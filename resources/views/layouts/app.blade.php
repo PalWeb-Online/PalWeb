@@ -2,13 +2,26 @@
 
 <html lang="{{ app()->getLocale() }}" @if (app()->getLocale() == 'ar') dir="rtl" @else dir="ltr" @endif>
 <head>
-    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-          content="{{ $pageDescription ?? 'Learn Palestinian Spoken Arabic with an online textbook featuring many dialogues & activities, a detailed dictionary with pronunciation audios & example sentences, a series of video tutorial lessons & many more resources.' }}">
-    <meta name="author" content="Adrian Abdul-Bahá">
+
+    <meta name="description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta name="author" content="R. Adrian">
+
+    <meta property="og:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}">
+    <meta property="og:description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta property="og:image" content="{{ url('/img/palweb.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@palweb_app">
+    <meta name="twitter:creator" content="@rafi2_ab">
+    <meta name="twitter:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}">
+    <meta name="twitter:description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta name="twitter:image" content="{{ url('/img/palweb.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
