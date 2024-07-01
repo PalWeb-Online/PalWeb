@@ -1,0 +1,691 @@
+#academy-map {
+    display: grid;
+    gap: 1.6rem;
+    align-content: start;
+    position: fixed;
+    top: 98%;
+    left: 50%;
+    transform: translate(-50%, 0) rotate(0deg);
+    width: 90%;
+    height: 100%;
+    background: $accent-yellow-pastel;
+    border-radius: 1.6rem;
+    border: 0.1rem solid $purple-deep;
+    box-shadow: -0.4rem 0.6rem 0 rgba(black, 0.25), 0.4rem 0.6rem 0 rgba(black, 0.25);
+    padding: 0 6.4rem;
+    z-index: 5;
+    transition: transform 0.1s, top 0.3s ease-in-out;
+
+    .featured-title {
+        justify-self: center;
+    }
+
+    &:hover {
+        transform: translate(-50%, -4.8rem) rotate(-1deg);
+    }
+
+    &.show {
+        top: 10%;
+        transform: translate(-50%, 2.4rem) rotate(0);
+
+        &:hover {
+            transform: translate(-50%, 0) rotate(-1deg);
+        }
+    }
+}
+
+#unit-nav {
+    text-align: center;
+    user-select: none;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.6rem;
+    font-family: $monoFont, $ar_headFont;
+
+    .unit-nav-units {
+        display: flex;
+        align-items: center;
+        gap: 4.8rem;
+
+        * {
+            font-size: 6.4rem;
+            color: $purple-deep;
+            font-family: $displayFont;
+            text-transform: uppercase;
+            transition: 0.1s;
+
+            &.active {
+                transform: translate(0.4rem, -0.4rem);
+                text-shadow: -0.4rem 0.4rem 0 $accent-yellow;
+            }
+        }
+
+        a:hover {
+            transform: translate(0.4rem, -0.4rem);
+            text-shadow: -0.4rem 0.4rem 0 $accent-yellow;
+        }
+    }
+
+    .unit-nav-lessons {
+        flex: 1 0 100%;
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
+        color: $grn;
+    }
+}
+
+.lesson-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 9.6rem;
+    width: 9.6rem;
+    padding-block-start: 1.6rem;
+    padding-inline-start: 1.6rem;
+    border-radius: 50%;
+    color: $purple-deep;
+    border: 0.1rem solid $purple-deep;
+    background: $accent-yellow-pastel;
+    font-family: $displayFont;
+    font-size: 12.8rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    overflow: hidden;
+
+    &.active {
+        color: $accent-yellow;
+        border: 0.1rem solid $accent-yellow;
+        background: $accent-yellow;
+    }
+
+    &:not(.active):hover {
+        background: $purple-deep;
+    }
+}
+
+figure.unit-image {
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    margin: 0;
+
+    img {
+        width: 100%;
+        max-height: 600px;
+        object-fit: cover;
+        border: 0.4rem solid $purple-deep;
+        border-radius: 2.4rem;
+        padding: 0.2rem;
+        background: $purple-pastel-light;
+        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    }
+
+    figcaption {
+        position: absolute;
+        top: 3.2rem;
+        right: -1.2rem;
+        padding: 0.6rem 1.8rem;
+        color: $purple-deep;
+        border: 0.2rem solid $purple-deep;
+        border-radius: 1.2rem;
+        box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
+        font-family: $headFont;
+        font-size: 1.6rem;
+        background: white;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    &:hover {
+        figcaption {
+            transform: rotate(-2deg);
+        }
+    }
+}
+
+.lesson-index {
+    position: relative;
+    display: grid;
+    gap: 2.4rem;
+    padding: 0 2.4rem 1.6rem;
+    background: $accent-yellow-pastel;
+    margin-block-start: 3.2rem;
+    border-radius: 1.6rem;
+    border: 0.1rem solid $purple-deep;
+    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+
+    .deck-flashcard-wrapper {
+        display: none;
+    }
+
+    .lesson-index-head {
+        justify-self: end;
+        display: flex;
+        flex-flow: row-reverse;
+        align-items: center;
+        gap: 1.6rem;
+        margin-block-start: -2.0rem;
+
+        .folder {
+            img {
+                width: 4.8rem;
+            }
+
+            .open {
+                display: none;
+            }
+
+            .closed {
+                display: block;
+            }
+        }
+
+        .folder:hover {
+            .open {
+                display: block;
+            }
+
+            .closed {
+                display: none;
+            }
+        }
+
+        & > *:first-child {
+            justify-self: end;
+            color: $purple-deep;
+            font-family: $displayFont;
+            background: white;
+            border-radius: 1.6rem;
+            border: 0.1rem solid $purple-deep;
+            padding: 0.2rem 1.6rem 0.4rem;
+            font-weight: 700;
+            font-size: 3.2rem;
+            text-transform: uppercase;
+        }
+    }
+
+    .lesson-index-title {
+        color: $purple-deep;
+        font-family: $headFont;
+        font-weight: 700;
+        font-size: 4.8rem;
+        border-bottom: 0.1rem solid $purple-deep;
+    }
+
+    .lesson-index-body {
+        display: flex;
+        flex-flow: row-reverse wrap;
+        gap: 3.2rem;
+    }
+}
+
+.lesson-index-content-section-wrapper {
+    flex-grow: 1;
+    display: grid;
+    align-content: start;
+    gap: 1.6rem;
+
+    .lesson-index-content-section {
+        display: grid;
+        grid-template-columns: max-content auto;
+        align-items: end;
+        gap: 0.4rem;
+        padding-block-end: 0.8rem;
+        border-block-end: 0.1rem solid $accent-yellow;
+
+        .lesson-index-content-section-heading {
+            color: $accent-yellow;
+            font-family: $displayFont;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+        }
+
+        .lesson-index-content-section-title {
+            text-align: end;
+            color: $purple-deep;
+            font-family: $headFont;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .lesson-index-content-section-content {
+            grid-column: span 2;
+            font-size: 1.4rem;
+            font-family: $bodyFont;
+        }
+    }
+}
+
+@media (min-width: 960px) {
+    .lesson-index .deck-flashcard-wrapper {
+        display: grid;
+    }
+}
+
+.lesson-concept-container {
+    width: 100%;
+    font-size: 1.8rem;
+    text-align: justify;
+    transition: 0.3s;
+    border-radius: 2.4rem;
+    background: white;
+    padding: clamp(2.4rem, 4vw, 3.6rem);
+    margin: 3.2rem 0;
+    position: relative;
+
+    & > .title-container {
+        margin: 0 0 2.8rem -0.6rem;
+        @media (min-width: 960px) {
+            margin: 2.4rem 0 3.6rem -1.2rem;
+        }
+    }
+
+    h1, h2 {
+        //font-size: 2.8rem;
+        line-height: 1em;
+        margin: 3.2rem 0 1.6rem;
+        font-family: $headFont;
+        text-transform: none;
+    }
+
+    p {
+        margin-block-start: 1.6rem;
+        margin-block-end: 1.6rem;
+    }
+
+    & > *:last-child {
+        margin-bottom: 0;
+    }
+
+    & > .popout {
+        width: 6.4rem;
+    }
+}
+
+.lesson-concept-container {
+    padding: 0;
+
+    .lesson-concept-head {
+        padding: 2.4rem 3.2rem;
+        border-radius: 2.3rem 2.3rem 0 0;
+
+        .featured-title {
+            color: white;
+        }
+    }
+
+    .lesson-concept-body {
+        display: grid;
+        padding: 3.2rem;
+
+        h1 {
+            font-size: 6.4rem;
+            margin: 0 0 1.6rem;
+        }
+
+        .array {
+            margin: 0;
+        }
+    }
+
+    &.skill {
+        box-shadow: -0.6rem 0.6rem 0 $purple-pastel-dark;
+
+        .lesson-concept-head {
+            background: $purple-primary;
+        }
+
+        .lesson-concept-body {
+            h1 {
+                color: $purple-primary;
+            }
+        }
+    }
+
+    &.idea {
+        border: 0.1rem solid $purple-deep;
+        box-shadow: -0.4rem 0.4rem 0 rgb(black, 0.2);
+
+        .lesson-concept-head {
+            background: $accent-yellow;
+        }
+
+        .lesson-concept-body {
+            h1 {
+                color: $purple-deep;
+            }
+        }
+    }
+
+    & > .popout {
+        position: absolute;
+        top: -2.4rem;
+        right: 1.6rem;
+    }
+}
+
+.activity-title {
+    margin: 3.2rem 0.8rem 0.6rem;
+    border-radius: 1.6rem 1.6rem 0.4rem 0.4rem;
+    background: rgba($grn, 0.8);
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: $monoFont, $ar_bodyFont;
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding: 0.8rem 2.0rem;
+    max-width: 100%;
+
+    @media (min-width: 960px) {
+        max-width: 25%;
+    }
+}
+
+.activity-area {
+    display: grid;
+    gap: 2.4rem;
+    margin-block: 3.2rem;
+
+    .question-group {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .array {
+        margin: 0;
+    }
+}
+
+.activity-info-container {
+    display: grid;
+    direction: rtl;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    border-radius: 1.2rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    border: 0.1rem solid $accent-yellow;
+    box-shadow: -0.4rem 0.4rem 0 $accent-yellow-pastel;
+    padding: 0.8rem;
+    background: white;
+
+    // TODO: How to resolve the spacing issue?
+    font-family: 'JetBrains Mono', 'Vazirmatn', monospace;
+    text-align: center;
+
+    & > * {
+        min-width: 12rem;
+        background: $accent-yellow-pastel;
+        padding: 0.8rem 1.6rem;
+        border-radius: 0.8rem;
+
+    }
+}
+
+.activity-select {
+    display: flex;
+    direction: rtl;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.6rem;
+    white-space: nowrap;
+    background: white;
+    border-radius: 1.6rem;
+    border: 0.1rem solid $accent-yellow;
+    box-shadow: -0.4rem 0.4rem 0 $accent-yellow-pastel;
+    padding: 1.2rem 1.6rem;
+    margin-block: 1.2rem 0.4rem;
+
+    p {
+        font-family: $ar_bodyFont;
+        font-size: 2.0rem;
+        margin: 0;
+    }
+
+    .activity-select-choices {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.8rem;
+        margin-block-start: -2.4rem;
+
+        button {
+            font-family: $bodyFont;
+            font-weight: 700;
+            font-size: 1.8rem;
+            @include button-primary-dark;
+
+            &:hover {
+                box-shadow: none;
+                transform: translate(-0.2rem, 0.2rem);
+            }
+
+            &.selected {
+                box-shadow: none;
+                transform: translate(-0.2rem, 0.2rem);
+                background: $purple-primary-dark;
+                color: white;
+            }
+        }
+    }
+}
+
+.activity-fill {
+    display: flex;
+    flex-flow: row-reverse wrap;
+
+    background-color: white;
+    border: 0.1rem solid $accent-yellow;
+    box-shadow: -0.4rem 0.4rem 0 $accent-yellow-pastel;
+    border-radius: 1.6rem;
+    padding: 0.8rem 1.6rem;
+    margin-block: 0.4rem 0.8rem;
+
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+
+    gap: 0.4rem 1.6rem;
+    text-align: center;
+    white-space: nowrap;
+
+    & > div {
+        flex-grow: 1;
+        display: flex;
+        flex-flow: row-reverse wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1.6rem;
+    }
+
+    p {
+        flex-basis: 30%;
+        font-family: $ar_bodyFont;
+    }
+
+    p, input {
+        direction: rtl;
+        text-align: start;
+        font-weight: 400;
+        font-size: 2.0rem;
+        line-height: 3.2rem;
+        margin: 0;
+    }
+
+    input {
+        font-family: $ar_bodyFont;
+        accent-color: $purple-deep;
+        border-radius: 1.2rem;
+        border: 0.1rem solid $purple-primary-dark;
+        box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
+        color: $purple-deep;
+        background: white;
+        padding: 0.4rem 1.2rem;
+        margin-block: 0.2rem;
+        flex-grow: 1;
+
+        &:focus {
+            outline: 0.1rem solid $accent-yellow;
+            border: 0.1rem solid $accent-yellow;
+        }
+    }
+
+    button {
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        padding: 0.4rem;
+        color: $purple-deep;
+        background: white;
+        border: 0.1rem solid $purple-primary-dark;
+        box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
+        margin-block-end: 0.2rem;
+    }
+
+    button:hover {
+        box-shadow: none;
+        transform: translate(-0.2rem, 0.2rem);
+    }
+
+    &.correct {
+        input {
+            color: black !important;
+            box-shadow: none;
+            transform: translate(-0.1rem, 0.1rem);
+            border: none;
+        }
+
+        button {
+            color: white;
+            background: $purple-primary-dark;
+            box-shadow: none;
+            transform: translate(-0.2rem, 0.2rem);
+        }
+    }
+
+    img {
+        border-radius: 0.8rem 0.8rem 0 0.8rem;
+        max-width: 50%;
+    }
+}
+
+div.activity-image {
+    width: 100%;
+    display: grid;
+    direction: rtl;
+    grid-column-gap: 2.0rem;
+    grid-row-gap: 2.0rem;
+    grid-template-columns: repeat(1, 1fr);
+    @media (min-width: 960px) {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    img {
+        border-radius: 0.8rem;
+    }
+}
+
+div.activity-image .image-card {
+    display: grid;
+    grid-template-areas: "overlap";
+
+    > * {
+        grid-area: overlap
+    }
+
+    > img {
+        z-index: 1;
+    }
+
+    &:active > img {
+        visibility: hidden
+    }
+
+    > div {
+        display: flex;
+        align-self: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+}
+
+.activity-dialog {
+    display: grid;
+    row-gap: 0.8rem;
+    direction: rtl;
+    text-align: start;
+    margin-block: 1.6rem;
+}
+
+.dialog-line-wrapper {
+    display: flex;
+}
+
+.dialog-line-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    color: black;
+    border-radius: 1.6rem;
+    text-align: center;
+
+    background: white;
+    border: 0.1rem solid $accent-yellow;
+    box-shadow: -0.4rem 0.4rem 0 $accent-yellow-pastel;
+    margin-block: 1.6rem 0.4rem;
+
+    &:not(:has(.dialog-line-head)) {
+        margin-block-start: 0;
+    }
+
+    font-size: 2.0rem;
+    font-family: $ar_bodyFont;
+
+    .dialog-line-head {
+        font-family: $bodyFont;
+        font-weight: 700;
+        margin-inline-start: -1.2rem;
+        transform: translateY(-1.2rem);
+
+        @include button-primary-dark;
+    }
+
+    .dialog-heading {
+        text-transform: uppercase;
+        font-family: $monoFont;
+        font-size: 1.6rem;
+        border: none;
+    }
+
+    .dialog-line-body {
+        display: grid;
+        gap: 0.4rem;
+        padding: 1.2rem 2.4rem;
+
+        .dialog-arb {
+            text-align: right;
+        }
+
+        .dialog-eng {
+            text-align: right;
+            direction: ltr;
+            width: 100%;
+            font-family: $bodyFont;
+            font-size: 1.4rem;
+        }
+
+        .dialog-arb a {
+            color: inherit !important;
+            font-weight: inherit;
+            border-radius: 0.4rem;
+            padding: 0 0.4rem;
+            margin: 0 0.2rem;
+        }
+    }
+}

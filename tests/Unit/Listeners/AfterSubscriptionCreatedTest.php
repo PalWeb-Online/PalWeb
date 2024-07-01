@@ -1,0 +1,54 @@
+<?php
+
+namespace Tests\Unit\Listeners;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Cashier\Subscription;
+use Spark\Events\SubscriptionCreated;
+use Tests\TestCase;
+
+class AfterSubscriptionCreatedTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_afterSubscriptionCreated_adds_user_to_student_role()
+    {
+        $this->roles();
+
+        $user = User::factory()->create();
+        $this->assertFalse($user->hasRole('student'));
+        $subscription = new Subscription();
+        event(new SubscriptionCreated($user, $subscription));
+
+        $user->refresh();
+        $this->assertTrue($user->hasRole('student'));
+    }
+
+    public function test_afterSubscriptionCreated_if_user_is_already_a_student()
+    {
+        $this->roles();
+
+        // Should just do nothing basically
+        $user = User::factory()->create()->grantStudentRole();
+        $this->assertTrue($user->hasRole('student'));
+        $subscription = new Subscription();
+        event(new SubscriptionCreated($user, $subscription));
+
+        $user->refresh();
+        $this->assertTrue($user->hasRole('student'));
+    }
+
+    public function test_afterSubscriptionCreated_if_user_is_an_admin()
+    {
+        $this->roles();
+
+        $user = User::factory()->create()->grantAdminRole();
+        $this->assertTrue($user->hasRole('admin'));
+        $subscription = new Subscription();
+        event(new SubscriptionCreated($user, $subscription));
+
+        $user->refresh();
+        $this->assertTrue($user->hasRole('student'));
+    }
+}

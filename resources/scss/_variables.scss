@@ -1,0 +1,282 @@
+@mixin button-primary-dark {
+    background: white;
+    color: $purple-deep;
+    border: 0.1rem solid $purple-primary-dark;
+    box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
+    border-radius: 1.2rem;
+    padding: 0.8rem 1.2rem;
+}
+
+@mixin button-primary-deep {
+    background: white;
+    color: $purple-deep;
+    border: 0.1rem solid $purple-deep;
+    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
+    border-radius: 1.2rem;
+    padding: 0.8rem 1.2rem;
+}
+
+@mixin box-yellow-pastel {
+    color: $purple-deep;
+    background: $accent-yellow-pastel;
+    border: 0.1rem solid $accent-yellow;
+    border-radius: 0.8rem;
+}
+
+// PalWeb Fonts
+$logoFont: 'benda', sans-serif;
+$displayFont: 'beastly', 'greycliff-arabic-cf', serif;
+$headFont: 'monotalic', 'greycliff-arabic-cf', sans-serif;
+$monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
+$bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
+$ar_headFont: 'ibm-plex-arabic', sans-serif, 'Noto Color Emoji';
+$ar_bodyFont: 'Vazirmatn', sans-serif;
+
+// PalWeb Colors
+$purple-deep-dark: #360f88;
+$purple-deep: #4313aa;
+$purple-primary-dark: #5435B0;
+$purple-primary: #7047eb;
+$purple-pastel-dark: #c6b5f7;
+$purple-pastel: #e2dafb;
+$purple-pastel-light: #f1edfd;
+$accent-yellow: #ffc32c;
+$accent-yellow-pastel: #fff0ca;
+$accent-green: #5c9e31;
+$accent-green: #B1CC33;
+//$accent-pink: #ffa7c0;
+//$accent-pink-dark: #EA5A47;
+
+// Colors
+html {
+    --red: rgba(237, 28, 36, 1);
+    --dimred: rgba(237, 28, 36, 0.1);
+    --orn: rgba(242, 101, 34, 1);
+    --dimorn: rgba(242, 101, 34, 0.1);
+    --yel: rgba(255, 194, 14, 1);
+    --dimyel: rgba(255, 194, 14, 0.1);
+    --grn: rgba(0, 166, 81, 1);
+    --dimgrn: rgba(0, 166, 81, 0.1);
+    --cyn: rgba(0, 174, 239, 1);
+    --dimcyn: rgba(0, 174, 239, 0.1);
+    --blu: rgba(0, 114, 188, 1);
+    --dimblu: rgba(0, 114, 188, 0.1);
+    --prp: rgba(102, 45, 145, 1);
+    --dimprp: rgba(102, 45, 145, 0.1);
+    --mag: rgba(236, 0, 140, 1);
+    --dimmag: rgba(236, 0, 140, 0.1);
+    --gry: rgba(136, 136, 136, 1);
+    --dimgry: rgba(136, 136, 136, 0.1);
+}
+
+// Legacy Colors
+$red: rgb(237, 28, 36);
+$cyn: rgb(0, 174, 239);
+//$orn: rgb(242, 101, 34);
+//$yel: rgb(255, 194, 14);
+//$grn: rgb(0, 166, 81);
+//$blu: rgb(0, 114, 188);
+//$prp: rgb(102, 45, 145);
+//$mag: rgb(236, 0, 140);
+
+// New Colors
+$orn: rgb(242, 88, 36); // 15, 85, 95
+$yel: rgb(255, 179, 26); // 40, 90, 100
+$grn: rgb(0, 166, 83); // 150, 100, 65
+$blu: rgb(0, 102, 204); // 210, 100, 80
+$prp: rgb(110, 33, 166); // 275, 80, 65
+$mag: rgb(229, 23, 126); // 330, 90, 90
+
+$colors: (
+    "red": $red,
+    "orn": $orn,
+    "yel": $yel,
+    "grn": $grn,
+    "cyn": $cyn,
+    "blu": $blu,
+    "prp": $prp,
+    "mag": $mag,
+);
+
+// TODO: put these elsewhere
+$cast: (
+    // students of Arabic literature at Birzeit University
+    "ʔakram": $grn, // Akram, from Jericho
+    "ġassān": $cyn, // Ghassan, from Nablus (Beita)
+    "šādi": $blu, // Shadi, from Jaffa
+    "jiryis": $prp, // Jeries, from Jerusalem (Abu Dis)
+    "yāra": $mag, // Yara, from Gaza
+    "dāna": $red, // Dana, from Haifa
+    "sama": $orn, // Sama, from Bethlehem
+    "mīra": $yel, // Mera, from Nazareth
+    // diaspora Palestinians studying English literature full-time at Birzeit
+    "mħammad": $grn, // Mhammad, from Jordan
+    "yūsef": $prp, // Yousef, from Syria
+    "lama": $orn, // Lama, from Lebanon
+    "ʔarwa": $prp, // Arwa, from Egypt
+    // diaspora Palestinians doing a semester at Birzeit
+    "sāmir": $orn, // Samer, from Silwad
+    "širīn": $grn, // Shireen, from Jenin
+    // Shams & Nur
+    "guest-1": $grn,
+    "guest-2": $prp,
+    "guest-3": $orn,
+);
+
+$boxes: (
+    "grammar": $grn,
+    "vocab": $prp,
+    "dialog": $orn,
+    "text": $grn,
+    "info": $blu
+);
+
+$charts: (
+    "red": $red,
+    "orn": $orn,
+    "yel": $yel,
+    "grn": $grn,
+    "cyn": $cyn,
+    "blu": $blu,
+    "prp": $prp,
+    "mag": $mag,
+    // greeting = grn
+    "resp": $orn,
+    // inherited = grn
+    "borrowed": $mag,
+    "ap": $yel,
+    "pp": $blu,
+    "nv": $grn,
+    "dialog": $orn,
+    "vocab": $prp,
+    "msc": $blu,
+    "fem": $mag,
+    "plr": $prp,
+    "elt": $blu,
+    "defect": $blu,
+    "sing": $mag,
+    "pauc": $prp,
+    "m": $blu,
+    "f": $mag,
+    "p": $prp,
+    "collective": $blu,
+    "demonym": $prp,
+    "pseudo": $mag,
+    "participle": $yel,
+    "clitic": $orn,
+    "idiom": $orn,
+    "isPatient": $orn,
+    "hasObject": $prp,
+);
+
+@each $name, $color in $colors {
+    .#{$name} {
+        color: $color
+    }
+}
+
+.rainbow-background {
+    color: white !important;
+    background: linear-gradient(
+            105deg,
+            rgba(255, 0, 0, 1) 0%,
+            rgba(255, 154, 0, 1) 10%,
+            rgba(208, 222, 33, 1) 20%,
+            rgba(79, 220, 74, 1) 30%,
+            rgba(63, 218, 216, 1) 40%,
+            rgba(47, 201, 226, 1) 50%,
+            rgba(28, 127, 238, 1) 60%,
+            rgba(95, 21, 242, 1) 70%,
+            rgba(186, 12, 248, 1) 80%,
+            rgba(251, 7, 217, 1) 90%,
+            rgba(255, 0, 0, 1) 100%
+    );
+}
+
+@keyframes bounceIn {
+    from,
+    20%,
+    40%,
+    60%,
+    80%,
+    to {
+        -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    0% {
+        opacity: 0;
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    20% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    40% {
+        -webkit-transform: scale3d(0.9, 0.9, 0.9);
+        transform: scale3d(0.9, 0.9, 0.9);
+    }
+
+    60% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.03, 1.03, 1.03);
+        transform: scale3d(1.03, 1.03, 1.03);
+    }
+
+    80% {
+        -webkit-transform: scale3d(0.97, 0.97, 0.97);
+        transform: scale3d(0.97, 0.97, 0.97);
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(0.8rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fontToggle {
+    0% {
+        font-weight: 400;
+        text-transform: uppercase;
+        font-family: $displayFont;
+    }
+
+    33% {
+        font-weight: 700;
+        text-transform: none;
+        font-family: $headFont;
+    }
+
+    66% {
+        font-weight: 700;
+        text-transform: lowercase;
+        font-family: $logoFont;
+    }
+
+    100% {
+        font-weight: 400;
+        text-transform: uppercase;
+        font-family: $displayFont;
+    }
+}
+
+.font-toggle {
+    line-height: 2.4rem;
+    //animation: fontToggle 3s infinite;
+}
