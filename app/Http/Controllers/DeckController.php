@@ -296,10 +296,13 @@ class DeckController extends Controller
         $newDeck->name .= " (Copy)";
         $newDeck->save();
 
-        $user->decks()->attach($newDeck->id);
+        Bookmark::add($deck, $user);
 
         $termIds = $deck->terms()->pluck('term_id');
-        $newDeck->terms()->attach($termIds);
+
+        foreach ($termIds as $index => $id) {
+            $newDeck->terms()->attach($id, ['position' => $index + 1]);
+        }
 
         $this->flasher->addSuccess(__('deck.copied', ['deck' => $deck->name]));
         return to_route('decks.show', $newDeck->id);
