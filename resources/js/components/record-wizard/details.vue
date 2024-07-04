@@ -15,7 +15,7 @@
 		</div>
 	</section>
 	<section>
-		<div  id="mwe-rwd-lang-field">
+		<div id="mwe-rwd-lang-field">
 			<label for="mwe-rwd-lang-input">{{&__ "mwe-recwiz-details-lang"}}</label>
 			<ooui-dropdown id="mwe-rwd-lang" input-id="mwe-rwd-lang-input" :options="availableLanguages" v-model="metadata.language" @change="onLanguageChange()"></ooui-dropdown>
 			<ooui-checkbox v-model="randomise" id="mwe-rwd-randomise"></ooui-checkbox> {{_ "mwe-recwiz-details-randomise"}}
