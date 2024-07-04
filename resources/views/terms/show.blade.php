@@ -226,16 +226,13 @@
                                 {{ $index+1 }}
                             </div>
 
-                            @isset($gloss->attribute)
-                                <div class="chart-item {{ $gloss->type }}" style="margin: 0 0.8rem 0 0">
-                                    <div class="chart-title">{{ $gloss->attribute }}</div>
-                                    @isset($gloss->structure)
-                                        <div>{{ $gloss->structure }}</div>
-                                    @endisset
-                                </div>
-                            @endisset
-
                             <div class="gloss-li-content">
+                                @isset($gloss->attribute)
+                                    <div class="gloss-li-attribute">
+                                        [{{ $gloss->attribute }}] {{ $gloss->structure }}
+                                    </div>
+                                @endisset
+
                                 <div class="gloss-li-content-gloss">
                                     {{ $gloss->gloss }}
                                 </div>

@@ -29,7 +29,7 @@
             <div>2F</div>
             <div>
                 <div>{{ $host }}{{ !in_array(mb_substr($translit, -1), $longVowels) ? 'ك' : 'كي' }}</div>
-                <div>{{ $translit }}{{ !in_array(mb_substr($translit, -1), $longVowels) ? 'ek' : 'ki' }}</div>
+                <div>{{ $translit }}{{ !in_array(mb_substr($translit, -1), $longVowels) ? 'ik' : 'ki' }}</div>
             </div>
         </div>
         <div class="inflection-chart-item" style="grid-column: span 2">

@@ -231,6 +231,11 @@
         transform: rotate(-6deg);
     }
 
+    .gloss-li-attribute {
+        color: $purple-primary;
+        font-weight: 700;
+    }
+
     .gloss-li-content {
         display: grid;
         gap: 0.8rem;
@@ -477,6 +482,7 @@
 
 .inflection-chart-wrapper {
     display: flex;
+    flex-flow: row wrap;
     justify-content: center;
 
     .inflection-chart {

@@ -22,7 +22,6 @@ div.array {
     display: inline-flex;
     gap: 0.2rem;
     align-items: center;
-    align-self: start;
     justify-self: start;
     font-size: 1.2rem;
     border-radius: 0.8rem;
@@ -207,10 +206,6 @@ figure.data-box {
     border: 0.3rem solid $purple-primary-dark;
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
     overflow: hidden;
-
-    &:has(.tier-item-unlocked) .tiers-action {
-        visibility: hidden;
-    }
 }
 
 .tier-item-unlocked {
@@ -247,6 +242,7 @@ figure.data-box {
 
     .tier-body {
         display: grid;
+        text-align: center;
         padding: 0.4rem 0.8rem;
         color: $purple-deep;
 
@@ -277,6 +273,12 @@ figure.data-box {
         font-size: 2.4rem;
         text-transform: none;
         padding: 1.6rem;
+    }
+
+    @media (min-width: 960px) {
+        .tier-body {
+            text-align: left;
+        }
     }
 }
 
