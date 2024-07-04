@@ -459,8 +459,8 @@ export default {
 
                     <template v-if="!attributes.includes(['idiom', 'clitic'])">
                         <div class="form-field">
-                            <label for="root">Root{{ term.category === 'verb' ? ' *' : '' }}</label>
-                            <input id="root" v-model="root" :required="term.category === 'verb'"
+                            <label for="root">Root{{ term.category === 'verb' && !attributes.includes('idiom') ? ' *' : '' }}</label>
+                            <input id="root" v-model="root" :required="term.category === 'verb' && !attributes.includes('pseudo')"
                                    name="root"
                                    type="text"/>
                         </div>
@@ -752,29 +752,33 @@ export default {
                                 <select :id="'glosses['+index+'][attribute]'" v-model="gloss.attribute"
                                         :name="'glosses['+index+'][attribute]'" required>
                                     <option value="auxiliary">auxiliary</option>
-                                    <optgroup label="isPatient">
-                                        <option value="unaccusative">unaccusative</option>
-                                        <option value="passive">passive</option>
-                                        <option value="reflexive">reflexive</option>
-                                        <option value="reciprocal">reciprocal</option>
-                                    </optgroup>
-                                    <optgroup label="noPatient">
-                                        <option value="unergative">unergative</option>
-                                        <option value="stative">stative</option>
-                                    </optgroup>
-                                    <optgroup label="hasObject">
-                                        <option value="transitive">transitive</option>
-                                        <option value="causative">causative</option>
-                                        <option value="causative">dative</option>
-                                        <option value="complex">complex</option>
-                                    </optgroup>
+                                    <option label="isPatient">isPatient</option>
+                                    <option label="noPatient">noPatient</option>
+                                    <option label="hasObject">hasObject</option>
                                 </select>
-                            </div>
-                            <div v-if="gloss.attribute !== 'auxiliary'" class="form-field">
-                                <label :for="'glosses['+index+'][structure]'">Argument Structure *</label>
-                                <input :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
-                                       :name="'glosses['+index+'][structure]'"
-                                       required type="text"/>
+                                <template v-if="gloss.attribute !== '' && gloss.attribute !== 'auxiliary'">
+                                    <label :for="'glosses['+index+'][structure]'">Structure *</label>
+                                    <select :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
+                                            :name="'glosses['+index+'][structure]'" required>
+                                        <optgroup label="isPatient" v-if="gloss.attribute === 'isPatient'">
+                                            <option value="unaccusative">unaccusative</option>
+                                            <option value="passive">passive</option>
+                                            <option value="reflexive">reflexive</option>
+                                            <option value="reciprocal">reciprocal</option>
+                                        </optgroup>
+                                        <optgroup label="noPatient" v-if="gloss.attribute === 'noPatient'">
+                                            <option value="unergative">unergative</option>
+                                            <option value="copular">copular</option>
+                                            <option value="stative">stative</option>
+                                        </optgroup>
+                                        <optgroup label="hasObject" v-if="gloss.attribute === 'hasObject'">
+                                            <option value="transitive">transitive</option>
+                                            <option value="ditransitive">ditransitive</option>
+                                            <option value="causative">causative</option>
+                                            <option value="dative">dative</option>
+                                        </optgroup>
+                                    </select>
+                                </template>
                             </div>
                         </template>
 

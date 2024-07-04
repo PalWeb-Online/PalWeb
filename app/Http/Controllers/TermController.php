@@ -150,12 +150,7 @@ class TermController extends Controller
         }
 
         $likeTerms = $this->termRepository->getLikeTerms($term);
-        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])
-            ->filter()
-            ->map(function ($term) {
-                $term->glosses = $this->verbType($term->glosses, $term->category);
-                return $term;
-            });
+        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
 
         $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
         $sortedAttributes = $term->attributes->sortBy(function ($attr) use ($attributeOrder) {
@@ -241,30 +236,6 @@ class TermController extends Controller
                 ];
             }),
         ];
-    }
-
-    private function verbType($glosses, $category)
-    {
-        return $glosses->map(function ($gloss) use ($glosses, $category) {
-
-            $type = false;
-
-            if ($category == 'verb') {
-                if (in_array($gloss->attribute, ['unaccusative', 'passive', 'reflexive', 'reciprocal'])) {
-                    $type = 'isPatient';
-                } elseif (in_array($gloss->attribute, ['transitive', 'causative', 'dative', 'complex'])) {
-                    $type = 'hasObject';
-                } elseif (in_array($gloss->attribute, ['unergative', 'stative'])) {
-                    $type = 'noPatient';
-                } elseif ($gloss->attribute == 'auxiliary') {
-                    $type = 'auxiliary';
-                }
-            }
-
-            $gloss->type = $type;
-
-            return $gloss;
-        });
     }
 
     /**
