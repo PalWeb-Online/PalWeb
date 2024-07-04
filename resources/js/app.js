@@ -5,6 +5,9 @@ import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
 import ActionButton from "./components/ActionButton.vue";
 
+import AudioRecord from './lingua-recorder/AudioRecord';
+import LinguaRecorder from './lingua-recorder/LinguaRecorder';
+
 import axios from 'axios';
 import Alpine from 'alpinejs';
 
@@ -29,14 +32,6 @@ if (document.querySelector('#dictionaryFilters')) {
     dictionaryFiltersApp.mount('#dictionaryFilters');
 }
 
-// Original Approach, for 1 Search Bar
-// if (document.querySelector('#searchBar')) {
-//     const searchBarApp = createApp({});
-//     searchBarApp.component('SearchBar', SearchBar);
-//     searchBarApp.mount('#searchBar');
-// }
-
-// Current Approach, for 2 Search Bars; isn't working
 const searchBarElements = document.querySelectorAll('[data-vue-component="SearchBar"]');
 searchBarElements.forEach((element, index) => {
     createApp({
