@@ -3,6 +3,6 @@
     {!! isset($img) ? '<img src="' . $img . '">' : '' !!}
     <div>
         <input type="text" data-ans="{{ $ans }}" maxlength="{{ strlen($ans) }}">
-        <button class="material-icons-round">done</button>
+        <button class="material-symbols-rounded">done</button>
     </div>
 </div>
