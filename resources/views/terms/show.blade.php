@@ -283,7 +283,7 @@
 
                         @if(count($gloss->sentences) > 0)
                             @foreach ($gloss->sentences as $sentence)
-                                <x-sentence :sentence="$sentence" :currentTerm="$term->translit"/>
+                                <x-sentence :sentence="$sentence" :currentTerm="$term->slug"/>
                             @endforeach
                         @endif
                     </div>

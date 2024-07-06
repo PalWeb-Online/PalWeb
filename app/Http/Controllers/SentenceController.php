@@ -106,8 +106,10 @@ class SentenceController extends Controller
         $sentence->update($request->sentence);
 
         $this->flasher->addSuccess(__('updated', ['thing' => $sentence->translit]));
-        return to_route('sentences.index');
 
+        return view('sentences.show', [
+            'sentence' => $sentence
+        ]);
     }
 
     public function destroy(Sentence $sentence)

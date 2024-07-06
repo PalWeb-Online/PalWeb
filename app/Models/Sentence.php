@@ -69,10 +69,12 @@ class Sentence extends Model
             $sentenceTerm = trim($sentenceTerm, "/");
             $sentenceTerm = explode("/", $sentenceTerm);
 
-            if ($foundTerm = Term::firstWhere('translit', $sentenceTerm[0])) {
+            $foundTerm = Term::firstWhere('slug', $sentenceTerm[0]);
+
+            if ($foundTerm) {
                 $foundTerm->sent_term = $sentenceTerm[2];
                 $foundTerm->sent_translit = $sentenceTerm[1];
-                if ($currentTerm !== null) {
+                if ($currentTerm) {
                     $foundTerm->current = $currentTerm == $sentenceTerm[0];
                 }
                 $sentenceTermsCollection->push($foundTerm);
@@ -85,22 +87,6 @@ class Sentence extends Model
         }
 
         return $sentenceTermsCollection;
-    }
-
-    public function getLemmas()
-    {
-        $sentenceTerms = explode(",", $this->sentence);
-        $sentenceTermsArray = [];
-        foreach ($sentenceTerms as $sentenceTerm) {
-            $sentenceTerm = trim($sentenceTerm, "/");
-            $sentenceTerm = explode("/", $sentenceTerm);
-
-            $sentenceTermsArray[] = [
-                'sent_term' => $sentenceTerm[2],
-                'sent_lemma' => $sentenceTerm[0],
-            ];
-        }
-        return $sentenceTermsArray;
     }
 
     public function sound()
