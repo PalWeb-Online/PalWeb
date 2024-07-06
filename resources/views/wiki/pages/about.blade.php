@@ -4,7 +4,7 @@
 </x-page-head>
 
 <div class="doc-section">
-    <h1 style="text-transform: none">Welcome to PalWeb</h1>
+    <h1 style="text-transform: none">Welcome to PalWeb!</h1>
     <p>Welcome to <b>PalWeb</b>, the Web of Palestinian Arabic. PalWeb is the online hub for the study & research of the
         Palestinian dialects of Spoken Arabic. If you're ready to start learning Spoken Arabic, you've come to the right
         place!</p>

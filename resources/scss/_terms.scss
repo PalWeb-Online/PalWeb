@@ -260,6 +260,10 @@
     }
 }
 
+.doc-section > .term-li-container {
+    margin-block: 3.2rem;
+}
+
 .term-li-container {
     display: grid;
     gap: 0.4rem;
@@ -736,9 +740,11 @@ Sentences
         flex-direction: column;
         padding: 0.8rem;
         cursor: default;
+        color: black;
 
         &:hover {
             background-color: $purple-pastel-light;
+            text-decoration: none;
         }
 
         & > div:nth-child(1) {
@@ -754,7 +760,6 @@ Sentences
         }
 
         &.active {
-            color: black;
             background: rgba($accent-yellow, 0.25);
         }
     }

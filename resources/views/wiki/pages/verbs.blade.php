@@ -8,233 +8,355 @@
 <div id="copula" class="doc-section">
     <h1>Copulae</h1>
 
-    <h1>THE STATIVE COPULA</h1>
+    <h2>the Stative Copula</h2>
 
     <p>In Arabic, a <b>null copula</b> is used to define the state of a subject; this is the <b>stative
-            copula</b>. By definition, the subject of a <b>stative copula</b> must be definite.</p>
+            copula</b>. Since the <b>stative copula</b> is not an overt verb, these sentences are usually referred to as
+        <b>nominal sentences</b>, in contrast to <b>verbal sentences</b>. Because the <b>null copula</b> doesn't convey
+        information about the grammatical person of the subject, an overt subject is required.</p>
 
-    <x-sentence eng="the children are happy">
-        <x-sentence-term arb="الولاد" eng="the-children" :term="$terms->firstWhere('translit', 'wlād')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="the children are happy">
+            <x-sentence-term arb="الولاد" eng="DEF-children" :term="$terms->firstWhere('translit', 'walad')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they go">
+            <x-sentence-term arb="بروحو" eng="3P.go" :term="$terms->firstWhere('translit', 'rāħ')"/>
+        </x-sentence>
+    </div>
 
-    <p>Since the <b>stative copula</b> is not an overt verb, these sentences are usually referred to as <b>nominal
-            sentences</b>; these are distinct only in that they demand an overt subject. Having said that, the <b>stative
-            copula</b> does occupy the head of a verbal phrase that may be modified by auxiliaries; hence, it may be
-        present even in sentences with an overt verb (i.e. <b>verbal sentences</b>). In view of this, all sentences with
-        <b>copulae</b> are specifically referred to as <b>copular sentences</b>.</p>
+    <p>However, because a <b>stative
+            copula</b> may be modified by auxiliaries, <b>copulae</b> may actually be present in what appear to be <b>verbal
+            sentences</b>. It is therefore better to distinguish all sentences with <b>copulae</b> as <b>copular
+            sentences</b>; so-called <b>nominal sentences</b> are simply <b>copular sentences</b> that happen to be
+        unmodified.</p>
 
-    <x-sentence eng="the children were happy">
-        <x-sentence-term arb="الولاد" eng="the-children" :term="$terms->firstWhere('translit', 'wlād')"/>
-        <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="they were happy">
+            <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they were going">
+            <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="يروحو" eng="3P.go" :term="$terms->firstWhere('translit', 'rāħ')"/>
+        </x-sentence>
+    </div>
 
     <p>As in the foregoing sentence, the <b>stative copula</b> may be modified by an <b>aspectual verb</b> to indicate
         the stability of a state over time. While the unmarked <b>كان (kān)</b> indicates a static state, terms like <b>صار
             (ṣār)</b> & <b>بطّل (baṭṭal)</b> indicate the beginning & end of a state, respectively; other <b>aspectual
             verbs</b> exist as well. As usual, verbal auxiliaries agree with the subject.</p>
 
-    <x-sentence eng="the children became happy">
-        <x-sentence-term arb="الولاد" eng="the-children" :term="$terms->firstWhere('translit', 'wlād')"/>
-        <x-sentence-term arb="صارو" eng="3P.became" :term="$terms->firstWhere('translit', 'ṣār')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="they became happy">
+            <x-sentence-term arb="صارو" eng="3P.became" :term="$terms->firstWhere('translit', 'ṣār')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they ceased being happy">
+            <x-sentence-term arb="بطّلو" eng="3P.ceased" :term="$terms->firstWhere('translit', 'baṭṭal')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+    </div>
 
-    <x-sentence eng="the children ceased being happy">
-        <x-sentence-term arb="الولاد" eng="the-children" :term="$terms->firstWhere('translit', 'wlād')"/>
-        <x-sentence-term arb="بطّلو" eng="3P.ceased" :term="$terms->firstWhere('translit', 'baṭṭal')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <p>Negation always acts upon the first overt word in a verbal phrase, whether it be a verbal auxiliary or a verbal
+        complement (see <b>the Existential Copula</b>) — skipping over the <b>null copula</b> if possible. If the verbal
+        phrase only contains a <b>null copula</b>, the
+        negative particle <b>مش (miš)</b> is produced.</p>
 
-    <p>As for negation, it applies to the head of the highest verbal phrase in the structure. When the <b>null
-            copula</b> itself is negated thus, the negative particle <b>مش (miš)</b> is produced.</p>
+    <x-term :term="$terms->firstWhere('translit', 'miš')"/>
 
-    <x-sentence eng="they weren't happy">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="the children aren't happy">
+            <x-sentence-term arb="الولاد" eng="DEF-children" :term="$terms->firstWhere('translit', 'walad')"/>
+            <x-sentence-term arb="مش" eng="not" :term="$terms->firstWhere('translit', 'miš')"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they don't go">
+            <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
+            <x-sentence-term arb="بروحو" eng="3P.go" :term="$terms->firstWhere('translit', 'rāħ')"/>
+            <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they weren't happy">
+            <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
+            <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="they weren't going">
+            <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
+            <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
+            <x-sentence-term arb="يروحو" eng="3P.go" :term="$terms->firstWhere('translit', 'rāħ')"/>
+        </x-sentence>
+    </div>
 
-    <x-sentence eng="(they) aren't happy">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="مبسوطين" eng="P.happy" :term="$terms->firstWhere('translit', 'mabsūṭ')"/>
-    </x-sentence>
+    <h2>the Existential Copula</h2>
 
-    <x-vocabulary title="particles">
-        <x-term :term="$terms->firstWhere('translit', 'miš')"/>
-    </x-vocabulary>
+    <p>An <b>existential copula</b> that indicates the existence of something may be formed by following a <b>null
+            copula</b> with a <b>copular complement</b>, namely a preposition with a definite, cliticized referent.</p>
+    <p>In Palestinian Arabic, the default <b>copular complement</b> is the expletive <b>فيه (fīh)</b>, a frozen particle
+        that is never inflected. Etymologically meaning <b>"in-it"</b>, its function is similar to <b>"there"</b> in the
+        English <b>"there is"</b>.</p>
 
-    <div class="line" style="height: 0.2rem; margin-top: 2.4rem"></div>
-    <h1>THE EXISTENTIAL COPULA</h1>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="there is cheese">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
 
-    <p>In Palestinian Arabic, the expletive <b>فيه (fīh)</b> is inserted after the <b>null copula</b>
-        to create an <b>existential copula</b> (i.e. <b>"there be"</b>). One should not be led to misidentify the
-        function of <b>فيه (fīh)</b> by the fact that the <b>null copula</b> is not pronounced in the <b>Present
-            Tense</b>.
+    <x-term :term="$terms->firstWhere('translit', 'fīh')"/>
+
+    <p>While the use of the expletive is not too dissimilar from English, a handful of true prepositions may act as <b>copular
+            complements</b> as well, providing an existential meaning without the need for an expletive.</p>
+
+    <div class="group-horizontal">
+        <x-sentence size="l" eng="there is cheese on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
+
+    <p>If the same prepositional phrase were to appear after the noun, however, it would not be a <b>copular
+            complement</b>; the expletive would be necessary to create the existential meaning.</p>
+
+    <div class="group-vertical">
+        <x-sentence size="l" eng="??? cheese on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="there is cheese on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+        </x-sentence>
+    </div>
+
+    <p>As mentioned above, a <b>copular complement</b> must have a cliticized referent; it cannot be a standalone noun.
     </p>
 
-    <x-sentence eng="there are problems">
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="ولاد" eng="children" :term="$terms->firstWhere('translit', 'wlād')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="there is cheese on the salad">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+            <x-sentence-term arb="على" eng="on" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term arb="السلطة" eng="DEF-salad" :term="$terms->firstWhere('slug', 'noun-salaṭa')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="??? on the salad cheese">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="على" eng="on" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term arb="السلطة" eng="DEF-salad" :term="$terms->firstWhere('slug', 'noun-salaṭa')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
 
-    <p>Since an <b>existential copula</b> is fundamentally an impersonal verb, it has no subject but rather a referent
-        that is necessarily indefinite. Hence, verbal auxiliaries are never inflected.</p>
+    <p>When a <b>copular complement</b> other than the expletive is used, the topic may be definite. This, however,
+        rules out purely existential interpretations in favor of possessive ones.</p>
 
-    <x-sentence eng="there were children">
-        <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="ولاد" eng="children" :term="$terms->firstWhere('translit', 'wlād')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="there is a book / it has a book (in it)">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there) / in-it.M" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term eng="book" :term="$terms->firstWhere('slug', 'noun-ktāb')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="it has the book (in it)">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="in-it.M" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="الكتاب" eng="DEF-book" :term="$terms->firstWhere('slug', 'noun-ktāb')"/>
+        </x-sentence>
+    </div>
 
-    <p>Consequently, there is no ambiguity between a sentence with an <b>existential copula</b> & a sentence
-        with a <b>stative copula</b> that incidentally features <b>فيه (fīh)</b> as its complement.</p>
+    <p>In theory, there is no limit to the amount of <b>copular complements</b> in an <b>existential copula</b>,
+        although in most cases having multiple referents would be nonsensical. However, the expletive <b>فيه (fīh)</b> —
+        being unspecific about its referent — may always be used in conjunction with other <b>copular complements</b>.
+        While it does not add any meaning, it underlines the indefiniteness of the topic; indeed, it may only be used if
+        the topic is indefinite.</p>
 
-    <x-sentence eng="the children were in it">
-        <x-sentence-term arb="الولاد" eng="the-children" :term="$terms->firstWhere('translit', 'wlād')"/>
-        <x-sentence-term arb="كانو" eng="3P.were" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="in-3M" :term="$terms->firstWhere('translit', 'fīh')"/>
-    </x-sentence>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="there is cheese on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
 
-    <p>Although negation is resolved as expected, the expletive is included in the negative phrase & undergoes a sound
-        change that shortens its phonemically long final vowel.</p>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="the cheese is on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term arb="الجبنة" eng="DEF-cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
 
-    <x-sentence eng="there weren't any children">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="ولاد" eng="children" :term="$terms->firstWhere('translit', 'wlād')"/>
-    </x-sentence>
+        <x-sentence size="l" eng="??? there is the cheese on it">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term arb="الجبنة" eng="DEF-cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
 
-    <x-sentence eng="there aren't any children">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="ولاد" eng="children" :term="$terms->firstWhere('translit', 'wlād')"/>
-    </x-sentence>
+    <p>Because an <b>existential copula</b> is fundamentally an impersonal verb that has no subject but rather a
+        referent that is necessarily undefined, verbal auxiliaries that modify it are never inflected.</p>
 
-    <p>Notice that these negation patterns can only be accounted for if the <b>null copula</b> is analyzed as
-        syntactically distinct from <b>كان (kān)</b>. Otherwise, one should find <b>مكانو فش</b> or <b>مش فيه</b> —
-        neither of which are grammatical forms of verbal negation for the <b>existential copula</b>.</p>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="there was cheese">
+            <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="there was cheese on it">
+            <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+    </div>
 
-    <x-vocabulary title="particles">
-        <x-term :term="$terms->firstWhere('translit', 'fīh')"/>
-    </x-vocabulary>
+    <p>Aside from <b>فيه (fīh)</b>, the remaining <b>copular complements</b> convey more or less possessive meanings by
+        situating the existence of something at the possessor's location.</p>
 
-    <div class="line" style="height: 0.2rem; margin-top: 2.4rem"></div>
-    <h1>THE POSSESSIVE COPULA</h1>
+    <div class="group-vertical">
+        <x-sentence size="l" eng="she has work">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('slug', 'preposition-ʕind')"/>
+            <x-sentence-term eng="work" :term="$terms->firstWhere('slug', 'noun-šuġl')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="she owns a car">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="إلها" eng="to-her" :term="$terms->firstWhere('slug', 'preposition-la-')"/>
+            <x-sentence-term eng="car" :term="$terms->firstWhere('slug', 'noun-sayyāra')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="she has the keys with her">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="معها" eng="with-her" :term="$terms->firstWhere('slug', 'preposition-maʕ')"/>
+            <x-sentence-term arb="المفاتيح" eng="DEF-keys" :term="$terms->firstWhere('slug', 'noun-sayyāra')"/>
+        </x-sentence>
+    </div>
 
-    <p>In addition to the expletive <b>فيه (fīh)</b>, there are a handful of prepositions that may complement an <b>existential
-            copula</b>; these <b>verbal prepositions</b> are used to build a <b>possessive copula</b> that conveys its
-        meaning by situating the
-        existence of something at the possessor's location.</p>
-
-    <x-sentence eng="she has problems">
-        <x-sentence-term arb="" eng="=" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="مشاكل" eng="problems" :term="$terms->firstWhere('translit', 'muškile')"/>
-    </x-sentence>
-
-    <p>Although semantically this might seem like a transitive verb, in reality it is an <b>existential copula</b> that
-        is pinned to the semantic agent by the preposition. Since there is no subject syntactically, verbal auxiliaries
-        are not inflected here either:</p>
-
-    <x-sentence eng="she had problems">
-        <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="مشاكل" eng="problems" :term="$terms->firstWhere('translit', 'muškile')"/>
-    </x-sentence>
-
-    <p>Negation proceeds as expected:</p>
-
-    <x-sentence eng="she doesn't have problems">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="مشاكل" eng="problems" :term="$terms->firstWhere('translit', 'muškile')"/>
-    </x-sentence>
-
-    <x-sentence eng="she didn't have problems">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="مشاكل" eng="problems" :term="$terms->firstWhere('translit', 'muškile')"/>
-    </x-sentence>
-
-    <p>Given that the complement of the <b>existential copula</b> is necessarily indefinite, the presence of <b>فيه
-            (fīh)</b> in the <b>possessive copula</b> forces it to require an indefinite complement. However, the <b>verbal
-            preposition</b> can supply the existential meaning on its own, so the expletive may be removed from the
-        construction & this requirement neutralized.</p>
-
-    <x-sentence eng="she had the car">
-        <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="="/>
-        <x-sentence-term arb="" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
-
-    <x-sentence eng="she has the car">
-        <x-sentence-term arb="" eng="=" :term="$terms->firstWhere('translit', 'kān')"/>
-        <x-sentence-term arb="" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
-
-    <p>In some cases, <b>verbal prepositions</b> are indistinguishable from <b>pseudo-verbs</b>. When all other possible
-        elements of the <b>possessive copula</b> are null, the preposition — syntactically a verbal complement – moves
-        to fill the position of the verb itself, where it may be negated:</p>
-
-    <x-sentence eng="she has the car">
-        <x-sentence-term arb="عندها" eng="3F.has" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
-
-    <x-sentence eng="she doesn't have the car">
-        <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="عندها" eng="3F.has" :term="$terms->firstWhere('translit', 'ʔind')"/>
-        <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
-        <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
-
-    <p>Although <b>verbal prepositions</b> are categorized in the <b>Dictionary</b> alongside
-        <b>pseudo-verbs</b> for the sake of practicality, only by distinguishing between the two can we account for the
-        differences in their
-        syntactic behavior.</p>
-
-    <x-vocabulary title="verbal prepositions">
+    <div class="terms-list">
         <x-term :term="$terms->firstWhere('translit', 'ʕindo')"/>
-        <x-term :term="$terms->firstWhere('translit', 'maʕo')"/>
         <x-term :term="$terms->firstWhere('translit', 'ʔilo')"/>
-        <x-term :term="$terms->firstWhere('translit', 'fiyyo')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕalēh')"/>
-    </x-vocabulary>
+        <x-term :term="$terms->firstWhere('translit', 'maʕo')"/>
+    </div>
 
-    {{--    <p>Additional idiomatic verbs may be built from these idioms, as in <b>إله عليه</b> ("he owes him").</p>--}}
+    <p>Additional idiomatic verbs may be built from these <b>copular complements</b>.</p>
 
+    <div class="group-vertical">
+        <x-sentence size="l" eng="she owes me money">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="إلي عليها" eng="to-me on-her" :term="$terms->firstWhere('slug', 'verb-ʔilo ʕalēh')"/>
+            <x-sentence-term eng="money" :term="$terms->firstWhere('translit', 'maṣāri')"/>
+        </x-sentence>
+    </div>
+
+    <x-term :term="$terms->firstWhere('translit', 'ʔilo ʕalēh')"/>
+
+    <p>Sometimes, the <b>existential copula</b> may be preceded by what appears to be a subject: the semantic possessor.
+        However, the subject is actually undefined; the preceding noun is a <b>topic</b>. We see this, firstly, in that
+        this false subject may never succeed the verb — contrary to the norm in an SVO language like Arabic.</p>
+
+    <div class="group-vertical">
+        <x-sentence size="l" eng="Maryam has work">
+            <x-sentence-term arb="مريم" eng="Maryam"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
+            <x-sentence-term eng="work" :term="$terms->firstWhere('slug', 'noun-šuġl')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="??? she has Maryam work">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عندها" eng="at-her" :term="$terms->firstWhere('translit', 'ʔind')"/>
+            <x-sentence-term arb="مريم" eng="Maryam"/>
+            <x-sentence-term eng="work" :term="$terms->firstWhere('slug', 'noun-šuġl')"/>
+        </x-sentence>
+    </div>
+
+    <p>Secondly, in that verbal auxiliaries are never inflected according to this false subject.</p>
+
+    <div class="group-vertical">
+        <x-sentence size="l" eng="the salad had cheese on it">
+            <x-sentence-term arb="السلطة" eng="DEF-salad" :term="$terms->firstWhere('slug', 'noun-salaṭa')"/>
+            <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="عليها" eng="on-it.F" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="cheese" :term="$terms->firstWhere('slug', 'noun-žibne')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="the bag had a banana in it">
+            <x-sentence-term arb="الشنتة" eng="DEF-bag" :term="$terms->firstWhere('translit', 'šanta')"/>
+            <x-sentence-term arb="كان" eng="was" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="فيها" eng="in-it.F" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="موزة" eng="banana" :term="$terms->firstWhere('slug', 'noun-mōz')"/>
+        </x-sentence>
+    </div>
+
+    <x-term :term="$terms->firstWhere('translit', 'fiyyo')"/>
+    <x-term :term="$terms->firstWhere('translit', 'ʕalēh')"/>
+
+    <p>When true prepositions act as <b>copular complements</b> — especially without the expletive — they function
+        very similarly to true <b>pseudo-verbs</b>. Because <b>copular complements</b> must have a definite referent in
+        the form of a clitic, they appear as though always conjugated. Negation may act upon them. Moreover, their
+        possessive meanings make them semantically like transitive verbs. Although these <b>copular complements</b> are
+        categorized in the <b>Dictionary</b> as <b>pseudo-verbs</b> for the sake of practicality, they are a distinct
+        category of terms.</p>
+
+    <div class="group-vertical">
+        <x-sentence size="l" eng="she owes me $50">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="إلي" eng="to-me" :term="$terms->firstWhere('slug', 'preposition-la-')"/>
+            <x-sentence-term arb="عليها" eng="on-her" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="fifty" :term="$terms->firstWhere('slug', 'numeral-xamsīn')"/>
+            <x-sentence-term eng="dollar" :term="$terms->firstWhere('slug', 'noun-dōlār')"/>
+        </x-sentence>
+    </div>
+
+    <p>Negation always acts upon the first — & only the first — overt word in a verbal phrase, whether it be a verbal
+        auxiliary or a verbal complement. When the <b>particle</b> <b>فيه (fīh)</b> is negated, it undergoes a sound
+        change that shortens its phonemically long final vowel. Likewise, <b>إله (ʔilo)</b> loses its initial glottal
+        stop.</p>
+
+    <div class="group-vertical">
+        <x-sentence size="l" eng="she does not owe money">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مـ ـعليها ش" eng="not on-her not"
+                             :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="money" :term="$terms->firstWhere('translit', 'maṣāri')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="she does not owe me money">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مـ ـليـ ـش" eng="not to-me not"
+                             :term="$terms->firstWhere('slug', 'preposition-la-')"/>
+            <x-sentence-term arb="عليها" eng="on-her" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="money" :term="$terms->firstWhere('translit', 'maṣāri')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="she does not owe me money">
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="مـ ـفـ ـش" eng="not (there) not" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="إلي" eng="to-me" :term="$terms->firstWhere('slug', 'preposition-la-')"/>
+            <x-sentence-term arb="عليها" eng="on-her" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="money" :term="$terms->firstWhere('translit', 'maṣāri')"/>
+        </x-sentence>
+        <x-sentence size="l" eng="she did not owe me money">
+            <x-sentence-term arb="مـ ـكانـ ـش" eng="not was not" :term="$terms->firstWhere('translit', 'kān')"/>
+            <x-sentence-term arb="∅" eng="(be)"/>
+            <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
+            <x-sentence-term arb="إلي" eng="to-me" :term="$terms->firstWhere('slug', 'preposition-la-')"/>
+            <x-sentence-term arb="عليها" eng="on-her" :term="$terms->firstWhere('slug', 'preposition-ʕala')"/>
+            <x-sentence-term eng="money" :term="$terms->firstWhere('translit', 'maṣāri')"/>
+        </x-sentence>
+    </div>
 </div>
 
 <div id="pseudo" class="doc-section">
@@ -244,45 +366,11 @@
         is that — unlike etymological verbs — they are conjugated using <b>clitic pronouns</b> rather
         than by way of inflectional morphology.</p>
 
-    <div class="array">
-        <div class="example-sentence">
-            <div class="example-eng" style="text-transform: uppercase">
-                PSEUDO-VERBS
-            </div>
-            <div class="example-arb"
-                 style="flex-flow: row-reverse wrap; justify-content: space-around; font-family: 'Vazirmatn'; font-weight: 700">
-                <span style="flex-basis: 80%">بدّه</span>
-                <span style="flex-basis: 80%">شكله</span>
-                <span style="flex-basis: 40%">عنده</span>
-                <span style="flex-basis: 40%">معه</span>
-                <span style="flex-basis: 40%">إله</span>
-                <span style="flex-basis: 40%">فيّه</span>
-                <span style="flex-basis: 80%">عليه</span>
-            </div>
-        </div>
-    </div>
-
     <p>It should be noted that <b>verbal prepositions</b> are categorized here as <b>pseudo-verbs</b>. However, at heart
         they are prepositions used to form <b>possessive
             copulae</b>, which are only reanalyzed as <b>pseudo-verbs</b> when all other elements of the underlying
         structure are null; they are therefore subject to major restrictions as <b>pseudo-verbs</b>, including the fact
         that they cannot be directly modified by auxiliaries.</p>
-
-    <div class="array">
-        <div class="example-sentence">
-            <div class="example-eng" style="text-transform: uppercase">
-                VERBAL PREPOSITIONS
-            </div>
-            <div class="example-arb"
-                 style="flex-flow: row-reverse wrap; justify-content: space-around; font-family: 'Vazirmatn'; font-weight: 700">
-                <span style="flex-basis: 40%">عنده</span>
-                <span style="flex-basis: 40%">معه</span>
-                <span style="flex-basis: 40%">إله</span>
-                <span style="flex-basis: 40%">فيّه</span>
-                <span style="flex-basis: 80%">عليه</span>
-            </div>
-        </div>
-    </div>
 
     <p>In general, the grammaticalization of <b>pseudo-verbs</b> is visible in that they may be modified by auxiliaries
         that agree with the semantic agent rather than with the <b>pseudo-verb</b> itself.</p>
@@ -354,14 +442,13 @@
 
     <x-sentence eng="I don't have a car">
         <x-sentence-term arb="مـ" eng="not" :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-sentence-term arb="" eng="="/>
+        <x-sentence-term arb="∅" eng="(be)"/>
         <x-sentence-term arb="فيه" eng="(there)" :term="$terms->firstWhere('translit', 'fīh')"/>
         <x-sentence-term arb="ـش" eng="not" :term="$terms->firstWhere('translit', '-š')"/>
         <x-sentence-term arb="عندي" eng="1S.have" :term="$terms->firstWhere('translit', 'ʕind-')"/>
         <x-sentence-term arb="سيّارة" eng="a car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     </x-sentence>
 
-    <h2>TO WANT</h2>
     <p>With regard to <b>بدّه (biddo)</b>, it is a transitive verb that requires an object. Note that the interference
         of the
         <b>clitic pronoun</b> always forces the direct object onto the <b>ايّا (yyā-)</b> affix.</p>
@@ -371,11 +458,6 @@
         <x-sentence-term arb="ايّاه" eng="M.it" :term="$terms->firstWhere('translit', 'yyā-')"/>
     </x-sentence>
 
-    <x-vocabulary title="to want">
-        <x-term :term="$terms->firstWhere('translit', 'biddo')"/>
-    </x-vocabulary>
-
-    <h2>TO SEEM</h2>
     <p>With regard to <b>شكله (šiklo "to seem")</b>, it is a raising verb that raises a constituent to the subject
         position; if clause-initial, it may refer to a null
         subject as well.</p>
@@ -404,7 +486,8 @@
         <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
         <x-sentence-term arb="جديدة" eng="F.new" :term="$terms->firstWhere('translit', 'jdīd')"/>
     </x-sentence>
-    <x-vocabulary title="to seem">
+    <x-vocabulary title="pseudo-verbs">
+        <x-term :term="$terms->firstWhere('translit', 'biddo')"/>
         <x-term :term="$terms->firstWhere('translit', 'šiklo')"/>
     </x-vocabulary>
 </div>

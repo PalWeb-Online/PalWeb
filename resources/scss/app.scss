@@ -6,15 +6,29 @@
 @import 'terms';
 @import 'users';
 
-div.array {
+.group-horizontal, div.array {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row-reverse wrap;
     justify-content: center;
-    margin: 2.4rem 0;
+    margin: 3.2rem 0;
     gap: 1.6rem;
 
     & > div.array {
         margin: 0
+    }
+
+    .sentence {
+        margin-block: 0;
+    }
+}
+
+.group-vertical {
+    display: grid;
+    margin-block: 3.2rem;
+    gap: 1.6rem;
+
+    .sentence {
+        margin-block: 0;
     }
 }
 

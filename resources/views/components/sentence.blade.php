@@ -42,7 +42,7 @@
     {{-- if the Sentence is built in the view --}}
 @elseif($eng)
     <div class="sentence-wrapper" style="justify-self: center">
-        <div class="sentence l">
+        <div class="sentence {{ $size }}">
             <div class="sentence-arb">
                 {{ $slot }}
             </div>
