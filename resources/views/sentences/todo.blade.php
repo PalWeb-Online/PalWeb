@@ -2,54 +2,32 @@
 
 @section('content')
 
-    <style>
+    <x-page-head>
+        <x-link :href="route('sentences.index')">{{ __('phrasebook') }}</x-link>
+        <x-link :href="route('sentences.todo')">{{ __('todo') }}</x-link>
+    </x-page-head>
 
-        h1 {
-            font-family: 'JetBrains Mono', monospace, 'Readex Pro';
-            text-transform: uppercase;
-            font-weight: 700;
-            font-size: 2.4rem;
-        }
+    <div class="doc-section">
+        <h1>Terms With Eligible Sentences</h1>
+        <ul>
+            @foreach ($withEligibleSentences as $term)
+                <li><a href="{{ route('terms.show', $term) }}">{{ $term->term }}</a> ({{ $term->translit }})</li>
+            @endforeach
+        </ul>
 
-        ul {
-            font-size: 1.6rem;
-            font-family: 'JetBrains Mono', monospace, 'Readex Pro';
-            font-weight: 700;
-            margin: 1.6rem 0 0;
-        }
+        <h1>Terms Missing Sentences</h1>
+        <ul>
+            @foreach ($termsMissingSentences as $term)
+                <li><a href="{{ route('terms.show', $term) }}">{{ $term->term }}</a> ({{ $term->translit }}) "{{ $term->gloss }}"</li>
+            @endforeach
+        </ul>
 
-        #main a {
-            color: var(--grn)
-        }
-
-        #main a:hover {
-            color: var(--red)
-        }
-
-    </style>
-
-    <a href="{{ route("sentences.index") }}" class="material-symbols-rounded subtitle">arrow_back</a>
-    <div class="maintitle">To-Do</div>
-
-    <h1>Terms Missing Sentences</h1>
-    <ul>
-        @foreach ($termsMissingSentences as $term)
-            <li><a href="/dictionary/{{ $term->slug }}">{{ $term->term }}</a></li>
-        @endforeach
-    </ul>
-
-    <h1>Sentences Missing Audios</h1>
-    <ul>
-        @foreach ($sentencesMissingAudios as $sentence)
-            <li>SENTENCE: {{ $sentence->translit }}</li>
-        @endforeach
-    </ul>
-
-    <h1>Orphan Sentences</h1>
-    <ul>
-        @foreach ($orphanSentences as $orphanSentence)
-            <li>{{ $sentence->translit }}</li>
-        @endforeach
-    </ul>
+        <h1>Orphan Sentences</h1>
+        <ul>
+            @foreach ($orphanSentences as $orphanSentence)
+                <li>{{ $sentence->translit }}</li>
+            @endforeach
+        </ul>
+    </div>
 
 @endsection

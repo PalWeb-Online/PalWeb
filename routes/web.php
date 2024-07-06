@@ -68,7 +68,6 @@ Route::prefix('/email')->middleware('auth')->group(function () {
 Route::prefix('/dictionary')->controller(TermController::class)->group(function () {
     Route::post('/search', 'search')->name('dictionary.search');
     Route::get('/random', 'random')->name('terms.random');
-    Route::get('/todo', 'todo')->middleware('admin')->name('terms.todo');
 
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
@@ -128,38 +127,8 @@ Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
  */
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::prefix('/dictionary')->group(function () {
-
-        Route::get('/request', function () {
-            return view('terms.request');
-        })->middleware('pageTitle:Request Term')->name('terms.request');
-
-        Route::post('/request', [TermController::class, 'request'])->name('request.store');
-
-        Route::resource('/sentences', SentenceController::class)->except(['index', 'show'])->middleware('admin');
-
-        Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
-            Route::get('/', 'index')->name('sentences.index');
-            Route::get('/{sentence}', 'show')->name('sentences.show');
-            Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
-            Route::get('/todo', 'todo')->name('sentences.todo');
-        });
-
-        Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
-            Route::get('/', 'index')->name('explore.index');
-            Route::get('/{page}', 'show')->name('explore.show');
-        });
-    });
-
-    Route::prefix('/units')->controller(UnitController::class)->group(function () {
-//        Route::get('/{unit}/lessons/{lesson}', 'showLesson')->name('lessons.lesson');
-    });
-
-    /**
-     * Academy Routes
-     */
-
     Route::prefix('/academy')->group(function () {
+
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('academy.index');
             Route::get('/{unit}', 'unit')->name('academy.unit');
@@ -172,9 +141,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    /**
-     * Dashboard Routes
-     */
+    Route::prefix('/dictionary')->group(function () {
+
+        Route::get('/todo/terms', [TermController::class, 'todo'])->middleware('admin')->name('terms.todo');
+        Route::get('/todo/sentences', [SentenceController::class, 'todo'])->middleware('admin')->name('sentences.todo');
+
+        Route::get('/request', function () {
+            return view('terms.request');
+        })->middleware('pageTitle:Request Term')->name('terms.request');
+        Route::post('/request', [TermController::class, 'request'])->name('request.store');
+
+        Route::resource('/sentences', SentenceController::class)->except(['index', 'show'])->middleware('admin');
+        Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
+            Route::get('/', 'index')->name('sentences.index');
+            Route::get('/{sentence}', 'show')->name('sentences.show');
+            Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
+        });
+
+        Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
+            Route::get('/', 'index')->name('explore.index');
+            Route::get('/{page}', 'show')->name('explore.show');
+        });
+    });
+
     Route::prefix('/dashboard')->group(function () {
 
         Route::controller(DashboardController::class)->group(function () {

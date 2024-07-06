@@ -623,39 +623,18 @@ class TermController extends Controller
 
     public function todo()
     {
-        $missingInflections = new Collection();
+        $missingInflections = [];
         foreach (Inflection::whereIn('form', ['ap', 'pp', 'nv'])->get() as $inflection) {
             if (Term::where('translit', $inflection->translit)->doesntExist()) {
-                $missingTerms = $missingTerms->merge($inflection->translit);
+                $missingInflections[] = $inflection;
             }
         }
+        $missingInflections = collect($missingInflections);
 
-        $audioFiles = Storage::disk('s3')->allFiles('audio');
-        $audios = [];
-        foreach ($audioFiles as $audio) {
-            $audio = str_replace('audio/', '', $audio);
-            $audio = str_replace('.mp3', '', $audio);
-            $audios[] = $audio;
-        }
-
-        $pronunciationsMissingAudios = new Collection();
-        foreach (Term::all() as $term) {
-            foreach ($term->pronunciations as $pronunciation) {
-                if (!in_array($pronunciation->audify(), $audios)) {
-                    $row = strtoupper($pronunciation->dialect).': '.$pronunciation->translit;
-                    $pronunciationsMissingAudios = $pronunciationsMissingAudios->merge($row);
-                }
-            }
-        }
-
-        $inflectionsMissingAudios = Inflection::where('form', '!=', 'host')->whereNotIn('translit', $audios)->get();
-
-        View::share('pageTitle', 'to-Do');
+        View::share('pageTitle', 'Dictionary: to-Do');
         return view('terms.todo', [
             'missingTerms' => MissingTerm::all(),
             'missingInflections' => $missingInflections,
-            'pronunciationsMissingAudios' => $pronunciationsMissingAudios,
-            'inflectionsMissingAudios' => $inflectionsMissingAudios,
         ]);
     }
 }

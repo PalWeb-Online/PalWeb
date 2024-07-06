@@ -8,8 +8,6 @@ use App\Models\Sentence;
 use App\Models\Term;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
 
@@ -122,41 +120,33 @@ class SentenceController extends Controller
 
     public function todo()
     {
-        $termsMissingSentences = new Collection();
-        foreach (Gloss::doesntHave('sentences')->get() as $gloss) {
-            $termsMissingSentences = $termsMissingSentences->merge(Term::where('id', $gloss->term_id)->get());
-        }
-        $termsMissingSentences = $termsMissingSentences->unique();
-
-        $audioFiles = Storage::disk('s3')->allFiles('audio');
-        $audios = [];
-        foreach ($audioFiles as $audio) {
-            $audio = str_replace('audio/', '', $audio);
-            $audio = str_replace('.mp3', '', $audio);
-            $audios[] = $audio;
-        }
-
-        $sentencesMissingAudios = new Collection();
+        $withEligibleSentences = [];
         foreach (Sentence::all() as $sentence) {
-            if (!in_array($sentence->translit, $audios)) {
-                $sentencesMissingAudios =
-                    $sentencesMissingAudios->merge(Sentence::where('sentence', $sentence->sentence)->get());
-            }
-            preg_match_all('/(\[{2}[^\]]*\]{2})/', $sentence->sentence, $matches);
-            $sentenceTerms = $matches[0];
-            foreach ($sentenceTerms as $sentenceTerm) {
-                preg_match('/\[{2}([^|\]]*)\|([^\]]*)\]{2}/', $sentenceTerm, $matches);
-                $termsArray = $termsArray->merge($matches[1]);
+            foreach ($sentence->getTerms() as $term) {
+                if (!is_array($term) && !$term->glosses()->whereHas('sentences')->exists()) {
+                    $withEligibleSentences[] = $term;
+                }
             }
         }
+        $withEligibleSentences = collect($withEligibleSentences);
+        $withEligibleSentences = $withEligibleSentences->unique('id');
+
+
+        $termsMissingSentences = [];
+        foreach (Gloss::doesntHave('sentences')->get() as $gloss) {
+            $term = Term::firstWhere('id', $gloss->term_id);
+            $term->gloss = $gloss->gloss;
+            $termsMissingSentences[] = $term;
+        }
+        $termsMissingSentences = collect($termsMissingSentences);
 
         $orphanSentences = Sentence::doesntHave('glosses')->get();
 
-        View::share('pageTitle', 'to-Do');
+        View::share('pageTitle', 'Phrasebook: to-Do');
         return view('sentences.todo', [
             'termsMissingSentences' => $termsMissingSentences,
-            'sentencesMissingAudios' => $sentencesMissingAudios,
-            'orphanSentences' => $orphanSentences
+            'orphanSentences' => $orphanSentences,
+            'withEligibleSentences' => $withEligibleSentences
         ]);
     }
 }
