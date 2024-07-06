@@ -25,7 +25,7 @@
                 </script>
 
                 <div class="eng">
-                    {{ \Illuminate\Support\Str::limit($term->glosses[$i ?? 0]->gloss, 48) }}
+                    {{ \Illuminate\Support\Str::limit($gloss->gloss ?? $term->glosses[0]->gloss, 48) }}
                 </div>
 
                 @if($term->isPinned())

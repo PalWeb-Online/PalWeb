@@ -41,7 +41,7 @@
         @if(count($deck->terms) > 0)
             <x-vocabulary>
                 @foreach($deck->terms as $term)
-                    <x-term :term="$term"/>
+                    <x-term :term="$term" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)" />
                 @endforeach
             </x-vocabulary>
         @else

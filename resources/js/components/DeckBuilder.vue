@@ -65,18 +65,23 @@ export default {
         },
         addTerm() {
             this.terms.push({
+                term: '',
                 slug: '',
+                gloss: '',
                 position: '',
+                selected: false,
             });
             this.updatePosition();
         },
         removeTerm(index) {
             this.terms.splice(index, 1);
             this.updatePosition();
-
         },
-        insertSlug(index, slug) {
-            this.terms[index].slug = slug;
+        insertTerm(index, term) {
+            this.terms[index].term = term.term;
+            this.terms[index].slug = term.term.slug;
+            this.terms[index].gloss = term.term.glosses[0].id;
+            this.terms[index].selected = true;
         },
         submit() {
             if (this.mode === "add") {
@@ -148,10 +153,21 @@ export default {
                     <div class="form-field inline"
                          style="flex-flow: row wrap; row-gap: 0; justify-content: flex-start">
                         <label :for="'terms['+index+'][slug]'"
-                               style="margin-inline-end: 0; flex-basis: auto">{{ index + 1 }}.</label>
-                        <SearchBar :resultType="'slug'" @emitSlug="insertSlug(index, $event)"/>
-                        <input :id="'terms['+index+'][slug]'" :name="'terms['+index+'][slug]'" type="text"
-                               v-model="element.slug"/>
+                               style="flex-basis: auto">{{ index + 1 }}.</label>
+
+                        <template v-if="!element.selected">
+                            <SearchBar :resultType="'model'" @emitTerm="insertTerm(index, $event)"/>
+                        </template>
+
+                        <template v-else>
+                            <div>{{ element.term.term }} ({{ element.term.translit }}) {{ element.term.category }}</div>
+                            <select v-model="element.gloss">
+                                <option v-for="gloss in element.term.glosses" :value="gloss.id">{{ gloss.gloss }}</option>
+                            </select>
+
+                            <input style="display: none" :id="'terms['+index+'][slug]'" :name="'terms['+index+'][slug]'"
+                                   type="text" v-model="element.term.slug"/>
+                        </template>
 
                         <img src="/img/trash.svg" alt="Delete" v-show="terms.length > 0" @click="removeTerm(index)"/>
                     </div>

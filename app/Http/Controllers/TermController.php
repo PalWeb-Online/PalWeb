@@ -115,15 +115,22 @@ class TermController extends Controller
             ->filter(['search' => $search])
             ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
             ->orderBy('terms.term', 'ASC')
+            ->with('glosses')
             ->take(10)
             ->get();
 
         $searchResults = $results->map(function ($term) {
             return [
-                'term' => $term['term'],
-                'slug' => $term['slug'],
-                'category' => $term['category'],
-                'translit' => $term['translit'],
+                'term' => $term->term,
+                'slug' => $term->slug,
+                'category' => $term->category,
+                'translit' => $term->translit,
+                'glosses' => $term->glosses->map(function ($gloss) {
+                    return [
+                        'id' => $gloss->id,
+                        'gloss' => $gloss->gloss,
+                    ];
+                })->toArray(),
             ];
         })->toArray();
 

@@ -100,7 +100,24 @@ class DeckController extends Controller
 
         $terms = [];
         foreach ($deck->terms as $term) {
-            $terms[] = ['slug' => $term->slug, 'position' => $term->pivot->position];
+            $terms[] = [
+                'term' => [
+                    'term' => $term->term,
+                    'slug' => $term->slug,
+                    'category' => $term->category,
+                    'translit' => $term->translit,
+                    'glosses' => $term->glosses->map(function ($gloss) {
+                        return [
+                            'id' => $gloss->id,
+                            'gloss' => $gloss->gloss,
+                        ];
+                    })->toArray(),
+                ],
+                'slug' => $term->slug,
+                'gloss' => $term->pivot->gloss_id,
+                'position' => $term->pivot->position,
+                'selected' => true,
+            ];
         }
 
         return response()->json([
@@ -163,7 +180,12 @@ class DeckController extends Controller
         foreach ($terms as $termData) {
             $term = Term::firstWhere('slug', $termData['slug']);
             if ($term) {
-                $deck->terms()->syncWithoutDetaching([$term->id => ['position' => $termData['position']]]);
+                $deck->terms()->syncWithoutDetaching([
+                    $term->id => [
+                        'gloss_id' => $termData['gloss'],
+                        'position' => $termData['position'],
+                    ]
+                ]);
             }
         }
 
