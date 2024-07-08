@@ -26,6 +26,9 @@
     @endphp
 
     <div class="action-divider"></div>
+    <a href="{{ route('sentences.index') }}">See Usages</a>
+
+    <div class="action-divider"></div>
     @if($decksWithoutTerm->isNotEmpty())
         <x-dropdown class="context-submenu">
             <x-slot name="trigger">

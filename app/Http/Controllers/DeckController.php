@@ -96,14 +96,13 @@ class DeckController extends Controller
 
     public function get($id)
     {
-        $deck = Deck::with('terms')->findOrFail($id);
+        $deck = Deck::findOrFail($id);
 
         $terms = [];
         foreach ($deck->terms as $term) {
             $terms[] = [
                 'term' => [
                     'term' => $term->term,
-                    'slug' => $term->slug,
                     'category' => $term->category,
                     'translit' => $term->translit,
                     'glosses' => $term->glosses->map(function ($gloss) {
@@ -113,8 +112,8 @@ class DeckController extends Controller
                         ];
                     })->toArray(),
                 ],
-                'slug' => $term->slug,
-                'gloss' => $term->pivot->gloss_id,
+                'term_id' => $term->id,
+                'gloss_id' => $term->pivot->gloss_id,
                 'position' => $term->pivot->position,
                 'selected' => true,
             ];
@@ -178,11 +177,12 @@ class DeckController extends Controller
     private function linkTerms($deck, $terms)
     {
         foreach ($terms as $termData) {
-            $term = Term::firstWhere('slug', $termData['slug']);
+            $term = Term::find($termData['term_id']);
+
             if ($term) {
                 $deck->terms()->syncWithoutDetaching([
                     $term->id => [
-                        'gloss_id' => $termData['gloss'],
+                        'gloss_id' => $termData['gloss_id'],
                         'position' => $termData['position'],
                     ]
                 ]);
@@ -190,7 +190,7 @@ class DeckController extends Controller
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->slug, array_column($terms, 'slug'))) {
+            if (!in_array($term->id, array_column($terms, 'term_id'))) {
                 $deck->terms()->detach($term->id);
             }
         }

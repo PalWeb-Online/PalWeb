@@ -58,6 +58,7 @@ export default {
         emitTerm(term) {
             this.$emit('emitTerm', { term });
             this.ignoreNextSearch = true;
+            this.searchTerm = '';
             this.closeResults();
         }
     }

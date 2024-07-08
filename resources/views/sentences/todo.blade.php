@@ -7,25 +7,15 @@
         <x-link :href="route('sentences.todo')">{{ __('todo') }}</x-link>
     </x-page-head>
 
-    <div class="doc-section">
-        <h1>Terms With Eligible Sentences</h1>
-        <ul>
-            @foreach ($withEligibleSentences as $term)
-                <li><a href="{{ route('terms.show', $term) }}">{{ $term->term }}</a> ({{ $term->translit }})</li>
-            @endforeach
-        </ul>
+    <x-tip>
+        <p>Only the first 100 items are shown in this list.</p>
+    </x-tip>
 
+    <div class="doc-section">
         <h1>Terms Missing Sentences</h1>
         <ul>
-            @foreach ($termsMissingSentences as $term)
+            @foreach ($terms as $term)
                 <li><a href="{{ route('terms.show', $term) }}">{{ $term->term }}</a> ({{ $term->translit }}) "{{ $term->gloss }}"</li>
-            @endforeach
-        </ul>
-
-        <h1>Orphan Sentences</h1>
-        <ul>
-            @foreach ($orphanSentences as $orphanSentence)
-                <li>{{ $sentence->translit }}</li>
             @endforeach
         </ul>
     </div>

@@ -156,6 +156,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('sentences.index');
             Route::get('/{sentence}', 'show')->name('sentences.show');
             Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
+            Route::get('/{sentence}/get', 'get')->name('sentences.get')->middleware('admin');
+
         });
 
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {

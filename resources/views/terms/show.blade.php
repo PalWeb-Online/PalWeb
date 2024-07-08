@@ -218,12 +218,12 @@
             </div>
 
             <div class="term-container-glosses">
-                @foreach ($term->glosses as $index => $gloss)
+                @foreach ($term->glosses as $i => $gloss)
 
                     <div class="gloss-li-container">
                         <div class="gloss-li">
                             <div class="gloss-li-label">
-                                {{ $index+1 }}
+                                {{ $i + 1 }}
                             </div>
 
                             <div class="gloss-li-content">
@@ -281,10 +281,13 @@
                             @endif
                         </div>
 
-                        @if(count($gloss->sentences) > 0)
-                            @foreach ($gloss->sentences as $sentence)
-                                <x-sentence :sentence="$sentence" :currentTerm="$term->slug"/>
+                        @if(count($term->sentences($gloss->id)->get()) > 0)
+                            @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
+                                <x-sentence :sentence="$sentence" :currentTerm="$term->id"/>
                             @endforeach
+                            @if(count($term->sentences($gloss->id)->get()) > 2)
+                                <a href="{{ route('sentences.index') }}" style="align-self: end">See All Usages ({{ count($term->sentences($gloss->id)->get()) }})</a>
+                            @endif
                         @endif
                     </div>
                 @endforeach

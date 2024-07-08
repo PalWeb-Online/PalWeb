@@ -10,12 +10,8 @@
     <x-sentence size="l" :sentence="$sentence"/>
 
     <x-vocabulary>
-        @foreach($sentence->getTerms() as $term)
-            @if (is_array($term))
-                <x-term/>
-            @else
-                <x-term :term="$term"/>
-            @endif
+        @foreach($sentence->terms as $term)
+            <x-term :term="\App\Models\Term::find($term->id)" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
         @endforeach
     </x-vocabulary>
 
