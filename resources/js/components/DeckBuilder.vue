@@ -62,15 +62,6 @@ export default {
                 term.position = index + 1;
             });
         },
-        addTerm() {
-            this.terms.push({
-                term: '',
-                term_id: '',
-                gloss_id: '',
-                position: '',
-            });
-            this.updatePosition();
-        },
         removeTerm(index) {
             this.terms.splice(index, 1);
             this.updatePosition();
@@ -157,26 +148,30 @@ export default {
 
         <div class="field-wrapper">
             <draggable :list="terms" @end="updatePosition()"
-                       class="field-wrapper draggable" style="border: none; padding: 0">
+                       class="draggable">
                 <template #item="{ element, index }">
-                    <div class="form-field inline"
-                         style="flex-flow: row wrap; justify-content: flex-start">
+                    <div class="builder-item">
+                        <div class="builder-item-term">
+                            <div>{{ element.term.term }}</div>
+                            <div>({{ element.term.translit }}) {{ element.term.category }}.</div>
+                        </div>
 
-                        <div>{{ element.term.term }} ({{ element.term.translit }}) {{ element.term.category }}</div>
+                        <div class="builder-item-gloss">
+                            <select v-model="element.gloss_id">
+                                <option v-for="gloss in element.term.glosses" :value="gloss.id">
+                                    {{ gloss.gloss.length > 60 ? gloss.gloss.slice(0, 60) + "..." : gloss.gloss }}
+                                </option>
+                            </select>
+                            <img src="/img/trash.svg" alt="Delete" v-show="terms.length > 0"
+                                 @click="removeTerm(index)"/>
+                        </div>
 
-                        <select v-model="element.gloss_id">
-                            <option v-for="gloss in element.term.glosses" :value="gloss.id">{{ gloss.gloss }}</option>
-                        </select>
-
-                        <input style="display: none" :id="'terms['+index+'][term_id]'" :name="'terms['+index+'][term_id]'"
+                        <input style="display: none" :id="'terms['+index+'][term_id]'"
+                               :name="'terms['+index+'][term_id]'"
                                type="text" v-model="element.term_id"/>
-
-                        <img src="/img/trash.svg" alt="Delete" v-show="terms.length > 0" @click="removeTerm(index)"/>
                     </div>
                 </template>
             </draggable>
-
-            <div class="field-add" @click="addTerm()">+ Add TERM</div>
         </div>
 
         <label class="checkbox" for="deck[private]">

@@ -840,12 +840,6 @@ ul.search-results {
         color: $purple-primary;
     }
 
-    &.draggable {
-        label {
-            cursor: grab;
-        }
-    }
-
     .field-label {
         color: $accent-yellow;
         font-size: 2.4rem;
@@ -873,4 +867,9 @@ ul.search-results {
         cursor: pointer;
         width: 2.0rem;
     }
+}
+
+.draggable {
+    display: grid;
+    gap: 1.6rem;
 }

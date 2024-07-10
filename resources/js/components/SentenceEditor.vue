@@ -133,31 +133,43 @@ export default {
             </div>
         </div>
 
+        <div class="sentence-preview" style="direction: rtl">
+            <div v-if="terms.length < 1" class="sentence-preview-info">Sentence Preview</div>
+            <template v-for="term in terms">
+                <div class="sentence-preview-term">
+                    <div>{{ term.sent_term }}</div>
+                    <div>{{ term.sent_translit }}</div>
+                </div>
+            </template>
+        </div>
+
         <div class="field-wrapper">
             <draggable :list="terms" @end="updatePosition()"
-                       class="field-wrapper draggable" style="border: none; padding: 0">
+                       class="draggable">
 
                 <template #item="{ element, index }">
-                    <div class="form-field inline"
-                         style="flex-flow: row wrap; justify-content: flex-start">
+                    <div class="sentence-builder-item">
+                        <div class="builder-item-term">
+                            <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
+                                   type="text" v-model="element.sent_term"/>
+                            <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
+                                   type="text" v-model="element.sent_translit"/>
+                        </div>
 
-                        <div v-if="element.term_id">{{ element.term.term }} ({{ element.term.translit }})</div>
-
-                        <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
-                               type="text" v-model="element.sent_term"/>
-                        <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
-                               type="text" v-model="element.sent_translit"/>
-
-                        <select v-if="element.term.glosses.length" v-model="element.gloss_id">
-                            <option v-for="gloss in element.term.glosses" :value="gloss.id">{{gloss.gloss}}
-                            </option>
-                        </select>
+                        <div class="builder-item-gloss">
+                            <select v-if="element.term.glosses.length" v-model="element.gloss_id">
+                                <option v-for="gloss in element.term.glosses" :value="gloss.id">
+                                    {{ gloss.gloss.length > 60 ? gloss.gloss.slice(0, 60) + "..." : gloss.gloss }}
+                                </option>
+                            </select>
+                            <img src="/img/trash.svg" alt="Delete" v-show="terms.length > 0"
+                                 @click="removeTerm(index)"/>
+                        </div>
 
                         <input style="display: none" :id="'terms['+index+'][term_id]'"
                                :name="'terms['+index+'][term_id]'"
                                type="text" v-model="element.term_id"/>
 
-                        <img src="/img/trash.svg" alt="Delete" v-show="terms.length > 0" @click="removeTerm(index)"/>
                     </div>
                 </template>
             </draggable>

@@ -24,6 +24,7 @@
                 @endforeach
             </div>
             <div class="sentence-eng">
+                {{ $sentence->id }}
                 {{ $sentence->trans }}
             </div>
 

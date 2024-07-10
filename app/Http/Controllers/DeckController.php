@@ -54,14 +54,14 @@ class DeckController extends Controller
 
         $decks = $query->with('author')
             ->where('private', 0)
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(25)
             ->onEachSide(1);
         $totalCount = $decks->total();
 
         $newest = Deck::with('author')
             ->where('private', 0)
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->take(5)
             ->get();
 

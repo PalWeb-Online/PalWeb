@@ -48,7 +48,7 @@ class SentenceController extends Controller
         }
 
         $sentences = $query
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(25)
             ->onEachSide(1);
 
@@ -117,69 +117,22 @@ class SentenceController extends Controller
 
     private function linkTerms($sentence, $terms)
     {
+        DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
+
         foreach ($terms as $termData) {
-            $term = Term::find($termData['term_id']);
+            DB::table('sentence_term')->insert([
+                'sentence_id' => $sentence->id,
+                'term_id' => $termData['term_id'] ?? null,
+                'gloss_id' => $termData['gloss_id'] ?? null,
+                'sent_term' => $termData['sent_term'],
+                'sent_translit' => $termData['sent_translit'],
+                'position' => $termData['position'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-            if ($term) {
-                $sentence->terms()->syncWithoutDetaching([
-                    $term->id => [
-                        'gloss_id' => $termData['gloss_id'],
-                        'sent_term' => $termData['sent_term'],
-                        'sent_translit' => $termData['sent_translit'],
-                        'position' => $termData['position'],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                ]);
-
-            } else {
-                $term = DB::table('sentence_term')
-                    ->where([
-                        'sentence_id' => $sentence->id,
-                        'sent_term' => $termData['sent_term'],
-                        'sent_translit' => $termData['sent_translit'],
-                        'position' => $termData['position']
-                    ])
-                    ->first();
-
-                if (!$term) {
-                    DB::table('sentence_term')->insert([
-                        'sentence_id' => $sentence->id,
-                        'term_id' => null,
-                        'gloss_id' => null,
-                        'sent_term' => $termData['sent_term'],
-                        'sent_translit' => $termData['sent_translit'],
-                        'position' => $termData['position'],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
-
+            if (!$termData['term_id']) {
                 MissingTerm::firstOrCreate(['translit' => $termData['sent_term']]);
-            }
-        }
-
-        $sentTermsAndPositions = array_map(function ($term) {
-            return [
-                'sent_term' => $term['sent_term'],
-                'sent_translit' => $term['sent_translit'],
-                'position' => $term['position']
-            ];
-        }, $terms);
-
-        $sentenceTerms = DB::table('sentence_term')->where('sentence_id', $sentence->id)->get();
-
-        foreach ($sentenceTerms as $term) {
-            $searchTerm = [
-                'sent_term' => $term->sent_term,
-                'sent_translit' => $term->sent_translit,
-                'position' => $term->position
-            ];
-
-            if (!in_array($searchTerm, $sentTermsAndPositions)) {
-                $term->term_id
-                    ? $sentence->terms()->detach($term->term_id)
-                    : DB::table('sentence_term')->where('id', $term->id)->delete();
             }
         }
     }
@@ -231,14 +184,19 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function edit(Sentence $sentence)
-    {
+    public
+    function edit(
+        Sentence $sentence
+    ) {
         View::share('pageTitle', 'Edit Sentence');
         return view('sentences.edit', compact('sentence'));
     }
 
-    public function update(Sentence $sentence, Request $request)
-    {
+    public
+    function update(
+        Sentence $sentence,
+        Request $request
+    ) {
         $this->validateRequest($request);
 
         $sentence->update($this->buildSentence($request));
@@ -252,21 +210,24 @@ class SentenceController extends Controller
         ];
     }
 
-    public function destroy(Sentence $sentence)
-    {
+    public
+    function destroy(
+        Sentence $sentence
+    ) {
         $sentence->delete();
 
         $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
         return to_route('sentences.index');
     }
 
-    public function todo()
+    public
+    function todo()
     {
         $terms = [];
 
         Gloss::chunk(200, function ($glosses) use (&$terms) {
             foreach ($glosses as $gloss) {
-                if(count($gloss->term->sentences($gloss->id)->get()) < 1) {
+                if (count($gloss->term->sentences($gloss->id)->get()) < 1) {
                     $gloss->term->gloss = $gloss->gloss;
                     $terms[] = $gloss->term;
                 }
