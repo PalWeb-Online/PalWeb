@@ -54,14 +54,14 @@ class DeckController extends Controller
 
         $decks = $query->with('author')
             ->where('private', 0)
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(25)
             ->onEachSide(1);
         $totalCount = $decks->total();
 
         $newest = Deck::with('author')
             ->where('private', 0)
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->take(5)
             ->get();
 
@@ -96,11 +96,27 @@ class DeckController extends Controller
 
     public function get($id)
     {
-        $deck = Deck::with('terms')->findOrFail($id);
+        $deck = Deck::findOrFail($id);
 
         $terms = [];
         foreach ($deck->terms as $term) {
-            $terms[] = ['slug' => $term->slug, 'position' => $term->pivot->position];
+            $terms[] = [
+                'term' => [
+                    'term' => $term->term,
+                    'category' => $term->category,
+                    'translit' => $term->translit,
+                    'glosses' => $term->glosses->map(function ($gloss) {
+                        return [
+                            'id' => $gloss->id,
+                            'gloss' => $gloss->gloss,
+                        ];
+                    })->toArray(),
+                ],
+                'term_id' => $term->id,
+                'gloss_id' => $term->pivot->gloss_id,
+                'position' => $term->pivot->position,
+                'selected' => true,
+            ];
         }
 
         return response()->json([
@@ -161,14 +177,20 @@ class DeckController extends Controller
     private function linkTerms($deck, $terms)
     {
         foreach ($terms as $termData) {
-            $term = Term::firstWhere('slug', $termData['slug']);
+            $term = Term::find($termData['term_id']);
+
             if ($term) {
-                $deck->terms()->syncWithoutDetaching([$term->id => ['position' => $termData['position']]]);
+                $deck->terms()->syncWithoutDetaching([
+                    $term->id => [
+                        'gloss_id' => $termData['gloss_id'],
+                        'position' => $termData['position'],
+                    ]
+                ]);
             }
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->slug, array_column($terms, 'slug'))) {
+            if (!in_array($term->id, array_column($terms, 'term_id'))) {
                 $deck->terms()->detach($term->id);
             }
         }

@@ -11,7 +11,6 @@ use App\Models\MissingTerm;
 use App\Models\Pattern;
 use App\Models\Pronunciation;
 use App\Models\Root;
-use App\Models\Sentence;
 use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
@@ -22,7 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Maize\Markable\Models\Bookmark;
@@ -48,6 +46,15 @@ class TermController extends Controller
             'message' => $term->isPinned()
                 ? __('pin.added', ['thing' => $term->term])
                 : __('pin.removed', ['thing' => $term->term])
+        ]);
+    }
+
+    public function usages(Term $term) {
+        $terms = [];
+        $terms[] = $term;
+
+        return view('terms.show', [
+            'terms' => $terms
         ]);
     }
 
@@ -100,6 +107,63 @@ class TermController extends Controller
         ]);
     }
 
+    /**
+     * Retrieves a Term for updating
+     */
+    public function get($id)
+    {
+        $term = Term::with([
+            'root',
+            'patterns',
+            'attributes',
+            'pronunciations',
+            'variants',
+            'components',
+            'references',
+            'spellings',
+            'inflections',
+            'glosses' => function ($query) {
+                $query->with([
+                    'synonyms',
+                    'antonyms',
+                    'valences',
+                ]);
+            }
+        ])->findOrFail($id);
+
+        return [
+            'term' => $term,
+            'root' => $term->root->root ?? '',
+            'attributes' => $term->attributes->pluck('attribute'),
+            'singPatterns' => $term->patterns->where('type', 'singular')->values(),
+            'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
+            'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
+            'pronunciations' => $term->pronunciations,
+            'variants' => $term->variants->pluck('slug'),
+            'components' => $term->components->pluck('slug'),
+            'references' => $term->references->pluck('slug'),
+            'spellings' => $term->spellings,
+            'inflections' => $term->inflections,
+            'glosses' => $term->glosses->map(function ($gloss) {
+                return [
+                    'id' => $gloss->id,
+                    'gloss' => $gloss->gloss,
+                    'attribute' => $gloss->attribute,
+                    'structure' => $gloss->structure,
+                    'synonyms' => $gloss->synonyms->pluck('slug'),
+                    'antonyms' => $gloss->antonyms->pluck('slug'),
+                    'valences' => $gloss->valences->map(function ($valence) {
+                        return [
+                            'id' => $valence->id,
+                            'translit' => $valence->translit,
+                            'valence' => $valence->pivot->type,
+                        ];
+                    }),
+                ];
+            }),
+        ];
+    }
+
     public function search(Request $request)
     {
         if ($request->searchTerm == null) {
@@ -115,15 +179,23 @@ class TermController extends Controller
             ->filter(['search' => $search])
             ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
             ->orderBy('terms.term', 'ASC')
+            ->with('glosses')
             ->take(10)
             ->get();
 
         $searchResults = $results->map(function ($term) {
             return [
-                'term' => $term['term'],
-                'slug' => $term['slug'],
-                'category' => $term['category'],
-                'translit' => $term['translit'],
+                'id' => $term->id,
+                'term' => $term->term,
+                'slug' => $term->slug,
+                'category' => $term->category,
+                'translit' => $term->translit,
+                'glosses' => $term->glosses->map(function ($gloss) {
+                    return [
+                        'id' => $gloss->id,
+                        'gloss' => $gloss->gloss,
+                    ];
+                })->toArray(),
             ];
         })->toArray();
 
@@ -180,65 +252,6 @@ class TermController extends Controller
     }
 
     /**
-     * Retrieves a Term for updating
-     */
-    public function get($id)
-    {
-        $term = Term::with([
-            'root',
-            'patterns',
-            'attributes',
-            'pronunciations',
-            'variants',
-            'components',
-            'references',
-            'spellings',
-            'inflections',
-            'glosses' => function ($query) {
-                $query->with([
-                    'synonyms',
-                    'antonyms',
-                    'valences',
-                    'sentences'
-                ]);
-            }
-        ])->findOrFail($id);
-
-        return [
-            'term' => $term,
-            'root' => $term->root->root ?? '',
-            'attributes' => $term->attributes->pluck('attribute'),
-            'singPatterns' => $term->patterns->where('type', 'singular')->values(),
-            'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
-            'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
-            'pronunciations' => $term->pronunciations,
-            'variants' => $term->variants->pluck('slug'),
-            'components' => $term->components->pluck('slug'),
-            'references' => $term->references->pluck('slug'),
-            'spellings' => $term->spellings,
-            'inflections' => $term->inflections,
-            'glosses' => $term->glosses->map(function ($gloss) {
-                return [
-                    'id' => $gloss->id,
-                    'gloss' => $gloss->gloss,
-                    'attribute' => $gloss->attribute,
-                    'structure' => $gloss->structure,
-                    'synonyms' => $gloss->synonyms->pluck('slug'),
-                    'antonyms' => $gloss->antonyms->pluck('slug'),
-                    'valences' => $gloss->valences->map(function ($valence) {
-                        return [
-                            'id' => $valence->id,
-                            'translit' => $valence->translit,
-                            'valence' => $valence->pivot->type,
-                        ];
-                    }),
-                    'sentences' => $gloss->sentences,
-                ];
-            }),
-        ];
-    }
-
-    /**
      * Creates a Term
      */
     public function store(Request $request)
@@ -284,13 +297,9 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
             $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-
-            foreach ($requestGloss['sentences'] as $sentence) {
-                $sentence = Sentence::create($sentence);
-                $sentence->glosses()->attach($gloss);
-            }
         }
 
+        // TODO: deprecated
         $missingTerm = MissingTerm::where([
             'translit' => $term->translit,
             'category' => $term->category
@@ -417,29 +426,6 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
             // TODO: valences are currently not distinguished as isPatient, noPatient, hasObject
-
-            // SENTENCES
-            $requestSentences = [];
-            foreach ($requestGloss['sentences'] as $i => $sentence) {
-                unset($sentence['id'], $sentence['pivot']);
-                $requestSentences[] = $sentence['translit'];
-
-                // update existing sentences
-                if ($i + 1 <= count($gloss->sentences)) {
-                    $sentenceObject = $gloss->sentences[$i];
-                    $sentenceObject->update($sentence);
-
-                    // create nonexistent sentences
-                } else {
-                    $sentenceObject = Sentence::create($sentence);
-                    $sentenceObject->glosses()->attach($gloss);
-                }
-            }
-
-            // delete sentences not in request
-            foreach ($gloss->sentences as $sentenceObject) {
-                !in_array($sentenceObject->translit, $requestSentences) && $sentenceObject->glosses()->detach($gloss);
-            }
         }
 
         // delete glosses not in request
@@ -449,6 +435,7 @@ class TermController extends Controller
 
         Root::doesntHave('terms')->delete();
 
+        // TODO: deprecated
         $missingTerm = MissingTerm::where([
             'translit' => $term->translit,
             'category' => $term->category
@@ -623,39 +610,18 @@ class TermController extends Controller
 
     public function todo()
     {
-        $missingInflections = new Collection();
+        $missingInflections = [];
         foreach (Inflection::whereIn('form', ['ap', 'pp', 'nv'])->get() as $inflection) {
             if (Term::where('translit', $inflection->translit)->doesntExist()) {
-                $missingTerms = $missingTerms->merge($inflection->translit);
+                $missingInflections[] = $inflection;
             }
         }
+        $missingInflections = collect($missingInflections);
 
-        $audioFiles = Storage::disk('s3')->allFiles('audio');
-        $audios = [];
-        foreach ($audioFiles as $audio) {
-            $audio = str_replace('audio/', '', $audio);
-            $audio = str_replace('.mp3', '', $audio);
-            $audios[] = $audio;
-        }
-
-        $pronunciationsMissingAudios = new Collection();
-        foreach (Term::all() as $term) {
-            foreach ($term->pronunciations as $pronunciation) {
-                if (!in_array($pronunciation->audify(), $audios)) {
-                    $row = strtoupper($pronunciation->dialect).': '.$pronunciation->translit;
-                    $pronunciationsMissingAudios = $pronunciationsMissingAudios->merge($row);
-                }
-            }
-        }
-
-        $inflectionsMissingAudios = Inflection::where('form', '!=', 'host')->whereNotIn('translit', $audios)->get();
-
-        View::share('pageTitle', 'to-Do');
+        View::share('pageTitle', 'Dictionary: to-Do');
         return view('terms.todo', [
             'missingTerms' => MissingTerm::all(),
             'missingInflections' => $missingInflections,
-            'pronunciationsMissingAudios' => $pronunciationsMissingAudios,
-            'inflectionsMissingAudios' => $inflectionsMissingAudios,
         ]);
     }
 }

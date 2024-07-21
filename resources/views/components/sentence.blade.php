@@ -10,12 +10,16 @@
     <div class="sentence-wrapper">
         <div class="sentence {{ $size }} audio" onclick="{{ $sentence->audify() }}.play()" tabindex="0">
             <div class="sentence-arb">
-                @foreach($sentence->getTerms($currentTerm ?? null) as $term)
-                    @if(is_array($term))
-                        <x-sentence-term :arb="$term['sent_term']" :eng="$term['sent_translit']"/>
+                @foreach($sentence->allTerms() as $term)
+
+                    @if(!$term->id)
+                        <x-sentence-term :arb="$term->sent_term" :eng="$term->sent_translit"/>
                     @else
-                        <x-sentence-term :term="$term" :arb="$term->sent_term" :eng="$term->sent_translit"
-                                         :isCurrent="$term->current"/>
+                        <x-sentence-term :term="\App\Models\Term::find($term->id)"
+                                         :arb="$term->sent_term"
+                                         :eng="$term->sent_translit"
+                                         :isCurrent="$currentTerm === $term->id"
+                        />
                     @endif
                 @endforeach
             </div>
@@ -29,9 +33,6 @@
         </div>
 
         <x-context-actions>
-            @unless(request()->routeIs('sentences.show'))
-                <a href="{{ route('sentences.show', $sentence) }}" target="_blank">View Sentence</a>
-            @endunless
             <x-sentence-actions :sentence="$sentence"/>
         </x-context-actions>
     </div>

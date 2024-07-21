@@ -259,6 +259,7 @@
                         @if(count($gloss->sentences) > 0)
                             <div class="fl-sentence-container {{ $verbType }}">
                                 <div class="fl-sentence-arb">
+{{--                                    deprecated for allTerms(), also Gloss-Sentence relationship --}}
                                     @foreach($gloss->sentences[0]->getTerms($gloss) as $sentenceTerm)
                                         @if(isset($sentenceTerm['exists']) && !isset($sentenceTerm['current']))
                                             <a href="/dictionary/{{ $sentenceTerm->category }}/{{ $sentenceTerm['translit'] }}"

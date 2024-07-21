@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
 class Sentence extends Model
 {
+    use HasFactory;
     use Markable;
 
     protected static array $marks = [
@@ -44,49 +46,26 @@ class Sentence extends Model
         }
     }
 
-    public function glosses(): BelongsToMany
+    public function terms(): BelongsToMany
     {
-        return $this->belongsToMany(Gloss::class);
+        return $this->belongsToMany(Term::class)
+            ->withPivot('gloss_id', 'sent_term', 'sent_translit', 'position')
+            ->orderBy('position');
+    }
+
+    public function allTerms()
+    {
+        return DB::table('sentence_term')
+            ->leftJoin('terms', 'sentence_term.term_id', '=', 'terms.id')
+            ->where('sentence_term.sentence_id', $this->id)
+            ->select('sentence_term.*', 'terms.*')
+            ->orderBy('sentence_term.position')
+            ->get();
     }
 
     public function file(): MorphOne
     {
         return $this->morphOne(File::class, 'fileable');
-    }
-
-    /**
-     * Retrieves the terms from the given sentence.
-     *
-     * @param  string|null  $currentTerm  The current term.
-     * @return \Illuminate\Support\Collection The collection of sentence terms.
-     */
-    public function getTerms($currentTerm = null): Collection
-    {
-        $sentenceTerms = explode(",", $this->sentence);
-        $sentenceTermsCollection = collect([]);
-
-        foreach ($sentenceTerms as $sentenceTerm) {
-            $sentenceTerm = trim($sentenceTerm, "/");
-            $sentenceTerm = explode("/", $sentenceTerm);
-
-            $foundTerm = Term::firstWhere('slug', $sentenceTerm[0]);
-
-            if ($foundTerm) {
-                $foundTerm->sent_term = $sentenceTerm[2];
-                $foundTerm->sent_translit = $sentenceTerm[1];
-                if ($currentTerm) {
-                    $foundTerm->current = $currentTerm == $sentenceTerm[0];
-                }
-                $sentenceTermsCollection->push($foundTerm);
-            } else {
-                $sentenceTermsCollection->push([
-                    'sent_term' => $sentenceTerm[2],
-                    'sent_translit' => $sentenceTerm[1],
-                ]);
-            }
-        }
-
-        return $sentenceTermsCollection;
     }
 
     public function sound()

@@ -703,26 +703,6 @@ ul.search-results {
     img {
         width: 1.6rem !important;
     }
-
-    .search-bar {
-        input {
-            height: auto;
-            padding: 0 1.6rem;
-            font-size: 1.4rem;
-            border: none;
-            outline: 0.1rem solid $purple-deep;
-            box-shadow: none;
-
-            &:focus {
-                border: none;
-                outline: 0.2rem solid $accent-yellow;
-            }
-        }
-
-        button {
-            display: none;
-        }
-    }
 }
 
 .auth-field {
@@ -790,6 +770,29 @@ ul.search-results {
             color: red;
         }
     }
+
+    .search-bar {
+        width: 100%;
+
+        input {
+            height: auto;
+            padding: 0.8rem 1.6rem;
+            margin: 0;
+            font-size: 1.6rem;
+            border: none;
+            box-shadow: none;
+            background: $purple-pastel-light;
+
+            &:focus {
+                border: none;
+                outline: 0.2rem solid $accent-yellow;
+            }
+        }
+
+        button {
+            display: none;
+        }
+    }
 }
 
 // TERM EDITOR
@@ -837,12 +840,6 @@ ul.search-results {
         color: $purple-primary;
     }
 
-    &.draggable {
-        label {
-            cursor: grab;
-        }
-    }
-
     .field-label {
         color: $accent-yellow;
         font-size: 2.4rem;
@@ -870,4 +867,9 @@ ul.search-results {
         cursor: pointer;
         width: 2.0rem;
     }
+}
+
+.draggable {
+    display: grid;
+    gap: 1.6rem;
 }

@@ -348,3 +348,37 @@
         }
     }
 }
+
+.builder-item {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.4rem 0.8rem;
+    font-family: $monoFont;
+
+    .builder-item-term, .builder-item-gloss {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem 0.8rem;
+    }
+
+    .builder-item-term {
+        & > *:nth-child(1) {
+            font-size: 2.0rem;
+            font-weight: 700;
+        }
+
+        & > *:nth-child(2) {
+            font-size: 1.2rem;
+        }
+    }
+
+    .builder-item-gloss {
+        flex-grow: 1;
+
+        select {
+            flex-grow: 1;
+        }
+    }
+}

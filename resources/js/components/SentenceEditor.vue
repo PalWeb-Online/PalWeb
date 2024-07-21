@@ -10,31 +10,23 @@ export default {
 
     props: [
         'mode',
-        'deckId'
+        'id'
     ],
 
     computed: {
         updateRoute() {
-            return `/community/decks/${this.deckId}`;
+            return `/dictionary/sentences/${this.id}`;
         },
         createRoute() {
-            return `/community/decks`;
+            return `/dictionary/sentences`;
         },
-        privateBoolean: {
-            get() {
-                return !!this.deck.private;
-            },
-            set(value) {
-                this.deck.private = value ? 1 : 0;
-            }
-        }
     },
     data() {
         return {
-            deck: {
-                name: '',
-                description: '',
-                private: false,
+            sentence: {
+                sentence: '',
+                translit: '',
+                trans: '',
             },
             terms: [],
             token: document.head.querySelector('meta[name="csrf-token"]').content,
@@ -43,14 +35,14 @@ export default {
     },
     created() {
         if (this.mode === "edit") {
-            this.getDeck(this.deckId);
+            this.getSentence(this.id);
         }
     },
     methods: {
-        getDeck(deckId) {
-            axios.get("/community/decks/" + deckId + "/get")
+        getSentence(id) {
+            axios.get("/dictionary/sentences/" + id + "/get")
                 .then(response => {
-                    this.deck = response.data.deck;
+                    this.sentence = response.data.sentence;
                     this.terms = response.data.terms;
                 })
                 .catch(error => {
@@ -62,6 +54,19 @@ export default {
                 term.position = index + 1;
             });
         },
+        addTerm() {
+            this.terms.push({
+                term: {
+                    glosses: []
+                },
+                term_id: '',
+                gloss_id: '',
+                sent_term: '',
+                sent_translit: '',
+                position: '',
+            });
+            this.updatePosition();
+        },
         removeTerm(index) {
             this.terms.splice(index, 1);
             this.updatePosition();
@@ -71,6 +76,8 @@ export default {
                 term: term.term,
                 term_id: term.term.id,
                 gloss_id: term.term.glosses[0].id,
+                sent_term: term.term.term,
+                sent_translit: term.term.translit,
                 position: '',
             });
             this.updatePosition();
@@ -78,7 +85,7 @@ export default {
         submit() {
             if (this.mode === "add") {
                 axios.post(this.createRoute, {
-                    deck: this.deck,
+                    sentence: this.sentence,
                     terms: this.terms
                 })
                     .then(response => {
@@ -91,7 +98,7 @@ export default {
                     });
             } else {
                 axios.patch(this.updateRoute, {
-                    deck: this.deck,
+                    sentence: this.sentence,
                     terms: this.terms
                 })
                     .then(response => {
@@ -119,45 +126,38 @@ export default {
         </div>
 
         <div class="auth-field">
-            <label for="deck[name]">Name</label>
-            <div class="field-input">
-                <input id="deck[name]" v-model="deck.name" name="deck[name]" required type="text"/>
-            </div>
+            <label>Terms</label>
+            <SearchBar :resultType="'model'" @emitTerm="insertTerm($event)"/>
             <div class="field-info">
-                What would you like to call your Deck?
-            </div>
-        </div>
-        <div class="auth-field">
-            <label for="deck[description]">Description</label>
-            <div class="field-input">
-                <textarea id="deck[description]" v-model="deck.description"
-                          name="deck[description]"/>
-            </div>
-            <div class="field-info">
-                What's your Deck about?
+                Start typing to search for Terms & add them to the Sentence.
             </div>
         </div>
 
-        <div class="auth-field">
-            <label>Terms: {{ terms.length }}</label>
-            <SearchBar :resultType="'model'" @emitTerm="insertTerm($event)"/>
-            <div class="field-info">
-                Start typing to search for Terms & add them to your Deck.
-            </div>
+        <div class="sentence-preview" style="direction: rtl">
+            <div v-if="terms.length < 1" class="sentence-preview-info">Sentence Preview</div>
+            <template v-for="term in terms">
+                <div class="sentence-preview-term">
+                    <div>{{ term.sent_term }}</div>
+                    <div>{{ term.sent_translit }}</div>
+                </div>
+            </template>
         </div>
 
         <div class="field-wrapper">
             <draggable :list="terms" @end="updatePosition()"
                        class="draggable">
+
                 <template #item="{ element, index }">
-                    <div class="builder-item">
+                    <div class="sentence-builder-item">
                         <div class="builder-item-term">
-                            <div>{{ element.term.term }}</div>
-                            <div>({{ element.term.translit }}) {{ element.term.category }}.</div>
+                            <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
+                                   type="text" v-model="element.sent_term"/>
+                            <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
+                                   type="text" v-model="element.sent_translit"/>
                         </div>
 
                         <div class="builder-item-gloss">
-                            <select v-model="element.gloss_id">
+                            <select v-if="element.term.glosses.length" v-model="element.gloss_id">
                                 <option v-for="gloss in element.term.glosses" :value="gloss.id">
                                     {{ gloss.gloss.length > 60 ? gloss.gloss.slice(0, 60) + "..." : gloss.gloss }}
                                 </option>
@@ -169,15 +169,23 @@ export default {
                         <input style="display: none" :id="'terms['+index+'][term_id]'"
                                :name="'terms['+index+'][term_id]'"
                                type="text" v-model="element.term_id"/>
+
                     </div>
                 </template>
             </draggable>
+
+            <div class="field-add" @click="addTerm()">+ Add TERM</div>
         </div>
 
-        <label class="checkbox" for="deck[private]">
-            <input type="checkbox" value=1 id="deck[private]" name="deck[private]" v-model="privateBoolean">
-            <span>Private</span>
-        </label>
+        <div class="auth-field">
+            <label for="sentence[trans]">Translation</label>
+            <div class="field-input">
+                <input id="sentence[trans]" v-model="sentence.trans" name="sentence[trans]" required type="text"/>
+            </div>
+            <div class="field-info">
+                Write the translation of the Sentence in English.
+            </div>
+        </div>
 
         <button type="submit" class="sp-button">
             <template v-if="mode === 'add'">Create</template>

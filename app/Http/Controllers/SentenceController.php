@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
 use App\Models\Gloss;
+use App\Models\MissingTerm;
 use App\Models\Sentence;
 use App\Models\Term;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
 
@@ -27,9 +27,9 @@ class SentenceController extends Controller
 
         if (Bookmark::has($sentence, $user)) {
             event(new ModelPinned($user));
-            $this->flasher->addSuccess(__('pin.added', ['thing' => $sentence->translit]));
+            $this->flasher->addSuccess(__('pin.added', ['thing' => $sentence->sentence]));
         } else {
-            $this->flasher->addSuccess(__('pin.removed', ['thing' => $sentence->translit]));
+            $this->flasher->addSuccess(__('pin.removed', ['thing' => $sentence->sentence]));
         }
 
         return back();
@@ -48,7 +48,7 @@ class SentenceController extends Controller
         }
 
         $sentences = $query
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(25)
             ->onEachSide(1);
 
@@ -71,19 +71,23 @@ class SentenceController extends Controller
     public function store(Request $request)
     {
         $this->validateRequest($request);
-        $sentence = $request->sentence;
-        $sentence = Sentence::create($sentence);
 
-        $this->flasher->addSuccess(__('created', ['thing' => $sentence->translit]));
-        return to_route('sentences.index');
+        $sentence = Sentence::create($this->buildSentence($request));
+
+        $this->linkTerms($sentence, $request->terms);
+
+        return [
+            'status' => 'success',
+            'redirect' => route('sentences.show', $sentence),
+            'flash' => __('created', ['thing' => $sentence->sentence])
+        ];
     }
 
     private function validateRequest($request)
     {
         return $request->validate([
-            'sentence.sentence' => ['required'],
-            'sentence.translit' => ['required'],
             'sentence.trans' => ['required'],
+            'terms' => ['required', 'array'],
         ]);
     }
 
@@ -93,70 +97,150 @@ class SentenceController extends Controller
         return view('sentences.create');
     }
 
-    public function edit(Sentence $sentence)
+    private function buildSentence($request)
     {
+        $terms = [];
+        $translits = [];
+
+        foreach ($request->terms as $term) {
+            $terms[] = $term['sent_term'];
+            $translits[] = $term['sent_translit'];
+        }
+
+        $sentence = $request->sentence;
+
+        $sentence['sentence'] = implode(' ', $terms);
+        $sentence['translit'] = implode(' ', $translits);
+
+        return $sentence;
+    }
+
+    private function linkTerms($sentence, $terms)
+    {
+        DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
+
+        foreach ($terms as $termData) {
+            DB::table('sentence_term')->insert([
+                'sentence_id' => $sentence->id,
+                'term_id' => $termData['term_id'] ?? null,
+                'gloss_id' => $termData['gloss_id'] ?? null,
+                'sent_term' => $termData['sent_term'],
+                'sent_translit' => $termData['sent_translit'],
+                'position' => $termData['position'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$termData['term_id']) {
+                MissingTerm::firstOrCreate(['translit' => $termData['sent_term']]);
+            }
+        }
+    }
+
+    public function get($id)
+    {
+        $sentence = Sentence::findOrFail($id);
+
+        $terms = [];
+        foreach ($sentence->allTerms() as $sentenceTerm) {
+            $term = Term::find($sentenceTerm->id);
+
+            if ($term) {
+                $terms[] = [
+                    'term' => [
+                        'term' => $term->term,
+                        'category' => $term->category,
+                        'translit' => $term->translit,
+                        'glosses' => $term->glosses->map(function ($gloss) {
+                            return [
+                                'id' => $gloss->id,
+                                'gloss' => $gloss->gloss,
+                            ];
+                        })->toArray(),
+                    ],
+                    'term_id' => $term->id,
+                    'gloss_id' => $sentenceTerm->gloss_id,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+            } else {
+                $terms[] = [
+                    'term' => [
+                        'glosses' => []
+                    ],
+                    'term_id' => null,
+                    'gloss_id' => null,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+            }
+        }
+
+        return response()->json([
+            'sentence' => $sentence,
+            'terms' => $terms
+        ]);
+    }
+
+    public
+    function edit(
+        Sentence $sentence
+    ) {
         View::share('pageTitle', 'Edit Sentence');
         return view('sentences.edit', compact('sentence'));
     }
 
-    public function update(Sentence $sentence, Request $request)
-    {
+    public
+    function update(
+        Sentence $sentence,
+        Request $request
+    ) {
         $this->validateRequest($request);
 
-        $sentence->update($request->sentence);
+        $sentence->update($this->buildSentence($request));
 
-        $this->flasher->addSuccess(__('updated', ['thing' => $sentence->translit]));
+        $this->linkTerms($sentence, $request->terms);
 
-        return view('sentences.show', [
-            'sentence' => $sentence
-        ]);
+        return [
+            'status' => 'success',
+            'redirect' => route('sentences.show', $sentence),
+            'flash' => __('updated', ['thing' => $sentence->sentence])
+        ];
     }
 
-    public function destroy(Sentence $sentence)
-    {
+    public
+    function destroy(
+        Sentence $sentence
+    ) {
         $sentence->delete();
 
-        $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->translit]));
+        $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
         return to_route('sentences.index');
     }
 
-    public function todo()
+    public
+    function todo()
     {
-        $termsMissingSentences = new Collection();
-        foreach (Gloss::doesntHave('sentences')->get() as $gloss) {
-            $termsMissingSentences = $termsMissingSentences->merge(Term::where('id', $gloss->term_id)->get());
-        }
-        $termsMissingSentences = $termsMissingSentences->unique();
+        $terms = [];
 
-        $audioFiles = Storage::disk('s3')->allFiles('audio');
-        $audios = [];
-        foreach ($audioFiles as $audio) {
-            $audio = str_replace('audio/', '', $audio);
-            $audio = str_replace('.mp3', '', $audio);
-            $audios[] = $audio;
-        }
+        Gloss::chunk(200, function ($glosses) use (&$terms) {
+            foreach ($glosses as $gloss) {
+                if (count($gloss->term->sentences($gloss->id)->get()) < 1) {
+                    $gloss->term->gloss = $gloss->gloss;
+                    $terms[] = $gloss->term;
+                }
 
-        $sentencesMissingAudios = new Collection();
-        foreach (Sentence::all() as $sentence) {
-            if (!in_array($sentence->translit, $audios)) {
-                $sentencesMissingAudios =
-                    $sentencesMissingAudios->merge(Sentence::where('sentence', $sentence->sentence)->get());
+                if (count($terms) === 100) {
+                    return false; // This will break the execution of the chunk
+                }
             }
-            preg_match_all('/(\[{2}[^\]]*\]{2})/', $sentence->sentence, $matches);
-            $sentenceTerms = $matches[0];
-            foreach ($sentenceTerms as $sentenceTerm) {
-                preg_match('/\[{2}([^|\]]*)\|([^\]]*)\]{2}/', $sentenceTerm, $matches);
-                $termsArray = $termsArray->merge($matches[1]);
-            }
-        }
+        });
 
-        $orphanSentences = Sentence::doesntHave('glosses')->get();
-
-        View::share('pageTitle', 'to-Do');
+        View::share('pageTitle', 'Phrasebook: to-Do');
         return view('sentences.todo', [
-            'termsMissingSentences' => $termsMissingSentences,
-            'sentencesMissingAudios' => $sentencesMissingAudios,
-            'orphanSentences' => $orphanSentences
+            'terms' => $terms,
         ]);
     }
 }

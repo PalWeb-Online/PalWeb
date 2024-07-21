@@ -1,5 +1,6 @@
 import {createApp, h} from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
+import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
@@ -17,6 +18,12 @@ if (document.querySelector('#termEditor')) {
     termEditorApp.mount('#termEditor');
 }
 
+if (document.querySelector('#sentenceEditor')) {
+    const sentenceEditorApp = createApp({});
+    sentenceEditorApp.component('SentenceEditor', SentenceEditor);
+    sentenceEditorApp.mount('#sentenceEditor');
+}
+
 if (document.querySelector('#deckBuilder')) {
     const DeckBuilderApp = createApp({});
     DeckBuilderApp.component('DeckBuilder', DeckBuilder);
@@ -29,14 +36,6 @@ if (document.querySelector('#dictionaryFilters')) {
     dictionaryFiltersApp.mount('#dictionaryFilters');
 }
 
-// Original Approach, for 1 Search Bar
-// if (document.querySelector('#searchBar')) {
-//     const searchBarApp = createApp({});
-//     searchBarApp.component('SearchBar', SearchBar);
-//     searchBarApp.mount('#searchBar');
-// }
-
-// Current Approach, for 2 Search Bars; isn't working
 const searchBarElements = document.querySelectorAll('[data-vue-component="SearchBar"]');
 searchBarElements.forEach((element, index) => {
     createApp({

@@ -1,5 +1,14 @@
+@unless(request()->routeIs('terms.show'))
+    <a href="{{ route('terms.show', $term) }}" target="_blank">View Term</a>
+@endunless
+
+@unless(request()->routeIs('terms.usages'))
+    <a href="{{ route('terms.usages', $term) }}">View Usages</a>
+@endunless
+
 @auth
     @if(auth()->user()->isAdmin())
+        <div class="action-divider"></div>
         <a href="{{ route('terms.edit', $term) }}">Edit
             Term</a>
         <form method="POST" action="{{ route('terms.destroy', $term) }}">

@@ -162,7 +162,6 @@ export default {
                 gloss: '',
                 attribute: '',
                 structure: '',
-                sentences: [],
                 synonyms: [],
                 antonyms: [],
                 valences: [],
@@ -196,18 +195,6 @@ export default {
             });
         },
         removeValence(index, fieldType) {
-            fieldType.splice(index, 1)
-        },
-
-        addSentence(gloss) {
-            let item = this.glosses.find(itm => itm == gloss);
-            item.sentences.push({
-                sentence: '',
-                translit: '',
-                trans: ''
-            });
-        },
-        removeSentence(index, fieldType) {
             fieldType.splice(index, 1)
         },
 
@@ -819,35 +806,6 @@ export default {
                                      @click="removeValence(index, gloss.valence)"/>
                             </div>
                             <div class="field-add" @click="addValence(gloss)">+ Add VALENCE</div>
-                        </div>
-
-                        <div class="field-wrapper with-add-object">
-                            <div v-for="(sentence, i) in gloss.sentences" :key="i" class="field-wrapper compound-field">
-                                <div class="field-label">
-                                    <div>sentence</div>
-                                    <img src="/img/trash.svg" alt="Delete" v-show="gloss.sentences.length > 0"
-                                         @click="removeSentence(i, gloss.sentences)"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][sentence]'">Sentence *</label>
-                                    <input :id="'sentences['+i+'][sentence]'" v-model="sentence.sentence"
-                                           :name="'sentences['+i+'][sentence]'"
-                                           required type="text"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][translit]'">Translit *</label>
-                                    <input :id="'sentences['+i+'][translit]'" v-model="sentence.translit"
-                                           :name="'sentences['+i+'][translit]'"
-                                           required type="text"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][trans]'">Translat *</label>
-                                    <input :id="'sentences['+i+'][trans]'" v-model="sentence.trans"
-                                           :name="'sentences['+i+'][trans]'"
-                                           required type="text"/>
-                                </div>
-                            </div>
-                            <div class="field-add" @click="addSentence(gloss)">+ Add SENTENCE</div>
                         </div>
                     </div>
                     <div class="field-add" @click="addGloss()">+ Add GLOSS</div>
