@@ -8,19 +8,54 @@
     </x-page-head>
 
     <div class="doc-section">
-        <h1>Missing Terms</h1>
-        <ul>
-            @foreach ($missingTerms as $missingTerm)
-                <li>{{ $missingTerm->translit }} ({{ $missingTerm->category }})</li>
+        <h1>From Sentences</h1>
+        <div class="missing-terms">
+            @foreach ($fromSentences as $term)
+                <div>
+                    {{ $term->sent_term }}
+                    ({{ $term->sent_translit }})
+
+                    <a href="{{ route('sentences.show', $term->sentence_id) }}">View Sentence</a>
+                </div>
             @endforeach
-        </ul>
+        </div>
+
+        <h1>Missing Terms</h1>
+        <div class="missing-terms">
+            @foreach ($missingTerms as $missingTerm)
+                <div>
+                    {{ $missingTerm->translit }}
+                    ({{ $missingTerm->category }})
+
+                    <form method="POST" action="{{ route('missing.destroy', $missingTerm) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button onclick="return confirm('Are you sure you want to delete this sentence?')">
+                            <a>Delete Missing</a>
+                        </button>
+                    </form>
+                </div>
+            @endforeach
+        </div>
 
         <h1>Missing Inflections</h1>
-        <ul>
+        <div class="missing-terms">
             @foreach ($missingInflections as $missingInflection)
-                <li>{{ $missingInflection->inflection }} {{ $missingInflection->translit }} ({{ $missingInflection->form }})</li>
+                <div>
+                    {{ $missingInflection->inflection }}
+                    {{ $missingInflection->translit }}
+                    ({{ $missingInflection->form }})
+
+                    <form method="POST" action="{{ route('missing.destroy', $missingInflection) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button onclick="return confirm('Are you sure you want to delete this sentence?')">
+                            <img src="{{ asset('/img/trash.svg') }}" alt="Delete"/>
+                        </button>
+                    </form>
+                </div>
             @endforeach
-        </ul>
+        </div>
     </div>
 
 @endsection

@@ -11,6 +11,7 @@ use App\Models\MissingTerm;
 use App\Models\Pattern;
 use App\Models\Pronunciation;
 use App\Models\Root;
+use App\Models\Sentence;
 use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
@@ -20,6 +21,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -73,7 +75,6 @@ class TermController extends Controller
             'search' => ''
         ];
 
-        // Merge request parameters with default filters
         $filter = array_merge($defaultFilters, request()->only(array_keys($defaultFilters)));
         $terms = $this->termRepository->getTerms($filter);
 
@@ -299,13 +300,6 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
         }
 
-        // TODO: deprecated
-        $missingTerm = MissingTerm::where([
-            'translit' => $term->translit,
-            'category' => $term->category
-        ]);
-        $missingTerm && $missingTerm->delete();
-
         return [
             'status' => 'success',
             'term' => $term,
@@ -405,18 +399,15 @@ class TermController extends Controller
             'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit'], $term),
         ]);
 
-        // GLOSSES
         $requestGlosses = [];
         foreach ($request->glosses as $index => $requestGloss) {
             unset($requestGloss['id']);
             $requestGlosses[] = $requestGloss['gloss'];
 
-            // update existing glosses
             if ($index + 1 <= count($term->glosses)) {
                 $term->glosses[$index]->update($requestGloss);
                 $gloss = $term->glosses[$index];
 
-                // create nonexistent glosses
             } else {
                 $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
                 $gloss = Gloss::create($requestGloss);
@@ -427,19 +418,11 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
         }
 
-        // delete glosses not in request
         foreach ($term->glosses as $gloss) {
             !in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
         }
 
         Root::doesntHave('terms')->delete();
-
-        // TODO: deprecated
-        $missingTerm = MissingTerm::where([
-            'translit' => $term->translit,
-            'category' => $term->category
-        ]);
-        $missingTerm && $missingTerm->delete();
 
         return [
             'status' => 'success',
@@ -618,6 +601,7 @@ class TermController extends Controller
 
         View::share('pageTitle', 'Dictionary: to-Do');
         return view('terms.todo', [
+            'fromSentences' => DB::table('sentence_term')->whereNull('term_id')->get(),
             'missingTerms' => MissingTerm::all(),
             'missingInflections' => $missingInflections,
         ]);

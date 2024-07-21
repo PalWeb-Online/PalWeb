@@ -6,6 +6,7 @@ use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\MissingTermController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TextController;
@@ -144,8 +145,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('/dictionary')->group(function () {
 
-        Route::get('/todo/terms', [TermController::class, 'todo'])->middleware('admin')->name('terms.todo');
-        Route::get('/todo/sentences', [SentenceController::class, 'todo'])->middleware('admin')->name('sentences.todo');
+        Route::middleware('admin')->group(function () {
+            Route::get('/todo/terms',
+                [TermController::class, 'todo'])->name('terms.todo');
+            Route::delete('/todo/terms/{missingTerm}',
+                [MissingTermController::class, 'destroy'])->name('missing.destroy');
+            Route::get('/todo/sentences',
+                [SentenceController::class, 'todo'])->name('sentences.todo');
+        });
+
 
         Route::get('/request', function () {
             return view('terms.request');

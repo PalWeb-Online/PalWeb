@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
 use App\Models\Gloss;
-use App\Models\MissingTerm;
 use App\Models\Sentence;
 use App\Models\Term;
 use Flasher\Prime\FlasherInterface;
@@ -130,58 +129,7 @@ class SentenceController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            if (!$termData['term_id']) {
-                MissingTerm::firstOrCreate(['translit' => $termData['sent_term']]);
-            }
         }
-    }
-
-    public function get($id)
-    {
-        $sentence = Sentence::findOrFail($id);
-
-        $terms = [];
-        foreach ($sentence->allTerms() as $sentenceTerm) {
-            $term = Term::find($sentenceTerm->id);
-
-            if ($term) {
-                $terms[] = [
-                    'term' => [
-                        'term' => $term->term,
-                        'category' => $term->category,
-                        'translit' => $term->translit,
-                        'glosses' => $term->glosses->map(function ($gloss) {
-                            return [
-                                'id' => $gloss->id,
-                                'gloss' => $gloss->gloss,
-                            ];
-                        })->toArray(),
-                    ],
-                    'term_id' => $term->id,
-                    'gloss_id' => $sentenceTerm->gloss_id,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ];
-            } else {
-                $terms[] = [
-                    'term' => [
-                        'glosses' => []
-                    ],
-                    'term_id' => null,
-                    'gloss_id' => null,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ];
-            }
-        }
-
-        return response()->json([
-            'sentence' => $sentence,
-            'terms' => $terms
-        ]);
     }
 
     public
@@ -241,6 +189,53 @@ class SentenceController extends Controller
         View::share('pageTitle', 'Phrasebook: to-Do');
         return view('sentences.todo', [
             'terms' => $terms,
+        ]);
+    }
+
+    public function get($id)
+    {
+        $sentence = Sentence::findOrFail($id);
+
+        $terms = [];
+        foreach ($sentence->allTerms() as $sentenceTerm) {
+            $term = Term::find($sentenceTerm->id);
+
+            if ($term) {
+                $terms[] = [
+                    'term' => [
+                        'term' => $term->term,
+                        'category' => $term->category,
+                        'translit' => $term->translit,
+                        'glosses' => $term->glosses->map(function ($gloss) {
+                            return [
+                                'id' => $gloss->id,
+                                'gloss' => $gloss->gloss,
+                            ];
+                        })->toArray(),
+                    ],
+                    'term_id' => $term->id,
+                    'gloss_id' => $sentenceTerm->gloss_id,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+            } else {
+                $terms[] = [
+                    'term' => [
+                        'glosses' => []
+                    ],
+                    'term_id' => null,
+                    'gloss_id' => null,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+            }
+        }
+
+        return response()->json([
+            'sentence' => $sentence,
+            'terms' => $terms
         ]);
     }
 }
