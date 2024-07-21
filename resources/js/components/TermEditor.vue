@@ -190,8 +190,8 @@ export default {
         addValence(gloss) {
             let item = this.glosses.find(itm => itm == gloss);
             item.valences.push({
-                translit: '',
-                valence: '',
+                slug: '',
+                relation: '',
             });
         },
         removeValence(index, fieldType) {
@@ -793,11 +793,11 @@ export default {
 
                         <div v-if="term.category === 'verb'" class="field-wrapper with-add-field">
                             <div v-for="(valence, index) in gloss.valences" :key="index" class="form-field inline">
-                                <label :for="'valences['+index+'][translit]'">valence</label>
-                                <input :id="'valences['+index+'][translit]'" v-model="valence.translit"
-                                       :name="'valences['+index+'][translit]'" type="text"/>
-                                <select :id="'valences['+index+'][valence]'"
-                                        v-model="valence.valence" :name="'valences['+index+'][valence]'" required>
+                                <label :for="'valences['+index+'][slug]'">valence</label>
+                                <input :id="'valences['+index+'][slug]'" v-model="valence.slug"
+                                       :name="'valences['+index+'][slug]'" type="text"/>
+                                <select :id="'valences['+index+'][relation]'"
+                                        v-model="valence.relation" :name="'valences['+index+'][relation]'" required>
                                     <option value="isPatient">isPatient</option>
                                     <option value="noPatient">noPatient</option>
                                     <option value="hasObject">hasObject</option>

@@ -49,7 +49,8 @@ class TermController extends Controller
         ]);
     }
 
-    public function usages(Term $term) {
+    public function usages(Term $term)
+    {
         $terms = [];
         $terms[] = $term;
 
@@ -154,9 +155,8 @@ class TermController extends Controller
                     'antonyms' => $gloss->antonyms->pluck('slug'),
                     'valences' => $gloss->valences->map(function ($valence) {
                         return [
-                            'id' => $valence->id,
-                            'translit' => $valence->translit,
-                            'valence' => $valence->pivot->type,
+                            'slug' => $valence->slug,
+                            'relation' => $valence->pivot->type,
                         ];
                     }),
                 ];
@@ -425,7 +425,6 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
             $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-            // TODO: valences are currently not distinguished as isPatient, noPatient, hasObject
         }
 
         // delete glosses not in request
@@ -474,34 +473,33 @@ class TermController extends Controller
     private
     function handleRelatives(
         object $origin,
-        array $requestSlugs,
+        array $requestItems,
         string $relation,
         string $reverseRelation = null
     ) {
-        $attachedSlugs = $origin->$relation->pluck('slug')->toArray();
-        $existingRequestSlugs = [];
+        $attachedTerms = $origin->$relation->pluck('slug')->toArray();
+        $requestTerms = [];
 
-        foreach ($requestSlugs as $slug) {
-            $relative = Term::firstWhere('slug', $slug);
-            if ($relative) {
-                $existingRequestSlugs[] = $relative->slug;
+        foreach ($requestItems as $item) {
+            $term = Term::firstWhere('slug', $item);
+            $type = is_array($item) ? $item['relation'] : $relation;
 
-                if (!in_array($relative->slug, $attachedSlugs)) {
-                    $origin->$relation()->attach($relative, ['type' => Str::singular($relation)]);
-                    $reverseRelation && $relative->$relation()->attach($origin, ['type' => $reverseRelation]);
+            if ($term) {
+                $requestTerms[] = $term->slug;
+
+                if (!in_array($term->slug, $attachedTerms)) {
+                    $origin->$relation()->attach($term, ['type' => Str::singular($type)]);
+                    $reverseRelation && $term->$relation()->attach($origin, ['type' => $reverseRelation]);
                 }
 
             } else {
-                $slug && MissingTerm::create(['translit' => $slug]);
+                $item && MissingTerm::create(['translit' => $item]);
             }
         }
 
-        $detachableSlugs = array_diff($attachedSlugs, $existingRequestSlugs);
+        $detachableSlugs = array_diff($attachedTerms, $requestTerms);
         foreach ($detachableSlugs as $slug) {
             $origin->$relation()->detach(Term::firstWhere('slug', $slug));
-
-            // it seems to me that the line below just repeats what's above
-//            Term::firstWhere('slug', $slug)->$relation()->detach($origin);
         }
     }
 

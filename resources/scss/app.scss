@@ -43,6 +43,7 @@
     background: $purple-deep;
     box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
     transform: translate(0.2rem, -0.2rem);
+    transition: 0.05s;
     user-select: none;
 
     .info-button-label,

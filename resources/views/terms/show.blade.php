@@ -13,12 +13,6 @@
 
     @foreach($terms as $term)
         <div class="term-container">
-            @php
-                $parentTerm = false;
-                $asInflection = App\Models\Inflection::whereIn('form', ['ap','pp','nv'])->where('translit', $term->translit);
-                $asInflection->exists() && $parentTerm = App\Models\Term::firstWhere('id', $asInflection->first()->term_id);
-            @endphp
-
             @if($term->isPinned())
                 <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
             @endif
@@ -55,13 +49,6 @@
                             @endif
                         @endforeach
                     @endif
-                    @if($parentTerm)
-                        <a href="{{ route('terms.show', $parentTerm) }}"
-                           class="chart-item {{ $asInflection->first()->form }}">
-                            <div class="chart-title">{{ $asInflection->first()->form }}</div>
-                            <div>{{ $parentTerm->term }} ({{ $parentTerm->translit }})</div>
-                        </a>
-                    @endif
                 </div>
 
                 <div class="term-references">
@@ -97,7 +84,7 @@
                     @endif
                 </div>
 
-                @unless(count($term->inflections->where('form', '!=', 'host')) == 0 and !$parentTerm)
+                @if(request()->routeIs('terms.show') and count($term->inflections->where('form', '!=', 'host')) > 0)
                     <div class="term-inflections">
                         @foreach($term->inflections as $inflection)
                             <x-info-button label="{{ $inflection->form }}"
@@ -131,7 +118,7 @@
                             {{--                    @endif--}}
                         @endforeach
                     </div>
-                @endunless
+                @endif
             </div>
 
             @unless(request()->routeIs('terms.usages'))
@@ -260,27 +247,19 @@
                                         @endforeach
                                     </div>
                                 @endif
+
+                                @if(count($gloss->valences) > 0)
+                                    @foreach($gloss->valences as $pair)
+                                        <div>
+                                            {{ $pair->pivot->type }}
+                                            <a href="{{ route('terms.show', $pair) }}">{{ $pair->term }}
+                                                ({{ $pair->translit }})
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
-                            @if(count($gloss->valences) > 0 || count($gloss->synonyms) > 0 || count($gloss->antonyms) > 0)
-                                <div class="gloss-relatives">
-                                    @if(count($gloss->valences) > 0)
-                                        @foreach($gloss->valences as $pair)
-                                            @php
-                                                $pairType = $pair->pivot->type;
-                                            @endphp
-                                            <div class="gloss-relative">
-                                                <div>{{ __('see') }}</div>
-                                                <a href="{{ route('terms.show', $pair) }}"
-                                                   class="chart-item {{ $pairType }}">
-                                                    <div class="chart-title">{{ $pair->term }}</div>
-                                                    <div>{{ $pair->translit }}</div>
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            @endif
                         </div>
 
                         @if(count($term->sentences($gloss->id)->get()) > 0)
