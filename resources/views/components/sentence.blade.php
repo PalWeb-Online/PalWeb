@@ -24,7 +24,6 @@
                 @endforeach
             </div>
             <div class="sentence-eng">
-                {{ $sentence->id }}
                 {{ $sentence->trans }}
             </div>
 
@@ -34,9 +33,6 @@
         </div>
 
         <x-context-actions>
-            @unless(request()->routeIs('sentences.show'))
-                <a href="{{ route('sentences.show', $sentence) }}" target="_blank">View Sentence</a>
-            @endunless
             <x-sentence-actions :sentence="$sentence"/>
         </x-context-actions>
     </div>

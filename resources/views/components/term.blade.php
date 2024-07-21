@@ -11,7 +11,6 @@
     <div class="term-li-container">
         <div class="term-li-wrapper">
             <x-context-actions>
-                <a href="{{ route('terms.show', $term) }}" target="_blank">View Term</a>
                 <x-term-actions :term="$term"/>
             </x-context-actions>
 

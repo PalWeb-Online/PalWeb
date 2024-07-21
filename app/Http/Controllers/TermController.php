@@ -49,6 +49,15 @@ class TermController extends Controller
         ]);
     }
 
+    public function usages(Term $term) {
+        $terms = [];
+        $terms[] = $term;
+
+        return view('terms.show', [
+            'terms' => $terms
+        ]);
+    }
+
     /**
      * Loads the Dictionary Index
      */

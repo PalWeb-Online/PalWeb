@@ -1,3 +1,7 @@
+@unless(request()->routeIs('sentences.show'))
+    <a href="{{ route('sentences.show', $sentence) }}" target="_blank">View Sentence</a>
+@endunless
+
 @auth
     @if(auth()->user()->isAdmin())
         <a href="{{ route('sentences.edit', $sentence) }}">Edit Sentence</a>

@@ -71,6 +71,7 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
 
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
+        Route::get('/{term:slug}/usages', 'usages')->name('terms.usages');
         Route::get('/{term:slug}', 'show')->name('terms.show');
 
         // Auth
