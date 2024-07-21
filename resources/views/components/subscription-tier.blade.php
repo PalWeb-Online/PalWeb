@@ -61,7 +61,7 @@
                 Support the Project
             </div>
         </div>
-        <div class="tiers-pricing">{{ $tier === 'student' ? '$8/m $80/y' : 'FREE' }}</div>
+        <div class="tiers-pricing">{{ $tier === 'student' ? '$12/m $80/y' : 'FREE' }}</div>
 
         @if($tier === $current)
             <div class="tiers-action">{{ 'current' }}</div>
