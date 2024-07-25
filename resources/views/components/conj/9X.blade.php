@@ -1,6 +1,6 @@
 <x-conj.chart>
 
-@if ($form == '4A')
+@if ($form == 'XA')
     <x-slot name="imp1S">بَ{{$r1}}{{$r2}}ِ{{$r3}}</x-slot>
     <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="imp1P">منِ{{$r1}}{{$r2}}ِ{{$r3}}</x-slot>
@@ -18,7 +18,7 @@
     <x-slot name="imp3P">بيِ{{$r1}}{{$r2}}ِ{{$r3}}و</x-slot>
     <x-slot name="imp3Ptr">byi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '4B')
+    @elseif ($form == 'XB')
         <x-slot name="imp1S">بَ{{$r1}}{{$r2}}ي</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp1P">منِ{{$r1}}{{$r2}}ي</x-slot>
@@ -36,7 +36,7 @@
         <x-slot name="imp3P">بيِ{{$r1}}{{$r2}}و</x-slot>
         <x-slot name="imp3Ptr">byi{{$r1tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4C')
+    @elseif ($form == 'XC')
         <x-slot name="imp1S">بَ{{$r1}}ِ{{$r2}}ّ</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}ِ{{$r2}}ّ</x-slot>
@@ -54,7 +54,7 @@
         <x-slot name="imp3P">بِ{{$r1}}ِ{{$r2}}ّو</x-slot>
         <x-slot name="imp3Ptr">bi{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4D')
+    @elseif ($form == 'XD')
         <x-slot name="imp1S">بَ{{$r1}}{{$r2}}{{$r3}}</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}ī{{$r3tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -92,7 +92,7 @@
 
 @endif
 
-@if ($form == '4A')
+@if ($form == 'XA')
     <x-slot name="past1S">أ{{$r1}}{{$r2}}َ{{$r3}}ت</x-slot>
     <x-slot name="past1Str">ʔa{{$r1tr}}{{$r2tr}}a{{$r3tr}}t</x-slot>
     <x-slot name="past1P">أ{{$r1}}{{$r2}}َ{{$r3}}نا</x-slot>
@@ -110,7 +110,7 @@
     <x-slot name="past3P">أ{{$r1}}{{$r2}}َ{{$r3}}و</x-slot>
     <x-slot name="past3Ptr">ʔa{{$r1tr}}{{$r2tr}}a{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '4B')
+    @elseif ($form == 'XB')
         <x-slot name="past1S">أ{{$r1}}{{$r2}}يت</x-slot>
         <x-slot name="past1Str">ʔa{{$r1tr}}{{$r2tr}}ēt</x-slot>
         <x-slot name="past1P">أ{{$r1}}{{$r2}}ينا</x-slot>
@@ -128,7 +128,7 @@
         <x-slot name="past3P">أ{{$r1}}{{$r2}}و</x-slot>
         <x-slot name="past3Ptr">ʔa{{$r1tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4C')
+    @elseif ($form == 'XC')
         <x-slot name="past1S">أ{{$r1}}َ{{$r2}}ّيت</x-slot>
         <x-slot name="past1Str">ʔa{{$r1tr}}a{{$r2tr}}{{$r2tr}}ēt</x-slot>
         <x-slot name="past1P">أ{{$r1}}َ{{$r2}}ّينا</x-slot>
@@ -146,7 +146,7 @@
         <x-slot name="past3P">أ{{$r1}}َ{{$r2}}ّو</x-slot>
         <x-slot name="past3Ptr">ʔa{{$r1tr}}a{{$r2tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4D')
+    @elseif ($form == 'XD')
         <x-slot name="past1S">أ{{$r1}}َ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">ʔa{{$r1tr}}a{{$r3tr}}t</x-slot>
         <x-slot name="past1P">أ{{$r1}}َ{{$r3}}نا</x-slot>
@@ -184,7 +184,7 @@
 
 @endif
 
-@if ($form == '4A')
+@if ($form == 'XA')
     <x-slot name="amr2M">إ{{$r1}}{{$r2}}ِ{{$r3}}</x-slot>
     <x-slot name="amr2Mtr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="amr2F">إ{{$r1}}{{$r2}}ِ{{$r3}}ي</x-slot>
@@ -192,7 +192,7 @@
     <x-slot name="amr2P">إ{{$r1}}{{$r2}}ِ{{$r3}}و</x-slot>
     <x-slot name="amr2Ptr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '4B')
+    @elseif ($form == 'XB')
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}ي</x-slot>
         <x-slot name="amr2Mtr">ʔi{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2F">إ{{$r1}}{{$r2}}ي</x-slot>
@@ -200,7 +200,7 @@
         <x-slot name="amr2P">إ{{$r1}}{{$r2}}و</x-slot>
         <x-slot name="amr2Ptr">ʔi{{$r1tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4C')
+    @elseif ($form == 'XC')
         <x-slot name="amr2M">إ{{$r1}}ِ{{$r2}}ّ</x-slot>
         <x-slot name="amr2Mtr">ʔi{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="amr2F">إ{{$r1}}ِ{{$r2}}ّي</x-slot>
@@ -208,7 +208,7 @@
         <x-slot name="amr2P">إ{{$r1}}ِ{{$r2}}ّو</x-slot>
         <x-slot name="amr2Ptr">ʔi{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
 
-    @elseif ($form == '4D')
+    @elseif ($form == 'XD')
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}{{$r3}}</x-slot>
         <x-slot name="amr2Mtr">ʔi{{$r1tr}}ī{{$r3tr}}</x-slot>
         <x-slot name="amr2F">إ{{$r1}}{{$r2}}{{$r3}}ي</x-slot>

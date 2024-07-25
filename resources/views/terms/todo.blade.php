@@ -30,7 +30,7 @@
                     <form method="POST" action="{{ route('missing.destroy', $missingTerm) }}">
                         @csrf
                         @method('DELETE')
-                        <button onclick="return confirm('Are you sure you want to delete this sentence?')">
+                        <button onclick="return confirm('Are you sure you want to delete this item from the list?')">
                             <a>Delete Missing</a>
                         </button>
                     </form>
