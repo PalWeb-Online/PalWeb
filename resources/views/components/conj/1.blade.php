@@ -418,7 +418,7 @@
 
 
 
-    @elseif (in_array($form, ['DY', 'DAu']))
+    @elseif (in_array($form, ['DW', 'DAu']))
         <x-slot name="past1S">{{$r1}}ُ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}u{{$r3tr}}t</x-slot>
         <x-slot name="past1P">{{$r1}}ُ{{$r3}}نا</x-slot>
@@ -474,19 +474,19 @@
 
     @elseif ($form == 'A1u')
         <x-slot name="amr2M">أ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="amr2Mtr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="amr2Mtr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="amr2F">أ{{$r1}}{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="amr2Ftr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}i</x-slot>
+        <x-slot name="amr2Ftr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">أ{{$r1}}{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="amr2Ptr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="amr2Ptr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>u
 
     @elseif ($form == 'A1h')
         <x-slot name="amr2M">{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="amr2Mtr">{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="amr2F">{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="amr2Ftr">{{$r2tr}}o{{$r3tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="amr2Ptr">{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r2tr}}u{{$r3tr}}u</x-slot>
 
     @elseif ($form == 'B1')
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}ي</x-slot>
@@ -514,11 +514,11 @@
 
     @elseif ($form == 'Ci')
         <x-slot name="amr2M">{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="amr2Mtr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ِ{{$r2}}ّي</x-slot>
-        <x-slot name="amr2Ftr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2P">{{$r1}}ِ{{$r2}}ّو</x-slot>
-        <x-slot name="amr2Ptr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'Ca')
         <x-slot name="amr2M">{{$r1}}َ{{$r2}}ّ</x-slot>
@@ -530,11 +530,11 @@
 
     @elseif ($form == 'Cu')
         <x-slot name="amr2M">{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="amr2Mtr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ُ{{$r2}}ّي</x-slot>
-        <x-slot name="amr2Ftr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2P">{{$r1}}ُ{{$r2}}ّو</x-slot>
-        <x-slot name="amr2Ptr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'DY')
         <x-slot name="amr2M">{{$r1}}{{$r2}}{{$r3}}</x-slot>
