@@ -500,6 +500,7 @@ export default {
                                         <option value="A1">A1</option>
                                         <option value="A1a">A1a</option>
                                         <option value="A1u">A1u</option>
+                                        <option value="A1h">A1h</option>
                                         <option value="A2">A2</option>
                                         <option value="A2i">A2i</option>
                                         <option value="B1">B1</option>
@@ -512,7 +513,6 @@ export default {
                                         <option value="DAi">DAi</option>
                                         <option value="DAu">DAu</option>
                                         <option value="DW">DW</option>
-                                        <option value="Ah">Ah</option>
                                         <option value="U1">U1</option>
                                         <option value="U2">U2</option>
                                     </template>
