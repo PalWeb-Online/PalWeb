@@ -198,7 +198,7 @@
         <x-slot name="imp3P">بِ{{$r1}}{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">bi{{$r1tr}}ī{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DA')
+    @elseif (in_array($form, ['DAi', 'DAu']))
         <x-slot name="imp1S">بَ{{$r1}}ا{{$r3}}</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}ā{{$r3tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}ا{{$r3}}</x-slot>
@@ -398,7 +398,7 @@
         <x-slot name="past3P">{{$r1}}َ{{$r2}}ّو</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}a{{$r2tr}}{{$r2tr}}u</x-slot>
 
-    @elseif (in_array($form, ['DY', 'DA']))
+    @elseif (in_array($form, ['DY', 'DAi']))
         <x-slot name="past1S">{{$r1}}ِ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}i{{$r3tr}}t</x-slot>
         <x-slot name="past1P">{{$r1}}ِ{{$r3}}نا</x-slot>
@@ -416,7 +416,9 @@
         <x-slot name="past3P">{{$r1}}ا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DW')
+
+
+    @elseif (in_array($form, ['DY', 'DAu']))
         <x-slot name="past1S">{{$r1}}ُ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}u{{$r3tr}}t</x-slot>
         <x-slot name="past1P">{{$r1}}ُ{{$r3}}نا</x-slot>
@@ -542,7 +544,7 @@
         <x-slot name="amr2P">{{$r1}}{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">{{$r1tr}}ī{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DA')
+    @elseif (in_array($form, ['DAi', 'DAu']))
         <x-slot name="amr2M">{{$r1}}ا{{$r3}}</x-slot>
         <x-slot name="amr2Mtr">{{$r1tr}}ā{{$r3tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ا{{$r3}}ي</x-slot>

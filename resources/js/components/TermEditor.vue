@@ -509,7 +509,8 @@ export default {
                                         <option value="Ca">Ca</option>
                                         <option value="Cu">Cu</option>
                                         <option value="DY">DY</option>
-                                        <option value="DA">DA</option>
+                                        <option value="DAi">DAi</option>
+                                        <option value="DAu">DAu</option>
                                         <option value="DW">DW</option>
                                         <option value="Ah">Ah</option>
                                         <option value="U1">U1</option>
