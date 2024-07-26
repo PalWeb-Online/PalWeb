@@ -58,11 +58,11 @@
                 r1='{{ $term->root->rootArray()[0][0] }}'
                 r2='{{ $term->root->rootArray()[0][1] }}'
                 r3='{{ $term->root->rootArray()[0][2] }}'
-                r4='{{ $term->root->rootArray()[0][3] }}'
+                r4='{{ $term->root->rootArray()[0][3] ?? null }}'
                 r1tr='{{ $term->root->rootArray()[1][0] }}'
                 r2tr='{{ $term->root->rootArray()[1][1] }}'
                 r3tr='{{ $term->root->rootArray()[1][2] }}'
-                r4tr='{{ $term->root->rootArray()[1][3] }}'
+                r4tr='{{ $term->root->rootArray()[1][3] ?? null }}'
                 form='{{ $pattern->form }}{{ $pattern->pattern }}'
             ></x-conj.Q>
         @endif

@@ -474,11 +474,11 @@
 
     @elseif ($form == 'A1u')
         <x-slot name="amr2M">أ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="amr2Mtr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
+        <x-slot name="amr2Mtr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="amr2F">أ{{$r1}}{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="amr2Ftr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}i</x-slot>
+        <x-slot name="amr2Ftr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">أ{{$r1}}{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="amr2Ptr">ʔo{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>
+        <x-slot name="amr2Ptr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>
 
     @elseif ($form == 'A1h')
         <x-slot name="amr2M">{{$r2}}ُ{{$r3}}</x-slot>
