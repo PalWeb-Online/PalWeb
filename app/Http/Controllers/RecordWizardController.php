@@ -7,7 +7,29 @@ use Illuminate\Http\Request;
 class RecordWizardController extends Controller
 {
     public function index() {
+        // loads the view containing the Record Wizard Vue component.
+
         return view('record.index');
+    }
+
+    public function getSpeakers()
+    {
+        // passes all the Speaker models to the view.
+    }
+
+    public function storeSpeaker()
+    {
+        // creates a new Speaker or updates its data.
+    }
+
+    public function getPronunciations()
+    {
+        // loads the Terms & Sentences missing Pronunciations into memory & passes them to the index() function.
+    }
+
+    public function storeRecordings()
+    {
+        // posts the recordings to the Droplet.
     }
 
     // Example controller method for processing file uploads
