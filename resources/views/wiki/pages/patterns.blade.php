@@ -123,7 +123,6 @@
     <h2>place: ma12a3 & ma12i3</h2>
     <p>This is a subset of the quadriliteral <b>CvCCvC</b> pattern & hence has <b>CaCāCiC</b> plurals.</p>
 
-    <div class="line" style="height: 0.2rem; margin-top: 2.4rem"></div>
     <h1>ADJECTIVE</h1>
     <h2>agent: 1a22ā3</h2>
     <p>This is a subset of the quadriliteral <b>CvCCLC</b> pattern, but it has sound plurals given that it is an

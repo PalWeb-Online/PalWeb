@@ -231,6 +231,11 @@
         transform: rotate(-6deg);
     }
 
+    .gloss-li-attribute {
+        color: $purple-primary;
+        font-weight: 700;
+    }
+
     .gloss-li-content {
         display: grid;
         gap: 0.8rem;
@@ -253,6 +258,10 @@
     &:first-child > h1:first-child {
         margin-block: 0;
     }
+}
+
+.doc-section > .term-li-container {
+    margin-block: 3.2rem;
 }
 
 .term-li-container {
@@ -477,6 +486,7 @@
 
 .inflection-chart-wrapper {
     display: flex;
+    flex-flow: row wrap;
     justify-content: center;
 
     .inflection-chart {
@@ -730,9 +740,11 @@ Sentences
         flex-direction: column;
         padding: 0.8rem;
         cursor: default;
+        color: black;
 
         &:hover {
             background-color: $purple-pastel-light;
+            text-decoration: none;
         }
 
         & > div:nth-child(1) {
@@ -748,7 +760,6 @@ Sentences
         }
 
         &.active {
-            color: black;
             background: rgba($accent-yellow, 0.25);
         }
     }
@@ -761,5 +772,103 @@ Sentences
     .pin {
         top: -1.2rem;
         left: -2.4rem
+    }
+}
+
+.sentence-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    direction: rtl;
+    font-family: $monoFont;
+    gap: 0.4rem 1.6rem;
+    border: 0.2rem solid $purple-pastel;
+    border-radius: 0.8rem;
+    padding: 0.8rem 0.8rem 1.0rem;
+
+    .sentence-preview-info {
+        color: $purple-pastel-dark;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .sentence-preview-term {
+        display: grid;
+        justify-items: center;
+        gap: 0.2rem;
+
+        & > *:nth-child(1) {
+            font-size: 2.0rem;
+            font-weight: 700;
+        }
+
+        & > *:nth-child(2) {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.sentence-builder-item {
+    display: grid;
+    gap: 0.4rem;
+    font-family: $monoFont;
+    border-radius: 0.8rem;
+    border: 0.1rem solid $purple-pastel;
+    padding: 0.4rem;
+
+    .builder-item-term {
+        display: flex;
+        flex-flow: row-reverse;
+        gap: 0.4rem;
+
+        & > *:nth-child(1) {
+            font-size: 1.4rem;
+        }
+
+        input {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 0;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+
+    .builder-item-gloss {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem 0.8rem;
+        flex-grow: 1;
+
+        select {
+            flex-grow: 1;
+        }
+    }
+}
+
+.missing-terms {
+    display: grid;
+    gap: 0.2rem;
+
+    & > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.4rem;
+
+        &:hover {
+            background: $purple-pastel-light;
+        }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        font-family: $bodyFont;
+        font-size: 1.6rem;
     }
 }

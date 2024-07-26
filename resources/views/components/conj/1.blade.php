@@ -38,37 +38,37 @@
 
     @elseif ($form == 'A1u')
         <x-slot name="imp1S">بَ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp1P">منُ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp1Ptr">mno{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp1Ptr">mnu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp2M">بتُ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp2Mtr">bto{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp2Mtr">btu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp2F">بتُ{{$r1}}{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="imp2Ftr">bto{{$r1tr}}{{$r2tr}}o{{$r3tr}}i</x-slot>
+        <x-slot name="imp2Ftr">btu{{$r1tr}}{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="imp2P">بتُ{{$r1}}{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="imp2Ptr">bto{{$r1tr}}{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="imp2Ptr">btu{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>
         <x-slot name="imp3M">بيُ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp3Mtr">byo{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp3Mtr">byu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp3F">بتُ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp3Ftr">bto{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp3Ftr">btu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp3P">بيُ{{$r1}}{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="imp3Ptr">byo{{$r1tr}}{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="imp3Ptr">byu{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>
 
     @elseif ($form == 'A1h')
         <x-slot name="imp1S">با{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp1Str">bā{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp1Str">bā{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp1P">منا{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp1Ptr">mnā{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp1Ptr">mnā{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp2M">بتا{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp2Mtr">btā{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp2Mtr">btā{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp2F">بتا{{$r2}}{{$r3}}ي</x-slot>
         <x-slot name="imp2Ftr">btā{{$r2tr}}{{$r3tr}}i</x-slot>
         <x-slot name="imp2P">بتا{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="imp2Ptr">btā{{$r2tr}}{{$r3tr}}u</x-slot>
         <x-slot name="imp3M">بيا{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp3Mtr">byā{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp3Mtr">byā{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp3F">بتا{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="imp3Ftr">btā{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="imp3Ftr">btā{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="imp3P">بيا{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">byā{{$r2tr}}{{$r3tr}}u</x-slot>
 
@@ -128,21 +128,21 @@
 
     @elseif ($form == 'Ci')
         <x-slot name="imp1S">بَ{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="imp1Str">ba{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp1Str">ba{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="imp1Ptr">min{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp1Ptr">min{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp2M">بِت{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="imp2Mtr">bit{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp2Mtr">bit{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp2F">بِت{{$r1}}ِ{{$r2}}ّي</x-slot>
-        <x-slot name="imp2Ftr">bit{{$r1tr}}e{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp2Ftr">bit{{$r1tr}}i{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp2P">بِت{{$r1}}ِ{{$r2}}ّو</x-slot>
-        <x-slot name="imp2Ptr">bit{{$r1tr}}e{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp2Ptr">bit{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
         <x-slot name="imp3M">بِ{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="imp3Mtr">bi{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp3Mtr">bi{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp3F">بِت{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="imp3Ftr">bit{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp3Ftr">bit{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp3P">بِ{{$r1}}ِ{{$r2}}ّو</x-slot>
-        <x-slot name="imp3Ptr">bi{{$r1tr}}e{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp3Ptr">bi{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'Ca')
         <x-slot name="imp1S">بَ{{$r1}}َ{{$r2}}ّ</x-slot>
@@ -164,21 +164,21 @@
 
     @elseif ($form == 'Cu')
         <x-slot name="imp1S">بَ{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="imp1Str">ba{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp1Str">ba{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="imp1Ptr">min{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp1Ptr">min{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp2M">بِت{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="imp2Mtr">bit{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp2Mtr">bit{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp2F">بِت{{$r1}}ُ{{$r2}}ّي</x-slot>
-        <x-slot name="imp2Ftr">bit{{$r1tr}}o{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp2Ftr">bit{{$r1tr}}u{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp2P">بِت{{$r1}}ُ{{$r2}}ّو</x-slot>
-        <x-slot name="imp2Ptr">bit{{$r1tr}}o{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp2Ptr">bit{{$r1tr}}u{{$r2tr}}{{$r2tr}}u</x-slot>
         <x-slot name="imp3M">بِ{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="imp3Mtr">bi{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp3Mtr">bi{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp3F">بِت{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="imp3Ftr">bit{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="imp3Ftr">bit{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="imp3P">بِ{{$r1}}ُ{{$r2}}ّو</x-slot>
-        <x-slot name="imp3Ptr">bi{{$r1tr}}o{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp3Ptr">bi{{$r1tr}}u{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'DY')
         <x-slot name="imp1S">بَ{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -198,7 +198,7 @@
         <x-slot name="imp3P">بِ{{$r1}}{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">bi{{$r1tr}}ī{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DA')
+    @elseif (in_array($form, ['DAi', 'DAu']))
         <x-slot name="imp1S">بَ{{$r1}}ا{{$r3}}</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}ā{{$r3tr}}</x-slot>
         <x-slot name="imp1P">مِن{{$r1}}ا{{$r3}}</x-slot>
@@ -398,7 +398,7 @@
         <x-slot name="past3P">{{$r1}}َ{{$r2}}ّو</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}a{{$r2tr}}{{$r2tr}}u</x-slot>
 
-    @elseif (in_array($form, ['DY', 'DA']))
+    @elseif (in_array($form, ['DY', 'DAi']))
         <x-slot name="past1S">{{$r1}}ِ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}i{{$r3tr}}t</x-slot>
         <x-slot name="past1P">{{$r1}}ِ{{$r3}}نا</x-slot>
@@ -416,7 +416,9 @@
         <x-slot name="past3P">{{$r1}}ا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DW')
+
+
+    @elseif (in_array($form, ['DW', 'DAu']))
         <x-slot name="past1S">{{$r1}}ُ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}u{{$r3tr}}t</x-slot>
         <x-slot name="past1P">{{$r1}}ُ{{$r3}}نا</x-slot>
@@ -472,19 +474,19 @@
 
     @elseif ($form == 'A1u')
         <x-slot name="amr2M">أ{{$r1}}{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="amr2Mtr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="amr2Mtr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="amr2F">أ{{$r1}}{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="amr2Ftr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}i</x-slot>
+        <x-slot name="amr2Ftr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">أ{{$r1}}{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="amr2Ptr">ʔo{{$r1tr}}{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="amr2Ptr">ʔu{{$r1tr}}{{$r2tr}}u{{$r3tr}}u</x-slot>
 
     @elseif ($form == 'A1h')
         <x-slot name="amr2M">{{$r2}}ُ{{$r3}}</x-slot>
-        <x-slot name="amr2Mtr">{{$r2tr}}o{{$r3tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r2tr}}u{{$r3tr}}</x-slot>
         <x-slot name="amr2F">{{$r2}}ُ{{$r3}}ي</x-slot>
-        <x-slot name="amr2Ftr">{{$r2tr}}o{{$r3tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r2tr}}u{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">{{$r2}}ُ{{$r3}}و</x-slot>
-        <x-slot name="amr2Ptr">{{$r2tr}}o{{$r3tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r2tr}}u{{$r3tr}}u</x-slot>
 
     @elseif ($form == 'B1')
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}ي</x-slot>
@@ -512,11 +514,11 @@
 
     @elseif ($form == 'Ci')
         <x-slot name="amr2M">{{$r1}}ِ{{$r2}}ّ</x-slot>
-        <x-slot name="amr2Mtr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ِ{{$r2}}ّي</x-slot>
-        <x-slot name="amr2Ftr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2P">{{$r1}}ِ{{$r2}}ّو</x-slot>
-        <x-slot name="amr2Ptr">{{$r1tr}}e{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r1tr}}i{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'Ca')
         <x-slot name="amr2M">{{$r1}}َ{{$r2}}ّ</x-slot>
@@ -528,11 +530,11 @@
 
     @elseif ($form == 'Cu')
         <x-slot name="amr2M">{{$r1}}ُ{{$r2}}ّ</x-slot>
-        <x-slot name="amr2Mtr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}</x-slot>
+        <x-slot name="amr2Mtr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ُ{{$r2}}ّي</x-slot>
-        <x-slot name="amr2Ftr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Ftr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2P">{{$r1}}ُ{{$r2}}ّو</x-slot>
-        <x-slot name="amr2Ptr">{{$r1tr}}o{{$r2tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="amr2Ptr">{{$r1tr}}u{{$r2tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == 'DY')
         <x-slot name="amr2M">{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -542,7 +544,7 @@
         <x-slot name="amr2P">{{$r1}}{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">{{$r1tr}}ī{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'DA')
+    @elseif (in_array($form, ['DAi', 'DAu']))
         <x-slot name="amr2M">{{$r1}}ا{{$r3}}</x-slot>
         <x-slot name="amr2Mtr">{{$r1tr}}ā{{$r3tr}}</x-slot>
         <x-slot name="amr2F">{{$r1}}ا{{$r3}}ي</x-slot>

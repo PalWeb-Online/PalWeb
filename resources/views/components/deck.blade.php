@@ -3,14 +3,9 @@
         <div class="deck-container-head">
             <div class="deck-container-head-title">{{ $deck->name }}</div>
 
-            @auth
-                <x-context-actions>
-                    @if (! Route::currentRouteNamed('decks.show'))
-                        <a href="{{ route('decks.show', $deck->id) }}">View Deck</a>
-                    @endif
-                    <x-deck-actions :deck="$deck" :user="auth()->user()"/>
-                </x-context-actions>
-            @endauth
+            <x-context-actions>
+                <x-deck-actions :deck="$deck"/>
+            </x-context-actions>
         </div>
 
 
@@ -41,7 +36,7 @@
         @if(count($deck->terms) > 0)
             <x-vocabulary>
                 @foreach($deck->terms as $term)
-                    <x-term :term="$term"/>
+                    <x-term :term="$term" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
                 @endforeach
             </x-vocabulary>
         @else

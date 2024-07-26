@@ -21,8 +21,8 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Maize\Markable\Models\Bookmark;
@@ -51,6 +51,16 @@ class TermController extends Controller
         ]);
     }
 
+    public function usages(Term $term)
+    {
+        $terms = [];
+        $terms[] = $term;
+
+        return view('terms.show', [
+            'terms' => $terms
+        ]);
+    }
+
     /**
      * Loads the Dictionary Index
      */
@@ -65,7 +75,6 @@ class TermController extends Controller
             'search' => ''
         ];
 
-        // Merge request parameters with default filters
         $filter = array_merge($defaultFilters, request()->only(array_keys($defaultFilters)));
         $terms = $this->termRepository->getTerms($filter);
 
@@ -100,90 +109,6 @@ class TermController extends Controller
         ]);
     }
 
-    public function search(Request $request)
-    {
-        if ($request->searchTerm == null) {
-            $searchResults = [];
-            return response()->json(compact('searchResults'));
-        }
-
-        $search = $request->searchTerm;
-
-        $results = Term::query()
-            ->select('terms.*')
-            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-            ->filter(['search' => $search])
-            ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
-            ->orderBy('terms.term', 'ASC')
-            ->take(10)
-            ->get();
-
-        $searchResults = $results->map(function ($term) {
-            return [
-                'term' => $term['term'],
-                'slug' => $term['slug'],
-                'category' => $term['category'],
-                'translit' => $term['translit'],
-            ];
-        })->toArray();
-
-        return response()->json(compact('searchResults'));
-    }
-
-    public function show(Term $term, Request $request)
-    {
-        Log::info('Term Page:', [
-            'url' => $request->fullUrl(),
-        ]);
-
-        $allPronunciations = $term->pronunciations;
-        $userPronunciations = collect();
-        $otherPronunciations = collect();
-
-        if (auth()->check()) {
-            $dialect = auth()->user()->dialect_id;
-            $dialects = Dialect::find($dialect)->ancestors->pluck('id')
-                ->merge(Dialect::find($dialect)->descendants->pluck('id'))
-                ->push($dialect);
-            $userPronunciations = $allPronunciations->whereIn('dialect_id', $dialects);
-            $otherPronunciations = $allPronunciations->whereNotIn('dialect_id', $dialects);
-        }
-
-        $likeTerms = $this->termRepository->getLikeTerms($term);
-        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])
-            ->filter()
-            ->map(function ($term) {
-                $term->glosses = $this->verbType($term->glosses, $term->category);
-                return $term;
-            });
-
-        $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
-        $sortedAttributes = $term->attributes->sortBy(function ($attr) use ($attributeOrder) {
-            return array_search($attr->attribute, $attributeOrder);
-        });
-        $term->attributes = $sortedAttributes->values();
-
-        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
-        View::share('pageDescription',
-            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
-
-        return view('terms.show', [
-            'terms' => $terms,
-            'allPronunciations' => $allPronunciations,
-            'userPronunciations' => $userPronunciations,
-            'otherPronunciations' => $otherPronunciations,
-        ]);
-    }
-
-    public function random()
-    {
-        $term = Term::inRandomOrder()->first();
-        if (!$term) {
-            return to_route('terms.index');
-        }
-        return to_route('terms.show', $term);
-    }
-
     /**
      * Retrieves a Term for updating
      */
@@ -204,7 +129,6 @@ class TermController extends Controller
                     'synonyms',
                     'antonyms',
                     'valences',
-                    'sentences'
                 ]);
             }
         ])->findOrFail($id);
@@ -232,39 +156,100 @@ class TermController extends Controller
                     'antonyms' => $gloss->antonyms->pluck('slug'),
                     'valences' => $gloss->valences->map(function ($valence) {
                         return [
-                            'id' => $valence->id,
-                            'translit' => $valence->translit,
-                            'valence' => $valence->pivot->type,
+                            'slug' => $valence->slug,
+                            'relation' => $valence->pivot->type,
                         ];
                     }),
-                    'sentences' => $gloss->sentences,
                 ];
             }),
         ];
     }
 
-    private function verbType($glosses, $category)
+    public function search(Request $request)
     {
-        return $glosses->map(function ($gloss) use ($glosses, $category) {
+        if ($request->searchTerm == null) {
+            $searchResults = [];
+            return response()->json(compact('searchResults'));
+        }
 
-            $type = false;
+        $search = $request->searchTerm;
 
-            if ($category == 'verb') {
-                if (in_array($gloss->attribute, ['unaccusative', 'passive', 'reflexive', 'reciprocal'])) {
-                    $type = 'isPatient';
-                } elseif (in_array($gloss->attribute, ['transitive', 'causative', 'dative', 'complex'])) {
-                    $type = 'hasObject';
-                } elseif (in_array($gloss->attribute, ['unergative', 'stative'])) {
-                    $type = 'noPatient';
-                } elseif ($gloss->attribute == 'auxiliary') {
-                    $type = 'auxiliary';
-                }
-            }
+        $results = Term::query()
+            ->select('terms.*')
+            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
+            ->filter(['search' => $search])
+            ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
+            ->orderBy('terms.term', 'ASC')
+            ->with('glosses')
+            ->take(10)
+            ->get();
 
-            $gloss->type = $type;
+        $searchResults = $results->map(function ($term) {
+            return [
+                'id' => $term->id,
+                'term' => $term->term,
+                'slug' => $term->slug,
+                'category' => $term->category,
+                'translit' => $term->translit,
+                'glosses' => $term->glosses->map(function ($gloss) {
+                    return [
+                        'id' => $gloss->id,
+                        'gloss' => $gloss->gloss,
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
 
-            return $gloss;
+        return response()->json(compact('searchResults'));
+    }
+
+    public function show(Term $term, Request $request)
+    {
+        Log::info('Term Page:', [
+            'url' => $request->fullUrl(),
+        ]);
+
+        $allPronunciations = $term->pronunciations;
+        $userPronunciations = collect();
+        $otherPronunciations = collect();
+
+        if (auth()->check()) {
+            $dialect = auth()->user()->dialect_id;
+            $dialects = Dialect::find($dialect)->ancestors->pluck('id')
+                ->merge(Dialect::find($dialect)->descendants->pluck('id'))
+                ->push($dialect);
+            $userPronunciations = $allPronunciations->whereIn('dialect_id', $dialects);
+            $otherPronunciations = $allPronunciations->whereNotIn('dialect_id', $dialects);
+        }
+
+        $likeTerms = $this->termRepository->getLikeTerms($term);
+        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
+
+        $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
+        $sortedAttributes = $term->attributes->sortBy(function ($attr) use ($attributeOrder) {
+            return array_search($attr->attribute, $attributeOrder);
         });
+        $term->attributes = $sortedAttributes->values();
+
+        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
+        View::share('pageDescription',
+            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+
+        return view('terms.show', [
+            'terms' => $terms,
+            'allPronunciations' => $allPronunciations,
+            'userPronunciations' => $userPronunciations,
+            'otherPronunciations' => $otherPronunciations,
+        ]);
+    }
+
+    public function random()
+    {
+        $term = Term::inRandomOrder()->first();
+        if (!$term) {
+            return to_route('terms.index');
+        }
+        return to_route('terms.show', $term);
     }
 
     /**
@@ -313,18 +298,7 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
             $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-
-            foreach ($requestGloss['sentences'] as $sentence) {
-                $sentence = Sentence::create($sentence);
-                $sentence->glosses()->attach($gloss);
-            }
         }
-
-        $missingTerm = MissingTerm::where([
-            'translit' => $term->translit,
-            'category' => $term->category
-        ]);
-        $missingTerm && $missingTerm->delete();
 
         return [
             'status' => 'success',
@@ -425,18 +399,15 @@ class TermController extends Controller
             'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit'], $term),
         ]);
 
-        // GLOSSES
         $requestGlosses = [];
         foreach ($request->glosses as $index => $requestGloss) {
             unset($requestGloss['id']);
             $requestGlosses[] = $requestGloss['gloss'];
 
-            // update existing glosses
             if ($index + 1 <= count($term->glosses)) {
                 $term->glosses[$index]->update($requestGloss);
                 $gloss = $term->glosses[$index];
 
-                // create nonexistent glosses
             } else {
                 $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
                 $gloss = Gloss::create($requestGloss);
@@ -445,44 +416,13 @@ class TermController extends Controller
             $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
             $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
             $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-            // TODO: valences are currently not distinguished as isPatient, noPatient, hasObject
-
-            // SENTENCES
-            $requestSentences = [];
-            foreach ($requestGloss['sentences'] as $i => $sentence) {
-                unset($sentence['id'], $sentence['pivot']);
-                $requestSentences[] = $sentence['translit'];
-
-                // update existing sentences
-                if ($i + 1 <= count($gloss->sentences)) {
-                    $sentenceObject = $gloss->sentences[$i];
-                    $sentenceObject->update($sentence);
-
-                    // create nonexistent sentences
-                } else {
-                    $sentenceObject = Sentence::create($sentence);
-                    $sentenceObject->glosses()->attach($gloss);
-                }
-            }
-
-            // delete sentences not in request
-            foreach ($gloss->sentences as $sentenceObject) {
-                !in_array($sentenceObject->translit, $requestSentences) && $sentenceObject->glosses()->detach($gloss);
-            }
         }
 
-        // delete glosses not in request
         foreach ($term->glosses as $gloss) {
             !in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
         }
 
         Root::doesntHave('terms')->delete();
-
-        $missingTerm = MissingTerm::where([
-            'translit' => $term->translit,
-            'category' => $term->category
-        ]);
-        $missingTerm && $missingTerm->delete();
 
         return [
             'status' => 'success',
@@ -516,34 +456,33 @@ class TermController extends Controller
     private
     function handleRelatives(
         object $origin,
-        array $requestSlugs,
+        array $requestItems,
         string $relation,
         string $reverseRelation = null
     ) {
-        $attachedSlugs = $origin->$relation->pluck('slug')->toArray();
-        $existingRequestSlugs = [];
+        $attachedTerms = $origin->$relation->pluck('slug')->toArray();
+        $requestTerms = [];
 
-        foreach ($requestSlugs as $slug) {
-            $relative = Term::firstWhere('slug', $slug);
-            if ($relative) {
-                $existingRequestSlugs[] = $relative->slug;
+        foreach ($requestItems as $item) {
+            $term = Term::firstWhere('slug', $item);
+            $type = is_array($item) ? $item['relation'] : $relation;
 
-                if (!in_array($relative->slug, $attachedSlugs)) {
-                    $origin->$relation()->attach($relative, ['type' => Str::singular($relation)]);
-                    $reverseRelation && $relative->$relation()->attach($origin, ['type' => $reverseRelation]);
+            if ($term) {
+                $requestTerms[] = $term->slug;
+
+                if (!in_array($term->slug, $attachedTerms)) {
+                    $origin->$relation()->attach($term, ['type' => Str::singular($type)]);
+                    $reverseRelation && $term->$relation()->attach($origin, ['type' => $reverseRelation]);
                 }
 
             } else {
-                $slug && MissingTerm::create(['translit' => $slug]);
+                $item && MissingTerm::create(['translit' => $item]);
             }
         }
 
-        $detachableSlugs = array_diff($attachedSlugs, $existingRequestSlugs);
+        $detachableSlugs = array_diff($attachedTerms, $requestTerms);
         foreach ($detachableSlugs as $slug) {
             $origin->$relation()->detach(Term::firstWhere('slug', $slug));
-
-            // it seems to me that the line below just repeats what's above
-//            Term::firstWhere('slug', $slug)->$relation()->detach($origin);
         }
     }
 
@@ -652,39 +591,19 @@ class TermController extends Controller
 
     public function todo()
     {
-        $missingInflections = new Collection();
+        $missingInflections = [];
         foreach (Inflection::whereIn('form', ['ap', 'pp', 'nv'])->get() as $inflection) {
             if (Term::where('translit', $inflection->translit)->doesntExist()) {
-                $missingTerms = $missingTerms->merge($inflection->translit);
+                $missingInflections[] = $inflection;
             }
         }
+        $missingInflections = collect($missingInflections);
 
-        $audioFiles = Storage::disk('s3')->allFiles('audio');
-        $audios = [];
-        foreach ($audioFiles as $audio) {
-            $audio = str_replace('audio/', '', $audio);
-            $audio = str_replace('.mp3', '', $audio);
-            $audios[] = $audio;
-        }
-
-        $pronunciationsMissingAudios = new Collection();
-        foreach (Term::all() as $term) {
-            foreach ($term->pronunciations as $pronunciation) {
-                if (!in_array($pronunciation->audify(), $audios)) {
-                    $row = strtoupper($pronunciation->dialect).': '.$pronunciation->translit;
-                    $pronunciationsMissingAudios = $pronunciationsMissingAudios->merge($row);
-                }
-            }
-        }
-
-        $inflectionsMissingAudios = Inflection::where('form', '!=', 'host')->whereNotIn('translit', $audios)->get();
-
-        View::share('pageTitle', 'to-Do');
+        View::share('pageTitle', 'Dictionary: to-Do');
         return view('terms.todo', [
+            'fromSentences' => DB::table('sentence_term')->whereNull('term_id')->get(),
             'missingTerms' => MissingTerm::all(),
             'missingInflections' => $missingInflections,
-            'pronunciationsMissingAudios' => $pronunciationsMissingAudios,
-            'inflectionsMissingAudios' => $inflectionsMissingAudios,
         ]);
     }
 }

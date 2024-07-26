@@ -12,7 +12,7 @@
 >
     <button @click="open = !open" class="collapsible-head">
         <span>{{ $title }}</span>
-        <span class="material-icons-round">ads_click</span>
+        <span class="material-symbols-rounded">ads_click</span>
     </button>
 
     <div class="collapsible-body"

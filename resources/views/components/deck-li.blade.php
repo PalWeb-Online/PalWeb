@@ -46,11 +46,8 @@
             </div>
         @endif
 
-        @auth
-            <x-context-actions>
-                <a href="{{ route('decks.show', $deck->id) }}">View Deck</a>
-                <x-deck-actions :deck="$deck"/>
-            </x-context-actions>
-        @endauth
+        <x-context-actions>
+            <x-deck-actions :deck="$deck"/>
+        </x-context-actions>
     </div>
 @endif

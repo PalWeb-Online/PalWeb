@@ -6,15 +6,29 @@
 @import 'terms';
 @import 'users';
 
-div.array {
+.group-horizontal, div.array {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row-reverse wrap;
     justify-content: center;
-    margin: 2.4rem 0;
+    margin: 3.2rem 0;
     gap: 1.6rem;
 
     & > div.array {
         margin: 0
+    }
+
+    .sentence {
+        margin-block: 0;
+    }
+}
+
+.group-vertical {
+    display: grid;
+    margin-block: 3.2rem;
+    gap: 1.6rem;
+
+    .sentence {
+        margin-block: 0;
     }
 }
 
@@ -22,7 +36,6 @@ div.array {
     display: inline-flex;
     gap: 0.2rem;
     align-items: center;
-    align-self: start;
     justify-self: start;
     font-size: 1.2rem;
     border-radius: 0.8rem;
@@ -30,6 +43,7 @@ div.array {
     background: $purple-deep;
     box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
     transform: translate(0.2rem, -0.2rem);
+    transition: 0.05s;
     user-select: none;
 
     .info-button-label,
@@ -207,10 +221,6 @@ figure.data-box {
     border: 0.3rem solid $purple-primary-dark;
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
     overflow: hidden;
-
-    &:has(.tier-item-unlocked) .tiers-action {
-        visibility: hidden;
-    }
 }
 
 .tier-item-unlocked {
@@ -247,6 +257,7 @@ figure.data-box {
 
     .tier-body {
         display: grid;
+        text-align: center;
         padding: 0.4rem 0.8rem;
         color: $purple-deep;
 
@@ -277,6 +288,12 @@ figure.data-box {
         font-size: 2.4rem;
         text-transform: none;
         padding: 1.6rem;
+    }
+
+    @media (min-width: 960px) {
+        .tier-body {
+            text-align: left;
+        }
     }
 }
 
@@ -687,26 +704,6 @@ ul.search-results {
     img {
         width: 1.6rem !important;
     }
-
-    .search-bar {
-        input {
-            height: auto;
-            padding: 0 1.6rem;
-            font-size: 1.4rem;
-            border: none;
-            outline: 0.1rem solid $purple-deep;
-            box-shadow: none;
-
-            &:focus {
-                border: none;
-                outline: 0.2rem solid $accent-yellow;
-            }
-        }
-
-        button {
-            display: none;
-        }
-    }
 }
 
 .auth-field {
@@ -774,6 +771,29 @@ ul.search-results {
             color: red;
         }
     }
+
+    .search-bar {
+        width: 100%;
+
+        input {
+            height: auto;
+            padding: 0.8rem 1.6rem;
+            margin: 0;
+            font-size: 1.6rem;
+            border: none;
+            box-shadow: none;
+            background: $purple-pastel-light;
+
+            &:focus {
+                border: none;
+                outline: 0.2rem solid $accent-yellow;
+            }
+        }
+
+        button {
+            display: none;
+        }
+    }
 }
 
 // TERM EDITOR
@@ -821,12 +841,6 @@ ul.search-results {
         color: $purple-primary;
     }
 
-    &.draggable {
-        label {
-            cursor: grab;
-        }
-    }
-
     .field-label {
         color: $accent-yellow;
         font-size: 2.4rem;
@@ -854,4 +868,9 @@ ul.search-results {
         cursor: pointer;
         width: 2.0rem;
     }
+}
+
+.draggable {
+    display: grid;
+    gap: 1.6rem;
 }

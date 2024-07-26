@@ -1,7 +1,7 @@
 @php
     $current = 'guest';
 
-    if(auth()->check()) {
+    if (auth()->check()) {
         $current = 'hobbyist';
 
         if(in_array(auth()->user()->getRolesAsString(), ['student', 'admin'])) {
@@ -11,7 +11,7 @@
 
     $unlocked = false;
 
-    if($tier === 'guest' && in_array($current, ['hobbyist', 'student'])) {
+    if ($tier === 'guest' && in_array($current, ['hobbyist', 'student'])) {
         $unlocked = true;
     } elseif ($tier === 'hobbyist' && $current === 'student') {
         $unlocked = true;
@@ -19,7 +19,7 @@
 
     $unlockable = false;
 
-    if($tier === 'hobbyist' && $current === 'guest') {
+    if ($tier === 'hobbyist' && $current === 'guest') {
         $unlockable = true;
     } elseif ($tier === 'student' && in_array($current, ['hobbyist', 'guest'])) {
         $unlockable = true;
@@ -61,12 +61,14 @@
                 Support the Project
             </div>
         </div>
-        <div class="tiers-pricing">{{ $tier === 'student' ? '$8/m $80/y' : 'FREE' }}</div>
+        <div class="tiers-pricing">{{ $tier === 'student' ? '$12/m $80/y' : 'FREE' }}</div>
 
         @if($tier === $current)
             <div class="tiers-action">{{ 'current' }}</div>
         @elseif($current === 'guest')
             <a href="{{ route('signin') }}" class="tiers-action">{{ __('signin') }}</a>
+        @elseif($unlocked)
+            <div class="tiers-action">{{ 'unlocked' }}</div>
         @else
             <a href="/billing" class="tiers-action">{{ 'upgrade' }}</a>
         @endif

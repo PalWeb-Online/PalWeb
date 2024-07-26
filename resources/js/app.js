@@ -1,5 +1,6 @@
 import {createApp, h} from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
+import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
@@ -18,6 +19,12 @@ if (document.querySelector('#termEditor')) {
     const termEditorApp = createApp({});
     termEditorApp.component('TermEditor', TermEditor);
     termEditorApp.mount('#termEditor');
+}
+
+if (document.querySelector('#sentenceEditor')) {
+    const sentenceEditorApp = createApp({});
+    sentenceEditorApp.component('SentenceEditor', SentenceEditor);
+    sentenceEditorApp.mount('#sentenceEditor');
 }
 
 if (document.querySelector('#deckBuilder')) {

@@ -18,7 +18,6 @@
                 </script>
 
                 <x-context-actions>
-                    <a href="{{ route('terms.show', $wordOfTheDay) }}" target="_blank">View Term</a>
                     <x-term-actions :term="$wordOfTheDay" :user="auth()->user()"/>
                 </x-context-actions>
 

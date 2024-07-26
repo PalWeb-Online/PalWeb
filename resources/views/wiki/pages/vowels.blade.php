@@ -292,7 +292,6 @@
     </div>
 
     <h1>Realization</h1>
-    <div class="line"></div>
 
     <p>How do we know when and how to pronounce every vowel? After all, in writing there are still just three vowel
         letters

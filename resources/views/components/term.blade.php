@@ -11,7 +11,6 @@
     <div class="term-li-container">
         <div class="term-li-wrapper">
             <x-context-actions>
-                <a href="{{ route('terms.show', $term) }}" target="_blank">View Term</a>
                 <x-term-actions :term="$term"/>
             </x-context-actions>
 
@@ -25,7 +24,7 @@
                 </script>
 
                 <div class="eng">
-                    {{ \Illuminate\Support\Str::limit($term->glosses[$i ?? 0]->gloss, 48) }}
+                    {{ \Illuminate\Support\Str::limit($gloss->gloss ?? $term->glosses[0]->gloss, 48) }}
                 </div>
 
                 @if($term->isPinned())

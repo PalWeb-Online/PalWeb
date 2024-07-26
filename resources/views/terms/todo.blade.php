@@ -2,55 +2,60 @@
 
 @section('content')
 
-    <style>
+    <x-page-head>
+        <x-link :href="route('terms.index')">{{ __('dictionary') }}</x-link>
+        <x-link :href="route('terms.todo')">{{ __('todo') }}</x-link>
+    </x-page-head>
 
-        h1 {
-            font-family: 'JetBrains Mono', monospace, 'Readex Pro';
-            text-transform: uppercase;
-            font-weight: 700;
-            font-size: 2.4rem;
-        }
+    <div class="doc-section">
+        <h1>From Sentences</h1>
+        <div class="missing-terms">
+            @foreach ($fromSentences as $term)
+                <div>
+                    {{ $term->sent_term }}
+                    ({{ $term->sent_translit }})
 
-        ul {
-            font-size: 1.6rem;
-            font-family: 'JetBrains Mono', monospace, 'Readex Pro';
-            font-weight: 700;
-            margin: 1.6rem 0 0;
-        }
+                    <a href="{{ route('sentences.show', $term->sentence_id) }}">View Sentence</a>
+                </div>
+            @endforeach
+        </div>
 
-        #main a {
-            color: var(--grn)
-        }
+        <h1>Missing Terms</h1>
+        <div class="missing-terms">
+            @foreach ($missingTerms as $missingTerm)
+                <div>
+                    {{ $missingTerm->translit }}
+                    ({{ $missingTerm->category }})
 
-        #main a:hover {
-            color: var(--red)
-        }
+                    <form method="POST" action="{{ route('missing.destroy', $missingTerm) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button onclick="return confirm('Are you sure you want to delete this item from the list?')">
+                            <a>Delete Missing</a>
+                        </button>
+                    </form>
+                </div>
+            @endforeach
+        </div>
 
-    </style>
+        <h1>Missing Inflections</h1>
+        <div class="missing-terms">
+            @foreach ($missingInflections as $missingInflection)
+                <div>
+                    {{ $missingInflection->inflection }}
+                    {{ $missingInflection->translit }}
+                    ({{ $missingInflection->form }})
 
-    <a href="{{ route("terms.index") }}" class="material-symbols-rounded subtitle">arrow_back</a>
-    <div class="maintitle">To-Do</div>
-
-    <h1>Missing Terms</h1>
-    <ul>
-        @foreach ($missingTerms as $missingTerm)
-            <li>{{ $missingTerm->translit }} ({{ $missingTerm->category }})</li>
-        @endforeach
-    </ul>
-
-    <h1>Missing Audios</h1>
-    <ul>
-        @foreach ($pronunciationsMissingAudios as $pronunciation)
-            <li>{{ $pronunciation }}</li>
-        @endforeach
-        @foreach ($inflectionsMissingAudios as $inflection)
-            @if(!in_array($inflection->form, ['ap', 'pp', 'nv', 'isPatient', 'noPatient', 'hasObject']))
-                <li>CENTRAL URBAN PALESTINIAN: {{ $inflection->translit }}</li>
-            @else
-                <li>CENTRAL URBAN PALESTINIAN: <a
-                        href="/dictionary/verb/{{ $inflection->translit }}">{{ $inflection->translit }}</a></li>
-            @endif
-        @endforeach
-    </ul>
+                    <form method="POST" action="{{ route('missing.destroy', $missingInflection) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button onclick="return confirm('Are you sure you want to delete this sentence?')">
+                            <img src="{{ asset('/img/trash.svg') }}" alt="Delete"/>
+                        </button>
+                    </form>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
 @endsection

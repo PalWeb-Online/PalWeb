@@ -182,11 +182,11 @@
                        eng="what songs & singers you like"/>
         <x-dialog-line arb="كان ما صار اللي صار"
                        eng="what happened wouldn't have happened"/>
-        <x-dialog-line speaker="رنا" arb="ماما، كلّ هاذا عملتيه وإنتا مش متأكّدة أصلًا مين هو جيمي"
-                       eng="Mom, you did all this while not even being sure who Jimmy is"/>
+        <x-dialog-line speaker="رنا" arb="ماما، كلّ هاذا عملتيه وإنتي مش متأكّدة أصلًا مين هو جيمي"
+                       eng="Mom, you did all of this while not even being sure who Jimmy is"/>
         <x-dialog-line arb="وما سألتيني شخصيًّا عنّه"
                        eng="& you didn't ask me personally about him"/>
-        <x-dialog-line arb="كيف بدّك ايّاني أشاركك بأفكاري وشو بصير معي إذا إنتا هيك ردّة فعلك دايمًا؟"
+        <x-dialog-line arb="كيف بدّك ايّاني أشاركك بأفكاري وشو بصير معي إذا إنتي هيك ردّة فعلك دايمًا؟"
                        eng="how do you want me to share with you my thoughts & what happens in my life if this is always your reaction?"/>
         <x-dialog-line speaker="إمّ يزن" arb="رنّوش، أنا بعتذر منّك، أنا بالغت"
                        eng="Rannoush, I apologize, & I exaggerated"/>
@@ -210,10 +210,10 @@
         <x-dialog-line arb="عشان هيك، لازم نخلّي قنوات التواصل والحوار دايمًا مفتوحة"
                        eng="because of that, we should keep the channels of communication & dialogue always open"/>
         <x-dialog-line speaker="إمّ يزن" arb="وبلاها المبالغة بردود أفعالنا — لإنّها بتبني حواجز كثير بيننا وبينهم"
-                       eng="& let's not exaggerate in our reactions, because this raises walls between us & them"/>
+                       eng="& let's not exaggerate in our reactions, because it raises many barriers between us & them"/>
         <x-dialog-line speaker="أبو يزن" arb="وكثير مهمّ إحنا كآباء نعبّر عن محبّتنا لبناتنا"
                        eng="& it's very important that we as fathers express our affection for our daughters"/>
-        <x-dialog-line speaker="أبو يزن" arb="بالكلام الحلو والورد والهدايا والوقت"
+        <x-dialog-line arb="بالكلام الحلو والورد والهدايا والوقت"
                        eng="with nice words, flowers, gifts & time"/>
         <x-dialog-line arb="ونخفّف انتقادات وتكون تعليقاتنا إيجابيّة، ترفع معنوياتهم وتقرّبنا منّهم أكثر"
                        eng="& that we tone down criticisms & that our comments be positive, lift their spirits & bring us closer to them"/>

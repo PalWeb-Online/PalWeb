@@ -55,10 +55,10 @@ export default {
             this.showResults = false;
         },
 
-        emitSlug(term) {
-            this.searchTerm = term.term;
-            this.$emit('emitSlug', term.slug);
+        emitTerm(term) {
+            this.$emit('emitTerm', { term });
             this.ignoreNextSearch = true;
+            this.searchTerm = '';
             this.closeResults();
         }
     }
@@ -75,7 +75,7 @@ export default {
                 <div>{{ value.term }}</div>
                 <div>({{ value.translit }}) {{ value.category }}.</div>
             </a>
-            <div v-if="resultType === 'slug'" class="search-result" @click="emitSlug(value)"
+            <div v-if="resultType === 'model'" class="search-result" @click="emitTerm(value)"
                  v-for="(value, index) in searchResults" :key="index">
                 <div>{{ value.term }}</div>
                 <div>({{ value.translit }}) {{ value.category }}.</div>

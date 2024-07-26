@@ -12,8 +12,8 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('pfp', 'avatar');
+        Schema::table('deck_term', function (Blueprint $table) {
+            $table->foreignId('gloss_id')->nullable()->constrained()->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
@@ -24,8 +24,9 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('avatar', 'pfp');
+        Schema::table('deck_term', function (Blueprint $table) {
+            $table->dropForeign('deck_term_gloss_id_foreign');
+            $table->dropColumn('gloss_id');
         });
     }
 };

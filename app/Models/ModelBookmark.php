@@ -34,7 +34,7 @@ abstract class ModelBookmark extends Model
             public function apply(Builder $builder, Model $model)
             {
                 $builder->where('markable_type', '=', $this->modelName)
-                    ->orderBy('created_at', 'ASC');
+                    ->orderBy('id', 'ASC');
             }
         });
     }

@@ -162,7 +162,6 @@ export default {
                 gloss: '',
                 attribute: '',
                 structure: '',
-                sentences: [],
                 synonyms: [],
                 antonyms: [],
                 valences: [],
@@ -191,23 +190,11 @@ export default {
         addValence(gloss) {
             let item = this.glosses.find(itm => itm == gloss);
             item.valences.push({
-                translit: '',
-                valence: '',
+                slug: '',
+                relation: '',
             });
         },
         removeValence(index, fieldType) {
-            fieldType.splice(index, 1)
-        },
-
-        addSentence(gloss) {
-            let item = this.glosses.find(itm => itm == gloss);
-            item.sentences.push({
-                sentence: '',
-                translit: '',
-                trans: ''
-            });
-        },
-        removeSentence(index, fieldType) {
             fieldType.splice(index, 1)
         },
 
@@ -459,8 +446,8 @@ export default {
 
                     <template v-if="!attributes.includes(['idiom', 'clitic'])">
                         <div class="form-field">
-                            <label for="root">Root{{ term.category === 'verb' ? ' *' : '' }}</label>
-                            <input id="root" v-model="root" :required="term.category === 'verb'"
+                            <label for="root">Root{{ term.category === 'verb' && !attributes.includes('idiom') ? ' *' : '' }}</label>
+                            <input id="root" v-model="root" :required="term.category === 'verb' && !attributes.includes('pseudo')"
                                    name="root"
                                    type="text"/>
                         </div>
@@ -513,6 +500,7 @@ export default {
                                         <option value="A1">A1</option>
                                         <option value="A1a">A1a</option>
                                         <option value="A1u">A1u</option>
+                                        <option value="A1h">A1h</option>
                                         <option value="A2">A2</option>
                                         <option value="A2i">A2i</option>
                                         <option value="B1">B1</option>
@@ -522,9 +510,9 @@ export default {
                                         <option value="Ca">Ca</option>
                                         <option value="Cu">Cu</option>
                                         <option value="DY">DY</option>
-                                        <option value="DA">DA</option>
+                                        <option value="DAi">DAi</option>
+                                        <option value="DAu">DAu</option>
                                         <option value="DW">DW</option>
-                                        <option value="Ah">Ah</option>
                                         <option value="U1">U1</option>
                                         <option value="U2">U2</option>
                                     </template>
@@ -752,29 +740,33 @@ export default {
                                 <select :id="'glosses['+index+'][attribute]'" v-model="gloss.attribute"
                                         :name="'glosses['+index+'][attribute]'" required>
                                     <option value="auxiliary">auxiliary</option>
-                                    <optgroup label="isPatient">
-                                        <option value="unaccusative">unaccusative</option>
-                                        <option value="passive">passive</option>
-                                        <option value="reflexive">reflexive</option>
-                                        <option value="reciprocal">reciprocal</option>
-                                    </optgroup>
-                                    <optgroup label="noPatient">
-                                        <option value="unergative">unergative</option>
-                                        <option value="stative">stative</option>
-                                    </optgroup>
-                                    <optgroup label="hasObject">
-                                        <option value="transitive">transitive</option>
-                                        <option value="causative">causative</option>
-                                        <option value="causative">dative</option>
-                                        <option value="complex">complex</option>
-                                    </optgroup>
+                                    <option label="isPatient">isPatient</option>
+                                    <option label="noPatient">noPatient</option>
+                                    <option label="hasObject">hasObject</option>
                                 </select>
-                            </div>
-                            <div v-if="gloss.attribute !== 'auxiliary'" class="form-field">
-                                <label :for="'glosses['+index+'][structure]'">Argument Structure *</label>
-                                <input :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
-                                       :name="'glosses['+index+'][structure]'"
-                                       required type="text"/>
+                                <template v-if="gloss.attribute !== '' && gloss.attribute !== 'auxiliary'">
+                                    <label :for="'glosses['+index+'][structure]'">Structure *</label>
+                                    <select :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
+                                            :name="'glosses['+index+'][structure]'" required>
+                                        <optgroup label="isPatient" v-if="gloss.attribute === 'isPatient'">
+                                            <option value="unaccusative">unaccusative</option>
+                                            <option value="passive">passive</option>
+                                            <option value="reflexive">reflexive</option>
+                                            <option value="reciprocal">reciprocal</option>
+                                        </optgroup>
+                                        <optgroup label="noPatient" v-if="gloss.attribute === 'noPatient'">
+                                            <option value="unergative">unergative</option>
+                                            <option value="copular">copular</option>
+                                            <option value="stative">stative</option>
+                                        </optgroup>
+                                        <optgroup label="hasObject" v-if="gloss.attribute === 'hasObject'">
+                                            <option value="transitive">transitive</option>
+                                            <option value="ditransitive">ditransitive</option>
+                                            <option value="causative">causative</option>
+                                            <option value="dative">dative</option>
+                                        </optgroup>
+                                    </select>
+                                </template>
                             </div>
                         </template>
 
@@ -802,11 +794,11 @@ export default {
 
                         <div v-if="term.category === 'verb'" class="field-wrapper with-add-field">
                             <div v-for="(valence, index) in gloss.valences" :key="index" class="form-field inline">
-                                <label :for="'valences['+index+'][translit]'">valence</label>
-                                <input :id="'valences['+index+'][translit]'" v-model="valence.translit"
-                                       :name="'valences['+index+'][translit]'" type="text"/>
-                                <select :id="'valences['+index+'][valence]'"
-                                        v-model="valence.valence" :name="'valences['+index+'][valence]'" required>
+                                <label :for="'valences['+index+'][slug]'">valence</label>
+                                <input :id="'valences['+index+'][slug]'" v-model="valence.slug"
+                                       :name="'valences['+index+'][slug]'" type="text"/>
+                                <select :id="'valences['+index+'][relation]'"
+                                        v-model="valence.relation" :name="'valences['+index+'][relation]'" required>
                                     <option value="isPatient">isPatient</option>
                                     <option value="noPatient">noPatient</option>
                                     <option value="hasObject">hasObject</option>
@@ -815,35 +807,6 @@ export default {
                                      @click="removeValence(index, gloss.valence)"/>
                             </div>
                             <div class="field-add" @click="addValence(gloss)">+ Add VALENCE</div>
-                        </div>
-
-                        <div class="field-wrapper with-add-object">
-                            <div v-for="(sentence, i) in gloss.sentences" :key="i" class="field-wrapper compound-field">
-                                <div class="field-label">
-                                    <div>sentence</div>
-                                    <img src="/img/trash.svg" alt="Delete" v-show="gloss.sentences.length > 0"
-                                         @click="removeSentence(i, gloss.sentences)"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][sentence]'">Sentence *</label>
-                                    <input :id="'sentences['+i+'][sentence]'" v-model="sentence.sentence"
-                                           :name="'sentences['+i+'][sentence]'"
-                                           required type="text"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][translit]'">Translit *</label>
-                                    <input :id="'sentences['+i+'][translit]'" v-model="sentence.translit"
-                                           :name="'sentences['+i+'][translit]'"
-                                           required type="text"/>
-                                </div>
-                                <div class="form-field">
-                                    <label :for="'sentences['+i+'][trans]'">Translat *</label>
-                                    <input :id="'sentences['+i+'][trans]'" v-model="sentence.trans"
-                                           :name="'sentences['+i+'][trans]'"
-                                           required type="text"/>
-                                </div>
-                            </div>
-                            <div class="field-add" @click="addSentence(gloss)">+ Add SENTENCE</div>
                         </div>
                     </div>
                     <div class="field-add" @click="addGloss()">+ Add GLOSS</div>

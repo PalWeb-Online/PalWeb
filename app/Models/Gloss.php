@@ -19,11 +19,6 @@ class Gloss extends Model
         return $this->belongsTo(Term::class);
     }
 
-    public function sentences()
-    {
-        return $this->belongsToMany(Sentence::class);
-    }
-
     public function valences()
     {
         return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')

@@ -49,12 +49,22 @@ class Term extends Model
         }
     }
 
-    // TODO: are the Featured In decks being ordered by the position of the term within it?
+    public function sentences(int $gloss_id = null): BelongsToMany
+    {
+        $relationship = $this->belongsToMany(Sentence::class)
+            ->withPivot('gloss_id', 'sent_term', 'sent_translit', 'position');
+
+        if ($gloss_id) {
+            $relationship->wherePivot('gloss_id', $gloss_id);
+        }
+
+        return $relationship;
+    }
+
     public function decks(): BelongsToMany
     {
         return $this->belongsToMany(Deck::class)
-            ->withPivot('position')
-            ->orderBy('position');
+            ->withPivot('position');
     }
 
     public function root(): BelongsTo

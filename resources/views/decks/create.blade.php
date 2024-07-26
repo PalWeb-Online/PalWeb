@@ -17,8 +17,6 @@
                 Flashcards. <a href="https://youtu.be/R26-A9dgxCY" target="_blank">Watch the tutorial to get
                     started!</a>
             </p>
-            <p>Use the <b>Live Search</b> bar to the left to insert the unique identifier of the terms you need to the
-                right.</p>
         </div>
 
         <div id="deckBuilder">

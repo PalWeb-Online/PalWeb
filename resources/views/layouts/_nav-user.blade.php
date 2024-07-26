@@ -85,15 +85,15 @@
         @else
             <div class="nav-user-options-section">
                 <div class="featured-title l"
-                     style="font-family: 'monotalic', sans-serif; text-transform: none; font-weight: 700; margin-block-end: 3.2rem">
+                     style="text-transform: none">
                     enjoying
                     PalWeb?
                 </div>
-                <div class="nav-user-options-row" style="justify-content: start">
+                <div class="nav-user-options-row" style="grid-column: span 2">
                     <a class="nav-user-options-row-title" style="font-size: 2.4rem; text-transform: none"
                        href="https://www.ko-fi.com/palweb" target="_blank">Donate via Ko-Fi</a>
                 </div>
-                <div class="nav-user-options-row" style="justify-content: start">
+                <div class="nav-user-options-row" style="grid-column: span 2">
                     <a class="nav-user-options-row-title" style="font-size: 2.4rem; text-transform: none"
                        href="{{ route('dashboard.subscription') }}">Subscribe to PalWeb</a>
                 </div>
