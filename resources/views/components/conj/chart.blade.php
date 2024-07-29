@@ -61,8 +61,11 @@
 
     <div class="inflection-chart">
         <div class="inflection-chart-title" style="grid-column: span 2">{{ __('past') }}</div>
-        <div class="inflection-chart-item">
-            <div>1S</div>
+        <div class="inflection-chart-item" style="grid-row: span 2">
+            <div style="display: grid; gap: 1.6rem">
+                <div>1S</div>
+                <div>2M</div>
+            </div>
             <div>
                 <div>{{ $past1S }}</div>
                 <div>{{ $past1Str }}</div>
@@ -73,13 +76,6 @@
             <div>
                 <div>{{ $past1P }}</div>
                 <div>{{ $past1Ptr }}</div>
-            </div>
-        </div>
-        <div class="inflection-chart-item">
-            <div>2M</div>
-            <div>
-                <div>{{ $past2M }}</div>
-                <div>{{ $past2Mtr }}</div>
             </div>
         </div>
         <div class="inflection-chart-item">

@@ -72,7 +72,7 @@
         <x-slot name="imp3P">بيا{{$r2}}{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">byā{{$r2tr}}{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'B1')
+    @elseif (in_array($form, ['B1', 'B2i']))
         <x-slot name="imp1S">بَ{{$r1}}{{$r2}}ي</x-slot>
         <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp1P">منِ{{$r1}}{{$r2}}ي</x-slot>
@@ -362,7 +362,7 @@
         <x-slot name="past3P">{{$r1}}َ{{$r2}}و</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}a{{$r2tr}}u</x-slot>
 
-    @elseif ($form == 'B2')
+    @elseif (in_array($form, ['B2', 'B2i']))
         <x-slot name="past1S">{{$r1}}{{$r2}}يت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}{{$r2tr}}īt</x-slot>
         <x-slot name="past1P">{{$r1}}{{$r2}}ينا</x-slot>
@@ -488,7 +488,7 @@
         <x-slot name="amr2P">{{$r2}}ُ{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">{{$r2tr}}u{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'B1')
+    @elseif (in_array($form, ['B1', 'B2i']))
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}ي</x-slot>
         <x-slot name="amr2Mtr">ʔi{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2F">إ{{$r1}}{{$r2}}ي</x-slot>

@@ -506,6 +506,7 @@ export default {
                                         <option value="B1">B1</option>
                                         <option value="B1a">B1a</option>
                                         <option value="B2">B2</option>
+                                        <option value="B2i">B2i</option>
                                         <option value="Ci">Ci</option>
                                         <option value="Ca">Ca</option>
                                         <option value="Cu">Cu</option>
