@@ -516,6 +516,7 @@ export default {
                                         <option value="DW">DW</option>
                                         <option value="U1">U1</option>
                                         <option value="U2">U2</option>
+                                        <option value="ʔaža">ʔaža</option>
                                     </template>
                                     <template v-if="verbPattern.form !== '1'">
                                         <option value="A">A</option>
@@ -530,6 +531,9 @@ export default {
                                     </template>
                                     <template v-if="verbPattern.form === '8'">
                                         <option value="E">E</option>
+                                    </template>
+                                    <template v-if="verbPattern.form === '7'">
+                                        <option value="istanna">istanna</option>
                                     </template>
                                 </select>
                             </template>

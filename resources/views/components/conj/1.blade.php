@@ -270,23 +270,23 @@
         <x-slot name="imp3P">بيو{{$r2}}َ{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">byū{{$r2tr}}a{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'ʔija')
+    @elseif ($form == 'ʔaža')
         <x-slot name="imp1S">باجي</x-slot>
-        <x-slot name="imp1Str">bāji</x-slot>
+        <x-slot name="imp1Str">bāži</x-slot>
         <x-slot name="imp1P">منيجي</x-slot>
-        <x-slot name="imp1Ptr">mnīji</x-slot>
+        <x-slot name="imp1Ptr">mnīži</x-slot>
         <x-slot name="imp2M">بتيجي</x-slot>
-        <x-slot name="imp2Mtr">btīji</x-slot>
+        <x-slot name="imp2Mtr">btīži</x-slot>
         <x-slot name="imp2F">بتيجي</x-slot>
-        <x-slot name="imp2Ftr">btīji</x-slot>
+        <x-slot name="imp2Ftr">btīži</x-slot>
         <x-slot name="imp2P">بتيجو</x-slot>
-        <x-slot name="imp2Ptr">btīju</x-slot>
+        <x-slot name="imp2Ptr">btīžu</x-slot>
         <x-slot name="imp3M">بيجي</x-slot>
-        <x-slot name="imp3Mtr">bīji</x-slot>
+        <x-slot name="imp3Mtr">bīži</x-slot>
         <x-slot name="imp3F">بتيجي</x-slot>
-        <x-slot name="imp3Ftr">btīji</x-slot>
+        <x-slot name="imp3Ftr">btīži</x-slot>
         <x-slot name="imp3P">بيجو</x-slot>
-        <x-slot name="imp3Ptr">bīju</x-slot>
+        <x-slot name="imp3Ptr">bīžu</x-slot>
 
 @endif
 
@@ -417,7 +417,6 @@
         <x-slot name="past3Ptr">{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
 
-
     @elseif (in_array($form, ['DW', 'DAu']))
         <x-slot name="past1S">{{$r1}}ُ{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}u{{$r3tr}}t</x-slot>
@@ -436,23 +435,23 @@
         <x-slot name="past3P">{{$r1}}ا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'ʔija')
-        <x-slot name="past1S">إجيت</x-slot>
-        <x-slot name="past1Str">ʔijīt</x-slot>
-        <x-slot name="past1P">إجينا</x-slot>
-        <x-slot name="past1Ptr">ʔijīna</x-slot>
-        <x-slot name="past2M">إجيت</x-slot>
-        <x-slot name="past2Mtr">ʔijīt</x-slot>
-        <x-slot name="past2F">إجيتي</x-slot>
-        <x-slot name="past2Ftr">ʔijīti</x-slot>
-        <x-slot name="past2P">إجيتو</x-slot>
-        <x-slot name="past2Ptr">ʔijītu</x-slot>
-        <x-slot name="past3M">إجى</x-slot>
-        <x-slot name="past3Mtr">ʔija</x-slot>
-        <x-slot name="past3F">إجَت</x-slot>
-        <x-slot name="past3Ftr">ʔijat</x-slot>
-        <x-slot name="past3P">إجو</x-slot>
-        <x-slot name="past3Ptr">ʔiju</x-slot>
+    @elseif ($form == 'ʔaža')
+        <x-slot name="past1S">أجيت</x-slot>
+        <x-slot name="past1Str">ʔažīt</x-slot>
+        <x-slot name="past1P">أجينا</x-slot>
+        <x-slot name="past1Ptr">ʔažīna</x-slot>
+        <x-slot name="past2M">أجيت</x-slot>
+        <x-slot name="past2Mtr">ʔažīt</x-slot>
+        <x-slot name="past2F">أجيتي</x-slot>
+        <x-slot name="past2Ftr">ʔažīti</x-slot>
+        <x-slot name="past2P">أجيتو</x-slot>
+        <x-slot name="past2Ptr">ʔažītu</x-slot>
+        <x-slot name="past3M">أجى</x-slot>
+        <x-slot name="past3Mtr">ʔaža</x-slot>
+        <x-slot name="past3F">أجَت</x-slot>
+        <x-slot name="past3Ftr">ʔažat</x-slot>
+        <x-slot name="past3P">أجو</x-slot>
+        <x-slot name="past3Ptr">ʔažu</x-slot>
 
 @endif
 
@@ -576,7 +575,7 @@
         <x-slot name="amr2P">أو{{$r2}}َ{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">ʔū{{$r2tr}}a{{$r3tr}}u</x-slot>
 
-    @elseif ($form == 'ʔija')
+    @elseif ($form == 'ʔaža')
         <x-slot name="amr2M">تعال</x-slot>
         <x-slot name="amr2Mtr">taʕāl</x-slot>
         <x-slot name="amr2F">تعالي</x-slot>

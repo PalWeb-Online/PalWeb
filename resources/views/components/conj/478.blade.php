@@ -234,6 +234,24 @@
         <x-slot name="imp3P">بِستَ{{$r1}}ي{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">bista{{$r1tr}}ī{{$r3tr}}u</x-slot>
 
+    @elseif ($form == '7istanna')
+        <x-slot name="imp1S">بَستَنّى</x-slot>
+        <x-slot name="imp1Str">bastanna</x-slot>
+        <x-slot name="imp1P">منِستَنّى</x-slot>
+        <x-slot name="imp1Ptr">mnistanna</x-slot>
+        <x-slot name="imp2M">بتِستَنّى</x-slot>
+        <x-slot name="imp2Mtr">btistanna</x-slot>
+        <x-slot name="imp2F">بتِستَنّي</x-slot>
+        <x-slot name="imp2Ftr">btistanni</x-slot>
+        <x-slot name="imp2P">بتِستَنّو</x-slot>
+        <x-slot name="imp2Ptr">btistannu</x-slot>
+        <x-slot name="imp3M">بِستَنّى</x-slot>
+        <x-slot name="imp3Mtr">bistanna</x-slot>
+        <x-slot name="imp3F">بتِستَنّى</x-slot>
+        <x-slot name="imp3Ftr">btistanna</x-slot>
+        <x-slot name="imp3P">بِستَنّو</x-slot>
+        <x-slot name="imp3Ptr">bistannu</x-slot>
+
 @endif
 
 @if ($form == '4A')
@@ -470,6 +488,24 @@
         <x-slot name="past3P">استَ{{$r1}}ا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">ista{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
+    @elseif ($form == '7istanna')
+        <x-slot name="past1S">استَنّيت</x-slot>
+        <x-slot name="past1Str">istannēt</x-slot>
+        <x-slot name="past1P">اِستَنّينا</x-slot>
+        <x-slot name="past1Ptr">istannēna</x-slot>
+        <x-slot name="past2M">استَنّيت</x-slot>
+        <x-slot name="past2Mtr">istannēt</x-slot>
+        <x-slot name="past2F">استَنّيتي</x-slot>
+        <x-slot name="past2Ftr">istannēti</x-slot>
+        <x-slot name="past2P">استَنّيتو</x-slot>
+        <x-slot name="past2Ptr">istannētu</x-slot>
+        <x-slot name="past3M">استَنّى</x-slot>
+        <x-slot name="past3Mtr">istanna</x-slot>
+        <x-slot name="past3F">استَنّت</x-slot>
+        <x-slot name="past3Ftr">istannat</x-slot>
+        <x-slot name="past3P">استَنّو</x-slot>
+        <x-slot name="past3Ptr">istannu</x-slot>
+
 @endif
 
 @if ($form == '4A')
@@ -575,6 +611,14 @@
         <x-slot name="amr2Ftr">ʔista{{$r1tr}}ī{{$r3tr}}i</x-slot>
         <x-slot name="amr2P">إستَ{{$r1}}ي{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">ʔista{{$r1tr}}ī{{$r3tr}}u</x-slot>
+
+    @elseif ($form == '7istanna')
+        <x-slot name="amr2M">استَنّى</x-slot>
+        <x-slot name="amr2Mtr">istanna</x-slot>
+        <x-slot name="amr2F">استَنّي</x-slot>
+        <x-slot name="amr2Ftr">istanni</x-slot>
+        <x-slot name="amr2P">استَنّو</x-slot>
+        <x-slot name="amr2Ptr">istannu</x-slot>
 
 @endif
 
