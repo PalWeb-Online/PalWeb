@@ -18,8 +18,8 @@
         <div class="inflection-chart-item">
             <div>2M</div>
             <div>
-                <div>{{ $imp2M }}</div>
-                <div>{{ $imp2Mtr }}</div>
+                <div>{{ $imp3F }}</div>
+                <div>{{ $imp3Ftr }}</div>
             </div>
         </div>
         <div class="inflection-chart-item">
