@@ -128,7 +128,7 @@
         <x-slot name="imp3P">ب{{$r1}}تا{{$r3}}و</x-slot>
         <x-slot name="imp3Ptr">bi{{$r1tr}}tā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '8U')
+    @elseif ($form == '8E')
         <x-slot name="imp1S">بتّ{{$r2}}{{$r3}}</x-slot>
         <x-slot name="imp1Str">batt{{$r2tr}}i{{$r3tr}}</x-slot>
         <x-slot name="imp1P">منتّ{{$r2}}{{$r3}}</x-slot>
@@ -354,7 +354,7 @@
         <x-slot name="past3P">ا{{$r1}}تا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">i{{$r1tr}}tā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '8U')
+    @elseif ($form == '8E')
         <x-slot name="past1S">اتّ{{$r2}}{{$r3}}ت</x-slot>
         <x-slot name="past1Str">itta{{$r2tr}}a{{$r3tr}}t</x-slot>
         <x-slot name="past1P">اتّ{{$r2}}{{$r3}}نا</x-slot>
@@ -516,7 +516,7 @@
         <x-slot name="amr2P">إ{{$r1}}تا{{$r3}}و</x-slot>
         <x-slot name="amr2Ptr">ʔi{{$r1tr}}tā{{$r3tr}}u</x-slot>
 
-    @elseif ($form == '8U')
+    @elseif ($form == '8E')
         <x-slot name="amr2M">إتّ{{$r2}}{{$r3}}</x-slot>
         <x-slot name="amr2Mtr">ʔitt{{$r2tr}}i{{$r3tr}}</x-slot>
         <x-slot name="amr2F">إتّ{{$r2}}{{$r3}}ي</x-slot>

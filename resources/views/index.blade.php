@@ -29,7 +29,7 @@
         <div class="feature-panel" style="flex-direction: row-reverse">
             <div class="feature-panel-content">
                 <div class="feature-panel-title">{{ __('dictionary') }}</div>
-                <div class="feature-panel-subtitle">Over 2,000 terms & counting.</div>
+                <div class="feature-panel-subtitle">Over {{ floor(\App\Models\Term::count() / 100) * 100 }} terms & counting.</div>
                 <div class="feature-panel-description">Built off the knowledge of several other dictionaries, with some
                     home-grown research & computer-science magic, the PalWeb Dictionary is the only interactive Spoken
                     Arabic dictionary with hypertext pages that let you easily jump between terms, a powerful

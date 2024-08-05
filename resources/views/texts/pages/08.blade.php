@@ -225,7 +225,7 @@
                        eng="kids, I'm very pleased with you & what you did"/>
         <x-dialog-line arb="إنتو حسّيتو فصحابكم وضحّيتو عشانهم"
                        eng="you felt for your friends & made a sacrifice for them"/>
-        <x-dialog-line arb="ولو حكيتولنا كنّا بنقدر نساعد أكثر كمان"
+        <x-dialog-line arb="ولو حكيتولنا كنّا منقدر نساعد أكثر كمان"
                        eng="if you had told us, we would've been able to help more as well"/>
         <x-dialog-line speaker="إمّ سند" arb="مزبوط، الواحد لازم يساعد — بسّ سالي، لو حكيتيلنا"
                        eng="true, one must help — but Sally, if you'd told us"/>
