@@ -2,35 +2,35 @@
 
 @if ($form == '4A')
     <x-slot name="imp1S">بن{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp1Str">ban{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+    <x-slot name="imp1Str">bani{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="imp1P">منن{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp1Ptr">mnin{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+    <x-slot name="imp1Ptr">mnini{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="imp2F">بتن{{$r1}}{{$r2}}{{$r3}}ي</x-slot>
     <x-slot name="imp2Ftr">btin{{$r1tr}}i{{$r2tr}}{{$r3tr}}i</x-slot>
     <x-slot name="imp2P">بتن{{$r1}}{{$r2}}{{$r3}}و</x-slot>
     <x-slot name="imp2Ptr">btin{{$r1tr}}i{{$r2tr}}{{$r3tr}}u</x-slot>
     <x-slot name="imp3M">بن{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp3Mtr">bin{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+    <x-slot name="imp3Mtr">bini{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="imp3F">بتن{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp3Ftr">btin{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+    <x-slot name="imp3Ftr">btini{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
     <x-slot name="imp3P">بن{{$r1}}{{$r2}}{{$r3}}و</x-slot>
     <x-slot name="imp3Ptr">bin{{$r1tr}}i{{$r2tr}}{{$r3tr}}u</x-slot>
 
     @elseif ($form == '4B')
         <x-slot name="imp1S">بن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="imp1Str">ban{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp1Str">bani{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp1P">منن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="imp1Ptr">mnin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp1Ptr">mnini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp2F">بتن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="imp2Ftr">btin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp2Ftr">btini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp2P">بتن{{$r1}}{{$r2}}و</x-slot>
-        <x-slot name="imp2Ptr">btin{{$r1tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp2Ptr">btini{{$r1tr}}{{$r2tr}}u</x-slot>
         <x-slot name="imp3M">بن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="imp3Mtr">bin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp3Mtr">bini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp3F">بتن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="imp3Ftr">btin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="imp3Ftr">btini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="imp3P">بن{{$r1}}{{$r2}}و</x-slot>
-        <x-slot name="imp3Ptr">bin{{$r1tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="imp3Ptr">bini{{$r1tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == '4C')
         <x-slot name="imp1S">بن{{$r1}}{{$r2}}ّ</x-slot>

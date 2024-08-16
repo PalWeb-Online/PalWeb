@@ -1,20 +1,20 @@
 <x-conj.chart>
 
-@if (in_array($form, ['A1', 'A2i']))
-    <x-slot name="imp1S">ب{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
-    <x-slot name="imp1P">من{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp1Ptr">mni{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
-    <x-slot name="imp2F">بت{{$r1}}{{$r2}}{{$r3}}ي</x-slot>
-    <x-slot name="imp2Ftr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}i</x-slot>
-    <x-slot name="imp2P">بت{{$r1}}{{$r2}}{{$r3}}و</x-slot>
-    <x-slot name="imp2Ptr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
-    <x-slot name="imp3M">بي{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp3Mtr">byi{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
-    <x-slot name="imp3F">بت{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="imp3Ftr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
-    <x-slot name="imp3P">بي{{$r1}}{{$r2}}{{$r3}}و</x-slot>
-    <x-slot name="imp3Ptr">byi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
+    @if (in_array($form, ['A1', 'A2i']))
+        <x-slot name="imp1S">ب{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="imp1Str">ba{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+        <x-slot name="imp1P">من{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="imp1Ptr">mni{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+        <x-slot name="imp2F">بت{{$r1}}{{$r2}}{{$r3}}ي</x-slot>
+        <x-slot name="imp2Ftr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}i</x-slot>
+        <x-slot name="imp2P">بت{{$r1}}{{$r2}}{{$r3}}و</x-slot>
+        <x-slot name="imp2Ptr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
+        <x-slot name="imp3M">بي{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="imp3Mtr">byi{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+        <x-slot name="imp3F">بت{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="imp3Ftr">bti{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+        <x-slot name="imp3P">بي{{$r1}}{{$r2}}{{$r3}}و</x-slot>
+        <x-slot name="imp3Ptr">byi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
 
     @elseif (in_array($form, ['A1a', 'A2']))
         <x-slot name="imp1S">ب{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -256,23 +256,23 @@
         <x-slot name="imp3P">بيجو</x-slot>
         <x-slot name="imp3Ptr">bīžu</x-slot>
 
-@endif
+    @endif
 
-@if (in_array($form, ['A1', 'A1a', 'A1u', 'A1h', 'U1']))
-    <x-slot name="past1S">{{$r1}}{{$r2}}{{$r3}}ت</x-slot>
-    <x-slot name="past1Str">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}t</x-slot>
-    <x-slot name="past1P">{{$r1}}{{$r2}}{{$r3}}نا</x-slot>
-    <x-slot name="past1Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}na</x-slot>
-    <x-slot name="past2F">{{$r1}}{{$r2}}{{$r3}}تي</x-slot>
-    <x-slot name="past2Ftr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}ti</x-slot>
-    <x-slot name="past2P">{{$r1}}{{$r2}}{{$r3}}تو</x-slot>
-    <x-slot name="past2Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}tu</x-slot>
-    <x-slot name="past3M">{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="past3Mtr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}</x-slot>
-    <x-slot name="past3F">{{$r1}}{{$r2}}{{$r3}}ت</x-slot>
-    <x-slot name="past3Ftr">{{$r1tr}}a{{$r2tr}}{{$r3tr}}at</x-slot>
-    <x-slot name="past3P">{{$r1}}{{$r2}}{{$r3}}و</x-slot>
-    <x-slot name="past3Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}u</x-slot>
+    @if (in_array($form, ['A1', 'A1a', 'A1u', 'A1h', 'U1']))
+        <x-slot name="past1S">{{$r1}}{{$r2}}{{$r3}}ت</x-slot>
+        <x-slot name="past1Str">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}t</x-slot>
+        <x-slot name="past1P">{{$r1}}{{$r2}}{{$r3}}نا</x-slot>
+        <x-slot name="past1Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}na</x-slot>
+        <x-slot name="past2F">{{$r1}}{{$r2}}{{$r3}}تي</x-slot>
+        <x-slot name="past2Ftr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}ti</x-slot>
+        <x-slot name="past2P">{{$r1}}{{$r2}}{{$r3}}تو</x-slot>
+        <x-slot name="past2Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}tu</x-slot>
+        <x-slot name="past3M">{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="past3Mtr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}</x-slot>
+        <x-slot name="past3F">{{$r1}}{{$r2}}{{$r3}}ت</x-slot>
+        <x-slot name="past3Ftr">{{$r1tr}}a{{$r2tr}}{{$r3tr}}at</x-slot>
+        <x-slot name="past3P">{{$r1}}{{$r2}}{{$r3}}و</x-slot>
+        <x-slot name="past3Ptr">{{$r1tr}}a{{$r2tr}}a{{$r3tr}}u</x-slot>
 
     @elseif (in_array($form, ['A2', 'A2i', 'U2']))
         <x-slot name="past1S">{{$r1}}{{$r2}}{{$r3}}ت</x-slot>
@@ -370,7 +370,6 @@
         <x-slot name="past3P">{{$r1}}ا{{$r3}}و</x-slot>
         <x-slot name="past3Ptr">{{$r1tr}}ā{{$r3tr}}u</x-slot>
 
-
     @elseif (in_array($form, ['DW', 'DAu']))
         <x-slot name="past1S">{{$r1}}{{$r3}}ت</x-slot>
         <x-slot name="past1Str">{{$r1tr}}u{{$r3tr}}t</x-slot>
@@ -403,15 +402,15 @@
         <x-slot name="past3P">أجو</x-slot>
         <x-slot name="past3Ptr">ʔažu</x-slot>
 
-@endif
+    @endif
 
-@if (in_array($form, ['A1', 'A2i']))
-    <x-slot name="amr2M">إ{{$r1}}{{$r2}}{{$r3}}</x-slot>
-    <x-slot name="amr2Mtr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
-    <x-slot name="amr2F">إ{{$r1}}{{$r2}}{{$r3}}ي</x-slot>
-    <x-slot name="amr2Ftr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}i</x-slot>
-    <x-slot name="amr2P">إ{{$r1}}{{$r2}}{{$r3}}و</x-slot>
-    <x-slot name="amr2Ptr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
+    @if (in_array($form, ['A1', 'A2i']))
+        <x-slot name="amr2M">إ{{$r1}}{{$r2}}{{$r3}}</x-slot>
+        <x-slot name="amr2Mtr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}</x-slot>
+        <x-slot name="amr2F">إ{{$r1}}{{$r2}}{{$r3}}ي</x-slot>
+        <x-slot name="amr2Ftr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}i</x-slot>
+        <x-slot name="amr2P">إ{{$r1}}{{$r2}}{{$r3}}و</x-slot>
+        <x-slot name="amr2Ptr">ʔi{{$r1tr}}{{$r2tr}}i{{$r3tr}}u</x-slot>
 
     @elseif (in_array($form, ['A1a', 'A2']))
         <x-slot name="amr2M">إ{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -533,6 +532,6 @@
         <x-slot name="amr2P">تعالو</x-slot>
         <x-slot name="amr2Ptr">taʕālu</x-slot>
 
-@endif
+    @endif
 
 </x-conj.chart>

@@ -525,7 +525,7 @@ export default {
                                         <option value="B">B</option>
                                     </template>
                                     <template
-                                        v-if="verbPattern.form === '4' || verbPattern.form === '7' || verbPattern.form === '8'">
+                                        v-if="verbPattern.form === '4' || verbPattern.form === '7' || verbPattern.form === '8' || verbPattern.form === 'X'">
                                         <option value="C">C</option>
                                         <option value="D">D</option>
                                     </template>

@@ -10,6 +10,8 @@
 @elseif($term->category == 'verb')
     @foreach($term->patterns as $pattern)
         @if ($pattern->form == '1')
+
+{{--            TODO: rootArray is being called every single time individually --}}
             <x-conj.1
                 r1='{{ $term->root->rootArray()[0][0] }}'
                 r2='{{ $term->root->rootArray()[0][1] }}'

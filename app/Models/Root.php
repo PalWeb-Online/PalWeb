@@ -83,7 +83,8 @@ class Root extends Model
         $root = mb_str_split($this->root);
         $rootTr = str_replace(Root::arabic, Root::translit, $root);
 
-        // TODO: Only apply to conjugation charts, not Root Box.
+//        TODO: change transliterations on the basis of user dialect
+
         if (in_array('ء', $root)) {
             $root = str_replace('ء', 'أ', $root);
         }

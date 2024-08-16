@@ -148,19 +148,19 @@
 
     @elseif ($form == '9A')
         <x-slot name="past1S">ا{{$r1}}{{$r2}}{{$r3}}ّيت</x-slot>
-        <x-slot name="past1Str">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēt</x-slot>
+        <x-slot name="past1Str">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēt</x-slot>
         <x-slot name="past1P">ا{{$r1}}{{$r2}}{{$r3}}ّينا</x-slot>
-        <x-slot name="past1Ptr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēna</x-slot>
+        <x-slot name="past1Ptr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēna</x-slot>
         <x-slot name="past2F">ا{{$r1}}{{$r2}}{{$r3}}ّيتي</x-slot>
-        <x-slot name="past2Ftr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēti</x-slot>
+        <x-slot name="past2Ftr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ēti</x-slot>
         <x-slot name="past2P">ا{{$r1}}{{$r2}}{{$r3}}ّيتو</x-slot>
-        <x-slot name="past2Ptr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ētu</x-slot>
+        <x-slot name="past2Ptr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}ētu</x-slot>
         <x-slot name="past3M">ا{{$r1}}{{$r2}}{{$r3}}ّ</x-slot>
-        <x-slot name="past3Mtr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}</x-slot>
+        <x-slot name="past3Mtr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}</x-slot>
         <x-slot name="past3F">ا{{$r1}}{{$r2}}{{$r3}}ّت</x-slot>
-        <x-slot name="past3Ftr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}at</x-slot>
+        <x-slot name="past3Ftr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}at</x-slot>
         <x-slot name="past3P">ا{{$r1}}{{$r2}}{{$r3}}ّو</x-slot>
-        <x-slot name="past3Ptr">{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}u</x-slot>
+        <x-slot name="past3Ptr">i{{$r1tr}}{{$r2tr}}a{{$r3tr}}{{$r3tr}}u</x-slot>
 
 @endif
 
