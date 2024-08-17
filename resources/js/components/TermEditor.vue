@@ -514,8 +514,6 @@ export default {
                                         <option value="DAi">DAi</option>
                                         <option value="DAu">DAu</option>
                                         <option value="DW">DW</option>
-                                        <option value="U1">U1</option>
-                                        <option value="U2">U2</option>
                                         <option value="ʔaža">ʔaža</option>
                                     </template>
                                     <template v-if="verbPattern.form !== '1'">

@@ -23,15 +23,15 @@ class PatternSeeder extends Seeder
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'B1']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'B1a']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'B2']);
+        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'B2i']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'Ci']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'Ca']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'Cu']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'DY']);
-        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'DA']);
+        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'DAi']);
+        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'DAu']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'DW']);
-        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'U1']);
-        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'U2']);
-        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'ʔija']);
+        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '1', 'pattern' => 'ʔaža']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '2', 'pattern' => 'A']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '2', 'pattern' => 'B']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '2Q', 'pattern' => 'A']);
@@ -52,6 +52,7 @@ class PatternSeeder extends Seeder
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '7', 'pattern' => 'B']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '7', 'pattern' => 'C']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '7', 'pattern' => 'D']);
+        DB::table('patterns')->insert(['type' => 'verbal', 'form' => '7', 'pattern' => 'istanna']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '8', 'pattern' => 'A']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '8', 'pattern' => 'B']);
         DB::table('patterns')->insert(['type' => 'verbal', 'form' => '8', 'pattern' => 'C']);

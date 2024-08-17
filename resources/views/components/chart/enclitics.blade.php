@@ -66,7 +66,7 @@
             <div>3M</div>
             <div>
                 <div>{{ $host }}ه</div>
-                <div>{{ $translit }}{!! !in_array(mb_substr($translit, -1), $longVowels) ? 'o' : '<sup>h</sup>' !!}</div>
+                <div>{{ $translit }}{{ !in_array(mb_substr($translit, -1), $longVowels) ? 'o' : '(h)' }}</div>
             </div>
         </div>
         <div class="inflection-chart-item">

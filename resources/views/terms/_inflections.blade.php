@@ -1,13 +1,38 @@
-@if(count($term->inflections->whereIn('form', ['genitive', 'accusative'])) > 0)
-    @foreach ($term->inflections->whereIn('form', ['genitive', 'accusative']) as $hostForm)
-        <x-chart.enclitics
-            host="{{ $hostForm->inflection }}"
-            translit="{{ $hostForm->translit }}"
-            form="{{ $hostForm->form }}"
-        />
-    @endforeach
+@php
+    $hostForms = $term->inflections->whereIn('form', ['genitive', 'accusative'])->all();
+@endphp
 
-@elseif($term->category == 'verb')
+@if (count($hostForms) > 0)
+
+    <div x-data="{ activeIndex: 0, patterns: {{ count($hostForms) }} }" class="inflection-carousel">
+
+        @foreach ($hostForms as $index => $hostForm)
+            <div class="carousel-item" x-show="activeIndex === {{ $index }}" x-cloak>
+
+                @if(count($hostForms) > 1)
+                    <div class="carousel-item-head">
+                        <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : patterns - 1">
+                            &larr;
+                        </button>
+
+                        Variant {{ $index + 1 }}
+
+                        <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
+                            &rarr;
+                        </button>
+                    </div>
+                @endif
+
+                <x-chart.enclitics
+                    host="{{ $hostForm->inflection }}"
+                    translit="{{ $hostForm->translit }}"
+                    form="{{ $hostForm->form }}"
+                />
+            </div>
+        @endforeach
+    </div>
+
+@elseif ($term->category == 'verb')
     @php
         $root = $term->root->generateRoot($term);
         $arabic = $root[0];
@@ -26,15 +51,19 @@
                 <div class="carousel-item" x-show="activeIndex === {{ $index * count($translits) + $dialectIndex }}"
                      x-cloak>
                     <div class="carousel-item-head">
-                        <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : patterns - 1">
-                            &larr;
-                        </button>
+                        @if ($term->patterns->count() * count($translits) > 1)
+                            <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : patterns - 1">
+                                &larr;
+                            </button>
+                        @endif
 
-                        {{ $dialectTranslit['dialect'] }} {{ $pattern->pattern }}
+                        <div style="flex-grow: 1">{{ $dialectTranslit['dialect'] }} {{ $pattern->pattern }}</div>
 
-                        <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
-                            &rarr;
-                        </button>
+                        @if ($term->patterns->count() * count($translits) > 1)
+                            <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
+                                &rarr;
+                            </button>
+                        @endif
                     </div>
 
                     @if ($pattern->form == '1')
