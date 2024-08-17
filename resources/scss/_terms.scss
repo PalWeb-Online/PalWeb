@@ -88,7 +88,7 @@
     gap: 3.2rem;
 }
 
-.term-container-head, .term-container-data, .gloss-li-content {
+.term-container-head, .term-container-data, .gloss-li-container, .term-root {
     a {
         color: $purple-primary;
         font-weight: 700;
@@ -207,6 +207,23 @@
 
     .play {
         width: 2.8rem;
+    }
+}
+
+.gloss-li-container {
+    display: grid;
+    padding-block-end: 3.2rem;
+
+    &:not(:last-child) {
+        border-block-end: 2px dotted $purple-pastel-dark;
+    }
+
+    & > a {
+        padding-block: 0.8rem;
+        margin-inline-end: 3.2rem;
+        justify-self: end;
+        color: $purple-deep;
+        font-weight: 700;
     }
 }
 

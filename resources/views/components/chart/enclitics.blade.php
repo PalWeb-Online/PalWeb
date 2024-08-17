@@ -1,5 +1,28 @@
 @php
     $longVowels = ['ā', 'ē', 'ī', 'ō', 'ū'];
+
+    if ($form === 'genitive') {
+        if (in_array(mb_substr($translit, -1), ['ā', 'ō', 'ū'])) {
+            $ar1S = $host . 'ي';
+            $tr1S = $translit . 'y';
+
+        } elseif (mb_substr($translit, -1) === 'ē') {
+            $ar1S = $host . 'ّ';
+            $tr1S = mb_substr($translit, 0, -1) . 'ayy';
+
+        } elseif (mb_substr($translit, -1) === 'ī') {
+            $ar1S = $host . 'ّي';
+            $tr1S = mb_substr($translit, 0, -1) . 'iyyi';
+
+        } else {
+            $ar1S = $host . 'ي';
+            $tr1S = $translit . 'i';
+        }
+    } elseif ($form === 'accusative') {
+        $ar1S = $host . 'ني';
+        $tr1S = $translit . 'ni';
+    }
+
 @endphp
 
 <div class="inflection-chart-wrapper">
@@ -7,8 +30,8 @@
         <div class="inflection-chart-item">
             <div>1S</div>
             <div>
-                <div>{{ $host }}{{ mb_substr($translit, -1) == 'ē' ? 'ّ' : 'ي' }}</div>
-                <div>{{ mb_substr($translit, -1) == 'ē' ? mb_substr($translit, 0, -1).'ay' : $translit }}{{ !in_array(mb_substr($translit, -1), $longVowels) ? 'i' : 'y' }}</div>
+                <div>{{ $ar1S }}</div>
+                <div>{{ $tr1S }}</div>
             </div>
         </div>
         <div class="inflection-chart-item">

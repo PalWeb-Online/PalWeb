@@ -407,8 +407,8 @@ export default {
                                 <option v-if="term.category === 'adjective' && attributes.length === 0" value="elt">
                                     elative
                                 </option>
-                                <option value="host">host
-                                </option>
+                                <option value="genitive">host (genitive)</option>
+                                <option value="accusative">host (accusative)</option>
                                 <option v-if="term.category === 'phrase'" value="resp">response</option>
                             </select>
                         </div>

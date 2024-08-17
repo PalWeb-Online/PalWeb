@@ -1,4 +1,4 @@
-<x-conj.chart>
+<x-chart.conjugation>
 
 @if ($form == 'XA')
     <x-slot name="imp1S">ب{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -206,4 +206,4 @@
 
 @endif
 
-</x-conj.chart>
+</x-chart.conjugation>

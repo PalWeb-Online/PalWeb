@@ -1,11 +1,11 @@
-@if(count($term->inflections->where('form', 'host')) > 0)
-    @if($term->slug === 'preposition-b-')
-        <x-conj.b/>
-    @else
-        @foreach ($term->inflections->where('form', 'host') as $hostForm)
-            <x-conj.inflection host="{{ $hostForm->inflection }}" translit="{{ $hostForm->translit }}"/>
-        @endforeach
-    @endif
+@if(count($term->inflections->whereIn('form', ['genitive', 'accusative'])) > 0)
+    @foreach ($term->inflections->whereIn('form', ['genitive', 'accusative']) as $hostForm)
+        <x-chart.enclitics
+            host="{{ $hostForm->inflection }}"
+            translit="{{ $hostForm->translit }}"
+            form="{{ $hostForm->form }}"
+        />
+    @endforeach
 
 @elseif($term->category == 'verb')
     @php
@@ -14,7 +14,8 @@
         $translits = $root[1];
     @endphp
 
-    <div x-data="{ activeIndex: 0, patterns: {{ $term->patterns->count() * count($translits) }} }" class="inflection-carousel">
+    <div x-data="{ activeIndex: 0, patterns: {{ $term->patterns->count() * count($translits) }} }"
+         class="inflection-carousel">
 
         @foreach($term->patterns as $index => $pattern)
             @foreach ($translits as $dialectIndex => $dialectTranslit)
@@ -37,7 +38,7 @@
                     </div>
 
                     @if ($pattern->form == '1')
-                        <x-conj.1
+                        <x-chart.1
                             r1='{{ $arabic[0] }}'
                             r2='{{ $arabic[1] }}'
                             r3='{{ $arabic[2] }}'
@@ -45,10 +46,10 @@
                             r2tr='{{ $translit[1] }}'
                             r3tr='{{ $translit[2] }}'
                             form='{{ $pattern->pattern }}'
-                        ></x-conj.1>
+                        ></x-chart.1>
 
                     @elseif (in_array($pattern->form, ['2', '3', '5', '6']))
-                        <x-conj.2536
+                        <x-chart.2536
                             r1='{{ $arabic[0] }}'
                             r2='{{ $arabic[1] }}'
                             r3='{{ $arabic[2] }}'
@@ -56,10 +57,10 @@
                             r2tr='{{ $translit[1] }}'
                             r3tr='{{ $translit[2] }}'
                             form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                        ></x-conj.2536>
+                        ></x-chart.2536>
 
                     @elseif (in_array($pattern->form, ['4', '7', '8']))
-                        <x-conj.478
+                        <x-chart.478
                             r1='{{ $arabic[0] }}'
                             r2='{{ $arabic[1] }}'
                             r3='{{ $arabic[2] }}'
@@ -67,10 +68,10 @@
                             r2tr='{{ $translit[1] }}'
                             r3tr='{{ $translit[2] }}'
                             form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                        ></x-conj.478>
+                        ></x-chart.478>
 
                     @elseif (in_array($pattern->form, ['9', 'X']))
-                        <x-conj.9X
+                        <x-chart.9X
                             r1='{{ $arabic[0] }}'
                             r2='{{ $arabic[1] }}'
                             r3='{{ $arabic[2] }}'
@@ -78,10 +79,10 @@
                             r2tr='{{ $translit[1] }}'
                             r3tr='{{ $translit[2] }}'
                             form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                        ></x-conj.9X>
+                        ></x-chart.9X>
 
                     @elseif (in_array($pattern->form, ['2Q', '5Q']))
-                        <x-conj.Q
+                        <x-chart.Q
                             r1='{{ $arabic[0] }}'
                             r2='{{ $arabic[1] }}'
                             r3='{{ $arabic[2] }}'
@@ -91,7 +92,7 @@
                             r3tr='{{ $translit[2] }}'
                             r4tr='{{ $translit[3] ?? null }}'
                             form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                        ></x-conj.Q>
+                        ></x-chart.Q>
                     @endif
                 </div>
             @endforeach
