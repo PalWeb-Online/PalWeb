@@ -8,82 +8,93 @@
     @endif
 
 @elseif($term->category == 'verb')
-    @foreach($term->patterns as $pattern)
-        @php
-            $root = $term->root->generateRoot($term);
-            $arabic = $root[0];
-            $translits = $root[1];
-        @endphp
+    @php
+        $root = $term->root->generateRoot($term);
+        $arabic = $root[0];
+        $translits = $root[1];
+    @endphp
 
-        {{--        TODO: put these in some kind of carousel, with the user's dialect first --}}
-        @foreach ($translits as $dialectTranslit)
-            @php
-                $dialect = $dialectTranslit['dialect'];
-                $translit = $dialectTranslit['translit'];
-            @endphp
+    <div x-data="{ activeIndex: 0, patterns: {{ $term->patterns->count() * count($translits) }} }" class="inflection-carousel">
 
-            @if ($pattern->form == '1')
-                <x-conj.1
-                    r1='{{ $arabic[0] }}'
-                    r2='{{ $arabic[1] }}'
-                    r3='{{ $arabic[2] }}'
-                    r1tr='{{ $translit[0] }}'
-                    r2tr='{{ $translit[1] }}'
-                    r3tr='{{ $translit[2] }}'
-                    form='{{ $pattern->pattern }}'
-                    dialect='{{ $dialect }}'
-                ></x-conj.1>
+        @foreach($term->patterns as $index => $pattern)
+            @foreach ($translits as $dialectIndex => $dialectTranslit)
+                @php
+                    $translit = $dialectTranslit['translit'];
+                @endphp
 
-            @elseif (in_array($pattern->form, ['2', '3', '5', '6']))
-                <x-conj.2536
-                    r1='{{ $arabic[0] }}'
-                    r2='{{ $arabic[1] }}'
-                    r3='{{ $arabic[2] }}'
-                    r1tr='{{ $translit[0] }}'
-                    r2tr='{{ $translit[1] }}'
-                    r3tr='{{ $translit[2] }}'
-                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                    dialect='{{ $dialect }}'
-                ></x-conj.2536>
+                <div class="carousel-item" x-show="activeIndex === {{ $index * count($translits) + $dialectIndex }}"
+                     x-cloak>
+                    <div class="carousel-item-head">
+                        <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : patterns - 1">
+                            &larr;
+                        </button>
 
-            @elseif (in_array($pattern->form, ['4', '7', '8']))
-                <x-conj.478
-                    r1='{{ $arabic[0] }}'
-                    r2='{{ $arabic[1] }}'
-                    r3='{{ $arabic[2] }}'
-                    r1tr='{{ $translit[0] }}'
-                    r2tr='{{ $translit[1] }}'
-                    r3tr='{{ $translit[2] }}'
-                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                    dialect='{{ $dialect }}'
-                ></x-conj.478>
+                        {{ $dialectTranslit['dialect'] }} {{ $pattern->pattern }}
 
-            @elseif (in_array($pattern->form, ['9', 'X']))
-                <x-conj.9X
-                    r1='{{ $arabic[0] }}'
-                    r2='{{ $arabic[1] }}'
-                    r3='{{ $arabic[2] }}'
-                    r1tr='{{ $translit[0] }}'
-                    r2tr='{{ $translit[1] }}'
-                    r3tr='{{ $translit[2] }}'
-                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                    dialect='{{ $dialect }}'
-                ></x-conj.9X>
+                        <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
+                            &rarr;
+                        </button>
+                    </div>
 
-            @elseif (in_array($pattern->form, ['2Q', '5Q']))
-                <x-conj.Q
-                    r1='{{ $arabic[0] }}'
-                    r2='{{ $arabic[1] }}'
-                    r3='{{ $arabic[2] }}'
-                    r4='{{ $arabic[3] ?? null }}'
-                    r1tr='{{ $translit[0] }}'
-                    r2tr='{{ $translit[1] }}'
-                    r3tr='{{ $translit[2] }}'
-                    r4tr='{{ $translit[3] ?? null }}'
-                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
-                    dialect='{{ $dialect }}'
-                ></x-conj.Q>
-            @endif
+                    @if ($pattern->form == '1')
+                        <x-conj.1
+                            r1='{{ $arabic[0] }}'
+                            r2='{{ $arabic[1] }}'
+                            r3='{{ $arabic[2] }}'
+                            r1tr='{{ $translit[0] }}'
+                            r2tr='{{ $translit[1] }}'
+                            r3tr='{{ $translit[2] }}'
+                            form='{{ $pattern->pattern }}'
+                        ></x-conj.1>
+
+                    @elseif (in_array($pattern->form, ['2', '3', '5', '6']))
+                        <x-conj.2536
+                            r1='{{ $arabic[0] }}'
+                            r2='{{ $arabic[1] }}'
+                            r3='{{ $arabic[2] }}'
+                            r1tr='{{ $translit[0] }}'
+                            r2tr='{{ $translit[1] }}'
+                            r3tr='{{ $translit[2] }}'
+                            form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                        ></x-conj.2536>
+
+                    @elseif (in_array($pattern->form, ['4', '7', '8']))
+                        <x-conj.478
+                            r1='{{ $arabic[0] }}'
+                            r2='{{ $arabic[1] }}'
+                            r3='{{ $arabic[2] }}'
+                            r1tr='{{ $translit[0] }}'
+                            r2tr='{{ $translit[1] }}'
+                            r3tr='{{ $translit[2] }}'
+                            form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                        ></x-conj.478>
+
+                    @elseif (in_array($pattern->form, ['9', 'X']))
+                        <x-conj.9X
+                            r1='{{ $arabic[0] }}'
+                            r2='{{ $arabic[1] }}'
+                            r3='{{ $arabic[2] }}'
+                            r1tr='{{ $translit[0] }}'
+                            r2tr='{{ $translit[1] }}'
+                            r3tr='{{ $translit[2] }}'
+                            form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                        ></x-conj.9X>
+
+                    @elseif (in_array($pattern->form, ['2Q', '5Q']))
+                        <x-conj.Q
+                            r1='{{ $arabic[0] }}'
+                            r2='{{ $arabic[1] }}'
+                            r3='{{ $arabic[2] }}'
+                            r4='{{ $arabic[3] ?? null }}'
+                            r1tr='{{ $translit[0] }}'
+                            r2tr='{{ $translit[1] }}'
+                            r3tr='{{ $translit[2] }}'
+                            r4tr='{{ $translit[3] ?? null }}'
+                            form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                        ></x-conj.Q>
+                    @endif
+                </div>
+            @endforeach
         @endforeach
-    @endforeach
+    </div>
 @endif

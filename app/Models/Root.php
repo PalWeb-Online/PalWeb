@@ -98,16 +98,16 @@ class Root extends Model
         ],
 
         '3' => [
-            'ق' => 'k',
             'ك' => 'č',
+            'ق' => 'k',
         ],
         '10' => [
-            'ق' => 'k',
             'ك' => 'č',
+            'ق' => 'k',
         ],
         '11' => [
-            'ق' => 'k',
             'ك' => 'č',
+            'ق' => 'k',
         ],
 
         '6' => ['ق' => 'g'],
@@ -151,6 +151,7 @@ class Root extends Model
 
     private function generateTranslits(array $translit, $dialect): array|string
     {
+
         if (isset(self::translitOverrides[$dialect->id])) {
             $overrides = self::translitOverrides[$dialect->id];
 

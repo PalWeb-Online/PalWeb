@@ -484,22 +484,42 @@
     }
 }
 
+.inflection-carousel {
+    background: $purple-pastel-light;
+    border-radius: 1.2rem;
+
+    .carousel-item {
+        display: grid;
+        gap: 3.2rem;
+        padding: 0.8rem 0.8rem 3.2rem;
+
+        .carousel-item-head {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 1.6rem;
+            background: $purple-pastel;
+            border-radius: 0.8rem;
+            font-family: $headFont;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+    }
+}
+
+
 .inflection-chart-wrapper {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
+    gap: 3.2rem;
 
     .inflection-chart {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1.6rem;
         direction: rtl;
-        border-radius: 3.2rem;
-        padding: 3.2rem;
-
         text-align: center;
         font-family: $monoFont, $ar_bodyFont;
-        overflow: hidden;
 
         .inflection-chart-title {
             font-family: $headFont;
@@ -520,6 +540,7 @@
             border: 0.1rem solid $purple-deep;
             border-radius: 1.2rem;
             box-shadow: -0.3rem 0.3rem rgba(black, 0.2);
+            margin: 0 0 0.3rem 0.3rem;
             overflow: hidden;
 
             > div {
