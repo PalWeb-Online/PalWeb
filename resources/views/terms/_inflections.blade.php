@@ -9,64 +9,81 @@
 
 @elseif($term->category == 'verb')
     @foreach($term->patterns as $pattern)
-        @if ($pattern->form == '1')
+        @php
+            $root = $term->root->generateRoot($term);
+            $arabic = $root[0];
+            $translits = $root[1];
+        @endphp
 
-{{--            TODO: rootArray is being called every single time individually --}}
-            <x-conj.1
-                r1='{{ $term->root->rootArray()[0][0] }}'
-                r2='{{ $term->root->rootArray()[0][1] }}'
-                r3='{{ $term->root->rootArray()[0][2] }}'
-                r1tr='{{ $term->root->rootArray()[1][0] }}'
-                r2tr='{{ $term->root->rootArray()[1][1] }}'
-                r3tr='{{ $term->root->rootArray()[1][2] }}'
-                form='{{ $pattern->pattern }}'
-            ></x-conj.1>
+        {{--        TODO: put these in some kind of carousel, with the user's dialect first --}}
+        @foreach ($translits as $dialectTranslit)
+            @php
+                $dialect = $dialectTranslit['dialect'];
+                $translit = $dialectTranslit['translit'];
+            @endphp
 
-        @elseif (in_array($pattern->form, ['2', '3', '5', '6']))
-            <x-conj.2536
-                r1='{{ $term->root->rootArray()[0][0] }}'
-                r2='{{ $term->root->rootArray()[0][1] }}'
-                r3='{{ $term->root->rootArray()[0][2] }}'
-                r1tr='{{ $term->root->rootArray()[1][0] }}'
-                r2tr='{{ $term->root->rootArray()[1][1] }}'
-                r3tr='{{ $term->root->rootArray()[1][2] }}'
-                form='{{ $pattern->form }}{{ $pattern->pattern }}'
-            ></x-conj.2536>
+            @if ($pattern->form == '1')
+                <x-conj.1
+                    r1='{{ $arabic[0] }}'
+                    r2='{{ $arabic[1] }}'
+                    r3='{{ $arabic[2] }}'
+                    r1tr='{{ $translit[0] }}'
+                    r2tr='{{ $translit[1] }}'
+                    r3tr='{{ $translit[2] }}'
+                    form='{{ $pattern->pattern }}'
+                    dialect='{{ $dialect }}'
+                ></x-conj.1>
 
-        @elseif (in_array($pattern->form, ['4', '7', '8']))
-            <x-conj.478
-                r1='{{ $term->root->rootArray()[0][0] }}'
-                r2='{{ $term->root->rootArray()[0][1] }}'
-                r3='{{ $term->root->rootArray()[0][2] }}'
-                r1tr='{{ $term->root->rootArray()[1][0] }}'
-                r2tr='{{ $term->root->rootArray()[1][1] }}'
-                r3tr='{{ $term->root->rootArray()[1][2] }}'
-                form='{{ $pattern->form }}{{ $pattern->pattern }}'
-            ></x-conj.478>
+            @elseif (in_array($pattern->form, ['2', '3', '5', '6']))
+                <x-conj.2536
+                    r1='{{ $arabic[0] }}'
+                    r2='{{ $arabic[1] }}'
+                    r3='{{ $arabic[2] }}'
+                    r1tr='{{ $translit[0] }}'
+                    r2tr='{{ $translit[1] }}'
+                    r3tr='{{ $translit[2] }}'
+                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                    dialect='{{ $dialect }}'
+                ></x-conj.2536>
 
-        @elseif (in_array($pattern->form, ['9', 'X']))
-            <x-conj.9X
-                r1='{{ $term->root->rootArray()[0][0] }}'
-                r2='{{ $term->root->rootArray()[0][1] }}'
-                r3='{{ $term->root->rootArray()[0][2] }}'
-                r1tr='{{ $term->root->rootArray()[1][0] }}'
-                r2tr='{{ $term->root->rootArray()[1][1] }}'
-                r3tr='{{ $term->root->rootArray()[1][2] }}'
-                form='{{ $pattern->form }}{{ $pattern->pattern }}'
-            ></x-conj.9X>
+            @elseif (in_array($pattern->form, ['4', '7', '8']))
+                <x-conj.478
+                    r1='{{ $arabic[0] }}'
+                    r2='{{ $arabic[1] }}'
+                    r3='{{ $arabic[2] }}'
+                    r1tr='{{ $translit[0] }}'
+                    r2tr='{{ $translit[1] }}'
+                    r3tr='{{ $translit[2] }}'
+                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                    dialect='{{ $dialect }}'
+                ></x-conj.478>
 
-        @elseif (in_array($pattern->form, ['2Q', '5Q']))
-            <x-conj.Q
-                r1='{{ $term->root->rootArray()[0][0] }}'
-                r2='{{ $term->root->rootArray()[0][1] }}'
-                r3='{{ $term->root->rootArray()[0][2] }}'
-                r4='{{ $term->root->rootArray()[0][3] ?? null }}'
-                r1tr='{{ $term->root->rootArray()[1][0] }}'
-                r2tr='{{ $term->root->rootArray()[1][1] }}'
-                r3tr='{{ $term->root->rootArray()[1][2] }}'
-                r4tr='{{ $term->root->rootArray()[1][3] ?? null }}'
-                form='{{ $pattern->form }}{{ $pattern->pattern }}'
-            ></x-conj.Q>
-        @endif
+            @elseif (in_array($pattern->form, ['9', 'X']))
+                <x-conj.9X
+                    r1='{{ $arabic[0] }}'
+                    r2='{{ $arabic[1] }}'
+                    r3='{{ $arabic[2] }}'
+                    r1tr='{{ $translit[0] }}'
+                    r2tr='{{ $translit[1] }}'
+                    r3tr='{{ $translit[2] }}'
+                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                    dialect='{{ $dialect }}'
+                ></x-conj.9X>
+
+            @elseif (in_array($pattern->form, ['2Q', '5Q']))
+                <x-conj.Q
+                    r1='{{ $arabic[0] }}'
+                    r2='{{ $arabic[1] }}'
+                    r3='{{ $arabic[2] }}'
+                    r4='{{ $arabic[3] ?? null }}'
+                    r1tr='{{ $translit[0] }}'
+                    r2tr='{{ $translit[1] }}'
+                    r3tr='{{ $translit[2] }}'
+                    r4tr='{{ $translit[3] ?? null }}'
+                    form='{{ $pattern->form }}{{ $pattern->pattern }}'
+                    dialect='{{ $dialect }}'
+                ></x-conj.Q>
+            @endif
+        @endforeach
     @endforeach
 @endif

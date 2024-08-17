@@ -327,12 +327,13 @@
         @if(!request()->routeIs('terms.usages') && $term->root)
             @php
                 $rootTerms = $term->root->terms->sortBy('term');
+                $root = $term->root->generateRoot();
             @endphp
 
             <div class="term-root" x-data="{ open: false }">
                 <div class="term-root-head">
-                    <div class="term-root-head-arb">{{ $term->root->showRoot() }}</div>
-                    <div class="term-root-head-eng">({{ $term->root->transRoot() }})</div>
+                    <div class="term-root-head-arb">{{ $root[0] }}</div>
+                    <div class="term-root-head-eng">({{ $root[1] }})</div>
                 </div>
                 @unless(count($rootTerms) == 1)
                     <div class="term-root-body" x-show="open">
