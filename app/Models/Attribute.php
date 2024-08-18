@@ -9,8 +9,13 @@ class Attribute extends Model
 {
     protected $fillable = [];
 
-    public function terms(): belongsToMany
+    public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class);
+    }
+
+    public function glosses(): BelongsToMany
+    {
+        return $this->belongsToMany(Gloss::class);
     }
 }

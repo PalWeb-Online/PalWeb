@@ -94,12 +94,6 @@ export default {
                 <div class="filter-name">attribute</div>
                 <select v-model="selectedAttribute">
                     <option value=""></option>
-                    <option value="idiom">Idiom</option>
-                    <option value="clitic">Clitic</option>
-                    <option v-if="(selectedCategory === '' || selectedCategory === 'verb') && selectedForm === ''"
-                            value="pseudo">
-                        Pseudo V.
-                    </option>
                     <option
                         v-if="selectedCategory === '' || selectedCategory === 'noun' || selectedCategory === 'determiner'"
                         value="masculine">
@@ -117,7 +111,6 @@ export default {
                     </option>
                     <option v-if="selectedCategory === '' || selectedCategory === 'noun'" value="collective">
                         Collective
-                        N.
                     </option>
                     <option
                         v-if="selectedCategory === '' || selectedCategory === 'noun' || selectedCategory === 'adjective'"
@@ -127,14 +120,14 @@ export default {
                     <option
                         v-if="(selectedCategory === '' || selectedCategory === 'adjective') && selectedForm === ''"
                         value="defect">
-                        Defect Adj.
+                        Defect
                     </option>
-                    <option v-if="selectedCategory === '' || selectedCategory === 'adjective'" value="participle">
-                        Active
-                        Part.
+                    <option v-if="(selectedCategory === '' || selectedCategory === 'verb') && selectedForm === ''"
+                            value="pseudo">
+                        Pseudo
                     </option>
-                    <option value="quantifier">Quantifier</option>
-                    <option value="complementizer">Complementizer</option>
+                    <option value="clitic">Clitic</option>
+                    <option value="idiom">Idiom</option>
                 </select>
             </div>
             <div v-if="hasForm" class="filter-container">

@@ -15,19 +15,105 @@ class AttributeSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('attributes')->insert(['attribute' => 'masculine']);
-        DB::table('attributes')->insert(['attribute' => 'feminine']);
-        DB::table('attributes')->insert(['attribute' => 'plural']);
-        DB::table('attributes')->insert(['attribute' => 'collective']);
-        DB::table('attributes')->insert(['attribute' => 'demonym']);
-        DB::table('attributes')->insert(['attribute' => 'pseudo']);
-        DB::table('attributes')->insert(['attribute' => 'defect']);
-        DB::table('attributes')->insert(['attribute' => 'relative']);
-        DB::table('attributes')->insert(['attribute' => 'participle']);
-        DB::table('attributes')->insert(['attribute' => 'quantifier']);
-        DB::table('attributes')->insert(['attribute' => 'complementizer']);
-        DB::table('attributes')->insert(['attribute' => 'interrogative']);
-        DB::table('attributes')->insert(['attribute' => 'clitic']);
-        DB::table('attributes')->insert(['attribute' => 'idiom']);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'masculine',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'feminine',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'plural',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'collective',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'demonym',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'defect',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'pseudo',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'clitic',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'term',
+            'attribute' => 'idiom',
+        ]);
+
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'auxiliary',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'participle',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'unaccusative',
+            'category' => 'isPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'mediopassive',
+            'category' => 'isPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'reflexive',
+            'category' => 'isPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'reciprocal',
+            'category' => 'isPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'unergative',
+            'category' => 'noPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'stative',
+            'category' => 'noPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'copular',
+            'category' => 'noPatient',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'transitive',
+            'category' => 'hasObject',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'ditransitive',
+            'category' => 'hasObject',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'causative',
+            'category' => 'hasObject',
+        ]);
+        DB::table('attributes')->insert([
+            'model' => 'gloss',
+            'attribute' => 'dative',
+            'category' => 'hasObject',
+        ]);
     }
 }

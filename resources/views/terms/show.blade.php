@@ -216,11 +216,14 @@
                             </div>
 
                             <div class="gloss-li-content">
-                                @isset($gloss->attribute)
+                                @foreach($gloss->attributes as $attribute)
                                     <div class="gloss-li-attribute">
-                                        [{{ $gloss->attribute }}] {{ $gloss->structure }}
+                                        @isset($attribute->category)
+                                        {{ $attribute->category }}:
+                                        @endisset
+                                        {{ $attribute->attribute }}
                                     </div>
-                                @endisset
+                                @endforeach
 
                                 <div class="gloss-li-content-gloss">
                                     {{ $gloss->gloss }}

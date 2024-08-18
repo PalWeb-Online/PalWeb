@@ -301,13 +301,9 @@ export default {
                                 <option value="collective">collective</option>
                                 <option value="demonym">demonym</option>
                                 <option value="defect">defect</option>
-                                <option value="participle">participle</option>
                                 <option value="pseudo">pseudo</option>
-                                <option value="quantifier">quantifier</option>
-                                <option value="complementizer">complementizer</option>
-                                <option value="idiom">idiom</option>
                                 <option value="clitic">clitic</option>
-                                <option value="interrogative">interrogative</option>
+                                <option value="idiom">idiom</option>
                             </select>
                             <img src="/img/trash.svg" alt="Delete" v-show="attributes.length > 0"
                                  @click="removeItem('attributes', index)"/>
@@ -446,8 +442,11 @@ export default {
 
                     <template v-if="!attributes.includes(['idiom', 'clitic'])">
                         <div class="form-field">
-                            <label for="root">Root{{ term.category === 'verb' && !attributes.includes('idiom') ? ' *' : '' }}</label>
-                            <input id="root" v-model="root" :required="term.category === 'verb' && !attributes.includes('pseudo')"
+                            <label for="root">Root{{
+                                    term.category === 'verb' && !attributes.includes('idiom') ? ' *' : ''
+                                }}</label>
+                            <input id="root" v-model="root"
+                                   :required="term.category === 'verb' && !attributes.includes('pseudo')"
                                    name="root"
                                    type="text"/>
                         </div>
@@ -737,41 +736,35 @@ export default {
                                    required type="text"/>
                         </div>
 
-                        <template v-if="term.category === 'verb'">
-                            <div class="form-field inline">
-                                <label :for="'glosses['+index+'][attribute]'">Attribute *</label>
-                                <select :id="'glosses['+index+'][attribute]'" v-model="gloss.attribute"
-                                        :name="'glosses['+index+'][attribute]'" required>
-                                    <option value="auxiliary">auxiliary</option>
-                                    <option label="isPatient">isPatient</option>
-                                    <option label="noPatient">noPatient</option>
-                                    <option label="hasObject">hasObject</option>
-                                </select>
-                                <template v-if="gloss.attribute !== '' && gloss.attribute !== 'auxiliary'">
-                                    <label :for="'glosses['+index+'][structure]'">Structure *</label>
-                                    <select :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
-                                            :name="'glosses['+index+'][structure]'" required>
-                                        <optgroup label="isPatient" v-if="gloss.attribute === 'isPatient'">
-                                            <option value="unaccusative">unaccusative</option>
-                                            <option value="passive">passive</option>
-                                            <option value="reflexive">reflexive</option>
-                                            <option value="reciprocal">reciprocal</option>
-                                        </optgroup>
-                                        <optgroup label="noPatient" v-if="gloss.attribute === 'noPatient'">
-                                            <option value="unergative">unergative</option>
-                                            <option value="copular">copular</option>
-                                            <option value="stative">stative</option>
-                                        </optgroup>
-                                        <optgroup label="hasObject" v-if="gloss.attribute === 'hasObject'">
-                                            <option value="transitive">transitive</option>
-                                            <option value="ditransitive">ditransitive</option>
-                                            <option value="causative">causative</option>
-                                            <option value="dative">dative</option>
-                                        </optgroup>
-                                    </select>
+<!--                        TODO: attach the attribute, rather than write to glosses table -->
+                        <div class="form-field inline">
+                            <label :for="'glosses['+index+'][structure]'">Attribute{{ term.category === 'verb' ? ' *' : ''}}</label>
+                            <select :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
+                                    :name="'glosses['+index+'][structure]'" :required="term.category === 'verb'">
+                                <option value="auxiliary">auxiliary</option>
+                                <option value="participle" v-if="term.category === 'adjective'">participle</option>
+
+                                <template v-if="term.category === 'verb'">
+                                    <optgroup label="isPatient">
+                                        <option value="unaccusative">unaccusative</option>
+                                        <option value="mediopassive">mediopassive</option>
+                                        <option value="reflexive">reflexive</option>
+                                        <option value="reciprocal">reciprocal</option>
+                                    </optgroup>
+                                    <optgroup label="noPatient">
+                                        <option value="unergative">unergative</option>
+                                        <option value="copular">copular</option>
+                                        <option value="stative">stative</option>
+                                    </optgroup>
+                                    <optgroup label="hasObject">
+                                        <option value="transitive">transitive</option>
+                                        <option value="ditransitive">ditransitive</option>
+                                        <option value="causative">causative</option>
+                                        <option value="dative">dative</option>
+                                    </optgroup>
                                 </template>
-                            </div>
-                        </template>
+                            </select>
+                        </div>
 
                         <div class="field-wrapper with-add-field">
                             <div v-for="(value, index) in gloss.synonyms" :key="index" class="form-field inline">
