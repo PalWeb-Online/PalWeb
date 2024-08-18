@@ -219,7 +219,7 @@
                                 @foreach($gloss->attributes as $attribute)
                                     <div class="gloss-li-attribute">
                                         @isset($attribute->category)
-                                        {{ $attribute->category }}:
+                                        [{{ $attribute->category }}]
                                         @endisset
                                         {{ $attribute->attribute }}
                                     </div>
