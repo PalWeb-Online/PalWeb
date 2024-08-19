@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Attribute extends Model
 {
-    protected $fillable = [];
+    protected $guarded = [];
 
     public function terms(): BelongsToMany
     {
