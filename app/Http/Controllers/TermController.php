@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
 use Maize\Markable\Models\Bookmark;
 
 class TermController extends Controller
@@ -118,17 +117,13 @@ class TermController extends Controller
             'patterns',
             'attributes',
             'pronunciations',
-            'variants',
-            'components',
-            'references',
+            'relatives',
             'spellings',
             'inflections',
             'glosses' => function ($query) {
                 $query->with([
                     'attributes',
-                    'synonyms',
-                    'antonyms',
-                    'valences',
+                    'relatives'
                 ]);
             }
         ])->findOrFail($id);
@@ -140,9 +135,30 @@ class TermController extends Controller
             'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
             'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
             'pronunciations' => $term->pronunciations,
-            'variants' => $term->variants->pluck('slug'),
-            'components' => $term->components->pluck('slug'),
-            'references' => $term->references->pluck('slug'),
+            'variants' => $term->variants->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'references' => $term->references->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'components' => $term->components->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'descendants' => $term->descendants->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
             'spellings' => $term->spellings,
             'inflections' => $term->inflections,
             'glosses' => $term->glosses->map(function ($gloss) {
@@ -150,12 +166,10 @@ class TermController extends Controller
                     'id' => $gloss->id,
                     'gloss' => $gloss->gloss,
                     'attributes' => $gloss->attributes,
-                    'synonyms' => $gloss->synonyms->pluck('slug'),
-                    'antonyms' => $gloss->antonyms->pluck('slug'),
-                    'valences' => $gloss->valences->map(function ($valence) {
+                    'relatives' => $gloss->relatives->map(function ($relative) {
                         return [
-                            'slug' => $valence->slug,
-                            'relation' => $valence->pivot->type,
+                            'slug' => $relative->slug,
+                            'relation' => $relative->pivot->type,
                         ];
                     }),
                 ];
@@ -284,9 +298,13 @@ class TermController extends Controller
             $this->handlePatterns($term, $request->plurPatterns, 'plural');
             $this->handlePatterns($term, $request->verbPatterns, 'verbal');
 
-            $this->handleRelatives($term, $request->variants, 'variants', 'variant');
-            $this->handleRelatives($term, $request->references, 'references', 'reference');
-            $this->handleRelatives($term, $request->components, 'components', 'descendant');
+            $relatives = array_merge(
+                $request->variants,
+                $request->references,
+                $request->components,
+                $request->descendants,
+            );
+            $this->handleRelatives($term, $relatives);
 
             $this->handleDependents($term, $request->spellings, Spelling::class);
             $this->handleDependents($term, $request->inflections, Inflection::class);
@@ -301,9 +319,7 @@ class TermController extends Controller
                     Attribute::firstWhere('attribute', $attribute)->glosses()->attach($gloss);
                 }
 
-                $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
-                $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
-                $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
+                $this->handleRelatives($gloss, $requestGloss['relatives']);
             }
 
             return $term;
@@ -325,11 +341,11 @@ class TermController extends Controller
             'inflections.*.inflection' => ['required', new ArabicScript()],
             'inflections.*.translit' => ['required', new LatinScript()],
             'spellings.*.spelling' => ['required', new ArabicScript()],
-            'variants.*' => ['required', new LatinScript()],
-            'references.*' => ['required', new LatinScript()],
-            'components.*' => ['required', new LatinScript()],
-            'glosses.*.synonyms.*' => ['required', new LatinScript()],
-            'glosses.*.antonyms.*' => ['required', new LatinScript()],
+            'variants.*.slug' => ['required', new LatinScript()],
+            'references.*.slug' => ['required', new LatinScript()],
+            'components.*.slug' => ['required', new LatinScript()],
+            'descendants.*.slug' => ['required', new LatinScript()],
+            'glosses.*.relatives.*.slug' => ['required', new LatinScript()],
         ]);
     }
 
@@ -396,9 +412,13 @@ class TermController extends Controller
             $this->handlePatterns($term, $request->plurPatterns, 'plural');
             $this->handlePatterns($term, $request->verbPatterns, 'verbal');
 
-            $this->handleRelatives($term, $request->variants, 'variants', 'variant');
-            $this->handleRelatives($term, $request->references, 'references', 'reference');
-            $this->handleRelatives($term, $request->components, 'components', 'descendant');
+            $relatives = array_merge(
+                $request->variants,
+                $request->references,
+                $request->components,
+                $request->descendants,
+            );
+            $this->handleRelatives($term, $relatives);
 
             $this->handleDependents($term, $request->spellings, Spelling::class, $term->spellings, 'spelling');
             $this->handleDependents($term, $request->inflections, Inflection::class, $term->inflections, 'translit');
@@ -429,14 +449,13 @@ class TermController extends Controller
                     Attribute::firstWhere('attribute', $attribute)->glosses()->syncWithoutDetaching($gloss->id);
                 }
 
-                $detachableGlossAttributes = array_diff($gloss->attributes->pluck('attribute')->toArray(), $requestGlossAttributes);
+                $detachableGlossAttributes = array_diff($gloss->attributes->pluck('attribute')->toArray(),
+                    $requestGlossAttributes);
                 foreach ($detachableGlossAttributes as $attribute) {
                     Attribute::firstWhere('attribute', $attribute)->glosses()->detach($gloss);
                 }
 
-                $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
-                $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
-                $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
+                $this->handleRelatives($gloss, $requestGloss['relatives']);
             }
 
             foreach ($term->glosses as $gloss) {
@@ -480,23 +499,34 @@ class TermController extends Controller
     private
     function handleRelatives(
         object $origin,
-        array $requestItems,
-        string $relation,
-        string $reverseRelation = null
+        array $requestItems
     ) {
-        $attachedTerms = $origin->$relation->pluck('slug')->toArray();
-        $requestTerms = [];
+        $attachedTerms = $origin->relatives->pluck('slug')->toArray();
 
+        $requestTerms = [];
         foreach ($requestItems as $item) {
             $term = Term::firstWhere('slug', $item);
-            $type = is_array($item) ? $item['relation'] : $relation;
 
             if ($term) {
                 $requestTerms[] = $term->slug;
 
                 if (!in_array($term->slug, $attachedTerms)) {
-                    $origin->$relation()->attach($term, ['type' => Str::singular($type)]);
-                    $reverseRelation && $term->$relation()->attach($origin, ['type' => $reverseRelation]);
+                    $origin->relatives()->attach($term, ['type' => $item['relation']]);
+
+                    switch($item['relation']) {
+                        case 'variant':
+                            $term->relatives()->attach($origin, ['type' => 'variant']);
+                            break;
+                        case 'reference':
+                            $term->relatives()->attach($origin, ['type' => 'reference']);
+                            break;
+                        case 'component':
+                            $term->relatives()->attach($origin, ['type' => 'descendant']);
+                            break;
+                        case 'descendant':
+                            $term->relatives()->attach($origin, ['type' => 'component']);
+                            break;
+                    }
                 }
 
             } else {
@@ -506,7 +536,12 @@ class TermController extends Controller
 
         $detachableSlugs = array_diff($attachedTerms, $requestTerms);
         foreach ($detachableSlugs as $slug) {
-            $origin->$relation()->detach(Term::firstWhere('slug', $slug));
+            $term = Term::firstWhere('slug', $slug);
+            $origin->relatives()->detach($term);
+
+            if ($origin instanceof Term) {
+                $term->relatives()->detach($origin);
+            }
         }
     }
 

@@ -12,9 +12,6 @@ class Gloss extends Model
     use HasFactory;
 
     protected $guarded = ['sentences'];
-    protected $casts = [
-        'relatives' => 'array',
-    ];
 
     public function term(): BelongsTo
     {
@@ -26,22 +23,24 @@ class Gloss extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
-    public function synonyms()
+    public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')
-            ->wherePivot('type', 'synonym');
+            ->withPivot('type');
+    }
+
+    public function synonyms()
+    {
+        return $this->relatives()->wherePivot('type', 'synonym');
     }
 
     public function antonyms()
     {
-        return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')
-            ->wherePivot('type', 'antonym');
+        return $this->relatives()->wherePivot('type', 'antonym');
     }
 
     public function valences()
     {
-        return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')
-            ->wherePivotIn('type', ['isPatient', 'noPatient', 'hasObject'])
-            ->withPivot('type');
+        return $this->relatives()->wherePivotIn('type', ['isPatient', 'noPatient', 'hasObject']);
     }
 }

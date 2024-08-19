@@ -102,28 +102,30 @@ class Term extends Model
         return $this->hasMany(Pronunciation::class);
     }
 
-    public function variants(): BelongsToMany
+    public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->wherePivot('type', 'variant');
+            ->withPivot('type');
+    }
+
+    public function variants(): BelongsToMany
+    {
+        return $this->relatives()->wherePivot('type', 'variant');
     }
 
     public function references(): BelongsToMany
     {
-        return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->wherePivot('type', 'reference');
+        return $this->relatives()->wherePivot('type', 'reference');
     }
 
     public function components(): BelongsToMany
     {
-        return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->wherePivot('type', 'component');
+        return $this->relatives()->wherePivot('type', 'component');
     }
 
     public function descendants(): BelongsToMany
     {
-        return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->wherePivot('type', 'descendant');
+        return $this->relatives()->wherePivot('type', 'descendant');
     }
 
     /** Scopes */
