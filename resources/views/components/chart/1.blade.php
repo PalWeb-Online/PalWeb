@@ -4,13 +4,6 @@
     $r1 === 'ي' && $vowel = 'ī';
 @endphp
 
-@if (in_array($vowel, ['ū', 'ī']))
-    <x-tip>
-        <p>Because the first root letter is a consonant-vowel (i.e. <b>و</b> or <b>ي</b>), the coda of the first syllable in
-            the Present Tense results in a <b>"iw"</b> or <b>"iy"</b> that is elided to <b>"ū"</b> or <b>"ī"</b>, respectively.</p>
-    </x-tip>
-@endif
-
 <x-chart.conjugation>
     @if (in_array($form, ['A1', 'A2i']))
         <x-slot name="imp1S">ب{{$r1}}{{$r2}}{{$r3}}</x-slot>
@@ -498,3 +491,10 @@
 
     @endif
 </x-chart.conjugation>
+
+@if (in_array($vowel, ['ū', 'ī']))
+    <x-tip>
+        <p>Because the first root letter is a consonant-vowel (i.e. <b>و</b> or <b>ي</b>), the coda of the first syllable in
+            the Present Tense results in a <b>"iw"</b> or <b>"iy"</b> that is elided to <b>"ū"</b> or <b>"ī"</b>, respectively.</p>
+    </x-tip>
+@endif

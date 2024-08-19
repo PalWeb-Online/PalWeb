@@ -57,7 +57,7 @@
                             </button>
                         @endif
 
-                        <div style="flex-grow: 1">{{ $dialectTranslit['dialect'] }} {{ $pattern->pattern }}</div>
+                        <div style="flex-grow: 1">{{ $dialectTranslit['dialect'] }} {{ $pattern->form === '1' ? $pattern->pattern : $pattern->form . $pattern->pattern }}</div>
 
                         @if ($term->patterns->count() * count($translits) > 1)
                             <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
