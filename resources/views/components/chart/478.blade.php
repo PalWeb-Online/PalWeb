@@ -462,11 +462,11 @@
 
     @elseif ($form == '4B')
         <x-slot name="amr2M">إن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="amr2Mtr">ʔin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Mtr">ʔini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2F">إن{{$r1}}{{$r2}}ي</x-slot>
-        <x-slot name="amr2Ftr">ʔin{{$r1tr}}{{$r2tr}}i</x-slot>
+        <x-slot name="amr2Ftr">ʔini{{$r1tr}}{{$r2tr}}i</x-slot>
         <x-slot name="amr2P">إن{{$r1}}{{$r2}}و</x-slot>
-        <x-slot name="amr2Ptr">ʔin{{$r1tr}}{{$r2tr}}u</x-slot>
+        <x-slot name="amr2Ptr">ʔini{{$r1tr}}{{$r2tr}}u</x-slot>
 
     @elseif ($form == '4C')
         <x-slot name="amr2M">إن{{$r1}}{{$r2}}ّ</x-slot>

@@ -30,93 +30,56 @@
                     </x-context-actions>
 
                     <div>{{ __($term->category) }}.
-                        @foreach($term->attributes as $attribute)
-                            @if($attribute->attribute !== 'idiom')
-                                <span style="font-weight: 400">{{ $attribute->attribute }}.</span>
-                            @endif
-                        @endforeach
+
+                        @include('terms._attributes', ['attributes' => $term->attributes->pluck('attribute')->toArray()])
+
+                        @if($term->inflections->firstWhere('form', 'cnst'))
+                            <span style="font-weight: 400">construct:</span>
+                            {{ $term->inflections->firstWhere('form', 'cnst')->inflection }}
+                            ({{ $term->inflections->firstWhere('form', 'cnst')->translit }})
+                        @endif
+
+                        @if($term->category === 'verb')
+                            @foreach($term->patterns->pluck('form')->unique() as $form)
+                                <a href="{{ route('wiki.show', 'verb-forms') }}" target="_blank"
+                                   style="font-style: italic">form {{ $form }}.</a>
+                            @endforeach
+                        @endif
                     </div>
 
-                    {{--                    TODO: Use this file to organize attributes & links --}}
-                    {{--                    @if(count($term->attributes) > 0)--}}
-                    {{--                        @include('terms._attributes', ['attributes' => $term->attributes])--}}
-                    {{--                    @endif--}}
 
-                    @if($term->category === 'verb')
-                        @foreach($term->patterns as $pattern)
-                            @if($pattern->type === 'verbal')
-                                <div>FORM {{ $pattern->form }} ({{ $pattern->pattern }})</div>
-                            @endif
-                        @endforeach
-                    @endif
                 </div>
 
-                <div class="term-references">
-                    @if(count($term->spellings) > 0)
-                        <div>
-                            or
-                            @foreach($term->spellings as $spelling)
-                                <span style="font-weight: 700">{{ $spelling->spelling }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+                @if(count($term->spellings) + count($term->variants) + count($term->references) > 0)
+                    <div class="term-references">
+                        @if(count($term->spellings) > 0)
+                            <div>
+                                or
+                                @foreach($term->spellings as $spelling)
+                                    <span style="font-weight: 700">{{ $spelling->spelling }}</span>
+                                @endforeach
+                            </div>
+                        @endif
 
-                    @if(count($term->variants) > 0)
-                        <div>
-                            <span style="font-weight: 400">alt.</span>
-                            @foreach($term->variants as $variant)
-                                <a href="{{ route('terms.show', $variant) }}">{{ __($variant->term) }}
-                                    ({{ $variant->translit }})
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
+                        @if(count($term->variants) > 0)
+                            <div>
+                                <span style="font-weight: 400">alt.</span>
+                                @foreach($term->variants as $variant)
+                                    <a href="{{ route('terms.show', $variant) }}">{{ __($variant->term) }}
+                                        ({{ $variant->translit }})</a>
+                                @endforeach
+                            </div>
+                        @endif
 
-                    @if(count($term->references) > 0)
-                        <div>
-                            <span style="font-weight: 400">see:</span>
-                            @foreach($term->references as $reference)
-                                <a href="{{ route('terms.show', $reference)}}">{{ $reference->term }}
-                                    {{ $reference->translit }}
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-
-                @if(request()->routeIs('terms.show') and count($term->inflections->whereNotIn('form', ['genitive', 'accusative'])) > 0)
-                    <div class="term-inflections">
-                        @foreach($term->inflections as $inflection)
-                            <x-info-button label="{{ $inflection->form }}"
-                                           arb="{{ $inflection->inflection }}"
-                                           eng="{{ $inflection->translit }}"
-                            />
-
-                            {{--                    TODO: Support audio & links in x-info-button    --}}
-                            {{--                    @php--}}
-                            {{--                        $inflectionTerm = $term->firstWhere('translit', $inflection->translit);--}}
-                            {{--                    @endphp--}}
-                            {{--                    @if($inflectionTerm)--}}
-                            {{--                        <a href="{{ route('terms.show', $inflectionTerm) }}"--}}
-                            {{--                           class="chart-item {{ $inflection->form }}">--}}
-                            {{--                            <div class="chart-title">--}}
-                            {{--                                {{ $inflection->form }}--}}
-                            {{--                            </div>--}}
-                            {{--                            <div>{{ $inflection->inflection }} ({{ $inflection->translit }})--}}
-                            {{--                            </div>--}}
-                            {{--                        </a>--}}
-                            {{--                    @else--}}
-                            {{--                        <a class="chart-item audio {{ $inflection->form }}"--}}
-                            {{--                           onclick="{{ $inflection->audify() }}.play()">--}}
-                            {{--                            <div class="chart-title">{{ $inflection->form }}</div>--}}
-                            {{--                            <div>{{ $inflection->inflection }} ({{ $inflection->translit }})--}}
-                            {{--                            </div>--}}
-                            {{--                        </a>--}}
-                            {{--                        <script type="text/javascript">--}}
-                            {{--                            var {{ $inflection->audify() }} = new Howl({src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $inflection->audify() }}.mp3']});--}}
-                            {{--                        </script>--}}
-                            {{--                    @endif--}}
-                        @endforeach
+                        @if(count($term->references) > 0)
+                            <div>
+                                <span style="font-weight: 400">see:</span>
+                                @foreach($term->references as $reference)
+                                    <a href="{{ route('terms.show', $reference)}}">{{ $reference->term }}
+                                        {{ $reference->translit }}</a>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 @endif
             </div>
@@ -125,58 +88,9 @@
                 <div class="term-container-data">
                     <div class="term-etymology">
                         <div class="featured-title">{{ __('etymology') }}</div>
-                        <div style="display: flex; align-items: center; gap: 1.6rem">
-
-                            <div>
-                                {{ __($term->etymology['type']) }} {{ $term->etymology['source'] ? __($term->etymology['source']) : '' }}
-                            </div>
-
-                            @php
-                                $sortedPatterns = $term->patterns->sortByDesc('type');
-                            @endphp
-                            @foreach ($sortedPatterns as $pattern)
-                                @if ($pattern->type === 'singular')
-                                    @if ($pattern->form)
-                                        <div>
-                                            Verbal Pattern: Form {{ $pattern->form }} {{ $pattern->pattern }}
-                                        </div>
-                                    @else
-                                        <div>
-                                            Singular Pattern:
-                                            <a href="{{ route('wiki.show', 'patterns') }}">{{ $pattern->pattern }}</a>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($pattern->type === 'plural')
-                                    <div>
-                                        Plural Pattern:
-                                        {{ $pattern->pattern }}
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-
-                        @if(count($term->components) > 0)
-                            <div>
-                                Idiom from
-                                @foreach($term->components as $component)
-                                    <a href="{{ route('terms.show', $component) }}">{{ $component->term }}
-                                        ({{ $component->translit }})</a>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        @if(count($term->descendants) > 0)
-                            <div>
-                                Component of
-                                @foreach($term->descendants as $descendant)
-                                    <a href="{{ route('terms.show', $descendant) }}">{{ $descendant->term }}
-                                        ({{ $descendant->translit }})
-                                    </a>
-                                @endforeach
-                            </div>
-                        @endif
+                        @include('terms._etymology')
                     </div>
+
                     <div class="term-pronunciation" x-data="{ open: false }">
                         <div class="featured-title">{{ __('pronunciation') }}</div>
                         @if(auth()->check())
@@ -219,7 +133,7 @@
                                 @foreach($gloss->attributes as $attribute)
                                     <div class="gloss-li-attribute">
                                         @isset($attribute->category)
-                                        [{{ $attribute->category }}]
+                                            [{{ $attribute->category }}]
                                         @endisset
                                         {{ $attribute->attribute }}
                                     </div>
@@ -285,13 +199,14 @@
             </div>
 
             @unless(request()->routeIs('terms.usages'))
+
+                @include('terms._inflections')
+
                 @if($term->image != '')
                     <figure class="term-image">
                         <img alt="Term Image" src="{{ $term->image }}">
                     </figure>
                 @endif
-
-                @include('terms._inflections')
 
                 @isset($term->usage)
                     <div class="user-wrapper">

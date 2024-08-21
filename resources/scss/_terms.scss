@@ -9,7 +9,7 @@
 
     .term-container-head {
         padding-block-end: 2.4rem;
-        border-block-end: 0.2rem dotted $purple-primary-dark;
+        border-block-end: 0.1rem solid $purple-primary;
 
         .term-references, .term-inflections {
             display: flex;
@@ -504,6 +504,7 @@
 .inflection-carousel {
     background: $purple-pastel-light;
     border-radius: 1.2rem;
+    flex-grow: 1;
 
     .carousel-item {
         display: grid;
@@ -536,6 +537,10 @@
     gap: 3.2rem;
     padding-block: 3.2rem;
 
+    &.derived-terms {
+        border-block-start: 2px dotted $purple-pastel-dark
+    }
+
     .inflection-chart {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -557,31 +562,42 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: stretch;
-            flex-grow: 1;
-            flex-shrink: 0;
             background: $purple-pastel-light;
-            border: 0.1rem solid $purple-deep;
-            border-radius: 1.2rem;
-            box-shadow: -0.3rem 0.3rem rgba(black, 0.2);
             margin: 0 0 0.3rem 0.3rem;
-            overflow: hidden;
+            position: relative;
+
+            &:is(a):hover {
+                transform: translate(-0.3rem, 0.3rem);
+
+                & > div {
+                    box-shadow: none;
+                }
+            }
 
             > div {
                 padding: 0.4rem;
                 font-family: $monoFont, $ar_headFont;
+                border: 0.1rem solid $purple-deep;
+                box-shadow: -0.3rem 0.3rem rgba(black, 0.2);
 
                 display: flex;
                 align-items: center;
             }
 
-            > div:first-child {
+            > div:nth-child(1) {
+                border-radius: 0 1.2rem 1.2rem 0;
+                border-inline-end: none;
+
                 color: $purple-deep;
                 font-size: 1.2rem;
                 font-weight: 700;
                 padding: 0 0.8rem;
             }
 
-            > div:nth-child(2n) {
+            > div:nth-child(2) {
+                border-radius: 1.2rem 0 0 1.2rem;
+                border-inline-start: none;
+
                 background: white;
                 flex-grow: 1;
                 display: flex;
@@ -603,6 +619,14 @@
 
             > div:nth-child(2n) > div:not(:first-child) {
                 font-size: 1.2rem;
+            }
+
+            .play {
+                position: absolute;
+                top: -1.2rem;
+                right: 1.6rem;
+                width: 2.4rem;
+                transform: rotate(180deg);
             }
         }
     }

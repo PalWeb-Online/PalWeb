@@ -174,4 +174,12 @@ class Term extends Model
             )
         );
     }
+
+    public function audify()
+    {
+        $find = [' ', '-'];
+        $fix = ['_', ''];
+
+        return str_replace($find, $fix, $this->translit);
+    }
 }

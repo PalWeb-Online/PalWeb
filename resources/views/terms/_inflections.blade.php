@@ -3,26 +3,20 @@
 @endphp
 
 @if (count($hostForms) > 0)
-
     <div x-data="{ activeIndex: 0, patterns: {{ count($hostForms) }} }" class="inflection-carousel">
-
         @foreach ($hostForms as $index => $hostForm)
             <div class="carousel-item" x-show="activeIndex === {{ $index }}" x-cloak>
-
                 @if(count($hostForms) > 1)
                     <div class="carousel-item-head">
                         <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : patterns - 1">
                             &larr;
                         </button>
-
                         Variant {{ $index + 1 }}
-
                         <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
                             &rarr;
                         </button>
                     </div>
                 @endif
-
                 <x-chart.enclitics
                     host="{{ $hostForm->inflection }}"
                     translit="{{ $hostForm->translit }}"
@@ -57,7 +51,8 @@
                             </button>
                         @endif
 
-                        <div style="flex-grow: 1">{{ $dialectTranslit['dialect'] }} {{ $pattern->form === '1' ? $pattern->pattern : $pattern->form . $pattern->pattern }}</div>
+                        <div
+                            style="flex-grow: 1">{{ $dialectTranslit['dialect'] }} {{ $pattern->form === '1' ? $pattern->pattern : $pattern->form . $pattern->pattern }}</div>
 
                         @if ($term->patterns->count() * count($translits) > 1)
                             <button @click="activeIndex = (activeIndex < patterns - 1) ? activeIndex + 1 : 0">
@@ -126,5 +121,74 @@
                 </div>
             @endforeach
         @endforeach
+
+        @if(count($term->inflections) > 0)
+            <div class="inflection-chart-wrapper derived-terms">
+                <div class="inflection-chart">
+                    @if($term->inflections->firstWhere('form', 'ap'))
+                        <a href="#" class="inflection-chart-item">
+                            <div>AP</div>
+                            <div>
+                                <div>{{ $term->inflections->firstWhere('form', 'ap')->inflection }}</div>
+                                <div>{{ $term->inflections->firstWhere('form', 'ap')->translit }}</div>
+                            </div>
+                        </a>
+                    @endif
+                    @if($term->inflections->firstWhere('form', 'pp'))
+                        <a href="#" class="inflection-chart-item">
+                            <div>PP</div>
+                            <div>
+                                <div>{{ $term->inflections->firstWhere('form', 'pp')->inflection }}</div>
+                                <div>{{ $term->inflections->firstWhere('form', 'pp')->translit }}</div>
+                            </div>
+                        </a>
+                    @endif
+                    @if($term->inflections->firstWhere('form', 'nv'))
+                        <a href="#" class="inflection-chart-item">
+                            <div>NV</div>
+                            <div>
+                                <div>{{ $term->inflections->firstWhere('form', 'nv')->inflection }}</div>
+                                <div>{{ $term->inflections->firstWhere('form', 'nv')->translit }}</div>
+                            </div>
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
+
+@elseif(count($term->inflections) > 0)
+
+    @if (in_array($term->category, ['noun', 'adjective']))
+        @php
+            $type = 'singular';
+            $isMasculine = false;
+
+            foreach ($term->attributes->pluck('attribute')->toArray() as $attribute) {
+                if ($attribute === 'collective') {
+                    $type = 'collective';
+                    break;
+                }
+            }
+
+            if (count($term->inflections->where('form', 'fem')) > 0) {
+                $type = 'masculine';
+            }
+        @endphp
+
+        <div class="inflection-carousel">
+            <div class="carousel-item">
+                <x-chart.inflection :term="$term" :type="$type"/>
+            </div>
+        </div>
+    @endif
+    @if (count($term->inflections->where('form', 'resp')) > 0)
+        <div class="activity-dialog" style="margin-block: 0;">
+            <x-dialog-line speaker="دعاء" :arb="$term->term" :eng="$term->translit" audio/>
+            @foreach($term->inflections->where('form', 'resp')->all() as $response)
+                <x-dialog-line ltr speaker="جواب" :arb="$response->inflection" :eng="$response->translit" audio/>
+            @endforeach
+        </div>
+    @endif
+
 @endif
