@@ -216,10 +216,6 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request)
     {
-        Log::info('Term Page:', [
-            'url' => $request->fullUrl(),
-        ]);
-
         $allPronunciations = $term->pronunciations;
         $userPronunciations = collect();
         $otherPronunciations = collect();
