@@ -146,7 +146,7 @@ class Term extends Model
                 ->orWhereHas('glosses', function ($query) use ($search) {
                     $query
                         ->whereRaw("MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search])
-                        ->orWhere('gloss', 'LIKE', $search.'%');
+                        ->orWhere('gloss', 'LIKE', $search);
                 })
             )
         );

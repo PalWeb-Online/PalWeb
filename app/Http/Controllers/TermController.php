@@ -80,7 +80,6 @@ class TermController extends Controller
 
         $totalCount = $terms->total();
 
-
         if (!(bool) request()->query()) {
             $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
