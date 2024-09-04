@@ -4,50 +4,40 @@
 ])
 
 @if($deck)
-    <div class="deck-li-wrapper {{ $size }}">
-        <a href="{{ route('decks.show', $deck->id) }}" class="deck-li">
-            <div class="deck-metadata">
-                <div style="display: flex; gap: 0.8rem; align-items: center">
-                    <div class="deck-title">
-                        {{ $deck->name }}
-                    </div>
-                    <div class="deck-term-count">
-                        ({{ count($deck->terms) }})
-                    </div>
-                </div>
+    @php
+        $deckObject = [
+            'name' => $deck->name,
+            'description' => $deck->description,
+            'count' => count($deck->terms),
+            'pinCount' => \Maize\Markable\Models\Bookmark::count($deck),
+            'isPrivate' => $deck->private,
+            'authorName' => $deck->author->name,
+            'authorAvatar' => asset('img/avatars/' . $deck->author->avatar),
+            'size' => $size
+        ];
+    @endphp
 
-                @if($size === 'l' && $deck->description)
-                    <div class="deck-description">{{ \Illuminate\Support\Str::limit($deck->description, 190) }}</div>
-                @endif
-            </div>
+    <div data-vue-component="DeckItem"
+         data-props="{{ json_encode([
+                 'deck' => $deckObject,
+                 'imageURL' => asset('/img'),
+                 'isPinned' => $deck->isPinned(),
 
-            <div class="deck-author">
-                @if($deck->private)
-                    <img class="lock" src="{{ asset('img/lock.svg') }}" alt="lock"/>
-                @endif
-                <div class="deck-author-name">by {{ $deck->author->name }}</div>
-                <div class="deck-author-avatar">
-                    <img alt="Profile Picture" src="{{ asset('img/avatars/' . $deck->author->avatar) }}"/>
-                </div>
-            </div>
-        </a>
+                 'modelType' => 'deck',
 
-        @if($deck->isPinned())
-            <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
-        @endif
-
-        @php
-            $pinCount = \Maize\Markable\Models\Bookmark::count($deck);
-        @endphp
-        @if($pinCount > 1)
-            <div class="pin-counter">
-                <img src="{{ asset('img/heart.svg') }}" alt="heart"/>
-                <div>{{ $pinCount }}</div>
-            </div>
-        @endif
-
-        <x-context-actions>
-            <x-deck-actions :deck="$deck"/>
-        </x-context-actions>
+                 'routes' => [
+                     'view' => route('decks.show', $deck),
+                     'edit' => route('decks.edit', $deck),
+                     'delete' => route('decks.destroy', $deck),
+                     'creator' => route('users.show', $deck->author->username),
+                     'pin' => route('decks.pin', $deck),
+                     'privacyToggle' => route('decks.privacy.toggle', $deck),
+                     'copy' => route('decks.copy', $deck),
+                     'export' => route('decks.export', $deck)
+                 ],
+                 'isUser' => auth()->check(),
+                 'isAuthor' => $deck->author->id == auth()->user()->id,
+             ]) }}"
+    >
     </div>
 @endif

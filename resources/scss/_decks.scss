@@ -171,6 +171,26 @@
     }
 }
 
+.lock {
+    transition: 0.05s;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.25) saturate(1);
+        opacity: 50%;
+    }
+
+    &.public {
+        filter: brightness(1.5) saturate(0);
+        opacity: 25%;
+
+        &:hover {
+            filter: brightness(1.25) saturate(1);
+            opacity: 50%;
+        }
+    }
+}
+
 .deck-li {
     display: flex;
     flex-flow: row wrap;
@@ -188,8 +208,8 @@
     transition: 0.05s;
 
     &:hover {
-        box-shadow: none;
-        transform: translate(-0.3rem, 0.3rem);
+        //box-shadow: none;
+        //transform: translate(-0.3rem, 0.3rem);
     }
 
     .deck-metadata {

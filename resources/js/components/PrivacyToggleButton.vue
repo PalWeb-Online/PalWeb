@@ -3,13 +3,12 @@ import {ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
-    isPinned: Boolean,
+    isPrivate: Boolean,
     route: String,
     imageURL: String,
 });
 
-const emit = defineEmits(['updateCount']);
-let isPinned = ref(props.isPinned);
+let isPrivate = ref(props.isPrivate);
 
 const notifVisible = ref(false);
 const notifContent = ref('');
@@ -21,18 +20,17 @@ const {floatingStyles} = useFloating(reference, floating, {
     middleware: [offset(8), flip(), shift()]
 });
 
-const pin = async () => {
+const togglePrivacy = async () => {
     try {
-        const response = await axios.post(props.route);
-        isPinned.value = response.data.isPinned;
-        response.data.pinCount && emit('updateCount', response.data.pinCount);
+        const response = await axios.patch(props.route);
+        isPrivate.value = response.data.isPrivate;
 
         notifContent.value = response.data.message;
         notifVisible.value = true;
         setTimeout(() => notifVisible.value = false, 1000);
 
     } catch (error) {
-        console.error('Pin Failed', error);
+        console.error('Privacy Toggle Failed', error);
 
         notifContent.value = 'An error occurred.';
         notifVisible.value = true;
@@ -42,7 +40,8 @@ const pin = async () => {
 </script>
 
 <template>
-    <img ref="reference" :class="['pin', { unpinned: !isPinned }]" :src="`${imageURL}/pin.svg`" @click="pin" alt="pin"/>
+    <img ref="reference" :class="['lock', { public: !isPrivate }]" :src="`${imageURL}/${isPrivate ? 'lock.svg' : 'lock-open.svg'}`" @click="togglePrivacy" alt="lock"/>
+
     <Transition name="notification">
         <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
             {{ notifContent }}

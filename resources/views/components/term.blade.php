@@ -29,10 +29,10 @@
         <div data-vue-component="TermItem"
              data-props="{{ json_encode([
                  'term' => $termObject,
-                 'pinURL' => asset('/img/pin.svg'),
+                 'imageURL' => asset('/img'),
+                 'isPinned' => $term->isPinned(),
 
                  'modelType' => 'term',
-                 'triggerURL' => asset('/img/gear.svg'),
 
                  'routes' => [
                      'view' => route('terms.show', $term),
@@ -45,7 +45,6 @@
                  'isUser' => auth()->check(),
                  'isAdmin' => auth()->check() && auth()->user()->isAdmin(),
 
-                 'isPinned' => $term->isPinned(),
                  'userDecks' => $userDecks,
              ]) }}"
         >

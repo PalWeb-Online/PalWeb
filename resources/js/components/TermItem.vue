@@ -1,17 +1,17 @@
 <script setup>
 import {Howl} from 'howler';
 import {computed, onMounted, ref} from 'vue';
+import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import ContextActions from "./ContextActions.vue";
 import PinButton from "./PinButton.vue";
-import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
     term: Object,
-    pinURL: String,
+    imageURL: String,
+    isPinned: Boolean,
 
     // ContextActions
     modelType: String,
-    triggerURL: String,
 
     // ModelActions
     routes: Object,
@@ -19,7 +19,6 @@ const props = defineProps({
     isAdmin: Boolean,
 
     // ActionButtons
-    isPinned: Boolean,
     userDecks: Object,
 });
 
@@ -63,12 +62,11 @@ const gloss = computed(() => {
 <template>
     <div class="term-li-wrapper">
         <ContextActions
+            :imageURL="imageURL"
             :modelType="modelType"
-            :triggerURL="triggerURL"
             :routes="routes"
             :isUser="isUser"
             :isAdmin="isAdmin"
-            :isPinned="isPinned"
             :userDecks="userDecks"
         />
 
@@ -84,7 +82,7 @@ const gloss = computed(() => {
                 {{ gloss }}
             </div>
 
-            <PinButton v-if="isUser" :isPinned="isPinned" :pinRoute="routes.pin" :pinURL="pinURL"/>
+            <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"/>
         </div>
     </div>
 </template>

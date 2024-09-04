@@ -3,7 +3,7 @@ import {onBeforeUnmount, ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
-    deckToggleRoute: String,
+    route: String,
     userDecks: Object,
 });
 
@@ -50,7 +50,7 @@ const notifContent = ref('');
 
 const toggle = async (deck) => {
     try {
-        const route = props.deckToggleRoute.replace(':deckId', deck.id);
+        const route = props.route.replace(':deckId', deck.id);
         const response = await axios.post(route);
         deck.isPresent = response.data.isPresent;
         notifContent.value = response.data.message;

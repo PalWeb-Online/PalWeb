@@ -29,14 +29,15 @@ class DeckController extends Controller
 
         Bookmark::toggle($deck, $user);
 
-        if (Bookmark::has($deck, $user)) {
-            event(new ModelPinned($user));
-            $this->flasher->addSuccess(__('pin.added', ['thing' => $deck->name]));
-        } else {
-            $this->flasher->addSuccess(__('pin.removed', ['thing' => $deck->name]));
-        }
+        $deck->isPinned() && event(new ModelPinned($user));
 
-        return back();
+        return response()->json([
+            'pinCount' => Bookmark::count($deck),
+            'isPinned' => $deck->isPinned(),
+            'message' => $deck->isPinned()
+                ? __('pin.added', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name])
+        ]);
     }
 
     /**
@@ -283,8 +284,10 @@ class DeckController extends Controller
         $deck->private ? $status = 'private' : $status = 'public';
         $deck->save();
 
-        $this->flasher->addSuccess(__('privacy.updated', ['status' => $status]));
-        return back();
+        return [
+            'isPrivate' => $deck->private,
+            'message' => __('privacy.updated', ['status' => $status])
+        ];
     }
 
     public function toggleTerm(Deck $deck, Term $term)

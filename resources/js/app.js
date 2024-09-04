@@ -5,6 +5,7 @@ import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
 import TermItem from "./components/TermItem.vue";
+import DeckItem from "./components/DeckItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 
 import axios from 'axios';
@@ -57,6 +58,14 @@ termItemElements.forEach((element, index) => {
     const propsData = JSON.parse(element.dataset.props);
     createApp({
         render: () => h(TermItem, propsData)
+    }).mount(element);
+});
+
+const deckItemElements = document.querySelectorAll('[data-vue-component="DeckItem"]');
+deckItemElements.forEach((element, index) => {
+    const propsData = JSON.parse(element.dataset.props);
+    createApp({
+        render: () => h(DeckItem, propsData)
     }).mount(element);
 });
 

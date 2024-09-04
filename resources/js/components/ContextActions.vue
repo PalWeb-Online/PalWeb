@@ -2,18 +2,22 @@
 import {computed, onBeforeUnmount, ref} from 'vue';
 import {flip, offset, shift, useFloating} from '@floating-ui/vue';
 import TermActions from "./TermActions.vue";
+import DeckActions from "./DeckActions.vue";
 
 const props = defineProps({
+    imageURL: String,
     modelType: String,
-    triggerURL: String,
 
     // ModelActions
     routes: Object,
     isUser: Boolean,
-    isAdmin: Boolean,
 
-    // ActionButtons
+    // TermActions
+    isAdmin: Boolean,
     userDecks: Object,
+
+    // DeckActions
+    isAuthor: Boolean,
 });
 
 const isOpen = ref(false);
@@ -49,24 +53,34 @@ const getActionsComponent = computed(() => {
     switch (props.modelType) {
         case 'term':
             return TermActions;
+        case 'deck':
+            return DeckActions;
         default:
             return null;
     }
 });
 
 const getFilteredProps = computed(() => {
+    const defaultProps = {
+        modelType: props.modelType,
+        routes: props.routes,
+        isUser: props.isUser,
+    };
+
     switch (props.modelType) {
         case 'term':
             return {
-                routes: props.routes,
-                isUser: props.isUser,
+                ...defaultProps,
                 isAdmin: props.isAdmin,
-
-                // ActionButtons
                 userDecks: props.userDecks,
             };
+        case 'deck':
+            return {
+                ...defaultProps,
+                isAuthor: props.isAuthor,
+            };
         default:
-            return {};
+            return defaultProps;
     }
 });
 
@@ -74,7 +88,7 @@ const getFilteredProps = computed(() => {
 
 <template>
     <div class="context-actions-wrapper">
-        <img ref="reference" :src="triggerURL" @click="toggleMenu" alt="options"/>
+        <img ref="reference" :src="`${imageURL}/gear.svg`" @click="toggleMenu" alt="options"/>
 
         <div ref="floating" v-if="isOpen" :style="floatingStyles" class="context-actions-menu">
             <component :is="getActionsComponent" v-bind="getFilteredProps"/>

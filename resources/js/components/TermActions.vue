@@ -1,8 +1,9 @@
 <script setup>
-import DeckToggleButton from "./DeckToggleButton.vue";
+import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import DeleteButton from "./DeleteButton.vue";
 
 const props = defineProps({
+    modelType: String,
     routes: Object,
     isUser: Boolean,
     isAdmin: Boolean,
@@ -19,11 +20,11 @@ const props = defineProps({
     <template v-if="isAdmin">
         <div class="action-divider"></div>
         <a :href="routes.edit">Edit Term</a>
-        <DeleteButton :deleteRoute="routes.delete"/>
+        <DeleteButton :modelType="modelType" :route="routes.delete"/>
     </template>
 
     <template v-if="isUser">
         <div class="action-divider"></div>
-        <DeckToggleButton :userDecks="userDecks" :deckToggleRoute="routes.deckToggle"/>
+        <TermDeckToggleButton :userDecks="userDecks" :route="routes.deckToggle"/>
     </template>
 </template>
