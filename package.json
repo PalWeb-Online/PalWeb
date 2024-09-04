@@ -19,6 +19,7 @@
     "dependencies": {
         "@floating-ui/vue": "^1.0.6",
         "@vitejs/plugin-vue": "^3.1.0",
+        "howler": "^2.2.4",
         "vue": "^3.2.36",
         "vuedraggable": "^4.1.0"
     }

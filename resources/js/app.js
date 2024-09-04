@@ -4,7 +4,8 @@ import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
-import ActionButton from "./components/ActionButton.vue";
+import TermItem from "./components/TermItem.vue";
+import ContextActions from "./components/ContextActions.vue";
 
 import axios from 'axios';
 import Alpine from 'alpinejs';
@@ -43,11 +44,19 @@ searchBarElements.forEach((element, index) => {
     }).mount(element);
 });
 
-const actionButtonElements = document.querySelectorAll('[data-vue-component="ActionButton"]');
-actionButtonElements.forEach((element, index) => {
+const contextActionsElements = document.querySelectorAll('[data-vue-component="ContextActions"]');
+contextActionsElements.forEach((element, index) => {
     const propsData = JSON.parse(element.dataset.props);
     createApp({
-        render: () => h(ActionButton, propsData)
+        render: () => h(ContextActions, propsData)
+    }).mount(element);
+});
+
+const termItemElements = document.querySelectorAll('[data-vue-component="TermItem"]');
+termItemElements.forEach((element, index) => {
+    const propsData = JSON.parse(element.dataset.props);
+    createApp({
+        render: () => h(TermItem, propsData)
     }).mount(element);
 });
 

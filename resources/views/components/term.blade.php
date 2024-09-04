@@ -5,32 +5,50 @@
         if(auth()->check()) {
             $pronunciation = $term->pronunciations->firstWhere('dialect_id', auth()->user()->dialect_id);
             $pronunciation && $term->pronunciation = $pronunciation;
+
+            $userDecks = auth()->user()->decks->map(function ($deck) use ($term) {
+                return [
+                    'id' => $deck->id,
+                    'name' => $deck->name,
+                    'isPresent' => $deck->terms->contains($term->id)
+                ];
+            })->toArray();
+        } else {
+            $userDecks = [];
         }
+
+        $termObject = [
+            'term' => $term->term,
+            'translit' => $term->pronunciation->translit,
+            'file' => $term->pronunciation->audify(),
+            'gloss' => $gloss->gloss ?? $term->glosses[0]->gloss
+        ];
     @endphp
 
     <div class="term-li-container">
-        <div class="term-li-wrapper">
-            <x-context-actions>
-                <x-term-actions :term="$term"/>
-            </x-context-actions>
+        <div data-vue-component="TermItem"
+             data-props="{{ json_encode([
+                 'term' => $termObject,
+                 'pinURL' => asset('/img/pin.svg'),
 
-            <div class="term-li">
-                <div class="arb audio" onclick="{{ $term->pronunciation->audify() }}.play()"
-                     data-tippy-translit data-tippy-content="{{ $term->pronunciation->translit }}">
-                    {{ $term->term }}
-                </div>
-                <script type="text/javascript">
-                    var {{ $term->pronunciation->audify() }} = new Howl({src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $term->pronunciation->audify() }}.mp3']})
-                </script>
+                 'modelType' => 'term',
+                 'triggerURL' => asset('/img/gear.svg'),
 
-                <div class="eng">
-                    {{ \Illuminate\Support\Str::limit($gloss->gloss ?? $term->glosses[0]->gloss, 48) }}
-                </div>
+                 'routes' => [
+                     'view' => route('terms.show', $term),
+                     'usages' => route('terms.usages', $term),
+                     'edit' => route('terms.edit', $term),
+                     'delete' => route('terms.destroy', $term),
+                     'pin' => route('terms.pin', $term),
+                     'deckToggle' => route('decks.term.toggle', ['deck' => ':deckId', 'term' => $term->id])
+                 ],
+                 'isUser' => auth()->check(),
+                 'isAdmin' => auth()->check() && auth()->user()->isAdmin(),
 
-                @if($term->isPinned())
-                    <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
-                @endif
-            </div>
+                 'isPinned' => $term->isPinned(),
+                 'userDecks' => $userDecks,
+             ]) }}"
+        >
         </div>
 
         {{ $slot }}

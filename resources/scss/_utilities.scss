@@ -286,7 +286,53 @@ h3 {
     }
 }
 
-.dropdown-menu {
+// New Context Actions Menu
+
+.context-actions-wrapper {
+    direction: ltr;
+    flex-shrink: 0;
+    margin-block-start: 0.4rem;
+
+    img {
+        transition: 0.1s;
+        width: 2.4rem;
+    }
+
+    .context-actions-menu {
+        gap: 0;
+        margin: 0;
+        z-index: 2;
+        background: white;
+        border: 0.1rem solid $purple-primary-dark;
+        box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
+
+        a, button {
+            font-family: $monoFont;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: $purple-deep;
+
+            &:hover {
+                color: white;
+                text-decoration: none;
+                background: $purple-primary-dark;
+            }
+        }
+    }
+
+    .action-divider {
+        margin: 0.3rem 0.6rem;
+        border-block-end: 0.1rem dotted $purple-primary-dark;
+    }
+
+    &:hover {
+        img {
+            transform: rotate(15deg);
+        }
+    }
+}
+
+.dropdown-menu, .context-actions-menu {
     display: grid;
     gap: 0.4rem;
     padding: 0.4rem;
@@ -318,11 +364,26 @@ h3 {
 .pin {
     position: absolute;
     top: -0.8rem;
-    left: -1.8rem;
-    transform: rotate(-30deg);
+    left: -1.6rem;
+    transform: rotate(-35deg);
+    transition: 0.05s;
+    cursor: pointer;
 
-    &.disabled {
-        display: none;
+    &:hover {
+        filter: brightness(1.5) saturate(1);
+        opacity: 50%;
+    }
+
+    &.unpinned {
+        transform: translate(-0.2rem, -0.2rem) rotate(-35deg);
+        filter: brightness(1.5) saturate(0);
+        opacity: 20%;
+
+        &:hover {
+            transform: translate(-0.2rem, -0.2rem) rotate(-35deg);
+            filter: brightness(1.5) saturate(1);
+            opacity: 50%;
+        }
     }
 }
 
@@ -793,6 +854,8 @@ $flashers: (
 }
 
 .notification {
+    direction: ltr;
+    font-family: $monoFont;
     box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
     background: $purple-primary-dark;
     color: white;
@@ -801,6 +864,7 @@ $flashers: (
     padding: 0.4rem 0.8rem;
     border-radius: 0.4rem;
     white-space: nowrap;
+    z-index: 99;
 }
 
 .notification-leave-active {

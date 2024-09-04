@@ -21,7 +21,7 @@
     @endif
 
     <div class="action-divider"></div>
-    <div data-vue-component="ActionButton"
+    <div data-vue-component="PinButton"
          data-props="{{ json_encode(['id' => $term->id, 'isPinned' => $term->isPinned()]) }}"></div>
 
     @php

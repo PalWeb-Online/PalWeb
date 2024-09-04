@@ -3,32 +3,35 @@ import {ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
-    id: Number,
     isPinned: Boolean,
+    pinRoute: String,
+    pinURL: String,
 });
 
 let isPinned = ref(props.isPinned);
-const pinRoute = `/dictionary/terms/${props.id}/pin`;
 
 const notifVisible = ref(false);
 const notifContent = ref('');
 
 const reference = ref(null);
 const floating = ref(null);
-const {x, y, strategy} = useFloating(reference, floating, {
-    placement: 'right',
+const {floatingStyles} = useFloating(reference, floating, {
+    placement: 'left',
     middleware: [offset(8), flip(), shift()]
 });
 
 const pin = async () => {
     try {
-        const response = await axios.post(pinRoute, {id: props.id});
+        const response = await axios.post(props.pinRoute);
         isPinned.value = response.data.isPinned;
+
         notifContent.value = response.data.message;
         notifVisible.value = true;
         setTimeout(() => notifVisible.value = false, 1000);
+
     } catch (error) {
         console.error('Pin Failed', error);
+
         notifContent.value = 'An error occurred.';
         notifVisible.value = true;
         setTimeout(() => notifVisible.value = false, 1000);
@@ -37,15 +40,9 @@ const pin = async () => {
 </script>
 
 <template>
-    <form ref="reference">
-        <button @click.prevent="pin">
-            {{ isPinned ? 'Unpin' : 'Pin' }} Term
-        </button>
-    </form>
+    <img ref="reference" :class="['pin', { unpinned: !isPinned }]" :src="pinURL" @click="pin" alt="pin"/>
     <Transition name="notification">
-        <div ref="floating" class="notification"
-             :style="{ position: strategy, top: y ? `${y}px` : '', left: x ? `${x}px` : '' }"
-             v-if="notifVisible">
+        <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
             {{ notifContent }}
         </div>
     </Transition>

@@ -294,14 +294,17 @@ class DeckController extends Controller
         if (!$deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
-            $this->flasher->addSuccess(__('decks.term.added', ['term' => $term->term, 'deck' => $deck->name]));
 
         } else {
             $deck->terms()->detach($term->id);
-            $this->flasher->addSuccess(__('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]));
         }
 
-        return back();
+        return response()->json([
+            'isPresent' => !$deck->terms->contains($term->id),
+            'message' => !$deck->terms->contains($term->id)
+                ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
+                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name])
+        ]);
     }
 
     public function copy(Deck $deck)
