@@ -14,9 +14,6 @@ const props = defineProps({
     isUser: Boolean,
     isAdmin: Boolean,
 
-    // TermActions
-    userDecks: Object,
-
     // DeckActions
     isAuthor: Boolean,
 });
@@ -72,11 +69,6 @@ const getFilteredProps = computed(() => {
     };
 
     switch (props.modelType) {
-        case 'term':
-            return {
-                ...defaultProps,
-                userDecks: props.userDecks,
-            };
         case 'deck':
             return {
                 ...defaultProps,
@@ -90,10 +82,10 @@ const getFilteredProps = computed(() => {
 </script>
 
 <template>
-    <div class="context-actions-wrapper">
-        <img ref="reference" :src="`${imageURL}/gear.svg`" @click="toggleMenu" alt="options"/>
+    <div class="popup-menu-wrapper">
+        <img ref="reference" class="gear" :src="`${imageURL}/gear.svg`" @click="toggleMenu" alt="options"/>
 
-        <div ref="floating" v-if="isOpen" :style="floatingStyles" class="context-actions-menu">
+        <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
             <component :is="getActionsComponent" v-bind="getFilteredProps"/>
         </div>
     </div>

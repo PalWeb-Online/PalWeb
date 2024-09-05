@@ -286,19 +286,20 @@ h3 {
     }
 }
 
-// New Context Actions Menu
-
-.context-actions-wrapper {
+.popup-menu-wrapper {
     direction: ltr;
     flex-shrink: 0;
-    margin-block-start: 0.4rem;
 
-    img {
+    &:has(.gear) {
+        margin-block-start: 0.4rem;
+    }
+
+    .gear {
         transition: 0.1s;
         width: 2.4rem;
     }
 
-    .context-actions-menu {
+    .popup-menu {
         gap: 0;
         margin: 0;
         z-index: 2;
@@ -326,13 +327,13 @@ h3 {
     }
 
     &:hover {
-        img {
+        .gear {
             transform: rotate(15deg);
         }
     }
 }
 
-.dropdown-menu, .context-actions-menu {
+.dropdown-menu, .popup-menu {
     display: grid;
     gap: 0.4rem;
     padding: 0.4rem;
@@ -385,6 +386,13 @@ h3 {
             opacity: 50%;
         }
     }
+}
+
+.term-deck-toggle {
+    position: absolute;
+    bottom: 0;
+    left: -1.2rem;
+    cursor: pointer;
 }
 
 .flip {

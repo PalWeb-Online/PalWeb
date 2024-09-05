@@ -3,6 +3,7 @@ import {onBeforeUnmount, ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
+    imageURL: String,
     route: String,
     userDecks: Object,
 });
@@ -15,8 +16,11 @@ const submenu = ref(null);
 const notificationTrigger = ref(null);
 const notification = ref(null);
 
+const notifVisible = ref(false);
+const notifContent = ref('');
+
 const {floatingStyles: submenuStyles} = useFloating(submenuTrigger, submenu, {
-    placement: 'right',
+    placement: 'bottom',
     middleware: [offset(8), flip(), shift()],
 });
 
@@ -45,9 +49,6 @@ onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
 });
 
-const notifVisible = ref(false);
-const notifContent = ref('');
-
 const toggle = async (deck) => {
     try {
         const route = props.route.replace(':deckId', deck.id);
@@ -66,22 +67,26 @@ const toggle = async (deck) => {
 </script>
 
 <template>
-    <div ref="submenuTrigger" @click="showDecks">
-        <a>+/- Deck</a>
-    </div>
-    <div ref="submenu" v-if="isOpen" :style="submenuStyles" class="context-actions-menu">
-        <form ref="notificationTrigger">
-            <button v-for="deck in decks" @click.prevent="toggle(deck)">
-                <span style="font-weight: 700; text-transform: uppercase">
-                    [{{ deck.isPresent ? '✓' : ' ' }}]
-                </span>
-                {{ deck.name }}
-            </button>
-        </form>
-        <Transition name="notification">
-            <div ref="notification" :style="notificationStyles" v-if="notifVisible" class="notification">
-                {{ notifContent }}
-            </div>
-        </Transition>
+    <div class="popup-menu-wrapper">
+        <img ref="submenuTrigger" class="term-deck-toggle"
+             :src="`${imageURL}/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="showDecks" alt="pin"/>
+        <div ref="submenu" v-if="isOpen" :style="submenuStyles" class="popup-menu">
+            <form v-if="decks.length > 0" ref="notificationTrigger">
+                <button v-for="deck in decks" @click.prevent="toggle(deck)">
+                    <span style="font-weight: 700; text-transform: uppercase">
+                        [{{ deck.isPresent ? '✓' : ' ' }}]
+                    </span>
+                    {{ deck.name }}
+                </button>
+            </form>
+            <a v-else>
+                No Decks. Create one to get started.
+            </a>
+            <Transition name="notification">
+                <div ref="notification" :style="notificationStyles" v-if="notifVisible" class="notification">
+                    {{ notifContent }}
+                </div>
+            </Transition>
+        </div>
     </div>
 </template>

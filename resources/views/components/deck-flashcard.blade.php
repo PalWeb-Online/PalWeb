@@ -31,7 +31,7 @@
                      'export' => route('decks.export', $deck)
                  ],
                  'isUser' => auth()->check(),
-                 'isAuthor' => $deck->author->id == auth()->user()->id,
+                 'isAuthor' => auth()->check() && $deck->author->id === auth()->user()->id,
              ]) }}"
     >
     </div>

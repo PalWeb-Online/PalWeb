@@ -4,6 +4,7 @@ import {computed, onMounted, ref} from 'vue';
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import ContextActions from "./ContextActions.vue";
 import PinButton from "./PinButton.vue";
+import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 
 const props = defineProps({
     term: Object,
@@ -70,7 +71,6 @@ const gloss = computed(() => {
             :routes="routes"
             :isUser="isUser"
             :isAdmin="isAdmin"
-            :userDecks="userDecks"
         />
 
         <div class="term-li">
@@ -86,6 +86,7 @@ const gloss = computed(() => {
             </div>
 
             <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"/>
+            <TermDeckToggleButton v-if="isUser" :userDecks="userDecks" :route="routes.deckToggle" :imageURL="imageURL"/>
         </div>
     </div>
 </template>
