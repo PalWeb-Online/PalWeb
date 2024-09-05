@@ -3,6 +3,7 @@ import {computed, onBeforeUnmount, ref} from 'vue';
 import {flip, offset, shift, useFloating} from '@floating-ui/vue';
 import TermActions from "./TermActions.vue";
 import DeckActions from "./DeckActions.vue";
+import SentenceActions from "./SentenceActions.vue";
 
 const props = defineProps({
     imageURL: String,
@@ -11,9 +12,9 @@ const props = defineProps({
     // ModelActions
     routes: Object,
     isUser: Boolean,
+    isAdmin: Boolean,
 
     // TermActions
-    isAdmin: Boolean,
     userDecks: Object,
 
     // DeckActions
@@ -55,6 +56,8 @@ const getActionsComponent = computed(() => {
             return TermActions;
         case 'deck':
             return DeckActions;
+        case 'sentence':
+            return SentenceActions;
         default:
             return null;
     }
@@ -65,13 +68,13 @@ const getFilteredProps = computed(() => {
         modelType: props.modelType,
         routes: props.routes,
         isUser: props.isUser,
+        isAdmin: props.isAdmin,
     };
 
     switch (props.modelType) {
         case 'term':
             return {
                 ...defaultProps,
-                isAdmin: props.isAdmin,
                 userDecks: props.userDecks,
             };
         case 'deck':

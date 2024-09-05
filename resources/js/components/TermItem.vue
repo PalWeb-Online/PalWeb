@@ -26,8 +26,11 @@ const isOpen = ref(false);
 const tooltipTrigger = ref(null);
 const tooltip = ref(null);
 const {floatingStyles} = useFloating(tooltipTrigger, tooltip, {
-    placement: 'top-start',
-    middleware: [offset(), flip(), shift()]
+    placement: 'left-end',
+    middleware: [offset({
+        mainAxis: 4,
+        crossAxis: -4,
+    }), flip(), shift()]
 });
 
 const audio = ref(null);

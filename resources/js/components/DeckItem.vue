@@ -59,13 +59,12 @@ const description = computed(() => {
                     <img alt="Profile Picture" :src="deck.authorAvatar"/>
                 </div>
             </div>
-        </div>
 
-        <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL" @updateCount="updateCount" />
-
-        <div v-if="pinCount > 1" class="pin-counter">
-            <img :src="`${imageURL}/heart.svg`" alt="heart"/>
-            <div>{{ pinCount }}</div>
+            <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL" @updateCount="updateCount" />
+            <div v-if="pinCount > 1" class="pin-counter">
+                <img :src="`${imageURL}/heart.svg`" alt="heart"/>
+                <div>{{ pinCount }}</div>
+            </div>
         </div>
 
         <ContextActions

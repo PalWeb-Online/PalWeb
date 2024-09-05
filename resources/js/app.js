@@ -7,6 +7,7 @@ import SearchBar from "./components/SearchBar.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
+import SentenceItem from "./components/SentenceItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 
 import axios from 'axios';
@@ -75,6 +76,14 @@ deckFlashcardElements.forEach((element, index) => {
     const propsData = JSON.parse(element.dataset.props);
     createApp({
         render: () => h(DeckFlashcard, propsData)
+    }).mount(element);
+});
+
+const sentenceItemElements = document.querySelectorAll('[data-vue-component="SentenceItem"]');
+sentenceItemElements.forEach((element, index) => {
+    const propsData = JSON.parse(element.dataset.props);
+    createApp({
+        render: () => h(SentenceItem, propsData)
     }).mount(element);
 });
 

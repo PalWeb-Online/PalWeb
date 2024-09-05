@@ -5,40 +5,45 @@
     'eng' => false,
 ])
 
+@php
+    $sentenceObject = [
+        'sentence' => $sentence->sentence,
+        'trans' => $sentence->trans,
+        'file' => $sentence->audify(),
+        'terms' => $sentence->allTerms()->map(function ($term) use ($currentTerm) {
+            return [
+                'slug' => $term->slug,
+                'term' => $term->sent_term,
+                'translit' => $term->sent_translit,
+                'isCurrent' => $currentTerm === $term->id
+            ];
+        })->toArray(),
+        'size' => $size,
+    ];
+@endphp
+
 {{-- if the Sentence model exists --}}
 @if($sentence)
-    <div class="sentence-wrapper">
-        <div class="sentence {{ $size }} audio" onclick="{{ $sentence->audify() }}.play()" tabindex="0">
-            <div class="sentence-arb">
-                @foreach($sentence->allTerms() as $term)
+    <div data-vue-component="SentenceItem"
+         data-props="{{ json_encode([
+                 'sentence' => $sentenceObject,
+                 'imageURL' => asset('/img'),
+                 'isPinned' => $sentence->isPinned(),
 
-                    @if(!$term->id)
-                        <x-sentence-term :arb="$term->sent_term" :eng="$term->sent_translit"/>
-                    @else
-                        <x-sentence-term :term="\App\Models\Term::find($term->id)"
-                                         :arb="$term->sent_term"
-                                         :eng="$term->sent_translit"
-                                         :isCurrent="$currentTerm === $term->id"
-                        />
-                    @endif
-                @endforeach
-            </div>
-            <div class="sentence-eng">
-                {{ $sentence->trans }}
-            </div>
+                 'modelType' => 'sentence',
 
-            @if($sentence->isPinned())
-                <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
-            @endif
-        </div>
-
-        <x-context-actions>
-            <x-sentence-actions :sentence="$sentence"/>
-        </x-context-actions>
+                 'routes' => [
+                     'view' => route('sentences.show', $sentence),
+                     'edit' => route('sentences.edit', $sentence),
+                     'delete' => route('sentences.destroy', $sentence),
+                     'pin' => route('sentences.pin', $sentence),
+                     'viewTerm' => route('terms.show', ':termId'),
+                 ],
+                 'isUser' => auth()->check(),
+                 'isAdmin' => auth()->check() && auth()->user()->isAdmin(),
+             ]) }}"
+    >
     </div>
-    <script type="text/javascript">
-        var {{ $sentence->audify() }} = new Howl({src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $sentence->audify() }}.mp3']});
-    </script>
 
     {{-- if the Sentence is built in the view --}}
 @elseif($eng)
