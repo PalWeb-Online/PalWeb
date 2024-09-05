@@ -387,6 +387,14 @@ h3 {
     }
 }
 
+.flip {
+    top: -1.6rem;
+    right: -1.6rem;
+    position: absolute;
+    transform: rotate(75deg);
+    cursor: pointer;
+}
+
 .popout {
     transition: 0.3s cubic-bezier(.18, .89, .32, 1.28);
 
@@ -856,13 +864,14 @@ $flashers: (
 .notification {
     direction: ltr;
     font-family: $monoFont;
-    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
-    background: $purple-primary-dark;
-    color: white;
+    border-radius: 0.6rem;
+    border: 0.1rem solid $purple-primary-dark;
+    box-shadow: -0.1rem 0.1rem 0 $purple-primary-dark;
+    color: $purple-primary-dark;
+    background: white;
     font-weight: 400;
     font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.4rem;
+    padding: 0.4rem 1.2rem;
     white-space: nowrap;
     z-index: 99;
 }

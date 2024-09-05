@@ -77,14 +77,6 @@
             padding-block-start: 1.2rem;
             border-block-start: 0.2rem dotted $purple-primary-dark;
         }
-
-        .pin {
-            width: 3.6rem;
-        }
-
-        .lock {
-            width: 2.4rem;
-        }
     }
 
     .deck-flashcard-back {
@@ -112,7 +104,7 @@
         }
     }
 
-    &:hover {
+    &.flipped {
         .deck-flashcard-front {
             transform: rotateY(-180deg);
         }
@@ -124,6 +116,26 @@
 
     .deck-title {
         font-weight: 700;
+    }
+
+    .pin, .pin-counter, .lock, .flip {
+        z-index: 1;
+    }
+
+    .pin {
+        width: 3.6rem;
+    }
+
+    .pin-counter {
+        top: 2.4rem;
+    }
+
+    .lock {
+        width: 2.4rem;
+    }
+
+    .flip {
+        width: 4.2rem;
     }
 }
 
@@ -159,11 +171,6 @@
 
     .pin-counter {
         bottom: -1.2rem;
-        left: -1.6rem;
-
-        img {
-            width: 3.6rem;
-        }
     }
 
     .lock {
@@ -260,6 +267,7 @@
 
 .pin-counter {
     position: absolute;
+    left: -1.6rem;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -271,6 +279,10 @@
     & > * {
         grid-column: 1;
         grid-row: 1;
+    }
+
+    img {
+        width: 3.6rem;
     }
 }
 

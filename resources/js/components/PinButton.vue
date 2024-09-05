@@ -17,8 +17,8 @@ const notifContent = ref('');
 const reference = ref(null);
 const floating = ref(null);
 const {floatingStyles} = useFloating(reference, floating, {
-    placement: 'left',
-    middleware: [offset(8), flip(), shift()]
+    placement: 'top',
+    middleware: [offset(-4), flip(), shift()]
 });
 
 const pin = async () => {
