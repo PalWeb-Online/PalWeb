@@ -480,12 +480,19 @@
         }
     }
 
-    .profile-privacy {
+    .lock {
         width: 3.2rem;
         margin-block: 0.4rem;
         position: absolute;
         top: -2.0rem;
         right: 6.4rem;
+    }
+
+    .gear {
+        width: 3.2rem;
+        position: absolute;
+        top: -1.6rem;
+        right: 2.4rem;
     }
 }
 

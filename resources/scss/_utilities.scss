@@ -295,7 +295,6 @@ h3 {
     }
 
     .gear {
-        transition: 0.1s;
         width: 2.4rem;
     }
 
@@ -324,12 +323,6 @@ h3 {
     .action-divider {
         margin: 0.3rem 0.6rem;
         border-block-end: 0.1rem dotted $purple-primary-dark;
-    }
-
-    &:hover {
-        .gear {
-            transform: rotate(15deg);
-        }
     }
 }
 
@@ -362,13 +355,16 @@ h3 {
     }
 }
 
+.pin, .gear, .play, .flip, .term-deck-toggle {
+    cursor: pointer;
+}
+
 .pin {
     position: absolute;
     top: -0.8rem;
     left: -1.6rem;
     transform: rotate(-35deg);
     transition: 0.05s;
-    cursor: pointer;
 
     &:hover {
         filter: brightness(1.5) saturate(1);
@@ -388,11 +384,16 @@ h3 {
     }
 }
 
+.gear {
+    transition: 0.1s;
+
+    &:hover {
+        transform: rotate(15deg);
+    }
+}
+
 .term-deck-toggle {
     position: absolute;
-    bottom: 0;
-    left: -1.2rem;
-    cursor: pointer;
 }
 
 .flip {
@@ -400,7 +401,6 @@ h3 {
     right: -1.6rem;
     position: absolute;
     transform: rotate(75deg);
-    cursor: pointer;
 }
 
 .popout {

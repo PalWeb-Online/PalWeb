@@ -281,7 +281,7 @@ class DeckController extends Controller
         $this->authorize('modify', $deck);
 
         $deck->private = !$deck->private;
-        $deck->private ? $status = 'private' : $status = 'public';
+        $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
         return [

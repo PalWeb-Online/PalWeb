@@ -44,24 +44,17 @@
     </div>
 
     @if(auth()->user() && $user->id === auth()->user()->id)
-        @if($user->private)
-            <img class="profile-privacy" src="{{ asset('img/lock.svg') }}" alt="location" data-tippy-info
-                 data-tippy-content="Your Profile is set to Private."/>
-        @else
-            <img class="profile-privacy" src="{{ asset('img/public.svg') }}" alt="location"
-                 data-tippy-info
-                 data-tippy-content="Your Profile is set to Public."/>
-        @endif
+        <div data-vue-component="PrivacyToggleButton"
+             data-props="{{ json_encode([
+                'isPrivate' => $user->private,
+                'route' => route('settings.privacy.toggle', $user->id),
+                'imageURL' => asset('/img')
+             ]) }}"
+        >
+        </div>
 
-        <x-context-actions>
-            <a href="{{ route('settings.profile.edit') }}">Edit Profile</a>
-            <form method="POST" action="{{ route('settings.privacy.toggle', $user->id) }}">
-                @method('PATCH')
-                @csrf
-                <button>
-                    {{ $user->private ? __('Make Public') : __('Make Private') }}
-                </button>
-            </form>
-        </x-context-actions>
+        <a href="{{ route('settings.profile.edit') }}">
+            <img class="gear" src="{{ asset('/img/gear.svg') }}" alt="options"/>
+        </a>
     @endif
 </div>

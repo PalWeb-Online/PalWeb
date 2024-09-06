@@ -299,22 +299,6 @@
     // Mobile
     box-shadow: none;
 
-    .deck-container-head {
-        display: flex;
-        align-items: center;
-        gap: 1.6rem;
-        justify-content: space-between;
-        padding-block-end: 0.8rem;
-        border-block-end: 0.2rem dotted $purple-primary-dark;
-
-        .deck-container-head-title {
-            font-family: $headFont;
-            text-transform: none;
-            font-weight: 700;
-            font-size: 2.8rem;
-        }
-    }
-
     .user-wrapper {
         // Mobile
         margin-inline-start: calc(-1.2rem - 2.4rem);
@@ -328,7 +312,35 @@
         margin-inline: 1.6rem
     }
 
-    & > .pin {
+    .tip {
+        border: 0.1rem solid $purple-primary;
+    }
+
+    @media (min-width: 960px) {
+        box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
+
+        .user-wrapper {
+            margin-inline-start: calc(-3.2rem - 2.4rem);
+        }
+    }
+}
+
+.deck-container-head {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    justify-content: space-between;
+    padding-block-end: 0.8rem;
+    border-block-end: 0.2rem dotted $purple-primary-dark;
+
+    .deck-container-head-title {
+        font-family: $headFont;
+        text-transform: none;
+        font-weight: 700;
+        font-size: 2.8rem;
+    }
+
+    .pin {
         width: 4.8rem;
         top: -0.8rem;
         left: -2.4rem
@@ -347,6 +359,12 @@
         div {
             font-size: 1.6rem;
         }
+
+        @media (min-width: 960px) {
+            top: 3.6rem;
+            left: -2.4rem;
+            right: auto;
+        }
     }
 
     .lock {
@@ -356,28 +374,10 @@
         right: 3.6rem;
     }
 
-    & > .context-actions {
+    .context-actions {
         position: absolute;
         top: -1.6rem;
         right: 0.8rem;
-    }
-
-    .tip {
-        border: 0.1rem solid $purple-primary;
-    }
-
-    @media (min-width: 960px) {
-        box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
-
-        .user-wrapper {
-            margin-inline-start: calc(-3.2rem - 2.4rem);
-        }
-
-        .pin-counter {
-            top: 3.6rem;
-            left: -2.4rem;
-            right: auto;
-        }
     }
 }
 

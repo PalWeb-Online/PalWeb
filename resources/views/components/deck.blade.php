@@ -1,13 +1,6 @@
 @if($deck)
     <div class="deck-container">
-        <div class="deck-container-head">
-            <div class="deck-container-head-title">{{ $deck->name }}</div>
-
-            <x-context-actions>
-                <x-deck-actions :deck="$deck"/>
-            </x-context-actions>
-        </div>
-
+        <x-deck-head :deck="$deck"/>
 
         <div class="user-wrapper">
             <div class="user-avatar">
@@ -51,23 +44,5 @@
         @endif
 
         <div class="deck-term-count">{{ count($deck->terms) }} Terms</div>
-
-        @if($deck->isPinned())
-            <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
-        @endif
-
-        @php
-            $pinCount = \Maize\Markable\Models\Bookmark::count($deck);
-        @endphp
-        @if($pinCount > 1)
-            <div class="pin-counter">
-                <img src="{{ asset('img/heart.svg') }}" alt="heart"/>
-                <div>{{ $pinCount }}</div>
-            </div>
-        @endif
-
-        @if($deck->private)
-            <img class="lock" src="{{ asset('img/lock.svg') }}" alt="lock"/>
-        @endif
     </div>
 @endif

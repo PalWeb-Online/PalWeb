@@ -19,7 +19,6 @@
                  'isPinned' => $deck->isPinned(),
 
                  'modelType' => 'deck',
-
                  'routes' => [
                      'view' => route('decks.show', $deck),
                      'edit' => route('decks.edit', $deck),

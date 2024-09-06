@@ -31,20 +31,17 @@ const copyLink = (event) => {
 <template>
     <a :href="routes.view">View Deck</a>
 
+    <template v-if="isAuthor">
+        <a :href="routes.edit">Edit Deck</a>
+        <DeleteButton :modelType="modelType" :route="routes.delete"/>
+    </template>
+
     <template v-if="isUser">
+        <a :href="routes.creator">View Creator</a>
         <form :action="routes.copy" method="POST" @submit="confirmCopy">
             <input type="hidden" name="_token" :value="csrfToken">
             <button type="submit">Copy Deck</button>
         </form>
-        <a :href="routes.creator">View Creator</a>
-
-        <template v-if="isAuthor">
-            <div class="action-divider"></div>
-            <a :href="routes.edit">Edit Deck</a>
-            <DeleteButton :modelType="modelType" :route="routes.delete"/>
-        </template>
-
-        <div class="action-divider"></div>
         <a href="#" @click="copyLink">Share Link</a>
         <form :action="routes.export" method="POST">
             <input type="hidden" name="_token" :value="csrfToken">

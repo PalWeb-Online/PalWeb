@@ -1,20 +1,50 @@
-import {createApp, h} from "vue/dist/vue.esm-bundler";
+import { createApp, h } from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
 import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
 import TermItem from "./components/TermItem.vue";
+import TermHead from "./components/TermHead.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
 import SentenceItem from "./components/SentenceItem.vue";
 import ContextActions from "./components/ContextActions.vue";
-
+import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import axios from 'axios';
 import Alpine from 'alpinejs';
+import DeckHead from "./components/DeckHead.vue";
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.Alpine = Alpine;
+Alpine.start();
+
+const multiMountComponents = [
+    { selector: '[data-vue-component="SearchBar"]', component: SearchBar },
+    { selector: '[data-vue-component="ContextActions"]', component: ContextActions },
+    { selector: '[data-vue-component="TermItem"]', component: TermItem },
+    { selector: '[data-vue-component="TermHead"]', component: TermHead },
+    { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
+    { selector: '[data-vue-component="DeckHead"]', component: DeckHead },
+    { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
+    { selector: '[data-vue-component="SentenceItem"]', component: SentenceItem },
+    { selector: '[data-vue-component="PrivacyToggleButton"]', component: PrivacyToggleButton },
+];
+
+function mountMultiComponents(selector, component) {
+    document.querySelectorAll(selector).forEach(element => {
+        const propsData = JSON.parse(element.dataset.props || '{}');
+        createApp({
+            render: () => h(component, propsData)
+        }).mount(element);
+    });
+}
+
+multiMountComponents.forEach(({ selector, component }) => {
+    mountMultiComponents(selector, component);
+});
 
 if (document.querySelector('#termEditor')) {
     const termEditorApp = createApp({});
@@ -39,53 +69,3 @@ if (document.querySelector('#dictionaryFilters')) {
     dictionaryFiltersApp.component('DictionaryFilters', DictionaryFilters);
     dictionaryFiltersApp.mount('#dictionaryFilters');
 }
-
-const searchBarElements = document.querySelectorAll('[data-vue-component="SearchBar"]');
-searchBarElements.forEach((element, index) => {
-    createApp({
-        render: () => h(SearchBar)
-    }).mount(element);
-});
-
-const contextActionsElements = document.querySelectorAll('[data-vue-component="ContextActions"]');
-contextActionsElements.forEach((element, index) => {
-    const propsData = JSON.parse(element.dataset.props);
-    createApp({
-        render: () => h(ContextActions, propsData)
-    }).mount(element);
-});
-
-const termItemElements = document.querySelectorAll('[data-vue-component="TermItem"]');
-termItemElements.forEach((element, index) => {
-    const propsData = JSON.parse(element.dataset.props);
-    createApp({
-        render: () => h(TermItem, propsData)
-    }).mount(element);
-});
-
-const deckItemElements = document.querySelectorAll('[data-vue-component="DeckItem"]');
-deckItemElements.forEach((element, index) => {
-    const propsData = JSON.parse(element.dataset.props);
-    createApp({
-        render: () => h(DeckItem, propsData)
-    }).mount(element);
-});
-
-const deckFlashcardElements = document.querySelectorAll('[data-vue-component="DeckFlashcard"]');
-deckFlashcardElements.forEach((element, index) => {
-    const propsData = JSON.parse(element.dataset.props);
-    createApp({
-        render: () => h(DeckFlashcard, propsData)
-    }).mount(element);
-});
-
-const sentenceItemElements = document.querySelectorAll('[data-vue-component="SentenceItem"]');
-sentenceItemElements.forEach((element, index) => {
-    const propsData = JSON.parse(element.dataset.props);
-    createApp({
-        render: () => h(SentenceItem, propsData)
-    }).mount(element);
-});
-
-window.Alpine = Alpine;
-Alpine.start();

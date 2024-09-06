@@ -13,24 +13,11 @@
 
     @foreach($terms as $term)
         <div class="term-container">
-            @if($term->isPinned())
-                <img class="pin" src="{{ asset('img/pin.svg') }}" alt="pin"/>
-            @endif
-
             <div class="term-container-head">
                 <div class="term-headword">
-                    <div class="term-headword-arb">{{ $term->term }}</div>
-                    <div class="term-headword-eng">({{ $term->translit }})</div>
-
-                    <img class="play" src="{{ asset('img/play.svg') }}" alt="play"
-                         onclick="{{ $term->pronunciations[0]->audify() }}.play()"/>
-
-                    <x-context-actions>
-                        <x-term-actions :term="$term" :user="auth()->user()"/>
-                    </x-context-actions>
+                    <x-term-head :term="$term" />
 
                     <div>{{ __($term->category) }}.
-
                         @include('terms._attributes', ['attributes' => $term->attributes->pluck('attribute')->toArray()])
 
                         @if($term->inflections->firstWhere('form', 'cnst'))
@@ -46,8 +33,6 @@
                             @endforeach
                         @endif
                     </div>
-
-
                 </div>
 
                 @if(count($term->spellings) + count($term->variants) + count($term->references) > 0)

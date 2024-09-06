@@ -58,16 +58,6 @@
         margin-inline-start: calc(-1.2rem - 3.2rem);
     }
 
-    & > .pin {
-        width: 4.8rem;
-        top: -0.8rem;
-        left: -2.6rem
-    }
-
-    .play {
-        cursor: pointer;
-    }
-
     @media (min-width: 960px) {
         box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
 
@@ -106,18 +96,37 @@
     gap: 0 1.6rem;
     font-weight: 700;
 
-    .term-headword-arb {
-        font-size: 3.6rem;
-        font-family: 'Vazirmatn', sans-serif;
-    }
+    .term-head {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        gap: 0 1.2rem;
 
-    .term-headword-eng {
-        font-size: 1.8rem;
-        font-family: $monoFont;
-    }
+        .term-headword-arb {
+            font-size: 3.6rem;
+            font-family: 'Vazirmatn', sans-serif;
+        }
 
-    .play {
-        width: 2.8rem;
+        .term-headword-eng {
+            font-size: 1.8rem;
+            font-family: $monoFont;
+        }
+
+        .pin {
+            width: 4.8rem;
+            top: -0.8rem;
+            left: -2.6rem
+        }
+
+        .play {
+            width: 2.8rem;
+        }
+
+        .term-deck-toggle {
+            width: 4.8rem;
+            top: -2.4rem;
+            right: 1.6rem;
+        }
     }
 }
 
@@ -415,6 +424,8 @@
 
     .term-deck-toggle {
         width: 2.4rem;
+        bottom: 0;
+        left: -1.2rem;
     }
 }
 
