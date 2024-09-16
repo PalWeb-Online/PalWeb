@@ -211,33 +211,6 @@ h3 {
     .gear {
         width: 2.4rem;
     }
-
-    .popup-menu {
-        gap: 0;
-        margin: 0;
-        z-index: 2;
-        background: white;
-        border: 0.1rem solid $purple-primary-dark;
-        box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
-
-        a, button {
-            font-family: $monoFont;
-            font-size: 1.2rem;
-            font-weight: 400;
-            color: $purple-deep;
-
-            &:hover {
-                color: white;
-                text-decoration: none;
-                background: $purple-primary-dark;
-            }
-        }
-    }
-
-    .action-divider {
-        margin: 0.3rem 0.6rem;
-        border-block-end: 0.1rem dotted $purple-primary-dark;
-    }
 }
 
 .dropdown-menu, .popup-menu {
@@ -266,6 +239,33 @@ h3 {
         min-width: auto;
         box-shadow: none;
         transform: none;
+    }
+}
+
+.popup-menu {
+    gap: 0;
+    margin: 0;
+    z-index: 2;
+    background: white;
+    border: 0.1rem solid $purple-primary-dark;
+    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
+
+    a, button {
+        font-family: $monoFont;
+        font-size: 1.2rem;
+        font-weight: 400 !important;
+        color: $purple-deep !important;
+
+        &:hover {
+            text-decoration: none !important;
+            color: white !important;
+            background: $purple-primary-dark;
+        }
+    }
+
+    .action-divider {
+        margin: 0.3rem 0.6rem;
+        border-block-end: 0.1rem dotted $purple-primary-dark;
     }
 }
 
@@ -311,10 +311,11 @@ h3 {
 }
 
 .flip {
-    top: -1.6rem;
-    right: -1.6rem;
-    position: absolute;
-    transform: rotate(75deg);
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+        transform: rotate(-90deg);
+    }
 }
 
 .popout {

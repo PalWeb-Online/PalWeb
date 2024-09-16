@@ -1,8 +1,8 @@
 <script setup>
-import {computed, ref} from 'vue';
-import ContextActions from "./ContextActions.vue";
+import {computed, nextTick, onBeforeUnmount, ref} from 'vue';
 import PinButton from "./PinButton.vue";
 import PrivacyToggleButton from "./PrivacyToggleButton.vue";
+import DeckActions from "./DeckActions.vue";
 
 const props = defineProps({
     deck: Object,
@@ -20,22 +20,66 @@ const props = defineProps({
     isAuthor: Boolean,
 });
 
-let pinCount = ref(props.deck.pinCount);
-const updateCount = (count) => {
-    pinCount.value = count;
-};
-
 const description = computed(() => {
     return props.deck.description.length > 190
         ? props.deck.description.substring(0, 187) + '...'
         : props.deck.description;
 });
 
+const isOpen = ref(false);
+const trigger = ref(null);
+const menu = ref(null);
+const clickX = ref(0);
+const clickY = ref(0);
+
+const toggleMenu = async (event) => {
+    isOpen.value = !isOpen.value;
+    if (isOpen.value) {
+        clickX.value = event.clientX;
+        clickY.value = event.clientY;
+
+        await nextTick(() => {
+            const element = menu.value;
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                if (clickX.value + rect.width > viewportWidth) {
+                    clickX.value = viewportWidth - rect.width - 8;
+                }
+                if (clickY.value + rect.height > viewportHeight) {
+                    clickY.value = viewportHeight - rect.height - 8;
+                }
+            }
+        });
+
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('click', handleClickOutside);
+
+    } else {
+        document.body.style.overflow = '';
+        document.removeEventListener('click', handleClickOutside);
+    }
+};
+
+const handleClickOutside = (event) => {
+    if (!trigger.value.contains(event.target) && !menu.value.contains(event.target)) {
+        isOpen.value = false;
+        document.body.style.overflow = '';
+        document.removeEventListener('click', handleClickOutside);
+    }
+};
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
+
 </script>
 
 <template>
-    <div class="deck-li-wrapper {{ deck.size }}">
-        <div :href="routes.view" class="deck-li">
+    <div :class="['deck-item-wrapper', deck.size]">
+        <div class="deck-item" ref="trigger" @click="toggleMenu">
             <div class="deck-metadata">
                 <div style="display: flex; gap: 0.8rem; align-items: center">
                     <div class="deck-title">
@@ -45,34 +89,37 @@ const description = computed(() => {
                         ({{ deck.count }})
                     </div>
                 </div>
-
-                <template v-if="deck.size === 'l' && deck.description">
-                    <div class="deck-description">{{ description }}</div>
-                </template>
+                <div v-if="deck.size === 'l' && deck.description" class="deck-description">
+                    {{ description }}
+                </div>
             </div>
 
             <div class="deck-author">
-                <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate" :route="routes.privacyToggle" :imageURL="imageURL" />
-
                 <div class="deck-author-name">by {{ deck.authorName }}</div>
                 <div class="deck-author-avatar">
                     <img alt="Profile Picture" :src="deck.authorAvatar"/>
                 </div>
             </div>
-
-            <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL" @updateCount="updateCount" />
-            <div v-if="pinCount > 1" class="pin-counter">
-                <img :src="`${imageURL}/heart.svg`" alt="heart"/>
-                <div>{{ pinCount }}</div>
-            </div>
         </div>
 
-        <ContextActions
-            :imageURL="imageURL"
-            :modelType="modelType"
-            :routes="routes"
-            :isUser="isUser"
-            :isAuthor="isAuthor"
+        <div class="popup-menu" ref="menu" v-if="isOpen"
+             :style="{ top: `${clickY}px`, left: `${clickX}px`, position: 'fixed' }">
+            <DeckActions
+                modelType="deck"
+                :routes="routes"
+                :isUser="isUser"
+                :isAuthor="isAuthor"
+            />
+        </div>
+
+        <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate"
+                             :route="routes.privacyToggle"
+                             :imageURL="imageURL"/>
+        <PinButton v-if="isUser"
+                   :isPinned="isPinned"
+                   :pinCount="deck.pinCount"
+                   :route="routes.pin"
+                   :imageURL="imageURL"
         />
     </div>
 </template>

@@ -52,7 +52,7 @@ function playAudio() {
 
 <template>
     <div class="sentence-wrapper">
-        <div :class="['sentence', sentence.size]" @click="playAudio">
+        <div :class="['sentence-item', sentence.size]" @click="playAudio">
             <div class="sentence-arb">
                 <template v-for="term in sentence.terms">
                     <template v-if="term.slug">

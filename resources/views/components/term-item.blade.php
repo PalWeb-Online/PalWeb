@@ -7,21 +7,21 @@
 ])
 
 @if($term)
-    <div class="term-li-container">
+    <div class="term-item-container">
         <x-vue.term component="TermItem" :term="$term" :gloss="$gloss" />
         {{ $slot }}
     </div>
 
 @elseif($subterm)
-    <div class="term-li subterm">
+    <div class="term-item subterm">
         <div class="arb">{{ $arb }}</div>
         <div class="eng">{{ $eng }}</div>
     </div>
 
 @elseif($arb)
-    <div class="term-li-container">
-        <div class="term-li-wrapper">
-            <div class="term-li">
+    <div class="term-item-container">
+        <div class="term-item-wrapper">
+            <div class="term-item">
                 <div class="arb">{{ $arb }}</div>
                 <div class="eng">{{ $eng }}</div>
             </div>
@@ -29,7 +29,7 @@
         {{ $slot }}
     </div>
 @else
-    <div class="term-li coming-soon">
+    <div class="term-item coming-soon">
         <div class="feature-callout">
             {{ __('coming soon') }}
         </div>

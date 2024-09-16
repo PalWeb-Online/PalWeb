@@ -4,12 +4,13 @@ import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
     isPinned: Boolean,
+    pinCount: Number,
     route: String,
     imageURL: String,
 });
 
-const emit = defineEmits(['updateCount']);
 let isPinned = ref(props.isPinned);
+let pinCount = ref(props.pinCount);
 
 const notifVisible = ref(false);
 const notifContent = ref('');
@@ -25,7 +26,10 @@ const pin = async () => {
     try {
         const response = await axios.post(props.route);
         isPinned.value = response.data.isPinned;
-        response.data.pinCount && emit('updateCount', response.data.pinCount);
+
+        if (response.data.pinCount) {
+            pinCount.value = response.data.pinCount;
+        }
 
         notifContent.value = response.data.message;
         notifVisible.value = true;
@@ -43,6 +47,11 @@ const pin = async () => {
 
 <template>
     <img ref="reference" :class="['pin', { unpinned: !isPinned }]" :src="`${imageURL}/pin.svg`" @click="pin" alt="pin"/>
+    <div v-if="pinCount > 1" class="pin-counter">
+        <img :src="`${imageURL}/heart.svg`" alt="heart"/>
+        <div>{{ pinCount }}</div>
+    </div>
+
     <Transition name="notification">
         <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
             {{ notifContent }}

@@ -286,31 +286,26 @@
     }
 }
 
-.doc-section > .term-li-container {
+.doc-section > .term-item-container {
     margin-block: 3.2rem;
 }
 
-.term-li-container {
+.term-item-container {
     display: grid;
     gap: 0.4rem;
 }
 
-.term-li-wrapper {
+.term-item-wrapper {
     display: flex;
     gap: 0.8rem;
     align-items: center;
-    direction: rtl;
     width: 100%;
     padding-block-start: 0.8rem;
 
     &.s {
         padding: 0;
 
-        .popup-menu-wrapper {
-            display: none;
-        }
-
-        .term-li {
+        .term-item {
             display: block;
             border: none;
             background: none;
@@ -323,10 +318,19 @@
                 display: none;
             }
         }
+
+        .play {
+            display: none;
+        }
+    }
+
+    .play {
+        width: 2.8rem;
     }
 }
 
-.term-li {
+.term-item {
+    direction: rtl;
     flex-grow: 1;
     position: relative;
     display: grid;
@@ -444,6 +448,10 @@
         width: 2.4rem;
         bottom: 0;
         left: -1.2rem;
+    }
+
+    .popup-menu {
+        direction: ltr;
     }
 }
 
@@ -668,7 +676,7 @@ Sentences
     }
 }
 
-.sentence {
+.sentence-item {
     position: relative;
     display: flex;
     flex-direction: column;

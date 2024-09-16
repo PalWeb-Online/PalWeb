@@ -9,7 +9,7 @@
 
 @elseif($eng)
     <div class="sentence-wrapper" style="justify-self: center">
-        <div class="sentence {{ $size }}">
+        <div class="sentence-item {{ $size }}">
             <div class="sentence-arb">
                 {{ $slot }}
             </div>
@@ -20,7 +20,7 @@
     </div>
 
 @else
-    <div class="sentence coming-soon">
+    <div class="sentence-item coming-soon">
         <div class="feature-callout">
             {{ __('coming soon') }}
         </div>

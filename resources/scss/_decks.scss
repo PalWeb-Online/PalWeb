@@ -33,14 +33,38 @@
 .deck-flashcard-wrapper {
     display: grid;
     justify-items: center;
+    position: relative;
+
+    .pin, .pin-counter, .lock, .flip {
+        z-index: 1;
+    }
+
+    .pin {
+        width: 3.6rem;
+    }
+
+    .pin-counter {
+        top: 2.4rem;
+    }
+
+    .lock {
+        top: -1.2rem;
+        right: 0.8rem;
+        width: 2.4rem;
+    }
+
+    .flip {
+        width: 3.2rem;
+    }
 }
 
 .deck-flashcard {
-    position: relative;
     width: 26rem;
     height: 32rem;
     perspective: 120rem;
     margin-block-end: 0.3rem;
+    cursor: pointer;
+    user-select: none;
 
     .deck-flashcard-front, .deck-flashcard-back {
         position: absolute;
@@ -117,38 +141,18 @@
     .deck-title {
         font-weight: 700;
     }
-
-    .pin, .pin-counter, .lock, .flip {
-        z-index: 1;
-    }
-
-    .pin {
-        width: 3.6rem;
-    }
-
-    .pin-counter {
-        top: 2.4rem;
-    }
-
-    .lock {
-        width: 2.4rem;
-    }
-
-    .flip {
-        width: 4.2rem;
-    }
 }
 
 .decks-list {
     display: grid;
     gap: 1.6rem;
 
-    .deck-li-wrapper {
+    .deck-item-wrapper {
         margin: 0 0 0.3rem 0.3rem;
     }
 }
 
-.deck-li-wrapper {
+.deck-item-wrapper {
     position: relative;
     display: flex;
     gap: 0.8rem;
@@ -156,11 +160,11 @@
     margin: 1.6rem 0 calc(1.6rem + 0.3rem) 0.3rem;
 
     &.l {
-        .deck-li .deck-metadata {
+        .deck-item .deck-metadata {
             padding-block: 0.8rem
         }
 
-        .deck-li .deck-title {
+        .deck-item .deck-title {
             font-size: 1.6rem
         }
     }
@@ -174,11 +178,14 @@
     }
 
     .lock {
+        top: -0.4rem;
+        right: -1.2rem;
         width: 2.4rem;
     }
 }
 
 .lock {
+    position: absolute;
     transition: 0.05s;
     cursor: pointer;
 
@@ -198,7 +205,7 @@
     }
 }
 
-.deck-li {
+.deck-item {
     display: flex;
     flex-flow: row wrap;
     flex-grow: 1;
@@ -215,8 +222,8 @@
     transition: 0.05s;
 
     &:hover {
-        //box-shadow: none;
-        //transform: translate(-0.3rem, 0.3rem);
+        box-shadow: none;
+        transform: translate(-0.3rem, 0.3rem);
     }
 
     .deck-metadata {
@@ -369,7 +376,6 @@
 
     .lock {
         width: 3.6rem;
-        position: absolute;
         top: -2.0rem;
         right: 3.6rem;
     }
