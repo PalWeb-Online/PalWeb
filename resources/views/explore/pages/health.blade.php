@@ -76,22 +76,22 @@
     </x-vocabulary>
 </div>
 
-{{--    <figure data-tippy-image data-tippy-content="You should take one pill every 8 hours">--}}
+{{--    <figure>--}}
 {{--        <img--}}
 {{--            src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Paxlovid_pills_close-up%2C_scattered.jpg">--}}
 {{--        <figcaption>لازم تشرب حبّة كلّ ثمن ساعات</figcaption>--}}
 {{--    </figure>--}}
-{{--    <figure data-tippy-image data-tippy-content="What was the result of the COVID test?">--}}
+{{--    <figure>--}}
 {{--        <img--}}
 {{--            src="https://upload.wikimedia.org/wikipedia/commons/c/c8/3410903_%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DA%AF%D8%A7%D9%87_%D8%AA%D8%AE%D8%B5%D8%B5%DB%8C_%D8%AA%D8%B4%D8%AE%DB%8C%D8%B5_%DA%A9%D9%88%D9%88%DB%8C%D8%AF_%DB%B1%DB%B9_%D8%AF%D8%B1_%D8%A7%D9%87%D9%88%D8%A7%D8%B2.jpg">--}}
 {{--        <figcaption>شو كانت نتيجة فحص الكورونا؟</figcaption>--}}
 {{--    </figure>--}}
-{{--    <figure data-tippy-image data-tippy-content="Since yesterday I've gotten a fever & a headache">--}}
+{{--    <figure>--}}
 {{--        <img--}}
 {{--            src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Headache_touching_forehead.jpg">--}}
 {{--        <figcaption>من مبارح صار عندي سخونة ووجع راس</figcaption>--}}
 {{--    </figure>--}}
-{{--    <figure data-tippy-image data-tippy-content="She's a psychologist specializing in depression">--}}
+{{--    <figure>--}}
 {{--        <img--}}
 {{--            src="https://upload.wikimedia.org/wikipedia/commons/5/55/Francesca_Mastrantonio_2017_-11.jpg">--}}
 {{--        <figcaption>هي دكتورة نفسيّة متخصّصة بالاكتئاب</figcaption>--}}

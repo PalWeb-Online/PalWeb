@@ -4,16 +4,17 @@ import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
-import TermItem from "./components/TermItem.vue";
 import TermHead from "./components/TermHead.vue";
+import TermItem from "./components/TermItem.vue";
+import DeckHead from "./components/DeckHead.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
 import SentenceItem from "./components/SentenceItem.vue";
+import BadgeItem from "./components/BadgeItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import axios from 'axios';
 import Alpine from 'alpinejs';
-import DeckHead from "./components/DeckHead.vue";
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -24,12 +25,13 @@ Alpine.start();
 const multiMountComponents = [
     { selector: '[data-vue-component="SearchBar"]', component: SearchBar },
     { selector: '[data-vue-component="ContextActions"]', component: ContextActions },
-    { selector: '[data-vue-component="TermItem"]', component: TermItem },
     { selector: '[data-vue-component="TermHead"]', component: TermHead },
-    { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
+    { selector: '[data-vue-component="TermItem"]', component: TermItem },
     { selector: '[data-vue-component="DeckHead"]', component: DeckHead },
+    { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
     { selector: '[data-vue-component="SentenceItem"]', component: SentenceItem },
+    { selector: '[data-vue-component="BadgeItem"]', component: BadgeItem },
     { selector: '[data-vue-component="PrivacyToggleButton"]', component: PrivacyToggleButton },
 ];
 

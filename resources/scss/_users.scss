@@ -517,18 +517,24 @@
 
     .badge {
         display: grid;
-        overflow: hidden;
-        //border-radius: 50%;
-
-        &.disabled img {
-            transform: scale(1.1);
-            filter: grayscale(1);
-        }
+        border-radius: 50%;
+        background: $accent-yellow-pastel;
+        transform-style: preserve-3d;
+        transform: perspective(1000px);
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: translateZ(1.6rem)
+        }
+
+        &.disabled {
+            filter: grayscale(1);
+
+            img {
+                transform: scale(1.1);
+            }
         }
     }
 
@@ -542,6 +548,16 @@
 
     &:hover > .popout {
         transform: scale(1.2) rotate(-15deg);
+    }
+}
+
+.badge-data {
+    display: grid;
+    padding-block: 0.8rem;
+    gap: 0.4rem;
+
+    & > div:nth-child(1) {
+        font-weight: 700;
     }
 }
 

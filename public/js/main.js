@@ -143,56 +143,6 @@ $('.nav-mobile-toggle').click(function () {
     $('.nav-user').removeClass('show');
 });
 
-/* TOOLTIP */
-
-tippy.setDefaultProps({
-    arrow: true,
-    delay: [0, 0],
-    animation: 'scale-extreme',
-    followCursor: 'horizontal',
-    maxWidth: 320,
-    allowHTML: true,
-    inertia: true,
-    touch: 'hold',
-    hideOnClick: false,
-    duration: [100, 50],
-    placement: 'top',
-    offset: [0, 8],
-});
-
-tippy('[data-tippy-translit]', {
-    followCursor: false,
-    placement: 'top-end',
-    offset: [20, -12],
-});
-tippy('[data-tippy-term]', {
-    followCursor: false,
-    placement: 'top',
-    offset: [0, -4],
-});
-tippy('[data-tippy-info]', {
-    followCursor: false,
-    placement: 'top',
-    offset: [0, 8],
-});
-tippy('[data-tippy-image]', {
-    followCursor: false,
-    placement: 'bottom',
-    offset: [0, 0],
-    maxWidth: 480,
-});
-tippy('[data-tippy-sentence]', {
-    followCursor: false,
-    placement: 'bottom',
-    offset: [0, -4],
-    maxWidth: 480,
-});
-tippy('[data-tippy-dialog]', {
-    followCursor: 'horizontal',
-    placement: 'top',
-    offset: [0, 8]
-});
-
 /* ACTIVITES */
 
 $('body').on('click', '.activity-select button', function () {
