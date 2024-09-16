@@ -7,30 +7,30 @@
 <iframe src="https://www.youtube.com/embed/qLA_9NjlBcQ" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="تحمّل" eng="to bear, to endure, to deal with"/>
-    <x-term arb="تخيّل" eng="to imagine"/>
-    <x-term arb="دعم" eng="to support"/>
-    <x-term arb="شجّع" eng="to encourage"/>
-    <x-term arb="طرد" eng="to expel, to kick out"/>
-    <x-term arb="طار" eng="to fly"/>
-    <x-term arb="فاجأ" eng="to surprise"/>
-    <x-term arb="قدّر" eng="to appreciate"/>
-    <x-term arb="نجح" eng="to succeed"/>
-    <x-term arb="نقز" eng="to be startled, to flinch"/>
-    <x-term arb="نقّز" eng="to startle"/>
-    <x-term arb="ودّى" eng="to lead, to send, to take (someone somewhere)"/>
-    <x-term arb="جائزة" eng="award, prize"/>
-    <x-term arb="رياضيّات" eng="math"/>
-    <x-term arb="مسرح" eng="theater"/>
-    <x-term arb="مستوى" eng="level"/>
-    <x-term arb="شرف" eng="honor"/>
-    <x-term arb="شهادة" eng="certificate, diploma"/>
-    <x-term arb="قدرة" eng="ability, capability"/>
-    <x-term arb="قرار" eng="decision"/>
-    <x-term arb="مادّة" eng="subject matter, field of study"/>
-    <x-term arb="مصدوم" eng="shocked"/>
-    <x-term arb="علنيّ" eng="public"/>
-    <x-term arb="خلال" eng="through, throughout"/>
+    <x-term-item arb="تحمّل" eng="to bear, to endure, to deal with"/>
+    <x-term-item arb="تخيّل" eng="to imagine"/>
+    <x-term-item arb="دعم" eng="to support"/>
+    <x-term-item arb="شجّع" eng="to encourage"/>
+    <x-term-item arb="طرد" eng="to expel, to kick out"/>
+    <x-term-item arb="طار" eng="to fly"/>
+    <x-term-item arb="فاجأ" eng="to surprise"/>
+    <x-term-item arb="قدّر" eng="to appreciate"/>
+    <x-term-item arb="نجح" eng="to succeed"/>
+    <x-term-item arb="نقز" eng="to be startled, to flinch"/>
+    <x-term-item arb="نقّز" eng="to startle"/>
+    <x-term-item arb="ودّى" eng="to lead, to send, to take (someone somewhere)"/>
+    <x-term-item arb="جائزة" eng="award, prize"/>
+    <x-term-item arb="رياضيّات" eng="math"/>
+    <x-term-item arb="مسرح" eng="theater"/>
+    <x-term-item arb="مستوى" eng="level"/>
+    <x-term-item arb="شرف" eng="honor"/>
+    <x-term-item arb="شهادة" eng="certificate, diploma"/>
+    <x-term-item arb="قدرة" eng="ability, capability"/>
+    <x-term-item arb="قرار" eng="decision"/>
+    <x-term-item arb="مادّة" eng="subject matter, field of study"/>
+    <x-term-item arb="مصدوم" eng="shocked"/>
+    <x-term-item arb="علنيّ" eng="public"/>
+    <x-term-item arb="خلال" eng="through, throughout"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

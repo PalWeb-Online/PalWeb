@@ -1,6 +1,6 @@
 @if($deck)
     <div class="deck-container">
-        <x-deck-head :deck="$deck"/>
+        <x-vue.deck :deck="$deck" component="DeckHead" />
 
         <div class="user-wrapper">
             <div class="user-avatar">
@@ -29,7 +29,7 @@
         @if(count($deck->terms) > 0)
             <x-vocabulary>
                 @foreach($deck->terms as $term)
-                    <x-term :term="$term" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
+                    <x-vue.term component="TermItem" :term="$term" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
                 @endforeach
             </x-vocabulary>
         @else

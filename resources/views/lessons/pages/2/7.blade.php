@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(53)"/>
+<x-deck-container :deck="\App\Models\Deck::find(53)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -8,22 +8,22 @@
         completely
         impossible for it to appear without a clitic pronoun.</p>
 
-    <x-sentence eng="I want a glass of water">
+    <x-sentence-item eng="I want a glass of water">
         <x-sentence-term arb="بدّي" eng="1S.want" :term="$terms['biddo'] ?? null"/>
         <x-sentence-term arb="كاسة" eng="cup" :term="$terms['kāse'] ?? null"/>
         <x-sentence-term arb="ميّ" eng="water" :term="$terms['mayy'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>In terms of its meaning, it can either express desire or need (i.e. <b>"to need"</b>). Which of these meanings is
         intended simply depends on context.</p>
 
-    <x-sentence eng="I need your phone number & address">
+    <x-sentence-item eng="I need your phone number & address">
         <x-sentence-term arb="بدّي" eng="1S.need" :term="$terms['biddo'] ?? null"/>
         <x-sentence-term arb="رقم" eng="number" :term="$terms['raqam'] ?? null"/>
         <x-sentence-term arb="تلفونك" eng="your-phone" :term="$terms['talafōn'] ?? null"/>
         <x-sentence-term arb="و" eng="&" :term="$terms['w-'] ?? null"/>
         <x-sentence-term arb="عنوانك" eng="your-address" :term="$terms['ʕinwān'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"
@@ -31,17 +31,17 @@
 
     <p>We use the preposition <b>لـ (la- "for")</b> to refer to the beneficiary or purpose of something. Be careful to
         note that it's the only clitic that deletes the vowel of the article <b>الـ</b> in writing:</p>
-    <x-sentence eng="I need a gift for my friend">
+    <x-sentence-item eng="I need a gift for my friend">
         <x-sentence-term arb="بدّي" eng="1S.need" :term="$terms['biddo'] ?? null"/>
         <x-sentence-term arb="هديّة" eng="gift" :term="$terms['hadiyye'] ?? null"/>
         <x-sentence-term arb="لـ" eng="for" :term="$terms['la-'] ?? null"/>
         <x-sentence-term arb="ـصاحبي" eng="my-friend" :term="$terms['ṣāħib'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="food for the cats">
+    </x-sentence-item>
+    <x-sentence-item eng="food for the cats">
         <x-sentence-term arb="أكل" eng="food" :term="$terms['ʔakl'] ?? null"/>
         <x-sentence-term arb="لـ" eng="for" :term="$terms['la-'] ?? null"/>
         <x-sentence-term arb="ـلبسس" eng="the-cats" :term="$terms['bisse'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('exercise') }}">

@@ -1,36 +1,36 @@
-<x-deck :deck="\App\Models\Deck::find(31)"/>
+<x-deck-container :deck="\App\Models\Deck::find(31)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
     <p>Negating nominal sentences in Arabic is very straightforward. We just insert the word <b>مش (miš "not")</b> after
         the subject, where we would expect the verb <b>"to be"</b> in English.</p>
-    <x-sentence eng="you aren't Akram">
+    <x-sentence-item eng="you aren't Akram">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
         <x-sentence-term arb="أكرم" eng="Akram"/>
-    </x-sentence>
-    <x-sentence eng="you aren't from Palestine">
+    </x-sentence-item>
+    <x-sentence-item eng="you aren't from Palestine">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="فلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>We can easily raise our intonation to turn these negative statements into questions. Alternatively, we can start
         the question with <b>مش (miš "not")</b> as well.</p>
 
-    <x-sentence eng="you aren't from Palestine?">
+    <x-sentence-item eng="you aren't from Palestine?">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="فلسطين؟" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="aren't you from Palestine?">
+    </x-sentence-item>
+    <x-sentence-item eng="aren't you from Palestine?">
         <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="فلسطين؟" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"
@@ -40,18 +40,18 @@
         the state of the world: We say <b>"it's raining"</b> — but what does <b>"it"</b> really refer to? In
         Arabic, <b>الدنيا (d-dinya)</b> — literally, <b>"the world"</b> — is the subject of sentences that refer to the
         state of the world, the weather, etc.</p>
-    <x-sentence eng="it's daytime in Palestine">
+    <x-sentence-item eng="it's daytime in Palestine">
         <x-sentence-term arb="الدنيا" eng="(it)" :term="$terms['dinya'] ?? null"/>
         <x-sentence-term arb="نهار" eng="daytime" :term="$terms['nhār'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـفلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Not only that, but nouns are used where in English an adjective would be expected:</p>
-    <x-sentence eng="is it hot there?">
+    <x-sentence-item eng="is it hot there?">
         <x-sentence-term arb="الدنيا" eng="(it)" :term="$terms['dinya'] ?? null"/>
         <x-sentence-term arb="شوب" eng="heat" :term="$terms['šōb'] ?? null"/>
         <x-sentence-term arb="هناك؟" eng="there" :term="$terms['hunāk'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Now we can use the following terms to easily talk about the weather in Arabic!</p>
 </x-lesson-concept>
 
@@ -198,29 +198,29 @@
         attitudes to the information being communicated in a conversation as well. When communicating information we're
         uncertain of, we might want to get some confirmation or agreement from the other person — right? In Arabic, we
         can use <b>صحّ (ṣaħħ "correct")</b> for this.</p>
-    <x-sentence eng="it's hot, right?">
+    <x-sentence-item eng="it's hot, right?">
         <x-sentence-term arb="شوب" eng="heat" :term="$terms['šōb'] ?? null"/>
         <x-sentence-term arb="صحّ؟" eng="right" :term="$terms['ṣaħħ'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>If we feel pretty certain about a statement, we can end it with <b>ولّا (willa "or")</b> to double-check that
         information. Since this word is used to present mutually exclusive options, we imply that the other option is
         <b>"not"</b> — like saying <b>"isn't
             it?"</b></p>
-    <x-sentence eng="you're Akram, aren't you?">
+    <x-sentence-item eng="you're Akram, aren't you?">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="أكرم" eng="Akram"/>
         <x-sentence-term arb="ولّا؟" eng="or" :term="$terms['willa'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Similarly, we can express surprise at interesting or surprising information using common expressions like <b>والله
             (wallah "really")</b> & <b>عن جدّ (ʕan jadd "really")</b>.</p>
-    <x-sentence eng="really? you're not Akram?">
+    <x-sentence-item eng="really? you're not Akram?">
         <x-sentence-term arb="عن جدّ؟" eng="really" :term="$terms['ʕan jadd'] ?? null"/>
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
         <x-sentence-term arb="أكرم؟" eng="Akram"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('dialogue') }}">

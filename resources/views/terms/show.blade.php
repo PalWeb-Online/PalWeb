@@ -15,7 +15,7 @@
         <div class="term-container">
             <div class="term-container-head">
                 <div class="term-headword">
-                    <x-term-head :term="$term" />
+                    <x-vue.term :term="$term" component="TermHead" />
 
                     <div>{{ __($term->category) }}.
                         @include('terms._attributes', ['attributes' => $term->attributes->pluck('attribute')->toArray()])
@@ -167,11 +167,11 @@
                         @if(count($term->sentences($gloss->id)->get()) > 0)
                             @if(request()->routeIs('terms.usages'))
                                 @foreach ($term->sentences($gloss->id)->get() as $sentence)
-                                    <x-sentence :sentence="$sentence" :currentTerm="$term->id"/>
+                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence" :currentTerm="$term->id"/>
                                 @endforeach
                             @else
                                 @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
-                                    <x-sentence :sentence="$sentence" :currentTerm="$term->id"/>
+                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence" :currentTerm="$term->id"/>
                                 @endforeach
                                 @if(count($term->sentences($gloss->id)->get()) > 2)
                                     <a href="{{ route('terms.usages', $term) }}">See All Usages
@@ -219,7 +219,7 @@
 
                         <div class="decks-list">
                             @foreach($term->decks->where('private', '!=', 1) as $deck)
-                                <x-deck-li :deck="$deck"/>
+                                <x-vue.deck component="DeckItem" :deck="$deck"/>
                             @endforeach
                         </div>
                     </div>

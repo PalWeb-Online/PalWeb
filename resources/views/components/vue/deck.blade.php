@@ -1,3 +1,9 @@
+@props([
+    'component' => $component,
+    'deck' => $deck,
+    'size' => 'm'
+])
+
 @if($deck)
     @php
         $deckObject = [
@@ -8,17 +14,18 @@
             'isPrivate' => $deck->private,
             'authorName' => $deck->author->name,
             'authorAvatar' => asset('img/avatars/' . $deck->author->avatar),
-            'terms' => $deck->terms->pluck('term')
+            'terms' => $deck->terms->pluck('term'),
+            'size' => $size
         ];
     @endphp
 
-    <div data-vue-component="DeckFlashcard"
+    <div data-vue-component="{{ $component }}"
          data-props="{{ json_encode([
+                 'modelType' => 'deck',
                  'deck' => $deckObject,
                  'imageURL' => asset('/img'),
                  'isPinned' => $deck->isPinned(),
 
-                 'modelType' => 'deck',
                  'routes' => [
                      'view' => route('decks.show', $deck),
                      'edit' => route('decks.edit', $deck),
@@ -30,7 +37,7 @@
                      'export' => route('decks.export', $deck)
                  ],
                  'isUser' => auth()->check(),
-                 'isAuthor' => auth()->check() && $deck->author->id === auth()->user()->id,
+                 'isAuthor' => auth()->check() && $deck->author->id == auth()->user()->id,
              ]) }}"
     >
     </div>

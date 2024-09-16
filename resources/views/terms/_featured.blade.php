@@ -3,7 +3,7 @@
         <div class="featured-title l" style="text-transform: none">Word of the Day</div>
         <div class="term-container-head">
             <div class="term-headword">
-                <x-term-head :term="$wordOfTheDay" />
+                <x-vue.term :term="$wordOfTheDay" component="TermHead" />
 
                 <div>{{ __($wordOfTheDay->category) }}.
                     @include('terms._attributes', ['attributes' => $wordOfTheDay->attributes->pluck('attribute')->toArray()])
@@ -64,11 +64,8 @@
 
     <div class="terms-featured-latest">
         <div class="featured-title m" style="text-transform: none">Latest</div>
-        @foreach($latestTerms as $wordOfTheDay)
-            <a href="{{ route('terms.show', $wordOfTheDay) }}"
-               data-tippy-term data-tippy-content="{{ $wordOfTheDay->glosses[0]->gloss }}">
-                {{ $wordOfTheDay->term }}
-            </a>
+        @foreach($latestTerms as $term)
+            <x-vue.term component="TermItem" size="s" :term="$term" />
         @endforeach
     </div>
 </div>

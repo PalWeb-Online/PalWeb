@@ -29,7 +29,7 @@
                 </x-tip>
             @endif
             @foreach($sentences as $sentence)
-                <x-sentence size="s" :sentence="$sentence"/>
+                <x-vue.sentence component="SentenceItem" size="s" :sentence="$sentence"/>
             @endforeach
         </div>
     @else

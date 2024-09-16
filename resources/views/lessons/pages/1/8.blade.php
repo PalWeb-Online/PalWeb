@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(45)"/>
+<x-deck-container :deck="\App\Models\Deck::find(45)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -7,18 +7,18 @@
         in <b>definiteness</b>. If a noun is definite, any adjective that modifies it must definite as well — indicated
         by the article <b>الـ (-l)</b>. Naturally, not doing so results in an ordinary nominal sentence.</p>
     <div class="array">
-        <x-sentence eng="a big building">
+        <x-sentence-item eng="a big building">
             <x-sentence-term arb="عمارة" eng="building" :term="$terms['ʕimāra'] ?? null"/>
             <x-sentence-term arb="كبيرة" eng="big" :term="$terms['kbīr'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="the big building">
+        </x-sentence-item>
+        <x-sentence-item eng="the big building">
             <x-sentence-term arb="العمارة" eng="the-building" :term="$terms['ʕimāra'] ?? null"/>
             <x-sentence-term arb="الكبيرة" eng="the-big" :term="$terms['kbīr'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="the building is big">
+        </x-sentence-item>
+        <x-sentence-item eng="the building is big">
             <x-sentence-term arb="العمارة" eng="the-building" :term="$terms['ʕimāra'] ?? null"/>
             <x-sentence-term arb="كبيرة" eng="big" :term="$terms['kbīr'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </x-lesson-concept>
 
@@ -27,13 +27,13 @@
 
     <p>Now that we know all forms of grammatical agreement for adjectives, we can describe things more specifically.
         Let's learn to ask others to specify things as well, using the word <b>أيّ (ʔayy "which")</b>:</p>
-    <x-sentence eng="which neighborhood do you live in?">
+    <x-sentence-item eng="which neighborhood do you live in?">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="ساكن" eng="living" :term="$terms['sākin'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b--preposition'] ?? null"/>
         <x-sentence-term arb="ـأيّ" eng="which" :term="$terms['ʔayy'] ?? null"/>
         <x-sentence-term arb="حيّ؟" eng="neighborhood" :term="$terms['ħayy'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>In addition to <b>أيّ (ʔayy)</b>, Palestinian Arabic provides interrogative versions of the three <b>demonstrative
             determiners</b> — <b>هادا (hāda)</b>, <b>هادي (hādi)</b> & <b>هدول (hadōl)</b>. They sound like mergers of
         <b>أيّ
@@ -46,13 +46,13 @@
     ></x-inflections>
 
     <p>In principle, they work the same & fulfill the same function as <b>أيّ (ʔayy)</b>:</p>
-    <x-sentence eng="which neighborhood do you live in?">
+    <x-sentence-item eng="which neighborhood do you live in?">
         <x-sentence-term arb="إنتا" eng="you.M" :term="$terms['ʔinta'] ?? null"/>
         <x-sentence-term arb="ساكن" eng="living" :term="$terms['sākin'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b--preposition'] ?? null"/>
         <x-sentence-term arb="ـأنوه" eng="which" :term="$terms['ʔanūh'] ?? null"/>
         <x-sentence-term arb="حيّ؟" eng="neighborhood" :term="$terms['ħayy'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>So why use them? Because <b>أيّ (ʔayy)</b> is exclusively a <b>determiner</b>, meaning it must have a referent;
         it
@@ -60,20 +60,20 @@
         their <b>demonstrative</b> counterparts — can stand by themselves as pronouns, meaning <b>"which
             one(s)?"</b>.</p>
     <div class="array">
-        <x-sentence eng="which one?">
+        <x-sentence-item eng="which one?">
             <x-sentence-term arb="أنيه؟" eng="which.F" :term="$terms['ʔanīh'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="I live in a village">
+        </x-sentence-item>
+        <x-sentence-item eng="I live in a village">
             <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
             <x-sentence-term arb="ساكن" eng="living" :term="$terms['sākin'] ?? null"/>
             <x-sentence-term arb="بـ" eng="in" :term="$terms['b--preposition'] ?? null"/>
             <x-sentence-term arb="ـقرية" eng="village" :term="$terms['qarye'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="which one is good?">
+    <x-sentence-item eng="which one is good?">
         <x-sentence-term arb="أنوه" eng="which.M" :term="$terms['ʔanūh'] ?? null"/>
         <x-sentence-term arb="منيح" eng="good.M" :term="$terms['mnīħ'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Once you've memorized them, you'll probably find them easier & more natural to use than <b>أيّ
             (ʔayy)</b>, as they don't require you to specify or repeat the referent every single time.</p>
 </x-lesson-concept>
@@ -233,23 +233,23 @@
     </p>
 
     <div class="array">
-        <x-sentence eng="me too">
+        <x-sentence-item eng="me too">
             <x-sentence-term arb="و" eng="&" :term="$terms['w-'] ?? null"/>
             <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
             <x-sentence-term arb="كمان" eng="also" :term="$terms['kamān'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="I am from Palestine">
+        </x-sentence-item>
+        <x-sentence-item eng="I am from Palestine">
             <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
             <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
             <x-sentence-term arb="فلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="Shadi is also from Palestine">
+    <x-sentence-item eng="Shadi is also from Palestine">
         <x-sentence-term arb="شادي" eng="Shadi"/>
         <x-sentence-term arb="كمان" eng="also" :term="$terms['kamān'] ?? null"/>
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="فلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Notice that we're constantly learning new interjections & transition terms, like <b>يلّا (yalla "alright")</b>,
         <b>بصراحة (b-ṣarāħa "honestly")</b> & <b>ع فكرة (ʕa fikra "actually")</b>. We can use these to guide the flow of

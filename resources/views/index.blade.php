@@ -11,7 +11,7 @@
     </div>
 
     <div class="feature-panel" style="background: none; padding: 0 1.6rem;">
-        <x-deck :deck="\App\Models\Deck::find(56)"/>
+        <x-deck-container :deck="\App\Models\Deck::find(56)"/>
     </div>
 
     <div class="feature-panel-wrapper">
@@ -38,9 +38,9 @@
             </div>
             <div class="feature-panel-feature">
                 <div class="terms-list">
-                    <x-term :term="\App\Models\Term::firstWhere('slug', 'noun-l-ʔuds')"/>
-                    <x-term :term="\App\Models\Term::firstWhere('slug', 'preposition-b-')"/>
-                    <x-term :term="\App\Models\Term::firstWhere('slug', 'noun-falasṭīn')"/>
+                    <x-term-item :term="\App\Models\Term::firstWhere('slug', 'noun-l-ʔuds')"/>
+                    <x-term-item :term="\App\Models\Term::firstWhere('slug', 'preposition-b-')"/>
+                    <x-term-item :term="\App\Models\Term::firstWhere('slug', 'noun-falasṭīn')"/>
                 </div>
             </div>
         </div>
@@ -57,8 +57,8 @@
             </div>
             <div class="feature-panel-feature">
                 <div style="display: flex; flex-flow: row wrap; justify-content: space-around; gap: 1.6rem">
-                    <x-deck-flashcard :deck="\App\Models\Deck::find(1)"/>
-                    <x-deck-flashcard :deck="\App\Models\Deck::find(2)"/>
+                    <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find(1)"/>
+                    <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find(2)"/>
                 </div>
             </div>
         </div>
@@ -74,8 +74,8 @@
                 </div>
             </div>
             <div class="feature-panel-feature">
-                <x-sentence size="l" :sentence="\App\Models\Sentence::find(4)"/>
-                <x-sentence size="l" :sentence="\App\Models\Sentence::find(5)"/>
+                <x-sentence-item size="l" :sentence="\App\Models\Sentence::find(4)"/>
+                <x-sentence-item size="l" :sentence="\App\Models\Sentence::find(5)"/>
             </div>
         </div>
 

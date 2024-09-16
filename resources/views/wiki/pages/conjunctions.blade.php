@@ -5,4 +5,4 @@
     <x-link :href="route('wiki.show', 'conjunctions')">{{ __('conjunctions') }}</x-link>
 </x-page-head>
 
-<x-deck :deck="\App\Models\Deck::find(34)"/>
+<x-deck-container :deck="\App\Models\Deck::find(34)"/>

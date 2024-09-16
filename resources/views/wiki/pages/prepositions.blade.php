@@ -11,31 +11,31 @@
 </p>
 
 <div class="array">
-    <x-sentence eng="in it">
+    <x-sentence-item eng="in it">
         <x-sentence-term arb="فيـ" eng="in" :term="$terms->firstWhere('translit', 'b-')"/>
         <x-sentence-term arb="ـها" eng="F.it" :term="$terms->firstWhere('translit', '-ha')"/>
-    </x-sentence>
-    <x-sentence eng="in the car">
+    </x-sentence-item>
+    <x-sentence-item eng="in the car">
         <x-sentence-term arb="بـ" eng="in" :term="$terms->firstWhere('translit', 'b-')"/>
         <x-sentence-term arb="ـالسيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
+    </x-sentence-item>
 </div>
 
 <div class="array">
-    <x-sentence eng="for him">
+    <x-sentence-item eng="for him">
         <x-sentence-term arb="إلـ" eng="for" :term="$terms->firstWhere('translit', 'la-')"/>
         <x-sentence-term arb="ـه" eng="him" :term="$terms->firstWhere('translit', '-o')"/>
-    </x-sentence>
-    <x-sentence eng="for the boy">
+    </x-sentence-item>
+    <x-sentence-item eng="for the boy">
         <x-sentence-term arb="لـ" eng="for" :term="$terms->firstWhere('translit', 'la-')"/>
         <x-sentence-term arb="ـلولد" eng="the-boy" :term="$terms->firstWhere('translit', 'walad')"/>
-    </x-sentence>
+    </x-sentence-item>
 </div>
 
 <p><b>Prepositions</b> are a semi-closed category; different regions may have alternatives for these terms. <b>Prepositions</b>
     include the following terms & their variants:</p>
 
-<x-deck :deck="\App\Models\Deck::find(35)"/>
+<x-deck-container :deck="\App\Models\Deck::find(35)"/>
 
 <div class="doc-section">
     <h1>Prepositions & Verbs</h1>
@@ -52,12 +52,12 @@
     <p>See <a href="{{ route('wiki.show', 'verbs') }}">the copula</a> & <a href="{{ route('wiki.show', 'verbs') }}">pseudo-verbs</a>.
         Some prepositions are used as verbs with idiomatic meanings; they are a subset of <b>prepositional
             verbs</b> formed specifically by attaching prepositions to the <b>null copula</b>.</p>
-    <x-sentence eng="I have a friend in London">
+    <x-sentence-item eng="I have a friend in London">
         <x-sentence-term arb="فيه إلي" eng="1S.have" :term="$terms->firstWhere('translit', 'la-')"/>
         <x-sentence-term arb="صديق" eng="friend" :term="$terms->firstWhere('translit', 'ṣadīq')"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms->firstWhere('translit', 'b-')"/>
         <x-sentence-term arb="ـلندن" eng="London"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <h2>Prepositional Verbs</h2>
     <p>Some verbs convey distinct idiomatic meanings when paired with certain prepositions. Since these multi-term verbs
@@ -65,19 +65,19 @@
         own independent meaning.</p>
 
     <x-vocabulary>
-        <x-term arb="ردّ (على)" eng="to reply (to)"/>
-        <x-term arb="ردّ على" eng="to obey, to do as (someone) says"/>
+        <x-term-item arb="ردّ (على)" eng="to reply (to)"/>
+        <x-term-item arb="ردّ على" eng="to obey, to do as (someone) says"/>
     </x-vocabulary>
 
-    <x-sentence eng="he replied to the message">
+    <x-sentence-item eng="he replied to the message">
         <x-sentence-term arb="ردّ" eng="3M.replied" :term="$terms->firstWhere('translit', 'radd')"/>
         <x-sentence-term arb="على" eng="to" :term="$terms->firstWhere('translit', 'ʕala')"/>
         <x-sentence-term arb="الرسالة" eng="the-message" :term="$terms->firstWhere('translit', 'risāle')"/>
-    </x-sentence>
-    <x-sentence eng="he obeyed his parents">
+    </x-sentence-item>
+    <x-sentence-item eng="he obeyed his parents">
         <x-sentence-term arb="ردّ على" eng="3M.obeyed" :term="$terms->firstWhere('translit', 'radd ʕala')"/>
         <x-sentence-term arb="أهله" eng="his-parents" :term="$terms->firstWhere('translit', 'ʔahl')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <h2>Patient Markers</h2>
     <p>A handful of prepositions are used to indicate the semantic direct or indirect patient of an action. Each one
@@ -88,33 +88,33 @@
 
     <p>Indicates the sufferer of an action over which the sufferer has no control or influence.</p>
 
-    <x-sentence eng="he missed out on it">
+    <x-sentence-item eng="he missed out on it">
         <x-sentence-term arb="راح" eng="3M.went" :term="$terms->firstWhere('translit', 'rāħ')"/>
         <x-sentence-term arb="عليه" eng="(against-him)" :term="$terms->firstWhere('translit', 'ʕala')"/>
-    </x-sentence>
-    <x-sentence eng="he backstabbed him">
+    </x-sentence-item>
+    <x-sentence-item eng="he backstabbed him">
         <x-sentence-term arb="حكى" eng="3M.spoke" :term="$terms->firstWhere('translit', 'ħaka')"/>
         <x-sentence-term arb="عليه" eng="(against-him)" :term="$terms->firstWhere('translit', 'ʕala')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>It is sometimes an exact
         antonym of <b>لـ (la-)</b>, which indicates the beneficiary of an action, although both may translate as
         <b>"for"</b> in English.</p>
 
-    <x-sentence eng="clear a way for the ambulance">
+    <x-sentence-item eng="clear a way for the ambulance">
         <x-sentence-term arb="إفتح" eng="2M.open" :term="$terms->firstWhere('translit', 'fataħ')"/>
         <x-sentence-term arb="طريق" eng="road" :term="$terms->firstWhere('translit', 'ṭarīʔ')"/>
         <x-sentence-term arb="لـ" eng="for" :term="$terms->firstWhere('translit', 'la-')"/>
         <x-sentence-term arb="سيّارة الإسعاف" eng="the-ambulance" :term="$terms->firstWhere('translit', 'ʔisʕāf')"/>
-    </x-sentence>
+    </x-sentence-item>
 
-    <x-sentence eng="don't cut off the ambulance">
+    <x-sentence-item eng="don't cut off the ambulance">
         <x-sentence-term arb="ما" eng="don't" :term="$terms->firstWhere('translit', 'mā')"/>
         <x-sentence-term arb="تسكّر" eng="2M.close" :term="$terms->firstWhere('translit', 'sakkar')"/>
         <x-sentence-term arb="الطريق" eng="the-road" :term="$terms->firstWhere('translit', 'ṭarīʔ')"/>
         <x-sentence-term arb="عليه" eng="(against)" :term="$terms->firstWhere('translit', 'ʕala')"/>
         <x-sentence-term arb="سيّارة الإسعاف" eng="the-ambulance" :term="$terms->firstWhere('translit', 'ʔisʕāf')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <h3>لـ</h3>
 
@@ -138,40 +138,40 @@
         rather is a continuous process for which the semantic object was used.</p>
 
     <x-vocabulary>
-        <x-term arb="صوّر" eng="to take a picture"/>
+        <x-term-item arb="صوّر" eng="to take a picture"/>
     </x-vocabulary>
-    <x-sentence eng="he took a picture of her">
+    <x-sentence-item eng="he took a picture of her">
         <x-sentence-term arb="صوّرها" eng="3M.photographed-her" :term="$terms->firstWhere('translit', 'fakkar')"/>
-    </x-sentence>
-    <x-sentence eng="he took pictures of her">
+    </x-sentence-item>
+    <x-sentence-item eng="he took pictures of her">
         <x-sentence-term arb="صوّر" eng="3M.photographed" :term="$terms->firstWhere('translit', 'fakkar')"/>
         <x-sentence-term arb="فيها" eng="her" :term="$terms->firstWhere('translit', 'b-')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-vocabulary>
-        <x-term arb="فكّر" eng="(intransitive) to think"/>
-        <x-term arb="فكّر" eng="(ditransitive) to consider (someone a certain way)"/>
+        <x-term-item arb="فكّر" eng="(intransitive) to think"/>
+        <x-term-item arb="فكّر" eng="(ditransitive) to consider (someone a certain way)"/>
     </x-vocabulary>
-    <x-sentence eng="he thought about him">
+    <x-sentence-item eng="he thought about him">
         <x-sentence-term arb="فكّر" eng="3M.thought" :term="$terms->firstWhere('translit', 'fakkar')"/>
         <x-sentence-term arb="فيه" eng="him" :term="$terms->firstWhere('translit', 'b-')"/>
-    </x-sentence>
-    <x-sentence eng="he considered him good">
+    </x-sentence-item>
+    <x-sentence-item eng="he considered him good">
         <x-sentence-term arb="فكّره" eng="3M.thought-him" :term="$terms->firstWhere('translit', 'fakkar')"/>
         <x-sentence-term arb="منيح" eng="to" :term="$terms->firstWhere('translit', 'mnīħ')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-vocabulary>
-        <x-term arb="مسك" eng="(intransitive) to hold on"/>
-        <x-term arb="مسك" eng="(transitive) to grab"/>
+        <x-term-item arb="مسك" eng="(intransitive) to hold on"/>
+        <x-term-item arb="مسك" eng="(transitive) to grab"/>
     </x-vocabulary>
-    <x-sentence eng="hold onto it">
+    <x-sentence-item eng="hold onto it">
         <x-sentence-term arb="إمسك" eng="2M.hold on" :term="$terms->firstWhere('translit', 'masak')"/>
         <x-sentence-term arb="فيه" eng="it" :term="$terms->firstWhere('translit', 'b-')"/>
-    </x-sentence>
-    <x-sentence eng="grab it">
+    </x-sentence-item>
+    <x-sentence-item eng="grab it">
         <x-sentence-term arb="إمسكه" eng="2M.grab-it" :term="$terms->firstWhere('translit', 'masak')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     1. (instrumental preposition; marks the thing used to carry out an action) by, using, by means of.
     أنا بروح عالشغل كل يوم بالبسكليت

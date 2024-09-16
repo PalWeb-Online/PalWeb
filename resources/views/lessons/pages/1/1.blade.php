@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(5)"/>
+<x-deck-container :deck="\App\Models\Deck::find(5)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -8,15 +8,15 @@
         to give information about ourselves & others, like this:</p>
 
     <div class="array">
-        <x-sentence eng="I am Akram">
+        <x-sentence-item eng="I am Akram">
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-ʔana')"/>
             <x-sentence-term arb="أكرم" eng="ʔakram"/>
-        </x-sentence>
-        <x-sentence eng="I am from Palestine">
+        </x-sentence-item>
+        <x-sentence-item eng="I am from Palestine">
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-ʔana')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'preposition-min')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-falasṭīn')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>While in English there are seven distinct <b>subject pronouns</b>, in Arabic there are eight: there is no neutral
@@ -43,24 +43,24 @@
         substitute them
         for the missing piece of information.</p>
 
-    <x-sentence eng="Are you from Palestine?">
+    <x-sentence-item eng="Are you from Palestine?">
         <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-ʔinta')"/>
         <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'preposition-min')"/>
         <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-falasṭīn')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <div class="array">
-        <x-sentence eng="Where are you from?">
+        <x-sentence-item eng="Where are you from?">
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-ʔinta')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'preposition-min')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'adverb-wēn')"/>
-        </x-sentence>
+        </x-sentence-item>
 
-        <x-sentence eng="Where are you from?">
+        <x-sentence-item eng="Where are you from?">
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'preposition-min')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'adverb-wēn')"/>
             <x-sentence-term :term="\App\Models\Term::firstWhere('slug', 'noun-ʔinta')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </x-lesson-concept>
 

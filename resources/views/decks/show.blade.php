@@ -7,5 +7,5 @@
         <x-link :href="route('decks.show', $deck)">{{ __('view') }}</x-link>
     </x-page-head>
 
-    <x-deck :deck="$deck"/>
+    <x-deck-container :deck="$deck"/>
 @endsection

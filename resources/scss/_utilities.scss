@@ -38,38 +38,11 @@ li {
     font-size: 3.6rem
 }
 
-.audio {
-    cursor: url(../../public/img/play.svg) 16 16, auto;
-}
-
 button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
-}
-
-button.audio {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem;
-    background-color: $grn;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 1.6rem !important;
-    transform: translateY(0.2rem);
-    margin-inline-start: 0.8rem;
-
-    &:hover {
-        box-shadow: 0 0 0 0.2rem white, 0 0 0 0.4rem $grn
-    }
-
-    &:active {
-        background-color: $orn;
-        box-shadow: 0 0 0 0.2rem white, 0 0 0 0.4rem $orn
-    }
 }
 
 label {
@@ -224,65 +197,6 @@ h3 {
         left: 50%;
         transform: translateX(-50%);
         min-width: 100%;
-    }
-
-    &.context-actions, &.context-submenu {
-        .dropdown-menu {
-            gap: 0;
-            z-index: 2;
-            background: white;
-            border: 0.1rem solid $purple-primary-dark;
-            box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
-
-            a, button {
-                font-family: $monoFont;
-                font-size: 1.2rem;
-                font-weight: 400;
-                color: $purple-deep;
-
-                &:hover {
-                    color: white;
-                    text-decoration: none;
-                    background: $purple-primary-dark;
-                }
-            }
-        }
-    }
-
-    &.context-actions {
-        flex-shrink: 0;
-        margin-block-start: 0.4rem;
-
-        &:hover {
-            img {
-                transform: rotate(15deg);
-            }
-        }
-
-        .action-divider {
-            margin: 0.3rem 0.6rem;
-            border-block-end: 0.1rem dotted $purple-primary-dark;
-        }
-
-        img {
-            transition: 0.1s;
-            width: 2.4rem;
-        }
-    }
-
-    &.context-submenu {
-        & > .dropdown-wrapper {
-            transform: none;
-            top: 0;
-            left: 100%;
-            z-index: 3;
-            min-width: max-content;
-
-            .dropdown-menu {
-                margin-block-start: 0;
-                margin-inline-start: 0.8rem
-            }
-        }
     }
 }
 

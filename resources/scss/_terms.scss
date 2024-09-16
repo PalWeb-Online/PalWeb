@@ -303,8 +303,26 @@
     width: 100%;
     padding-block-start: 0.8rem;
 
-    .context-actions {
-        direction: ltr;
+    &.s {
+        padding: 0;
+
+        .popup-menu-wrapper {
+            display: none;
+        }
+
+        .term-li {
+            display: block;
+            border: none;
+            background: none;
+
+            .arb {
+                margin: 0;
+            }
+
+            .eng {
+                display: none;
+            }
+        }
     }
 }
 
@@ -497,23 +515,6 @@
     display: grid;
     grid-auto-rows: min-content;
     gap: 0.8rem;
-
-    a {
-        text-align: center;
-        background: white;
-        font-family: $ar_bodyFont;
-        font-weight: 700;
-        font-size: 1.8rem;
-        padding: 0.6rem 0;
-        border-radius: 0.8rem;
-        border: 0.1rem solid $purple-primary-dark;
-        box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
-
-        &:hover {
-            box-shadow: none;
-            transform: translate(-0.2rem, 0.2rem);
-        }
-    }
 }
 
 .inflection-carousel {

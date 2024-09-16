@@ -1,27 +1,27 @@
-<x-deck :deck="\App\Models\Deck::find(50)"/>
+<x-deck-container :deck="\App\Models\Deck::find(50)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
 
     <p>We can convey our impressions about something by prefacing our thoughts with the <b>pseudo-verb</b> <b>شكله
             (šiklo "it seems")</b>. It may be used neutrally, as in this sentence:</p>
-    <x-sentence eng="it seems his father is Palestinian">
+    <x-sentence-item eng="it seems his father is Palestinian">
         <x-sentence-term arb="شكله" eng="it seems" :term="$terms['šiklo'] ?? null"/>
         <x-sentence-term arb="أبوه" eng="his-father" :term="$terms['ʔabu'] ?? null"/>
         <x-sentence-term arb="فلسطينيّ" eng="Palestinian" :term="$terms['falasṭīni'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>It's also possible to specify a point of reference using the correct inflection. In that case, it's preferable
         for the verb to follow the subject, if there is one.</p>
-    <x-sentence eng="his father seems Palestinian">
+    <x-sentence-item eng="his father seems Palestinian">
         <x-sentence-term arb="أبوه" eng="his-father" :term="$terms['ʔabu'] ?? null"/>
         <x-sentence-term arb="شكله" eng="3M.seems" :term="$terms['šiklo'] ?? null"/>
         <x-sentence-term arb="فلسطينيّ" eng="Palestinian" :term="$terms['falasṭīni'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="you seem upset">
+    </x-sentence-item>
+    <x-sentence-item eng="you seem upset">
         <x-sentence-term arb="شكلك" eng="2M.seem" :term="$terms['šiklo'] ?? null"/>
         <x-sentence-term arb="زعلان" eng="upset" :term="$terms['zaʕlān'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-inflections
         conj1S="شكلي" conj1Str="šikli"
@@ -44,28 +44,28 @@
         definition they are in the <b>فعلان (faʕlān)</b> pattern.</p>
 
     <div class="array">
-        <x-sentence eng="Sama is (feeling) cold">
+        <x-sentence-item eng="Sama is (feeling) cold">
             <x-sentence-term arb="سما" eng="Sama"/>
             <x-sentence-term arb="بردانة" eng="cold" :term="$terms['bardān'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="Sama is upset">
+        </x-sentence-item>
+        <x-sentence-item eng="Sama is upset">
             <x-sentence-term arb="سما" eng="Sama"/>
             <x-sentence-term arb="زعلانة" eng="upset" :term="$terms['zaʕlān'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>When it comes to animate nouns, <b>Intensive Adjectives</b> — like <b>Active Participles</b> — are used to
         indicate someone's current state, rather than an essential quality of theirs.</p>
 
     <div class="array">
-        <x-sentence eng="? Sama is (a) cold (person)">
+        <x-sentence-item eng="? Sama is (a) cold (person)">
             <x-sentence-term arb="سما" eng="Sama"/>
             <x-sentence-term arb="باردة" eng="cold" :term="$terms['bārid'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="the coffee is cold">
+        </x-sentence-item>
+        <x-sentence-item eng="the coffee is cold">
             <x-sentence-term arb="القهوة" eng="the-coffee" :term="$terms['ʔahwe'] ?? null"/>
             <x-sentence-term arb="باردة" eng="cold" :term="$terms['bārid'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </x-lesson-concept>
 

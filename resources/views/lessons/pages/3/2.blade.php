@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(58)"/>
+<x-deck-container :deck="\App\Models\Deck::find(58)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -7,32 +7,32 @@
         (i.e. <b>"more"</b>) & <b>superlative</b> (i.e. <b>"most"</b>) in meaning; its exact meaning is set by the
         syntax. We will start by learning how to use <b>elative adjectives</b> predicatively, just like any other
         adjective.</p>
-    <x-sentence eng="this man is older than the other">
+    <x-sentence-item eng="this man is older than the other">
         <x-sentence-term arb="هالزلمة" eng="this-man" :term="$terms['zalame'] ?? null"/>
         <x-sentence-term arb="أكبر" eng="older" :term="$terms['kbīr'] ?? null"/>
         <x-sentence-term arb="من" eng="than" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="التاني" eng="the-other" :term="$terms['tāny'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Regardless of the adjective's lemma form, the <b>elative form</b> is always in the <b>أفعل (ʔafʕal)</b> pattern &
         does not follow gender & number agreement; it has no feminine or plural form.</p>
-    <x-sentence eng="this coffee is tastier than the other">
+    <x-sentence-item eng="this coffee is tastier than the other">
         <x-sentence-term arb="هالقهوة" eng="this-coffee" :term="$terms['ʔahwe'] ?? null"/>
         <x-sentence-term arb="أزكى" eng="tastier" :term="$terms['zāky'] ?? null"/>
         <x-sentence-term arb="من" eng="than" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="التانية" eng="the-other" :term="$terms['tāny'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Not all adjectives have an <b>elative form</b>. In that case, we use <b>أكتر (ʔaktar "more")</b> after the
         adjective:</p>
-    <x-sentence eng="this man is more famous than the other">
+    <x-sentence-item eng="this man is more famous than the other">
         <x-sentence-term arb="هالزلمة" eng="this-man" :term="$terms['zalame'] ?? null"/>
         <x-sentence-term arb="مشهور" eng="famous" :term="$terms['mašhūr'] ?? null"/>
         <x-sentence-term arb="أكتر" eng="more" :term="$terms['ktīr'] ?? null"/>
         <x-sentence-term arb="من" eng="than" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="التاني" eng="the-other" :term="$terms['tāny'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>In fact, <b>أكتر (ʔaktar "more")</b> can & does modify entire phrases as well as single adjectives:</p>
-    <x-sentence eng="Paris is closer to London than Jerusalem is">
+    <x-sentence-item eng="Paris is closer to London than Jerusalem is">
         <x-sentence-term arb="باريس" eng="Paris" :term="$terms['zalame'] ?? null"/>
         <x-sentence-term arb="قريبة" eng="near" :term="$terms['mašḡūl'] ?? null"/>
         <x-sentence-term arb="على" eng="to" :term="$terms['ktīr'] ?? null"/>
@@ -40,7 +40,7 @@
         <x-sentence-term arb="أكتر" eng="more" :term="$terms['tāny'] ?? null"/>
         <x-sentence-term arb="من" eng="than" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="القدس" eng="Jerusalem" :term="$terms['tāny'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"

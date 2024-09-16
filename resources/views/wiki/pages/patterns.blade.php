@@ -9,24 +9,24 @@
 
     <h2 id="CvCC" style="scroll-margin: 8rem">CCC</h2>
     <x-vocabulary title="CLC">
-        <x-term :term="$terms->firstWhere('translit', 'bāb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'sūʔ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕīd')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'bāb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'sūʔ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕīd')"/>
     </x-vocabulary>
     <x-vocabulary title="CvCC">
-        <x-term :term="$terms->firstWhere('translit', 'šams')"/>
-        <x-term :term="$terms->firstWhere('translit', 'bēt')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṣaff')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'šams')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'bēt')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṣaff')"/>
     </x-vocabulary>
     <x-vocabulary title="CvCCe">
-        <x-term :term="$terms->firstWhere('translit', 'ġurfe')"/>
-        <x-term :term="$terms->firstWhere('translit', 'dōle')"/>
-        <x-term :term="$terms->firstWhere('translit', 'šaʔʔa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ġurfe')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'dōle')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'šaʔʔa')"/>
     </x-vocabulary>
     <x-vocabulary title="CvCvC">
-        <x-term :term="$terms->firstWhere('translit', 'balad')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔamar')"/>
-        <x-term :term="$terms->firstWhere('translit', 'zalame')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'balad')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔamar')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'zalame')"/>
     </x-vocabulary>
     {{--    <x-vocabulary title="plural: CCūC">--}}
     {{--        <x-inflections--}}
@@ -43,7 +43,7 @@
     {{--        ></x-inflections>--}}
     {{--    </x-vocabulary>--}}
     {{--    <x-vocabulary>--}}
-    {{--        <x-term arb="CvCaC" eng="CvCCe broken plural pattern"/>--}}
+    {{--        <x-term-item arb="CvCaC" eng="CvCCe broken plural pattern"/>--}}
     {{--        <x-inflections--}}
     {{--            conjF="غرفة" conjFtr="ġurfe"--}}
     {{--            conjP="غرف" conjPtr="ġuraf"--}}
@@ -60,37 +60,37 @@
 
     <h2>CCLC</h2>
     <x-vocabulary title="CCāC">
-        <x-term :term="$terms->firstWhere('translit', 'ktāb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'buxār')"/>
-        <x-term :term="$terms->firstWhere('translit', 'žihāz')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ktāb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'buxār')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'žihāz')"/>
     </x-vocabulary>
     <x-vocabulary title="CCīC">
-        <x-term :term="$terms->firstWhere('translit', 'rġīf')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṣadīq')"/>
-        <x-term :term="$terms->firstWhere('translit', 'madīne')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'rġīf')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṣadīq')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'madīne')"/>
     </x-vocabulary>
     <x-vocabulary title="CCūC">
-        <x-term :term="$terms->firstWhere('translit', 'zbūn')"/>
-        <x-term :term="$terms->firstWhere('translit', 'xarūf')"/>
-        <x-term :term="$terms->firstWhere('translit', 'sxūne')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'zbūn')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'xarūf')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'sxūne')"/>
     </x-vocabulary>
 
     <h2>CCCC</h2>
     <x-vocabulary title="CvCCvC">
-        <x-term :term="$terms->firstWhere('translit', 'zaʕtar')"/>
-        <x-term :term="$terms->firstWhere('translit', 'taksy')"/>
-        <x-term :term="$terms->firstWhere('translit', 'silsile')"/>
-        <x-term :term="$terms->firstWhere('translit', 'muškile')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔuġnye')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'zaʕtar')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'taksy')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'silsile')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'muškile')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔuġnye')"/>
     </x-vocabulary>
 
     <h2>CCCLC</h2>
     <x-vocabulary title="CvCCLC">
-        <x-term :term="$terms->firstWhere('translit', 'ʔusbūʕ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'xityār')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔannīne')"/>
-        <x-term :term="$terms->firstWhere('translit', 'muftāħ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'duktōr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔusbūʕ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'xityār')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔannīne')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'muftāħ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'duktōr')"/>
     </x-vocabulary>
 </div>
 
@@ -99,12 +99,12 @@
 
     <h2 id="CvCC" style="scroll-margin: 8rem">CCC</h2>
     <x-vocabulary title="CCāC">
-        <x-term :term="$terms->firstWhere('translit', 'kalb')"/>
-        <x-term subterm arb="كلاب" eng="dogs"/>
-        <x-term :term="$terms->firstWhere('translit', 'ḍaww')"/>
-        <x-term subterm arb="ضواو" eng="lights"/>
-        <x-term :term="$terms->firstWhere('translit', 'walad')"/>
-        <x-term subterm arb="ولاد" eng="boys; children"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'kalb')"/>
+        <x-term-item subterm arb="كلاب" eng="dogs"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ḍaww')"/>
+        <x-term-item subterm arb="ضواو" eng="lights"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'walad')"/>
+        <x-term-item subterm arb="ولاد" eng="boys; children"/>
     </x-vocabulary>
 </div>
 

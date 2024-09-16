@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(41)"/>
+<x-deck-container :deck="\App\Models\Deck::find(41)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -22,21 +22,21 @@
         being reserved for inanimate nouns. In Arabic, though, all nouns — animate or not — are gendered, meaning that
         even non-human nouns are either <b>"he"</b> or <b>"she"</b>!</p>
 
-    <x-sentence eng="she is Sama">
+    <x-sentence-item eng="she is Sama">
         <x-sentence-term arb="هي" eng="she" :term="$terms['hiyye'] ?? null"/>
         <x-sentence-term arb="سما" eng="Sama"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <div class="array">
-        <x-sentence eng="it's in Palestine">
+        <x-sentence-item eng="it's in Palestine">
             <x-sentence-term arb="هي" eng="she" :term="$terms['hiyye'] ?? null"/>
             <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
             <x-sentence-term arb="ـفلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="where is Jerusalem?">
+        </x-sentence-item>
+        <x-sentence-item eng="where is Jerusalem?">
             <x-sentence-term arb="وين" eng="where" :term="$terms['wēn'] ?? null"/>
             <x-sentence-term arb="القدس" eng="Jerusalem" :term="$terms['l-ʔuds'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>How would you know whether an inanimate noun is masculine or feminine? In most cases, feminine nouns are
@@ -51,59 +51,59 @@
     <p>In Arabic, this distinction applies to the <b>Demonstrative Pronouns</b> as well: there are distinct masculine &
         feminine forms of <b>"this"</b>, alongside a single gender-neutral <b>"these"</b>.</p>
     <div class="array">
-        <x-sentence eng="this is a school">
+        <x-sentence-item eng="this is a school">
             <x-sentence-term arb="هاذي" eng="this.F" :term="$terms['hādi'] ?? null"/>
             <x-sentence-term arb="مدرسة" eng="school.F" :term="$terms['madrase'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="this is an office">
+        </x-sentence-item>
+        <x-sentence-item eng="this is an office">
             <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
             <x-sentence-term arb="مكتب" eng="office.M" :term="$terms['maktab'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="these are Sama & Dana">
+    <x-sentence-item eng="these are Sama & Dana">
         <x-sentence-term arb="هذول" eng="these" :term="$terms['hādōl'] ?? null"/>
         <x-sentence-term arb="سما" eng="Sama"/>
         <x-sentence-term arb="و" eng="&" :term="$terms['w'] ?? null"/>
         <x-sentence-term arb="دانا" eng="Dana"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p><b>Demonstratives</b> are used as <b>Determiners</b> (i.e. "<b>this</b> house") by attaching them to the head
         noun of the phrase. Since the noun in this construction is necessarily definite, the article <b>الـ (-l)</b> is
         always used.</p>
 
-    <x-sentence eng="this is a guy">
+    <x-sentence-item eng="this is a guy">
         <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
         <x-sentence-term arb="شبّ" eng="guy" :term="$terms['šabb'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <div class="array">
-        <x-sentence eng="this guy is ...">
+        <x-sentence-item eng="this guy is ...">
             <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
             <x-sentence-term arb="الشبّ" eng="the-guy" :term="$terms['šabb'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="this is the guy">
+        </x-sentence-item>
+        <x-sentence-item eng="this is the guy">
             <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
             <x-sentence-term arb="الشبّ" eng="the-guy" :term="$terms['šabb'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>Notice that — on its own — this construction could be read either as a complete sentence or as a noun phrase.
         However, in a full sentence only one interpretation would be possible. Besides, it's common to abbreviate the
         <b>Demonstratives</b> to <b>هـ (ha-)</b> in these cases.</p>
 
-    <x-sentence eng="this guy is in the class">
+    <x-sentence-item eng="this guy is in the class">
         <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
         <x-sentence-term arb="الشبّ" eng="the-guy" :term="$terms['šabb'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالصفّ" eng="the-class" :term="$terms['ṣaff'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
-    <x-sentence eng="this guy is in the class">
+    <x-sentence-item eng="this guy is in the class">
         <x-sentence-term arb="هـ" eng="this" :term="$terms['ha-'] ?? null"/>
         <x-sentence-term arb="ـالشبّ" eng="the-guy" :term="$terms['šabb'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالصفّ" eng="the-class" :term="$terms['ṣaff'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-inflections
         conjM="هاذا" conjMtr="this"
@@ -264,20 +264,20 @@
     <p>Palestinian Arabic is very lenient in terms of politeness registers. Politeness is a matter of
         demeanor, rather than form. Still, there a few easy strategies to sound more polite. One way is to
         address others initially by their name:</p>
-    <x-sentence eng="where are you (Mera) from?">
+    <x-sentence-item eng="where are you (Mera) from?">
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="وين" eng="where" :term="$terms['wēn'] ?? null"/>
         <x-sentence-term arb="ميرا؟" eng="Mera"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>When trying to get someone's attention or
         addressing someone in general — especially in greetings — it's natural to use the
         vocative particle <b>يا (ya)</b>. Not using it can sound pretty abrupt.</p>
-    <x-sentence eng="good morning, girls">
+    <x-sentence-item eng="good morning, girls">
         <x-sentence-term arb="صباح الخير" eng="good morning" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
         <x-sentence-term arb="يا" eng="oh" :term="$terms['ya'] ?? null"/>
         <x-sentence-term arb="صبايا" eng="girls" :term="$terms['ṣabiyye'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('dialogue') }}">

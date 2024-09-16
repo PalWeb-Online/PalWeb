@@ -6,14 +6,14 @@
 
         <x-collapsible title="{{ __('know-this') }} | لازم تكون عارف">
             <h1>the tā marbūṭa</h1>
-            <x-sentence eng="a small bottle">
+            <x-sentence-item eng="a small bottle">
                 <x-sentence-term arb="قنّينة" eng="bottle" :term="$terms['ʔannīne'] ?? null"/>
                 <x-sentence-term arb="زغيرة" eng="small" :term="$terms['zḡīr'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="a bottle of water">
+            </x-sentence-item>
+            <x-sentence-item eng="a bottle of water">
                 <x-sentence-term arb="قنّينة" eng="bottle" :term="$terms['ʔannīne'] ?? null"/>
                 <x-sentence-term arb="ميّ" eng="water" :term="$terms['mayy'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
 
             <p>Additionally, there is a distinct <b>sound plural</b> associated with feminine forms: <b>ات (-āt)</b>.
                 Many nouns
@@ -29,11 +29,11 @@
             ></x-inflections>
 
             <x-vocabulary title="affixes">
-                <x-term :term="$terms['-āt'] ?? null" i="1"/>
+                <x-term-item :term="$terms['-āt'] ?? null" i="1"/>
             </x-vocabulary>
 
             <x-vocabulary title="patterns">
-                <x-term arb="1v2a3" eng="(1v23e Broken Plural)"/>
+                <x-term-item arb="1v2a3" eng="(1v23e Broken Plural)"/>
             </x-vocabulary>
         </x-collapsible>
 

@@ -28,17 +28,17 @@
 <p>Additionally, if it were the head of a prepositional phrase, the phrase should be preceded by <b>اللي</b> if
     modifying a definite noun — & the term only ever defines a definite noun.</p>
 
-<x-sentence eng="the man's motorcycle">
+<x-sentence-item eng="the man's motorcycle">
     <x-sentence-term arb="الموتور" eng="l-mōtōr" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="تبع" eng="tabaʕ" :term="$terms->firstWhere('translit', 'tabaʕ')"/>
     <x-sentence-term arb="الزلمة" eng="z-zalame" :term="$terms->firstWhere('translit', 'zalame')"/>
-</x-sentence>
+</x-sentence-item>
 
-<x-sentence eng="the motorcycle that belongs to the man">
+<x-sentence-item eng="the motorcycle that belongs to the man">
     <x-sentence-term arb="الموتور" eng="l-mōtōr" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="اللي" eng="l-li" :term="$terms->firstWhere('translit', 'l-li')"/>
     <x-sentence-term arb="للزلمة" eng="laz-zalame" :term="$terms->firstWhere('translit', 'zalame')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>On the basis of its genderedness alone, it should be either a noun — namely, a pronoun — with feminine & plural
     forms, or an adjective subject to gender & number
@@ -47,20 +47,20 @@
 <p>Normally, nouns can only modify other nouns via <b>iḍāfa</b>; in this structure, the modified term is overtly
     indefinite, while the final modifier is overtly definite:</p>
 
-<x-sentence eng="the man's car">
+<x-sentence-item eng="the man's car">
     <x-sentence-term arb="سيّارة" eng="sayyārt" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="الزلمة" eng="z-zalame" :term="$terms->firstWhere('translit', 'zalame')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>However, in the <b>تبع</b> structure, the modified noun features the article, showing that there is no <b>iḍāfa</b>.
     Instead, the <b>تبع</b> structure is itself an <b>iḍāfa</b> structure in which <b>تبع</b> is the modified term; this
     is audible in the pronunciation of the feminine form.</p>
 
-<x-sentence eng="the man's car">
+<x-sentence-item eng="the man's car">
     <x-sentence-term arb="السيّارة" eng="s-sayyāra" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="تبعة" eng="tabʕt" :term="$terms->firstWhere('translit', 'tabaʕ')"/>
     <x-sentence-term arb="الزلمة" eng="z-zalame" :term="$terms->firstWhere('translit', 'zalame')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>Because of these reasons, the <b>تبع</b> structure is best understood as an adjective that can form <b>iḍāfa</b>,
     which is ordinarily impossible; the term observes definiteness agreement with the
@@ -70,27 +70,27 @@
 <div class="doc-section">
     <h1>{{ __('inventory') }}</h1>
     <x-vocabulary title="{{ __('particles') }}">
-        <x-term :term="$terms->firstWhere('translit', 'ya-')"/>
-        <x-term :term="$terms->firstWhere('translit', 'fīh')"/>
-        <x-term :term="$terms->firstWhere('translit', 'hayy')"/>
-        <x-term :term="$terms->firstWhere('translit', 'tabaʕ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ya-')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'fīh')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'hayy')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'tabaʕ')"/>
     </x-vocabulary>
     <x-vocabulary title="{{ __('negators') }}">
-        <x-term :term="$terms->firstWhere('translit', 'mā')"/>
-        <x-term :term="$terms->firstWhere('translit', '-š')"/>
-        <x-term :term="$terms->firstWhere('translit', 'miš')"/>
-        <x-term :term="$terms->firstWhere('translit', 'bala')"/>
-        <x-term :term="$terms->firstWhere('translit', 'balāš')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mā')"/>
+        <x-term-item :term="$terms->firstWhere('translit', '-š')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'miš')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'bala')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'balāš')"/>
     </x-vocabulary>
     <x-vocabulary title="{{ __('quantifiers') }}">
-        <x-term :term="$terms->firstWhere('translit', 'kull')"/>
-        <x-term :term="$terms->firstWhere('translit', 'wala')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔakamm')"/>
-        <x-term :term="$terms->firstWhere('translit', 'nafs')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ġēr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'kull')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'wala')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔakamm')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'nafs')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ġēr')"/>
     </x-vocabulary>
     <x-vocabulary title="{{ __('complementizers') }}">
-        <x-term :term="$terms->firstWhere('translit', 'ʔinn-')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ma-')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔinn-')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ma-')"/>
     </x-vocabulary>
 </div>

@@ -20,7 +20,7 @@
 
             <div class="sentence-list">
                 @foreach ($gloss->term->sentences($gloss->id)->get() as $sentence)
-                    <x-sentence size="s" :sentence="$sentence"/>
+                    <x-sentence-item size="s" :sentence="$sentence"/>
                 @endforeach
             </div>
         @endforeach

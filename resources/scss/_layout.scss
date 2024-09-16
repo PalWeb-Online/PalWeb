@@ -1,8 +1,6 @@
 body {
-    // It should be this way so that the body can always expand vertically, pushing the footer to the bottom.
     display: flex;
     flex-flow: column;
-
     min-height: 100vh;
     font-family: $bodyFont;
     font-size: 1.6rem;

@@ -18,6 +18,3 @@ yarn-error.log
 /.vscode
 /database/backup.sql
 auth.json
-resources/views/components/reserves.blade.php
-resources/scss/legacy.scss
-arabic23may2023.sql

@@ -14,14 +14,14 @@
                 <b>broken plurals</b>.</p>
 
             <div class="array">
-                <x-sentence eng="these are children">
+                <x-sentence-item eng="these are children">
                     <x-sentence-term arb="هذول" eng="these" :term="$terms['hadōl'] ?? null"/>
                     <x-sentence-term arb="ولاد" eng="children" :term="$terms['walad'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="this is a child">
+                </x-sentence-item>
+                <x-sentence-item eng="this is a child">
                     <x-sentence-term arb="هاذا" eng="this.M" :term="$terms['hāda'] ?? null"/>
                     <x-sentence-term arb="ولد" eng="child" :term="$terms['walad'] ?? null"/>
-                </x-sentence>
+                </x-sentence-item>
             </div>
 
             <p>At first, this means you will need to memorize the plural forms of nouns one-by-one.
@@ -38,8 +38,8 @@
                     plural</b> patterns & thus have multiple plural forms with no difference in meaning.</p>
 
             <x-vocabulary title="patterns">
-                <x-term arb="12ā3" eng="(1v23 Broken Plural)"/>
-                <x-term arb="12ū3" eng="(1v23 Broken Plural)"/>
+                <x-term-item arb="12ā3" eng="(1v23 Broken Plural)"/>
+                <x-term-item arb="12ū3" eng="(1v23 Broken Plural)"/>
             </x-vocabulary>
         </x-collapsible>
 

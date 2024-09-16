@@ -6,73 +6,73 @@
 
 <div class="doc-section">
     <x-vocabulary title="general">
-        <x-term :term="$terms->firstWhere('translit', 'ṭibb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṭibbi')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṣiħħa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'mrīḍ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṭibb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṭibbi')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṣiħħa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mrīḍ')"/>
     </x-vocabulary>
     <x-vocabulary title="at the hospital">
-        <x-term :term="$terms->firstWhere('translit', 'ʕiyāde')"/>
-        <x-term :term="$terms->firstWhere('translit', 'marīḍ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'duktōr')"/>
-        <x-term :term="$terms->firstWhere('translit', 'žarrāħ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'mumarriḍ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'mustašfa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'taʔmīn')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṭawāriʔ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'kammāme')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕamaliyye')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕiyāde')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'marīḍ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'duktōr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'žarrāħ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mumarriḍ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mustašfa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'taʔmīn')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṭawāriʔ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'kammāme')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕamaliyye')"/>
     </x-vocabulary>
     <x-vocabulary title="at the pharmacy">
-        <x-term :term="$terms->firstWhere('translit', 'ṣaydaliyye')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṣaydali')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕilāž')"/>
-        <x-term :term="$terms->firstWhere('translit', 'waṣfe')"/>
-        <x-term :term="$terms->firstWhere('translit', 'dawa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ħabb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṣaydaliyye')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṣaydali')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕilāž')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'waṣfe')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'dawa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ħabb')"/>
     </x-vocabulary>
     <x-vocabulary title="at the laboratory">
-        <x-term :term="$terms->firstWhere('translit', 'muxtabar')"/>
-        <x-term :term="$terms->firstWhere('translit', 'natīže')"/>
-        <x-term :term="$terms->firstWhere('translit', 'faħṣ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'muxtabar')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'natīže')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'faħṣ')"/>
     </x-vocabulary>
     <x-vocabulary title="diseases & conditions">
-        <x-term :term="$terms->firstWhere('translit', 'maraḍ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕadwa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'rašħ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'žalṭa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'saraṭān')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaʕma')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaṭraš')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'maraḍ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕadwa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'rašħ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'žalṭa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'saraṭān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaʕma')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaṭraš')"/>
     </x-vocabulary>
     <x-vocabulary title="symptoms">
-        <x-term :term="$terms->firstWhere('translit', 'taʕb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'wažaʕ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'sxūne')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔishāl')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔiltihāb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ġaŧayān')"/>
-        <x-term :term="$terms->firstWhere('translit', 'stafraġ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'taʕb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'wažaʕ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'sxūne')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔishāl')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔiltihāb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ġaŧayān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'stafraġ')"/>
     </x-vocabulary>
     <x-vocabulary title="body parts">
-        <x-term :term="$terms->firstWhere('translit', 'rās')"/>
-        <x-term :term="$terms->firstWhere('translit', 'sinn')">
-            <x-term subterm arb="دكتور سنان" eng="dentist"/>
-        </x-term>
-        <x-term :term="$terms->firstWhere('translit', 'ḍahr')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔalb')"/>
-        <x-term :term="$terms->firstWhere('translit', 'miʕde')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔīd')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔižr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'rās')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'sinn')">
+            <x-term-item subterm arb="دكتور سنان" eng="dentist"/>
+        </x-term-item>
+        <x-term-item :term="$terms->firstWhere('translit', 'ḍahr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔalb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'miʕde')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔīd')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔižr')"/>
     </x-vocabulary>
     <x-vocabulary title="mental health">
-        <x-term :term="$terms->firstWhere('translit', 'nafsi')">
-            <x-term subterm arb="صحّة نفسيّة" eng="mental health"/>
-            <x-term subterm arb="دكتور نفسيّ" eng="psychologist, psychiatrist"/>
-        </x-term>
-        <x-term :term="$terms->firstWhere('translit', 'ʔalaʔ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'tawattur')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔiktiʔāb')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'nafsi')">
+            <x-term-item subterm arb="صحّة نفسيّة" eng="mental health"/>
+            <x-term-item subterm arb="دكتور نفسيّ" eng="psychologist, psychiatrist"/>
+        </x-term-item>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔalaʔ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'tawattur')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔiktiʔāb')"/>
     </x-vocabulary>
 </div>
 

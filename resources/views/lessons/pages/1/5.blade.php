@@ -1,42 +1,42 @@
-<x-deck :deck="\App\Models\Deck::find(42)"/>
+<x-deck-container :deck="\App\Models\Deck::find(42)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
 
     <p>In Arabic, we express the meaning of <b>"there is"</b> by inserting <b>فيه (fīh)</b> at the start of the
         sentence; this type of sentence is called an <b>existential sentence</b>.</p>
-    <x-sentence eng="there is trash in the bag">
+    <x-sentence-item eng="there is trash in the bag">
         <x-sentence-term arb="فيه" eng="(there is)" :term="$terms['fīh'] ?? null"/>
         <x-sentence-term arb="زبالة" eng="trash" :term="$terms['zbāle'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالكيس" eng="the-bag" :term="$terms['kīs'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Note that <b>فيه (fīh)</b> itself is not a verb. Rather, it's a particle that is etymologically a preposition —
         analogous to the <b>"there"</b> in <b>"there is"</b>. Indeed, <b>existential sentences</b> are closely related
         to <b>nominal sentences</b> in that the verbal element of both (i.e. the verb <b>"to be"</b>) is implicit.
         Because of this, <b>فيه (fīh)</b> itself is frozen as-is & is never conjugated.</p>
     <div class="array">
-        <x-sentence eng="there is a girl">
+        <x-sentence-item eng="there is a girl">
             <x-sentence-term arb="فيه" eng="in-it" :term="$terms['fīh'] ?? null"/>
             <x-sentence-term arb="بنت" eng="girl" :term="$terms['bint'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="there is a boy">
+        </x-sentence-item>
+        <x-sentence-item eng="there is a boy">
             <x-sentence-term arb="فيه" eng="in-it" :term="$terms['fīh'] ?? null"/>
             <x-sentence-term arb="ولد" eng="boy" :term="$terms['walad'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="there are children">
+    <x-sentence-item eng="there are children">
         <x-sentence-term arb="فيه" eng="in-it" :term="$terms['fīh'] ?? null"/>
         <x-sentence-term arb="ولاد" eng="children" :term="$terms['walad'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>We negate <b>فيه (fīh)</b> with a word very similar to <b>مش (miš)</b> — <b>فش (fiš)</b>:</p>
-    <x-sentence eng="there is no trash in the bag">
+    <x-sentence-item eng="there is no trash in the bag">
         <x-sentence-term arb="فش" eng="there isn't" :term="$terms['fīh'] ?? null"/>
         <x-sentence-term arb="زبالة" eng="trash" :term="$terms['zbāle'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالكيس" eng="the-bag" :term="$terms['kīs'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"
@@ -44,38 +44,38 @@
 
     <p>It's time to learn another preposition used to indicate the location of something: <b>على (ʕala "on")</b> — often
         shortened to just <b>عـ (ʕa-)</b>.</p>
-    <x-sentence eng="the cup is on the table">
+    <x-sentence-item eng="the cup is on the table">
         <x-sentence-term arb="الكاسة" eng="the-cup" :term="$terms['kāse'] ?? null"/>
         <x-sentence-term arb="عـ" eng="on" :term="$terms['ʕala'] ?? null"/>
         <x-sentence-term arb="ـالطاولة" eng="the-table" :term="$terms['ṭāwla'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Notice the difference between <b>بـ (b-)</b> & <b>عـ (ʕa-)</b>. Since the former specifically means
         <b>"inside"</b>, they are not interchangeable; that is, usually <b>بـ (b-)</b> refers to a container, while
         <b>عـ (ʕa-)</b> refers to a surface.</p>
-    <x-sentence eng="the coffee is in the cup">
+    <x-sentence-item eng="the coffee is in the cup">
         <x-sentence-term arb="القهوة" eng="the-coffee" :term="$terms['ʔahwe'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالكاسة" eng="the-cup" :term="$terms['kāse'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="the coffee is on the shirt">
+    </x-sentence-item>
+    <x-sentence-item eng="the coffee is on the shirt">
         <x-sentence-term arb="القهوة" eng="the-coffee" :term="$terms['ʔahwe'] ?? null"/>
         <x-sentence-term arb="عـ" eng="on" :term="$terms['ʕala'] ?? null"/>
         <x-sentence-term arb="ـالبلوزة" eng="the-shirt" :term="$terms['blūze'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>In fact, Arabic is very literal in its use of <b>بـ (b-)</b> & <b>عـ (ʕa-)</b>, so avoid translating directly —
         think literally!</p>
-    <x-sentence eng="he is at home">
+    <x-sentence-item eng="he is at home">
         <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالبيت" eng="the-house" :term="$terms['bēt'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="he is in bed">
+    </x-sentence-item>
+    <x-sentence-item eng="he is in bed">
         <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
         <x-sentence-term arb="عـ" eng="on" :term="$terms['ʕala'] ?? null"/>
         <x-sentence-term arb="ـالتخت" eng="the-bed" :term="$terms['taxt'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('exercise') }}">
@@ -222,30 +222,30 @@
 
     <p>We can form perfectly polite requests simply by using <b>ممكن (mumkin "possible")</b> — similar to <b>"may"</b>
         in English. Context fills in the rest.</p>
-    <x-sentence eng="may (I ask) a question?">
+    <x-sentence-item eng="may (I ask) a question?">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="سؤال؟" eng="question" :term="$terms['suʔāl'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="may (I have) some coffee?">
+    </x-sentence-item>
+    <x-sentence-item eng="may (I have) some coffee?">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="قهوة؟" eng="coffee.F" :term="$terms['ʔahwe'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>But being more polite than this — like saying <b>"please"</b> — is slightly more involved, because of the
         distinction between the masculine & feminine <b>"you"</b>. Not only do different pronouns exist for each, but
         slightly different verbal forms exist too. Since many common phrases are built
         around what are technically verbs, they may differ slightly based on the gender
         of the addressee. Namely, feminine forms are created by adding <b>ي (-i)</b>.</p>
-    <x-sentence eng="may (I have) some coffee, please?">
+    <x-sentence-item eng="may (I have) some coffee, please?">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="قهوة" eng="coffee.F" :term="$terms['ʔahwe'] ?? null"/>
         <x-sentence-term arb="لو سمحت؟" eng="please (m.)" :term="$terms['law samaħt'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="may (I have) some coffee, please?">
+    </x-sentence-item>
+    <x-sentence-item eng="may (I have) some coffee, please?">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="قهوة" eng="coffee.F" :term="$terms['ʔahwe'] ?? null"/>
         <x-sentence-term arb="لو سمحتي؟" eng="please (f.)" :term="$terms['law samaħt'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Let's use the gendered forms of two essential phrases to practice hearing these differences now.</p>
 
     <x-inflections

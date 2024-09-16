@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(43)"/>
+<x-deck-container :deck="\App\Models\Deck::find(43)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -10,19 +10,19 @@
         adjectives have <b>sound plurals</b>; a few nouns are pluralized this way as well.</p>
 
     <div class="array">
-        <x-sentence eng="he is busy">
+        <x-sentence-item eng="he is busy">
             <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
             <x-sentence-term arb="مشغول" eng="busy.M" :term="$terms['mašġūl'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="she is busy">
+        </x-sentence-item>
+        <x-sentence-item eng="she is busy">
             <x-sentence-term arb="هي" eng="she" :term="$terms['hiyye'] ?? null"/>
             <x-sentence-term arb="مشغولة" eng="busy.F" :term="$terms['mašġūl'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="they are busy">
+    <x-sentence-item eng="they are busy">
         <x-sentence-term arb="همّه" eng="they" :term="$terms['humme'] ?? null"/>
         <x-sentence-term arb="مشغولين" eng="busy.P" :term="$terms['mašġūl'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-inflections
         conjM="مشغول" conjMtr="mašġūl"
@@ -34,7 +34,7 @@
         <p>On rare occasion, you may find that an adjective doesn't vary in terms of gender & number. We've already
             learned three very common ones — did you notice?</p>
         <x-vocabulary title="adjectives">
-            <x-term :term="$terms['tamām'] ?? null"/>
+            <x-term-item :term="$terms['tamām'] ?? null"/>
             <x-inflections
                 conjM="تمام" conjMtr="tamām"
                 conjF="تمام" conjFtr="tamām"
@@ -42,8 +42,8 @@
             ></x-inflections>
         </x-vocabulary>
         <x-vocabulary>
-            <x-term :term="$terms['ṣaħħ'] ?? null"/>
-            <x-term :term="$terms['ġalaṭ'] ?? null"/>
+            <x-term-item :term="$terms['ṣaħħ'] ?? null"/>
+            <x-term-item :term="$terms['ġalaṭ'] ?? null"/>
         </x-vocabulary>
     </x-collapsible>
 </x-lesson-concept>
@@ -58,12 +58,12 @@
         this suffix now to create terms for various nationalities. What would yours be?</p>
 
     <div class="array">
-        <x-sentence eng="Palestinian">
+        <x-sentence-item eng="Palestinian">
             <x-sentence-term arb="فلسطينيّ" eng="falasṭīni" :term="$terms['falasṭīni'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="Palestine">
+        </x-sentence-item>
+        <x-sentence-item eng="Palestine">
             <x-sentence-term arb="فلسطين" eng="falasṭīn" :term="$terms['falasṭīn'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </x-lesson-concept>
 
@@ -239,19 +239,19 @@
     <p>When we want to tell someone not to worry or brush something off, we can use either <b>عادي (ʕādi)</b> — an
         adjective meaning <b>"normal"</b> — or <b>معليش (maʕlēš)</b>, both expressing the meaning of <b>"it's fine"</b>.
         We often use these in response to an apology.</p>
-    <x-sentence eng="it's fine, the test is really easy">
+    <x-sentence-item eng="it's fine, the test is really easy">
         <x-sentence-term arb="عادي" eng="it's fine" :term="$terms['ʕādi-phrase'] ?? null"/>
         <x-sentence-term arb="الإمتحان" eng="the-exam" :term="$terms['ʔimtiħān'] ?? null"/>
         <x-sentence-term arb="كثير" eng="very" :term="$terms['ktīr'] ?? null"/>
         <x-sentence-term arb="سهل" eng="easy" :term="$terms['sihil'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>When we come bearing bad news, though, we can soften it with <b>بصراحة (b-ṣarāħa "honestly")</b>.</p>
-    <x-sentence eng="honestly, the test is really hard">
+    <x-sentence-item eng="honestly, the test is really hard">
         <x-sentence-term arb="بصراحة" eng="honestly" :term="$terms['ṣarāħa'] ?? null"/>
         <x-sentence-term arb="الإمتحان" eng="the-exam" :term="$terms['ʔimtiħān'] ?? null"/>
         <x-sentence-term arb="كثير" eng="very" :term="$terms['ktīr'] ?? null"/>
         <x-sentence-term arb="صعب" eng="difficult" :term="$terms['ṣiʕib'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('dialogue') }}">

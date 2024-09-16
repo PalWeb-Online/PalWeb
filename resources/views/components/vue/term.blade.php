@@ -1,4 +1,11 @@
-@if(isset($term))
+@props([
+    'component' => $component,
+    'term' => $term,
+    'gloss' => false,
+    'size' => 'm',
+])
+
+@if($term)
     @php
         $term->pronunciation = $term->pronunciations->first();
 
@@ -21,18 +28,17 @@
             'term' => $term->term,
             'translit' => $term->pronunciation->translit,
             'file' => $term->pronunciation->audify(),
-            'gloss' => $gloss->gloss ?? $term->glosses[0]->gloss
+            'gloss' => $gloss->gloss ?? $term->glosses[0]->gloss,
+            'size' => $size,
         ];
     @endphp
 
-    <div class="term-li-container">
-        <div data-vue-component="TermItem"
-             data-props="{{ json_encode([
+    <div data-vue-component="{{ $component }}"
+         data-props="{{ json_encode([
+                 'modelType' => 'term',
                  'term' => $termObject,
                  'imageURL' => asset('/img'),
                  'isPinned' => $term->isPinned(),
-
-                 'modelType' => 'term',
 
                  'routes' => [
                      'view' => route('terms.show', $term),
@@ -47,32 +53,7 @@
 
                  'userDecks' => $userDecks,
              ]) }}"
-        >
-        </div>
-
-        {{ $slot }}
-    </div>
-
-@elseif(isset($subterm))
-    <div class="term-li subterm">
-        <div class="arb">{{ $arb }}</div>
-        <div class="eng">{{ $eng }}</div>
-    </div>
-
-@elseif(isset($arb))
-    <div class="term-li-container">
-        <div class="term-li-wrapper">
-            <div class="term-li">
-                <div class="arb">{{ $arb }}</div>
-                <div class="eng">{{ $eng }}</div>
-            </div>
-        </div>
-        {{ $slot }}
-    </div>
-@else
-    <div class="term-li coming-soon">
-        <div class="feature-callout">
-            {{ __('coming soon') }}
-        </div>
+         class="{{ $component === 'TermHead' ? 'term-head' : '' }}"
+    >
     </div>
 @endif

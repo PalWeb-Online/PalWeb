@@ -7,43 +7,43 @@
 <iframe src="https://www.youtube.com/embed/QOjSOycpd6c" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    {{--            <x-term arb="استجوب" eng="to question, to interrogate"/>--}}
-    <x-term arb="حدّد" eng="to delimit, to define"/>
-    <x-term arb="حسب" eng="to count (as valid)"/>
-    <x-term arb="حسب حساب ~" eng="to account for ~, to keep ~ in mind"/>
-    <x-term arb="حكم (على)" eng="to judge, to pass judgement (on someone)"/>
-    <x-term arb="سلّى" eng="to entertain"/>
-    <x-term arb="بشهّي" eng="is delicious"/>
-    <x-term arb="ضغط" eng="to press"/>
-    <x-term arb="ضغط" eng="pressure"/>
-    <x-term arb="مضغوط" eng="under pressure, weighed down, overworked"/>
-    <x-term arb="غلب" eng="to beat, to defeat"/>
-    <x-term arb="غلّب" eng="to bother, to trouble"/>
-    <x-term arb="غلبة" eng="bother, trouble"/>
-    <x-term arb="ميّز" eng="to distinguish, to discriminate"/>
-    <x-term arb="نادى" eng="to call over"/>
-    <x-term arb="اتّفق" eng="to come to an agreement, to agree on (something)"/>
-    <x-term arb="حكي" eng="talk">
-        <x-term subterm arb="حكي فاضي" eng="empty talk; hot air"/>
-    </x-term>
-    <x-term arb="خبرة" eng="experience"/>
-    <x-term arb="فريق" eng="team"/>
-    <x-term arb="ملعب" eng="playing field, playground, stadium, court"/>
+    {{--            <x-term-item arb="استجوب" eng="to question, to interrogate"/>--}}
+    <x-term-item arb="حدّد" eng="to delimit, to define"/>
+    <x-term-item arb="حسب" eng="to count (as valid)"/>
+    <x-term-item arb="حسب حساب ~" eng="to account for ~, to keep ~ in mind"/>
+    <x-term-item arb="حكم (على)" eng="to judge, to pass judgement (on someone)"/>
+    <x-term-item arb="سلّى" eng="to entertain"/>
+    <x-term-item arb="بشهّي" eng="is delicious"/>
+    <x-term-item arb="ضغط" eng="to press"/>
+    <x-term-item arb="ضغط" eng="pressure"/>
+    <x-term-item arb="مضغوط" eng="under pressure, weighed down, overworked"/>
+    <x-term-item arb="غلب" eng="to beat, to defeat"/>
+    <x-term-item arb="غلّب" eng="to bother, to trouble"/>
+    <x-term-item arb="غلبة" eng="bother, trouble"/>
+    <x-term-item arb="ميّز" eng="to distinguish, to discriminate"/>
+    <x-term-item arb="نادى" eng="to call over"/>
+    <x-term-item arb="اتّفق" eng="to come to an agreement, to agree on (something)"/>
+    <x-term-item arb="حكي" eng="talk">
+        <x-term-item subterm arb="حكي فاضي" eng="empty talk; hot air"/>
+    </x-term-item>
+    <x-term-item arb="خبرة" eng="experience"/>
+    <x-term-item arb="فريق" eng="team"/>
+    <x-term-item arb="ملعب" eng="playing field, playground, stadium, court"/>
     {{--            why is this reversed? --}}
-    {{--            <x-sentence eng="we had a lot of pressure at work today">--}}
+    {{--            <x-sentence-item eng="we had a lot of pressure at work today">--}}
     {{--                <x-sentence-term arb="كثير" eng="very much"/>--}}
     {{--                <x-sentence-term arb="كان عندنا" eng="we had"/>--}}
     {{--                <x-sentence-term arb="ضغط" eng="pressure"/>--}}
     {{--                <x-sentence-term arb="بالشغل" eng="at work"/>--}}
     {{--                <x-sentence-term arb="اليوم" eng="today"/>--}}
-    {{--            </x-sentence>--}}
-    {{--            <x-term arb="متعب" eng="exhausting"/>--}}
-    <x-term arb="فهمان" eng="knowledgeable"/>
-    {{--            <x-term arb="مختلف" eng="different"/>--}}
-    <x-term arb="رائع" eng="amazing"/>
-    <x-term arb="فوقانيّ" eng="above"/>
-    <x-term arb="تحتانيّ" eng="below"/>
-    <x-term arb="حاضر" eng="yessir"/>
+    {{--            </x-sentence-item>--}}
+    {{--            <x-term-item arb="متعب" eng="exhausting"/>--}}
+    <x-term-item arb="فهمان" eng="knowledgeable"/>
+    {{--            <x-term-item arb="مختلف" eng="different"/>--}}
+    <x-term-item arb="رائع" eng="amazing"/>
+    <x-term-item arb="فوقانيّ" eng="above"/>
+    <x-term-item arb="تحتانيّ" eng="below"/>
+    <x-term-item arb="حاضر" eng="yessir"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

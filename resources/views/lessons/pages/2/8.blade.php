@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(54)"/>
+<x-deck-container :deck="\App\Models\Deck::find(54)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -8,66 +8,66 @@
         indefinite. Also, since singular nouns always refer to <b>"one"</b> of something by definition, we rarely use
         the word <b>"one"</b> as a counter for an indefinite singular noun; it's redundant.</p>
     <div class="array">
-        <x-sentence eng="one plate">
+        <x-sentence-item eng="one plate">
             <x-sentence-term arb="صحن" eng="(a) plate" :term="$terms['ṣaħn'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="one cup">
+        </x-sentence-item>
+        <x-sentence-item eng="one cup">
             <x-sentence-term arb="كاسة" eng="(a) cup" :term="$terms['kāse'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>One of the unique features of Arabic, though, is the existence of a suffix — <b>ين (-ēn)</b> — that can
         apply to any countable noun to indicate two of that noun:</p>
-    <x-sentence eng="two plates">
+    <x-sentence-item eng="two plates">
         <x-sentence-term arb="صحنين" eng="plate-two" :term="$terms['ṣaħn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>Do you remember the <b>ة (-e)</b> that feminine nouns usually end in? It's shaped like that because it actually
         becomes a <b>تـ (-t)</b> when something is attached to it, including the dual suffix:</p>
-    <x-sentence eng="two cups">
+    <x-sentence-item eng="two cups">
         <x-sentence-term arb="كاستين" eng="cup-two" :term="$terms['kāse'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>As for the numbers from <b>3–10</b>, we insert the counter before the noun — like in English (e.g. <b>"three
             glasses"</b>) — but we use its <b>construct form</b>, formed by removing the final <b>ة (-e)</b> of the
         numeral.</p>
 
-    <x-sentence eng="may we have three glasses of water">
+    <x-sentence-item eng="may we have three glasses of water">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="تلات" eng="three" :term="$terms['talāte'] ?? null"/>
         <x-sentence-term arb="كاسات" eng="cups" :term="$terms['kāse'] ?? null"/>
         <x-sentence-term arb="ميّ" eng="water" :term="$terms['mayy'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="the journey is three hours long">
+    </x-sentence-item>
+    <x-sentence-item eng="the journey is three hours long">
         <x-sentence-term arb="مدّة" eng="duration" :term="$terms['mudde'] ?? null"/>
         <x-sentence-term arb="الرحلة" eng="the-journey" :term="$terms['riħle'] ?? null"/>
         <x-sentence-term arb="تلات" eng="three" :term="$terms['talāte'] ?? null"/>
         <x-sentence-term arb="ساعات" eng="hours" :term="$terms['sāʕa'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     {{--    <p>Aside from <b>3-10</b>, the only other numeral set with construct forms is <b>11-19</b>; these are formed by--}}
     {{--        re-introducing the final <b>ر (-r)</b> in <b>عشرة (ʕašara)</b> (see below).</p>--}}
 
     {{--    <p>When counting past ten of a noun, we use its singular form:</p>--}}
-    {{--    <x-sentence eng="the journey is thirteen hours long">--}}
+    {{--    <x-sentence-item eng="the journey is thirteen hours long">--}}
     {{--        <x-sentence-term arb="مدّة" eng="duration" :term="$terms['mudde'] ?? null"/>--}}
     {{--        <x-sentence-term arb="الرحلة" eng="the-journey" :term="$terms['riħle'] ?? null"/>--}}
     {{--        <x-sentence-term arb="تلاتّعشر" eng="thirteen" :term="$terms['talāttāš'] ?? null"/>--}}
     {{--        <x-sentence-term arb="ساعة" eng="hour" :term="$terms['sāʕa'] ?? null"/>--}}
-    {{--    </x-sentence>--}}
-    {{--    <x-sentence eng="the journey is thirty hours long">--}}
+    {{--    </x-sentence-item>--}}
+    {{--    <x-sentence-item eng="the journey is thirty hours long">--}}
     {{--        <x-sentence-term arb="مدّة" eng="duration" :term="$terms['mudde'] ?? null"/>--}}
     {{--        <x-sentence-term arb="الرحلة" eng="the-journey" :term="$terms['riħle'] ?? null"/>--}}
     {{--        <x-sentence-term arb="تلاتين" eng="thirty" :term="$terms['talātīn'] ?? null"/>--}}
     {{--        <x-sentence-term arb="ساعة" eng="hour" :term="$terms['sāʕa'] ?? null"/>--}}
-    {{--    </x-sentence>--}}
+    {{--    </x-sentence-item>--}}
 
     {{--    <p>We also use the singular form to say <b>"some"</b> or <b>"a few"</b>:</p>--}}
-    {{--    <x-sentence eng="the journey takes a few hours">--}}
+    {{--    <x-sentence-item eng="the journey takes a few hours">--}}
     {{--        <x-sentence-term arb="الرحلة" eng="the-journey" :term="$terms['riħle'] ?? null"/>--}}
     {{--        <x-sentence-term arb="بدّها" eng="needs" :term="$terms['bidd-'] ?? null"/>--}}
     {{--        <x-sentence-term arb="أكم" eng="a few" :term="$terms['ʔakam'] ?? null"/>--}}
     {{--        <x-sentence-term arb="ساعة" eng="hour" :term="$terms['sāʕa'] ?? null"/>--}}
-    {{--    </x-sentence>--}}
+    {{--    </x-sentence-item>--}}
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"
@@ -77,23 +77,23 @@
         as a pronoun with the meaning of <b>"more"</b>. Let's practice using it alongside <b>حبّة (ħabbe)</b>, a generic
         term commonly used to refer to a single unit of something that is otherwise uncountable.</p>
 
-    <x-sentence eng="I'd like some more coffee">
+    <x-sentence-item eng="I'd like some more coffee">
         <x-sentence-term arb="بدّي" eng="1S.want" :term="$terms['biddo'] ?? null"/>
         <x-sentence-term arb="كمان" eng="more" :term="$terms['kamān'] ?? null"/>
         <x-sentence-term arb="قهوة" eng="coffee" :term="$terms['ʔahwe'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="I'd like one more (can, etc.) of cola">
+    </x-sentence-item>
+    <x-sentence-item eng="I'd like one more (can, etc.) of cola">
         <x-sentence-term arb="بدّي" eng="1S.want" :term="$terms['biddo'] ?? null"/>
         <x-sentence-term arb="كمان" eng="more" :term="$terms['kamān'] ?? null"/>
         <x-sentence-term arb="حبّة" eng="piece" :term="$terms['ħabb'] ?? null"/>
         <x-sentence-term arb="كولا" eng="cola" :term="$terms['kōla'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="may I have two more pieces of falafel">
+    </x-sentence-item>
+    <x-sentence-item eng="may I have two more pieces of falafel">
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="كمان" eng="more" :term="$terms['kamān'] ?? null"/>
         <x-sentence-term arb="حبّتين" eng="piece-two" :term="$terms['ħabb'] ?? null"/>
         <x-sentence-term arb="فلافل" eng="falafel" :term="$terms['falāfil'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('exercise') }}">

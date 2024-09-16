@@ -64,7 +64,7 @@ const gloss = computed(() => {
 </script>
 
 <template>
-    <div class="term-li-wrapper">
+    <div :class="['term-li-wrapper', term.size]">
         <ContextActions
             :imageURL="imageURL"
             :modelType="modelType"
@@ -74,7 +74,7 @@ const gloss = computed(() => {
         />
 
         <div class="term-li">
-            <div ref="tooltipTrigger" class="arb audio" @click="playAudio">
+            <div ref="tooltipTrigger" class="arb" @click="playAudio">
                 {{ term.term }}
             </div>
             <div ref="tooltip" v-if="isOpen" :style="floatingStyles" class="notification">

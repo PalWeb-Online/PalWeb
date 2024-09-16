@@ -13,30 +13,30 @@
                 theme, indicating that it's a place for cooking (i.e. a kitchen), or the person that cooks (i.e. a
                 chef).</p>
             <div class="array">
-                <x-sentence eng="to cook">
+                <x-sentence-item eng="to cook">
                     <x-sentence-term arb="طبخ" eng="ṭabax" :term="$terms['ṭabax'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="kitchen">
+                </x-sentence-item>
+                <x-sentence-item eng="kitchen">
                     <x-sentence-term arb="مطبخ" eng="maṭbax" :term="$terms['maṭbax'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="chef">
+                </x-sentence-item>
+                <x-sentence-item eng="chef">
                     <x-sentence-term arb="طبّاخ" eng="ṭabbāx" :term="$terms['ṭabbāx'] ?? null"/>
-                </x-sentence>
+                </x-sentence-item>
             </div>
             <p>While English learners have to memorize the meanings of suffixes like <b>"-ing"</b> or <b>"-ly"</b>,
                 Arabic learners should get familiar with these word patterns, since they fulfill a very similar role. In
                 fact, many patterns are associated with a specific word category or part of speech, like verbs or
                 adjectives.</p>
             <div class="array">
-                <x-sentence eng="to wash">
+                <x-sentence-item eng="to wash">
                     <x-sentence-term arb="غسل" eng="ġasal" :term="$terms['ġasal'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="sink">
+                </x-sentence-item>
+                <x-sentence-item eng="sink">
                     <x-sentence-term arb="مغسلة" eng="maġsale" :term="$terms['maġsale'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="washing machine">
+                </x-sentence-item>
+                <x-sentence-item eng="washing machine">
                     <x-sentence-term arb="غسّالة" eng="ġassāle" :term="$terms['ġassāle'] ?? null"/>
-                </x-sentence>
+                </x-sentence-item>
             </div>
             <p>Because of that, you can
                 sometimes infer the meanings of new terms by combining the meanings of their roots &
@@ -44,8 +44,8 @@
                 writing, you'll never have to guess its voweling. Don't learn Arabic the hard way!</p>
 
             <x-vocabulary title="patterns">
-                <x-term arb="ma12a3" eng="(Location Pattern)"/>
-                <x-term arb="1a22ā3" eng="(Agent Pattern)"/>
+                <x-term-item arb="ma12a3" eng="(Location Pattern)"/>
+                <x-term-item arb="1a22ā3" eng="(Agent Pattern)"/>
             </x-vocabulary>
         </x-collapsible>
 

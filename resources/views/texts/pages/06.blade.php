@@ -7,34 +7,34 @@
 <iframe src="https://www.youtube.com/embed/qu4jnh5MHlc" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="حافظ" eng="to take care of, to keep safe"/>
-    <x-term arb="تحلّل" eng="to dissolve, to degrade"/>
-    <x-term arb="دبّر" eng="to get, to find, to obtain"/>
-    <x-term arb="دبّر حاله" eng="to manage, to get by; to figure it out on one's own"/>
-    <x-term arb="زاح" eng="to move over, to scoot over"/>
-    <x-term arb="شدّ على" eng="to motivate, to encourage, to pressure (someone)"/>
-    <x-term arb="ضوى" eng="to turn on"/>
-    <x-term arb="طفى" eng="to turn off"/>
-    <x-term arb="عرّض" eng="to expose (to something)"/>
-    <x-term arb="لمّ" eng="to collect, to pick up (e.g. garbage)"/>
-    <x-term arb="نقذ" eng="to save (someone)"/>
-    <x-term arb="مباراة" eng="match"/>
-    <x-term arb="بيئة" eng="environment (i.e. nature)"/>
-    <x-term arb="خطر" eng="danger"/>
-    <x-term arb="زينة" eng="decoration; ornament"/>
-    <x-term arb="إسعاف" eng="first aid">
-        <x-term subterm arb="(سيّارة) إسعاف" eng="ambulance"/>
-    </x-term>
-    <x-term arb="عصبيّة" eng="anger, wrath"/>
-    <x-term arb="علم" eng="flag"/>
-    <x-term arb="فكر" eng="thought, belief, opinion, consideration"/>
-    <x-term arb="لزوم" eng="what is necessary; must-have, essential">
-        <x-term subterm arb="زيادة عن اللزوم" eng="more than (what's) necessary; too much"/>
-    </x-term>
-    <x-term arb="هجمة" eng="attack"/>
-    <x-term arb="استهتار" eng="recklessness"/>
-    <x-term arb="خطير" eng="dangerous"/>
-    <x-term arb="بعد" eng="still"/>
+    <x-term-item arb="حافظ" eng="to take care of, to keep safe"/>
+    <x-term-item arb="تحلّل" eng="to dissolve, to degrade"/>
+    <x-term-item arb="دبّر" eng="to get, to find, to obtain"/>
+    <x-term-item arb="دبّر حاله" eng="to manage, to get by; to figure it out on one's own"/>
+    <x-term-item arb="زاح" eng="to move over, to scoot over"/>
+    <x-term-item arb="شدّ على" eng="to motivate, to encourage, to pressure (someone)"/>
+    <x-term-item arb="ضوى" eng="to turn on"/>
+    <x-term-item arb="طفى" eng="to turn off"/>
+    <x-term-item arb="عرّض" eng="to expose (to something)"/>
+    <x-term-item arb="لمّ" eng="to collect, to pick up (e.g. garbage)"/>
+    <x-term-item arb="نقذ" eng="to save (someone)"/>
+    <x-term-item arb="مباراة" eng="match"/>
+    <x-term-item arb="بيئة" eng="environment (i.e. nature)"/>
+    <x-term-item arb="خطر" eng="danger"/>
+    <x-term-item arb="زينة" eng="decoration; ornament"/>
+    <x-term-item arb="إسعاف" eng="first aid">
+        <x-term-item subterm arb="(سيّارة) إسعاف" eng="ambulance"/>
+    </x-term-item>
+    <x-term-item arb="عصبيّة" eng="anger, wrath"/>
+    <x-term-item arb="علم" eng="flag"/>
+    <x-term-item arb="فكر" eng="thought, belief, opinion, consideration"/>
+    <x-term-item arb="لزوم" eng="what is necessary; must-have, essential">
+        <x-term-item subterm arb="زيادة عن اللزوم" eng="more than (what's) necessary; too much"/>
+    </x-term-item>
+    <x-term-item arb="هجمة" eng="attack"/>
+    <x-term-item arb="استهتار" eng="recklessness"/>
+    <x-term-item arb="خطير" eng="dangerous"/>
+    <x-term-item arb="بعد" eng="still"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

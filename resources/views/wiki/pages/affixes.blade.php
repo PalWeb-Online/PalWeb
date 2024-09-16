@@ -10,4 +10,4 @@
         sake of convenience, as they are meaningful morphemes.</p>
 </x-tip>
 
-<x-deck :deck="\App\Models\Deck::find(32)"/>
+<x-deck-container :deck="\App\Models\Deck::find(32)"/>
