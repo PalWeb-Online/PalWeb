@@ -9,9 +9,6 @@ const props = defineProps({
     imageURL: String,
     isPinned: Boolean,
 
-    // ContextActions
-    modelType: String,
-
     // ModelActions
     routes: Object,
     isUser: Boolean,
@@ -109,6 +106,7 @@ onBeforeUnmount(() => {
                 :routes="routes"
                 :isUser="isUser"
                 :isAuthor="isAuthor"
+                :isPinned="isPinned"
             />
         </div>
 

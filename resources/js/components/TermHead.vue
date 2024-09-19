@@ -10,9 +10,6 @@ const props = defineProps({
     imageURL: String,
     isPinned: Boolean,
 
-    // ContextActions
-    modelType: String,
-
     // ModelActions
     routes: Object,
     isUser: Boolean,
@@ -44,8 +41,8 @@ function playAudio() {
 
     <img class="play" :src="`${imageURL}/play.svg`" @click="playAudio" alt="play"/>
     <ContextActions
+        modelType="term"
         :imageURL="imageURL"
-        :modelType="modelType"
         :routes="routes"
         :isUser="isUser"
         :isAdmin="isAdmin"

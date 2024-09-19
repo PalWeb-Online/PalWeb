@@ -11,9 +11,6 @@ const props = defineProps({
     imageURL: String,
     isPinned: Boolean,
 
-    // ContextActions
-    modelType: String,
-
     // ModelActions
     routes: Object,
     isUser: Boolean,

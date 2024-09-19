@@ -9,9 +9,6 @@ const props = defineProps({
     imageURL: String,
     isPinned: Boolean,
 
-    // ContextActions
-    modelType: String,
-
     // ModelActions
     routes: Object,
     isUser: Boolean,
@@ -37,20 +34,23 @@ const description = computed(() => {
     <div class="deck-container-head">
         <div class="deck-container-head-title">{{ deck.name }}</div>
 
-        <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL" @updateCount="updateCount" />
+        <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"
+                   @updateCount="updateCount"/>
         <div v-if="pinCount > 1" class="pin-counter">
             <img :src="`${imageURL}/heart.svg`" alt="heart"/>
             <div>{{ pinCount }}</div>
         </div>
 
-        <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate" :route="routes.privacyToggle" :imageURL="imageURL" />
+        <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate" :route="routes.privacyToggle"
+                             :imageURL="imageURL"/>
 
         <ContextActions
+            modelType="deck"
             :imageURL="imageURL"
-            :modelType="modelType"
             :routes="routes"
             :isUser="isUser"
             :isAuthor="isAuthor"
+            :isPinned="isPinned"
         />
     </div>
 </template>

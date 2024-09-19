@@ -4,14 +4,12 @@ import PinButton from "./PinButton.vue";
 import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";
 import VanillaTilt from "vanilla-tilt";
+import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
     deck: Object,
     imageURL: String,
     isPinned: Boolean,
-
-    // ContextActions
-    modelType: String,
 
     // ModelActions
     routes: Object,
@@ -28,60 +26,13 @@ const description = computed(() => {
 });
 
 const flipCard = (event) => {
-    const flashcard = event.target.closest('.deck-flashcard-wrapper').querySelector('.deck-flashcard');
-    if (flashcard) {
-        flashcard.classList.toggle('flipped');
+    const card = event.target.closest('.deck-flashcard-wrapper').querySelector('.deck-flashcard');
+    if (card) {
+        card.classList.toggle('flipped');
     }
 };
 
-const isOpen = ref(false);
 const trigger = ref(null);
-const menu = ref(null);
-const clickX = ref(0);
-const clickY = ref(0);
-
-const toggleMenu = async (event) => {
-    isOpen.value = !isOpen.value;
-    if (isOpen.value) {
-        clickX.value = event.clientX;
-        clickY.value = event.clientY;
-
-        await nextTick(() => {
-            const element = menu.value;
-            if (element) {
-                const rect = element.getBoundingClientRect();
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-
-                if (clickX.value + rect.width > viewportWidth) {
-                    clickX.value = viewportWidth - rect.width - 8;
-                }
-                if (clickY.value + rect.height > viewportHeight) {
-                    clickY.value = viewportHeight - rect.height - 8;
-                }
-            }
-        });
-
-        document.body.style.overflow = 'hidden';
-        document.addEventListener('click', handleClickOutside);
-
-    } else {
-        document.body.style.overflow = '';
-        document.removeEventListener('click', handleClickOutside);
-    }
-};
-
-const handleClickOutside = (event) => {
-    if (!trigger.value.contains(event.target) && !menu.value.contains(event.target)) {
-        isOpen.value = false;
-        document.body.style.overflow = '';
-        document.removeEventListener('click', handleClickOutside);
-    }
-};
-
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
-});
 
 onMounted(() => {
     VanillaTilt.init(trigger.value, {
@@ -97,7 +48,7 @@ onMounted(() => {
 
 <template>
     <div class="deck-flashcard-wrapper">
-        <div class="deck-flashcard" ref="trigger" @click="toggleMenu">
+        <div class="deck-flashcard" ref="trigger" @click="flipCard">
             <div class="deck-flashcard-front">
                 <div class="deck-flashcard-front-head">
                     <div class="deck-title">{{ deck.name }}</div>
@@ -120,16 +71,6 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="popup-menu" ref="menu" v-if="isOpen"
-             :style="{ top: `${clickY}px`, left: `${clickX}px`, position: 'fixed' }">
-            <DeckActions
-                modelType="deck"
-                :routes="routes"
-                :isUser="isUser"
-                :isAuthor="isAuthor"
-            />
-        </div>
-
         <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate"
                              :route="routes.privacyToggle"
                              :imageURL="imageURL"/>
@@ -140,6 +81,13 @@ onMounted(() => {
                    :imageURL="imageURL"
         />
 
-        <img :src="`${imageURL}/flip.svg`" class="flip" @click="flipCard" alt="flip"/>
+        <ContextActions
+            modelType="deck"
+            :imageURL="imageURL"
+            :routes="routes"
+            :isUser="isUser"
+            :isAuthor="isAuthor"
+            :isPinned="isPinned"
+        />
     </div>
 </template>

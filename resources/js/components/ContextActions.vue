@@ -13,6 +13,7 @@ const props = defineProps({
     routes: Object,
     isUser: Boolean,
     isAdmin: Boolean,
+    isPinned: Boolean,
 
     // DeckActions
     isAuthor: Boolean,
@@ -73,6 +74,7 @@ const getFilteredProps = computed(() => {
             return {
                 ...defaultProps,
                 isAuthor: props.isAuthor,
+                isPinned: props.isPinned,
             };
         default:
             return defaultProps;
