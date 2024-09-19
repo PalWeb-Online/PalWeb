@@ -643,17 +643,15 @@ div.activity-image .image-card {
     color: black;
     border-radius: 1.6rem;
     text-align: center;
-
     background: white;
     border: 0.1rem solid $accent-yellow;
     box-shadow: -0.4rem 0.4rem 0 $accent-yellow-pastel;
+    font-size: 2.0rem;
+    font-family: $ar_bodyFont;
 
     &:not(:has(.dialog-line-head)) {
         margin-block-start: 0;
     }
-
-    font-size: 2.0rem;
-    font-family: $ar_bodyFont;
 
     .dialog-line-head {
         font-family: $bodyFont;

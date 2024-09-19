@@ -240,6 +240,12 @@ h3 {
         box-shadow: none;
         transform: none;
     }
+
+    .disabled {
+        filter: opacity(0.5) grayscale(1);
+        cursor: auto;
+        user-select: none;
+    }
 }
 
 .popup-menu {
@@ -253,12 +259,12 @@ h3 {
     a, button {
         font-family: $monoFont;
         font-size: 1.2rem;
-        font-weight: 400 !important;
-        color: $purple-deep !important;
+        font-weight: 400;
+        color: $purple-deep;
 
         &:hover {
-            text-decoration: none !important;
-            color: white !important;
+            text-decoration: none;
+            color: white;
             background: $purple-primary-dark;
         }
     }

@@ -64,7 +64,7 @@
         <div class="tiers-pricing">{{ $tier === 'student' ? '$12/m $80/y' : 'FREE' }}</div>
 
         @if($tier === $current)
-            <div class="tiers-action">{{ 'current' }}</div>
+            <a href="/billing" class="tiers-action">{{ 'manage' }}</a>
         @elseif($current === 'guest')
             <a href="{{ route('signin') }}" class="tiers-action">{{ __('signin') }}</a>
         @elseif($unlocked)

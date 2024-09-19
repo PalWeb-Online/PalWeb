@@ -26,7 +26,6 @@
 
     <div data-vue-component="{{ $component }}"
          data-props="{{ json_encode([
-                 'modelType' => 'sentence',
                  'sentence' => $sentenceObject,
                  'imageURL' => asset('/img'),
                  'isPinned' => $sentence->isPinned(),
