@@ -21,7 +21,6 @@
 
     <div data-vue-component="{{ $component }}"
          data-props="{{ json_encode([
-                 'modelType' => 'deck',
                  'deck' => $deckObject,
                  'imageURL' => asset('/img'),
                  'isPinned' => $deck->isPinned(),
@@ -30,6 +29,7 @@
                      'view' => route('decks.show', $deck),
                      'edit' => route('decks.edit', $deck),
                      'delete' => route('decks.destroy', $deck),
+                     'study' => route('flashcards.study', $deck),
                      'creator' => route('users.show', $deck->author->username),
                      'pin' => route('decks.pin', $deck),
                      'privacyToggle' => route('decks.privacy.toggle', $deck),

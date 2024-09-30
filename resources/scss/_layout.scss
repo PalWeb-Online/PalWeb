@@ -9,6 +9,17 @@ body {
     background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, $purple-pastel;
     background-attachment: fixed;
 
+    &.hero-blue {
+        #hero-panel {
+            background: $purple-deep;
+        }
+
+        .term-flashcard-front {
+            color: $purple-deep;
+            background: $accent-yellow;
+        }
+    }
+
     &.hero-yellow {
         #hero-panel {
             background: $accent-yellow;
@@ -390,8 +401,8 @@ nav {
     }
 
     h2 {
-        font-family: $logoFont;
-        text-transform: lowercase;
+        font-family: $headFont;
+        text-transform: none;
     }
 
     .hero-title {
@@ -443,7 +454,7 @@ nav {
         }
 
         h2 {
-            font-size: 8.0rem;
+            font-size: 6.4rem;
         }
     }
 }

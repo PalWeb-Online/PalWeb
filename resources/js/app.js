@@ -6,9 +6,11 @@ import DictionaryFilters from "./components/DictionaryFilters.vue";
 import SearchBar from "./components/SearchBar.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
+import TermFlashcard from "./components/TermFlashcard.vue";
 import DeckHead from "./components/DeckHead.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
+import FlashcardPortal from "./components/FlashcardPortal.vue";
 import SentenceItem from "./components/SentenceItem.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import ContextActions from "./components/ContextActions.vue";
@@ -27,6 +29,7 @@ const multiMountComponents = [
     { selector: '[data-vue-component="ContextActions"]', component: ContextActions },
     { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
+    { selector: '[data-vue-component="TermFlashcard"]', component: TermFlashcard },
     { selector: '[data-vue-component="DeckHead"]', component: DeckHead },
     { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
@@ -64,6 +67,12 @@ if (document.querySelector('#deckBuilder')) {
     const DeckBuilderApp = createApp({});
     DeckBuilderApp.component('DeckBuilder', DeckBuilder);
     DeckBuilderApp.mount('#deckBuilder');
+}
+
+if (document.querySelector('#flashcardPortal')) {
+    const flashcardPortalApp = createApp({});
+    flashcardPortalApp.component('FlashcardPortal', FlashcardPortal);
+    flashcardPortalApp.mount('#flashcardPortal');
 }
 
 if (document.querySelector('#dictionaryFilters')) {

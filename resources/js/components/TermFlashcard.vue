@@ -1,0 +1,115 @@
+<script setup>
+import {Howl} from 'howler';
+import {onMounted, onUnmounted, ref, watch} from 'vue';
+import ContextActions from "./ContextActions.vue";
+import VanillaTilt from "vanilla-tilt";
+
+const props = defineProps({
+    term: Object,
+    imageURL: String,
+    isUser: Boolean,
+    isAdmin: Boolean,
+    isActive: Boolean,
+    flipDefault: Boolean,
+    showTerm: Boolean,
+    showTranslit: Boolean,
+    showInflections: Boolean
+});
+
+const audio = ref(null);
+const trigger = ref(null);
+
+function playAudio() {
+    if (audio.value) {
+        audio.value.play();
+    }
+}
+
+const flipCard = () => {
+    const card = trigger.value;
+    if (card) {
+        card.classList.toggle('flipped');
+    }
+};
+
+onMounted(() => {
+    audio.value = new Howl({
+        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
+    });
+
+    VanillaTilt.init(trigger.value, {
+        max: 10,
+        speed: 400,
+        scale: 1,
+        glare: true,
+        "max-glare": 0.1,
+    });
+
+    if (props.isActive) {
+        window.addEventListener('keydown', handleKeydown);
+    }
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeydown);
+});
+
+watch(() => props.isActive, (newVal) => {
+    if (newVal) {
+        window.addEventListener('keydown', handleKeydown);
+    } else {
+        window.removeEventListener('keydown', handleKeydown);
+    }
+});
+
+const handleKeydown = (event) => {
+    if (event.key === 'ArrowDown' || event.key === 's') {
+        event.preventDefault();
+        flipCard();
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'w') {
+        event.preventDefault();
+        playAudio();
+    }
+};
+
+</script>
+
+<template>
+    <div class="term-flashcard-wrapper">
+        <img class="play" :src="`${imageURL}/play.svg`" alt="play" @click="playAudio"/>
+
+        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" ref="trigger" @click="flipCard">
+            <div class="term-flashcard-front">
+                <div>{{ term.term }}</div>
+                <div v-show="showTranslit">{{ term.translit }}</div>
+            </div>
+            <div class="term-flashcard-back">
+                <div class="term-flashcard-head" v-show="showTerm">
+                    <div class="term-flashcard-headword">
+                        <span>{{ term.term }}</span>
+                        <span v-show="showTranslit">({{ term.translit }})</span>
+                        <span>{{ term.category }}.</span>
+                    </div>
+                    <div v-show="showInflections" class="term-flashcard-inflections">
+                        <div v-for="inflection in term.inflections" class="term-flashcard-inflection-item">
+                            <span>{{ inflection.inflection }}</span>
+                            <span v-show="showTranslit">({{ inflection.translit }})</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="term-flashcard-glosses">
+                    <div v-for="(gloss, index) in term.glosses" class="eng">{{ index + 1 }}. {{ gloss.gloss }}</div>
+                </div>
+            </div>
+        </div>
+        <ContextActions
+            modelType="term"
+            :imageURL="imageURL"
+            :routes="term.routes"
+            :isUser="isUser"
+            :isAdmin="isAdmin"
+        />
+    </div>
+</template>

@@ -51,16 +51,20 @@
 
 <body class="{{ $bodyBackground ?? '' }}">
 
-@include("layouts._nav-mobile")
-@include("layouts._nav-sticky")
-@include("layouts._nav-user")
-@include('layouts._nav-header')
+@unless(request()->routeIs('flashcards.study'))
+    @include("layouts._nav-mobile")
+    @include("layouts._nav-sticky")
+    @include("layouts._nav-user")
+    @include('layouts._nav-header')
+@endunless
 
 @yield('page-hero')
 
 @yield('page-body')
 
-@include("layouts._footer")
+@unless(request()->routeIs('flashcards.study'))
+    @include("layouts._footer")
+@endunless
 </body>
 
 <script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>

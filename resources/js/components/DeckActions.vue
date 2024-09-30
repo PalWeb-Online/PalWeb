@@ -1,11 +1,22 @@
 <script setup>
 import DeleteButton from "./DeleteButton.vue";
+import {onMounted, ref} from "vue";
+import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
     modelType: String,
     routes: Object,
     isUser: Boolean,
     isAuthor: Boolean,
+    isPinned: Boolean,
+});
+
+const isOpen = ref(false);
+const reference = ref(null);
+const floating = ref(null);
+const {floatingStyles} = useFloating(reference, floating, {
+    placement: 'right',
+    middleware: [offset(8), flip(), shift()]
 });
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -26,6 +37,15 @@ const copyLink = (event) => {
     });
 };
 
+onMounted(() => {
+    reference.value.addEventListener('mouseenter', () => {
+        isOpen.value = true;
+    });
+    reference.value.addEventListener('mouseleave', () => {
+        isOpen.value = false;
+    });
+});
+
 </script>
 
 <template>
@@ -35,6 +55,11 @@ const copyLink = (event) => {
         <a :href="routes.edit">Edit Deck</a>
         <DeleteButton :modelType="modelType" :route="routes.delete"/>
     </template>
+
+    <!--    PinButton must emit status of isPinned for this to be dynamic -->
+    <a ref="reference" :href="[isPinned ? routes.study : '#']" :class="[isPinned ? '' : 'disabled']">Study Deck</a>
+    <div ref="floating" v-if="!isPinned & isOpen" :style="floatingStyles" class="notification">You must Pin the Deck to Study it.
+    </div>
 
     <template v-if="isUser">
         <a :href="routes.creator">View Creator</a>

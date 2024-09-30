@@ -6,12 +6,51 @@
             v1.0 Release Notes ->
         </a>
 
-        <h2>Welcome to PalWeb!</h2>
-        <div class="hero-blurb">database-powered Palestinian Arabic learning tools</div>
+        <h2>database-powered Palestinian Arabic learning tools</h2>
     </div>
 
     <div class="feature-panel" style="background: none; padding: 0 1.6rem;">
-        <x-deck-container :deck="\App\Models\Deck::find(56)"/>
+        @php
+            $term = \App\Models\Term::firstWhere('slug', 'phrase-ʔahla w-sahla');
+            $term = [
+                'id' => $term->id,
+                'term' => $term->term,
+                'category' => $term->category,
+                'translit' => $term->translit,
+                'file' => $term->pronunciations[0]->audify(),
+                'inflections' => $term->inflections->map(function ($inflection) {
+                    return [
+                        'inflection' => $inflection->inflection,
+                        'translit' => $inflection->translit,
+                    ];
+                }),
+                'glosses' => $term->glosses->map(function ($gloss) {
+                    return [
+                        'id' => $gloss->id,
+                        'gloss' => $gloss->gloss,
+                    ];
+                })->toArray(),
+                'routes' => [
+                    'view' => route('terms.show', $term),
+                    'edit' => route('terms.edit', $term),
+                    'delete' => route('terms.destroy', $term),
+                    'usages' => route('terms.usages', $term),
+                ],
+            ];
+        @endphp
+
+        <div data-vue-component="TermFlashcard"
+             data-props="{{ json_encode([
+                 'term' => $term,
+                 'imageURL' => asset('/img'),
+                 'isUser' => auth()->check(),
+                 'isAdmin' => auth()->check() && auth()->user()->isAdmin(),
+                 'showTerm' => true,
+                 'showTranslit' => true,
+             ]) }}"
+             style="flex-grow: 1"
+        >
+        </div>
     </div>
 
     <div class="feature-panel-wrapper">
@@ -29,7 +68,9 @@
         <div class="feature-panel" style="flex-direction: row-reverse">
             <div class="feature-panel-content">
                 <div class="feature-panel-title">{{ __('dictionary') }}</div>
-                <div class="feature-panel-subtitle">Over {{ floor(\App\Models\Term::count() / 100) * 100 }} terms & counting.</div>
+                <div class="feature-panel-subtitle">Over {{ floor(\App\Models\Term::count() / 100) * 100 }} terms &
+                    counting.
+                </div>
                 <div class="feature-panel-description">Built off the knowledge of several other dictionaries, with some
                     home-grown research & computer-science magic, the PalWeb Dictionary is the only interactive Spoken
                     Arabic dictionary with hypertext pages that let you easily jump between terms, a powerful
