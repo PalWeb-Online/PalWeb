@@ -3,17 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deck;
+use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\View;
 
 class FlashcardController extends Controller
 {
+    public function __construct(protected FlasherInterface $flasher)
+    {
+    }
+
     public function study(Deck $deck)
     {
-        View::share('pageTitle', 'Flashcard Portal');
-        return view('users.flashcards.study', [
-            'deck' => $deck,
-            'bodyBackground' => 'purple-pastel'
-        ]);
+        if ($deck->terms->isNotEmpty()) {
+            View::share('pageTitle', 'Flashcard Portal');
+            return view('users.flashcards.study', [
+                'deck' => $deck,
+                'bodyBackground' => 'purple-pastel'
+            ]);
+
+        } else {
+            $this->flasher->addFlash('error', 'Can\'t study an empty Deck.');
+            return back();
+        }
     }
 
     public function get($id)

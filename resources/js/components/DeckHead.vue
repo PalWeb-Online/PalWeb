@@ -17,11 +17,6 @@ const props = defineProps({
     isAuthor: Boolean,
 });
 
-let pinCount = ref(props.deck.pinCount);
-const updateCount = (count) => {
-    pinCount.value = count;
-};
-
 const description = computed(() => {
     return props.deck.description.length > 190
         ? props.deck.description.substring(0, 187) + '...'
@@ -34,15 +29,17 @@ const description = computed(() => {
     <div class="deck-container-head">
         <div class="deck-container-head-title">{{ deck.name }}</div>
 
-        <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"
-                   @updateCount="updateCount"/>
-        <div v-if="pinCount > 1" class="pin-counter">
-            <img :src="`${imageURL}/heart.svg`" alt="heart"/>
-            <div>{{ pinCount }}</div>
-        </div>
-
-        <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate" :route="routes.privacyToggle"
-                             :imageURL="imageURL"/>
+        <PinButton v-if="isUser"
+                   :route="routes.pin"
+                   :imageURL="imageURL"
+                   :isPinned="isPinned"
+                   :pinCount="deck.pinCount"
+        />
+        <PrivacyToggleButton v-if="isAuthor"
+                             :route="routes.privacyToggle"
+                             :imageURL="imageURL"
+                             :isPrivate="deck.isPrivate"
+        />
 
         <ContextActions
             modelType="deck"
@@ -50,7 +47,6 @@ const description = computed(() => {
             :routes="routes"
             :isUser="isUser"
             :isAuthor="isAuthor"
-            :isPinned="isPinned"
         />
     </div>
 </template>

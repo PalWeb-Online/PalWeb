@@ -106,18 +106,19 @@ onBeforeUnmount(() => {
                 :routes="routes"
                 :isUser="isUser"
                 :isAuthor="isAuthor"
-                :isPinned="isPinned"
             />
         </div>
 
-        <PrivacyToggleButton v-if="isAuthor" :isPrivate="deck.isPrivate"
-                             :route="routes.privacyToggle"
-                             :imageURL="imageURL"/>
         <PinButton v-if="isUser"
-                   :isPinned="isPinned"
-                   :pinCount="deck.pinCount"
                    :route="routes.pin"
                    :imageURL="imageURL"
+                   :isPinned="isPinned"
+                   :pinCount="deck.pinCount"
+        />
+        <PrivacyToggleButton v-if="isAuthor"
+                             :route="routes.privacyToggle"
+                             :imageURL="imageURL"
+                             :isPrivate="deck.isPrivate"
         />
     </div>
 </template>

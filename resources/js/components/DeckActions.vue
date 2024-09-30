@@ -56,10 +56,7 @@ onMounted(() => {
         <DeleteButton :modelType="modelType" :route="routes.delete"/>
     </template>
 
-    <!--    PinButton must emit status of isPinned for this to be dynamic -->
-    <a ref="reference" :href="[isPinned ? routes.study : '#']" :class="[isPinned ? '' : 'disabled']">Study Deck</a>
-    <div ref="floating" v-if="!isPinned & isOpen" :style="floatingStyles" class="notification">You must Pin the Deck to Study it.
-    </div>
+    <a ref="reference" :href="routes.study">Study Deck</a>
 
     <template v-if="isUser">
         <a :href="routes.creator">View Creator</a>
