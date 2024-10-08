@@ -20,16 +20,21 @@ const audio = ref(null);
 const trigger = ref(null);
 
 function playAudio() {
+    const cardElement = trigger.value.closest('.carousel__slide');
+    if (cardElement && cardElement.classList.contains('carousel__slide--clone')) {
+        return;
+    }
+
     if (audio.value) {
         audio.value.play();
     }
 }
 
 const flipCard = () => {
-    const card = trigger.value;
-    if (card) {
+    const cardElements = document.querySelectorAll(`[data-id="${props.term.id}"]`);  // Find both original and cloned cards
+    cardElements.forEach(card => {
         card.classList.toggle('flipped');
-    }
+    });
 };
 
 onMounted(() => {
@@ -80,7 +85,7 @@ const handleKeydown = (event) => {
     <div class="term-flashcard-wrapper">
         <img class="play" :src="`${imageURL}/play.svg`" alt="play" @click="playAudio"/>
 
-        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" ref="trigger" @click="flipCard">
+        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="term.id" ref="trigger" @click="flipCard">
             <div class="term-flashcard-front">
                 <div class="term-flashcard-term">
                     <div>{{ term.term }}</div>
