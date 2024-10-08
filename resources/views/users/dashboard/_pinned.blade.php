@@ -1,6 +1,6 @@
-<form method="GET" action="{{ route('dashboard.workbench') }}">
-    <button name="sort" value="oldest">Oldest First</button>
-    <button name="sort" value="newest">Newest First</button>
+<form method="GET" action="{{ route('dashboard.workbench') }}" class="workbench-options">
+    <button name="sort" value="oldest" class="{{ request()->input('sort') == 'newest' ? '' : 'active' }}">Oldest First</button>
+    <button name="sort" value="newest" class="{{ request()->input('sort') == 'newest' ? 'active' : '' }}">Newest First</button>
 </form>
 
 <div class="featured-title l">Decks: {{ count($decks) }}</div>
