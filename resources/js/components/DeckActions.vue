@@ -67,7 +67,7 @@ onMounted(() => {
         <a href="#" @click="copyLink">Share Link</a>
         <form :action="routes.export" method="POST">
             <input type="hidden" name="_token" :value="csrfToken">
-            <button type="submit">Export to CSV</button>
+            <button type="submit">Export CSV</button>
         </form>
     </template>
 </template>

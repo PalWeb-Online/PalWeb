@@ -9,13 +9,16 @@
         @if(request()->routeIs('terms.usages'))
             <x-link :href="route('terms.usages', $terms[0])">{{ __('usages') }}</x-link>
         @endif
+        <div class="breadcrumbs__option">
+            <x-link :href="route('terms.random')">{{ __('random') }}</x-link>
+        </div>
     </x-page-head>
 
     @foreach($terms as $term)
         <div class="term-container">
             <div class="term-container-head">
                 <div class="term-headword">
-                    <x-vue.term :term="$term" component="TermHead" />
+                    <x-vue.term :term="$term" component="TermHead"/>
 
                     <div>{{ __($term->category) }}.
                         @include('terms._attributes', ['attributes' => $term->attributes->pluck('attribute')->toArray()])
@@ -167,11 +170,13 @@
                         @if(count($term->sentences($gloss->id)->get()) > 0)
                             @if(request()->routeIs('terms.usages'))
                                 @foreach ($term->sentences($gloss->id)->get() as $sentence)
-                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence" :currentTerm="$term->id"/>
+                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                    :currentTerm="$term->id"/>
                                 @endforeach
                             @else
                                 @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
-                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence" :currentTerm="$term->id"/>
+                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                    :currentTerm="$term->id"/>
                                 @endforeach
                                 @if(count($term->sentences($gloss->id)->get()) > 2)
                                     <a href="{{ route('terms.usages', $term) }}">See All Usages

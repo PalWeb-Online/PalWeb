@@ -20,7 +20,7 @@ const isSliding = ref(false);
 const flipDefault = ref(false);
 const showTerm = ref(true);
 const showTranslit = ref(false);
-const showInflections = ref(false);
+const flipDefaultInflections = ref(false);
 const defaultOrder = ref([]);
 
 onMounted(() => {
@@ -108,6 +108,7 @@ const shuffle = () => {
             <button @click="reset">Reset Cards</button>
             <button @click="shuffle">Shuffle Terms</button>
             <button @click="flipDefault = !flipDefault">Default Side: {{ flipDefault ? 'Gloss' : 'Term' }}</button>
+            <button @click="flipDefaultInflections = !flipDefaultInflections">Show Inflections: {{ flipDefaultInflections ? 'Front' : 'Back' }}</button>
             <label class="checkbox">
                 <input type="checkbox" value=1 v-model="showTranslit">
                 <span>Show Transcription</span>
@@ -115,10 +116,6 @@ const shuffle = () => {
             <label class="checkbox">
                 <input type="checkbox" value=1 v-model="showTerm">
                 <span>Show Term (Back Side)</span>
-            </label>
-            <label class="checkbox">
-                <input type="checkbox" value=1 v-model="showInflections">
-                <span>Show Inflections (Must Show Term)</span>
             </label>
         </div>
     </div>
@@ -141,7 +138,7 @@ const shuffle = () => {
                     :flipDefault="flipDefault"
                     :showTerm="showTerm"
                     :showTranslit="showTranslit"
-                    :showInflections="showInflections"
+                    :flipDefaultInflections="flipDefaultInflections"
                 />
             </Slide>
         </template>

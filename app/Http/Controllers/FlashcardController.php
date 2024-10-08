@@ -18,7 +18,7 @@ class FlashcardController extends Controller
             View::share('pageTitle', 'Flashcard Portal');
             return view('users.flashcards.study', [
                 'deck' => $deck,
-                'bodyBackground' => 'purple-pastel'
+                'layout' => 'app',
             ]);
 
         } else {
@@ -43,7 +43,7 @@ class FlashcardController extends Controller
                 'category' => $term->category,
                 'translit' => $term->pronunciation->translit,
                 'file' => $term->pronunciation->audify(),
-                'inflections' => $term->inflections->map(function ($inflection) {
+                'inflections' => $term->inflections->whereNotIn('form', ['accusative', 'genitive'])->map(function ($inflection) {
                     return [
                         'inflection' => $inflection->inflection,
                         'translit' => $inflection->translit,

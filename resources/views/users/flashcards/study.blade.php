@@ -1,18 +1,9 @@
 @extends ('layouts.main')
 
 @section('content')
-    <style>
-        #page-body {
-            margin-block: 1.6rem;
-        }
-    </style>
-
     <div class="flashcard-portal-head">
-        <div>
-            <a href="{{ route('dashboard.workbench') }}">Return to Workbench</a>
-            <a href="{{ route('decks.show', $deck) }}">View Deck</a>
-        </div>
-        <div>{{ $deck->name }}</div>
+        <a href="{{ route('dashboard.workbench') }}">Back to Workbench</a>
+        <x-vue.deck component="DeckHead" :deck="$deck"/>
     </div>
 
     <div id="flashcardPortal" style="min-width: 0">

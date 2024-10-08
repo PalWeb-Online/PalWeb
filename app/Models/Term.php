@@ -20,7 +20,10 @@ class Term extends Model
         Bookmark::class,
     ];
 
-    protected $guarded = ['root'];
+    protected $guarded = [
+        'root'
+    ];
+
     protected $casts = [
         'etymology' => 'array'
     ];
@@ -102,15 +105,15 @@ class Term extends Model
         return $this->hasMany(Pronunciation::class);
     }
 
+    public function variants(): BelongsToMany
+    {
+        return $this->relatives()->wherePivot('type', 'variant');
+    }
+
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
             ->withPivot('type');
-    }
-
-    public function variants(): BelongsToMany
-    {
-        return $this->relatives()->wherePivot('type', 'variant');
     }
 
     public function references(): BelongsToMany

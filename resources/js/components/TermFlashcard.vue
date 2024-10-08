@@ -11,9 +11,9 @@ const props = defineProps({
     isAdmin: Boolean,
     isActive: Boolean,
     flipDefault: Boolean,
+    flipDefaultInflections: Boolean,
     showTerm: Boolean,
     showTranslit: Boolean,
-    showInflections: Boolean
 });
 
 const audio = ref(null);
@@ -82,24 +82,36 @@ const handleKeydown = (event) => {
 
         <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" ref="trigger" @click="flipCard">
             <div class="term-flashcard-front">
-                <div>{{ term.term }}</div>
-                <div v-show="showTranslit">{{ term.translit }}</div>
+                <div class="term-flashcard-term">
+                    <div>{{ term.term }}</div>
+                    <div v-show="showTranslit">{{ term.translit }}</div>
+                </div>
+
+                <div v-show="flipDefaultInflections && term.inflections.length > 0"
+                     class="term-flashcard-inflections">
+                    <div v-for="inflection in term.inflections" class="term-flashcard-inflection-item">
+                        <div>{{ inflection.inflection }}</div>
+                        <div v-show="showTranslit">{{ inflection.translit }}</div>
+                    </div>
+                </div>
             </div>
             <div class="term-flashcard-back">
                 <div class="term-flashcard-head" v-show="showTerm">
                     <div class="term-flashcard-headword">
-                        <span>{{ term.term }}</span>
-                        <span v-show="showTranslit">({{ term.translit }})</span>
-                        <span>{{ term.category }}.</span>
+                        <div>{{ term.term }}</div>
+                        <div v-show="showTranslit">({{ term.translit }})</div>
                     </div>
-                    <div v-show="showInflections" class="term-flashcard-inflections">
+
+                    <div v-show="!flipDefaultInflections && term.inflections.length > 0"
+                         class="term-flashcard-inflections">
                         <div v-for="inflection in term.inflections" class="term-flashcard-inflection-item">
-                            <span>{{ inflection.inflection }}</span>
-                            <span v-show="showTranslit">({{ inflection.translit }})</span>
+                            <div>{{ inflection.inflection }}</div>
+                            <div v-show="showTranslit">({{ inflection.translit }})</div>
                         </div>
                     </div>
                 </div>
                 <div class="term-flashcard-glosses">
+                    <div>{{ term.category }}.</div>
                     <div v-for="(gloss, index) in term.glosses" class="eng">{{ index + 1 }}. {{ gloss.gloss }}</div>
                 </div>
             </div>
