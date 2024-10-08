@@ -410,6 +410,8 @@ nav {
         font-weight: 700;
         color: white;
         text-shadow: -0.4rem 0.4rem 0 rgba(black, 0.33);
+        font-size: clamp(3.2rem, 12vw, 9.6rem);
+        hyphens: none;
     }
 
     h1 {
@@ -417,7 +419,6 @@ nav {
         font-weight: 400;
         text-shadow: -0.6rem 0.6rem 0 rgba(black, 0.33);
         animation: bounceIn 0.5s;
-        font-size: clamp(3.2rem, 12vw, 9.6rem);
     }
 
     h2 {
