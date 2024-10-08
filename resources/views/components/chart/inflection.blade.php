@@ -16,36 +16,40 @@
                     });
                 </script>
             </div>
-            <div class="inflection-chart-item">
-                <div>S</div>
-                <div>
-                    <div>{{ $term->inflections->firstWhere('form', 'sing')->inflection }}</div>
-                    <div>{{ $term->inflections->firstWhere('form', 'sing')->translit }}</div>
-                </div>
+            @if($term->inflections->firstWhere('form', 'sing'))
+                <div class="inflection-chart-item">
+                    <div>S</div>
+                    <div>
+                        <div>{{ $term->inflections->firstWhere('form', 'sing')->inflection }}</div>
+                        <div>{{ $term->inflections->firstWhere('form', 'sing')->translit }}</div>
+                    </div>
 
-                <img class="play" src="{{ asset('img/play.svg') }}" alt="play"
-                     onclick="{{ $term->inflections->firstWhere('form', 'sing')->audify() }}.play()"/>
-                <script type="text/javascript">
-                    var {{ $term->inflections->firstWhere('form', 'sing')->audify() }} = new Howl({
-                        src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $term->inflections->firstWhere('form', 'sing')->audify() }}.mp3']
-                    });
-                </script>
-            </div>
-            <div class="inflection-chart-item">
-                <div>P</div>
-                <div>
-                    <div>{{ $term->inflections->firstWhere('form', 'pauc')->inflection }}</div>
-                    <div>{{ $term->inflections->firstWhere('form', 'pauc')->translit }}</div>
+                    <img class="play" src="{{ asset('img/play.svg') }}" alt="play"
+                         onclick="{{ $term->inflections->firstWhere('form', 'sing')->audify() }}.play()"/>
+                    <script type="text/javascript">
+                        var {{ $term->inflections->firstWhere('form', 'sing')->audify() }} = new Howl({
+                            src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $term->inflections->firstWhere('form', 'sing')->audify() }}.mp3']
+                        });
+                    </script>
                 </div>
+            @endif
+            @if($term->inflections->firstWhere('form', 'pauc'))
+                <div class="inflection-chart-item">
+                    <div>P</div>
+                    <div>
+                        <div>{{ $term->inflections->firstWhere('form', 'pauc')->inflection }}</div>
+                        <div>{{ $term->inflections->firstWhere('form', 'pauc')->translit }}</div>
+                    </div>
 
-                <img class="play" src="{{ asset('img/play.svg') }}" alt="play"
-                     onclick="{{ $term->inflections->firstWhere('form', 'pauc')->audify() }}.play()"/>
-                <script type="text/javascript">
-                    var {{ $term->inflections->firstWhere('form', 'pauc')->audify() }} = new Howl({
-                        src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $term->inflections->firstWhere('form', 'pauc')->audify() }}.mp3']
-                    });
-                </script>
-            </div>
+                    <img class="play" src="{{ asset('img/play.svg') }}" alt="play"
+                         onclick="{{ $term->inflections->firstWhere('form', 'pauc')->audify() }}.play()"/>
+                    <script type="text/javascript">
+                        var {{ $term->inflections->firstWhere('form', 'pauc')->audify() }} = new Howl({
+                            src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $term->inflections->firstWhere('form', 'pauc')->audify() }}.mp3']
+                        });
+                    </script>
+                </div>
+            @endif
         @else
             <div class="inflection-chart-item"
                  style="grid-column: span {{ $term->inflections->where('form', 'fem')->isEmpty() ? count($term->inflections->where('form', 'plr')) * 2 : 1 }}">
