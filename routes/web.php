@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RecordWizardController;
 use App\Http\Controllers\MissingTermController;
@@ -32,7 +33,9 @@ use Illuminate\Support\Facades\Route;
  * Displays the homepage.
  */
 Route::get('/', function () {
-    return view('index');
+    return view('index', [
+        'bodyBackground' => 'front-page'
+    ]);
 })->middleware('pageTitle:Home')->name('homepage');
 
 /**
@@ -177,6 +180,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/dashboard')->group(function () {
+        Route::prefix('/flashcards')->controller(FlashcardController::class)->group(function () {
+            Route::get('/{deck}', 'study')->name('flashcards.study');
+            Route::get('/{deck}/get', 'get')->name('flashcards.study.get');
+        });
 
         Route::controller(DashboardController::class)->group(function () {
             Route::get('/workbench', 'workbench')->name('dashboard.workbench');

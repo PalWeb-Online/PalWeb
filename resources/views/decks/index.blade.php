@@ -31,7 +31,7 @@
                 </x-tip>
             @endif
             @foreach($decks as $deck)
-                <x-deck-li :deck="$deck"/>
+                <x-vue.deck component="DeckItem" :deck="$deck"/>
             @endforeach
         </div>
     @else

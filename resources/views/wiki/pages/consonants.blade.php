@@ -26,31 +26,31 @@
         are:</p>
 
     <x-vocabulary>
-        <x-term arb="ب" eng="/b/"/>
-        <x-term arb="ت" eng="/t/"/>
-        <x-term arb="ج" eng="/ʒ/"/>
-        <x-term arb="ح" eng="/ħ/"/>
-        <x-term arb="خ" eng="/x/"/>
-        <x-term arb="د" eng="/d/"/>
-        <x-term arb="ر" eng="/r/"/>
-        <x-term arb="ز" eng="/z/"/>
-        <x-term arb="س" eng="/s/"/>
-        <x-term arb="ش" eng="/ʃ/"/>
-        <x-term arb="ص" eng="/sˤ/"/>
-        <x-term arb="ض" eng="/dˤ/"/>
-        <x-term arb="ط" eng="/tˤ/"/>
-        <x-term arb="ظ" eng="/zˤ/"/>
-        <x-term arb="ع" eng="/ʕ/"/>
-        <x-term arb="غ" eng="/ɣ/"/>
-        <x-term arb="ف" eng="/f/"/>
-        <x-term arb="ل" eng="/l/"/>
-        <x-term arb="ك" eng="/k/"/>
-        <x-term arb="ن" eng="/n/"/>
-        <x-term arb="م" eng="/m/"/>
-        <x-term arb="هـ" eng="/h/"/>
-        <x-term arb="ء" eng="/ʔ/"/>
-        <x-term arb="و" eng="/w/"/>
-        <x-term arb="ي" eng="/j/"/>
+        <x-term-item arb="ب" eng="/b/"/>
+        <x-term-item arb="ت" eng="/t/"/>
+        <x-term-item arb="ج" eng="/ʒ/"/>
+        <x-term-item arb="ح" eng="/ħ/"/>
+        <x-term-item arb="خ" eng="/x/"/>
+        <x-term-item arb="د" eng="/d/"/>
+        <x-term-item arb="ر" eng="/r/"/>
+        <x-term-item arb="ز" eng="/z/"/>
+        <x-term-item arb="س" eng="/s/"/>
+        <x-term-item arb="ش" eng="/ʃ/"/>
+        <x-term-item arb="ص" eng="/sˤ/"/>
+        <x-term-item arb="ض" eng="/dˤ/"/>
+        <x-term-item arb="ط" eng="/tˤ/"/>
+        <x-term-item arb="ظ" eng="/zˤ/"/>
+        <x-term-item arb="ع" eng="/ʕ/"/>
+        <x-term-item arb="غ" eng="/ɣ/"/>
+        <x-term-item arb="ف" eng="/f/"/>
+        <x-term-item arb="ل" eng="/l/"/>
+        <x-term-item arb="ك" eng="/k/"/>
+        <x-term-item arb="ن" eng="/n/"/>
+        <x-term-item arb="م" eng="/m/"/>
+        <x-term-item arb="هـ" eng="/h/"/>
+        <x-term-item arb="ء" eng="/ʔ/"/>
+        <x-term-item arb="و" eng="/w/"/>
+        <x-term-item arb="ي" eng="/j/"/>
     </x-vocabulary>
 
     <h3>Points of Articulation</h3>
@@ -111,10 +111,10 @@
     <p>In Palestinian Arabic, there are four <b>pharyngealized</b> (a.k.a. “dark” or “emphatic”) consonants:</p>
 
     <x-vocabulary>
-        <x-term arb="ص" eng="/sˤ/"/>
-        <x-term arb="ض" eng="/dˤ/"/>
-        <x-term arb="ط" eng="/tˤ/"/>
-        <x-term arb="ظ" eng="/zˤ/"/>
+        <x-term-item arb="ص" eng="/sˤ/"/>
+        <x-term-item arb="ض" eng="/dˤ/"/>
+        <x-term-item arb="ط" eng="/tˤ/"/>
+        <x-term-item arb="ظ" eng="/zˤ/"/>
     </x-vocabulary>
 
     <p>When pronouncing these types of consonants, the front of the tongue produces the primary articulation
@@ -134,7 +134,7 @@
         don't over-articulate every consonant individually, but rather approach syllables & words as unit.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="انبسط.play()">
+        <div class="content" onclick="انبسط.play()">
             <div class="arb">انبسط</div>
             <div class="eng">/nbasatˤ/</div>
             <div class="gloss">[ɪnbɑsˤɑtˤ]</div>
@@ -149,9 +149,9 @@
     <h3>Dental Fricatives</h3>
 
     <x-vocabulary>
-        <x-term arb="ث" eng="/θ/"/>
-        <x-term arb="ذ" eng="/ð/"/>
-        <x-term arb="ظ" eng="/ðˤ/"/>
+        <x-term-item arb="ث" eng="/θ/"/>
+        <x-term-item arb="ذ" eng="/ð/"/>
+        <x-term-item arb="ظ" eng="/ðˤ/"/>
     </x-vocabulary>
 
     <p>In Arabic, there are three of these so-called dental fricatives. In the urban dialects of Palestinian
@@ -191,18 +191,18 @@
         Palestinian Arabic realizes them only as stops.</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'ŧaqāfe')"/>
-        <x-term :term="$terms->firstWhere('translit', 'tumm')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ŧaqāfe')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'tumm')"/>
     </x-vocabulary>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'ʔiza')"/>
-        <x-term :term="$terms->firstWhere('translit', 'dāʔ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔiza')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'dāʔ')"/>
     </x-vocabulary>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'muwaẓẓaf')"/>
-        <x-term :term="$terms->firstWhere('translit', 'naḍḍaf')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'muwaẓẓaf')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'naḍḍaf')"/>
     </x-vocabulary>
 
     <p>Notice that there is no pharyngealized form of <b>ز</b> in Standard Arabic; the native form is an
@@ -215,15 +215,15 @@
         to native terms, meaning they are most commonly substituted by stops.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="تمّ.play()">
+        <div class="content" onclick="تمّ.play()">
             <div class="arb"><span class="grn">ت</span>مّ</div>
             <div class="eng"><span class="grn">t</span>umm</div>
         </div>
-        <div class="content audio" onclick="داق.play()">
+        <div class="content" onclick="داق.play()">
             <div class="arb"><span class="grn">د</span>اق</div>
             <div class="eng"><span class="grn">d</span>ā2</div>
         </div>
-        <div class="content audio" onclick="نضّف.play()">
+        <div class="content" onclick="نضّف.play()">
             <div class="arb">ن<span class="grn">ضّ</span>ف</div>
             <div class="eng">na<span class="grn">ḍḍ</span>af</div>
         </div>
@@ -232,7 +232,7 @@
     <h3>Qāf</h3>
 
     <x-vocabulary>
-        <x-term arb="ق" eng="/q/"/>
+        <x-term-item arb="ق" eng="/q/"/>
     </x-vocabulary>
 
     <p>As is the case with the dental fricatives, <b>/q/</b> is conserved in formal terms. Natively, though,
@@ -244,7 +244,7 @@
             <div class="arb">م<span class="mag">ق</span>الة</div>
             <div class="eng">ma<span class="mag">q</span>āle</div>
         </div>
-        <div class="content audio" onclick="قارن.play()">
+        <div class="content" onclick="قارن.play()">
             <div class="arb"><span class="mag">ق</span>ارن</div>
             <div class="eng"><span class="mag">q</span>āran</div>
         </div>
@@ -264,7 +264,7 @@
         associated with the Bedouin community.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="قالوقلنا.play()">
+        <div class="content" onclick="قالوقلنا.play()">
             <div class="title">URBAN</div>
             <div class="arb"><span class="mag">ق</span>ال و<span class="mag">ق</span>ُلنا</div>
             <div class="eng"><span class="mag">2</span>āl w <span class="mag">2</span>ulna</div>
@@ -272,7 +272,7 @@
     </div>
 
     <div class="flex">
-        <div class="content audio" onclick="كالوكلنا.play()">
+        <div class="content" onclick="كالوكلنا.play()">
             <div class="title">RURAL</div>
             <div class="arb"><span class="mag">ق</span>ال و<span class="mag">ق</span>ُلنا</div>
             <div class="eng"><span class="mag">k</span>āl w <span class="mag">k</span>ulna</div>
@@ -296,12 +296,12 @@
         sound changes in <b>rural dialects</b>:</p>
 
     <x-vocabulary>
-        <x-term arb="ث" eng="/θ/"/>
-        <x-term arb="ذ" eng="/ð/"/>
-        <x-term arb="ظ" eng="/ðˤ/"/>
-        <x-term arb="ق" eng="/k/"/>
-        <x-term arb="ك" eng="/tʃ/"/>
-        <x-term arb="ج" eng="/dʒ/"/>
+        <x-term-item arb="ث" eng="/θ/"/>
+        <x-term-item arb="ذ" eng="/ð/"/>
+        <x-term-item arb="ظ" eng="/ðˤ/"/>
+        <x-term-item arb="ق" eng="/k/"/>
+        <x-term-item arb="ك" eng="/tʃ/"/>
+        <x-term-item arb="ج" eng="/dʒ/"/>
     </x-vocabulary>
 
     <p>And that's everything you need to know about <b>Consonants</b> in Palestinian Arabic!</p>

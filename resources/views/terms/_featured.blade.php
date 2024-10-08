@@ -2,31 +2,24 @@
     <div class="terms-featured-daily">
         <div class="featured-title l" style="text-transform: none">Word of the Day</div>
         <div class="term-container-head">
-            <img class="popout" src="{{ asset('/img/sunflower.svg') }}" alt="Sunflower"/>
-
             <div class="term-headword">
-                <div class="term-headword-arb">{{ $wordOfTheDay->term }}</div>
-                <div class="term-headword-eng">({{ $wordOfTheDay->translit }})</div>
-
-                <img class="play" src="{{ asset('img/play.svg') }}" width="28" alt="play"
-                     onclick="{{ $wordOfTheDay->pronunciations[0]->audify() }}.play()"/>
-
-                <script type="text/javascript">
-                    var {{ $wordOfTheDay->pronunciations[0]->audify() }} = new Howl({
-                        src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $wordOfTheDay->pronunciations[0]->audify() }}.mp3']
-                    });
-                </script>
-
-                <x-context-actions>
-                    <x-term-actions :term="$wordOfTheDay" :user="auth()->user()"/>
-                </x-context-actions>
+                <x-vue.term :term="$wordOfTheDay" component="TermHead" />
 
                 <div>{{ __($wordOfTheDay->category) }}.
-                    @foreach($wordOfTheDay->attributes as $attribute)
-                        @if($attribute->attribute !== 'idiom')
-                            <span style="font-weight: 400">{{ $attribute->attribute }}.</span>
-                        @endif
-                    @endforeach
+                    @include('terms._attributes', ['attributes' => $wordOfTheDay->attributes->pluck('attribute')->toArray()])
+
+                    @if($wordOfTheDay->inflections->firstWhere('form', 'cnst'))
+                        <span style="font-weight: 400">construct:</span>
+                        {{ $wordOfTheDay->inflections->firstWhere('form', 'cnst')->inflection }}
+                        ({{ $wordOfTheDay->inflections->firstWhere('form', 'cnst')->translit }})
+                    @endif
+
+                    @if($wordOfTheDay->category === 'verb')
+                        @foreach($wordOfTheDay->patterns->pluck('form')->unique() as $form)
+                            <a href="{{ route('wiki.show', 'verb-forms') }}" target="_blank"
+                               style="font-style: italic">form {{ $form }}.</a>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -71,11 +64,8 @@
 
     <div class="terms-featured-latest">
         <div class="featured-title m" style="text-transform: none">Latest</div>
-        @foreach($latestTerms as $wordOfTheDay)
-            <a href="{{ route('terms.show', $wordOfTheDay) }}"
-               data-tippy-term data-tippy-content="{{ $wordOfTheDay->glosses[0]->gloss }}">
-                {{ $wordOfTheDay->term }}
-            </a>
+        @foreach($latestTerms as $term)
+            <x-vue.term component="TermItem" size="s" :term="$term" />
         @endforeach
     </div>
 </div>

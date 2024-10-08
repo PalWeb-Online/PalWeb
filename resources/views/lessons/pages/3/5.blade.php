@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(61)"/>
+<x-deck-container :deck="\App\Models\Deck::find(61)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">

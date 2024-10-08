@@ -1,10 +1,9 @@
 <?php
 
-function glossParser($gloss)
+function audify($translit)
 {
+    $find = [' ', '-'];
+    $fix = ['_', ''];
 
-    $gloss = str_replace('IND', '<span class="yel">IND</span>', $gloss);
-    $gloss = str_replace('DEF', '<span class="grn">DEF</span>', $gloss);
-
-    return $gloss;
+    return str_replace($find, $fix, $translit);
 }

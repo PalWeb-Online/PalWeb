@@ -21,8 +21,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('select:wordoftheday')->daily();
         $schedule->command('select:featureddeck')->weekly();
-
-        // $schedule->command('inspire')->hourly();
     }
 
     /**

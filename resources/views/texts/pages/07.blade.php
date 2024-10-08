@@ -7,40 +7,40 @@
 <iframe src="https://www.youtube.com/embed/OldaBo1rqBI" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="خلّط" eng="to mix"/>
-    <x-term arb="ردّ على" eng="to listen to (i.e. obey), to do as (someone) says"/>
-    <x-term arb="صاحب" eng="to befriend"/>
-    {{--            <x-term arb="صوّر" eng="to film, to photograph"/>--}}
-    <x-term arb="ضاف" eng="to attach; (online) to add"/>
-    <x-term arb="غار" eng="to be jealous"/>
-    <x-term arb="غيران" eng="jealous"/>
-    <x-term arb="فصل" eng="to separate"/>
-    {{--            <x-term arb="قسّم" eng="to divide, to split up"/>--}}
-    {{--            <x-term arb="قدّم" eng="to present, to offer"/>--}}
-    <x-term arb="قضى" eng="to spend (time)"/>
-    <x-term arb="لاحظ" eng="to notice, to realize"/>
-    <x-term arb="وثق" eng="to trust"/>
-    {{--            <x-term arb="وصّل" eng="to take (somewhere); to deliver"/>--}}
-    {{--            <x-term arb="توقّع" eng="to expect"/>--}}
-    <x-term arb="أثّر" eng="to affect"/>
-    {{--            <x-term arb="مجموعة" eng="group"/>--}}
-    <x-term arb="رسالة" eng="message"/>
-    <x-term arb="شخصيّة" eng="personality; character"/>
-    {{--            <x-term arb="مشروع" eng="project"/>--}}
-    <x-term arb="تصرّف" eng="behavior"/>
-    <x-term arb="طفولة" eng="childhood"/>
-    <x-term arb="معظم" eng="majority; most"/>
-    {{--            <x-term arb="فرصة" eng="opportunity"/>--}}
-    <x-term arb="قصد" eng="intention; (intended) meaning"/>
-    <x-term arb="إحتياط" eng="precaution"/>
-    <x-term subterm arb="للإحتياط" eng="just in case"/>
-    <x-term arb="رأي" eng="opinion"/>
-    <x-term subterm arb="شو رأيك (بـ)" eng="how about ...; what do you think (of ...)"/>
-    <x-term arb="بعض" eng="each other"/>
-    <x-term arb="مزعج" eng="upsetting"/>
-    <x-term arb="عشوائيّ" eng="random"/>
-    <x-term arb="فخور" eng="proud"/>
-    <x-term arb="مش بس هيك" eng="that's not all"/>
+    <x-term-item arb="خلّط" eng="to mix"/>
+    <x-term-item arb="ردّ على" eng="to listen to (i.e. obey), to do as (someone) says"/>
+    <x-term-item arb="صاحب" eng="to befriend"/>
+    {{--            <x-term-item arb="صوّر" eng="to film, to photograph"/>--}}
+    <x-term-item arb="ضاف" eng="to attach; (online) to add"/>
+    <x-term-item arb="غار" eng="to be jealous"/>
+    <x-term-item arb="غيران" eng="jealous"/>
+    <x-term-item arb="فصل" eng="to separate"/>
+    {{--            <x-term-item arb="قسّم" eng="to divide, to split up"/>--}}
+    {{--            <x-term-item arb="قدّم" eng="to present, to offer"/>--}}
+    <x-term-item arb="قضى" eng="to spend (time)"/>
+    <x-term-item arb="لاحظ" eng="to notice, to realize"/>
+    <x-term-item arb="وثق" eng="to trust"/>
+    {{--            <x-term-item arb="وصّل" eng="to take (somewhere); to deliver"/>--}}
+    {{--            <x-term-item arb="توقّع" eng="to expect"/>--}}
+    <x-term-item arb="أثّر" eng="to affect"/>
+    {{--            <x-term-item arb="مجموعة" eng="group"/>--}}
+    <x-term-item arb="رسالة" eng="message"/>
+    <x-term-item arb="شخصيّة" eng="personality; character"/>
+    {{--            <x-term-item arb="مشروع" eng="project"/>--}}
+    <x-term-item arb="تصرّف" eng="behavior"/>
+    <x-term-item arb="طفولة" eng="childhood"/>
+    <x-term-item arb="معظم" eng="majority; most"/>
+    {{--            <x-term-item arb="فرصة" eng="opportunity"/>--}}
+    <x-term-item arb="قصد" eng="intention; (intended) meaning"/>
+    <x-term-item arb="إحتياط" eng="precaution"/>
+    <x-term-item subterm arb="للإحتياط" eng="just in case"/>
+    <x-term-item arb="رأي" eng="opinion"/>
+    <x-term-item subterm arb="شو رأيك (بـ)" eng="how about ...; what do you think (of ...)"/>
+    <x-term-item arb="بعض" eng="each other"/>
+    <x-term-item arb="مزعج" eng="upsetting"/>
+    <x-term-item arb="عشوائيّ" eng="random"/>
+    <x-term-item arb="فخور" eng="proud"/>
+    <x-term-item arb="مش بس هيك" eng="that's not all"/>
 </x-vocabulary>
 
 {{--                <p>1. Partner up with a friend and fill in the following dialogue.</p>--}}

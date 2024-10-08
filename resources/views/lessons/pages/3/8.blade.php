@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(64)"/>
+<x-deck-container :deck="\App\Models\Deck::find(64)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -6,28 +6,28 @@
     <p>Normally, we think of any quantity that is greater than one to be grammatically plural. On a fundamental level,
         this is true in Arabic as well.</p>
 
-    <x-sentence eng="a nice house">
+    <x-sentence-item eng="a nice house">
         <x-sentence-term arb="بيت" eng="house" :term="$terms['bēt'] ?? null"/>
         <x-sentence-term arb="حلو" eng="(m.) nice" :term="$terms['ħilu'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="two nice houses">
+    </x-sentence-item>
+    <x-sentence-item eng="two nice houses">
         <x-sentence-term arb="بيتين" eng="two-houses" :term="$terms['bēt'] ?? null"/>
         <x-sentence-term arb="حلوين" eng="(p.) nice" :term="$terms['ħilu'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="three nice houses">
+    </x-sentence-item>
+    <x-sentence-item eng="three nice houses">
         <x-sentence-term arb="تلات" eng="three" :term="$terms['talāt'] ?? null"/>
         <x-sentence-term arb="بيوت" eng="houses" :term="$terms['bēt'] ?? null"/>
         <x-sentence-term arb="حلوين" eng="(p.) nice" :term="$terms['ħilu'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>However, undefined quantities of inanimate nouns are treated as single masses in Arabic; these masses are <b>grammatically
             feminine</b>. (In practice, even counted quantities may be <i>either plural or feminine</i>; the higher the
         number, the greater the preference for feminine agreement. While dual nouns are <i>always plural</i>, quantities
         greater than two may go either way.)</p>
-    <x-sentence eng="nice houses">
+    <x-sentence-item eng="nice houses">
         <x-sentence-term arb="بيوت" eng="houses" :term="$terms['bēt'] ?? null"/>
         <x-sentence-term arb="حلوة" eng="(f.) nice" :term="$terms['ħilu'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-lesson-concept section-type="skill" section-title="vocabulary"

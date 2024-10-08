@@ -11,14 +11,14 @@
                 substances — like <b>"paper"</b> — can't be counted, so they must be qualified by a counter (e.g. <b>"a sheet of
                     paper"</b>). In Arabic, these types of terms — <b>collective nouns</b> — are far more common; many plants,
                 animals, substances & foodstuffs are referred to by collective nouns.</p>
-            <x-sentence eng="paper">
+            <x-sentence-item eng="paper">
                 <x-sentence-term arb="ورق" eng="(coll.) paper" :term="$terms['waraʔ'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
             <p>While the counter used for these mass nouns in English is not really predictable, in Arabic we always form <b>singulative
                     nouns</b> by adding an <b>ة (-e)</b> to the collective noun.</p>
-            <x-sentence eng="a sheet of paper">
+            <x-sentence-item eng="a sheet of paper">
                 <x-sentence-term arb="ورقة" eng="(sing.) paper" :term="$terms['waraʔ'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
             <p>As you can see, singulative nouns are always <b>feminine singular</b>, while collective nouns are always <b>masculine
                     singular</b>. It may seem strange for a collective noun to be singular, but these types of terms are
                 singular in English as well (e.g. <b>"paper is white"</b>). However, where English doesn't use a mass noun, the

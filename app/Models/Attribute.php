@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Attribute extends Model
 {
-    protected $fillable = [];
+    protected $guarded = [];
 
-    public function terms(): belongsToMany
+    public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class);
+    }
+
+    public function glosses(): BelongsToMany
+    {
+        return $this->belongsToMany(Gloss::class);
     }
 }

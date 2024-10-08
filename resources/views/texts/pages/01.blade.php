@@ -7,30 +7,30 @@
 <iframe src="https://www.youtube.com/embed/U-Hcuclljkw" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="حمى" eng="to protect"/>
-    <x-term arb="اضطرّ" eng="to be obligated"/>
-    <x-term arb="عطس" eng="to sneeze"/>
-    <x-term arb="منع" eng="to forbid, to prevent"/>
-    <x-term arb="تمنّى" eng="to hope"/>
-    <x-term arb="نقل" eng="to move, to transport; to pass on"/>
-    <x-term arb="جماعة" eng="community, people; everyone, folks"/>
-    <x-term arb="تجمّع" eng="gathering"/>
-    <x-term arb="حرارة" eng="fever"/>
-    <x-term arb="حلق" eng="throat"/>
-    <x-term arb="سطح" eng="surface"/>
-    <x-term arb="مسؤوليّة" eng="responsibility"/>
-    <x-term arb="أصبع" eng="finger"/>
-    <x-term arb="أضفر" eng="nail"/>
-    <x-term arb="عدوى" eng="infection"/>
-    <x-term arb="فيروس" eng="virus"/>
-    <x-term arb="قاعدة" eng="rule"/>
-    <x-term arb="كمّامة" eng="facemask"/>
-    <x-term arb="مشوار" eng="errand, outing"/>
-    <x-term arb="طارئ" eng="emergency"/>
-    <x-term arb="معدي" eng="infectious"/>
-    <x-term arb="ممنوع" eng="forbidden"/>
-    <x-term arb="أشكال وألوان" eng="of all kinds, types, sorts"/>
-    <x-term arb="لا سمح الله" eng="God forbid"/>
+    <x-term-item arb="حمى" eng="to protect"/>
+    <x-term-item arb="اضطرّ" eng="to be obligated"/>
+    <x-term-item arb="عطس" eng="to sneeze"/>
+    <x-term-item arb="منع" eng="to forbid, to prevent"/>
+    <x-term-item arb="تمنّى" eng="to hope"/>
+    <x-term-item arb="نقل" eng="to move, to transport; to pass on"/>
+    <x-term-item arb="جماعة" eng="community, people; everyone, folks"/>
+    <x-term-item arb="تجمّع" eng="gathering"/>
+    <x-term-item arb="حرارة" eng="fever"/>
+    <x-term-item arb="حلق" eng="throat"/>
+    <x-term-item arb="سطح" eng="surface"/>
+    <x-term-item arb="مسؤوليّة" eng="responsibility"/>
+    <x-term-item arb="أصبع" eng="finger"/>
+    <x-term-item arb="أضفر" eng="nail"/>
+    <x-term-item arb="عدوى" eng="infection"/>
+    <x-term-item arb="فيروس" eng="virus"/>
+    <x-term-item arb="قاعدة" eng="rule"/>
+    <x-term-item arb="كمّامة" eng="facemask"/>
+    <x-term-item arb="مشوار" eng="errand, outing"/>
+    <x-term-item arb="طارئ" eng="emergency"/>
+    <x-term-item arb="معدي" eng="infectious"/>
+    <x-term-item arb="ممنوع" eng="forbidden"/>
+    <x-term-item arb="أشكال وألوان" eng="of all kinds, types, sorts"/>
+    <x-term-item arb="لا سمح الله" eng="God forbid"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

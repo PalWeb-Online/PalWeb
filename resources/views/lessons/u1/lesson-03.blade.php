@@ -27,45 +27,45 @@
                 denotes the state that results from a completed action.</p>
 
             <div class="array">
-                <x-sentence eng="he's standing">
+                <x-sentence-item eng="he's standing">
                     <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                     <x-sentence-term arb="واقف" eng="standing" :term="$terms['wāʔif'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="he stood up">
+                </x-sentence-item>
+                <x-sentence-item eng="he stood up">
                     <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                     <x-sentence-term arb="وقف" eng="3M.stood" :term="$terms['wiʔif'] ?? null"/>
-                </x-sentence>
+                </x-sentence-item>
             </div>
-            <x-sentence eng="he's standing on the corner">
+            <x-sentence-item eng="he's standing on the corner">
                 <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                 <x-sentence-term arb="واقف" eng="standing" :term="$terms['ʔāʕid'] ?? null"/>
                 <x-sentence-term arb="عـ" eng="on" :term="$terms['ʔala'] ?? null"/>
                 <x-sentence-term arb="الكوربا" eng="the-corner" :term="$terms['kursy'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
 
             <div class="array">
-                <x-sentence eng="he's seated">
+                <x-sentence-item eng="he's seated">
                     <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                     <x-sentence-term arb="قاعد" eng="seated" :term="$terms['ʔāʕid'] ?? null"/>
-                </x-sentence>
-                <x-sentence eng="he sat down">
+                </x-sentence-item>
+                <x-sentence-item eng="he sat down">
                     <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                     <x-sentence-term arb="قعد" eng="3M.sat" :term="$terms['ʔaʕad'] ?? null"/>
-                </x-sentence>
+                </x-sentence-item>
             </div>
-            <x-sentence eng="he's seated on the chair">
+            <x-sentence-item eng="he's seated on the chair">
                 <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
                 <x-sentence-term arb="قاعد" eng="seated" :term="$terms['ʔāʕid'] ?? null"/>
                 <x-sentence-term arb="عـ" eng="on" :term="$terms['ʔala'] ?? null"/>
                 <x-sentence-term arb="الكرسي" eng="the-chair" :term="$terms['kursy'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
 
             <p>Insofar as they are states rather than progressive actions, <b>Active Participles</b> are often very
                 similar in meaning to generic adjectives, but are used in a greater variety of situations, lending
                 themselves to various verb-like usages that will be discussed throughout the course.</p>
 
             <x-vocabulary title="patterns">
-                <x-term arb="1ā2i3" eng="(Form 1 Active Participle)"/>
+                <x-term-item arb="1ā2i3" eng="(Form 1 Active Participle)"/>
             </x-vocabulary>
         </x-collapsible>
 

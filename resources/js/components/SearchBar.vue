@@ -1,75 +1,83 @@
-<script>
+<script setup>
+import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import debounce from 'lodash/debounce';
+import axios from 'axios';
 
-export default {
-    props: {
-        resultType: {
-            type: String,
-            default: 'link'
-        },
+const props = defineProps({
+    resultType: {
+        type: String,
+        default: 'link',
     },
+});
 
-    components: {
-        debounce,
-    },
+const emit = defineEmits(['emitTerm']);
 
-    data() {
-        return {
-            searchTerm: new URLSearchParams(window.location.search).get('search') || '',
-            searchResults: [],
-            showResults: false,
-            ignoreNextSearch: false,
-        };
-    },
-    created() {
-        this.debouncedSearch = debounce(this.liveResults, 150);
-        document.addEventListener("click", this.closeResults);
-    },
-    beforeDestroy() {
-        document.removeEventListener("click", this.closeResults);
-    },
-    watch: {
-        searchTerm(newVal) {
-            this.debouncedSearch(newVal);
-        }
-    },
-    methods: {
-        liveResults(searchTerm) {
-            if (typeof searchTerm === 'string') {
-                axios.post(`/dictionary/search`, {searchTerm})
-                    .then(response => {
-                        if (this.ignoreNextSearch) {
-                            this.ignoreNextSearch = false;
-                        } else {
-                            this.showResults = true;
-                        }
-                        this.searchResults = response.data.searchResults;
-                    })
-                    .catch(error => {
-                        console.error('Search error:', error);
-                    });
-            }
-        },
+// Tooltip
+const reference = ref(null);
+const floating = ref(null);
+const {floatingStyles} = useFloating(reference, floating, {
+    placement: 'bottom',
+    middleware: [offset(8), flip(), shift()],
+});
 
-        closeResults() {
-            this.showResults = false;
-        },
+// Search
+const searchTerm = ref(new URLSearchParams(window.location.search).get('search') || '');
+const searchResults = ref([]);
+const showResults = ref(false);
+const ignoreNextSearch = ref(false);
 
-        emitTerm(term) {
-            this.$emit('emitTerm', { term });
-            this.ignoreNextSearch = true;
-            this.searchTerm = '';
-            this.closeResults();
-        }
+const debouncedSearch = debounce((term) => {
+    liveResults(term);
+}, 150);
+
+const liveResults = (term) => {
+    if (typeof term === 'string') {
+        axios.post(`/dictionary/search`, {searchTerm: term})
+            .then(response => {
+                if (ignoreNextSearch.value) {
+                    ignoreNextSearch.value = false;
+                } else {
+                    showResults.value = true;
+                }
+                searchResults.value = response.data.searchResults;
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+            });
     }
 };
+
+const closeResults = () => {
+    showResults.value = false;
+};
+
+const emitTerm = (term) => {
+    emit('emitTerm', {term});
+    ignoreNextSearch.value = true;
+    searchTerm.value = '';
+    closeResults();
+};
+
+onMounted(() => {
+    document.addEventListener("click", closeResults);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", closeResults);
+});
+
+watch(searchTerm, (newVal) => {
+    debouncedSearch(newVal);
+});
 </script>
 
 <template>
     <div class="search-bar">
-        <input v-model="searchTerm" @change="liveResults" @click.stop
+        <input ref="reference" v-model="searchTerm" @change="liveResults" @click.stop
                name="search" placeholder="دوّر" type="text" autocomplete="off"/>
-        <div v-if="searchResults.length > 0 && showResults" class="search-results" @click.stop>
+        <div ref="floating" :style="floatingStyles" v-if="searchResults.length > 0 && showResults"
+             class="search-results" @click.stop>
             <a v-if="resultType === 'link'" :href="'/dictionary/terms/'+value.slug" class="search-result"
                v-for="(value, index) in searchResults" :key="index">
                 <div>{{ value.term }}</div>

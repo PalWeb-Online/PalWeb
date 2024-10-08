@@ -11,45 +11,45 @@
 <p>At first glance, semantic numbers can function syntactically like adjectives; in that sense, it could be said
     that they belong to the <b>Adjective</b> grammatical category.</p>
 
-<x-sentence eng="the young students">
+<x-sentence-item eng="the young students">
     <x-sentence-term arb="الطلّاب" eng="the-students" :term="$terms->firstWhere('translit', 'ṭālib')"/>
     <x-sentence-term arb="الزغار" eng="the-young" :term="$terms->firstWhere('translit', 'zḡīr')"/>
-</x-sentence>
-<x-sentence eng="the five students">
+</x-sentence-item>
+<x-sentence-item eng="the five students">
     <x-sentence-term arb="الطلّاب" eng="the-students" :term="$terms->firstWhere('translit', 'ṭālib')"/>
     <x-sentence-term arb="الخمسة" eng="the-five" :term="$terms->firstWhere('translit', 'xamse')"/>
-</x-sentence>
-<x-sentence eng="the fifth student">
+</x-sentence-item>
+<x-sentence-item eng="the fifth student">
     <x-sentence-term arb="الطالب" eng="the-student" :term="$terms->firstWhere('translit', 'ṭālib')"/>
     <x-sentence-term arb="الخامس" eng="the-fifth" :term="$terms->firstWhere('translit', 'xāmis')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>However, as a grammatical category, <b>Numerals</b> are defined by their ability to instantiate
     the so-called <b>counting structure</b> (<b>هيكل العدّ</b>). Although all these terms are classified only as <b>Numerals</b>
     for simplicity, it should be kept in mind that they are always viably <b>Adjectives</b> as well.</p>
 
-<x-sentence eng="five students">
+<x-sentence-item eng="five students">
     <x-sentence-term arb="خمس" eng="five" :term="$terms->firstWhere('translit', 'xamse')"/>
     <x-sentence-term arb="طلّاب" eng="students" :term="$terms->firstWhere('translit', 'ṭālib')"/>
-</x-sentence>
-<x-sentence eng="the fifth student">
+</x-sentence-item>
+<x-sentence-item eng="the fifth student">
     <x-sentence-term arb="خامس" eng="fifth" :term="$terms->firstWhere('translit', 'xāmis')"/>
     <x-sentence-term arb="طالب" eng="student" :term="$terms->firstWhere('translit', 'ṭālib')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>Although this structure is referred to as defining of <b>Numerals</b>, <b>elative adjectives</b> — like semantic <b>numerals</b>
     — may be used both as <b>attributive adjectives</b> & as the head term of the <b>counting structure</b> as well.
     Since they share all the features of semantic <b>numerals</b>, <b>elative adjectives</b> are likewise classified as
     <b>Numerals</b> — keeping in mind that all <b>Numerals</b> are always viably <b>Adjectives</b> as well.</p>
 
-<x-sentence eng="the smartest student">
+<x-sentence-item eng="the smartest student">
     <x-sentence-term arb="الطالب" eng="the-student" :term="$terms->firstWhere('translit', 'ṭālib')"/>
     <x-sentence-term arb="الأشطر" eng="the-smartest" :term="$terms->firstWhere('translit', 'šāṭir')"/>
-</x-sentence>
-<x-sentence eng="the smartest student">
+</x-sentence-item>
+<x-sentence-item eng="the smartest student">
     <x-sentence-term arb="أشطر" eng="smartest" :term="$terms->firstWhere('translit', 'šāṭir')"/>
     <x-sentence-term arb="طالب" eng="student" :term="$terms->firstWhere('translit', 'ṭālib')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p>In one sense, <b>elative adjectives</b> are a type of <b>ordinal number</b>; while the canonical <b>ordinal
         numbers</b> refer to an endpoint in a numerical sequence (e.g. "the fifth"), <b>elative adjectives</b> have
@@ -87,16 +87,16 @@
     <p>Although the <b>elative</b> forms of all <b>Adjectives</b> fall within this category, they are not
         individually recorded as distinct lemmas unless they are not related to any <b>positive</b> form — with the
         exception of the analytic elativizer <b>أكتر (ʔaktar)</b>.</p>
-    <x-sentence eng="the thing you like to do the most">
+    <x-sentence-item eng="the thing you like to do the most">
         <x-sentence-term arb="أكتر" eng="most" :term="$terms->firstWhere('translit', 'ʔaktar')"/>
         <x-sentence-term arb="إشي بتحبّ تسوّيه" eng="something you like to do"/>
-    </x-sentence>
+    </x-sentence-item>
     <x-vocabulary title="elatives">
-        <x-term :term="$terms->firstWhere('translit', 'ʔaktar')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaħsan')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔafḍal')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaqṣa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔadna')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔasfal')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaktar')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaħsan')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔafḍal')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaqṣa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔadna')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔasfal')"/>
     </x-vocabulary>
 </div>

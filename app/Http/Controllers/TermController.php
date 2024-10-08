@@ -11,7 +11,6 @@ use App\Models\MissingTerm;
 use App\Models\Pattern;
 use App\Models\Pronunciation;
 use App\Models\Root;
-use App\Models\Sentence;
 use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
@@ -24,7 +23,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
 use Maize\Markable\Models\Bookmark;
 
 class TermController extends Controller
@@ -82,7 +80,6 @@ class TermController extends Controller
 
         $totalCount = $terms->total();
 
-
         if (!(bool) request()->query()) {
             $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
@@ -119,16 +116,13 @@ class TermController extends Controller
             'patterns',
             'attributes',
             'pronunciations',
-            'variants',
-            'components',
-            'references',
+            'relatives',
             'spellings',
             'inflections',
             'glosses' => function ($query) {
                 $query->with([
-                    'synonyms',
-                    'antonyms',
-                    'valences',
+                    'attributes',
+                    'relatives'
                 ]);
             }
         ])->findOrFail($id);
@@ -136,28 +130,45 @@ class TermController extends Controller
         return [
             'term' => $term,
             'root' => $term->root->root ?? '',
-            'attributes' => $term->attributes->pluck('attribute'),
             'singPatterns' => $term->patterns->where('type', 'singular')->values(),
             'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
             'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
             'pronunciations' => $term->pronunciations,
-            'variants' => $term->variants->pluck('slug'),
-            'components' => $term->components->pluck('slug'),
-            'references' => $term->references->pluck('slug'),
+            'variants' => $term->variants->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'references' => $term->references->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'components' => $term->components->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
+            'descendants' => $term->descendants->map(function ($relative) {
+                return [
+                    'slug' => $relative->slug,
+                    'relation' => $relative->pivot->type,
+                ];
+            }),
             'spellings' => $term->spellings,
             'inflections' => $term->inflections,
             'glosses' => $term->glosses->map(function ($gloss) {
                 return [
                     'id' => $gloss->id,
                     'gloss' => $gloss->gloss,
-                    'attribute' => $gloss->attribute,
-                    'structure' => $gloss->structure,
-                    'synonyms' => $gloss->synonyms->pluck('slug'),
-                    'antonyms' => $gloss->antonyms->pluck('slug'),
-                    'valences' => $gloss->valences->map(function ($valence) {
+                    'attributes' => $gloss->attributes,
+                    'relatives' => $gloss->relatives->map(function ($relative) {
                         return [
-                            'slug' => $valence->slug,
-                            'relation' => $valence->pivot->type,
+                            'slug' => $relative->slug,
+                            'relation' => $relative->pivot->type,
                         ];
                     }),
                 ];
@@ -205,10 +216,6 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request)
     {
-        Log::info('Term Page:', [
-            'url' => $request->fullUrl(),
-        ]);
-
         $allPronunciations = $term->pronunciations;
         $userPronunciations = collect();
         $otherPronunciations = collect();
@@ -259,46 +266,59 @@ class TermController extends Controller
     {
         $this->validateRequest($request);
 
-        $termData = $request->term;
+        $term = DB::transaction(function () use ($request) {
 
-        $termData = array_merge($termData, [
-            'translit' => $request->pronunciations[0]['translit'],
-            'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit']),
-        ]);
+            $termData = $request->term;
 
-        if ($request->root) {
-            $root = Root::firstOrCreate(['root' => $request->root]);
             $termData = array_merge($termData, [
-                'root_id' => $root->id,
+                'translit' => $request->pronunciations[0]['translit'],
+                'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit']),
             ]);
-        }
 
-        $term = Term::create($termData);
+            if ($request->root) {
+                $root = Root::firstOrCreate(['root' => $request->root]);
+                $termData = array_merge($termData, [
+                    'root_id' => $root->id,
+                ]);
+            }
 
-        foreach ($request->input('attributes') as $attribute) {
-            Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
-        }
+            $term = Term::create($termData);
 
-        $this->handlePatterns($term, $request->singPatterns, 'singular');
-        $this->handlePatterns($term, $request->plurPatterns, 'plural');
-        $this->handlePatterns($term, $request->verbPatterns, 'verbal');
+            $attributes = array_map(fn($item) => $item['attribute'], $request->term['attributes']);
+            foreach ($attributes as $attribute) {
+                Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
+            }
 
-        $this->handleRelatives($term, $request->variants, 'variants', 'variant');
-        $this->handleRelatives($term, $request->references, 'references', 'reference');
-        $this->handleRelatives($term, $request->components, 'components', 'descendant');
+            $this->handlePatterns($term, $request->singPatterns, 'singular');
+            $this->handlePatterns($term, $request->plurPatterns, 'plural');
+            $this->handlePatterns($term, $request->verbPatterns, 'verbal');
 
-        $this->handleDependents($term, $request->spellings, Spelling::class);
-        $this->handleDependents($term, $request->inflections, Inflection::class);
-        $this->handleDependents($term, $request->pronunciations, Pronunciation::class);
+            $relatives = array_merge(
+                $request->variants,
+                $request->references,
+                $request->components,
+                $request->descendants,
+            );
+            $this->handleRelatives($term, $relatives);
 
-        foreach ($request->glosses as $requestGloss) {
-            $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
-            $gloss = Gloss::create($requestGloss);
+            $this->handleDependents($term, $request->spellings, Spelling::class);
+            $this->handleDependents($term, $request->inflections, Inflection::class);
+            $this->handleDependents($term, $request->pronunciations, Pronunciation::class);
 
-            $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
-            $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
-            $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-        }
+            foreach ($request->glosses as $requestGloss) {
+                $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
+                $gloss = Gloss::create($requestGloss);
+
+                $glossAttributes = array_map(fn($item) => $item['attribute'], $requestGloss['attributes']);
+                foreach ($glossAttributes as $attribute) {
+                    Attribute::firstWhere('attribute', $attribute)->glosses()->attach($gloss);
+                }
+
+                $this->handleRelatives($gloss, $requestGloss['relatives']);
+            }
+
+            return $term;
+        });
 
         return [
             'status' => 'success',
@@ -316,11 +336,11 @@ class TermController extends Controller
             'inflections.*.inflection' => ['required', new ArabicScript()],
             'inflections.*.translit' => ['required', new LatinScript()],
             'spellings.*.spelling' => ['required', new ArabicScript()],
-            'variants.*' => ['required', new LatinScript()],
-            'references.*' => ['required', new LatinScript()],
-            'components.*' => ['required', new LatinScript()],
-            'glosses.*.synonyms.*' => ['required', new LatinScript()],
-            'glosses.*.antonyms.*' => ['required', new LatinScript()],
+            'variants.*.slug' => ['required', new LatinScript()],
+            'references.*.slug' => ['required', new LatinScript()],
+            'components.*.slug' => ['required', new LatinScript()],
+            'descendants.*.slug' => ['required', new LatinScript()],
+            'glosses.*.relatives.*.slug' => ['required', new LatinScript()],
         ]);
     }
 
@@ -353,76 +373,94 @@ class TermController extends Controller
     public function update(Term $term, Request $request)
     {
         $this->validateRequest($request);
-        $termData = $request->term;
 
-        // TODO: double-check this
-        if ($request->root) {
-            $root = Root::firstOrCreate(['root' => $request->root]);
-            $termData = array_merge($termData, [
-                'root_id' => $root->id,
-            ]);
-        } else {
-            $termData = array_merge($termData, [
-                'root_id' => null,
-            ]);
-        }
+        $term = DB::transaction(function () use ($term, $request) {
 
-        $term->update($termData);
-        $term->refresh();
+            $termData = $request->term;
 
-        foreach ($request->input('attributes') as $attribute) {
-            $attribute = Attribute::firstWhere('attribute', $attribute);
-            $attribute->terms()->syncWithoutDetaching($term->id);
-        }
-
-        $detachableAttributes = array_diff($term->attributes->pluck('attribute')->toArray(),
-            $request->input('attributes'));
-        foreach ($detachableAttributes as $attribute) {
-            Attribute::firstWhere('attribute', $attribute)->terms()->detach($term);
-        }
-
-        $this->handlePatterns($term, $request->singPatterns, 'singular');
-        $this->handlePatterns($term, $request->plurPatterns, 'plural');
-        $this->handlePatterns($term, $request->verbPatterns, 'verbal');
-
-        $this->handleRelatives($term, $request->variants, 'variants', 'variant');
-        $this->handleRelatives($term, $request->references, 'references', 'reference');
-        $this->handleRelatives($term, $request->components, 'components', 'descendant');
-
-        $this->handleDependents($term, $request->spellings, Spelling::class, $term->spellings, 'spelling');
-        $this->handleDependents($term, $request->inflections, Inflection::class, $term->inflections, 'translit');
-        $this->handleDependents($term, $request->pronunciations, Pronunciation::class, $term->pronunciations,
-            'translit');
-
-        $term->update([
-            'translit' => $request->pronunciations[0]['translit'],
-            'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit'], $term),
-        ]);
-
-        $requestGlosses = [];
-        foreach ($request->glosses as $index => $requestGloss) {
-            unset($requestGloss['id']);
-            $requestGlosses[] = $requestGloss['gloss'];
-
-            if ($index + 1 <= count($term->glosses)) {
-                $term->glosses[$index]->update($requestGloss);
-                $gloss = $term->glosses[$index];
-
+            // TODO: double-check this
+            if ($request->root) {
+                $root = Root::firstOrCreate(['root' => $request->root]);
+                $termData = array_merge($termData, [
+                    'root_id' => $root->id,
+                ]);
             } else {
-                $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
-                $gloss = Gloss::create($requestGloss);
+                $termData = array_merge($termData, [
+                    'root_id' => null,
+                ]);
             }
 
-            $this->handleRelatives($gloss, $requestGloss['synonyms'], 'synonyms');
-            $this->handleRelatives($gloss, $requestGloss['antonyms'], 'antonyms');
-            $this->handleRelatives($gloss, $requestGloss['valences'], 'valences');
-        }
+            $term->update($termData);
+            $term->refresh();
 
-        foreach ($term->glosses as $gloss) {
-            !in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
-        }
+            $requestAttributes = array_map(fn($item) => $item['attribute'], $request->term['attributes']);
+            foreach ($requestAttributes as $attribute) {
+                Attribute::firstWhere('attribute', $attribute)->terms()->syncWithoutDetaching($term->id);
+            }
 
-        Root::doesntHave('terms')->delete();
+            $detachableAttributes = array_diff($term->attributes->pluck('attribute')->toArray(), $requestAttributes);
+            foreach ($detachableAttributes as $attribute) {
+                Attribute::firstWhere('attribute', $attribute)->terms()->detach($term);
+            }
+
+            $this->handlePatterns($term, $request->singPatterns, 'singular');
+            $this->handlePatterns($term, $request->plurPatterns, 'plural');
+            $this->handlePatterns($term, $request->verbPatterns, 'verbal');
+
+            $relatives = array_merge(
+                $request->variants,
+                $request->references,
+                $request->components,
+                $request->descendants,
+            );
+            $this->handleRelatives($term, $relatives);
+
+            $this->handleDependents($term, $request->spellings, Spelling::class, $term->spellings, 'spelling');
+            $this->handleDependents($term, $request->inflections, Inflection::class, $term->inflections, 'translit');
+            $this->handleDependents($term, $request->pronunciations, Pronunciation::class, $term->pronunciations,
+                'translit');
+
+            $term->update([
+                'translit' => $request->pronunciations[0]['translit'],
+                'slug' => $this->handleSlug($request->term['category'], $request->pronunciations[0]['translit'], $term),
+            ]);
+
+            $requestGlosses = [];
+            foreach ($request->glosses as $index => $requestGloss) {
+                unset($requestGloss['id']);
+                $requestGlosses[] = $requestGloss['gloss'];
+
+                if ($index + 1 <= count($term->glosses)) {
+                    $term->glosses[$index]->update($requestGloss);
+                    $gloss = $term->glosses[$index];
+
+                } else {
+                    $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
+                    $gloss = Gloss::create($requestGloss);
+                }
+
+                $requestGlossAttributes = array_map(fn($item) => $item['attribute'], $requestGloss['attributes']);
+                foreach ($requestGlossAttributes as $attribute) {
+                    Attribute::firstWhere('attribute', $attribute)->glosses()->syncWithoutDetaching($gloss->id);
+                }
+
+                $detachableGlossAttributes = array_diff($gloss->attributes->pluck('attribute')->toArray(),
+                    $requestGlossAttributes);
+                foreach ($detachableGlossAttributes as $attribute) {
+                    Attribute::firstWhere('attribute', $attribute)->glosses()->detach($gloss);
+                }
+
+                $this->handleRelatives($gloss, $requestGloss['relatives']);
+            }
+
+            foreach ($term->glosses as $gloss) {
+                !in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
+            }
+
+            Root::doesntHave('terms')->delete();
+
+            return $term;
+        });
 
         return [
             'status' => 'success',
@@ -456,23 +494,34 @@ class TermController extends Controller
     private
     function handleRelatives(
         object $origin,
-        array $requestItems,
-        string $relation,
-        string $reverseRelation = null
+        array $requestItems
     ) {
-        $attachedTerms = $origin->$relation->pluck('slug')->toArray();
-        $requestTerms = [];
+        $attachedTerms = $origin->relatives->pluck('slug')->toArray();
 
+        $requestTerms = [];
         foreach ($requestItems as $item) {
             $term = Term::firstWhere('slug', $item);
-            $type = is_array($item) ? $item['relation'] : $relation;
 
             if ($term) {
                 $requestTerms[] = $term->slug;
 
                 if (!in_array($term->slug, $attachedTerms)) {
-                    $origin->$relation()->attach($term, ['type' => Str::singular($type)]);
-                    $reverseRelation && $term->$relation()->attach($origin, ['type' => $reverseRelation]);
+                    $origin->relatives()->attach($term, ['type' => $item['relation']]);
+
+                    switch($item['relation']) {
+                        case 'variant':
+                            $term->relatives()->attach($origin, ['type' => 'variant']);
+                            break;
+                        case 'reference':
+                            $term->relatives()->attach($origin, ['type' => 'reference']);
+                            break;
+                        case 'component':
+                            $term->relatives()->attach($origin, ['type' => 'descendant']);
+                            break;
+                        case 'descendant':
+                            $term->relatives()->attach($origin, ['type' => 'component']);
+                            break;
+                    }
                 }
 
             } else {
@@ -482,7 +531,12 @@ class TermController extends Controller
 
         $detachableSlugs = array_diff($attachedTerms, $requestTerms);
         foreach ($detachableSlugs as $slug) {
-            $origin->$relation()->detach(Term::firstWhere('slug', $slug));
+            $term = Term::firstWhere('slug', $slug);
+            $origin->relatives()->detach($term);
+
+            if ($origin instanceof Term) {
+                $term->relatives()->detach($origin);
+            }
         }
     }
 

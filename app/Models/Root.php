@@ -9,13 +9,6 @@ class Root extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
-    public function terms()
-    {
-        return $this->hasMany(Term::class);
-    }
-
     const arabic = [
         'ب',
         'ت',
@@ -46,12 +39,11 @@ class Root extends Model
         'ي',
         'ء',
     ];
-
     const translit = [
         'b',
         't',
         'ŧ',
-        'ž',
+        'j',
         'ħ',
         'x',
         'd',
@@ -63,7 +55,7 @@ class Root extends Model
         'ṣ',
         'ḍ',
         'ṭ',
-        'ẓ',
+        'ż',
         'ʕ',
         'ġ',
         'f',
@@ -77,32 +69,103 @@ class Root extends Model
         'y',
         'ʔ',
     ];
+    const translitOverrides = [
+        '1' => [],
+        '4' => [],
+        '5' => [],
+        '7' => [],
 
-    public function rootArray()
+        '2' => [
+            'ق' => 'ʔ',
+            'ث' => 't',
+            'ذ' => 'z',
+            'ظ' => 'ẓ',
+            'ج' => 'ž',
+        ],
+        '8' => [
+            'ق' => 'ʔ',
+            'ث' => 't',
+            'ذ' => 'z',
+            'ظ' => 'ẓ',
+            'ج' => 'ž',
+        ],
+        '9' => [
+            'ق' => 'ʔ',
+            'ث' => 't',
+            'ذ' => 'z',
+            'ظ' => 'ẓ',
+            'ج' => 'ž',
+        ],
+
+        '3' => [
+            'ك' => 'č',
+            'ق' => 'k',
+        ],
+        '10' => [
+            'ك' => 'č',
+            'ق' => 'k',
+        ],
+        '11' => [
+            'ك' => 'č',
+            'ق' => 'k',
+        ],
+
+        '6' => ['ق' => 'g'],
+    ];
+
+    protected $guarded = [];
+
+    public function terms()
     {
-        $root = mb_str_split($this->root);
-        $rootTr = str_replace(Root::arabic, Root::translit, $root);
+        return $this->hasMany(Term::class);
+    }
 
-        // TODO: Only apply to conjugation charts, not Root Box.
-        if (in_array('ء', $root)) {
-            $root = str_replace('ء', 'أ', $root);
+    public function generateRoot(Term $term = null): array
+    {
+        $arabic = mb_str_split($this->root);
+        $translit = str_replace(self::arabic, self::translit, $arabic);
+
+        if ($term) {
+            $arabic = str_replace('ء', 'أ', $arabic);
+            $translits = [];
+
+            foreach ($term->pronunciations as $pronunciation) {
+                $dialect = $pronunciation->dialect;
+                $dialectTranslit = $this->generateTranslits($translit, $dialect);
+
+                $translits[] = [
+                    'dialect' => $dialect->name,
+                    'translit' => $dialectTranslit
+                ];
+            }
+
+            return [$arabic, $translits];
+
+        } else {
+            $arabic = implode(' ', $arabic);
+            $translit = implode(' ', $translit);
+
+            return [$arabic, $translit];
+        }
+    }
+
+    private function generateTranslits(array $translit, $dialect): array|string
+    {
+
+        if (isset(self::translitOverrides[$dialect->id])) {
+            $overrides = self::translitOverrides[$dialect->id];
+
+            foreach ($overrides as $arabicLetter => $dialectTranslit) {
+                $defaultTranslit = str_replace(self::arabic, self::translit, $arabicLetter);
+
+                $translit = str_replace(
+                    $defaultTranslit,
+                    $dialectTranslit,
+                    $translit
+                );
+            }
         }
 
-        return [$root, $rootTr];
-    }
-
-    public function showRoot()
-    {
-        $root = implode(' ', Root::rootArray()[0]);
-        $root = str_replace('أ', 'ء', $root);
-
-        return $root;
-    }
-
-    public function transRoot()
-    {
-        $rootTr = implode(' ', Root::rootArray()[1]);
-
-        return $rootTr;
+        return $translit;
     }
 }

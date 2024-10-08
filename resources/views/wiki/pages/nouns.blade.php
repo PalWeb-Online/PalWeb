@@ -99,20 +99,20 @@
         analytically via <b>reflexive pronouns</b> in cases where reflexive verbal forms don't exist; <b>حالـ
             (ħāl-)</b> is properly reflexive, while <b>بعض (baʕḍ)</b> is reciprocal.</p>
     <x-vocabulary title="reflexive">
-        <x-term :term="$terms->firstWhere('translit', 'nafs-')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ħāl-')"/>
-        <x-term :term="$terms->firstWhere('translit', 'baʕḍ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'nafs-')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ħāl-')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'baʕḍ')"/>
     </x-vocabulary>
 
     <h2>Other Pronouns</h2>
     <x-vocabulary title="interrogative">
-        <x-term :term="$terms->firstWhere('translit', 'šu')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔēš')"/>
-        <x-term :term="$terms->firstWhere('translit', 'mīn')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'šu')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔēš')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mīn')"/>
     </x-vocabulary>
     <x-vocabulary title="indefinite">
-        <x-term :term="$terms->firstWhere('translit', 'ħada')"/>
-        <x-term :term="$terms->firstWhere('translit', 'kamān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ħada')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'kamān')"/>
     </x-vocabulary>
     <p>In the case of the <b>relative pronoun</b>, its referent may be indexed by an antecedent or, in its absence,
         by
@@ -121,6 +121,6 @@
         subject to gender & number agreement. However, it does agree with its referent in definiteness; when the
         referent is indefinite, the form of <b>اللي</b> is <b>null</b>.</p>
     <x-vocabulary title="relative">
-        <x-term :term="$terms->firstWhere('translit', 'l-li')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'l-li')"/>
     </x-vocabulary>
 </div>

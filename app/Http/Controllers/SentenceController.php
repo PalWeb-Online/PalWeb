@@ -24,14 +24,14 @@ class SentenceController extends Controller
 
         Bookmark::toggle($sentence, $user);
 
-        if (Bookmark::has($sentence, $user)) {
-            event(new ModelPinned($user));
-            $this->flasher->addSuccess(__('pin.added', ['thing' => $sentence->sentence]));
-        } else {
-            $this->flasher->addSuccess(__('pin.removed', ['thing' => $sentence->sentence]));
-        }
+        $sentence->isPinned() && event(new ModelPinned($user));
 
-        return back();
+        return response()->json([
+            'isPinned' => $sentence->isPinned(),
+            'message' => $sentence->isPinned()
+                ? __('pin.added', ['thing' => $sentence->sentence])
+                : __('pin.removed', ['thing' => $sentence->sentence])
+        ]);
     }
 
     public function index(Request $request)

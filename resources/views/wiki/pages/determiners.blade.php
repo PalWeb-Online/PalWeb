@@ -21,14 +21,14 @@
     <b>clitic
         form</b> <b>هـ (ha-)</b>.</p>
 
-<x-sentence eng="the chair">
+<x-sentence-item eng="the chair">
     <x-sentence-term arb="الـ" eng="l-" :term="$terms->firstWhere('translit', 'l-')"/>
     <x-sentence-term arb="كرسي" eng="kursy" :term="$terms->firstWhere('translit', 'kursi')"/>
-</x-sentence>
-<x-sentence eng="this chair">
+</x-sentence-item>
+<x-sentence-item eng="this chair">
     <x-sentence-term arb="هـ" eng="ha-" :term="$terms->firstWhere('translit', 'ha-')"/>
     <x-sentence-term arb="ـالـ" eng="l-" :term="$terms->firstWhere('translit', 'l-')"/>
     <x-sentence-term arb="كرسي" eng="kursy" :term="$terms->firstWhere('translit', 'kursi')"/>
-</x-sentence>
+</x-sentence-item>
 
-<x-deck :deck="\App\Models\Deck::find(33)"/>
+<x-deck-container :deck="\App\Models\Deck::find(33)"/>

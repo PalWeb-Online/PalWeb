@@ -7,32 +7,32 @@
 <iframe src="https://www.youtube.com/embed/O-B85gxPBus" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="بالغ" eng="to exaggerate"/>
-    <x-term arb="مبالغة" eng="exaggeration"/>
-    <x-term arb="جاب قراره" eng="to find out everything"/>
-    <x-term arb="دلّع" eng="to be sweet to; to pamper, to spoil"/>
-    <x-term arb="ربّى" eng="to raise, to educate"/>
-    <x-term arb="ترباية" eng="education (as a person); parenting"/>
-    <x-term arb="رفض" eng="to refuse"/>
-    <x-term arb="مرفوض" eng="unacceptable"/>
-    <x-term arb="ركّز" eng="to focus, to concentrate, to pay attention"/>
-    <x-term arb="مركّز" eng="focused, concentrated"/>
-    <x-term arb="تركيز" eng="concentration"/>
-    <x-term arb="سرح" eng="to daydream"/>
-    <x-term arb="سرحان" eng="daydreaming"/>
-    {{--            <x-term arb="صبغ" eng="to dye"/>--}}
-    <x-term arb="انتبه (على)" eng="to notice; to pay attention (to one's surroundings)"/>
-    <x-term arb="واجه" eng="to confront"/>
-    <x-term arb="ردّة فعل" eng="reaction"/>
-    <x-term arb="مراهقة" eng="teen age"/>
-    <x-term arb="شرط" eng="condition"/>
-    <x-term arb="عقل" eng="mind"/>
-    <x-term arb="علامة" eng="grade, mark"/>
-    <x-term arb="كلام" eng="someone's word"/>
-    <x-term subterm arb="أخد كلام ~ جدّ" eng="to take ~'s word seriously"/>
-    <x-term arb="صايع" eng="wayward, vagabond"/>
-    <x-term arb="شخصيًّا" eng="personally"/>
-    <x-term arb="يا خسارة" eng="that's too bad; what a shame, what a waste"/>
+    <x-term-item arb="بالغ" eng="to exaggerate"/>
+    <x-term-item arb="مبالغة" eng="exaggeration"/>
+    <x-term-item arb="جاب قراره" eng="to find out everything"/>
+    <x-term-item arb="دلّع" eng="to be sweet to; to pamper, to spoil"/>
+    <x-term-item arb="ربّى" eng="to raise, to educate"/>
+    <x-term-item arb="ترباية" eng="education (as a person); parenting"/>
+    <x-term-item arb="رفض" eng="to refuse"/>
+    <x-term-item arb="مرفوض" eng="unacceptable"/>
+    <x-term-item arb="ركّز" eng="to focus, to concentrate, to pay attention"/>
+    <x-term-item arb="مركّز" eng="focused, concentrated"/>
+    <x-term-item arb="تركيز" eng="concentration"/>
+    <x-term-item arb="سرح" eng="to daydream"/>
+    <x-term-item arb="سرحان" eng="daydreaming"/>
+    {{--            <x-term-item arb="صبغ" eng="to dye"/>--}}
+    <x-term-item arb="انتبه (على)" eng="to notice; to pay attention (to one's surroundings)"/>
+    <x-term-item arb="واجه" eng="to confront"/>
+    <x-term-item arb="ردّة فعل" eng="reaction"/>
+    <x-term-item arb="مراهقة" eng="teen age"/>
+    <x-term-item arb="شرط" eng="condition"/>
+    <x-term-item arb="عقل" eng="mind"/>
+    <x-term-item arb="علامة" eng="grade, mark"/>
+    <x-term-item arb="كلام" eng="someone's word"/>
+    <x-term-item subterm arb="أخد كلام ~ جدّ" eng="to take ~'s word seriously"/>
+    <x-term-item arb="صايع" eng="wayward, vagabond"/>
+    <x-term-item arb="شخصيًّا" eng="personally"/>
+    <x-term-item arb="يا خسارة" eng="that's too bad; what a shame, what a waste"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

@@ -7,11 +7,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta name="description"
+          content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
     <meta name="author" content="R. Adrian">
 
     <meta property="og:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}">
-    <meta property="og:description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta property="og:description"
+          content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
     <meta property="og:image" content="{{ url('/img/palweb.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
@@ -20,7 +22,8 @@
     <meta name="twitter:site" content="@palweb_app">
     <meta name="twitter:creator" content="@rafi2_ab">
     <meta name="twitter:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}">
-    <meta name="twitter:description" content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
+    <meta name="twitter:description"
+          content="{{ $pageDescription ?? 'PalWeb: the Web of Palestinian Arabic | Get your study on with PalWeb\'s database-powered Palestinian Arabic learning tools: search the Dictionary & the Phrasebook; create & share your own custom flashcard Decks; connect with a vibrant language-learning community.' }}">
     <meta name="twitter:image" content="{{ url('/img/palweb.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -46,7 +49,7 @@
 
 </head>
 
-<body class="{{ $bodyBackground ?? '' }}">
+<body class="{{ $layout ?? '' }} {{ $bodyBackground ?? '' }}">
 
 @include("layouts._nav-mobile")
 @include("layouts._nav-sticky")
@@ -58,11 +61,8 @@
 @yield('page-body')
 
 @include("layouts._footer")
-</body>
 
-<script type="text/javascript" src="https://unpkg.com/@popperjs/core@2"></script>
-<script type="text/javascript" src="https://unpkg.com/tippy.js@6"></script>
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale-extreme.css">
+</body>
 
 <script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>
 

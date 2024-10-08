@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(30)"/>
+<x-deck-container :deck="\App\Models\Deck::find(30)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -11,26 +11,26 @@
         word.</p>
 
     <div class="array">
-        <x-sentence eng="the house">
+        <x-sentence-item eng="the house">
             <x-sentence-term arb="الـ" eng="the"/>
             <x-sentence-term arb="ـبيت" eng="house"/>
-        </x-sentence>
-        <x-sentence eng="a house">
+        </x-sentence-item>
+        <x-sentence-item eng="a house">
             <x-sentence-term arb="بيت" eng="house"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>Of course, <b>proper nouns</b> — like names, places, etc. — are already definite, so they don't need the article.
         But while English usually doesn't use <b>"the"</b> when referring to general concepts, Arabic does.</p>
 
     <div class="array">
-        <x-sentence eng="Arabic">
+        <x-sentence-item eng="Arabic">
             <x-sentence-term arb="الـ" eng="the" :term="$terms['l-'] ?? null"/>
             <x-sentence-term arb="ـعربيّ" eng="Arabic" :term="$terms['ʕarabi'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="Palestine">
+        </x-sentence-item>
+        <x-sentence-item eng="Palestine">
             <x-sentence-term arb="فلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p>Some consonants cause <b>الـ (-l)</b> to merge into them, doubling the sound; these
@@ -40,23 +40,23 @@
         different location.) Note that this feature has no effect on spelling.</p>
 
     <div class="array">
-        <x-sentence eng="the moon">
+        <x-sentence-item eng="the moon">
             <x-sentence-term arb="القمر" eng="l-ʔamar" :term="$terms['ʔamar'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="the sun">
+        </x-sentence-item>
+        <x-sentence-item eng="the sun">
             <x-sentence-term arb="الشمس" eng="š-šams" :term="$terms['šams'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <x-collapsible title="SEE MORE">
         <p>Pay attention to the following words. Do you notice anything strange about them?</p>
         <div class="array" style="margin: 0 0 1.6rem">
-            <x-sentence eng="the chair">
+            <x-sentence-item eng="the chair">
                 <x-sentence-term arb="الكرسي" eng="il-kursi" :term="$terms['kursi'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="the book">
+            </x-sentence-item>
+            <x-sentence-item eng="the book">
                 <x-sentence-term arb="الكتاب" eng="li-ktāb" :term="$terms['ktāb'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
         </div>
         <p>In one, the article sounds like <b>[ɪl]</b> or just <b>[l]</b> — but it sounds like <b>[lɪ]</b> in the other!
         </p>
@@ -68,12 +68,12 @@
             throughout Palestinian Arabic.</p>
         <p>Note that this separation causes the <b>sun letters</b> to lose their effect.</p>
         <div class="array" style="margin: 0 0 1.6rem">
-            <x-sentence eng="the olive">
+            <x-sentence-item eng="the olive">
                 <x-sentence-term arb="الزتون" eng="iz-zatūn" :term="$terms['zatūn'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="the garbage">
+            </x-sentence-item>
+            <x-sentence-item eng="the garbage">
                 <x-sentence-term arb="الزبالة" eng="li-zbāle" :term="$terms['zbāle'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
         </div>
     </x-collapsible>
 </x-lesson-concept>
@@ -85,26 +85,26 @@
         prepositions in Arabic: <b>بـ (b- "in")</b>. Notice that <b>بـ (b-)</b> is a <b>clitic</b> as well. We can use
         <b>بـ (b-)</b>, first of all, to indicate the location of something.</p>
 
-    <x-sentence eng="I am in Jerusalem">
+    <x-sentence-item eng="I am in Jerusalem">
         <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="القدس" eng="Jerusalem" :term="$terms['l-ʔuds'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="Jerusalem is in Palestine">
+    </x-sentence-item>
+    <x-sentence-item eng="Jerusalem is in Palestine">
         <x-sentence-term arb="القدس" eng="Jerusalem" :term="$terms['l-ʔuds'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـفلسطين" eng="Palestine" :term="$terms['falasṭīn'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>But we can use this term in an abstract sense as well, as we do in English. We'll be using this word a lot to ask
         for the meanings of other Arabic terms, so don't forget it!</p>
 
-    <x-sentence eng="what's 'l-ʔuds' in English?" wrapped>
+    <x-sentence-item eng="what's 'l-ʔuds' in English?" wrapped>
         <x-sentence-term arb="شو" eng="what" :term="$terms['šu'] ?? null"/>
         <x-sentence-term arb="القدس" eng="'l-ʔuds'" :term="$terms['l-ʔuds'] ?? null"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالإنجليزي" eng="the-English" :term="$terms['ʔinglīzi'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 
@@ -258,17 +258,17 @@
         word <b>يعني (yaʕni)</b>, we can use <b>يلّا (yalla "let's go")</b> either literally or to casually agree to
         an
         idea or even gently end small-talk & move on.</p>
-    <x-sentence eng="shall we get going?">
+    <x-sentence-item eng="shall we get going?">
         <x-sentence-term arb="يلّا؟" eng="let's go" :term="$terms['yalla'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="come on, let's go!">
+    </x-sentence-item>
+    <x-sentence-item eng="come on, let's go!">
         <x-sentence-term arb="يلّا" eng="let's go" :term="$terms['yalla'] ?? null"/>
         <x-sentence-term arb="يلّا" eng="let's go" :term="$terms['yalla'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="alright then, bye">
+    </x-sentence-item>
+    <x-sentence-item eng="alright then, bye">
         <x-sentence-term arb="يلّا" eng="let's go" :term="$terms['yalla'] ?? null"/>
         <x-sentence-term arb="سلامات" eng="goodbye" :term="$terms['salāmāt'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-collapsible title="SEE MORE">
         <p>How do you repond to <b>صباح الخير (ṣabāħ l-xēr)</b> & <b>مسا الخير (masa l-xēr)</b>? While you can reply
@@ -278,21 +278,21 @@
             it's also very common to use the names of different types of flowers!</p>
 
         <div class="array">
-            <x-sentence eng="good morning">
+            <x-sentence-item eng="good morning">
                 <x-sentence-term arb="صباح النور" eng="ṣabāħ n-nūr" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="good morning">
+            </x-sentence-item>
+            <x-sentence-item eng="good morning">
                 <x-sentence-term arb="صباح الحبّ" eng="ṣabāħ l-ħubb" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="good morning">
+            </x-sentence-item>
+            <x-sentence-item eng="good morning">
                 <x-sentence-term arb="صباح الورد" eng="ṣabāħ l-ward" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="good morning">
+            </x-sentence-item>
+            <x-sentence-item eng="good morning">
                 <x-sentence-term arb="صباح الفلّ" eng="ṣabāħ l-full" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
-            </x-sentence>
-            <x-sentence eng="good morning">
+            </x-sentence-item>
+            <x-sentence-item eng="good morning">
                 <x-sentence-term arb="صباح اليسمين" eng="ṣabāħ l-yasmīn" :term="$terms['ṣabāħ l-xēr'] ?? null"/>
-            </x-sentence>
+            </x-sentence-item>
         </div>
     </x-collapsible>
 </x-lesson-concept>

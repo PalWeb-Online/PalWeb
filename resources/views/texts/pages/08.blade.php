@@ -7,30 +7,30 @@
 <iframe src="https://www.youtube.com/embed/ZEpASYe3s0k" allowfullscreen></iframe>
 
 <x-vocabulary title="verbs">
-    <x-term arb="حسّ بـ ~" eng="to sympathize with ~"/>
-    <x-term arb="داق" eng="to taste"/>
-    <x-term arb="ربط" eng="to tie, to connect; to make a connection"/>
-    <x-term arb="رفع" eng="to raise"/>
-    <x-term arb="شرّب" eng="to give (someone something) to drink"/>
-    <x-term arb="ضحّى" eng="to sacrifice"/>
-    <x-term arb="كبر" eng="to grow"/>
-    <x-term arb="لحّق" eng="to manage (to do something) on time"/>
-    <x-term arb="لخّص" eng="to summarize"/>
-    <x-term arb="تلخيص" eng="summary"/>
-    <x-term arb="وتّر" eng="to stress (someone) out"/>
-    <x-term arb="داعي" eng="call, need, reason (to do something)"/>
-    <x-term arb="خطوة" eng="step"/>
-    <x-term arb="تفصيل" eng="detail"/>
-    <x-term arb="فنّان" eng="artist"/>
-    <x-term arb="قراءة" eng="reading"/>
-    <x-term arb="قالب" eng="mold"/>
-    <x-term arb="قناة" eng="channel"/>
-    <x-term arb="وحش" eng="beast"/>
-    <x-term arb="وصفة" eng="recipe"/>
-    <x-term arb="رهيب" eng="awesome"/>
-    <x-term arb="محرّج" eng="embarassed"/>
-    <x-term arb="مثل" eng="(Syria, Lebanon) like"/>
-    <x-term arb="من ورا" eng="behind (someone's) back"/>
+    <x-term-item arb="حسّ بـ ~" eng="to sympathize with ~"/>
+    <x-term-item arb="داق" eng="to taste"/>
+    <x-term-item arb="ربط" eng="to tie, to connect; to make a connection"/>
+    <x-term-item arb="رفع" eng="to raise"/>
+    <x-term-item arb="شرّب" eng="to give (someone something) to drink"/>
+    <x-term-item arb="ضحّى" eng="to sacrifice"/>
+    <x-term-item arb="كبر" eng="to grow"/>
+    <x-term-item arb="لحّق" eng="to manage (to do something) on time"/>
+    <x-term-item arb="لخّص" eng="to summarize"/>
+    <x-term-item arb="تلخيص" eng="summary"/>
+    <x-term-item arb="وتّر" eng="to stress (someone) out"/>
+    <x-term-item arb="داعي" eng="call, need, reason (to do something)"/>
+    <x-term-item arb="خطوة" eng="step"/>
+    <x-term-item arb="تفصيل" eng="detail"/>
+    <x-term-item arb="فنّان" eng="artist"/>
+    <x-term-item arb="قراءة" eng="reading"/>
+    <x-term-item arb="قالب" eng="mold"/>
+    <x-term-item arb="قناة" eng="channel"/>
+    <x-term-item arb="وحش" eng="beast"/>
+    <x-term-item arb="وصفة" eng="recipe"/>
+    <x-term-item arb="رهيب" eng="awesome"/>
+    <x-term-item arb="محرّج" eng="embarassed"/>
+    <x-term-item arb="مثل" eng="(Syria, Lebanon) like"/>
+    <x-term-item arb="من ورا" eng="behind (someone's) back"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
@@ -225,7 +225,7 @@
                        eng="kids, I'm very pleased with you & what you did"/>
         <x-dialog-line arb="إنتو حسّيتو فصحابكم وضحّيتو عشانهم"
                        eng="you felt for your friends & made a sacrifice for them"/>
-        <x-dialog-line arb="ولو حكيتولنا كنّا بنقدر نساعد أكثر كمان"
+        <x-dialog-line arb="ولو حكيتولنا كنّا منقدر نساعد أكثر كمان"
                        eng="if you had told us, we would've been able to help more as well"/>
         <x-dialog-line speaker="إمّ سند" arb="مزبوط، الواحد لازم يساعد — بسّ سالي، لو حكيتيلنا"
                        eng="true, one must help — but Sally, if you'd told us"/>

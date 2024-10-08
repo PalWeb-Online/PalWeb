@@ -8,7 +8,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '01') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l1)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l1)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -46,7 +46,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '02') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l2)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l2)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -84,7 +84,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '03') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l3)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l3)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -122,7 +122,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '04') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l4)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l4)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -160,7 +160,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '05') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l5)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l5)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -198,7 +198,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '06') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l6)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l6)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
@@ -236,7 +236,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '07') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l7)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l7)"/>
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
                 <div class="lesson-index-content-section-heading">{{ __('skill') }}</div>
@@ -273,7 +273,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '08') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l8)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l8)"/>
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">
                 <div class="lesson-index-content-section-heading">{{ __('skill') }}</div>
@@ -310,7 +310,7 @@
     </div>
     <div class="lesson-index-title">{{ __('lessons.' . $unit . '09') }}</div>
     <div class="lesson-index-body">
-        <x-deck-flashcard :deck="\App\Models\Deck::find($l9)"/>
+        <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find($l9)"/>
 
         <div class="lesson-index-content-section-wrapper">
             <div class="lesson-index-content-section">

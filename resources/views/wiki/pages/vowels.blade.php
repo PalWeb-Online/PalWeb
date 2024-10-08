@@ -19,12 +19,12 @@
         characters of the Arabic script, the diacritics used to represent short vowels are not usually written.</p>
 
     <x-vocabulary title="vowels">
-        <x-term arb="ــَـ" eng="(short open-front) /a/"/>
-        <x-term arb="ــِـ" eng="(short closed-front) /i/"/>
-        <x-term arb="ــُـ" eng="(short closed-back) /u/"/>
-        <x-term arb="ا" eng="(long open-front) /aː/"/>
-        <x-term arb="ي" eng="(long closed-front) /iː/"/>
-        <x-term arb="و" eng="(long closed-back) /uː/"/>
+        <x-term-item arb="ــَـ" eng="(short open-front) /a/"/>
+        <x-term-item arb="ــِـ" eng="(short closed-front) /i/"/>
+        <x-term-item arb="ــُـ" eng="(short closed-back) /u/"/>
+        <x-term-item arb="ا" eng="(long open-front) /aː/"/>
+        <x-term-item arb="ي" eng="(long closed-front) /iː/"/>
+        <x-term-item arb="و" eng="(long closed-back) /uː/"/>
     </x-vocabulary>
 
     <p>Note that <b>/a/</b> may actually be represented in a variety of ways, most notably including <b>ى</b> &
@@ -48,16 +48,16 @@
         affects <b>/aː/</b> — not <b>/a/</b>.</p>
 
     <x-vocabulary title="open-front">
-        <x-term :term="$terms->firstWhere('translit', 'bardān')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ħammām')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'bardān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ħammām')"/>
     </x-vocabulary>
 
     <p>Pharyngealization continues to affect the realization of <b>/a/</b> & <b>/aː/</b> in Palestinian
         Arabic. Since pharyngealization may spread more freely throughout a word in Spoken Arabic, the
         pharyngealized consonant doesn't have to be immediately before or after the vowel to have an effect.</p>
     <x-vocabulary title="open-front">
-        <x-term :term="$terms->firstWhere('translit', 'ʕaṭšān')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ṭayyāra')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕaṭšān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ṭayyāra')"/>
     </x-vocabulary>
 
     {{--        <p>Now is a good time to mention that the consonant <b>/r/</b> is usually pharyngealized as well. Additionally,--}}
@@ -69,8 +69,8 @@
         extremely rare; they include — but are not limited to — terms with <b>الله (ʔallah)</b> in them.</p>
 
     <x-vocabulary title="open-front">
-        <x-term :term="$terms->firstWhere('translit', 'ʔāh')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ya ʔallah')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔāh')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ya ʔallah')"/>
     </x-vocabulary>
 
     <h2>Mid-Front & Mid-Back</h2>
@@ -80,12 +80,12 @@
         have short & long mid-front (<b>/e/</b>), as well as short and long mid-back (<b>/o/</b>).</p>
 
     <x-vocabulary title="mid-front">
-        <x-term :term="$terms->firstWhere('translit', 'madrase')"/>
-        <x-term :term="$terms->firstWhere('translit', 'zēt')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'madrase')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'zēt')"/>
     </x-vocabulary>
     <x-vocabulary title="mid-back">
-        <x-term :term="$terms->firstWhere('translit', 'barḍo')"/>
-        <x-term :term="$terms->firstWhere('translit', 'fōʔ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'barḍo')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'fōʔ')"/>
     </x-vocabulary>
 
     <p>Since there's no unique way to write the short and long <b>/e/</b> and <b>/o/</b> vowels, short and long
@@ -141,17 +141,17 @@
         they appear in these types of high frequency nouns:</p>
 
     <div class="flex">
-        <div class="content audio" onclick="lēl.play()">
+        <div class="content" onclick="lēl.play()">
             <div class="arb">ل<span class="orn">ي</span>ل</div>
             <div class="eng">l<span class="orn">ē</span>l</div>
             <div class="gloss">night</div>
         </div>
-        <div class="content audio" onclick="bēn.play()">
+        <div class="content" onclick="bēn.play()">
             <div class="arb">ب<span class="orn">ي</span>ن</div>
             <div class="eng">b<span class="orn">ē</span>n</div>
             <div class="gloss">between</div>
         </div>
-        <div class="content audio" onclick="zēt.play()">
+        <div class="content" onclick="zēt.play()">
             <div class="arb">ز<span class="orn">ي</span>ت</div>
             <div class="eng">z<span class="orn">ē</span>t</div>
             <div class="gloss">oil</div>
@@ -159,17 +159,17 @@
     </div>
 
     <div class="flex">
-        <div class="content audio" onclick="yōm.play()">
+        <div class="content" onclick="yōm.play()">
             <div class="arb">ي<span class="blu">و</span>م</div>
             <div class="eng">y<span class="blu">ō</span>m</div>
             <div class="gloss">day</div>
         </div>
-        <div class="content audio" onclick="fōʔ.play()">
+        <div class="content" onclick="fōʔ.play()">
             <div class="arb">ف<span class="blu">و</span>ق</div>
             <div class="eng">f<span class="blu">ō</span>2</div>
             <div class="gloss">above</div>
         </div>
-        <div class="content audio" onclick="jōz.play()">
+        <div class="content" onclick="jōz.play()">
             <div class="arb">ج<span class="blu">و</span>ز</div>
             <div class="eng">j<span class="blu">ō</span>z</div>
             <div class="gloss">husband</div>
@@ -180,22 +180,22 @@
         for <b>ta marbūṭa</b>, it's generally pronounced as <b>/e/</b>.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="maʕna.play()">
+        <div class="content" onclick="maʕna.play()">
             <div class="arb">معن<span class="grn">ى</span></div>
             <div class="eng">maʕn<span class="grn">a</span></div>
         </div>
-        <div class="content audio" onclick="f1_ḥaka.play()">
+        <div class="content" onclick="f1_ḥaka.play()">
             <div class="arb">حك<span class="grn">ى</span></div>
             <div class="eng">ħak<span class="grn">a</span></div>
         </div>
     </div>
 
     <div class="flex">
-        <div class="content audio" onclick="wajbe.play()">
+        <div class="content" onclick="wajbe.play()">
             <div class="arb">وجب<span class="orn">ة</span></div>
             <div class="eng">wajb<span class="orn">e</span></div>
         </div>
-        <div class="content audio" onclick="jumle.play()">
+        <div class="content" onclick="jumle.play()">
             <div class="arb">جمل<span class="orn">ة</span></div>
             <div class="eng">juml<span class="orn">e</span></div>
         </div>
@@ -223,17 +223,17 @@
         the stem. In all other cases, though, <b>ي</b> always represents <b>/i/</b>.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="f1_maša.play()">
+        <div class="content" onclick="f1_maša.play()">
             <div class="arb">مشى</div>
             <div class="eng">maša</div>
             <div class="gloss">he walked</div>
         </div>
-        <div class="content audio" onclick="f1_maša$mašēt.play()">
+        <div class="content" onclick="f1_maša$mašēt.play()">
             <div class="arb">مش<span class="orn">ي</span>ت</div>
             <div class="eng">maš<span class="orn">ē</span>t</div>
             <div class="gloss">I walked</div>
         </div>
-        <div class="content audio" onclick="f1_maša$btimši.play()">
+        <div class="content" onclick="f1_maša$btimši.play()">
             <div class="arb">بتمش<span class="yel">ي</span></div>
             <div class="eng">btimš<span class="yel">i</span></div>
             <div class="gloss">you.F walked</div>
@@ -241,17 +241,17 @@
     </div>
 
     <div class="flex">
-        <div class="content audio" onclick="f1_ḥabb.play()">
+        <div class="content" onclick="f1_ḥabb.play()">
             <div class="arb">حبّ</div>
             <div class="eng">ħabb</div>
             <div class="gloss">he loved</div>
         </div>
-        <div class="content audio" onclick="f1_ḥabb$ḥabbēt.play()">
+        <div class="content" onclick="f1_ḥabb$ḥabbēt.play()">
             <div class="arb">حبّ<span class="orn">ي</span>ت</div>
             <div class="eng">ħabb<span class="orn">ē</span>t</div>
             <div class="gloss">I loved</div>
         </div>
-        <div class="content audio" onclick="f1_ḥabb$bitḥibbi.play()">
+        <div class="content" onclick="f1_ḥabb$bitḥibbi.play()">
             <div class="arb">بتحبّ<span class="yel">ي</span></div>
             <div class="eng">bitħibb<span class="yel">i</span></div>
             <div class="gloss">you.F loved</div>
@@ -305,12 +305,12 @@
         be more tense in stressed syllables and less tense is unstressed syllables.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="wijh.play()">
+        <div class="content" onclick="wijh.play()">
             <div class="arb">وِجِه</div>
             <div class="eng">/w<span class="yel">i</span>ʒ<span class="yel">i</span>h/</div>
             <div class="gloss">[w<span class="yel">ɪ</span>ʒ<span class="yel">ɪ</span>h]</div>
         </div>
-        <div class="content audio" onclick="šuḡl.play()">
+        <div class="content" onclick="šuḡl.play()">
             <div class="arb">شُغُل</div>
             <div class="eng">/ʃ<span class="prp">u</span>ɣ<span class="prp">u</span>l/</div>
             <div class="gloss">[ʃ<span class="prp">ʊ</span>ɣ<span class="prp">ʊ</span>l]</div>
@@ -325,12 +325,12 @@
         well.</p>
 
     <div class="flex">
-        <div class="content audio" onclick="f1_ḥaka$ḥakētilha.play()">
+        <div class="content" onclick="f1_ḥaka$ḥakētilha.play()">
             <div class="arb">حكيتلها</div>
             <div class="eng">/ħak<span class="orn">e:</span>t<span class="yel">i</span>lha/</div>
             <div class="gloss">[ħak<span class="orn">e</span>t<span class="yel">ɪ</span>lha]</div>
         </div>
-        <div class="content audio" onclick="mizān.play()">
+        <div class="content" onclick="mizān.play()">
             <div class="arb">ميزان</div>
             <div class="eng">/m<span class="yel">i:</span>zæ:n/</div>
             <div class="gloss">[m<span class="yel">i</span>zæ:n]</div>
@@ -342,17 +342,17 @@
         the back of the mouth and throat:</p>
 
     <div class="flex">
-        <div class="content audio" onclick="nusḵa.play()">
+        <div class="content" onclick="nusḵa.play()">
             <div class="arb">نسخ<span class="grn">ة</span></div>
             <div class="eng">[nusx<span class="grn">a</span>]</div>
             <div class="gloss">/nusx<span class="orn">e</span>/</div>
         </div>
-        <div class="content audio" onclick="luḡa.play()">
+        <div class="content" onclick="luḡa.play()">
             <div class="arb">لغ<span class="grn">ة</span></div>
             <div class="eng">[lʊɣ<span class="grn">a</span>]</div>
             <div class="gloss">/luɣ<span class="orn">e</span>/</div>
         </div>
-        <div class="content audio" onclick="jāmʕa.play()">
+        <div class="content" onclick="jāmʕa.play()">
             <div class="arb">جامع<span class="grn">ة</span></div>
             <div class="eng">[jæ:mʕ<span class="grn">a</span>]</div>
             <div class="gloss">/ja:mʕ<span class="orn">e</span>/</div>
@@ -360,17 +360,17 @@
     </div>
 
     <div class="flex">
-        <div class="content audio" onclick="ṣarāḥa.play()">
+        <div class="content" onclick="ṣarāḥa.play()">
             <div class="arb">صراح<span class="grn">ة</span></div>
             <div class="eng">[sˤɑrɑ:ħ<span class="grn">a</span>]</div>
             <div class="gloss">/sˤara:ħ<span class="orn">e</span>/</div>
         </div>
-        <div class="content audio" onclick="jiha.play()">
+        <div class="content" onclick="jiha.play()">
             <div class="arb">جه<span class="grn">ة</span></div>
             <div class="eng">[ʒɪh<span class="grn">a</span>]</div>
             <div class="gloss">/ʒih<span class="orn">e</span>/</div>
         </div>
-        <div class="content audio" onclick="šaʔʔa.play()">
+        <div class="content" onclick="šaʔʔa.play()">
             <div class="arb">شقّ<span class="grn">ة</span></div>
             <div class="eng">[šaʔʔ<span class="grn">a</span>]</div>
             <div class="gloss">/šaʔʔ<span class="orn">e</span>/</div>

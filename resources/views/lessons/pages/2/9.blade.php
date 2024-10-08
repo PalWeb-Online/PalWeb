@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(55)"/>
+<x-deck-container :deck="\App\Models\Deck::find(55)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -14,12 +14,12 @@
     <p>In Arab culture, one's full name is the so-called <b>إسم رباعي (ʔism rubāʕi)</b> — a four-part name
         composed of the given name, the father's given name, the father's father's given name & the family
         name:</p>
-    <x-sentence eng="Ahmad Odeh Mahmud al-Barghuti">
+    <x-sentence-item eng="Ahmad Odeh Mahmud al-Barghuti">
         <x-sentence-term arb="أحمد" eng="given"/>
         <x-sentence-term arb="عودة" eng="father's"/>
         <x-sentence-term arb="محمود" eng="g-father's"/>
         <x-sentence-term arb="البرغوثي" eng="family"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('dialogue') }}">

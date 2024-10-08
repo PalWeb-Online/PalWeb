@@ -29,13 +29,13 @@
 
 <div class="flex">
   <div class="num">1A</div>
-  <div class="content audio" onclick="bēt$ilbet.play()">
+  <div class="content" onclick="bēt$ilbet.play()">
     <div class="arb"><span class="grn">ال</span>بيت</div>
     <div class="eng">the house</div>
     <div class="gloss"><span class="grn">DEF</span>-house</div>
   </div>
   <div class="num">1B</div>
-  <div class="content audio" onclick="bēt.play()">
+  <div class="content" onclick="bēt.play()">
     <div class="arb">بيت</div>
     <div class="eng">a house</div>
     <div class="gloss"><span class="yel">IND</span>.house</div>
@@ -52,14 +52,14 @@
 
 <div class="flex">
   <div class="num">2A</div>
-  <div class="content audio" onclick="bēt$ilbet_likbir.play()">
+  <div class="content" onclick="bēt$ilbet_likbir.play()">
     <div class="arb"><span class="grn">ال</span>بيت <span class="grn">ال</span>كبير</div>
     <div class="eng">the big house</div>
     <div class="gloss"><span class="grn">DEF</span>-house <span class="grn">DEF</span>-big</div>
   </div>
 
   <div class="num">2B</div>
-  <div class="content audio" onclick="bēt$bēt_kbir.play()">
+  <div class="content" onclick="bēt$bēt_kbir.play()">
     <div class="arb">بيت كبير</div>
     <div class="eng">a big house</div>
     <div class="gloss"><span class="yel">IND</span>.house <span class="yel">IND</span>.big</div>
@@ -72,14 +72,14 @@
 
 <div class="flex">
   <div class="num block grnbgr material-icons-round">check</div>
-  <div class="content audio" onclick="bēt$bēti.play()">
+  <div class="content" onclick="bēt$bēti.play()">
     <div class="arb">بيت<span class="grn">ي</span></div>
     <div class="eng">my house</div>
     <div class="gloss">1S.<span class="grn">DEF</span>-house</div>
   </div>
 
   <div class="num block redbgr material-icons-round">close</div>
-  <div class="content audio x" onclick="x.play()">
+  <div class="content x" onclick="x.play()">
     <div class="arb"><span class="red">ال</span>بيت<span class="grn">ي</span></div>
     <div class="eng">the my house</div>
     <div class="gloss"><span class="red">DEF</span>-[1S.<span class="grn">DEF</span>-house]</div>
@@ -90,7 +90,7 @@
 
 <div class="flex">
   <div class="num block grnbgr material-icons-round">check</div>
-  <div class="content audio" onclick="bēt$bēti_likbir.play()">
+  <div class="content" onclick="bēt$bēti_likbir.play()">
     <div class="arb">بيت<span class="grn">ي</span> <span class="grn">ال</span>كبير</div>
     <div class="eng">my big house</div>
     <div class="gloss">1S.<span class="grn">DEF</span>-house <span class="grn">DEF</span>-big</div>
@@ -99,7 +99,7 @@
 
 <div class="flex">
   <div class="num block redbgr material-icons-round">close</div>
-  <div class="content audio x" onclick="x.play()">
+  <div class="content x" onclick="x.play()">
     <div class="arb"><span class="red">ال</span>بيت<span class="grn">ي</span> <span class="grn">ال</span>كبير</div>
     <div class="eng">the my big house</div>
     <div class="gloss"><span class="red">DEF</span>-[1S.<span class="grn">DEF</span>-house] <span class="grn">DEF</span>-big</div>
@@ -112,7 +112,7 @@
 
 <div class="flex">
   <div class="num">2A</div>
-  <div class="content audio" onclick="bēt$ilbet_likbir.play()">
+  <div class="content" onclick="bēt$ilbet_likbir.play()">
     <div class="arb"><span class="grn">ال</span>بيت <span class="grn">ال</span>كبير</div>
     <div class="eng">the big house</div>
     <div class="gloss"><span class="grn">DEF</span>-house <span class="grn">DEF</span>-big</div>
@@ -121,7 +121,7 @@
 
 <div class="flex">
   <div class="num">3</div>
-  <div class="content audio" onclick="bēt$ilbet_kbir.play()">
+  <div class="content" onclick="bēt$ilbet_kbir.play()">
     <div class="arb"><span class="grn">ال</span>بيت كبير</div>
     <div class="eng">the house is big</div>
     <div class="gloss">[<span class="grn">DEF</span>-house] = <span class="yel">IND</span>.big</div>
@@ -137,7 +137,7 @@
 
 <div class="flex">
   <div class="num">4A</div>
-  <div class="content audio" onclick="lahje$illahje_ilfalasṭīniyye.play()">
+  <div class="content" onclick="lahje$illahje_ilfalasṭīniyye.play()">
     <div class="arb"><span class="grn">ال</span>لَهجة <span class="grn">ال</span>فَلَسطينيّة</div>
     <div class="eng">the Palestinian dialect</div>
     <div class="gloss"><span class="grn">DEF</span>-dialect <span class="grn">DEF</span>-Palestinian</div>
@@ -146,7 +146,7 @@
 
 <div class="flex">
   <div class="num">4B</div>
-  <div class="content audio" onclick="lahje$lahjet_falasṭīn.play()">
+  <div class="content" onclick="lahje$lahjet_falasṭīn.play()">
     <div class="arb">لَهجة <span class="grn">فَلَسطين</span></div>
     <div class="eng">the dialect of Palestine</div>
     <div class="gloss"><span class="grn">DEF</span>.[<span class="yel">IND</span>.dialect <span class="grn">DEF</span>.Palestine]</div>
@@ -207,7 +207,7 @@
 
 <div class="flex">
   <div class="num block redbgr material-icons-round">close</div>
-  <div class="content audio x" onclick="x.play()">
+  <div class="content x" onclick="x.play()">
     <div class="arb"><span class="red">ال</span>لَهجة <span class="grn">فَلَسطين</span></div>
     <div class="eng">the dialect is Palestine</div>
     <div class="gloss"><span class="grn">DEF</span>-dialect = <span class="grn">DEF</span>.Palestine</div>
@@ -218,7 +218,7 @@
 
 <div class="flex">
   <div class="num block yelbgr material-icons-round">question_mark</div>
-  <div class="content audio" onclick="bēt$bēt_likbir.play()">
+  <div class="content" onclick="bēt$bēt_likbir.play()">
     <div class="arb">بيت <span class="grn">ال</span>كبير</div>
     <div class="eng">the house of the adult</div>
     <div class="gloss"><span class="grn">DEF</span>.[<span class="yel">IND</span>.house <span class="grn">DEF</span>-big]</div>
@@ -233,7 +233,7 @@
       <li>an adjective modifying a noun must agree in definiteness with the noun</li>
 
       <div class="flex">
-        <div class="content audio" onclick="bēt$bēt_kbir.play()">
+        <div class="content" onclick="bēt$bēt_kbir.play()">
           <div class="title"><span class="yel">IND</span> + <span class="yel">IND</span></div>
           <div class="arb">بيت كبير</div>
           <div class="eng">a big house</div>
@@ -242,7 +242,7 @@
       </div>
 
       <div class="flex">
-        <div class="content audio" onclick="bēt$ilbet_likbir.play()">
+        <div class="content" onclick="bēt$ilbet_likbir.play()">
           <div class="title"><span class="grn">DEF</span> + <span class="grn">DEF</span></div>
           <div class="arb"><span class="grn">ال</span>بيت <span class="grn">ال</span>كبير</div>
           <div class="eng">the big house</div>
@@ -296,14 +296,14 @@
 
 <div class="flex">
   <div class="num">8A</div>
-  <div class="content audio" onclick="kitāb$hāda_ktāb.play()">
+  <div class="content" onclick="kitāb$hāda_ktāb.play()">
     <div class="title">PRONOUN</div>
     <div class="arb">هَدا كتاب</div>
     <div class="eng">this is a book</div>
     <div class="gloss">[DEF.this] = IND.book</div>
   </div>
   <div class="num">8B</div>
-  <div class="content audio" onclick="kitāb$hāda_liktāb.play()">
+  <div class="content" onclick="kitāb$hāda_liktāb.play()">
     <div class="title">DETERMINER</div>
     <div class="arb">هَدا <span class="grn">ال</span>كتاب</div>
     <div class="eng">this book</div>
@@ -315,14 +315,14 @@
 
 <div class="flex">
   <div class="num">8C</div>
-  <div class="content audio" onclick="kitāb$hāda_liktāb.play()">
+  <div class="content" onclick="kitāb$hāda_liktāb.play()">
     <div class="title">PRONOUN</div>
     <div class="arb"><span class="blu">هَدا</span> <span class="grn">ال</span>كتاب</div>
     <div class="eng">this is the book</div>
     <div class="gloss"><span class="blu">M</span>.this = [<span class="grn">DEF</span>-<span class="blu">M</span>.book]</div>
   </div>
   <div class="num">8D</div>
-  <div class="content audio" onclick="kitāb$hāliktāb.play()">
+  <div class="content" onclick="kitāb$hāliktāb.play()">
     <div class="title">DETERMINER</div>
     <div class="arb"><span class="grn">هال</span>كتاب</div>
     <div class="eng">this book</div>
@@ -349,14 +349,14 @@
 
 <div class="flex">
   <div class="num">10A</div>
-  <div class="content audio" onclick="ūlād$hadōl_lūlād.play()">
+  <div class="content" onclick="ūlād$hadōl_lūlād.play()">
     <div class="title">PRONOUN</div>
     <div class="arb"><span class="yel">هَدول</span> <span class="grn">ال</span>أولاد</div>
     <div class="eng">these are the kids</div>
     <div class="gloss"><span class="yel">P</span>.these = [<span class="grn">DEF</span>-<span class="yel">P</span>.kids]</div>
   </div>
   <div class="num">10B</div>
-  <div class="content audio" onclick="ūlād$hālūlād.play()">
+  <div class="content" onclick="ūlād$hālūlād.play()">
     <div class="title">DETERMINER</div>
     <div class="arb"><span class="grn">هال</span>أولاد</div>
     <div class="eng">these kids</div>
@@ -383,7 +383,7 @@
 
 <div class="flex">
   <div class="num">??</div>
-  <div class="content audio" onclick="bēt$hālbet_kbir.play()">
+  <div class="content" onclick="bēt$hālbet_kbir.play()">
     <div class="arb"><span class="grn">هال</span>بيت كبير</div>
     <div class="eng">this house is big</div>
     <div class="gloss">[this <span class="grn">DEF</span>-house] = <span class="yel">IND</span>.big</div>
@@ -392,7 +392,7 @@
 
 <div class="flex">
   <div class="num">??</div>
-  <div class="content audio" onclick="bēt$hālbet_likbir.play()">
+  <div class="content" onclick="bēt$hālbet_likbir.play()">
     <div class="arb"><span class="grn">هال</span>بيت <span class="grn">ال</span>كبير</div>
     <div class="eng">this big house</div>
     <div class="gloss">[this <span class="grn">DEF</span>-house <span class="grn">DEF</span>-big]</div>
@@ -401,7 +401,7 @@
 
 <div class="flex">
   <div class="num">15</div>
-  <div class="content audio" onclick="bēt$hālbet_likbir_ḡāli_šway.play()">
+  <div class="content" onclick="bēt$hālbet_likbir_ḡāli_šway.play()">
     <div class="arb"><span class="grn">هال</span>بيت <span class="grn">ال</span>كبير غالي شوَي</div>
     <div class="eng">this big house is a bit expensive</div>
     <div class="gloss">[this <span class="grn">DEF</span>-house <span class="grn">DEF</span>-big] = <span class="yel">IND</span>.expensive a bit</div>
@@ -412,7 +412,7 @@
 
 <div class="flex">
   <div class="num">14A</div>
-  <div class="content audio" onclick="lahje$lahjet_ilmanṭaʔa.play()">
+  <div class="content" onclick="lahje$lahjet_ilmanṭaʔa.play()">
     <div class="arb">لَهجة <span class="grn">ال</span>مَنطِقة</div>
     <div class="eng">the dialect of the region</div>
     <div class="gloss">[<span class="yel">IND</span>.dialect <span class="grn">DEF</span>-region].<span class="grn">DEF</span></div>
@@ -420,7 +420,7 @@
 </div>
 <div class="flex">
   <div class="num">14B</div>
-  <div class="content audio" onclick="lahje$lahjet_hālmanṭaʔa.play()">
+  <div class="content" onclick="lahje$lahjet_hālmanṭaʔa.play()">
     <div class="arb">لَهجة <span class="grn">هال</span>مَنطِقة</div>
     <div class="eng">the dialect of this region</div>
     <div class="gloss">[<span class="yel">IND</span>.dialect this-<span class="grn">DEF</span>-region].<span class="grn">DEF</span></div>
@@ -429,7 +429,7 @@
 
 <div class="flex">
   <div class="num">16</div>
-  <div class="content audio" onclick="lahje$lahjet_hālmanṭaʔa_ḥilwe_ktīr.play()">
+  <div class="content" onclick="lahje$lahjet_hālmanṭaʔa_ḥilwe_ktīr.play()">
     <div class="arb">لَهجة <span class="grn">هال</span>مَنطِقة حِلوة كتير</div>
     <div class="eng">the dialect of this region is very beautiful</div>
     <div class="gloss">[<span class="yel">IND</span>.<span class="mag">F</span>.dialect this-<span class="grn">DEF</span>-region].<span class="grn">DEF</span> = <span class="mag">F</span>.beautiful very</div>

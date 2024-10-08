@@ -1,23 +1,23 @@
-<x-deck :deck="\App\Models\Deck::find(49)"/>
+<x-deck-container :deck="\App\Models\Deck::find(49)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
 
     <p>We use <b>ʔidāfa</b> to — among other things — indicate possession; hence:</p>
-    <x-sentence eng="the man's family">
+    <x-sentence-item eng="the man's family">
         <x-sentence-term arb="عيلة" eng="family" :term="$terms['ʕēle'] ?? null"/>
         <x-sentence-term arb="الزلمة" eng="the-man" :term="$terms['zalame'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>But what if, instead of using a noun, we'd like to use a pronoun? How can we say <b>"his family"</b> or even <b>"my
             family"</b>? In theory, we'd like to use a pronoun instead of <b>الزلمة</b>. However, <b>هو</b> can't be
         used here.</p>
     <p>Arabic pronouns have two forms: a <b>noun form</b> for nouns in the <b>nominative</b> case (the default case of
         nouns) & a <b>clitic form</b> for nouns in the <b>genitive-accusative</b> case. In practical terms, the <b>clitic
             form</b> is the one used to indicate possession & — as we will learn later — to indicate verbal objects.</p>
-    <x-sentence eng="his family">
+    <x-sentence-item eng="his family">
         <x-sentence-term arb="عيلتـ" eng="family" :term="$terms['ʕēle'] ?? null"/>
         <x-sentence-term arb="ـه" eng="his" :term="$terms['-o'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-inflections
         conj1S="عيلتي" conj1Str="ʕēlti"
@@ -36,12 +36,12 @@
 
     <p>In Palestinian Arabic, final vowels are always short on the surface. If a suffix were to follow the word,
         however, that vowel would no longer be final & would therefore be pronounced as long:</p>
-    <x-sentence eng="father">
+    <x-sentence-item eng="father">
         <x-sentence-term arb="أبو" eng="ʔabu" :term="$terms['ʔabu'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="her father">
+    </x-sentence-item>
+    <x-sentence-item eng="her father">
         <x-sentence-term arb="أبوها" eng="ʔabūha" :term="$terms['ʔabu'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Some <b>clitic pronouns</b>, however, begin with — or simply are — vowels. Palestinian Arabic doesn't allow two
         different vowels to exist back-to-back, so if we attach these clitic pronouns to a final vowel, they are going
@@ -136,39 +136,39 @@
             (-ak)</b> & <b>ـك (-ek)</b> — different forms of <b>إنتا (ʔinta)</b> & <b>إنتي (ʔinti)</b> that will be
         discussed later.</p>
 
-    <x-sentence eng="excuse me, could I get some help?">
+    <x-sentence-item eng="excuse me, could I get some help?">
         <x-sentence-term arb="أغلّبَك" eng="excuse me (m.)" :term="$terms['ʔaġallbak'] ?? null"/>
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="مساعدة" eng="help" :term="$terms['musāʕade'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="excuse me, could I get some help?">
+    </x-sentence-item>
+    <x-sentence-item eng="excuse me, could I get some help?">
         <x-sentence-term arb="أغلّبِك" eng="excuse me (f.)" :term="$terms['ʔaġallbak'] ?? null"/>
         <x-sentence-term arb="ممكن" eng="possible" :term="$terms['mumkin'] ?? null"/>
         <x-sentence-term arb="مساعدة" eng="help" :term="$terms['musāʕade'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>As you can see, <b>أغلّبك (ʔaġallbak/ek)</b> is an interjection used to get someone's attention when you'd like
         to ask something of them; it's polite to use, but not overly so. If you'd like to sound extra polite, instead of
         <b>إنتا (ʔinta)</b> & <b>إنتي (ʔinti)</b> you can use <b>حضرتك (ħaḍratak/ek)</b> — similar to <b>"sir"</b> or
         <b>"ma'am"</b>. It's very polite to address strangers this way, but it's not mandatory.</p>
 
-    <x-sentence eng="how are you, sir?">
+    <x-sentence-item eng="how are you, sir?">
         <x-sentence-term arb="كيف" eng="how" :term="$terms['kīf'] ?? null"/>
         <x-sentence-term arb="حضرتَك" eng="you sir" :term="$terms['ħaḍratak'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="where are you from, ma'am?">
+    </x-sentence-item>
+    <x-sentence-item eng="where are you from, ma'am?">
         <x-sentence-term arb="من" eng="from" :term="$terms['min'] ?? null"/>
         <x-sentence-term arb="وين" eng="where" :term="$terms['wēn'] ?? null"/>
         <x-sentence-term arb="حضرتِك" eng="you ma'am" :term="$terms['ħaḍratak'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>We greet others with <b>يعطيك العافية (yaʕṭīk l-ʕāfye "may He give you well-being")</b> when we find them in work
         situations or after they have performed some type of service.</p>
 
-    <x-sentence eng="hello, may He give you well-being">
+    <x-sentence-item eng="hello, may He give you well-being">
         <x-sentence-term arb="مرحبا" eng="hello" :term="$terms['marħaba'] ?? null"/>
         <x-sentence-term arb="يعطيك العافية" eng="may He give you well-being" :term="$terms['yaʕṭīk l-ʕāfye'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <x-inflections
         conjM="حضرتَك" conjMtr="ħaḍrtak"

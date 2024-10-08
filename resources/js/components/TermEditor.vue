@@ -19,6 +19,7 @@ export default {
             term: {
                 term: '',
                 category: '',
+                attributes: [],
                 etymology: {
                     type: '',
                     source: '',
@@ -27,14 +28,14 @@ export default {
                 usage: '',
             },
             root: '',
-            attributes: [],
             singPatterns: [],
             plurPatterns: [],
             verbPatterns: [],
             pronunciations: [],
             variants: [],
-            components: [],
             references: [],
+            components: [],
+            descendants: [],
             spellings: [],
             inflections: [],
             glosses: [],
@@ -55,14 +56,14 @@ export default {
                 .then(response => {
                     this.term = response.data.term;
                     this.root = (response.data.root) ? response.data.root : this.root;
-                    this.attributes = response.data.attributes;
                     this.singPatterns = response.data.singPatterns;
                     this.plurPatterns = response.data.plurPatterns;
                     this.verbPatterns = response.data.verbPatterns;
                     this.pronunciations = response.data.pronunciations;
                     this.variants = response.data.variants;
-                    this.components = response.data.components;
                     this.references = response.data.references;
+                    this.components = response.data.components;
+                    this.descendants = response.data.descendants;
                     this.spellings = (response.data.spellings) ? response.data.spellings : this.spellings;
                     this.inflections = (response.data.inflections) ? response.data.inflections : this.inflections;
                     this.glosses = response.data.glosses;
@@ -84,11 +85,19 @@ export default {
             return allowedCategories.includes(category);
         },
 
-        addItem(itemName) {
-            this[itemName].push('')
+        addAttribute(model, index = null) {
+            if (model === 'term') {
+                this.term.attributes.push({
+                    attribute: '',
+                });
+            } else if (model === 'gloss') {
+                this.glosses[index].attributes.push({
+                    attribute: '',
+                });
+            }
         },
-        removeItem(itemName, index) {
-            this[itemName].splice(index, 1)
+        removeAttribute(index, fieldType) {
+            fieldType.splice(index, 1);
         },
 
         addPronunciation() {
@@ -160,41 +169,32 @@ export default {
         addGloss() {
             this.glosses.push({
                 gloss: '',
-                attribute: '',
-                structure: '',
-                synonyms: [],
-                antonyms: [],
-                valences: [],
+                attributes: [],
+                relatives: [],
             });
         },
         removeGloss(item) {
             this.glosses.splice(this.glosses.indexOf(item), 1);
         },
 
-        addSynonym(gloss) {
-            let item = this.glosses.find(itm => itm == gloss);
-            item.synonyms.push('');
+        addRelative(itemName, relation) {
+            this[itemName].push({
+                slug: '',
+                relation: relation,
+            });
         },
-        removeSynonym(index, fieldType) {
-            fieldType.splice(index, 1)
-        },
-
-        addAntonym(gloss) {
-            let item = this.glosses.find(itm => itm == gloss);
-            item.antonyms.push('');
-        },
-        removeAntonym(index, fieldType) {
-            fieldType.splice(index, 1)
+        removeRelative(itemName, index) {
+            this[itemName].splice(index, 1)
         },
 
-        addValence(gloss) {
+        addGlossRelative(gloss) {
             let item = this.glosses.find(itm => itm == gloss);
-            item.valences.push({
+            item.relatives.push({
                 slug: '',
                 relation: '',
             });
         },
-        removeValence(index, fieldType) {
+        removeGlossRelative(index, fieldType) {
             fieldType.splice(index, 1)
         },
 
@@ -203,14 +203,14 @@ export default {
                 axios.post(this.createRoute, {
                     term: this.term,
                     root: this.root,
-                    attributes: this.attributes,
                     singPatterns: this.singPatterns,
                     plurPatterns: this.plurPatterns,
                     verbPatterns: this.verbPatterns,
                     pronunciations: this.pronunciations,
                     variants: this.variants,
-                    components: this.components,
                     references: this.references,
+                    components: this.components,
+                    descendants: this.descendants,
                     spellings: this.spellings,
                     inflections: this.inflections,
                     glosses: this.glosses
@@ -227,14 +227,14 @@ export default {
                 axios.patch(this.updateRoute, {
                     term: this.term,
                     root: this.root,
-                    attributes: this.attributes,
                     singPatterns: this.singPatterns,
                     plurPatterns: this.plurPatterns,
                     verbPatterns: this.verbPatterns,
                     pronunciations: this.pronunciations,
                     variants: this.variants,
-                    components: this.components,
                     references: this.references,
+                    components: this.components,
+                    descendants: this.descendants,
                     spellings: this.spellings,
                     inflections: this.inflections,
                     glosses: this.glosses
@@ -290,29 +290,24 @@ export default {
                         </select>
                     </div>
                     <div class="field-wrapper with-add-field">
-                        <div v-for="(value, index) in attributes" :key="index" class="form-field inline">
-                            <label :for="'attributes['+index+']'">attribute</label>
-                            <select :id="'attributes['+index+']'" v-model="attributes[index]"
-                                    :name="'attributes['+index+']'">
-                                <option selected value=""></option>
+                        <div v-for="(value, index) in term.attributes" :key="index" class="form-field inline">
+                            <label :for="'attributes['+index+'][attribute]'">attribute</label>
+                            <select :id="'attributes['+index+'][attribute]'" v-model="term.attributes[index].attribute"
+                                    :name="'attributes['+index+'][attribute]'">
                                 <option value="masculine">masculine</option>
                                 <option value="feminine">feminine</option>
                                 <option value="plural">plural</option>
                                 <option value="collective">collective</option>
                                 <option value="demonym">demonym</option>
                                 <option value="defect">defect</option>
-                                <option value="participle">participle</option>
                                 <option value="pseudo">pseudo</option>
-                                <option value="quantifier">quantifier</option>
-                                <option value="complementizer">complementizer</option>
-                                <option value="idiom">idiom</option>
                                 <option value="clitic">clitic</option>
-                                <option value="interrogative">interrogative</option>
+                                <option value="idiom">idiom</option>
                             </select>
-                            <img src="/img/trash.svg" alt="Delete" v-show="attributes.length > 0"
-                                 @click="removeItem('attributes', index)"/>
+                            <img src="/img/trash.svg" alt="Delete" v-show="term.attributes.length > 0"
+                                 @click="removeAttribute(index, term.attributes)"/>
                         </div>
-                        <div class="field-add" @click="addItem('attributes')">+ Add ATTRIBUTE</div>
+                        <div class="field-add" @click="addAttribute('term')">+ Add ATTRIBUTE</div>
                     </div>
 
                     <div class="form-field">
@@ -386,16 +381,23 @@ export default {
                             <label :for="'inflections['+index+'][form]'">Type *</label>
                             <select :id="'inflections['+index+'][form]'" v-model="inflection.form"
                                     :name="'inflections['+index+'][form]'" required>
-                                <template v-if="term.category === 'verb' && !attributes.includes('pseudo')">
+                                <template
+                                    v-if="term.category === 'verb' && !term.attributes.map(attr => attr.attribute).includes('pseudo')">
                                     <option value="ap">AP</option>
                                     <option value="pp">PP</option>
                                     <option value="nv">NV</option>
                                 </template>
 
                                 <template v-if="term.category === 'noun'">
-                                    <option v-if="attributes.includes('collective')" value="sing">singulative</option>
-                                    <option v-if="attributes.includes('collective')" value="pauc">paucal</option>
-                                    <option v-if="!attributes.includes('collective')" value="fem">feminine</option>
+                                    <option v-if="term.attributes.map(attr => attr.attribute).includes('collective')"
+                                            value="sing">singulative
+                                    </option>
+                                    <option v-if="term.attributes.map(attr => attr.attribute).includes('collective')"
+                                            value="pauc">paucal
+                                    </option>
+                                    <option v-if="!term.attributes.map(attr => attr.attribute).includes('collective')"
+                                            value="fem">feminine
+                                    </option>
                                     <option value="plr">plural</option>
                                 </template>
                                 <option v-if="term.category === 'numeral'" value="cnst">construct</option>
@@ -404,11 +406,12 @@ export default {
                                     <option value="fem">feminine</option>
                                     <option value="plr">plural</option>
                                 </template>
-                                <option v-if="term.category === 'adjective' && attributes.length === 0" value="elt">
+                                <option v-if="term.category === 'adjective' && term.attributes.length === 0"
+                                        value="elt">
                                     elative
                                 </option>
-                                <option value="host">host
-                                </option>
+                                <option value="genitive">host (genitive)</option>
+                                <option value="accusative">host (accusative)</option>
                                 <option v-if="term.category === 'phrase'" value="resp">response</option>
                             </select>
                         </div>
@@ -433,21 +436,25 @@ export default {
                         <div>etymology</div>
                     </div>
 
-                    <div v-if="attributes.includes('idiom')" class="field-wrapper with-add-field">
+                    <div v-if="term.attributes.map(attr => attr.attribute).includes('idiom')"
+                         class="field-wrapper with-add-field">
                         <div v-for="(value, index) in components" :key="index" class="form-field inline">
-                            <label :for="'components['+index+']'">component</label>
-                            <input :id="'components['+index+']'" v-model="components[index]"
-                                   :name="'components['+index+']'" type="text"/>
+                            <label :for="'components['+index+'][slug]'">component</label>
+                            <input :id="'components['+index+'][slug]'" v-model="components[index].slug"
+                                   :name="'components['+index+'][slug]'" type="text"/>
                             <img src="/img/trash.svg" alt="Delete" v-show="components.length > 0"
-                                 @click="removeItem('components', index)"/>
+                                 @click="removeRelative('components', index)"/>
                         </div>
-                        <div class="field-add" @click="addItem('components')">+ Add COMPONENT</div>
+                        <div class="field-add" @click="addRelative('components', 'component')">+ Add COMPONENT</div>
                     </div>
 
-                    <template v-if="!attributes.includes(['idiom', 'clitic'])">
+                    <template v-if="!term.attributes.map(attr => attr.attribute).includes(['idiom', 'clitic'])">
                         <div class="form-field">
-                            <label for="root">Root{{ term.category === 'verb' && !attributes.includes('idiom') ? ' *' : '' }}</label>
-                            <input id="root" v-model="root" :required="term.category === 'verb' && !attributes.includes('pseudo')"
+                            <label for="root">Root{{
+                                    term.category === 'verb' && !term.attributes.map(attr => attr.attribute).includes('idiom') ? ' *' : ''
+                                }}</label>
+                            <input id="root" v-model="root"
+                                   :required="term.category === 'verb' && !term.attributes.map(attr => attr.attribute).includes('pseudo')"
                                    name="root"
                                    type="text"/>
                         </div>
@@ -506,6 +513,7 @@ export default {
                                         <option value="B1">B1</option>
                                         <option value="B1a">B1a</option>
                                         <option value="B2">B2</option>
+                                        <option value="B2i">B2i</option>
                                         <option value="Ci">Ci</option>
                                         <option value="Ca">Ca</option>
                                         <option value="Cu">Cu</option>
@@ -513,8 +521,7 @@ export default {
                                         <option value="DAi">DAi</option>
                                         <option value="DAu">DAu</option>
                                         <option value="DW">DW</option>
-                                        <option value="U1">U1</option>
-                                        <option value="U2">U2</option>
+                                        <option value="ʔaža">ʔaža</option>
                                     </template>
                                     <template v-if="verbPattern.form !== '1'">
                                         <option value="A">A</option>
@@ -523,12 +530,15 @@ export default {
                                         <option value="B">B</option>
                                     </template>
                                     <template
-                                        v-if="verbPattern.form === '4' || verbPattern.form === '7' || verbPattern.form === '8'">
+                                        v-if="verbPattern.form === '4' || verbPattern.form === '7' || verbPattern.form === '8' || verbPattern.form === 'X'">
                                         <option value="C">C</option>
                                         <option value="D">D</option>
                                     </template>
                                     <template v-if="verbPattern.form === '8'">
                                         <option value="E">E</option>
+                                    </template>
+                                    <template v-if="verbPattern.form === '7'">
+                                        <option value="istanna">istanna</option>
                                     </template>
                                 </select>
                             </template>
@@ -566,49 +576,44 @@ export default {
                             <div class="form-field inline">
                                 <label for="singPatterns[pattern]">Singul *</label>
                                 <select id="singPatterns[pattern]" v-model="singPattern.pattern"
-                                        :required="attributes.includes('participle')"
                                         name="singPatterns[pattern]">
-                                    <option v-if="attributes.includes('participle')" selected value="ap">AP</option>
-                                    <template v-if="!attributes.includes('participle')">
-                                        <option selected value=""></option>
-                                        <optgroup v-if="singPattern.form" label="Derived Terms">
-                                            <option value="ap">AP</option>
-                                            <template
-                                                v-if="term.category !== 'numeral' && !attributes.includes('participle')">
-                                                <option value="pp">PP</option>
-                                                <option value="nv">NV</option>
-                                            </template>
-                                        </optgroup>
-                                        <template v-if="term.category !== 'numeral' && !singPattern.form">
-                                            <optgroup label="Named">
-                                                <option value="relative">Relative</option>
-                                                <option value="IA">Intensive</option>
-                                                <option value="NA">Nominal'ed</option>
-                                            </optgroup>
-                                            <optgroup label="CCC">
-                                                <option value="CLC">CLC(e)</option>
-                                                <option value="CvCC">CvCC</option>
-                                                <option value="CvCCe">CvCCe</option>
-                                                <option value="CvCvC">CvCvC(e)</option>
-                                                <option value="CiCiC">CiCiC</option>
-                                            </optgroup>
-                                            <optgroup label="CCCC">
-                                                <option value="CvCCvC">CvCCvC(e)</option>
-                                                <option value="maCCvC">maCCvC(e)</option>
-                                            </optgroup>
-                                            <optgroup label="CCLC">
-                                                <option value="CCāC">CCāC</option>
-                                                <option value="CCāCe">CCāCe</option>
-                                                <option value="CCīC">CCīC(e)</option>
-                                                <option value="CCūC">CCūC(e)</option>
-                                            </optgroup>
-                                            <optgroup label="CCCLC">
-                                                <option value="CvCCLC">CvCCLC(e)</option>
-                                                <option value="Ca22āC">Ca22āC(e)</option>
-                                                <option value="Ca22īC">Ca22īC</option>
-                                                <option value="Ca22ūC">Ca22ūC(e)</option>
-                                            </optgroup>
+                                    <optgroup v-if="singPattern.form" label="Derived Terms">
+                                        <option value="ap">AP</option>
+                                        <template
+                                            v-if="term.category !== 'numeral' && !term.attributes.map(attr => attr.attribute).includes('participle')">
+                                            <option value="pp">PP</option>
+                                            <option value="nv">NV</option>
                                         </template>
+                                    </optgroup>
+                                    <template v-if="term.category !== 'numeral' && !singPattern.form">
+                                        <optgroup label="Named">
+                                            <option value="relative">Relative</option>
+                                            <option value="IA">Intensive</option>
+                                            <option value="NA">Nominal'ed</option>
+                                        </optgroup>
+                                        <optgroup label="CCC">
+                                            <option value="CLC">CLC(e)</option>
+                                            <option value="CvCC">CvCC</option>
+                                            <option value="CvCCe">CvCCe</option>
+                                            <option value="CvCvC">CvCvC(e)</option>
+                                            <option value="CiCiC">CiCiC</option>
+                                        </optgroup>
+                                        <optgroup label="CCCC">
+                                            <option value="CvCCvC">CvCCvC(e)</option>
+                                            <option value="maCCvC">maCCvC(e)</option>
+                                        </optgroup>
+                                        <optgroup label="CCLC">
+                                            <option value="CCāC">CCāC</option>
+                                            <option value="CCāCe">CCāCe</option>
+                                            <option value="CCīC">CCīC(e)</option>
+                                            <option value="CCūC">CCūC(e)</option>
+                                        </optgroup>
+                                        <optgroup label="CCCLC">
+                                            <option value="CvCCLC">CvCCLC(e)</option>
+                                            <option value="Ca22āC">Ca22āC(e)</option>
+                                            <option value="Ca22īC">Ca22īC</option>
+                                            <option value="Ca22ūC">Ca22ūC(e)</option>
+                                        </optgroup>
                                     </template>
                                 </select>
                                 <img src="/img/trash.svg" alt="Delete" v-show="singPatterns.length > 0"
@@ -681,13 +686,13 @@ export default {
                     </div>
                     <div class="field-wrapper with-add-field">
                         <div v-for="(value, index) in variants" :key="index" class="form-field inline">
-                            <label :for="'variants['+index+']'">variant</label>
-                            <input :id="'variants['+index+']'" v-model="variants[index]"
-                                   :name="'variants['+index+']'" type="text"/>
+                            <label :for="'variants['+index+'][slug]'">variant</label>
+                            <input :id="'variants['+index+'][slug]'" v-model="variants[index].slug"
+                                   :name="'variants['+index+'][slug]'" type="text"/>
                             <img src="/img/trash.svg" alt="Delete" v-show="variants.length > 0"
-                                 @click="removeItem('variants', index)"/>
+                                 @click="removeRelative('variants', index)"/>
                         </div>
-                        <div class="field-add" @click="addItem('variants')">+ Add VARIANT</div>
+                        <div class="field-add" @click="addRelative('variants', 'variant')">+ Add VARIANT</div>
                     </div>
                 </div>
 
@@ -697,13 +702,22 @@ export default {
                     </div>
                     <div class="field-wrapper with-add-field">
                         <div v-for="(value, index) in references" :key="index" class="form-field inline">
-                            <label :for="'references['+index+']'">reference</label>
-                            <input :id="'references['+index+']'" v-model="references[index]"
-                                   :name="'references['+index+']'" type="text"/>
+                            <label :for="'references['+index+'][slug]'">reference</label>
+                            <input :id="'references['+index+'][slug]'" v-model="references[index].slug"
+                                   :name="'references['+index+'][slug]'" type="text"/>
                             <img src="/img/trash.svg" alt="Delete" v-show="references.length > 0"
-                                 @click="removeItem('references', index)"/>
+                                 @click="removeRelative('references', index)"/>
                         </div>
-                        <div class="field-add" @click="addItem('references')">+ Add REFERENCE</div>
+                        <div class="field-add" @click="addRelative('references', 'reference')">+ Add REFERENCE</div>
+                    </div>
+                    <div class="field-wrapper with-add-field">
+                        <div v-for="(value, index) in descendants" :key="index" class="form-field inline">
+                            <label :for="'descendants['+index+'][slug]'">descendant</label>
+                            <input :id="'descendants['+index+'][slug]'" v-model="descendants[index].slug"
+                                   :name="'descendants['+index+'][slug]'" type="text" readonly/>
+                            <img src="/img/trash.svg" alt="Delete" v-show="descendants.length > 0"
+                                 @click="removeRelative('descendants', index)"/>
+                        </div>
                     </div>
                 </div>
 
@@ -734,79 +748,65 @@ export default {
                                    required type="text"/>
                         </div>
 
-                        <template v-if="term.category === 'verb'">
-                            <div class="form-field inline">
-                                <label :for="'glosses['+index+'][attribute]'">Attribute *</label>
-                                <select :id="'glosses['+index+'][attribute]'" v-model="gloss.attribute"
-                                        :name="'glosses['+index+'][attribute]'" required>
+                        <!--                        TODO: attach the attribute, rather than write to glosses table -->
+                        <div class="field-wrapper with-add-field">
+                            <div v-for="(value, i) in gloss.attributes" :key="i" class="form-field inline">
+                                <label
+                                    :for="'attributes['+i+'][attribute]'">attribute{{
+                                        term.category === 'verb' ? ' *' : ''
+                                    }}</label>
+                                <select :id="'attributes['+i+'][attribute]'"
+                                        v-model="gloss.attributes[i].attribute"
+                                        :name="'attributes['+i+'][attribute]'">
                                     <option value="auxiliary">auxiliary</option>
-                                    <option label="isPatient">isPatient</option>
-                                    <option label="noPatient">noPatient</option>
-                                    <option label="hasObject">hasObject</option>
-                                </select>
-                                <template v-if="gloss.attribute !== '' && gloss.attribute !== 'auxiliary'">
-                                    <label :for="'glosses['+index+'][structure]'">Structure *</label>
-                                    <select :id="'glosses['+index+'][structure]'" v-model="gloss.structure"
-                                            :name="'glosses['+index+'][structure]'" required>
-                                        <optgroup label="isPatient" v-if="gloss.attribute === 'isPatient'">
+                                    <option value="participle" v-if="term.category === 'adjective'">participle</option>
+
+                                    <template v-if="term.category === 'verb'">
+                                        <optgroup label="isPatient">
                                             <option value="unaccusative">unaccusative</option>
-                                            <option value="passive">passive</option>
+                                            <option value="mediopassive">mediopassive</option>
                                             <option value="reflexive">reflexive</option>
                                             <option value="reciprocal">reciprocal</option>
                                         </optgroup>
-                                        <optgroup label="noPatient" v-if="gloss.attribute === 'noPatient'">
+                                        <optgroup label="noPatient">
                                             <option value="unergative">unergative</option>
                                             <option value="copular">copular</option>
                                             <option value="stative">stative</option>
                                         </optgroup>
-                                        <optgroup label="hasObject" v-if="gloss.attribute === 'hasObject'">
+                                        <optgroup label="hasObject">
                                             <option value="transitive">transitive</option>
                                             <option value="ditransitive">ditransitive</option>
                                             <option value="causative">causative</option>
                                             <option value="dative">dative</option>
                                         </optgroup>
-                                    </select>
-                                </template>
-                            </div>
-                        </template>
-
-                        <div class="field-wrapper with-add-field">
-                            <div v-for="(value, index) in gloss.synonyms" :key="index" class="form-field inline">
-                                <label :for="'synonyms['+index+']'">synonyms</label>
-                                <input :id="'synonyms['+index+']'" v-model="gloss.synonyms[index]"
-                                       :name="'synonyms['+index+']'" type="text"/>
-                                <img src="/img/trash.svg" alt="Delete" v-show="gloss.synonyms.length > 0"
-                                     @click="removeSynonym(index, gloss.synonyms)"/>
-                            </div>
-                            <div class="field-add" @click="addSynonym(gloss)">+ Add SYNONYM</div>
-                        </div>
-
-                        <div class="field-wrapper with-add-field">
-                            <div v-for="(value, index) in gloss.antonyms" :key="index" class="form-field inline">
-                                <label :for="'antonyms['+index+']'">antonyms</label>
-                                <input :id="'antonyms['+index+']'" v-model="gloss.antonyms[index]"
-                                       :name="'antonyms['+index+']'" type="text"/>
-                                <img src="/img/trash.svg" alt="Delete" v-show="gloss.antonyms.length > 0"
-                                     @click="removeAntonym(index, gloss.antonyms)"/>
-                            </div>
-                            <div class="field-add" @click="addAntonym(gloss)">+ Add ANTONYM</div>
-                        </div>
-
-                        <div v-if="term.category === 'verb'" class="field-wrapper with-add-field">
-                            <div v-for="(valence, index) in gloss.valences" :key="index" class="form-field inline">
-                                <label :for="'valences['+index+'][slug]'">valence</label>
-                                <input :id="'valences['+index+'][slug]'" v-model="valence.slug"
-                                       :name="'valences['+index+'][slug]'" type="text"/>
-                                <select :id="'valences['+index+'][relation]'"
-                                        v-model="valence.relation" :name="'valences['+index+'][relation]'" required>
-                                    <option value="isPatient">isPatient</option>
-                                    <option value="noPatient">noPatient</option>
-                                    <option value="hasObject">hasObject</option>
+                                    </template>
                                 </select>
-                                <img src="/img/trash.svg" alt="Delete" v-show="gloss.valences.length > 0"
-                                     @click="removeValence(index, gloss.valence)"/>
+                                <img src="/img/trash.svg" alt="Delete" v-show="gloss.attributes.length > 0"
+                                     @click="removeAttribute(i, gloss.attributes)"/>
                             </div>
-                            <div class="field-add" @click="addValence(gloss)">+ Add VALENCE</div>
+                            <div class="field-add" @click="addAttribute('gloss', index)">+ Add ATTRIBUTE
+                            </div>
+                        </div>
+
+                        <div class="field-wrapper with-add-field">
+                            <div v-for="(relative, index) in gloss.relatives" :key="index" class="form-field inline">
+                                <label :for="'relatives['+index+'][slug]'">relative</label>
+                                <input :id="'relatives['+index+'][slug]'" v-model="relative.slug"
+                                       :name="'relatives['+index+'][slug]'" type="text"/>
+                                <select :id="'relatives['+index+'][relation]'"
+                                        v-model="relative.relation" :name="'relatives['+index+'][relation]'" required>
+                                    <option value="synonym">synonym</option>
+                                    <option value="antonym">antonym</option>
+                                    <optgroup label="valences" v-if="term.category === 'verb'">
+                                        <option value="isPatient">isPatient</option>
+                                        <option value="noPatient">noPatient</option>
+                                        <option value="hasObject">hasObject</option>
+                                    </optgroup>
+                                </select>
+                                <img src="/img/trash.svg" alt="Delete" v-show="gloss.relatives.length > 0"
+                                     @click="removeGlossRelative(index, gloss.relatives)"/>
+                            </div>
+                            <div class="field-add" @click="addGlossRelative(gloss)">+ Add RELATIVE</div>
                         </div>
                     </div>
                     <div class="field-add" @click="addGloss()">+ Add GLOSS</div>

@@ -7,11 +7,11 @@
         <x-link :href="route('sentences.show', $sentence)">{{ __('view') }}</x-link>
     </x-page-head>
 
-    <x-sentence size="l" :sentence="$sentence"/>
+    <x-vue.sentence component="SentenceItem" size="l" :sentence="$sentence"/>
 
     <x-vocabulary>
         @foreach($sentence->terms as $term)
-            <x-term :term="\App\Models\Term::find($term->id)" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
+            <x-term-item :term="\App\Models\Term::find($term->id)" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
         @endforeach
     </x-vocabulary>
 

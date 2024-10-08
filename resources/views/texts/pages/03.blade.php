@@ -7,37 +7,37 @@
 <iframe src="https://www.youtube.com/embed/jg9CHjnI1GM" allowfullscreen></iframe>
 
 <x-vocabulary title="vocabulary">
-    <x-term arb="بلّغ" eng="to report"/>
-    <x-term arb="بهدل" eng="to scold, to tell off"/>
-    <x-term arb="حزر" eng="to guess"/>
-    <x-term arb="حزّن" eng="to sadden">
-        <x-term subterm arb="حزّن ~ على ~" eng="to make ~ feel sorry for ~"/>
-    </x-term>
-    <x-term arb="خطف" eng="to kidnap"/>
-    <x-term arb="تخوّت (على)" eng="to joke around; to poke fun (at)"/>
-    <x-term arb="دلّ" eng="to guide, to show (someone) the way"/>
-    <x-term arb="ركب" eng="to get on or ride (a vehicle, etc.)"/>
-    <x-term arb="طنّش" eng="to ignore"/>
-    <x-term arb="غلط" eng="to be wrong, to make a mistake"/>
-    <x-term arb="عاد" eng="to do (something) again; to redo, to repeat"/>
-    <x-term arb="وثق" eng="to trust"/>
-    <x-term arb="فضح" eng="to embarrass (someone) in front of others"/>
-    <x-term arb="وزّع" eng="to distribute"/>
-    <x-term arb="وعي" eng="to be careful, aware, wary">
-        <x-term subterm arb="أوعك (~)" eng="don't; careful not to ~"/>
-    </x-term>
-    <x-term arb="وعّى" eng="to raise (someone's) awareness"/>
-    <x-term arb="جريمة" eng="crime"/>
-    <x-term arb="مجرم" eng="criminal"/>
-    <x-term arb="دور" eng="role"/>
-    <x-term arb="ذهب" eng="gold"/>
-    <x-term arb="مصلحة" eng="advantage, benefit, interest, sake">
-        <x-term subterm arb="لمصلحة ~" eng="for ~'s sake, for ~'s own good"/>
-    </x-term>
-    <x-term arb="هوس" eng="obsession"/>
-    <x-term arb="مسدود" eng="obstructed, blocked, plugged, clogged, sealed"/>
-    <x-term arb="خفّ على ~" eng="(usually sardonic) give ~ a break, tone it down"/>
-    <x-term arb="الله ستر" eng="God shielded; thank God (nothing bad happened)"/>
+    <x-term-item arb="بلّغ" eng="to report"/>
+    <x-term-item arb="بهدل" eng="to scold, to tell off"/>
+    <x-term-item arb="حزر" eng="to guess"/>
+    <x-term-item arb="حزّن" eng="to sadden">
+        <x-term-item subterm arb="حزّن ~ على ~" eng="to make ~ feel sorry for ~"/>
+    </x-term-item>
+    <x-term-item arb="خطف" eng="to kidnap"/>
+    <x-term-item arb="تخوّت (على)" eng="to joke around; to poke fun (at)"/>
+    <x-term-item arb="دلّ" eng="to guide, to show (someone) the way"/>
+    <x-term-item arb="ركب" eng="to get on or ride (a vehicle, etc.)"/>
+    <x-term-item arb="طنّش" eng="to ignore"/>
+    <x-term-item arb="غلط" eng="to be wrong, to make a mistake"/>
+    <x-term-item arb="عاد" eng="to do (something) again; to redo, to repeat"/>
+    <x-term-item arb="وثق" eng="to trust"/>
+    <x-term-item arb="فضح" eng="to embarrass (someone) in front of others"/>
+    <x-term-item arb="وزّع" eng="to distribute"/>
+    <x-term-item arb="وعي" eng="to be careful, aware, wary">
+        <x-term-item subterm arb="أوعك (~)" eng="don't; careful not to ~"/>
+    </x-term-item>
+    <x-term-item arb="وعّى" eng="to raise (someone's) awareness"/>
+    <x-term-item arb="جريمة" eng="crime"/>
+    <x-term-item arb="مجرم" eng="criminal"/>
+    <x-term-item arb="دور" eng="role"/>
+    <x-term-item arb="ذهب" eng="gold"/>
+    <x-term-item arb="مصلحة" eng="advantage, benefit, interest, sake">
+        <x-term-item subterm arb="لمصلحة ~" eng="for ~'s sake, for ~'s own good"/>
+    </x-term-item>
+    <x-term-item arb="هوس" eng="obsession"/>
+    <x-term-item arb="مسدود" eng="obstructed, blocked, plugged, clogged, sealed"/>
+    <x-term-item arb="خفّ على ~" eng="(usually sardonic) give ~ a break, tone it down"/>
+    <x-term-item arb="الله ستر" eng="God shielded; thank God (nothing bad happened)"/>
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">

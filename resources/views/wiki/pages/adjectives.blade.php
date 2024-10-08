@@ -49,19 +49,19 @@
     modifiers — if any — observing <b>grammatical agreement</b> with the noun they modify (namely, <b>gender</b>,
     <b>number</b> & <b>definiteness</b> agreement).</p>
 
-<x-sentence eng="the broken car">
+<x-sentence-item eng="the broken car">
     <x-sentence-term arb="السيّارة" eng="DEF-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="الخربانة" eng="DEF-broken" :term="$terms->firstWhere('translit', 'xarbān')"/>
-</x-sentence>
-<x-sentence eng="Sama's new job">
+</x-sentence-item>
+<x-sentence-item eng="Sama's new job">
     <x-sentence-term arb="شغل" eng="job" :term="$terms->firstWhere('translit', 'šuġl')"/>
     <x-sentence-term arb="سما" eng="Sama"/>
     <x-sentence-term arb="الجديد" eng="DEF-new" :term="$terms->firstWhere('translit', 'ždīd')"/>
-</x-sentence>
-<x-sentence eng="my favorite song">
+</x-sentence-item>
+<x-sentence-item eng="my favorite song">
     <x-sentence-term arb="أغنيتي" eng="my-song" :term="$terms->firstWhere('translit', 'ʔuġniye')"/>
     <x-sentence-term arb="المفضّلة" eng="DEF-favorite" :term="$terms->firstWhere('translit', 'mufaḍḍal')"/>
-</x-sentence>
+</x-sentence-item>
 
 <p><b>Elative Adjectives</b> are adjectives that can convey either a comparative or a superlative meaning, depending
     on the syntax. In the syntax of adjectives, they are <b>comparatives</b>. For the use of <b>superlatives</b> —
@@ -90,23 +90,23 @@
 {{--        <div>أسرع سيّارة</div>--}}
 {{--    </div>--}}
 
-<x-sentence eng="(1) the car is faster">
+<x-sentence-item eng="(1) the car is faster">
     <x-sentence-term arb="السيّارة" eng="the-car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="أسرع" eng="faster" :term="$terms->firstWhere('translit', 'sarīʕ')"/>
-</x-sentence>
-<x-sentence eng="(2) a faster car">
+</x-sentence-item>
+<x-sentence-item eng="(2) a faster car">
     <x-sentence-term arb="سيّارة" eng="car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
     <x-sentence-term arb="أسرع" eng="faster" :term="$terms->firstWhere('translit', 'sarīʕ')"/>
-</x-sentence>
+</x-sentence-item>
 <div class="array">
-    <x-sentence eng="(3b) the fastest car">
+    <x-sentence-item eng="(3b) the fastest car">
         <x-sentence-term arb="أسرع" eng="faster" :term="$terms->firstWhere('translit', 'sarīʕ')"/>
         <x-sentence-term arb="سيّارة" eng="car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
-    </x-sentence>
-    <x-sentence eng="(3a) the fastest car">
+    </x-sentence-item>
+    <x-sentence-item eng="(3a) the fastest car">
         <x-sentence-term arb="السيّارة" eng="car" :term="$terms->firstWhere('translit', 'sayyāra')"/>
         <x-sentence-term arb="الأسرع" eng="faster" :term="$terms->firstWhere('translit', 'sarīʕ')"/>
-    </x-sentence>
+    </x-sentence-item>
 </div>
 
 <div class="doc-section">
@@ -145,14 +145,14 @@
         independent use as a noun. In these cases, the broken plural forms apply specifically to the noun senses of the
         term.</p>
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'mašhūr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mašhūr')"/>
         <x-inflections
             conjM="مشهور" conjMtr="mašhūr"
             conjP="مشهورين" conjPtr="mašhūrīn"
         ></x-inflections>
     </x-vocabulary>
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'mašhūr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'mašhūr')"/>
         <x-inflections
             conjM="مشهور" conjMtr="mašhūr"
             conjP="مشاهير" conjPtr="mašāhīr"
@@ -168,8 +168,8 @@
         rather are back-formed by removing the <b>يّ (-yy)</b> suffix & sometimes applying some other transformation.
     </p>
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'fransa')"/>
-        <x-term :term="$terms->firstWhere('translit', 'fransāwi')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'fransa')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'fransāwi')"/>
         <x-inflections
             conjM="فرنساويّ" conjMtr="fransāwi"
             conjF="فرنساويّة" conjFtr="fransāwiyye"
@@ -177,8 +177,8 @@
         ></x-inflections>
     </x-vocabulary>
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'ʕarab')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʕarabi')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕarab')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʕarabi')"/>
         <x-inflections
             conjM="عربيّ" conjMtr="ʕarabi"
             conjF="عربيّة" conjFtr="ʕarabiyye"
@@ -186,14 +186,14 @@
         ></x-inflections>
     </x-vocabulary>
 
-    <x-sentence eng="French guys">
+    <x-sentence-item eng="French guys">
         <x-sentence-term arb="الشباب" eng="DEF-guys" :term="$terms->firstWhere('translit', 'šabb')"/>
         <x-sentence-term arb="الفرنساويّين" eng="DEF-French" :term="$terms->firstWhere('translit', 'fransāwi')"/>
-    </x-sentence>
-    <x-sentence eng="Arab guys">
+    </x-sentence-item>
+    <x-sentence-item eng="Arab guys">
         <x-sentence-term arb="الشباب" eng="DEF-guys" :term="$terms->firstWhere('translit', 'šabb')"/>
         <x-sentence-term arb="العرب" eng="DEF-Arab" :term="$terms->firstWhere('translit', 'ʕarabi')"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>Regardless of the form of the plural itself, all <b>Demonym Adjectives</b> are characterized by the fact that
         their plural forms may only be used for <b>animate</b> nouns; it's always ungrammatical to use the plural form
@@ -233,29 +233,29 @@
         word in this pattern. Alternatively — like in English — <b>أكثر (ʔaktar "more")</b> may be used, most commonly
         if the <b>positive form</b> has more than three consonants or otherwise doesn't fit into the pattern.</p>
     <div class="array">
-        <x-sentence eng="smarter">
+        <x-sentence-item eng="smarter">
             <x-sentence-term arb="أشطر" eng="smarter" :term="$terms->firstWhere('translit', 'šāṭir')"/>
-        </x-sentence>
-        <x-sentence eng="smart">
+        </x-sentence-item>
+        <x-sentence-item eng="smart">
             <x-sentence-term arb="شاطر" eng="smart" :term="$terms->firstWhere('translit', 'šāṭir')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
     <div class="array">
-        <x-sentence eng="more of an idiot">
+        <x-sentence-item eng="more of an idiot">
             <x-sentence-term arb="أحمر" eng="donkey-er" :term="$terms->firstWhere('translit', 'ħmār')"/>
-        </x-sentence>
-        <x-sentence eng="an idiot">
+        </x-sentence-item>
+        <x-sentence-item eng="an idiot">
             <x-sentence-term arb="حمار" eng="donkey" :term="$terms->firstWhere('translit', 'ħmār')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
     <div class="array">
-        <x-sentence eng="busier">
+        <x-sentence-item eng="busier">
             <x-sentence-term arb="مشغول" eng="busy" :term="$terms->firstWhere('translit', 'mašġūl')"/>
             <x-sentence-term arb="أكثر" eng="more" :term="$terms->firstWhere('translit', 'ʔaktar')"/>
-        </x-sentence>
-        <x-sentence eng="busy">
+        </x-sentence-item>
+        <x-sentence-item eng="busy">
             <x-sentence-term arb="مشغول" eng="busy" :term="$terms->firstWhere('translit', 'mašġūl')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </div>
 
@@ -270,8 +270,8 @@
         is of or related to that noun.</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'falasṭīn')"/>
-        <x-term :term="$terms->firstWhere('translit', 'falasṭīni')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'falasṭīn')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'falasṭīni')"/>
         <x-inflections
             conjM="فلسطينيّ" conjMtr="falasṭīni"
             conjF="فلسطينيّة" conjFtr="falasṭīniyye"
@@ -285,15 +285,15 @@
         or — if the latter refers to a person — to a human collective.</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'masīħi')"/>
-        <x-term :term="$terms->firstWhere('translit', 'masīħiyye')"/>
-        <x-sentence eng="alcohol isn't sinful for Christians">
+        <x-term-item :term="$terms->firstWhere('translit', 'masīħi')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'masīħiyye')"/>
+        <x-sentence-item eng="alcohol isn't sinful for Christians">
             <x-sentence-term arb="الكحول" eng="the-alcohol" :term="$terms->firstWhere('translit', 'kuħūl')"/>
             <x-sentence-term arb="مش" eng="not" :term="$terms->firstWhere('translit', 'miš')"/>
             <x-sentence-term arb="حرام" eng="immoral" :term="$terms->firstWhere('translit', 'ħarām')"/>
             <x-sentence-term arb="عند" eng="at" :term="$terms->firstWhere('translit', 'ʕind')"/>
             <x-sentence-term arb="المسيحيّة" eng="Christians" :term="$terms->firstWhere('translit', 'masīħiyye')"/>
-        </x-sentence>
+        </x-sentence-item>
     </x-vocabulary>
 
     <h2>Intensive Adjectives</h2>
@@ -302,32 +302,32 @@
         constrasting with adjectives that refer to intrinsic qualities &/or are used for inanimate nouns.</p>
 
     <div class="array">
-        <x-sentence eng="he's good-looking">
+        <x-sentence-item eng="he's good-looking">
             <x-sentence-term arb="هو" eng="he" :term="$terms->firstWhere('translit', 'huwwe')"/>
             <x-sentence-term arb="حلو" eng="good-looking" :term="$terms->firstWhere('translit', 'ħilu')"/>
-        </x-sentence>
-        <x-sentence eng="he's a cold person">
+        </x-sentence-item>
+        <x-sentence-item eng="he's a cold person">
             <x-sentence-term arb="هو" eng="he" :term="$terms->firstWhere('translit', 'huwwe')"/>
             <x-sentence-term arb="بارد" eng="cold" :term="$terms->firstWhere('translit', 'bārid')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
     <div class="array">
-        <x-sentence eng="he's looking good">
+        <x-sentence-item eng="he's looking good">
             <x-sentence-term arb="هو" eng="he" :term="$terms->firstWhere('translit', 'huwwe')"/>
             <x-sentence-term arb="حليان" eng="looking good" :term="$terms->firstWhere('translit', 'ħalyān')"/>
-        </x-sentence>
-        <x-sentence eng="he's feeling cold">
+        </x-sentence-item>
+        <x-sentence-item eng="he's feeling cold">
             <x-sentence-term arb="هو" eng="he" :term="$terms->firstWhere('translit', 'huwwe')"/>
             <x-sentence-term arb="بردان" eng="cold" :term="$terms->firstWhere('translit', 'bardān')"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 
     <p><b>Intensive Adjectives</b> are often associated with <b>A2 Verbs</b>, which tend to indicate something entering
         into a state (i.e. becoming a certain way).</p>
 
     <x-vocabulary title="INTENSIVE ADJECTIVES">
-        <x-term :term="$terms->firstWhere('translit', 'ziʕil')"/>
-        <x-term :term="$terms->firstWhere('translit', 'zaʕlān')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ziʕil')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'zaʕlān')"/>
         <x-inflections
             conjM="زعلان" conjMtr="zaʕlān"
             conjF="زعلانة" conjFtr="zaʕlāne"
@@ -347,9 +347,9 @@
         these are relatively infrequent & the pattern is only productive for the formation of <b>Elative Adjectives</b>.
     </p>
     <x-vocabulary title="DEFECT ADJECTIVES">
-        <x-term :term="$terms->firstWhere('translit', 'ʔaʕma')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaṣlaʕ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'ʔaħmar')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaʕma')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaṣlaʕ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ʔaħmar')"/>
     </x-vocabulary>
 </div>
 

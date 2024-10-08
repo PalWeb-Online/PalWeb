@@ -29,14 +29,15 @@ class DeckController extends Controller
 
         Bookmark::toggle($deck, $user);
 
-        if (Bookmark::has($deck, $user)) {
-            event(new ModelPinned($user));
-            $this->flasher->addSuccess(__('pin.added', ['thing' => $deck->name]));
-        } else {
-            $this->flasher->addSuccess(__('pin.removed', ['thing' => $deck->name]));
-        }
+        $deck->isPinned() && event(new ModelPinned($user));
 
-        return back();
+        return response()->json([
+            'pinCount' => Bookmark::count($deck),
+            'isPinned' => $deck->isPinned(),
+            'message' => $deck->isPinned()
+                ? __('pin.added', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name])
+        ]);
     }
 
     /**
@@ -280,11 +281,13 @@ class DeckController extends Controller
         $this->authorize('modify', $deck);
 
         $deck->private = !$deck->private;
-        $deck->private ? $status = 'private' : $status = 'public';
+        $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
-        $this->flasher->addSuccess(__('privacy.updated', ['status' => $status]));
-        return back();
+        return [
+            'isPrivate' => $deck->private,
+            'message' => __('privacy.updated', ['status' => $status])
+        ];
     }
 
     public function toggleTerm(Deck $deck, Term $term)
@@ -294,14 +297,17 @@ class DeckController extends Controller
         if (!$deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
-            $this->flasher->addSuccess(__('decks.term.added', ['term' => $term->term, 'deck' => $deck->name]));
 
         } else {
             $deck->terms()->detach($term->id);
-            $this->flasher->addSuccess(__('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]));
         }
 
-        return back();
+        return response()->json([
+            'isPresent' => !$deck->terms->contains($term->id),
+            'message' => !$deck->terms->contains($term->id)
+                ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
+                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name])
+        ]);
     }
 
     public function copy(Deck $deck)

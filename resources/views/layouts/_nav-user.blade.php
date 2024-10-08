@@ -143,7 +143,7 @@
                 </a>
                 <a href="{{ route('dashboard.workbench') }}" class="nav-user-dashboard-option">
                     <div>{{ __('workbench') }}</div>
-                    <div>check out your pins & decks</div>
+                    <div>study your flashcards & pins</div>
                 </a>
                 <a href="{{ route('dashboard.subscription') }}" class="nav-user-dashboard-option">
                     <div>{{ __('subscription') }}</div>

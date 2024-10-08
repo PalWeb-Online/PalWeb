@@ -470,22 +470,19 @@
         }
     }
 
-    .context-actions {
-        position: absolute;
-        top: -2.0rem;
-        right: 2.4rem;
-
-        img {
-            width: 3.2rem;
-        }
-    }
-
-    .profile-privacy {
+    .lock {
         width: 3.2rem;
         margin-block: 0.4rem;
         position: absolute;
         top: -2.0rem;
         right: 6.4rem;
+    }
+
+    .gear {
+        width: 3.2rem;
+        position: absolute;
+        top: -1.6rem;
+        right: 2.4rem;
     }
 }
 
@@ -520,18 +517,24 @@
 
     .badge {
         display: grid;
-        overflow: hidden;
-        //border-radius: 50%;
-
-        &.disabled img {
-            transform: scale(1.1);
-            filter: grayscale(1);
-        }
+        border-radius: 50%;
+        background: $accent-yellow-pastel;
+        transform-style: preserve-3d;
+        transform: perspective(960rem);
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: translateZ(1.6rem)
+        }
+
+        &.disabled {
+            filter: grayscale(1);
+
+            img {
+                transform: scale(1.1);
+            }
         }
     }
 
@@ -545,6 +548,16 @@
 
     &:hover > .popout {
         transform: scale(1.2) rotate(-15deg);
+    }
+}
+
+.badge-data {
+    display: grid;
+    padding-block: 0.8rem;
+    gap: 0.4rem;
+
+    & > div:nth-child(1) {
+        font-weight: 700;
     }
 }
 
@@ -591,6 +604,25 @@
         object-fit: cover;
         min-height: 100%;
         min-width: 100%;
+    }
+}
+
+.workbench-options {
+    display: flex;
+    gap: 1.6rem;
+
+    button {
+        color: $purple-deep;
+        font-family: $bodyFont;
+        font-size: 1.6rem;
+
+        &.active {
+            font-weight: 700;
+        }
+
+        &:hover {
+            text-decoration: 2px solid underline;
+        }
     }
 }
 

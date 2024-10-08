@@ -1,4 +1,4 @@
-<x-deck :deck="\App\Models\Deck::find(44)"/>
+<x-deck-container :deck="\App\Models\Deck::find(44)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -11,38 +11,38 @@
     </p>
 
     <div class="array">
-        <x-sentence eng="he knows">
+        <x-sentence-item eng="he knows">
             <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
             <x-sentence-term arb="عارف" eng="aware" :term="$terms['ʕārif'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="he knew">
+        </x-sentence-item>
+        <x-sentence-item eng="he knew">
             <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
             <x-sentence-term arb="عرف" eng="3M.knew" :term="$terms['ʕirif'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="he knows who I am">
+    <x-sentence-item eng="he knows who I am">
         <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
         <x-sentence-term arb="عارف" eng="knowing" :term="$terms['ʕārif'] ?? null"/>
         <x-sentence-term arb="مين" eng="who" :term="$terms['mīn'] ?? null"/>
         <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <div class="array">
-        <x-sentence eng="he sees">
+        <x-sentence-item eng="he sees">
             <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
             <x-sentence-term arb="شايف" eng="seeing" :term="$terms['šāyif'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="he saw">
+        </x-sentence-item>
+        <x-sentence-item eng="he saw">
             <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
             <x-sentence-term arb="شاف" eng="3M.saw" :term="$terms['šāf'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
-    <x-sentence eng="he sees where I am">
+    <x-sentence-item eng="he sees where I am">
         <x-sentence-term arb="هو" eng="he" :term="$terms['huwwe'] ?? null"/>
         <x-sentence-term arb="شايف" eng="seeing" :term="$terms['šāyif'] ?? null"/>
         <x-sentence-term arb="وين" eng="where" :term="$terms['wēn'] ?? null"/>
         <x-sentence-term arb="أنا" eng="I" :term="$terms['ʔana'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 
     <p>However, what is considered a <b>stative verb</b> in Arabic may or may not be so in English. For now,
         learn which <b>Active Participles</b> are used this way on a case-by-case basis.</p>
@@ -55,38 +55,38 @@
             "in")</b>
         & <b>على (ʕala "on")</b> situate one thing in direct physical relation to another, <b>عند (ʕind)</b> is somewhat
         more abstract, situating something in the same vicinity or location as something else.</p>
-    <x-sentence eng="Sama is at the door">
+    <x-sentence-item eng="Sama is at the door">
         <x-sentence-term arb="سما" eng="Sama"/>
         <x-sentence-term arb="عند" eng="at" :term="$terms['ʕind'] ?? null"/>
         <x-sentence-term arb="الباب" eng="the-door" :term="$terms['bāb'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>In some situations, <b>"at"</b> in English can imply <b>"inside"</b> — but this is never
         the case in Arabic. Only <b>بـ (b-)</b> can mean <b>"inside"</b>, while <b>عند (ʕind)</b> is more akin to <b>"by"</b>
         (i.e. <b>"next to"</b>).</p>
-    <x-sentence eng="Sama is at the store">
+    <x-sentence-item eng="Sama is at the store">
         <x-sentence-term arb="سما" eng="Sama"/>
         <x-sentence-term arb="بـ" eng="in" :term="$terms['b-'] ?? null"/>
         <x-sentence-term arb="ـالمحلّ" eng="the-store" :term="$terms['maħall'] ?? null"/>
-    </x-sentence>
-    <x-sentence eng="Sama is by the store">
+    </x-sentence-item>
+    <x-sentence-item eng="Sama is by the store">
         <x-sentence-term arb="سما" eng="Sama"/>
         <x-sentence-term arb="عند" eng="by" :term="$terms['ʕind'] ?? null"/>
         <x-sentence-term arb="المحلّ" eng="the-store" :term="$terms['maħall'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
     <p>In other words, avoid using <b>عند (ʕind)</b> for something that is physically within a certain place.</p>
 
     <p>In the most abstract sense, <b>عند (ʕind)</b> simply refers to <b>"where ... is"</b>. It may even be used in
         reference to a person, meaning <b>"at ...'s place"</b>.</p>
-    <x-sentence eng="Ghassan is at Akram's place">
+    <x-sentence-item eng="Ghassan is at Akram's place">
         <x-sentence-term arb="غسّان" eng="Ghassan"/>
         <x-sentence-term arb="عند" eng="at" :term="$terms['ʕind'] ?? null"/>
         <x-sentence-term arb="أكرم" eng="Akram"/>
-    </x-sentence>
-    <x-sentence eng="Ghassan is at the doctor's">
+    </x-sentence-item>
+    <x-sentence-item eng="Ghassan is at the doctor's">
         <x-sentence-term arb="غسّان" eng="Ghassan"/>
         <x-sentence-term arb="عند" eng="at" :term="$terms['ʕind'] ?? null"/>
         <x-sentence-term arb="الدكتور" eng="the-doctor" :term="$terms['duktōr'] ?? null"/>
-    </x-sentence>
+    </x-sentence-item>
 </x-lesson-concept>
 
 <x-activity-area title="{{ __('exercise') }}">
@@ -121,15 +121,15 @@
         & number with the subject. We can accept the apology using some familiar expressions, like <b>عادي (ʕādi)</b> &
         <b>معليش (maʕlēš)</b>. It's that simple!</p>
     <div class="array">
-        <x-sentence eng="it's OK, it's no problem">
+        <x-sentence-item eng="it's OK, it's no problem">
             <x-sentence-term arb="عادي" eng="it's OK" :term="$terms['ʕādi'] ?? null"/>
             <x-sentence-term arb="مش" eng="not" :term="$terms['miš'] ?? null"/>
             <x-sentence-term arb="مشكلة" eng="problem" :term="$terms['muškile'] ?? null"/>
-        </x-sentence>
-        <x-sentence eng="we're sorry">
+        </x-sentence-item>
+        <x-sentence-item eng="we're sorry">
             <x-sentence-term arb="إحنا" eng="we" :term="$terms['ʔiħna'] ?? null"/>
             <x-sentence-term arb="آسفين" eng="(p.) sorry" :term="$terms['ʔāsif'] ?? null"/>
-        </x-sentence>
+        </x-sentence-item>
     </div>
 </x-lesson-concept>
 

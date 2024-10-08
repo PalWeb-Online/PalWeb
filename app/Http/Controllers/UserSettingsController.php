@@ -68,12 +68,15 @@ class UserSettingsController
     public function togglePrivacy()
     {
         $user = auth()->user();
+
         $user->private = !$user->private;
-        $user->private ? $status = 'private' : $status = 'public';
+        $user->private ? $status = 'Private' : $status = 'Public';
         $user->save();
 
-        $this->flasher->addSuccess(__('privacy.updated', ['status' => $status]));
-        return back();
+        return [
+            'isPrivate' => $user->private,
+            'message' => __('privacy.updated', ['status' => $status])
+        ];
     }
 
     /**

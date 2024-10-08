@@ -22,7 +22,7 @@
         verb in the <b>Lexicon</b> — around 700 terms at the time. As others joined the team & the goal of 700
         entries was met & exceeded, the project's scope — and the rigor & detail
         of its entries — grew significantly. By July 2022, <b>Wiktionary</b> had over 2,800 <b>South Levantine
-            Arabic</b> terms & nearly as many audio pronunciation samples, with hundreds of example sentences & usages.
+            Arabic</b> terms & nearly as many pronunciation samples, with hundreds of example sentences & usages.
         If you'd like to check out
         the entries, you can simply go to <a href="https://wiktionary.org/" target="_blank">Wiktionary</a> & search for
         a word in Arabic. If it's used in Palestinian Arabic, there should be an entry for it.</p>
@@ -45,7 +45,7 @@
         team
         and the goal of 700 entries was met & exceeded, the Project's scope — and the rigor & detail
         of
-        its entries — grew significantly. As of July 2022, there are +2,800 terms & +2,600 audio
+        its entries — grew significantly. As of July 2022, there are +2,800 terms & +2,600
         recordings for AJP on Wiktionary, with hundreds of example sentences & various other
         features as
         well.</p>
@@ -104,7 +104,7 @@
         Palestinian Arabic (i.e. the urban Arabic dialect of Jerusalem).</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'ktīr')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'ktīr')"/>
     </x-vocabulary>
 
     <p>In accordance with the conventions of Arabic dictionaries, all verbs are indexed in the 3rd-person masculine form
@@ -112,9 +112,9 @@
         require a pronoun, including pseudo-verbs & phrasal verbs:</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'rāħ')"/>
-        <x-term :term="$terms->firstWhere('translit', 'biddo')"/>
-        <x-term :term="$terms->firstWhere('translit', 'dār bālo')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'rāħ')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'biddo')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'dār bālo')"/>
     </x-vocabulary>
 
     <p>As for phrases that require two pronouns that refer to two different subjects, the 3rd-person masculine pronoun
@@ -122,7 +122,7 @@
         distinct.</p>
 
     <x-vocabulary>
-        <x-term :term="$terms->firstWhere('translit', 'حقّه عليها')"/>
+        <x-term-item :term="$terms->firstWhere('translit', 'حقّه عليها')"/>
     </x-vocabulary>
     {{--    “to be s.o.’s fault; (lit.) it was her fault re: sth. done to him; she was to blame”--}}
 
@@ -327,7 +327,7 @@
         <div class="inline-chart pronunciation">
             <div
                 style="display:flex; align-items: center; flex-flow: row wrap; padding: 0.4rem; gap: 0.4rem">
-                <a class="chart-item audio"
+                <a class="chart-item"
                    onclick="ktīr.play()">
                     <div class="chart-title">/ktiːr/</div>
                     <div>[ktiːr]</div>
@@ -341,7 +341,7 @@
             </div>
             <div
                 style="display:flex; align-items: center; flex-flow: row wrap; padding: 0.4rem; gap: 0.4rem">
-                <a class="chart-item audio borrowed"
+                <a class="chart-item borrowed"
                    onclick="maqāle.play()">
                     <div class="chart-title">/maqaːle/</div>
                     <div>[maˈqaː.le]</div>
@@ -442,24 +442,24 @@
     <h1>Glossary</h1>
 
     <x-vocabulary title="vowels">
-        <x-term arb="ــَـ" eng="fatħa: /a/"/>
-        <x-term arb="ــِـ" eng="kasra: /i/"/>
-        <x-term arb="ــُـ" eng="ḍamme: /u/"/>
-        <x-term arb="ا" eng="ʔalif: /aː/"/>
-        <x-term arb="ي" eng="yā: /iː/ /j/"/>
-        <x-term arb="و" eng="wāw: /uː/ /w/"/>
-        <x-term arb="ى" eng="ʔalif maksūra: /a/"/>
-        <x-term arb="ة" eng="tā marbūṭa: /i ~ e ~ a/"/>
+        <x-term-item arb="ــَـ" eng="fatħa: /a/"/>
+        <x-term-item arb="ــِـ" eng="kasra: /i/"/>
+        <x-term-item arb="ــُـ" eng="ḍamme: /u/"/>
+        <x-term-item arb="ا" eng="ʔalif: /aː/"/>
+        <x-term-item arb="ي" eng="yā: /iː/ /j/"/>
+        <x-term-item arb="و" eng="wāw: /uː/ /w/"/>
+        <x-term-item arb="ى" eng="ʔalif maksūra: /a/"/>
+        <x-term-item arb="ة" eng="tā marbūṭa: /i ~ e ~ a/"/>
     </x-vocabulary>
 
     <x-vocabulary title="persons">
-        <x-term arb="أنا" eng="1S: first-person singular"/>
-        <x-term arb="إحنا" eng="1P: first-person plural"/>
-        <x-term arb="إنتا" eng="2M: second-person masculine singular"/>
-        <x-term arb="إنتي" eng="2F: second-person feminine singular"/>
-        <x-term arb="إنتو" eng="2P: second-person plural"/>
-        <x-term arb="هو" eng="3M: third-person masculine singular"/>
-        <x-term arb="هي" eng="3F: third-person feminine singular"/>
-        <x-term arb="همّه" eng="3P: third-person plural"/>
+        <x-term-item arb="أنا" eng="1S: first-person singular"/>
+        <x-term-item arb="إحنا" eng="1P: first-person plural"/>
+        <x-term-item arb="إنتا" eng="2M: second-person masculine singular"/>
+        <x-term-item arb="إنتي" eng="2F: second-person feminine singular"/>
+        <x-term-item arb="إنتو" eng="2P: second-person plural"/>
+        <x-term-item arb="هو" eng="3M: third-person masculine singular"/>
+        <x-term-item arb="هي" eng="3F: third-person feminine singular"/>
+        <x-term-item arb="همّه" eng="3P: third-person plural"/>
     </x-vocabulary>
 </div>

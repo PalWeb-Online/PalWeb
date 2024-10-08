@@ -1,10 +1,10 @@
 @import 'variables';
-@import 'utilities';
 @import 'layout';
 @import 'academy';
 @import 'decks';
 @import 'terms';
 @import 'users';
+@import 'utilities';
 
 .group-horizontal, div.array {
     display: flex;
@@ -350,6 +350,12 @@ Search Tools
         }
     }
 
+    .search-results {
+        display: grid;
+        gap: 0.4rem;
+        z-index: 10;
+    }
+
     button.search {
         position: absolute;
         right: -0.8rem;
@@ -505,40 +511,6 @@ ul.search-results {
         break-inside: avoid-column;
         page-break-inside: avoid;
         -webkit-column-break-inside: avoid;
-    }
-}
-
-.form-field, .nav-search, .search-bar {
-    .search-results {
-        position: absolute;
-        top: 100%;
-        display: grid;
-        direction: rtl;
-        gap: 0.4rem;
-        margin-block-start: 0.8rem;
-        z-index: 10;
-    }
-}
-
-.form-field, .nav-search {
-    .search-results {
-        border-radius: 0.8rem;
-        border: 0.1rem solid $accent-yellow;
-        margin-block-start: 0.4rem;
-
-        .search-result {
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.4rem;
-            font-size: 1.2rem;
-
-            & > div:nth-child(1) {
-                font-size: 1.4rem;
-            }
-
-            & > div:nth-child(2) {
-                font-size: 1.0rem;
-            }
-        }
     }
 }
 

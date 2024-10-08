@@ -7,11 +7,9 @@
 @endsection
 
 @section('content')
-
     <div class="tiers-container">
         <x-subscription-tier tier="guest"/>
         <x-subscription-tier tier="hobbyist"/>
         <x-subscription-tier tier="student"/>
     </div>
-
 @endsection

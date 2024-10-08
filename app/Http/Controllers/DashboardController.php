@@ -19,6 +19,33 @@ class DashboardController
         $terms = Term::whereHasBookmark(auth()->user())->get();
         $sentences = Sentence::whereHasBookmark(auth()->user())->get();
 
+        $decks = Deck::select('decks.*')
+            ->join('markable_bookmarks', function ($join) use ($user) {
+                $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
+                    ->where('markable_bookmarks.markable_type', '=', Deck::class)
+                    ->where('markable_bookmarks.user_id', '=', $user->id);
+            })
+            ->orderBy('markable_bookmarks.id')
+            ->get();
+
+        $terms = Term::select('terms.*')
+            ->join('markable_bookmarks', function ($join) use ($user) {
+                $join->on('terms.id', '=', 'markable_bookmarks.markable_id')
+                    ->where('markable_bookmarks.markable_type', '=', Term::class)
+                    ->where('markable_bookmarks.user_id', '=', $user->id);
+            })
+            ->orderBy('markable_bookmarks.id')
+            ->get();
+
+        $sentences = Sentence::select('sentences.*')
+            ->join('markable_bookmarks', function ($join) use ($user) {
+                $join->on('sentences.id', '=', 'markable_bookmarks.markable_id')
+                    ->where('markable_bookmarks.markable_type', '=', Sentence::class)
+                    ->where('markable_bookmarks.user_id', '=', $user->id);
+            })
+            ->orderBy('markable_bookmarks.id')
+            ->get();
+
         if ($request->input('sort') == 'newest') {
             $decks = $decks->reverse();
             $terms = $terms->reverse();
