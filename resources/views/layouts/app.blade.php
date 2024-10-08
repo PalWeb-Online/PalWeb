@@ -49,22 +49,19 @@
 
 </head>
 
-<body class="{{ $bodyBackground ?? '' }}">
+<body class="{{ $layout ?? '' }} {{ $bodyBackground ?? '' }}">
 
-@unless(request()->routeIs('flashcards.study'))
-    @include("layouts._nav-mobile")
-    @include("layouts._nav-sticky")
-    @include("layouts._nav-user")
-    @include('layouts._nav-header')
-@endunless
+@include("layouts._nav-mobile")
+@include("layouts._nav-sticky")
+@include("layouts._nav-user")
+@include('layouts._nav-header')
 
 @yield('page-hero')
 
 @yield('page-body')
 
-@unless(request()->routeIs('flashcards.study'))
-    @include("layouts._footer")
-@endunless
+@include("layouts._footer")
+
 </body>
 
 <script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>

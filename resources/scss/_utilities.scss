@@ -213,23 +213,23 @@ h3 {
     }
 }
 
-.dropdown-menu, .popup-menu {
+.popup-menu {
     display: grid;
-    gap: 0.4rem;
     padding: 0.4rem;
-    margin-block-start: 0.4rem;
     border-radius: 0.6rem;
+    border: 0.1rem solid $purple-deep;
+    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
+    background: white;
     text-align: start;
     text-transform: none;
     user-select: none;
+    z-index: 2;
 
     form {
         display: grid;
     }
 
     a, button {
-        font-size: 1.2rem;
-        font-weight: 400;
         line-height: 1.5;
         white-space: nowrap;
         text-align: start;
@@ -239,27 +239,10 @@ h3 {
         min-width: auto;
         box-shadow: none;
         transform: none;
-    }
-
-    .disabled {
-        filter: opacity(0.5) grayscale(1);
-        cursor: auto;
-        user-select: none;
-    }
-}
-
-.popup-menu {
-    gap: 0;
-    margin: 0;
-    z-index: 2;
-    background: white;
-    border: 0.1rem solid $purple-primary-dark;
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
-
-    a, button {
         font-family: $monoFont;
         font-size: 1.2rem;
         font-weight: 400;
+        text-transform: capitalize;
         color: $purple-deep;
 
         &:hover {
@@ -267,6 +250,12 @@ h3 {
             color: white;
             background: $purple-primary-dark;
         }
+    }
+
+    .disabled {
+        filter: opacity(0.5) grayscale(1);
+        cursor: auto;
+        user-select: none;
     }
 
     .action-divider {
@@ -812,3 +801,15 @@ $flashers: (
 .notification-leave-to {
     opacity: 0;
 }
+
+//.tag__new {
+//    position: absolute;
+//    top: -3.6rem;
+//    left: -0.8rem;
+//    color: $purple-deep;
+//    background: $accent-yellow;
+//    font-family: $displayFont;
+//    font-size: 1.6rem;
+//    padding: 0.4rem 1.2rem;
+//    border-radius: 6.4rem;
+//}

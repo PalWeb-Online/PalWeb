@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('/', function () {
     return view('index', [
-        'bodyBackground' => 'hero-blue'
+        'bodyBackground' => 'front-page'
     ]);
 })->middleware('pageTitle:Home')->name('homepage');
 

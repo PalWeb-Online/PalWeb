@@ -607,6 +607,25 @@
     }
 }
 
+.workbench-options {
+    display: flex;
+    gap: 1.6rem;
+
+    button {
+        color: $purple-deep;
+        font-family: $bodyFont;
+        font-size: 1.6rem;
+
+        &.active {
+            font-weight: 700;
+        }
+
+        &:hover {
+            text-decoration: 2px solid underline;
+        }
+    }
+}
+
 @media (min-width: 960px) {
     .nav-user-dashboard {
         box-shadow: -0.3rem 0 0 rgba(black, 0.25);

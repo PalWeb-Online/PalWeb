@@ -11,7 +11,7 @@
     <div class="dropdown-wrapper"
          style="display: none"
          x-show="open">
-        <div class="dropdown-menu">
+        <div class="popup-menu">
             {{ $content }}
         </div>
     </div>

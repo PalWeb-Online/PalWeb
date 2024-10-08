@@ -5,55 +5,48 @@
 </x-page-head>
 
 <div class="doc-section">
-    <h1 style="text-transform: none">PalWeb v1.0</h1>
-    <p>PalWeb is finally here! After a year of evolution, the Learn Palestinian Arabic website snowballed into something
-        much greater. It quickly became clear that a new banner was necessary to represent the qualitative leap from
-        a static informational page to an interactive network of words & word lovers.</p>
-    <p>While the site's design has been completely reimagined, there's not too much in the way of new features since the
-        Anniversary Build of the Learn Palestinian Arabic site, the final stable version in the prehistory of PalWeb.
-        That's because all the focus in the last two months has been on carefully redesigning every corner of the site &
-        cleaning up the codebase in order to publicly launch PalWeb 1.0 as a public repository on GitHub. Most of the
-        changes are therefore structural:</p>
+    <h1 style="text-transform: none">PalWeb v1.1</h1>
+    <p>As usual, the development of PalWeb proceeds with a mind of its own. Sometimes, what seems feasible at first
+        turns out to be far more challenging & time-consuming than expected, while daunting tasks come together
+        naturally & everything falls quickly into place. Meanwhile, the political moment we live in permits no leisure
+        or frivolity; for all the time I spend on PalWeb, I spend as much, for better or worse, on building political
+        power where it is needed to bring an end to this madness. So, I'm sorry for my working pace, which never seems
+        to reach the rate I envision.</p>
+    <p><b>PalWeb v1.1</b> is the ribbon-cutting for a variety of improvements introduced over the course of the summer,
+        in addition to introducing for the first time a key promised feature. Here's what's new & improved:</p>
     <ul>
-        <li>Dashboard is now overlain over the current view, with links to one's public Profile & private Workbench.
-            Account options appear directly within this Dashboard view.
+        <li>You can now study Decks through the <b>Flashcard Portal</b>, with several options to customize how you view
+            flashcards.
         </li>
-        <li>Units now have 9 Lessons, instead of 3 Lessons with 3 Modules each. Lessons now have a single vocabulary
-            list in the form of an interactable Deck.
+        <li>Turns most Deck, Term & Sentence objects into reactive Vue components for more intuitive interaction;
+            pinning, etc. no longer triggers a page refresh.
         </li>
+        <li>Renders most dropdown menus through Vue to place them dynamically in relation to their trigger &
+            the available space, preventing page overflow.
+        </li>
+        <li>Various design improvements in the Dictionary, namely in the display of attributes at the top & inflections
+            further down the page.
+        </li>
+        <li>Added a "Random Term" prompt to Dictionary pages to jump more seamlessly between pages.</li>
+        <li>Reconfigured how Sentences are built, tying them to the database & making them dynamic.</li>
+        <li>Fixes an issue where the Billing portal was hard to find.</li>
+        <li>Sorting now works as intended in the Workbench.</li>
+        <li>Word of the Day has been fixed (finally).</li>
+        <li>Updated front page.</li>
     </ul>
-</div>
 
-<div class="doc-section">
-    <h1>What’s Next?</h1>
-    <p>Here are some of the things on the development schedule for the next six months.</p>
-    <ul>
-        <li><b>July</b> — Launch PalWeb & public repository. Support & bug fixes, etc. Content writing for Wiki.
-            Commission new avatars & badge art from Palestinian artists.
-        </li>
-        <li><b>August</b> — Port RecordWizard extension. Content writing for Wiki. Record missing audios. Add 250 terms
-            to Dictionary.
-        </li>
-        <li><b>September</b> — Build Flashcard Portal. Add 250 terms to Dictionary</li>
-        <li><b>October-December</b> — Rebuild Academy with interactive Activities & User Progress, etc.</li>
-    </ul>
-    <p>Based on where I am by January 1st, we'll see what the following six months will look like. If all of the above
-        goes smoothly, then I can dedicate those six months exclusively to adding terms to the Dictionary & — finally —
-        to finishing the actual Academy content. As you can imagine, the reason why that has kept getting delayed is
-        that it's not practical to further flesh out something now that I actually need to rebuild.</p>
-    <p>I'm working toward PalWeb 2.0 next July 1st. All the help I can get until then will just help me reach that goal
-        faster! Read the <a href="{{ route('wiki.show', 'contributing') }}">Contributing</a> page if you'd like to help
-        out!</p>
-    <p>Finally — I'm putting this at the end because it might be a little ambitious — I'm hoping that PalWeb 2.0 can
-        launch alongside LangWeb 1.0, a framework for other language-learning web applications following the integrated
-        PalWeb model. Read the <a href="{{ route('wiki.show', 'about') }}">About</a> page for more on that long-term
-        vision!</p>
+    <p>Of course, there's still a lot of work left to do. For the rest of the year, I will be working on creating an
+        in-house application for recording & managing audio files. I don't want to just whip up something quickly,
+        because this would be the basis of the audio file management functionality of <b>LangWeb</b>. In the remaining
+        time, I will continue supporting the site, adding Terms to the Dictionary, etc. Proper work on the
+        <b>Academy</b> will begin in January & would be completed by summer.</p>
 </div>
 
 <div class="doc-section">
     <h1>Version History</h1>
     <ul>
-        <li>01/07/2024 — PalWeb v1.0.0 <b>(Current)</b></li>
+        <li>01/10/2024 — PalWeb v1.1.0 <b>(Current)</b></li>
+        <li>01/07/2024 — PalWeb v1.0.0</li>
         <li>01/05/2024 — PalWeb v0.5.0 (LPA v1.4.0: the Anniversary Build)</li>
         <li>15/03/2024 — PalWeb v0.4.0 (LPA v1.3.0: the Land Day Build)</li>
         <li>15/01/2024 — PalWeb v0.3.0 (LPA v1.2.0: the 1998 Build)</li>

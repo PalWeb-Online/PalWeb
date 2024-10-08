@@ -9,14 +9,17 @@ body {
     background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, $purple-pastel;
     background-attachment: fixed;
 
-    &.hero-blue {
+    &.front-page {
         #hero-panel {
-            background: $purple-deep;
-        }
+            h1 {
+                line-height: 0.8;
+                font-size: clamp(9.6rem, 16vw, 19.2rem);
+            }
 
-        .term-flashcard-front {
-            color: $purple-deep;
-            background: $accent-yellow;
+            h2 {
+                font-size: clamp(3.2rem, 6vw, 4.8rem);
+                margin-inline-start: 0.8rem;
+            }
         }
     }
 
@@ -60,6 +63,33 @@ body {
             .hero-title {
                 font-size: 7.2rem;
             }
+        }
+    }
+}
+
+body.app {
+    background: $purple-pastel-light;
+
+    #page-body {
+        margin: 1.6rem;
+        grid-auto-columns: 100%;
+    }
+
+    .nav-header,
+    .nav-sticky,
+    .nav-user,
+    .nav-mobile,
+    .nav-mobile-toggle,
+    .footer-container,
+    .pin,
+    .pin-counter,
+    .lock {
+        display: none;
+    }
+
+    @media (min-width: 960px) {
+        #page-body {
+            margin: 3.2rem;
         }
     }
 }
@@ -320,18 +350,22 @@ nav {
         min-width: auto;
     }
 
-    .dropdown-menu {
+    .popup-menu {
         gap: 0.2rem;
+        margin: 0.8rem 0.3rem 0 0;
         padding: 0.8rem 1.2rem 1.2rem;
-        margin-block-start: 0.8rem;
         border-radius: 0.8rem;
-        color: $purple-primary-dark;
-        background: white;
         border: 0.2rem solid $purple-deep;
-        box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
         animation: slideIn 0.2s;
 
+        a, button {
+            font-family: $bodyFont;
+            padding-inline-end: 2.4rem;
+            font-size: 1.4rem;
+        }
+
         .dropdown-section-title {
+            color: $purple-deep;
             font-family: $headFont;
             font-size: 1.6rem;
             font-weight: 700;
@@ -340,18 +374,6 @@ nav {
 
             &:not(:first-child) {
                 margin-block-start: 0.4rem;
-            }
-        }
-
-        a, button {
-            font-family: $bodyFont;
-            text-transform: capitalize;
-            padding-inline-end: 2.4rem;
-            font-size: 1.4rem;
-
-            &:hover {
-                color: white;
-                background-color: $purple-primary-dark;
             }
         }
     }
@@ -388,21 +410,20 @@ nav {
         font-weight: 700;
         color: white;
         text-shadow: -0.4rem 0.4rem 0 rgba(black, 0.33);
-        animation: bounceIn 0.5s;
-
-        // Mobile
-        font-size: 7.2rem;
     }
 
     h1 {
         font-family: $displayFont;
         font-weight: 400;
         text-shadow: -0.6rem 0.6rem 0 rgba(black, 0.33);
+        animation: bounceIn 0.5s;
+        font-size: clamp(3.2rem, 12vw, 9.6rem);
     }
 
     h2 {
         font-family: $headFont;
         text-transform: none;
+        font-size: clamp(2.4rem, 8vw, 6.4rem);
     }
 
     .hero-title {
@@ -412,9 +433,9 @@ nav {
     .hero-blurb {
         color: white;
         font-weight: 700;
-        font-family: $bodyFont;
-        font-size: 2.4rem;
-        background: $purple-primary;
+        font-family: $monoFont;
+        font-size: 2.0rem;
+        background: $purple-deep;
         box-shadow: 0 0.4rem 0 rgba(black, 0.33);
         border-radius: 3.2rem;
         padding: 0.8rem 3.2rem 1.2rem;
@@ -448,14 +469,6 @@ nav {
         margin: calc(-2.0rem - 3.2rem) 3.2rem 6.4rem;
         padding: 9.6rem 6.4rem;
         border-radius: 3.2rem;
-
-        h1 {
-            font-size: 9.6rem;
-        }
-
-        h2 {
-            font-size: 6.4rem;
-        }
     }
 }
 
@@ -621,6 +634,19 @@ nav {
                 box-shadow: -0.3rem 0.3rem 0 rgba($purple-primary-dark, 0.5);
             }
         }
+
+        .breadcrumbs__option {
+            transform: none;
+            box-shadow: none;
+            flex-grow: 1;
+            text-align: end;
+            background: none;
+            color: $purple-primary-dark;
+
+            & > a:hover {
+                text-decoration: 2px underline;
+            }
+        }
     }
 
     .page-title {
@@ -653,10 +679,10 @@ nav {
     margin-block: 9.6rem 6.4rem;
     background: $purple-pastel-light;
     position: relative;
+    justify-items: center;
 
     & > .popout {
         position: absolute;
-        top: -4.8rem;
 
         // Mobile
         width: 6.4rem;
@@ -664,8 +690,17 @@ nav {
         right: 5%;
     }
 
+    .world {
+        width: 6.4rem;
+        transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
+
+        &:hover {
+            transform: scale(1.05) rotate(-3deg);
+        }
+    }
+
     @media (min-width: 960px) {
-        gap: 12.8rem;
+        gap: 9.6rem;
         padding: 9.6rem 6.4rem 12.8rem;
 
         & > .popout {
@@ -677,28 +712,22 @@ nav {
 }
 
 .feature-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3.2rem;
-
-    // Mobile
-    flex-wrap: wrap;
+    display: grid;
+    gap: 4.8rem;
 
     .feature-panel-content, .feature-panel-feature {
         max-width: 96rem;
-        align-self: center;
-        justify-self: center;
     }
 
     .feature-panel-content {
         display: grid;
         gap: 1.6rem;
         align-content: start;
+        position: relative;
 
         .feature-panel-title {
             font-family: $displayFont;
-            font-size: 3.2rem;
+            font-size: 4.8rem;
             text-transform: uppercase;
             color: $purple-deep;
 
@@ -720,15 +749,60 @@ nav {
     }
 
     .feature-panel-feature {
-        flex: 1 0 50%;
+        justify-self: center;
     }
 
     iframe {
         border: 0.4rem solid $purple-pastel-dark;
     }
+}
+
+.model-counter-grid {
+    display: grid;
+    gap: 6.4rem 19.2rem;
+
+    border: 2px solid $accent-yellow;
+    padding: 3.6rem 9.6rem 4.8rem;
+    border-radius: 3.2rem;
+    backdrop-filter: blur(2px);
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+        translate: 0.8rem -0.8rem;
+        filter: drop-shadow(-0.8rem 0.8rem 0 $accent-yellow-pastel);
+    }
 
     @media (min-width: 960px) {
-        flex-wrap: nowrap;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.model-counter {
+    display: grid;
+
+    .model-counter-count {
+        color: $purple-deep;
+        font-family: $displayFont;
+        font-size: 9.6rem;
+        line-height: 1;
+    }
+
+    .model-counter-body {
+        display: grid;
+
+        .model-counter-model {
+            color: $purple-primary;
+            font-family: $displayFont;
+            font-size: 4.8rem;
+            line-height: 1.25;
+        }
+
+        .model-counter-description {
+            color: $purple-primary;
+            font-family: $headFont;
+            font-size: 2.0rem;
+            font-weight: 700;
+        }
     }
 }
 
