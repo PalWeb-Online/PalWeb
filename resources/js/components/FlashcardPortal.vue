@@ -1,7 +1,6 @@
 <script setup>
 import TermFlashcard from "./TermFlashcard.vue";
 import {onMounted, onUnmounted, ref} from "vue";
-
 import 'vue3-carousel/dist/carousel.css';
 import {Carousel, Pagination, Slide} from 'vue3-carousel';
 

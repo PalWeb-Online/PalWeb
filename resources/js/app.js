@@ -15,10 +15,8 @@ import SentenceItem from "./components/SentenceItem.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
-import ActionButton from "./components/ActionButton.vue";
+import RecordWizard from './components/record/RecordWizard.vue';
 
-import AudioRecord from './lingua-recorder/AudioRecord';
-import LinguaRecorder from './lingua-recorder/LinguaRecorder';
 
 import axios from 'axios';
 import Alpine from 'alpinejs';
@@ -55,6 +53,12 @@ function mountMultiComponents(selector, component) {
 multiMountComponents.forEach(({ selector, component }) => {
     mountMultiComponents(selector, component);
 });
+
+if (document.querySelector('#recordWizard')) {
+    const recordWizardApp = createApp({});
+    recordWizardApp.component('RecordWizard', RecordWizard);
+    recordWizardApp.mount('#recordWizard');
+}
 
 if (document.querySelector('#termEditor')) {
     const termEditorApp = createApp({});
