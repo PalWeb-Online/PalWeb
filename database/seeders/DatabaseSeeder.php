@@ -16,9 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         (new BadgeSeeder)->run();
         (new DialectSeeder)->run();
+        (new LocationSeeder)->run();
         (new PatternSeeder)->run();
         (new AttributeSeeder)->run();
         (new UserSeeder)->run();
+        (new SpeakerSeeder)->run();
         (new RoleSeeder)->run();
         (new TermSeeder)->run();
         (new DeckSeeder)->run();

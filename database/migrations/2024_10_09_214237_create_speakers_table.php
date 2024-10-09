@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('dialect_id')->constrained('dialects');
+            $table->foreignId('location_id')->constrained('locations');
             $table->string('name');
-            $table->string('gender')->nullable();
+            $table->string('gender');
             $table->timestamps();
         });
     }
