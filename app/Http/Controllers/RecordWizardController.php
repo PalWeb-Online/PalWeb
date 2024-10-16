@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dialect;
+use App\Models\Location;
+use App\Models\Speaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Storage;
 
 class RecordWizardController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         View::share('pageTitle', 'Record Wizard');
 
         return view('record.index', [
@@ -16,14 +20,49 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function getSpeakers()
+    public function getSpeaker()
     {
-        // passes all the Speaker models to the view.
+        $user = auth()->user();
+
+        $speaker = Speaker::firstWhere('user_id', $user->id) ?? [
+            'user_id' => null,
+            'dialect_id' => null,
+            'location_id' => null,
+            'gender' => null,
+        ];
+
+        return response()->json([
+            'name' => $user->name,
+            'speaker' => $speaker,
+        ]);
     }
 
-    public function storeSpeaker()
+    public function getSpeakerOptions()
     {
-        // creates a new Speaker or updates its data.
+        return response()->json([
+            'dialects' => Dialect::all()->toArray(),
+            'locations' => Location::all()->makeHidden('coordinate')->toArray(),
+        ]);
+    }
+
+    public function saveSpeaker(Request $request)
+    {
+        $user = auth()->user();
+
+        $speaker = Speaker::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'dialect_id' => $request->input('dialect_id'),
+                'location_id' => $request->input('location_id'),
+                'gender' => $request->input('gender')
+            ]
+        );
+
+        return response()->json([
+            'name' => $user->name,
+            'speaker' => $speaker,
+            'message' => 'Speaker profile saved successfully',
+        ]);
     }
 
     public function getPronunciations()
@@ -45,7 +84,7 @@ class RecordWizardController extends Controller
         // If processing WebM files with FFmpeg is required
         if ($file->getClientMimeType() == 'video/webm') {
             $ffmpegLocation = config('app.ffmpeg_location'); // Set FFmpeg location in config
-            $tempPath = storage_path('app/' . $path);
+            $tempPath = storage_path('app/'.$path);
             shell_exec("{$ffmpegLocation} -i {$tempPath} -c copy {$tempPath}-ffmpeg.webm");
             rename("{$tempPath}-ffmpeg.webm", "{$tempPath}");
         }

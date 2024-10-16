@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import {useRecordStore} from '../store/useRecordStore'; // Assuming we refactored store here
-import {useConfigStore} from '../store/useConfigStore'; // For fetching past records
+import useRecordStore from '../store/useRecordStore'; // Assuming we refactored store here
+import useConfigStore from '../store/useConfigStore'; // For fetching past records
 import WizardText from '../ui/WizardTextInput.vue';
 import WizardButton from '../ui/WizardButton.vue';
 import WizardDropdown from '../ui/WizardDropdown.vue';
@@ -77,117 +77,92 @@ watch(() => recordStore.state.step, (newStep) => {
 </script>
 
 <template>
-    <div>
-        <div class="mwe-rw-content-title">
-            <h3>Details</h3>
-        </div>
+    <div class="wizard-page-title">
+        <h2>Details</h2>
+    </div>
 
-        <div class="mwe-rw-section-group">
-            <section>
-                <!-- Word Input Field -->
-                <div id="mwe-rwd-input">
-                    <WizardText
-                        id="mwe-rwd-word"
-                        input-id="mwe-rwd-word-input"
-                        v-model="wordInputed"
-                        @enter="addWordFromInput"
-                        placeholder="Enter word or phrase"
-                    />
+    <div class="mwe-rw-section-group">
+        <section>
+            <!-- Word Input Field -->
+            <div id="mwe-rwd-input">
+                <WizardText
+                    id="mwe-rwd-word"
+                    input-id="mwe-rwd-word-input"
+                    v-model="wordInputed"
+                    @enter="addWordFromInput"
+                    placeholder="Enter word or phrase"
+                />
+                <WizardButton
+                    id="mwe-rwd-add"
+                    :invisible-label="true"
+                    icon="add"
+                    flags="primary progressive"
+                    @click="addWordFromInput"
+                />
+                <div id="mwe-rwd-input-help">
+                    Enter words or phrases that you would like to record.
+                </div>
+            </div>
+
+            <!-- Draggable List -->
+            <Draggable v-model="words" id="mwe-rwd-list">
+                <template #item="{ element, index }">
+                    <li class="draggable-item">
+                        <span>{{ element }}</span>
+                        <i class="mwe-rws-again" @click="clear(index)"></i>
+                    </li>
+                </template>
+            </Draggable>
+
+            <!-- Action Buttons -->
+            <div id="mwe-rwd-actions">
+                <WizardButton
+                    id="mwe-rwd-deduplicate"
+                    label="Deduplicate"
+                    @click="deduplicate"
+                />
+                <WizardButton
+                    id="mwe-rwd-clear"
+                    label="Clear All"
+                    flags="destructive"
+                    @click="clearAll"
+                />
+            </div>
+        </section>
+
+        <section>
+            <!-- Language Selection -->
+            <div id="mwe-rwd-lang-field">
+                <label for="mwe-rwd-lang-input">Language</label>
+                <WizardDropdown
+                    id="mwe-rwd-lang"
+                    input-id="mwe-rwd-lang-input"
+                    :options="availableLanguages"
+                    v-model="metadata.language"
+                    @change="onLanguageChange"
+                />
+                <WizardCheckbox
+                    id="mwe-rwd-randomise"
+                    v-model="randomise"
+                />
+                Randomise order
+            </div>
+
+            <!-- Generators Section -->
+            <div id="mwe-rwd-generators-field">
+                <h4>Inspiration</h4>
+                Use these generators for inspiration:
+                <div id="mwe-rwd-generator-buttons">
                     <WizardButton
-                        id="mwe-rwd-add"
-                        :invisible-label="true"
-                        icon="add"
-                        flags="primary progressive"
-                        @click="addWordFromInput"
-                    />
-                    <div id="mwe-rwd-input-help">
-                        Enter words or phrases that you would like to record.
-                    </div>
-                </div>
-
-                <!-- Draggable List -->
-                <Draggable v-model="words" id="mwe-rwd-list">
-                    <template #item="{ element, index }">
-                        <li class="draggable-item">
-                            <span>{{ element }}</span>
-                            <i class="mwe-rws-again" @click="clear(index)"></i>
-                        </li>
-                    </template>
-                </Draggable>
-
-                <!-- Action Buttons -->
-                <div id="mwe-rwd-actions">
-                    <WizardButton
-                        id="mwe-rwd-deduplicate"
-                        label="Deduplicate"
-                        @click="deduplicate"
-                    />
-                    <WizardButton
-                        id="mwe-rwd-clear"
-                        label="Clear All"
-                        flags="destructive"
-                        @click="clearAll"
+                        v-for="generator in generators"
+                        :key="generator.name"
+                        :id="'mwe-rwd-generator-' + generator.name"
+                        :label="generator.title"
+                        :icon="generator.icon"
+                        @click="$windowManager.openWindow(generator.name)"
                     />
                 </div>
-            </section>
-
-            <section>
-                <!-- Language Selection -->
-                <div id="mwe-rwd-lang-field">
-                    <label for="mwe-rwd-lang-input">Language</label>
-                    <WizardDropdown
-                        id="mwe-rwd-lang"
-                        input-id="mwe-rwd-lang-input"
-                        :options="availableLanguages"
-                        v-model="metadata.language"
-                        @change="onLanguageChange"
-                    />
-                    <WizardCheckbox
-                        id="mwe-rwd-randomise"
-                        v-model="randomise"
-                    />
-                    Randomise order
-                </div>
-
-                <!-- Generators Section -->
-                <div id="mwe-rwd-generators-field">
-                    <h4>Inspiration</h4>
-                    Use these generators for inspiration:
-                    <div id="mwe-rwd-generator-buttons">
-                        <WizardButton
-                            v-for="generator in generators"
-                            :key="generator.name"
-                            :id="'mwe-rwd-generator-' + generator.name"
-                            :label="generator.title"
-                            :icon="generator.icon"
-                            @click="$windowManager.openWindow(generator.name)"
-                        />
-                    </div>
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </div>
 </template>
-
-<style scoped>
-.mwe-rw-content-title {
-    margin-bottom: 20px;
-}
-
-.mwe-rw-field {
-    margin-bottom: 15px;
-}
-
-#mwe-rwd-input-help {
-    margin-top: 10px;
-    color: #666;
-}
-
-#mwe-rwd-actions {
-    margin-top: 20px;
-}
-
-.mwe-rw-section-group {
-    margin-top: 20px;
-}
-</style>

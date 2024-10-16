@@ -7,8 +7,8 @@ use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\RecordWizardController;
 use App\Http\Controllers\MissingTermController;
+use App\Http\Controllers\RecordWizardController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TextController;
@@ -203,7 +203,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::get('/record', [RecordWizardController::class, 'index'])->name('record');
+Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
+    Route::get('/', 'index')->middleware('admin')->name('record');
+    Route::get('/speaker', 'getSpeaker');
+    Route::get('/options', 'getSpeakerOptions');
+    Route::post('/speaker', 'saveSpeaker');
+});
 
 //Route::get('sitemap', function () {
 //    $sitemap = Sitemap::create()->add(Url::create('/'))->add(Url::create('/dictionary'))->add(Url::create('/units'))->add(Url::create('/texts'))->add(Url::create('/docs'));

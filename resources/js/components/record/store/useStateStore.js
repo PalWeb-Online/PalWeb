@@ -1,50 +1,61 @@
 import { reactive } from 'vue';
 
-export function useStateStore() {
-    const data = reactive({
-        step: 'tutorial',
-        isFrozen: false,
-        isBrowserReady: false,
-        isPublishing: false
-    });
+let store;
 
-    const prevStep = {
-        tutorial: 'tutorial',
-        speaker: 'tutorial',
-        details: 'speaker',
-        studio: 'details',
-        publish: 'studio'
-    };
+export default function useStateStore() {
+    if (!store) {
+        const data = reactive({
+            step: 'tutorial',
+            isFrozen: false,
+            isBrowserReady: false,
+            isPublishing: false
+        });
 
-    const nextStep = {
-        tutorial: 'speaker',
-        speaker: 'details',
-        details: 'studio',
-        studio: 'publish',
-        publish: 'details'
-    };
+        const prevStep = {
+            tutorial: 'tutorial',
+            speaker: 'tutorial',
+            details: 'speaker',
+            studio: 'details',
+            publish: 'studio'
+        };
 
-    function movePrev() {
-        data.step = prevStep[data.step];
+        const nextStep = {
+            tutorial: 'speaker',
+            speaker: 'details',
+            details: 'studio',
+            studio: 'publish',
+            publish: 'details'
+        };
+
+        function movePrev() {
+            data.step = prevStep[data.step];
+        }
+
+        function moveNext() {
+            data.step = nextStep[data.step];
+        }
+
+        function freeze() {
+            data.isFrozen = true;
+        }
+
+        function unfreeze() {
+            data.isFrozen = false;
+        }
+
+        function setBrowserReady(isReady) {
+            data.isBrowserReady = isReady;
+        }
+
+        store = {
+            data,
+            movePrev,
+            moveNext,
+            freeze,
+            unfreeze,
+            setBrowserReady,
+        };
     }
 
-    function moveNext() {
-        data.step = nextStep[data.step];
-    }
-
-    function freeze() {
-        data.isFrozen = true;
-    }
-
-    function unfreeze() {
-        data.isFrozen = false;
-    }
-
-    return {
-        data,
-        movePrev,
-        moveNext,
-        freeze,
-        unfreeze
-    };
+    return store;
 }

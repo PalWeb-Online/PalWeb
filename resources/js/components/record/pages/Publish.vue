@@ -127,46 +127,45 @@ const mediaUrlComputed = computed(() => {
 </script>
 
 <template>
-    <div>
-        <div class="mwe-rw-content-title">
-            <h3>Publish Recordings</h3>
-        </div>
+    <div class="wizard-page-title">
+        <h2>Publish Recordings</h2>
+    </div>
 
-        <div class="mwe-rw-section-group">
-            <section>
-                <!-- Word List with Checkboxes -->
-                <ul id="mwe-rwp-list" class="mwe-rw-list">
-                    <li v-for="(word, index) in words" :key="index" v-if="isSelectable(word)"
-                        :class="`mwe-rwp-${status[word]} ${errors[word] !== false ? 'mwe-rw-error' : ''} ${selectedArray[index] || ''}`"
-                        @click.self="selectWord(index)">
-                        <WizardCheckbox v-model="checkboxes[word]" :disabled="state.isPublishing"/>
-                        <label :for="'mwe-rwp-cb1-input'" v-html="word" :title="errors[word]"
-                               @click="selectWord(index)"></label>
-                    </li>
-                </ul>
-            </section>
+    <div class="mwe-rw-section-group">
+        <section>
+            <!-- Word List with Checkboxes -->
+            <ul id="mwe-rwp-list" class="mwe-rw-list">
+                <li v-for="(word, index) in words" :key="index" v-if="isSelectable(word)"
+                    :class="`mwe-rwp-${status[word]} ${errors[word] !== false ? 'mwe-rw-error' : ''} ${selectedArray[index] || ''}`"
+                    @click.self="selectWord(index)">
+                    <WizardCheckbox v-model="checkboxes[word]" :disabled="state.isPublishing"/>
+                    <label :for="'mwe-rwp-cb1-input'" v-html="word" :title="errors[word]"
+                           @click="selectWord(index)"></label>
+                </li>
+            </ul>
+        </section>
 
-            <section>
-                <!-- Playback Section -->
-                <div id="mwe-rwp-core" class="mwe-rw-core">
-                    <div id="mwe-rwp-itembox" class="mwe-rw-itembox">
-                        <WizardButton id="mwe-rwp-prev" icon="previous" :framed="false" @click="moveBackward"/>
-                        <div id="mwe-rwp-item" class="mwe-rw-item" v-html="words[selected]"></div>
-                        <WizardButton id="mwe-rwp-next" icon="next" :framed="false" @click="moveForward"/>
-                    </div>
-
-                    <!-- Audio/Video Controls -->
-                    <audio v-if="metadata.media === 'audio'" :src="mediaUrlComputed" controls autoplay></audio>
-                    <video v-if="metadata.media === 'video'" :src="mediaUrlComputed" controls autoplay></video>
+        <section>
+            <!-- Playback Section -->
+            <div id="mwe-rwp-core" class="mwe-rw-core">
+                <div id="mwe-rwp-itembox" class="mwe-rw-itembox">
+                    <WizardButton id="mwe-rwp-prev" icon="previous" :framed="false" @click="moveBackward"/>
+                    <div id="mwe-rwp-item" class="mwe-rw-item" v-html="words[selected]"></div>
+                    <WizardButton id="mwe-rwp-next" icon="next" :framed="false" @click="moveForward"/>
                 </div>
 
-                <!-- Progress and Counter Section -->
-                <div id="mwe-rwp-actions" class="mwe-rw-actions">
-                    <WizardProgressBar :value="(100 * statusCount.done / total).toString()"/>
+                <!-- Audio/Video Controls -->
+                <audio v-if="metadata.media === 'audio'" :src="mediaUrlComputed" controls autoplay></audio>
+                <video v-if="metadata.media === 'video'" :src="mediaUrlComputed" controls autoplay></video>
+            </div>
 
-                    <div id="mwe-rwp-counter" class="mwe-rw-counter">
-                        <span v-html="statusCount.done"></span> / <span v-html="total"></span>
-                        <span class="mwe-rw-othercounter">
+            <!-- Progress and Counter Section -->
+            <div id="mwe-rwp-actions" class="mwe-rw-actions">
+                <WizardProgressBar :value="(100 * statusCount.done / total).toString()"/>
+
+                <div id="mwe-rwp-counter" class="mwe-rw-counter">
+                    <span v-html="statusCount.done"></span> / <span v-html="total"></span>
+                    <span class="mwe-rw-othercounter">
               <span class="mwe-rw-errorcounter" v-if="statusCount.error > 0">
                 <i></i>
                 <span v-html="statusCount.error"></span>
@@ -176,41 +175,8 @@ const mediaUrlComputed = computed(() => {
                 <span v-html="statusCount.uploading + statusCount.finalizing"></span>
               </span>
             </span>
-                    </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </div>
 </template>
-
-<style scoped>
-.mwe-rw-content-title {
-    margin-bottom: 20px;
-}
-
-.mwe-rw-section-group {
-    margin-top: 20px;
-}
-
-.mwe-rw-core {
-    margin-top: 20px;
-}
-
-.mwe-rw-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.mwe-rw-error {
-    color: red;
-}
-
-.mwe-rw-itembox {
-    display: flex;
-    align-items: center;
-}
-
-.mwe-rwp-list {
-    margin-bottom: 20px;
-}
-</style>

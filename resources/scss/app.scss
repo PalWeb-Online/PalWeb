@@ -4,6 +4,7 @@
 @import 'decks';
 @import 'terms';
 @import 'users';
+@import 'record';
 @import 'utilities';
 
 .group-horizontal, div.array {
@@ -708,6 +709,7 @@ ul.search-results {
     }
 
     label {
+        font-family: $headFont;
         color: $accent-yellow;
         font-size: 2.4rem;
         font-weight: 700;

@@ -1,10 +1,12 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
-import WizardButton from '../ui/WizardButton.vue'; // Adjust the path if necessary
+import useStateStore from "../store/useStateStore.js";
+import WizardButton from '../ui/WizardButton.vue';
+import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 
 // Reactive state
-const isBrowserReady = ref(false);
-const mictesterState = ref('init'); // init -> wait -> record -> play
+const stateStore = useStateStore();
+const mictesterState = ref('init');
 const recorder = ref(null);
 const errorMessageAssociation = reactive({
     AbortError: 'Technical issue with the microphone.',
@@ -28,8 +30,8 @@ const getAudioStream = () => {
 
     recorder.value.on('readyFail', showError);
     recorder.value.on('ready', () => {
-        isBrowserReady.value = true;
-        recorder.value.on('stoped', mictesterPlay);
+        stateStore.setBrowserReady(true);
+        recorder.value.on('stopped', mictesterPlay);
     });
 };
 
@@ -38,7 +40,7 @@ const unloadRecorder = () => {
         recorder.value.stop();
         recorder.value.off('readyFail');
         recorder.value.off('ready');
-        recorder.value.off('stoped');
+        recorder.value.off('stopped');
         recorder.value.close();
         recorder.value = null;
     }
@@ -51,7 +53,7 @@ const showError = (mediaStreamError) => {
         message = errorMessageAssociation[mediaStreamError.name];
     }
 
-    alert(message); // Replace OO.ui.alert with native alert for now
+    alert(message);
 };
 
 const mictesterRecord = () => {
@@ -98,66 +100,58 @@ watch(mictesterState, (newState) => {
 </script>
 
 <template>
-    <div>
-        <div class="mwe-rw-content-title">
-            <h3>Tutorial</h3>
-        </div>
+    <div class="wizard-page-title">
+        <h2>Tutorial</h2>
+    </div>
 
-        <!-- Section when the browser is not ready -->
-        <div class="mwe-rw-section-group" v-if="!isBrowserReady">
-            <section>
-                <img src="/path/to/icons/no-mic.svg" width="40" height="40" alt="No microphone">
-                <p>Activate your microphone to proceed.</p>
-                <WizardButton id="mwe-rwt-reopenpopup" label="Reopen microphone settings popup"
-                              @click="getAudioStream"/>
-            </section>
-        </div>
+    <div class="wizard-section-container" v-if="!stateStore.data.isBrowserReady">
+        <section>
+            <img src="/path/to/icons/no-mic.svg" width="40" height="40" alt="No microphone">
+            <p>Activate your microphone to proceed.</p>
+            <WizardButton id="mwe-rwt-reopenpopup" label="Reopen microphone settings popup"
+                          @click="getAudioStream"/>
+        </section>
+    </div>
 
-        <!-- Section when the browser is ready -->
-        <div class="mwe-rw-section-group" v-if="isBrowserReady">
-            <section>
-                <p>Here is how to use the recording wizard.</p>
-                <div id="mwe-rwt-info">
-                    <p>Please follow the instructions to ensure the best quality.</p>
+    <div class="wizard-section-container" v-if="stateStore.data.isBrowserReady">
+        <section>
+            <p>Here's how to use the Record Wizard:</p>
+            <ol>
+                <li>When you're ready, click the "Test Me" button to run a recording test.</li>
+                <li>Say something out loud!</li>
+                <li>Listen to the recording & make sure it sounds right.</li>
+                <li>If so, move onto the next step!</li>
+                <li>If not, adjust your mic configuration as needed.</li>
+            </ol>
+
+            <div class="tip">
+                <div class="material-symbols-rounded">info</div>
+                <div class="tip-content">
+                    <p>Visit <a href="https://lingualibre.org/wiki/Help:Configure_your_microphone" target="_blank">this
+                        page</a> to
+                        learn how to configure your microphone.</p>
                 </div>
-            </section>
-            <section>
-                <p>Mic Tester Info: Make sure your microphone works correctly.</p>
-                <WizardButton
-                    id="mwe-rwt-testbutton"
-                    v-if="mictesterState === 'init'"
-                    label="Start Mic Test"
-                    @click="mictesterRecord"
-                />
-                <div id="mwe-rwt-testrecord" v-if="mictesterState === 'record'">
-                    Recording...
-                </div>
-                <div id="mwe-rwt-testplay" v-if="mictesterState === 'play'">
-                    Playing the recording...
-                </div>
-                <div id="mwe-rwt-testwait" v-if="mictesterState === 'wait'">
-                    Please wait...
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
+        <section>
+            <p>Press the button below to start the mic test.</p>
+            <WizardButton
+                v-if="mictesterState === 'init'"
+                label="Test Me"
+                @click="mictesterRecord"
+            />
+            <div class="wizard-test-status" v-if="mictesterState === 'wait'">
+                <div>waiting</div>
+                <div>don't speak yet</div>
+            </div>
+            <div class="wizard-test-status is-recording" v-if="mictesterState === 'record'">
+                <div>recording</div>
+                <div>speak now</div>
+            </div>
+            <div class="wizard-test-status" v-if="mictesterState === 'play'">
+                <div>listening</div>
+                <div>check the recording</div>
+            </div>
+        </section>
     </div>
 </template>
-
-<style scoped>
-.mwe-rw-content-title {
-    margin-bottom: 20px;
-}
-
-.mwe-rw-section-group {
-    margin-top: 20px;
-}
-
-img {
-    display: block;
-    margin-bottom: 10px;
-}
-
-p {
-    margin-bottom: 10px;
-}
-</style>

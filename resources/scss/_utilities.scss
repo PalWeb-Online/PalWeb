@@ -547,16 +547,20 @@ h3 {
     text-align: start;
     padding-inline: 1.6rem;
 
-    div > p {
-        margin: 0;
-        font-size: 1.6rem;
-    }
-
     a {
         font-weight: 700;
 
         &:hover, &:active {
             text-decoration: underline;
+        }
+    }
+
+    .tip-content {
+        margin-block: 1.6rem; display: flex; flex-flow: column; gap: 0.4rem;
+
+        p {
+            margin: 0;
+            font-size: 1.6rem;
         }
     }
 }

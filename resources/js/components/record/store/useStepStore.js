@@ -1,24 +1,39 @@
 import { reactive } from 'vue';
-import { useConfigStore } from './useConfigStore'; // If needed
-import { useStateStore } from './useStateStore'; // If needed
+import useRecordStore from './useRecordStore';
 
-export function useStepStore() {
-    const configStore = useConfigStore(); // Config data, if needed
-    const stateStore = useStateStore();   // State data, if needed
+let store;
 
-    const state = reactive({
-        config: configStore.config,
-        state: stateStore.state,
-    });
+export default function useStepStore() {
+    if (!store) {
+        const recordStore = useRecordStore();
 
-    const canMovePrev = () => true;
-    const canMoveNext = () => true;
+        const steps = {
+            tutorial: {
+                canMovePrev: () => false,
+                canMoveNext: () => true,
+            },
+            speaker: {
+                canMovePrev: () => true,
+                canMoveNext: () => recordStore.data.metadata.speaker.name !== '',
+            },
+            details: {
+                canMovePrev: () => true,
+                canMoveNext: () => recordStore.data.words.length > 0,
+            },
+            studio: {
+                canMovePrev: () => true,
+                canMoveNext: () => recordStore.data.statusCount.stashed > 0,
+            },
+            publish: {
+                canMovePrev: () => true,
+                canMoveNext: () => false,
+            }
+        };
 
-    // Add any other shared logic here...
+        store = {
+            steps,
+        };
+    }
 
-    return {
-        state,
-        canMovePrev,
-        canMoveNext,
-    };
+    return store;
 }

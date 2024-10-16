@@ -3,34 +3,34 @@ import {ref, watch} from 'vue';
 
 const props = defineProps({
     options: {type: Array, default: () => []},
-    value: {type: String, default: ''},
+    modelValue: {type: String, default: ''}, // Use modelValue for v-model binding
     disabled: {type: Boolean, default: false},
     inputId: {type: String, required: false}
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
-const selectedValue = ref(props.value);
+const selectedValue = ref(props.modelValue);
 
 // Function to select an option
 const selectOption = (option) => {
     if (!props.disabled) {
         selectedValue.value = option.data;
-        emit('input', option.data);
+        emit('update:modelValue', option.data); // Emit the correct event
     }
 };
 
 // Compute the class for buttons (indicating the active/selected state)
 const buttonClass = (option) => {
     return {
-        'button-option': true,
+        'wizard-button': true,
         'selected': option.data === selectedValue.value
     };
 };
 
-// Watch for changes to the value prop to sync the selected value
+// Watch for changes to the modelValue prop to sync the selected value
 watch(
-    () => props.value,
+    () => props.modelValue,
     (newVal) => {
         selectedValue.value = newVal;
     }
@@ -38,7 +38,7 @@ watch(
 </script>
 
 <template>
-    <div class="button-select">
+    <div class="wizard-select">
         <button
             v-for="option in options"
             :key="option.data"
@@ -52,9 +52,6 @@ watch(
 </template>
 
 <style scoped>
-.button-select {
-    display: flex;
-}
 
 .button-option {
     margin: 0 5px;

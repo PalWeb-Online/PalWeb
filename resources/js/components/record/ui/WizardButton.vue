@@ -40,24 +40,3 @@ const handleClick = (event) => {
         <span v-if="label">{{ label }}</span>
     </button>
 </template>
-
-<style scoped>
-.wizard-button {
-    /* Default button styles */
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-}
-
-.wizard-button[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.icon-sample-icon { /* Example class for icons */
-    margin-right: 8px;
-}
-</style>
