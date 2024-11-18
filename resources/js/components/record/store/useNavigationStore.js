@@ -35,7 +35,7 @@ export default function useNavigationStore() {
 
         const cancel = () => {
             if (confirm('Are you sure you want to leave the wizard?')) {
-                window.location.reload(); // This can be replaced with a redirect to a specific route
+                window.location.href = '/dashboard/workbench';
             }
         };
 

@@ -44,6 +44,7 @@ export default function useRecordStore() {
                     data.metadata.speaker = response.data.speaker;
                     data.metadata.speaker.name = response.data.name;
                 }
+                
             } catch (error) {
                 console.error('Error loading speaker:', error);
             }
@@ -60,6 +61,8 @@ export default function useRecordStore() {
 
                 alert(response.data.message);
                 data.metadata.speaker = response.data.speaker;
+                data.metadata.speaker.name = response.data.name;
+
             } catch (error) {
                 console.error('Error saving speaker:', error);
             }

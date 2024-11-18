@@ -113,10 +113,14 @@ body.mw-special-RecordWizard #contentHeading {
     align-items: center;
     justify-content: center;
     min-height: 200px;
+
+    .loading {
+        width: 6.4rem;
+    }
 }
 
-#mwe-rw-spinner img {
-    width: 6.4rem;
+.loading {
+    width: 3.6rem;
     animation: spinner 1s infinite;
     padding: 0;
 }

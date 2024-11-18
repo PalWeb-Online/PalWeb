@@ -141,8 +141,7 @@ watch(mictesterState, (newState) => {
                 @click="mictesterRecord"
             />
             <div class="wizard-test-status" v-if="mictesterState === 'wait'">
-                <div>waiting</div>
-                <div>don't speak yet</div>
+                <img class="loading" src="/img/wait.svg" alt="Loading"/>
             </div>
             <div class="wizard-test-status is-recording" v-if="mictesterState === 'record'">
                 <div>recording</div>
