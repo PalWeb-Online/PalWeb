@@ -1,11 +1,11 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import useRecordStore from '../store/useRecordStore';
+import {useRecordStore} from '../store/RecordStore';
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardSelect from '../ui/WizardSelect.vue';
 import WizardButton from "../ui/WizardButton.vue";
 
-const recordStore = useRecordStore();
+const RecordStore = useRecordStore();
 const dialects = ref([]);
 const locations = ref([]);
 const genders = ref([
@@ -29,7 +29,7 @@ const fetchSpeakerOptions = async () => {
 }
 
 function validateForm() {
-    const speaker = recordStore.data.metadata.speaker;
+    const speaker = RecordStore.data.metadata.speaker;
     if (!speaker.dialect_id || !speaker.location_id || !speaker.gender) {
         alert('Please fill out all the fields.');
         return false;
@@ -38,7 +38,7 @@ function validateForm() {
 }
 
 onMounted(async () => {
-    await recordStore.fetchSpeaker();
+    await RecordStore.fetchSpeaker();
     await fetchSpeakerOptions();
 });
 </script>
@@ -63,7 +63,7 @@ onMounted(async () => {
                 <img alt="Profile Picture"
                      src="/img/avatars/battix01.jpg"/>
             </div>
-            <div class="user-name">{{ recordStore.data.metadata.speaker.name ?? 'Loading...' }}</div>
+            <div class="user-name">{{ RecordStore.data.metadata.speaker.name ?? 'Loading...' }}</div>
         </section>
         <section>
 
@@ -72,7 +72,7 @@ onMounted(async () => {
                 <WizardDropdown
                     id="dialect"
                     :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                    v-model="recordStore.data.metadata.speaker.dialect_id"
+                    v-model="RecordStore.data.metadata.speaker.dialect_id"
                 />
             </div>
             <div class="mwe-rw-field">
@@ -80,7 +80,7 @@ onMounted(async () => {
                 <WizardDropdown
                     id="location"
                     :options="locations.map(location => ({ data: location.id, label: location.name }))"
-                    v-model="recordStore.data.metadata.speaker.location_id"
+                    v-model="RecordStore.data.metadata.speaker.location_id"
                 />
             </div>
             <div class="mwe-rw-field">
@@ -88,13 +88,13 @@ onMounted(async () => {
                 <WizardSelect
                     id="gender"
                     :options="genders"
-                    v-model="recordStore.data.metadata.speaker.gender"
+                    v-model="RecordStore.data.metadata.speaker.gender"
                 />
             </div>
 
             <WizardButton
-                :label="recordStore.data.metadata.speaker.user_id ? 'Update Speaker Profile' : 'Create Speaker Profile'"
-                @click="() => { if (validateForm()) recordStore.saveSpeaker(); }"
+                :label="RecordStore.data.metadata.speaker.user_id ? 'Update Speaker Profile' : 'Create Speaker Profile'"
+                @click="() => { if (validateForm()) RecordStore.saveSpeaker(); }"
             />
         </section>
     </div>

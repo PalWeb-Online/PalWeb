@@ -1,7 +1,7 @@
 <script setup>
-import { onBeforeUnmount, onMounted } from 'vue';
-import useStateStore from './store/useStateStore.js';
-import useNavigationStore from './store/useNavigationStore';
+import {onBeforeUnmount, onMounted} from 'vue';
+import {useStateStore} from './store/StateStore';
+import {useNavigationStore} from './store/NavigationStore';
 import RequestQueue from '../../utils/RequestQueue.js';
 import Tutorial from './pages/Tutorial.vue';
 import Speaker from './pages/Speaker.vue';
@@ -10,7 +10,7 @@ import Studio from './pages/Studio.vue';
 import Publish from './pages/Publish.vue';
 import WizardButton from './ui/WizardButton.vue';
 
-const stateStore = useStateStore();
+const StateStore = useStateStore();
 const {
     prev,
     next,
@@ -22,7 +22,7 @@ const {
 const requestQueue = new RequestQueue();
 
 const preventWindowClose = (event) => {
-    if (stateStore.hasPendingRequests) {
+    if (StateStore.hasPendingRequests) {
         event.preventDefault();
         event.returnValue = ''; // Standard way to trigger confirmation dialog in browsers
     }
@@ -31,7 +31,7 @@ const preventWindowClose = (event) => {
 // Lifecycle hook to simulate loading completion and set up window event listeners
 onMounted(() => {
     setTimeout(() => {
-        stateStore.data.isContentVisible = true;
+        StateStore.data.isContentVisible = true;
     }, 1000);
 
     // Prevent window close if there are pending requests
@@ -49,11 +49,11 @@ onBeforeUnmount(() => {
     <div id="mwe-rw">
         <!-- Step Navigation -->
         <div id="mwe-rw-steps">
-            <div :class="{ active: stateStore.data.step === 'tutorial' }">Tutorial</div>
-            <div :class="{ active: stateStore.data.step === 'speaker' }">Speaker</div>
-            <div :class="{ active: stateStore.data.step === 'details' }">Details</div>
-            <div :class="{ active: stateStore.data.step === 'studio' }">Studio</div>
-            <div :class="{ active: stateStore.data.step === 'publish' }">Publish</div>
+            <div :class="{ active: StateStore.data.step === 'tutorial' }">Tutorial</div>
+            <div :class="{ active: StateStore.data.step === 'speaker' }">Speaker</div>
+            <div :class="{ active: StateStore.data.step === 'details' }">Details</div>
+            <div :class="{ active: StateStore.data.step === 'studio' }">Studio</div>
+            <div :class="{ active: StateStore.data.step === 'publish' }">Publish</div>
         </div>
 
         <div id="mwe-rw-main">
@@ -71,9 +71,9 @@ onBeforeUnmount(() => {
                     label="Previous"
                     flags="progressive"
                     :framed="false"
-                    :disabled="stateStore.prevDisabled.value"
+                    :disabled="StateStore.prevDisabled.value"
                     @click="prev"
-                    v-show="stateStore.data.step !== 'tutorial' && stateStore.data.isPublishing === false"
+                    v-show="StateStore.data.step !== 'tutorial' && StateStore.data.isPublishing === false"
                 />
 
                 <WizardButton
@@ -81,9 +81,9 @@ onBeforeUnmount(() => {
                     icon="next"
                     label="Next"
                     flags="progressive primary"
-                    :disabled="stateStore.nextDisabled.value"
+                    :disabled="StateStore.nextDisabled.value"
                     @click="next"
-                    v-show="stateStore.data.isBrowserReady && stateStore.data.step !== 'publish'"
+                    v-show="StateStore.data.isBrowserReady && StateStore.data.step !== 'publish'"
                 />
 
                 <WizardButton
@@ -91,9 +91,9 @@ onBeforeUnmount(() => {
                     icon="upload"
                     label="Publish"
                     flags="progressive primary"
-                    :disabled="stateStore.hasPendingRequests.value"
+                    :disabled="StateStore.hasPendingRequests.value"
                     @click="next"
-                    v-show="stateStore.data.step === 'publish' && (stateStore.data.isPublishing === false || stateStore.hasPendingRequests === true)"
+                    v-show="StateStore.data.step === 'publish' && (StateStore.data.isPublishing === false || StateStore.hasPendingRequests === true)"
                 />
 
                 <WizardButton
@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
                     label="Restart"
                     flags="progressive primary"
                     @click="next"
-                    v-show="stateStore.data.isPublishing === true && !stateStore.hasPendingRequests"
+                    v-show="StateStore.data.isPublishing === true && !StateStore.hasPendingRequests"
                 />
 
                 <WizardButton
@@ -110,28 +110,28 @@ onBeforeUnmount(() => {
                     icon="reload"
                     label="Retry"
                     @click="retry"
-                    v-show="stateStore.showRetry.value"
+                    v-show="StateStore.showRetry.value"
                 />
             </div>
 
-            <div v-if="!stateStore.data.isContentVisible" id="mwe-rw-spinner">
+            <div v-if="!StateStore.data.isContentVisible" id="mwe-rw-spinner">
                 <img class="loading" src="/img/wait.svg" alt="Loading"/>
             </div>
 
-            <div v-if="stateStore.data.isContentVisible" id="mwe-rw-content">
-                <div class="mwe-rw-content" id="mwe-rw-tutorial" v-if="stateStore.data.step === 'tutorial'">
+            <div v-if="StateStore.data.isContentVisible" id="mwe-rw-content">
+                <div class="mwe-rw-content" id="mwe-rw-tutorial" v-if="StateStore.data.step === 'tutorial'">
                     <Tutorial/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-speaker" v-if="stateStore.data.step === 'speaker'">
+                <div class="mwe-rw-content" id="mwe-rw-speaker" v-if="StateStore.data.step === 'speaker'">
                     <Speaker/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-details" v-if="stateStore.data.step === 'details'">
+                <div class="mwe-rw-content" id="mwe-rw-details" v-if="StateStore.data.step === 'details'">
                     <Details/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-studio" v-if="stateStore.data.step === 'studio'">
+                <div class="mwe-rw-content" id="mwe-rw-studio" v-if="StateStore.data.step === 'studio'">
                     <Studio/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-publish" v-if="stateStore.data.step === 'publish'">
+                <div class="mwe-rw-content" id="mwe-rw-publish" v-if="StateStore.data.step === 'publish'">
                     <Publish/>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
-import useRecordStore from '../store/useRecordStore';
-import useListStore from '../store/useListStore';
+import {useRecordStore} from '../store/RecordStore';
+import {useListStore} from '../store/ListStore';
 import WizardNumber from '../ui/WizardNumberInput.vue';
 import WizardButton from '../ui/WizardButton.vue';
 import WizardPopup from '../ui/WizardPopup.vue';
@@ -10,16 +10,21 @@ import WizardSelect from '../ui/WizardSelect.vue';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 
 const {
-    words, selected, selectedArray, initSelection, moveForward, moveBackward,
+    words,
+    selected,
+    selectedArray,
+    initSelection,
+    moveForward,
+    moveBackward,
 } = useListStore(); // List-related logic
 
 // Store reference for metadata and status
-const recordStore = useRecordStore();
+const RecordStore = useRecordStore();
 
 // Reactive states
-const metadata = reactive(recordStore.metadata); // Language, media type, etc.
-const status = reactive(recordStore.status); // Recording status
-const statusCount = reactive(recordStore.statusCount); // Track counts for errors, stashing, etc.
+const metadata = reactive(RecordStore.data.metadata); // Language, media type, etc.
+const status = reactive(RecordStore.data.status); // Recording status
+const statusCount = reactive(RecordStore.data.statusCount); // Track counts for errors, stashing, etc.
 const isRecording = ref(false);
 const saturated = ref(false);
 const vumeter = ref(0);
@@ -76,7 +81,7 @@ const cancelRecord = () => {
 
 const removeRecord = (word) => {
     console.log('Removing record for', word);
-    recordStore.clearRecord(word); // Reset the record using store
+    RecordStore.clearRecord(word); // Reset the record using store
 };
 
 const runCountdown = () => {
@@ -94,7 +99,7 @@ const playRecord = (word) => {
     if (status[word] === 'stashed') {
         // Play the stashed version of the record
         console.log(`Playing record for word: ${word}`);
-        const audio = new Audio(recordStore.getMediaUrl(word)); // Use appropriate URL retrieval method
+        const audio = new Audio(RecordStore.getMediaUrl(word)); // Use appropriate URL retrieval method
         audio.play();
     }
 };
@@ -151,13 +156,13 @@ onMounted(() => {
                 break;
             case 'Delete':
             case 'Backspace':
-                removeRecord(recordStore.words[recordStore.selected]); // Use the store for word management
+                removeRecord(RecordStore.data.pronunciations[RecordStore.selected]); // Use the store for word management
                 break;
             case ' ':
                 toggleRecord();
                 break;
             case 'p':
-                playRecord(recordStore.words[recordStore.selected]); // Use the store for playing records
+                playRecord(RecordStore.data.pronunciations[RecordStore.selected]); // Use the store for playing records
                 break;
             default:
                 return;
@@ -255,11 +260,12 @@ onMounted(() => {
         </div>
 
         <!-- Recording Section -->
-        <div :class="(metadata.media === 'audio' ? 'mwe-rws-audio' : 'mwe-rws-video') + (isRecording ? ' mwe-rws-recording' : '')"
-             class="mwe-rw-section-group">
+        <div
+            :class="(metadata.media === 'audio' ? 'mwe-rws-audio' : 'mwe-rws-video') + (isRecording ? ' mwe-rws-recording' : '')"
+            class="mwe-rw-section-group">
             <section>
                 <ul id="mwe-rws-list" class="mwe-rw-list">
-                    <li v-for="(word, index) in recordStore.words" :key="index" @click="playRecord(word)">
+                    <li v-for="(word, index) in RecordStore.data.pronunciations" :key="index" @click="playRecord(word)">
                         {{ word }}
                     </li>
                 </ul>
@@ -268,7 +274,7 @@ onMounted(() => {
             <section>
                 <div id="mwe-rws-core" class="mwe-rw-core">
                     <div id="mwe-rws-itembox" class="mwe-rw-itembox">
-                        <div id="mwe-rws-item" class="mwe-rw-item">{{ recordStore.words[0] }}</div>
+                        <div id="mwe-rws-item" class="mwe-rw-item">{{ RecordStore.data.pronunciations[0] }}</div>
                         <WizardButton id="mwe-rws-skip" :framed="false" icon="next" label="Skip" @click="moveForward"/>
                     </div>
                     <video v-if="metadata.media === 'video'" id="mwe-rws-videoplayer" controls></video>
@@ -291,7 +297,7 @@ onMounted(() => {
                     </div>
 
                     <div id="mwe-rws-counter" class="mwe-rw-counter">
-                        <span>{{ statusCount.stashed }}</span> / <span>{{ recordStore.words.length }}</span>
+                        <span>{{ statusCount.stashed }}</span> / <span>{{ RecordStore.data.pronunciations.length }}</span>
                         <span class="mwe-rw-othercounter">
                             <span v-if="statusCount.error > 0" class="mwe-rw-errorcounter">
                                 <i></i>

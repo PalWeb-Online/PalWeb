@@ -1,25 +1,25 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import useRecordStore from '../store/useRecordStore';
+import {useRecordStore} from '../store/RecordStore';
 import Draggable from 'vuedraggable';
 import WizardButton from "../ui/WizardButton.vue";
 
-const recordStore = useRecordStore();
+const RecordStore = useRecordStore();
 
-const pronunciations = ref(recordStore.data.pronunciations);
+const pronunciations = ref(RecordStore.data.pronunciations);
 
 const remove = (index) => {
-    recordStore.removePronunciation(pronunciations.value[index]);
+    RecordStore.removePronunciation(pronunciations.value[index]);
 };
 
 const fetchMore = async () => {
-    await recordStore.fetchPronunciations(pronunciations.value);
-    pronunciations.value = recordStore.data.pronunciations;
+    await RecordStore.fetchPronunciations(pronunciations.value);
+    pronunciations.value = RecordStore.data.pronunciations;
 };
 
 onMounted(async () => {
-    await recordStore.fetchPronunciations();
-    pronunciations.value = recordStore.data.pronunciations;
+    await RecordStore.fetchPronunciations();
+    pronunciations.value = RecordStore.data.pronunciations;
 });
 </script>
 
@@ -30,7 +30,7 @@ onMounted(async () => {
     <div class="tip">
         <div class="material-symbols-rounded">info</div>
         <div class="tip-content">
-            <p>Because you selected <b>{{ recordStore.data.metadata.speaker.dialect_id }}</b> as your dialect, the first
+            <p>Because you selected <b>{{ RecordStore.data.metadata.speaker.dialect_id }}</b> as your dialect, the first
                 100 Pronunciations in that dialect that are to be recorded have been automatically loaded in below. You
                 may manually reorder the list or remove any Pronunciations that you do not wish to record. Once you are
                 satisfied with this list, proceed to the next step to record.</p>

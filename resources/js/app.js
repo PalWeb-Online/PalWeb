@@ -17,9 +17,11 @@ import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import RecordWizard from './components/record/RecordWizard.vue';
 
-
 import axios from 'axios';
 import Alpine from 'alpinejs';
+
+import { createPinia } from 'pinia';
+const pinia = createPinia();
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -55,10 +57,12 @@ multiMountComponents.forEach(({ selector, component }) => {
 });
 
 if (document.querySelector('#recordWizard')) {
-    const recordWizardApp = createApp({});
-    recordWizardApp.component('RecordWizard', RecordWizard);
+    const recordWizardApp = createApp(RecordWizard);
+    recordWizardApp.use(pinia);
     recordWizardApp.mount('#recordWizard');
 }
+
+// TODO: Simplify the following initializations as well.
 
 if (document.querySelector('#termEditor')) {
     const termEditorApp = createApp({});

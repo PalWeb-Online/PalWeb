@@ -1,11 +1,11 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
-import useStateStore from "../store/useStateStore.js";
+import {useStateStore} from "../store/StateStore";
 import WizardButton from '../ui/WizardButton.vue';
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 
 // Reactive state
-const stateStore = useStateStore();
+const StateStore = useStateStore();
 const mictesterState = ref('init');
 const recorder = ref(null);
 const errorMessageAssociation = reactive({
@@ -30,7 +30,7 @@ const getAudioStream = () => {
 
     recorder.value.on('readyFail', showError);
     recorder.value.on('ready', () => {
-        stateStore.setBrowserReady(true);
+        StateStore.setBrowserReady(true);
         recorder.value.on('stopped', mictesterPlay);
     });
 };
@@ -104,7 +104,7 @@ watch(mictesterState, (newState) => {
         <h2>Tutorial</h2>
     </div>
 
-    <div class="wizard-section-container" v-if="!stateStore.data.isBrowserReady">
+    <div class="wizard-section-container" v-if="!StateStore.data.isBrowserReady">
         <section>
             <img src="/path/to/icons/no-mic.svg" width="40" height="40" alt="No microphone">
             <p>Activate your microphone to proceed.</p>
@@ -113,7 +113,7 @@ watch(mictesterState, (newState) => {
         </section>
     </div>
 
-    <div class="wizard-section-container" v-if="stateStore.data.isBrowserReady">
+    <div class="wizard-section-container" v-if="StateStore.data.isBrowserReady">
         <section>
             <p>Here's how to use the Record Wizard:</p>
             <ol>
