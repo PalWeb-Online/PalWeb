@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted} from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 import useStateStore from './store/useStateStore.js';
 import useNavigationStore from './store/useNavigationStore';
 import RequestQueue from '../../utils/RequestQueue.js';
@@ -12,22 +12,17 @@ import WizardButton from './ui/WizardButton.vue';
 
 const stateStore = useStateStore();
 const {
-    prevDisabled,
-    nextDisabled,
-    showRetry,
     prev,
     next,
     cancel,
     retry,
-    hasPendingRequests,
-    openFileList,
 } = useNavigationStore();
 
 // Request queue initialization (if necessary)
 const requestQueue = new RequestQueue();
 
 const preventWindowClose = (event) => {
-    if (hasPendingRequests()) {
+    if (stateStore.hasPendingRequests) {
         event.preventDefault();
         event.returnValue = ''; // Standard way to trigger confirmation dialog in browsers
     }
@@ -76,7 +71,7 @@ onBeforeUnmount(() => {
                     label="Previous"
                     flags="progressive"
                     :framed="false"
-                    :disabled="prevDisabled"
+                    :disabled="stateStore.prevDisabled.value"
                     @click="prev"
                     v-show="stateStore.data.step !== 'tutorial' && stateStore.data.isPublishing === false"
                 />
@@ -86,7 +81,7 @@ onBeforeUnmount(() => {
                     icon="next"
                     label="Next"
                     flags="progressive primary"
-                    :disabled="nextDisabled"
+                    :disabled="stateStore.nextDisabled.value"
                     @click="next"
                     v-show="stateStore.data.isBrowserReady && stateStore.data.step !== 'publish'"
                 />
@@ -96,9 +91,9 @@ onBeforeUnmount(() => {
                     icon="upload"
                     label="Publish"
                     flags="progressive primary"
-                    :disabled="hasPendingRequests"
+                    :disabled="stateStore.hasPendingRequests.value"
                     @click="next"
-                    v-show="stateStore.data.step === 'publish' && (stateStore.data.isPublishing === false || hasPendingRequests === true)"
+                    v-show="stateStore.data.step === 'publish' && (stateStore.data.isPublishing === false || stateStore.hasPendingRequests === true)"
                 />
 
                 <WizardButton
@@ -107,17 +102,7 @@ onBeforeUnmount(() => {
                     label="Restart"
                     flags="progressive primary"
                     @click="next"
-                    v-show="stateStore.data.isPublishing === true && !hasPendingRequests"
-                />
-
-                <WizardButton
-                    id="mwe-rw-commonsfilelist"
-                    icon="logoWikimediaCommons"
-                    label="Open Commons File List"
-                    flags="progressive"
-                    :framed="false"
-                    @click="openFileList"
-                    v-show="stateStore.data.isPublishing === true"
+                    v-show="stateStore.data.isPublishing === true && !stateStore.hasPendingRequests"
                 />
 
                 <WizardButton
@@ -125,7 +110,7 @@ onBeforeUnmount(() => {
                     icon="reload"
                     label="Retry"
                     @click="retry"
-                    v-show="showRetry"
+                    v-show="stateStore.showRetry.value"
                 />
             </div>
 

@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
 import useRecordStore from '../store/useRecordStore';
-import useStepStore from '../store/useStepStore';
 import useListStore from '../store/useListStore';
 import WizardNumber from '../ui/WizardNumberInput.vue';
 import WizardButton from '../ui/WizardButton.vue';
@@ -10,7 +9,6 @@ import WizardDialog from '../ui/WizardDialog.vue';
 import WizardSelect from '../ui/WizardSelect.vue';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 
-const {canMoveNext, canMovePrev} = useStepStore(); // Navigation logic
 const {
     words, selected, selectedArray, initSelection, moveForward, moveBackward,
 } = useListStore(); // List-related logic

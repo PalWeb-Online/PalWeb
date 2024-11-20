@@ -7,7 +7,7 @@ export default function useListStore() {
     if (!store) {
 
         const recordStore = useRecordStore();
-        const words = ref(recordStore.words);
+        const pronunciations = ref(recordStore.data.pronunciations);
         const selected = ref(0);
         const autoScroll = ref(true);
         const selectedArray = reactive([]);
@@ -20,13 +20,13 @@ export default function useListStore() {
 
         const initSelection = () => {
             selectedArray.splice(0, selectedArray.length); // Clear selection
-            for (let i = 0; i < words.value.length; i++) {
-                selectedArray.push(false); // Initialize false for all words
+            for (let i = 0; i < pronunciations.value.length; i++) {
+                selectedArray.push(false); // Initialize false for all pronunciations
             }
 
             // Select the first selectable word
-            for (let i = 0; i < words.value.length; i++) {
-                if (isSelectable(words.value[i])) {
+            for (let i = 0; i < pronunciations.value.length; i++) {
+                if (isSelectable(pronunciations.value[i])) {
                     selectWord(i);
                     break;
                 }
@@ -43,7 +43,7 @@ export default function useListStore() {
 
         const moveBackward = () => {
             for (let i = selected.value - 1; i >= 0; i--) {
-                if (isSelectable(words.value[i])) {
+                if (isSelectable(pronunciations.value[i])) {
                     selectWord(i);
                     return true;
                 }
@@ -52,8 +52,8 @@ export default function useListStore() {
         };
 
         const moveForward = () => {
-            for (let i = selected.value + 1; i < words.value.length; i++) {
-                if (isSelectable(words.value[i])) {
+            for (let i = selected.value + 1; i < pronunciations.value.length; i++) {
+                if (isSelectable(pronunciations.value[i])) {
                     selectWord(i);
                     return true;
                 }
@@ -66,7 +66,7 @@ export default function useListStore() {
         const afterSelectionChange = () => true; // Update with custom logic
 
         store = {
-            words,
+            pronunciations,
             selected,
             selectedArray,
             autoScroll,
