@@ -68,42 +68,51 @@ class RecordWizardController extends Controller
 
     public function getPronunciations(Request $request)
     {
-
         $listed = $request->input('listedPronunciations', []);
-        $collection = collect(
-            Pronunciation::whereIn('id', collect($listed)->pluck('id'))->get()
-        );
+        $listedIds = collect($listed)->pluck('id');
+
+        $currentCollection = Pronunciation::whereIn('id', $listedIds)->get();
 
         $files = Storage::disk('s3')->files('audio');
         $filenames = array_map(function ($file) {
             return pathinfo($file, PATHINFO_FILENAME);
         }, $files);
 
-        $query = Pronunciation::where('dialect_id', $request->input('dialect_id'));
-        $highestId = collect($listed)->pluck('id')->max();
+        $dialectId = $request->input('dialect_id');
+        $highestId = $listedIds->max();
+
+        // Base query for new pronunciations
+        $query = Pronunciation::where('dialect_id', $dialectId);
+
         if ($highestId) {
             $query->where('id', '>', $highestId);
         }
 
+        $collection = collect($currentCollection);
         $chunkSize = 100;
         $processed = 0;
 
         while ($collection->count() < 100) {
-            $models = $query->skip($processed)->take($chunkSize)->get();
+            $newModels = $query->skip($processed)->take($chunkSize)->get();
 
-            if ($models->isEmpty()) {
+            if ($newModels->isEmpty()) {
                 break;
             }
 
-            $filtered = $models->filter(function ($pronunciation) use ($filenames) {
-                return !in_array($pronunciation->translit, $filenames);
+            $filtered = $newModels->filter(function ($pronunciation) use ($filenames, $listedIds) {
+                return !in_array($pronunciation->translit, $filenames) && !$listedIds->contains($pronunciation->id);
             });
 
             $collection = $collection->merge($filtered);
+
             $processed += $chunkSize;
         }
 
-        $pronunciations = $collection->take(100)->toArray();
+        $pronunciations = $collection->take(100)->map(function ($pronunciation) {
+            return array_merge($pronunciation->toArray(), [
+                'term' => $pronunciation->term->term
+            ]);
+        })->toArray();
 
         return response()->json([
             'pronunciations' => $pronunciations,

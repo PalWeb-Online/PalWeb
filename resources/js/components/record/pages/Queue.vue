@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue';
+import {onMounted, ref} from 'vue';
 import {useRecordStore} from '../store/RecordStore';
 import Draggable from 'vuedraggable';
 import WizardButton from "../ui/WizardButton.vue";
@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
     <div class="wizard-page-title">
-        <h2>Details</h2>
+        <h2>Queue</h2>
     </div>
     <div class="tip">
         <div class="material-symbols-rounded">info</div>
@@ -39,22 +39,26 @@ onMounted(async () => {
 
     <div class="wizard-section-container">
         <section>
-            <div>Count: {{ pronunciations.length }}/100</div>
-
-            <!-- Draggable List -->
-            <draggable :list="pronunciations" id="mwe-rwd-list">
+            <draggable :list="pronunciations" id="wizard-queue">
                 <template #item="{ element, index }">
-                    <li class="draggable-item">
-                        <span>{{ index+1 }} {{ element.translit }} {{ element.id }}</span>
+                    <li class="wizard-queue-item">
+                        <div>
+                            {{ index+1 }}. <span>{{ element.term }}</span> ({{ element.translit }})
+                        </div>
                         <img width="16"
-                            class="mwe-rws-again" src="/img/trash.svg" alt="Delete" v-show="pronunciations.length > 0"
+                             class="mwe-rws-again" src="/img/trash.svg" alt="Delete" v-show="pronunciations.length > 0"
                              @click="remove(index)"
                         />
                     </li>
                 </template>
             </draggable>
 
-            <WizardButton id="mwe-rwt-reopenpopup" label="Add More"
+            <div class="wizard-queue-count">{{ pronunciations.length }} / 100</div>
+
+<!--            disable if there are already 100 terms -->
+            <WizardButton id="mwe-rwt-reopenpopup"
+                          label="Add More"
+                          :disabled="RecordStore.data.pronunciations.length >= 100"
                           @click="fetchMore"/>
 
         </section>

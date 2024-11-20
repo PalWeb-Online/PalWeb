@@ -96,14 +96,15 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
             if (response.data) {
                 response.data.pronunciations.forEach((pronunciation) => {
-                    if (!data.pronunciations.includes(pronunciation)) {
-                        if (!data.records[pronunciation]) {
-                            data.records[pronunciation] = new Record(pronunciation);
-                            data.records[pronunciation].setLanguage(data.metadata.language);
-                            data.records[pronunciation].setSpeaker(data.metadata.speaker);
+                    const exists = data.pronunciations.some(p => p.id === pronunciation.id);
+                    if (!exists) {
+                        if (!data.records[pronunciation.id]) {
+                            data.records[pronunciation.id] = new Record(pronunciation);
+                            data.records[pronunciation.id].setLanguage(data.metadata.language);
+                            data.records[pronunciation.id].setSpeaker(data.metadata.speaker);
 
-                            setStatus(pronunciation, 'up');
-                            setError(pronunciation, false);
+                            setStatus(pronunciation.id, 'up');
+                            setError(pronunciation.id, false);
                         }
                         data.pronunciations.push(pronunciation);
                     }

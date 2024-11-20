@@ -21,11 +21,11 @@ export const useStateStore = defineStore('StateStore', () => {
             canMovePrev: () => true,
             canMoveNext: () => RecordStore.data.metadata.speaker.name !== '',
         },
-        details: {
+        queue: {
             canMovePrev: () => true,
             canMoveNext: () => RecordStore.data.pronunciations.length > 0,
         },
-        studio: {
+        record: {
             canMovePrev: () => true,
             canMoveNext: () => RecordStore.data.statusCount.stashed > 0,
         },
@@ -38,17 +38,17 @@ export const useStateStore = defineStore('StateStore', () => {
     const prevStep = {
         tutorial: 'tutorial',
         speaker: 'tutorial',
-        details: 'speaker',
-        studio: 'details',
-        publish: 'studio'
+        queue: 'speaker',
+        record: 'queue',
+        publish: 'record'
     };
 
     const nextStep = {
         tutorial: 'speaker',
-        speaker: 'details',
-        details: 'studio',
-        studio: 'publish',
-        publish: 'details'
+        speaker: 'queue',
+        queue: 'record',
+        record: 'publish',
+        publish: 'queue'
     };
 
     const prevDisabled = computed(() => data.isFrozen);
@@ -61,7 +61,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const showRetry = computed(() => {
         return (
-            data.step === 'studio' || data.step === 'publish'
+            data.step === 'record' || data.step === 'publish'
         ) && RecordStore.data.statusCount.error > 0;
     });
 
