@@ -1,5 +1,6 @@
-import { reactive } from 'vue';
+import {reactive} from 'vue';
 import axios from 'axios';
+import Record from "../../../utils/Record.js";
 
 let store;
 
@@ -8,9 +9,7 @@ export default function useRecordStore() {
 
         const data = reactive({
             metadata: {
-                language: '',
-                license: '',
-                media: '',
+                language: 'Palestinian Arabic',
                 speaker: {
                     name: '',
                     user_id: null,
@@ -19,12 +18,12 @@ export default function useRecordStore() {
                     gender: null,
                 },
             },
-            words: [],
+            pronunciations: [],
             records: {},
             status: {},
             errors: {},
             checkboxes: {},
-            statusCount: {
+            statusCount : {
                 up: 0,
                 ready: 0,
                 stashing: 0,
@@ -44,7 +43,7 @@ export default function useRecordStore() {
                     data.metadata.speaker = response.data.speaker;
                     data.metadata.speaker.name = response.data.name;
                 }
-                
+
             } catch (error) {
                 console.error('Error loading speaker:', error);
             }
@@ -68,24 +67,24 @@ export default function useRecordStore() {
             }
         };
 
-        const setStatus = (word, status) => {
-            if (data.status[word] === undefined) {
-                data.status[word] = status;
+        const setStatus = (pronunciation, status) => {
+            if (data.status[pronunciation] === undefined) {
+                data.status[pronunciation] = status;
             } else {
-                data.statusCount[data.status[word]]--;
-                data.status[word] = status;
+                data.statusCount[data.status[pronunciation]]--;
+                data.status[pronunciation] = status;
             }
             data.statusCount[status]++;
         };
 
-        const setError = (word, error) => {
-            if (data.errors[word] === undefined) {
-                data.errors[word] = error;
+        const setError = (pronunciation, error) => {
+            if (data.errors[pronunciation] === undefined) {
+                data.errors[pronunciation] = error;
             } else {
-                if (data.errors[word] !== false) {
+                if (data.errors[pronunciation] !== false) {
                     data.statusCount.error--;
                 }
-                data.errors[word] = error;
+                data.errors[pronunciation] = error;
             }
 
             if (error !== false) {
@@ -93,81 +92,62 @@ export default function useRecordStore() {
             }
         };
 
-        const clearRecord = (word) => {
-            const index = data.words.indexOf(word);
+        const fetchPronunciations = async (listedPronunciations = []) => {
+            try {
+                const response = await axios.post('/record/pronunciations', {
+                    dialect_id: data.metadata.speaker.dialect_id,
+                    listedPronunciations: listedPronunciations,
+                });
+
+                if (response.data) {
+                    response.data.pronunciations.forEach((pronunciation) => {
+                        if (!data.pronunciations.includes(pronunciation)) {
+                            if (!data.records[pronunciation]) {
+                                data.records[pronunciation] = new Record(pronunciation);
+                                data.records[pronunciation].setLanguage(data.metadata.language);
+                                data.records[pronunciation].setSpeaker(data.metadata.speaker);
+
+                                setStatus(pronunciation, 'up');
+                                setError(pronunciation, false);
+                            }
+                            data.pronunciations.push(pronunciation);
+                        }
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error loading pronunciations:', error);
+            }
+        };
+
+        const removePronunciation = (pronunciation) => {
+            const index = data.pronunciations.indexOf(pronunciation);
 
             if (index === -1) return false;
 
-            data.statusCount[data.status[word]]--;
-            if (data.errors[word] !== false) {
+            data.statusCount[data.status[pronunciation]]--;
+            if (data.errors[pronunciation] !== false) {
                 data.statusCount.error--;
             }
 
-            delete data.records[word];
-            delete data.status[word];
-            delete data.errors[word];
-            delete data.checkboxes[word];
+            delete data.records[pronunciation];
+            delete data.status[pronunciation];
+            delete data.errors[pronunciation];
+            delete data.checkboxes[pronunciation];
 
-            data.words.splice(index, 1);
+            data.pronunciations.splice(index, 1);
             return true;
         };
 
-        // is this used anywhere other than in setSpeaker? I removed that because it's not actually possible to change Speakers
-        const clearAllRecords = () => {
-            data.words.forEach((word) => {
-                delete data.records[word];
-                delete data.status[word];
-                delete data.errors[word];
-                delete data.checkboxes[word];
-            });
-
-            Object.keys(data.statusCount).forEach((key) => {
-                data.statusCount[key] = 0;
-            });
-
-            data.words.splice(0, data.words.length);
-        };
-
-        const addWords = (words) => {
-            words = Array.isArray(words) ? words : [words];
-
-            words.forEach((word) => {
-                const trimmedWord = word.replace(/\t/g, '').trim();
-                if (trimmedWord === '') return;
-
-                if (!data.words.includes(trimmedWord)) {
-                    if (!data.records[trimmedWord]) {
-                        data.records[trimmedWord] = {}; // Replace with appropriate Record logic if needed
-                        data.records[trimmedWord].setLanguage(data.metadata.language);
-                        data.records[trimmedWord].setSpeaker(data.metadata.speaker);
-                        data.records[trimmedWord].setLicense(data.metadata.license);
-
-                        setStatus(trimmedWord, 'up');
-                        setError(trimmedWord, false);
-                    }
-                    data.words.push(trimmedWord);
-                }
-            });
-        };
-
-        const randomizeList = () => {
-            for (let i = data.words.length - 1; i >= 0; i--) {
-                const randomIndex = Math.floor(Math.random() * (i + 1));
-                const temp = data.words[randomIndex];
-                data.words[randomIndex] = data.words[i];
-                data.words[i] = temp;
-            }
-        };
-
-        const doStash = (word, blob) => {
-            setStatus(word, 'ready');
-            setError(word, false);
+        const doStash = (pronunciation, blob) => {
+            setStatus(pronunciation, 'ready');
+            setError(pronunciation, false);
 
             if (blob !== undefined) {
-                data.records[word].setBlob(blob, data.metadata.media === 'audio' ? 'wav' : 'webm');
+                data.records[pronunciation].setBlob(blob);
             }
 
-            setStatus(word, 'stashing');
+            setStatus(pronunciation, 'stashing');
             // Assuming requestQueue and API logic will be integrated here
         };
 
@@ -177,10 +157,8 @@ export default function useRecordStore() {
             saveSpeaker,
             setStatus,
             setError,
-            clearRecord,
-            clearAllRecords,
-            addWords,
-            randomizeList,
+            fetchPronunciations,
+            removePronunciation,
             doStash,
         };
     }

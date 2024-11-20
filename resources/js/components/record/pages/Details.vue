@@ -1,78 +1,25 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import useRecordStore from '../store/useRecordStore'; // Assuming we refactored store here
-import useConfigStore from '../store/useConfigStore'; // For fetching past records
-import WizardText from '../ui/WizardTextInput.vue';
-import WizardButton from '../ui/WizardButton.vue';
-import WizardDropdown from '../ui/WizardDropdown.vue';
-import WizardCheckbox from '../ui/WizardCheckbox.vue';
+import useRecordStore from '../store/useRecordStore';
 import Draggable from 'vuedraggable';
+import WizardButton from "../ui/WizardButton.vue";
 
-// Import stores
 const recordStore = useRecordStore();
-const configStore = useConfigStore();
 
-// Reactive data
-const wordInputed = ref('');
-const words = ref(recordStore.words); // Use the store's word list
-const availableLanguages = ref([]);
-const randomise = ref(false);
-const metadata = ref(recordStore.metadata);
+const pronunciations = ref(recordStore.data.pronunciations);
 
-// Methods
-const addWordFromInput = () => {
-    if (wordInputed.value.trim()) {
-        const wordsArray = wordInputed.value.split('#').map(word => word.trim());
-        recordStore.addWords(wordsArray); // Use store method to add words
-        wordInputed.value = ''; // Clear input after adding
-    }
+const remove = (index) => {
+    recordStore.removePronunciation(pronunciations.value[index]);
 };
 
-const clear = (index) => {
-    recordStore.clearRecord(words.value[index]); // Remove from store
+const fetchMore = async () => {
+    await recordStore.fetchPronunciations(pronunciations.value);
+    pronunciations.value = recordStore.data.pronunciations;
 };
 
-const clearAll = () => {
-    recordStore.clearAllRecords(); // Clear all records in store
-};
-
-const deduplicate = () => {
-    const pastRecords = configStore.getPastRecords(metadata.value.language);
-    recordStore.words = recordStore.words.filter(word => !pastRecords.includes(word)); // Deduplicate words
-};
-
-const onLanguageChange = () => {
-    clearAll();
-    setupCurrentLanguage();
-};
-
-const setupCurrentLanguage = () => {
-    // Update media type based on the selected language
-    recordStore.updateMediaType();
-
-    // Fetch past records asynchronously for the current language
-    configStore.fetchPastRecords(metadata.value.language, metadata.value.speaker.qid);
-};
-
-// When the component is mounted, set up available languages and watch the current step
-onMounted(() => {
-    availableLanguages.value = Object.keys(metadata.value.speaker.languages).map(qid => ({
-        data: qid,
-        label: configStore.getLanguageLabel(qid),
-    }));
-
-    if (!metadata.value.language || !metadata.value.speaker.languages[metadata.value.language]) {
-        metadata.value.language = availableLanguages.value[0]?.data || 'en';
-    }
-
-    setupCurrentLanguage();
-});
-
-// Watch for step change (if controlled externally)
-watch(() => recordStore.state.step, (newStep) => {
-    if (newStep === 'details') {
-        setupCurrentLanguage();
-    }
+onMounted(async () => {
+    await recordStore.fetchPronunciations();
+    pronunciations.value = recordStore.data.pronunciations;
 });
 </script>
 
@@ -80,89 +27,36 @@ watch(() => recordStore.state.step, (newStep) => {
     <div class="wizard-page-title">
         <h2>Details</h2>
     </div>
+    <div class="tip">
+        <div class="material-symbols-rounded">info</div>
+        <div class="tip-content">
+            <p>Because you selected <b>{{ recordStore.data.metadata.speaker.dialect_id }}</b> as your dialect, the first
+                100 Pronunciations in that dialect that are to be recorded have been automatically loaded in below. You
+                may manually reorder the list or remove any Pronunciations that you do not wish to record. Once you are
+                satisfied with this list, proceed to the next step to record.</p>
+        </div>
+    </div>
 
-    <div class="mwe-rw-section-group">
+    <div class="wizard-section-container">
         <section>
-            <!-- Word Input Field -->
-            <div id="mwe-rwd-input">
-                <WizardText
-                    id="mwe-rwd-word"
-                    input-id="mwe-rwd-word-input"
-                    v-model="wordInputed"
-                    @enter="addWordFromInput"
-                    placeholder="Enter word or phrase"
-                />
-                <WizardButton
-                    id="mwe-rwd-add"
-                    :invisible-label="true"
-                    icon="add"
-                    flags="primary progressive"
-                    @click="addWordFromInput"
-                />
-                <div id="mwe-rwd-input-help">
-                    Enter words or phrases that you would like to record.
-                </div>
-            </div>
+            <div>Count: {{ pronunciations.length }}/100</div>
 
             <!-- Draggable List -->
-            <Draggable v-model="words" id="mwe-rwd-list">
+            <draggable :list="pronunciations" id="mwe-rwd-list">
                 <template #item="{ element, index }">
                     <li class="draggable-item">
-                        <span>{{ element }}</span>
-                        <i class="mwe-rws-again" @click="clear(index)"></i>
+                        <span>{{ index+1 }} {{ element.translit }} {{ element.id }}</span>
+                        <img width="16"
+                            class="mwe-rws-again" src="/img/trash.svg" alt="Delete" v-show="pronunciations.length > 0"
+                             @click="remove(index)"
+                        />
                     </li>
                 </template>
-            </Draggable>
+            </draggable>
 
-            <!-- Action Buttons -->
-            <div id="mwe-rwd-actions">
-                <WizardButton
-                    id="mwe-rwd-deduplicate"
-                    label="Deduplicate"
-                    @click="deduplicate"
-                />
-                <WizardButton
-                    id="mwe-rwd-clear"
-                    label="Clear All"
-                    flags="destructive"
-                    @click="clearAll"
-                />
-            </div>
-        </section>
+            <WizardButton id="mwe-rwt-reopenpopup" label="Add More"
+                          @click="fetchMore"/>
 
-        <section>
-            <!-- Language Selection -->
-            <div id="mwe-rwd-lang-field">
-                <label for="mwe-rwd-lang-input">Language</label>
-                <WizardDropdown
-                    id="mwe-rwd-lang"
-                    input-id="mwe-rwd-lang-input"
-                    :options="availableLanguages"
-                    v-model="metadata.language"
-                    @change="onLanguageChange"
-                />
-                <WizardCheckbox
-                    id="mwe-rwd-randomise"
-                    v-model="randomise"
-                />
-                Randomise order
-            </div>
-
-            <!-- Generators Section -->
-            <div id="mwe-rwd-generators-field">
-                <h4>Inspiration</h4>
-                Use these generators for inspiration:
-                <div id="mwe-rwd-generator-buttons">
-                    <WizardButton
-                        v-for="generator in generators"
-                        :key="generator.name"
-                        :id="'mwe-rwd-generator-' + generator.name"
-                        :label="generator.title"
-                        :icon="generator.icon"
-                        @click="$windowManager.openWindow(generator.name)"
-                    />
-                </div>
-            </div>
         </section>
     </div>
 </template>

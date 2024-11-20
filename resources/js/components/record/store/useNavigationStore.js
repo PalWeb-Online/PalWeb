@@ -25,7 +25,7 @@ export default function useNavigationStore() {
         const showRetry = computed(() => {
             return (
                 stateStore.data.step === 'studio' || stateStore.data.step === 'publish'
-            ) && recordStore.statusCount.error > 0;
+            ) && recordStore.data.statusCount.error > 0;
         });
 
         const fileListUrl = computed(() => {
@@ -90,7 +90,8 @@ export default function useNavigationStore() {
         };
 
         const hasPendingRequests = () => {
-            return recordStore.countStatus(['stashing', 'uploading', 'finalizing']) > 0;
+            return false;
+            // return recordStore.countStatus(['stashing', 'uploading', 'finalizing']) > 0;
         };
 
         const openFileList = () => {

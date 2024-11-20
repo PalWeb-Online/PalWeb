@@ -18,7 +18,7 @@ export default function useStepStore() {
             },
             details: {
                 canMovePrev: () => true,
-                canMoveNext: () => recordStore.data.words.length > 0,
+                canMoveNext: () => recordStore.data.pronunciations.length > 0,
             },
             studio: {
                 canMovePrev: () => true,

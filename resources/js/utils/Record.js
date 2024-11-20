@@ -1,16 +1,14 @@
 export default class Record {
-    constructor(word) {
+    constructor(pronunciation) {
         this.file = null;
-        this.fileExtension = 'wav';
         this.stashkey = null;
         this.imageInfo = null;
-        this.language = null;
         this.speaker = null;
-        this.license = '';
-        this.word = word;
+        this.language = 'Palestinian Arabic';
+        this.license = 'CC BY-SA';
+        this.transcription = pronunciation;
         this.extra = {};
         this.date = null;
-        this.transcription = this.word;
         this.qualifier = null;
     }
 
@@ -29,7 +27,7 @@ export default class Record {
         let filename = 'LL' +
             '-' + this.language.iso3 +
             '-' + this.speaker.name +
-            '-' + this.word + '.' + this.fileExtension;
+            '-' + this.transcription + '.wav';
 
         return filename.replace(illegalChars, '-');
     }
@@ -51,20 +49,11 @@ export default class Record {
     }
 
     /**
-     * Set the license for the record.
-     */
-    setLicense(license) {
-        this.license = license;
-        return this;
-    }
-
-    /**
      * Set the Blob file (audio) for this record.
      */
     setBlob(audioBlob, extension) {
         this.reset();
         this.file = audioBlob;
-        this.fileExtension = extension;
         this.date = new Date();
         return true;
     }
