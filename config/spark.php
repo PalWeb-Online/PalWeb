@@ -17,7 +17,7 @@ return [
     */
 
     'path' => 'billing',
-    'terms_url' => 'https://www.abdulbaha.xyz',
+    'terms_url' => 'https://www.palweb.app',
 
     /*
     |--------------------------------------------------------------------------

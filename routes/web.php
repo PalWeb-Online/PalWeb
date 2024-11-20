@@ -208,6 +208,7 @@ Route::prefix('/record')->controller(RecordWizardController::class)->group(funct
     Route::get('/speaker', 'getSpeaker');
     Route::get('/options', 'getSpeakerOptions');
     Route::post('/speaker', 'saveSpeaker');
+    Route::post('/pronunciations', 'getPronunciations');
 });
 
 //Route::get('sitemap', function () {

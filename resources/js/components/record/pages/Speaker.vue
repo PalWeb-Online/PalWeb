@@ -9,91 +9,93 @@ const recordStore = useRecordStore();
 const dialects = ref([]);
 const locations = ref([]);
 const genders = ref([
-  {data: 'male', label: 'Male'},
-  {data: 'female', label: 'Female'},
-  {data: 'other', label: 'Other'},
+    {data: 'male', label: 'Male'},
+    {data: 'female', label: 'Female'},
+    {data: 'other', label: 'Other'},
 ]);
 
 const fetchSpeakerOptions = async () => {
-  try {
-    const response = await axios.get('/record/options');
+    try {
+        const response = await axios.get('/record/options');
 
-    if (response.data) {
-      dialects.value = response.data.dialects;
-      locations.value = response.data.locations;
+        if (response.data) {
+            dialects.value = response.data.dialects;
+            locations.value = response.data.locations;
+        }
+
+    } catch (error) {
+        console.error('Loading Failed', error);
     }
-
-  } catch (error) {
-    console.error('Loading Failed', error);
-  }
 }
 
 function validateForm() {
-  const speaker = recordStore.data.metadata.speaker;
-  if (!speaker.dialect_id || !speaker.location_id || !speaker.gender) {
-    alert('Please fill out all the fields.');
-    return false;
-  }
-  return true;
+    const speaker = recordStore.data.metadata.speaker;
+    if (!speaker.dialect_id || !speaker.location_id || !speaker.gender) {
+        alert('Please fill out all the fields.');
+        return false;
+    }
+    return true;
 }
 
 onMounted(async () => {
-  await recordStore.fetchSpeaker();
-  await fetchSpeakerOptions();
+    await recordStore.fetchSpeaker();
+    await fetchSpeakerOptions();
 });
 </script>
 
 <template>
-  <div class="wizard-page-title">
-    <h2>Speaker</h2>
-  </div>
-  <div class="tip">
-    <div class="material-symbols-rounded">info</div>
-    <div class="tip-content">
-      <p>Every <b>Recording</b> belongs to a <b>Speaker</b> — that's you! Fill in the fields below to let others
-        know the dialect & other sociolinguistic information behind what they're hearing.</p>
+    <div class="wizard-page-title">
+        <h2>Speaker</h2>
     </div>
-  </div>
+    <div class="tip">
+        <div class="material-symbols-rounded">info</div>
+        <div class="tip-content">
+            <p>Every <b>Recording</b> belongs to a <b>Speaker</b> — that's you! Fill in the fields below to let others
+                know the dialect & other sociolinguistic information behind what they're hearing.</p>
+        </div>
+    </div>
 
-  <div class="wizard-section-container">
-    <section>
-      <div class="user-avatar">
-        <img alt="Profile Picture"
-             src="img/avatars/battix01.jpg"/>
-      </div>
-      <div class="user-name">{{ recordStore.data.metadata.speaker.name ?? 'Loading...' }}</div>
-    </section>
-    <section>
+    <!--    Make sure you can't proceed if you don't have a Speaker profile created yet. -->
 
-      <div class="mwe-rw-field">
-        <label for="dialect">Dialect</label>
-        <WizardDropdown
-            id="dialect"
-            :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-            v-model="recordStore.data.metadata.speaker.dialect_id"
-        />
-      </div>
-      <div class="mwe-rw-field">
-        <label for="location">Location</label>
-        <WizardDropdown
-            id="location"
-            :options="locations.map(location => ({ data: location.id, label: location.name }))"
-            v-model="recordStore.data.metadata.speaker.location_id"
-        />
-      </div>
-      <div class="mwe-rw-field">
-        <label for="gender">Gender</label>
-        <WizardSelect
-            id="gender"
-            :options="genders"
-            v-model="recordStore.data.metadata.speaker.gender"
-        />
-      </div>
+    <div class="wizard-section-container">
+        <section>
+            <div class="user-avatar">
+                <img alt="Profile Picture"
+                     src="/img/avatars/battix01.jpg"/>
+            </div>
+            <div class="user-name">{{ recordStore.data.metadata.speaker.name ?? 'Loading...' }}</div>
+        </section>
+        <section>
 
-      <WizardButton
-          :label="recordStore.data.metadata.speaker.user_id ? 'Update Speaker Profile' : 'Create Speaker Profile'"
-          @click="() => { if (validateForm()) recordStore.saveSpeaker(); }"
-      />
-    </section>
-  </div>
+            <div class="mwe-rw-field">
+                <label for="dialect">Dialect</label>
+                <WizardDropdown
+                    id="dialect"
+                    :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
+                    v-model="recordStore.data.metadata.speaker.dialect_id"
+                />
+            </div>
+            <div class="mwe-rw-field">
+                <label for="location">Location</label>
+                <WizardDropdown
+                    id="location"
+                    :options="locations.map(location => ({ data: location.id, label: location.name }))"
+                    v-model="recordStore.data.metadata.speaker.location_id"
+                />
+            </div>
+            <div class="mwe-rw-field">
+                <label for="gender">Gender</label>
+                <WizardSelect
+                    id="gender"
+                    :options="genders"
+                    v-model="recordStore.data.metadata.speaker.gender"
+                />
+            </div>
+
+            <WizardButton
+                :label="recordStore.data.metadata.speaker.user_id ? 'Update Speaker Profile' : 'Create Speaker Profile'"
+                @click="() => { if (validateForm()) recordStore.saveSpeaker(); }"
+            />
+        </section>
+    </div>
 </template>
