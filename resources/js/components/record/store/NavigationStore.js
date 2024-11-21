@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { useStateStore } from './StateStore';
-import { useRecordStore } from './RecordStore'; // Assume RecordStore is refactored to Pinia
+import { useRecordStore } from './RecordStore';
 import RequestQueue from '../../../utils/RequestQueue.js';
 
 export const useNavigationStore = defineStore('NavigationStore', () => {

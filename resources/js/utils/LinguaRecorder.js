@@ -156,11 +156,6 @@ export default class LinguaRecorder {
      * @chainable
      */
     on(event, handler) {
-        if (event === 'stoped') {
-            event = 'stopped';
-            console.warn('[LinguaRecorder] .on("stoped",...) is deprecated. Please use .on("stopped",...) instead.');
-        }
-
         if (event in this._eventHandlers) {
             this._eventHandlers[event].push(handler);
         }
@@ -178,11 +173,6 @@ export default class LinguaRecorder {
      * @chainable
      */
     off(event) {
-        if (event === 'stoped') {
-            event = 'stopped';
-            console.warn('[LinguaRecorder] .off("stoped") is deprecated. Please use .off("stopped") instead.');
-        }
-
         if (event in this._eventHandlers) {
             this._eventHandlers[event] = [];
         }

@@ -6,9 +6,9 @@ export const useListStore = defineStore('ListStore', () => {
     const RecordStore = useRecordStore();
 
     const pronunciations = ref(RecordStore.data.pronunciations);
-    const selected = ref(0); // Index of the selected pronunciation
-    const autoScroll = ref(true); // Whether to auto-scroll
-    const selectedArray = reactive([]); // Array tracking selection status
+    const selected = ref(0);
+    const autoScroll = ref(true);
+    const selectedArray = reactive([]);
 
     watch(selected, () => {
         if (autoScroll.value) {
@@ -33,9 +33,9 @@ export const useListStore = defineStore('ListStore', () => {
 
     const selectWord = (index) => {
         const data = beforeSelectionChange();
-        selectedArray[selected.value] = false; // Unselect previous
-        selected.value = index; // Update selected index
-        selectedArray[index] = 'mwe-rw-selected'; // Mark new selection
+        selectedArray[selected.value] = false;
+        selected.value = index;
+        selectedArray[index] = 'selected';
         afterSelectionChange(data);
     };
 

@@ -565,15 +565,16 @@ body.mw-special-RecordWizard #contentHeading {
     li {
         padding: 0.8rem 3.2rem;
         border-radius: 0.8rem;
+        font-family: $ar_bodyFont;
 
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-
-        &.mwe-rw-selected {
-            background-color: #f8f9fa;
+        &.selected {
+            background-color: $purple-deep;
+            color: white;
+            font-weight: 700;
         }
 
-        &:hover {
+        &:not(.selected):hover {
+            cursor: pointer;
             background: $accent-yellow-pastel;
         }
 
@@ -701,7 +702,8 @@ body.mw-special-RecordWizard #contentHeading {
     display: grid;
     grid-template-rows: auto min-content;
     gap: 1.6rem;
-    margin: 3.2rem;
+    padding: 3.2rem;
+    background: $accent-yellow-pastel;
 
     & > audio {
         width: 50%;
@@ -709,8 +711,9 @@ body.mw-special-RecordWizard #contentHeading {
     }
 
     .mwe-rw-itembox {
-        border: 1px solid $purple-deep;
+        //border: 1px solid $purple-deep;
         border-radius: 1.6rem;
+        background: white;
         display: flex;
         justify-content: center;
         align-items: center;

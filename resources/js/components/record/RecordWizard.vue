@@ -47,7 +47,6 @@ onBeforeUnmount(() => {
 <template>
     <h1>Record Wizard</h1>
     <div id="mwe-rw">
-        <!-- Step Navigation -->
         <div id="mwe-rw-steps">
             <div :class="{ active: StateStore.data.step === 'tutorial' }">Tutorial</div>
             <div :class="{ active: StateStore.data.step === 'speaker' }">Speaker</div>
@@ -71,7 +70,7 @@ onBeforeUnmount(() => {
                     label="Previous"
                     flags="progressive"
                     :framed="false"
-                    :disabled="StateStore.prevDisabled.value"
+                    :disabled="StateStore.prevDisabled"
                     @click="prev"
                     v-show="StateStore.data.step !== 'tutorial' && StateStore.data.isPublishing === false"
                 />
@@ -81,7 +80,7 @@ onBeforeUnmount(() => {
                     icon="next"
                     label="Next"
                     flags="progressive primary"
-                    :disabled="StateStore.nextDisabled.value"
+                    :disabled="StateStore.nextDisabled"
                     @click="next"
                     v-show="StateStore.data.isBrowserReady && StateStore.data.step !== 'publish'"
                 />
@@ -91,7 +90,7 @@ onBeforeUnmount(() => {
                     icon="upload"
                     label="Publish"
                     flags="progressive primary"
-                    :disabled="StateStore.hasPendingRequests.value"
+                    :disabled="StateStore.hasPendingRequests"
                     @click="next"
                     v-show="StateStore.data.step === 'publish' && (StateStore.data.isPublishing === false || StateStore.hasPendingRequests === true)"
                 />
@@ -110,7 +109,7 @@ onBeforeUnmount(() => {
                     icon="reload"
                     label="Retry"
                     @click="retry"
-                    v-show="StateStore.showRetry.value"
+                    v-show="StateStore.showRetry"
                 />
             </div>
 

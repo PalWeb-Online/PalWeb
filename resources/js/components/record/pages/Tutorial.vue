@@ -4,7 +4,6 @@ import {useStateStore} from "../store/StateStore";
 import WizardButton from '../ui/WizardButton.vue';
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 
-// Reactive state
 const StateStore = useStateStore();
 const mictesterState = ref('init');
 const recorder = ref(null);
@@ -18,9 +17,8 @@ const errorMessageAssociation = reactive({
 });
 const timer = ref(null);
 
-// Methods
 const getAudioStream = () => {
-    unloadRecorder(); // Unload any previous recorder
+    unloadRecorder();
 
     // Simulate getting the audio stream using LinguaRecorder (mock here)
     recorder.value = new LinguaRecorder({
@@ -85,7 +83,6 @@ const mictesterPlay = (record) => {
     }, 1100); // Simulate delay before playing
 };
 
-// Lifecycle hooks
 onMounted(() => {
     getAudioStream();
 });
