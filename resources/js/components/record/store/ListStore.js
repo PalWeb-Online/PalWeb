@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { reactive, ref, watch } from 'vue';
-import { useRecordStore } from './RecordStore';
+import {defineStore} from 'pinia';
+import {reactive, ref, watch} from 'vue';
+import {useRecordStore} from './RecordStore';
 
 export const useListStore = defineStore('ListStore', () => {
     const RecordStore = useRecordStore();
@@ -17,12 +17,11 @@ export const useListStore = defineStore('ListStore', () => {
     });
 
     const initSelection = () => {
-        selectedArray.splice(0, selectedArray.length); // Clear selection
+        selectedArray.splice(0, selectedArray.length);
         for (let i = 0; i < pronunciations.value.length; i++) {
-            selectedArray.push(false); // Initialize false for all pronunciations
+            selectedArray.push(false);
         }
 
-        // Select the first selectable word
         for (let i = 0; i < pronunciations.value.length; i++) {
             if (isSelectable(pronunciations.value[i])) {
                 selectWord(i);

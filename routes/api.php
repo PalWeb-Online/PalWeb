@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DiscordController;
+use App\Http\Controllers\RecordWizardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
+    Route::post('/stash', 'stash');
 });
 
 Route::post('/api/discord/joined', [DiscordController::class, 'joined']);

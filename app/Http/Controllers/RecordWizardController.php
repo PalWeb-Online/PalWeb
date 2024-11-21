@@ -151,28 +151,31 @@ class RecordWizardController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function uploadToStash(Request $request)
+    public function stash(Request $request)
     {
-        // Validate the request
         $request->validate([
-            'file' => 'required|file|mimes:wav,webm',  // Adjust based on your file types
+            'file' => 'required|file|mimes:wav|max:5120'
         ]);
 
-        // Handle the file upload to DigitalOcean Space (using the AWS SDK)
-        $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
+        try {
+            $file = $request->file('file');
 
-        // Assuming you're using a disk configured for DigitalOcean Spaces in config/filesystems.php
-        $path = Storage::disk('s3')->putFileAs('recordings', $file, $filename);
+            $filename = uniqid('stash_') . '.' . $file->getClientOriginalExtension();
 
-        // Get the file URL
-        $url = Storage::disk('s3')->url($path);
+            $path = $file->storeAs('stash', $filename);
 
-        return response()->json([
-            'success' => true,
-            'stashkey' => $filename, // You can generate your own stash key if needed
-            'url' => $url
-        ]);
+            return response()->json([
+                'message' => 'File stashed successfully.',
+                'stashkey' => $filename,
+                'url' => Storage::url($path),
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to stash the file.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function finishUpload(Request $request)

@@ -2,7 +2,6 @@
 import {onBeforeUnmount, onMounted} from 'vue';
 import {useStateStore} from './store/StateStore';
 import {useNavigationStore} from './store/NavigationStore';
-import RequestQueue from '../../utils/RequestQueue.js';
 import Tutorial from './pages/Tutorial.vue';
 import Speaker from './pages/Speaker.vue';
 import Queue from './pages/Queue.vue';
@@ -17,9 +16,6 @@ const {
     cancel,
     retry,
 } = useNavigationStore();
-
-// Request queue initialization (if necessary)
-const requestQueue = new RequestQueue();
 
 const preventWindowClose = (event) => {
     if (StateStore.hasPendingRequests) {

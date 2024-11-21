@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia';
 import { useStateStore } from './StateStore';
 import { useRecordStore } from './RecordStore';
-import RequestQueue from '../../../utils/RequestQueue.js';
 
 export const useNavigationStore = defineStore('NavigationStore', () => {
     const StateStore = useStateStore();
     const RecordStore = useRecordStore();
-    const requestQueue = RequestQueue;
 
     const cancel = () => {
         if (confirm('Are you sure you want to leave the wizard?')) {
