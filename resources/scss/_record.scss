@@ -573,6 +573,11 @@ body.mw-special-RecordWizard #contentHeading {
             font-weight: 700;
         }
 
+        &.stashed {
+            color: $accent-yellow;
+            font-weight: 700;
+        }
+
         &:not(.selected):hover {
             cursor: pointer;
             background: $accent-yellow-pastel;
@@ -765,11 +770,13 @@ body.mw-special-RecordWizard #contentHeading {
 .mwe-rw-actions {
     display: flex;
     align-items: center;
-    height: 100px;
     border-top: 1px solid $accent-yellow;
 
-    padding-left: 35px;
-    padding-right: 35px;
+    padding: 3.2rem;
+
+    .toggle-record, .is-recording {
+        width: 3.2rem;
+    }
 }
 
 #mwe-rws-record {
@@ -796,82 +803,49 @@ body.mw-special-RecordWizard #contentHeading {
     background-image: url('../icons/stop.svg')
 }
 
-#mwe-rws-vumeter {
+#wizard-vumeter {
     display: flex;
-    flex-direction: row;
+    flex-flow: row nowrap;
+    flex-grow: 1;
     list-style: none;
-    margin-right: 10px;
+    margin-inline: 1.6rem;
+    gap: 0.8rem;
+    padding: 0;
+
+    li {
+        width: 0.8rem;
+        padding-block: 1.2rem;
+        border-radius: 0.4rem;
+        background: $accent-yellow-pastel;
+    }
+
+    &.recording li {
+        background: $purple-pastel;
+
+        &.active {
+            background: $purple-primary;
+        }
+    }
+
+    &.saturated li,
+    &.saturated li.active {
+        background: red;
+    }
 }
 
-#mwe-rws-vumeter li {
-    width: 9px;
-    height: 23px;
-    border-radius: 10px;
-    background-color: #dfe6f5;
-}
-
-#mwe-rws-vumeter li + li {
-    margin-left: 7px;
-}
-
-#mwe-rws-vumeter li.mwe-rws-vu-active {
-    background-color: #00bd44;
-}
-
-#mwe-rws-vumeter.mwe-rws-saturated li,
-#mwe-rws-vumeter.mwe-rws-saturated li.mwe-rws-vu-active {
-    background-color: #dd3333;
+.wizard-record-counter {
+    font-family: $headFont;
+    font-size: 2.0rem;
+    font-weight: 700;
+    color: $purple-primary;
+    padding-block-start: 0.2rem;
 }
 
 #mwe-rws-record-indicator {
     color: #ff0000;
-    font-size: 23px;
     font-weight: bold;
-    width: 17px;
 }
 
-#mwe-rws-recording {
-    position: relative;
-    box-sizing: border-box;
-
-    width: 17px;
-    height: 17px;
-
-    border: 2px solid white;
-    border-radius: 100%;
-}
-
-.mwe-rws-recording #mwe-rws-recording {
-    border-color: #ff0000;
-}
-
-#mwe-rws-recording::after {
-    position: absolute;
-    box-sizing: border-box;
-    content: '';
-    top: 2px;
-    left: 2px;
-
-    width: 9px;
-    height: 9px;
-
-    background-color: white;
-    border-radius: 100%;
-}
-
-.mwe-rws-recording #mwe-rws-recording::after {
-    background-color: #ff0000;
-}
-
-.mwe-rw-counter {
-    position: relative;
-    margin-left: auto;
-
-    font-size: 23px;
-    font-weight: bolder;
-    letter-spacing: 0.5px;
-    color: #222222;
-}
 
 .mwe-rw-othercounter {
     display: inline-block;

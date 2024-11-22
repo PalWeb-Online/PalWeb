@@ -53,7 +53,7 @@ onMounted(async () => {
                 </template>
             </draggable>
 
-            <div class="wizard-queue-count">{{ pronunciations.length }} / 100</div>
+            <div class="wizard-queue-count">{{ pronunciations.length }} of 100</div>
 
 <!--            disable if there are already 100 terms -->
             <WizardButton id="mwe-rwt-reopenpopup"

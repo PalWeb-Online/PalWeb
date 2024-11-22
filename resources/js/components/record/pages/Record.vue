@@ -239,35 +239,37 @@ onMounted(() => {
             </div>
 
             <div class="mwe-rw-actions">
-                <WizardButton
-                    id="mwe-rws-record"
-                    :disabled="metadata.media === 'video' && videoStream === null"
-                    flags="primary progressive"
-                    icon="ll-record"
+                <img
+                    class="toggle-record"
+                    :src="`/img/${!isRecording ? 'record' : 'stop'}.svg`"
+                    :alt="!isRecording ? 'Record' : 'Stop'"
                     @click="toggleRecord"
                 />
-                <WizardVUMeter id="mwe-rws-vumeter" :class="{ 'mwe-rws-saturated': saturated }" :value="vumeter"/>
 
-                <div id="mwe-rws-record-indicator">
-                    <div v-if="countdown === 0 && !saturated" id="mwe-rws-recording"></div>
-                    <div v-if="saturated">SAT</div>
-                    <div v-if="countdown > 0">{{ countdown }}</div>
-                </div>
+                <WizardVUMeter id="wizard-vumeter"
+                               :value="vumeter"
+                               :class="{ 'saturated': saturated, 'recording': isRecording }"
+                />
 
-                <div id="mwe-rws-counter" class="mwe-rw-counter">
-                    <span>{{ statusCount.stashed }}</span> / <span>{{
-                        RecordStore.data.pronunciations.length
-                    }}</span>
-                    <span class="mwe-rw-othercounter">
-                            <span v-if="statusCount.error > 0" class="mwe-rw-errorcounter">
-                                <i></i>
-                                <span>{{ statusCount.error }}</span>
-                            </span>
-                            <span v-if="statusCount.stashing > 0" class="mwe-rw-progresscounter">
-                                <i></i>
-                                <span>{{ statusCount.stashing }}</span>
-                            </span>
-                        </span>
+                <div class="wizard-record-counter">
+                    {{ RecordStore.data.statusCount.stashed }} of {{ ListStore.pronunciations.length }}
+
+<!--                    <span class="mwe-rw-othercounter">-->
+<!--                        <span-->
+<!--                            v-if="RecordStore.data.statusCount.error > 0"-->
+<!--                            class="mwe-rw-errorcounter"-->
+<!--                        >-->
+<!--                            <i></i>-->
+<!--                            <span>{{ RecordStore.data.statusCount.error }}</span>-->
+<!--                        </span>-->
+<!--                        <span-->
+<!--                            v-if="RecordStore.data.statusCount.stashing > 0"-->
+<!--                            class="mwe-rw-progresscounter"-->
+<!--                        >-->
+<!--                            <i></i>-->
+<!--                            <span>{{ RecordStore.data.statusCount.stashing }}</span>-->
+<!--                        </span>-->
+<!--                    </span>-->
                 </div>
             </div>
         </section>
