@@ -13,31 +13,49 @@ const StateStore = useStateStore();
 const {
     prev,
     next,
-    cancel,
     retry,
 } = useNavigationStore();
+
+const cancel = () => {
+    if (confirm('Are you sure you want to leave the wizard? All your stashed recordings will be lost.')) {
+        clearStash();
+        window.location.href = '/dashboard/workbench';
+    }
+};
 
 const preventWindowClose = (event) => {
     if (StateStore.hasPendingRequests) {
         event.preventDefault();
-        event.returnValue = ''; // Standard way to trigger confirmation dialog in browsers
+        event.returnValue = '';
+    } else {
+        clearStash();
     }
 };
 
-// Lifecycle hook to simulate loading completion and set up window event listeners
+const clearStash = () => {
+    fetch('/api/record/clear-stash', { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                console.log('Stash directory cleaned up successfully.');
+            } else {
+                console.error('Failed to clean up stash directory.');
+            }
+        })
+        .catch(error => console.error('Error during stash cleanup:', error));
+};
+
 onMounted(() => {
     setTimeout(() => {
         StateStore.data.isContentVisible = true;
     }, 1000);
 
-    // Prevent window close if there are pending requests
     window.addEventListener('beforeunload', preventWindowClose);
 });
 
-// Clean up the window event listener before component is destroyed
 onBeforeUnmount(() => {
     window.removeEventListener('beforeunload', preventWindowClose);
 });
+
 </script>
 
 <template>

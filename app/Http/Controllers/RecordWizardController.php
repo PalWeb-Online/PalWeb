@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Pronunciation;
 use App\Models\Speaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Storage;
 
@@ -124,24 +125,14 @@ class RecordWizardController extends Controller
         // posts the recordings to the Droplet.
     }
 
-    // Example controller method for processing file uploads
     public function upload(Request $request)
     {
         $file = $request->file('upload');
         $path = $file->store('uploads');
 
-        // If processing WebM files with FFmpeg is required
-        if ($file->getClientMimeType() == 'video/webm') {
-            $ffmpegLocation = config('app.ffmpeg_location'); // Set FFmpeg location in config
-            $tempPath = storage_path('app/'.$path);
-            shell_exec("{$ffmpegLocation} -i {$tempPath} -c copy {$tempPath}-ffmpeg.webm");
-            rename("{$tempPath}-ffmpeg.webm", "{$tempPath}");
-        }
-
         return response()->json(['path' => $path]);
     }
 
-    // Example method to update user preferences
     public function updatePreferences(Request $request)
     {
         $user = Auth::user();
@@ -159,15 +150,14 @@ class RecordWizardController extends Controller
 
         try {
             $file = $request->file('file');
-
             $filename = uniqid('stash_') . '.' . $file->getClientOriginalExtension();
 
-            $path = $file->storeAs('stash', $filename);
+            $file->storeAs('stash', $filename, 'public');
 
             return response()->json([
                 'message' => 'File stashed successfully.',
                 'stashkey' => $filename,
-                'url' => Storage::url($path),
+                'url' => asset("stash/{$filename}"),
             ], 201);
 
         } catch (\Exception $e) {
@@ -183,9 +173,34 @@ class RecordWizardController extends Controller
         // Handle metadata and finalize the record upload if necessary
         // This might include saving information about the file, speaker, etc., in your database
 
+        $file = $request->file('file');
+        $path = $file->store('digitalocean-stash', 'spaces');
+
+        $localPath = public_path("stash/{$file->getClientOriginalName()}");
+        if (File::exists($localPath)) {
+            File::delete($localPath);
+        }
+
+//        return response()->json(['path' => $path], 200);
+
         return response()->json([
             'success' => true,
             'message' => 'File uploaded successfully!'
         ]);
+    }
+
+    public function clearStash()
+    {
+        $path = public_path('stash');
+        \Log::info('Clear stash method called. Path: ' . $path);
+
+        if (File::isDirectory($path)) {
+            \Log::info('Stash directory found. Cleaning up...');
+            File::cleanDirectory($path);
+            return response()->json(['message' => 'Stash directory cleaned up successfully.'], 200);
+        }
+
+        \Log::warning('Stash directory not found.');
+        return response()->json(['message' => 'Stash directory not found.'], 404);
     }
 }
