@@ -6,12 +6,6 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     const StateStore = useStateStore();
     const RecordStore = useRecordStore();
 
-    const cancel = () => {
-        if (confirm('Are you sure you want to leave the wizard?')) {
-            window.location.href = '/dashboard/workbench';
-        }
-    };
-
     const prev = () => {
         const currentStep = StateStore.data.step;
         const process = StateStore.steps[currentStep]?.canMovePrev();
@@ -68,7 +62,6 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         status: RecordStore.data.status,
         errors: RecordStore.data.errors,
         statusCount: RecordStore.data.statusCount,
-        cancel,
         prev,
         next,
         retry,

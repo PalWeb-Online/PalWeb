@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 import { reactive } from 'vue';
 import axios from 'axios';
 import Record from "../../../utils/Record.js";
+import RequestQueue from "../../../utils/RequestQueue.js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
     const data = reactive({
         metadata: {
-            language: 'Palestinian Arabic',
             speaker: {
                 name: '',
                 user_id: null,
@@ -32,6 +32,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
             error: 0,
         },
     });
+
+    const requestQueue = new RequestQueue();
 
     const fetchSpeaker = async () => {
         try {
@@ -100,7 +102,6 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     if (!exists) {
                         if (!data.records[pronunciation.id]) {
                             data.records[pronunciation.id] = new Record(pronunciation);
-                            data.records[pronunciation.id].setLanguage(data.metadata.language);
                             data.records[pronunciation.id].setSpeaker(data.metadata.speaker);
 
                             setStatus(pronunciation.id, 'up');
@@ -134,16 +135,46 @@ export const useRecordStore = defineStore('RecordStore', () => {
         return true;
     };
 
-    const doStash = (pronunciation, blob) => {
+    const doStash = async (pronunciation, blob) => {
+        const record = data.records[pronunciation];
+
+        if (!record) {
+            console.error(`Record for pronunciation ${pronunciation} not found.`);
+            setError(pronunciation, 'Record not found.');
+            return Promise.reject('Record not found.');
+        }
+
         setStatus(pronunciation, 'ready');
         setError(pronunciation, false);
 
-        if (blob !== undefined) {
-            data.records[pronunciation].setBlob(blob);
+        if (blob) {
+            try {
+                await record.setBlob(blob);
+            } catch (error) {
+                setError(pronunciation, 'Audio record initialization failed.');
+                console.error(error);
+                return Promise.reject('Audio record initialization failed.');
+            }
         }
 
         setStatus(pronunciation, 'stashing');
-        // Assuming requestQueue and API logic will be integrated here
+
+        return new Promise((resolve, reject) => {
+            requestQueue.push(async () => {
+                try {
+                    await record.uploadToStash();
+                    data.records[pronunciation].url = record.url;
+
+                    setStatus(pronunciation, 'stashed');
+                    console.log(`Successfully stashed: ${pronunciation}`);
+                    resolve();
+                } catch (error) {
+                    setError(pronunciation, error.message || 'Stash upload failed.');
+                    console.error(`Error uploading pronunciation ${pronunciation}:`, error);
+                    reject(error);
+                }
+            });
+        });
     };
 
     return {

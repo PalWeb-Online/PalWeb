@@ -1,12 +1,15 @@
+import AudioRecord from './AudioRecord.js';
+
 export default class Record {
     constructor(pronunciation) {
         this.file = null;
         this.stashkey = null;
         this.imageInfo = null;
-        this.speaker = null;
-        this.language = 'Palestinian Arabic';
         this.license = 'CC BY-SA';
-        this.transcription = pronunciation;
+        this.language = 'apc';
+        this.speaker = null;
+        this.pronunciation = pronunciation;
+        this.audioRecord = null;
         this.extra = {};
         this.date = null;
         this.qualifier = null;
@@ -19,43 +22,44 @@ export default class Record {
         this.extra = extra;
     }
 
-    /**
-     * Generate a filename for the record based on current metadata.
-     */
     getFilename() {
         const illegalChars = /[#<>[\]|{}:/\\]/g;
-        let filename = 'LL' +
-            '-' + this.language.iso3 +
-            '-' + this.speaker.name +
-            '-' + this.transcription + '.wav';
+
+        let filename =
+            this.language + '-' + this.speaker.dialect_id + '-' + this.pronunciation.translit + '-' + this.speaker.name + '.wav';
 
         return filename.replace(illegalChars, '-');
     }
 
-    /**
-     * Set the speaker object for the record.
-     */
     setSpeaker(speaker) {
         this.speaker = speaker;
-        return this;
     }
 
-    /**
-     * Set the language object for the record.
-     */
-    setLanguage(language) {
-        this.language = language;
-        return this;
+    setBlob(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const arrayBuffer = reader.result;
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioContext.decodeAudioData(arrayBuffer)
+                    .then((audioBuffer) => {
+                        const samples = audioBuffer.getChannelData(0);
+                        this.audioRecord = new AudioRecord(new Float32Array(samples), audioBuffer.sampleRate);
+                        resolve();
+                    })
+                    .catch(reject);
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(blob);
+        });
     }
 
-    /**
-     * Set the Blob file (audio) for this record.
-     */
-    setBlob(audioBlob, extension) {
-        this.reset();
-        this.file = audioBlob;
-        this.date = new Date();
-        return true;
+    getBlob() {
+        if (this.audioRecord) {
+            return this.audioRecord.getBlob();
+        } else {
+            throw new Error('AudioRecord instance not initialized.');
+        }
     }
 
     /**
@@ -74,37 +78,31 @@ export default class Record {
         this.imageInfo = null;
     }
 
-    /**
-     * Upload the audio file to a server.
-     * Replace the `uploadToStash` logic with your backend server's API endpoint.
-     */
-    async uploadToStash(apiEndpoint) {
-        if (!this.file) {
-            return Promise.reject('[Record] cannot stash; no file set.');
+    async uploadToStash() {
+        if (!this.audioRecord) {
+            return Promise.reject('[Record] cannot stash; no audio record initialized.');
         }
 
         const formData = new FormData();
-        formData.append('file', this.file, this.getFilename());
+        formData.append('file', this.audioRecord.getBlob(), this.getFilename());
 
         try {
-            const response = await fetch(apiEndpoint, {
+            const response = await fetch('/api/record/stash', {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
             const result = await response.json();
-            this.stashkey = result.stashkey; // Assuming 'stashkey' is returned from the server
-            this.fileUrl = result.url; // URL from DigitalOcean Spaces
+
+            this.stashkey = result.stashkey;
+            this.url = result.url;
+
         } catch (error) {
-            return Promise.reject('[Record] stash upload failed.');
+            return Promise.reject('[Record] stash upload failed: ' + error.message);
         }
 
         return Promise.resolve();
     }
 
-    /**
-     * Finalize the upload by publishing the audio to the server.
-     * Replace `finishUpload` logic with your backend server's API endpoint.
-     */
     async finishUpload(apiEndpoint) {
         if (!this.stashkey) {
             return Promise.reject('[Record] cannot upload; no stashkey.');
@@ -118,7 +116,7 @@ export default class Record {
                     metadata: {
                         speaker: this.speaker,
                         language: this.language,
-                        transcription: this.transcription,
+                        pronunciation: this.pronunciation,
                         qualifier: this.qualifier,
                         license: this.license,
                         extra: this.extra

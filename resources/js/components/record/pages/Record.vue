@@ -1,29 +1,19 @@
 <script setup>
-import {onMounted, reactive, ref, watch} from 'vue';
+import {onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import {useRecordStore} from '../store/RecordStore';
 import {useListStore} from '../store/ListStore';
 import WizardButton from '../ui/WizardButton.vue';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
-
-const {
-    words,
-    selected,
-    selectedArray,
-    initSelection,
-    moveForward,
-    moveBackward,
-} = useListStore(); // List-related logic
+import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 
 const RecordStore = useRecordStore();
+const ListStore = useListStore();
 
-// Reactive states
-const metadata = reactive(RecordStore.data.metadata); // Language, media type, etc.
-const status = reactive(RecordStore.data.status); // Recording status
-const statusCount = reactive(RecordStore.data.statusCount); // Track counts for errors, stashing, etc.
 const isRecording = ref(false);
 const saturated = ref(false);
 const vumeter = ref(0);
 const countdown = ref(0);
+let recorder;
 
 const audioParams = reactive({
     startThreshold: 0.1,
@@ -34,123 +24,166 @@ const audioParams = reactive({
     marginAfter: 0.25,
 });
 
-let recorder = null; // Placeholder for the recording object
+const showError = (error) => {
+    const errorMessageAssociation = {
+        AbortError: 'Technical issue with the microphone.',
+        NotAllowedError: 'Microphone access was not allowed.',
+        NotFoundError: 'Microphone not found.',
+        NotReadableError: 'Technical issue with the microphone.',
+        OverconstrainedError: 'Microphone not found.',
+        SecurityError: 'Technical issue with the microphone.',
+    };
 
-// Methods for recording
+    alert(errorMessageAssociation[error.name] || 'An unknown error occurred.');
+};
+
 const toggleRecord = () => {
     if (isRecording.value) {
         cancelRecord();
     } else {
-        startRecord();
-    }
-};
-
-const startRecord = () => {
-    if (!isRecording.value) {
-        console.log('Recording started');
-        isRecording.value = true;
-        saturated.value = false;
-        // Trigger recording start on your chosen recorder
-        // Example: recorder.start();
-    }
-};
-
-const cancelRecord = () => {
-    if (isRecording.value) {
-        console.log('Recording canceled');
-        isRecording.value = false;
-        saturated.value = false;
-        vumeter.value = 0;
-        countdown.value = 0;
-        // Trigger cancel on your chosen recorder
-        // Example: recorder.cancel();
-    }
-};
-
-const removeRecord = (word) => {
-    console.log('Removing record for', word);
-    RecordStore.clearRecord(word); // Reset the record using store
-};
-
-const runCountdown = () => {
-    if (isRecording.value) {
-        countdown.value--;
-        if (countdown.value > 0) {
-            setTimeout(runCountdown, 1000);
+        const currentPronunciation = ListStore.pronunciations[ListStore.selected];
+        if (currentPronunciation) {
+            console.log(`Starting recording for: ${currentPronunciation.term}`);
+            startRecord();
         } else {
-            console.log('Start recording after countdown');
+            alert('No word selected to record.');
         }
     }
 };
 
-const playRecord = (word) => {
-    if (status[word] === 'stashed') {
-        // Play the stashed version of the record
-        console.log(`Playing record for word: ${word}`);
-        const audio = new Audio(RecordStore.getMediaUrl(word)); // Use appropriate URL retrieval method
-        audio.play();
+const startRecord = () => {
+    console.log('Recording started');
+    isRecording.value = true;
+    saturated.value = false;
+
+    recorder.start();
+};
+
+const cancelRecord = () => {
+    console.log('Recording canceled');
+    isRecording.value = false;
+    saturated.value = false;
+    vumeter.value = 0;
+    countdown.value = 0;
+    recorder.cancel();
+};
+
+const playRecord = () => {
+    const currentPronunciation = ListStore.pronunciations[ListStore.selected];
+    if (currentPronunciation && RecordStore.data.status[currentPronunciation.id] === 'stashed') {
+        const record = RecordStore.data.records[currentPronunciation.id];
+        if (record && record.url) {
+            console.log(`Playing record for: ${currentPronunciation.term}`);
+            const audio = new Audio(record.url);
+            audio.play();
+        } else {
+            console.error('No URL found for stashed recording.');
+            alert('No recording available for this word.');
+        }
+    } else {
+        alert('No recording available for this word.');
     }
 };
 
-const onDataAvailable = (samples) => {
-    let amplitudeMax = Math.max(...samples.map(Math.abs));
-    // Update VU meter value
-    vumeter.value = Math.floor((-10 * amplitudeMax ** 2) + 25 * amplitudeMax);
+const selectWord = (index) => {
+    ListStore.selectWord(index);
+
+    if (RecordStore.data.status[ListStore.pronunciations[index].id] === 'stashed') {
+        playRecord();
+    }
+};
+
+const onDataAvailable = async (record) => {
+    const currentPronunciation = ListStore.pronunciations[ListStore.selected];
+    if (currentPronunciation) {
+        console.log(`Stashing record for: ${currentPronunciation.term}`);
+        const blob = record.getBlob();
+
+        if (blob) {
+            try {
+                await RecordStore.doStash(currentPronunciation.id, blob);
+
+                if (RecordStore.data.status[currentPronunciation.id] === 'stashed') {
+                    recorder.stop();
+                    ListStore.moveForward();
+                    startRecord();
+                }
+
+            } catch (error) {
+                console.error('Error during stashing:', error);
+                recorder.cancel();
+            }
+
+        } else {
+            console.error('No audio blob available to stash.');
+            recorder.cancel();
+        }
+
+    } else {
+        console.warn('No pronunciation selected for stashing.');
+    }
 };
 
 const onSaturate = () => {
     saturated.value = true;
 };
 
-// Watchers
-watch(audioParams, () => {
-    cancelRecord();
-    // Update recorder with new audio parameters if needed
-}, {deep: true});
-
-// Lifecycle hook: onMounted
 onMounted(() => {
+    recorder = new LinguaRecorder({
+        autoStart: true,
+        autoStop: true,
+        startThreshold: audioParams.startThreshold,
+        stopThreshold: audioParams.stopThreshold,
+        saturationThreshold: audioParams.saturationThreshold,
+        stopDuration: audioParams.stopDuration,
+        marginBefore: audioParams.marginBefore,
+        marginAfter: audioParams.marginAfter,
+    });
 
-    recorder.on('dataAvailable', onDataAvailable);
+    recorder.on('ready', () => {
+        console.log('Recorder is ready!');
+    });
+
+    recorder.on('readyFail', showError);
+
+    recorder.on('recording', (samples) => {
+        vumeter.value = Math.max(...samples) * 1000;
+        console.log(vumeter.value);
+    });
+
     recorder.on('saturated', onSaturate);
 
-    // Handle keyboard shortcuts
-    const shortcutsHandler = (event) => {
-        if (event.target.tagName === 'INPUT' || event.target.tagName === 'BUTTON') return;
+    recorder.on('stopped', (record) => {
+        onDataAvailable(record);
+    });
 
-        switch (event.key) {
-            case 'ArrowLeft':
-            case 'ArrowUp':
-                moveBackward();
-                break;
-            case 'ArrowRight':
-            case 'ArrowDown':
-                moveForward();
-                break;
-            case 'Delete':
-            case 'Backspace':
-                removeRecord(RecordStore.data.pronunciations[RecordStore.selected]); // Use the store for word management
-                break;
-            case ' ':
-                toggleRecord();
-                break;
-            case 'p':
-                playRecord(RecordStore.data.pronunciations[RecordStore.selected]); // Use the store for playing records
-                break;
-            default:
-                return;
-        }
-        event.preventDefault();
-    };
 
-    document.addEventListener('keydown', shortcutsHandler);
+    ListStore.initSelection();
 
-    // Cleanup on unmount
     return () => {
-        document.removeEventListener('keydown', shortcutsHandler);
-        if (recorder) recorder.destroy(); // Destroy recorder instance if applicable
+        if (recorder) {
+            recorder.close();
+        }
     };
 });
+
+onUnmounted(() => {
+    if (recorder) {
+        recorder.off('ready');
+        recorder.off('readyFail');
+        recorder.off('recording');
+        recorder.off('saturated');
+        recorder.off('stopped');
+        recorder.stop(true);
+        recorder.close();
+    }
+});
+
+watch(audioParams, (newParams) => {
+    if (recorder) {
+        recorder.setConfig(newParams);
+    }
+}, {deep: true});
 </script>
 
 <template>
@@ -158,66 +191,18 @@ onMounted(() => {
         <h2>Record</h2>
     </div>
 
-    <!--    <WizardPopup>-->
-    <!--        <template #trigger>-->
-    <!--            <i id="mwe-rws-settings" class="mwe-rw-topicon"></i>-->
-    <!--        </template>-->
-    <!--        <template #content>-->
-    <!--            <div id="mwe-rws-settings-audio">-->
-    <!--                <h4>Audio Recording Settings</h4>-->
-    <!--                <label>Start Threshold</label>-->
-    <!--                <WizardNumber v-model="audioParams.startThreshold" :max="100" :min="0" :percentage="true"/>-->
-    <!--                <label>Stop Threshold</label>-->
-    <!--                <WizardNumber v-model="audioParams.stopThreshold" :max="100" :min="0" :percentage="true"/>-->
-    <!--                <label>Saturation Threshold</label>-->
-    <!--                <WizardNumber v-model="audioParams.saturationThreshold" :max="100" :min="0" :percentage="true"/>-->
-    <!--                <label>Stop Duration</label>-->
-    <!--                <WizardNumber v-model="audioParams.stopDuration" :max="5" :min="0" :step="0.05"/>-->
-    <!--                <label>Margin Before</label>-->
-    <!--                <WizardNumber v-model="audioParams.marginBefore" :max="5" :min="0" :step="0.05"/>-->
-    <!--                <label>Margin After</label>-->
-    <!--                <WizardNumber v-model="audioParams.marginAfter" :max="5" :min="0" :step="0.05"/>-->
-    <!--            </div>-->
-    <!--        </template>-->
-    <!--    </WizardPopup>-->
-
-    <!--    <WizardDialog name="shortcuts" size="large">-->
-    <!--        <template #trigger>-->
-    <!--            <i id="mwe-rws-shortcuts" class="mwe-rw-topicon"></i>-->
-    <!--        </template>-->
-    <!--        <template #content>-->
-    <!--            <div id="mwe-rws-shortcuts-content">-->
-    <!--                <h4>Shortcuts</h4>-->
-    <!--                <section>-->
-    <!--                    <div>-->
-    <!--                        <kbd class="mwe-rw-key">←</kbd>-->
-    <!--                        <div>Previous Word</div>-->
-    <!--                    </div>-->
-    <!--                    <div>-->
-    <!--                        <kbd class="mwe-rw-key">→</kbd>-->
-    <!--                        <div>Next Word</div>-->
-    <!--                    </div>-->
-    <!--                    <div>-->
-    <!--                        <kbd class="mwe-rw-key">del</kbd>-->
-    <!--                        <div>Delete Recording</div>-->
-    <!--                    </div>-->
-    <!--                    <div>-->
-    <!--                        <kbd class="mwe-rw-key">P</kbd>-->
-    <!--                        <div>Listen to Recording</div>-->
-    <!--                    </div>-->
-    <!--                    <div>-->
-    <!--                        <kbd class="mwe-rw-key mwe-rw-key-long">space</kbd>-->
-    <!--                        <div>Toggle Recording</div>-->
-    <!--                    </div>-->
-    <!--                </section>-->
-    <!--            </div>-->
-    <!--        </template>-->
-    <!--    </WizardDialog>-->
-
-    <div class="wizard-section-container mwe-rws-audio" :class="isRecording ? ' mwe-rws-recording' : ''">
+    <div class="wizard-section-container mwe-rws-audio" :class="{ 'mwe-rws-recording': isRecording }">
         <section>
             <ul class="mwe-rw-list">
-                <li v-for="(element, index) in RecordStore.data.pronunciations" :key="index" @click="playRecord(word)">
+                <li
+                    v-for="(element, index) in ListStore.pronunciations"
+                    :key="index"
+                    :class="{
+                        'selected': ListStore.selected === index,
+                        'stashed': RecordStore.data.status[element.id] === 'stashed',
+                        }"
+                    @click="selectWord(index)"
+                >
                     {{ element.term }}
                 </li>
             </ul>
@@ -228,14 +213,15 @@ onMounted(() => {
                 <div class="mwe-rw-itembox">
                     <div class="mwe-rw-item">
                         <div>
-                            {{ RecordStore.data.pronunciations[0].term }}
+                            {{ ListStore.pronunciations[ListStore.selected]?.term || 'No term selected' }}
                         </div>
                         <div>
-                            {{ RecordStore.data.pronunciations[0].translit }}
+                            {{ ListStore.pronunciations[ListStore.selected]?.translit || '' }}
                         </div>
                     </div>
                 </div>
-                <WizardButton id="mwe-rws-skip" :framed="false" icon="next" label="Skip" @click="moveForward"/>
+                <WizardButton id="mwe-rws-skip" :framed="false" icon="next" label="Skip"
+                              @click="ListStore.moveForward"/>
             </div>
 
             <div class="mwe-rw-actions">

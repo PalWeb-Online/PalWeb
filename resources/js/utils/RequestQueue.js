@@ -1,8 +1,8 @@
 export default class RequestQueue {
     constructor() {
-        this.maxConcurrentRequests = 3; // Limit to 3 simultaneous requests
-        this.queue = []; // Queue to store pending requests
-        this.currentRequests = 0; // Tracks how many requests are currently running
+        this.max = 3;
+        this.queue = [];
+        this.working = 0;
 
         // Replace mw.Api() with a general API request logic if needed
         // Otherwise, adjust according to your existing API logic
@@ -13,11 +13,6 @@ export default class RequestQueue {
         };
     }
 
-    /**
-     * Adds a request to the queue. Starts processing if there are available slots.
-     * @param {Function} callback - A function that returns a Promise.
-     * @returns {Promise} - A promise that resolves or rejects when the request is processed.
-     */
     push(callback) {
         return new Promise((resolve, reject) => {
             this.queue.push({
@@ -26,18 +21,13 @@ export default class RequestQueue {
                 callback,
             });
 
-            if (this.currentRequests < this.maxConcurrentRequests) {
-                this.currentRequests++;
+            if (this.working < this.max) {
+                this.working++;
                 this.next();
             }
         });
     }
 
-    /**
-     * Adds a request to the front of the queue (high priority).
-     * @param {Function} callback - A function that returns a Promise.
-     * @returns {Promise} - A promise that resolves or rejects when the request is processed.
-     */
     force(callback) {
         return new Promise((resolve, reject) => {
             this.queue.unshift({
@@ -46,38 +36,31 @@ export default class RequestQueue {
                 callback,
             });
 
-            if (this.currentRequests < this.maxConcurrentRequests) {
-                this.currentRequests++;
+            if (this.working < this.max) {
+                this.working++;
                 this.next();
             }
         });
     }
 
-    /**
-     * Processes the next request in the queue.
-     * @private
-     */
     next() {
         if (this.queue.length > 0) {
             const { callback, resolve, reject } = this.queue.shift();
 
-            // Run the callback and handle the returned Promise
             callback()
                 .then(resolve)
                 .catch(reject)
                 .finally(() => {
-                    this.currentRequests--;
-                    this.next(); // Process the next request in the queue
+                    this.working--;
+                    this.next();
                 });
+
         } else {
-            this.currentRequests--;
+            this.working--;
         }
     }
 
-    /**
-     * Clears all pending requests from the queue.
-     */
     clearQueue() {
-        this.queue.length = 0; // Empty the queue
+        this.queue.length = 0;
     }
 }
