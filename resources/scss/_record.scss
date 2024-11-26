@@ -367,33 +367,6 @@ body.mw-special-RecordWizard #contentHeading {
 }
 
 /* PUBLISH */
-#mwe-rw-publish .wizard-section-container {
-    height: 460px;
-}
-
-#mwe-rw-publish .wizard-section-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    padding: 0;
-}
-
-#mwe-rw-publish section:first-child {
-    width: 38%;
-    height: 100%;
-    align-self: stretch;
-    overflow-y: scroll;
-    border-right: 1px solid rgba(156, 173, 210, 0.5);
-}
-
-#mwe-rw-publish section:last-child {
-    display: flex;
-    flex: 1;
-    max-width: 62%;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .mwe-rw-item {
     word-break: break-all;
 }
@@ -402,10 +375,6 @@ body.mw-special-RecordWizard #contentHeading {
     position: absolute;
     right: 4px;
     top: 4px;
-}
-
-#mwe-rwp-actions .oo-ui-progressBarWidget {
-    width: 320px;
 }
 
 @media screen and (max-width: 799px) {
@@ -433,7 +402,8 @@ body.mw-special-RecordWizard #contentHeading {
 }
 
 /* STUDIO */
-#mwe-rw-studio .wizard-section-container {
+#mwe-rw-studio .wizard-section-container,
+#mwe-rw-publish .wizard-section-container {
     height: 48rem;
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -711,19 +681,22 @@ body.mw-special-RecordWizard #contentHeading {
     background: $accent-yellow-pastel;
 
     & > audio {
-        width: 50%;
-        max-width: 50%;
+        border-radius: 3.2rem;
+        height: 3.2rem;
+        width: 100%;
     }
 
     .mwe-rw-itembox {
-        //border: 1px solid $purple-deep;
         border-radius: 1.6rem;
         background: white;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 1.6rem;
+        gap: 1.6rem;
 
         .mwe-rw-item {
+            flex-grow: 1;
             text-align: center;
 
             & > div:nth-child(1) {
@@ -736,6 +709,16 @@ body.mw-special-RecordWizard #contentHeading {
                 font-size: 2.0rem;
             }
         }
+
+        .arrow {
+            cursor: pointer;
+            width: 3.2rem;
+        }
+    }
+
+    .trash {
+        cursor: pointer;
+        width: 2.4rem;
     }
 
     #mwe-rws-skip {
@@ -771,8 +754,8 @@ body.mw-special-RecordWizard #contentHeading {
     display: flex;
     align-items: center;
     border-top: 1px solid $accent-yellow;
-
     padding: 3.2rem;
+    gap: 1.6rem;
 
     .toggle-record, .is-recording {
         width: 3.2rem;
@@ -808,7 +791,6 @@ body.mw-special-RecordWizard #contentHeading {
     flex-flow: row nowrap;
     flex-grow: 1;
     list-style: none;
-    margin-inline: 1.6rem;
     gap: 0.8rem;
     padding: 0;
 
@@ -839,6 +821,21 @@ body.mw-special-RecordWizard #contentHeading {
     font-weight: 700;
     color: $purple-primary;
     padding-block-start: 0.2rem;
+    white-space: nowrap;
+}
+
+.wizard-progress-container {
+    width: 100%;
+    background-color: $purple-pastel;
+    border-radius: 3.2rem;
+    height: 1.6rem;
+    overflow: hidden;
+}
+
+.wizard-progress-bar {
+    height: 100%;
+    background-color: $purple-primary;
+    transition: width 0.3s ease;
 }
 
 #mwe-rws-record-indicator {

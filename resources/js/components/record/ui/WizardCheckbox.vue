@@ -13,11 +13,9 @@ const handleChange = (event) => {
     emit('input', event.target.checked);
 };
 
-// Watch the `value` prop to update the checkbox programmatically if needed
 watch(
     () => props.value,
     (newVal) => {
-        // Manually update the checked state if `value` changes externally
         document.getElementById(props.inputId)?.setAttribute('checked', newVal);
     }
 );
@@ -25,7 +23,6 @@ watch(
 </script>
 
 <template>
-  <span>
     <input
         type="checkbox"
         :id="inputId"
@@ -33,12 +30,4 @@ watch(
         :disabled="disabled"
         @change="handleChange"
     />
-  </span>
 </template>
-
-<style scoped>
-/* Add any necessary styles */
-input[type="checkbox"] {
-    margin-right: 10px;
-}
-</style>

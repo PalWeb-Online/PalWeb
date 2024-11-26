@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
     Route::post('/stash', 'stash');
     Route::delete('/clear-stash', 'clearStash');
+    Route::delete('/discard-record/{stashkey}', 'discardRecord');
 });
 
 Route::post('/api/discord/joined', [DiscordController::class, 'joined']);

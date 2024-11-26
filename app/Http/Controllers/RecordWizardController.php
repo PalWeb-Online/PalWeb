@@ -189,18 +189,29 @@ class RecordWizardController extends Controller
         ]);
     }
 
+    public function discardRecord($stashkey)
+    {
+        $filePath = public_path("stash/{$stashkey}");
+
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+            \Log::info("Recording with stashkey {$stashkey} discarded successfully.");
+            return response()->json(['message' => "Recording with stashkey {$stashkey} discarded successfully."], 200);
+        }
+
+        \Log::warning("Recording with stashkey {$stashkey} not found.");
+        return response()->json(['message' => "Recording with stashkey {$stashkey} not found."], 404);
+    }
+
     public function clearStash()
     {
         $path = public_path('stash');
-        \Log::info('Clear stash method called. Path: ' . $path);
 
         if (File::isDirectory($path)) {
-            \Log::info('Stash directory found. Cleaning up...');
             File::cleanDirectory($path);
             return response()->json(['message' => 'Stash directory cleaned up successfully.'], 200);
         }
 
-        \Log::warning('Stash directory not found.');
         return response()->json(['message' => 'Stash directory not found.'], 404);
     }
 }
