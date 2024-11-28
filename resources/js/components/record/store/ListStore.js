@@ -35,6 +35,14 @@ export const useListStore = defineStore('ListStore', () => {
         selected.value = index;
         selectedArray[index] = 'selected';
         afterSelectionChange(data);
+
+        const selectedPronunciation = RecordStore.data.pronunciations[index];
+        if (RecordStore.data.status[selectedPronunciation.id] === 'stashed') {
+            // TODO: Stop recording previously if the recording has been stashed.
+            // TODO: if you start recording & don't stop it, then click on another word, you will re-record it
+            // cancelRecord();
+            RecordStore.playRecord();
+        }
     };
 
     const moveBackward = () => {

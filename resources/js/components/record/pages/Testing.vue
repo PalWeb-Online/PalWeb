@@ -98,7 +98,7 @@ watch(mictesterState, (newState) => {
 
 <template>
     <div class="wizard-page-title">
-        <h2>Tutorial</h2>
+        <h2>Testing</h2>
     </div>
 
     <div class="wizard-section-container" v-if="!StateStore.data.isBrowserReady">

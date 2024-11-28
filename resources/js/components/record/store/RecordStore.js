@@ -4,6 +4,7 @@ import axios from 'axios';
 import Record from "../../../utils/Record.js";
 import RequestQueue from "../../../utils/RequestQueue.js";
 import {useListStore} from "./ListStore.js";
+import {useStateStore} from "./StateStore.js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
     const data = reactive({
@@ -33,6 +34,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         },
     });
 
+    const StateStore = useStateStore();
     const ListStore = useListStore();
     const requestQueue = new RequestQueue();
 
@@ -60,6 +62,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
             alert(response.data.message);
             data.metadata.speaker = response.data.speaker;
             data.metadata.speaker.name = response.data.name;
+
         } catch (error) {
             console.error('Error saving speaker:', error);
         }
@@ -91,6 +94,9 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const fetchPronunciations = async (listedPronunciations = []) => {
+        // TODO: discard pronunciations that had previously been loaded in
+        // e.g. check if there is already data.records[pronunciation.id]
+
         try {
             const response = await axios.post('/record/pronunciations', {
                 dialect_id: data.metadata.speaker.dialect_id,
@@ -105,6 +111,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     }
                 });
             }
+
         } catch (error) {
             console.error('Error loading pronunciations:', error);
         }
@@ -179,21 +186,12 @@ export const useRecordStore = defineStore('RecordStore', () => {
             if (record?.url) {
                 const audio = new Audio(record.url);
                 audio.play();
-
-            } else {
-                console.error('No URL found for stashed recording.');
-                alert('No recording available for this word.');
             }
-
-        } else {
-            alert('No recording available for this word.');
         }
     };
 
-    const discardRecord = async (index) => {
+    const discardRecord = async (id) => {
         if (confirm('Are you sure you want to discard this recording?')) {
-            const id = data.pronunciations[index].id;
-
             const record = data.records[id];
             if (!record) {
                 console.warn(`Record with ID ${id} not found.`);
@@ -218,24 +216,65 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
                 delete data.records[id];
                 delete data.status[id];
+                delete data.errors[id];
                 data.statusCount.stashed--;
 
-                const recordIds = Object.keys(data.records);
-
-                if (recordIds.length > 0) {
-                    const currentIndex = recordIds.indexOf(String(id));
-                    const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
-                    const nextRecordId = recordIds[nextIndex];
-                    const nextPronunciationIndex = data.pronunciations.findIndex(p => p.id === Number(nextRecordId));
-                    ListStore.selectWord(nextPronunciationIndex);
-
-                } else {
-                    console.log("No more records available to select.");
-                }
+                // const recordIds = Object.keys(data.records);
+                //
+                // if (recordIds.length > 0) {
+                //     const currentIndex = recordIds.indexOf(String(id));
+                //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
+                //     const nextRecordId = recordIds[nextIndex];
+                //     const nextPronunciationIndex = data.pronunciations.findIndex(p => p.id === Number(nextRecordId));
+                //     ListStore.selectWord(nextPronunciationIndex);
+                //
+                // } else {
+                //     console.log("No more records available to select.");
+                // }
 
             } catch (error) {
                 console.error(`Error discarding recording with stashkey ${stashkey}:`, error);
             }
+        }
+    };
+
+    const uploadRecords = async () => {
+        // TODO: Stop recording before uploading.
+
+        if (confirm('Are you sure you want to upload all of your recordings?')) {
+            StateStore.data.isPublishing = true;
+
+            const stashedIds = Object.keys(data.status).filter(
+                (id) => data.status[id] === 'stashed'
+            );
+
+            for (const id of stashedIds) {
+                try {
+                    const pronunciationIndex = data.pronunciations.findIndex(
+                        (p) => p.id === Number(id)
+                    );
+                    ListStore.selectWord(pronunciationIndex);
+
+                    setStatus(id, 'uploading');
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+
+                    setStatus(id, 'uploaded');
+
+                    if (pronunciationIndex !== -1) {
+                        data.pronunciations.splice(pronunciationIndex, 1);
+                        ListStore.selectedArray.splice(pronunciationIndex, 1);
+                    }
+
+                    setStatus(id, 'done');
+
+                } catch (error) {
+                    console.error(`Simulated upload failed for record ID: ${id}`, error);
+                    setError(id, 'Upload simulation failed.');
+                }
+            }
+
+            StateStore.data.isPublishing = false;
+            console.log('All recordings uploaded successfully.');
         }
     };
 
@@ -249,6 +288,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         removePronunciation,
         doStash,
         playRecord,
-        discardRecord
+        discardRecord,
+        uploadRecords,
     };
 });

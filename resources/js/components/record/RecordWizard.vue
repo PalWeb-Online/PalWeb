@@ -2,11 +2,11 @@
 import {onBeforeUnmount, onMounted} from 'vue';
 import {useStateStore} from './store/StateStore';
 import {useNavigationStore} from './store/NavigationStore';
-import Tutorial from './pages/Tutorial.vue';
+import Testing from './pages/Testing.vue';
 import Speaker from './pages/Speaker.vue';
 import Queue from './pages/Queue.vue';
-import Record from './pages/Record.vue';
-import Publish from './pages/Publish.vue';
+import Studio from './pages/Studio.vue';
+import Finish from './pages/Finish.vue';
 import WizardButton from './ui/WizardButton.vue';
 
 const StateStore = useStateStore();
@@ -62,11 +62,11 @@ onBeforeUnmount(() => {
     <h1>Record Wizard</h1>
     <div id="mwe-rw">
         <div id="mwe-rw-steps">
-            <div :class="{ active: StateStore.data.step === 'tutorial' }">Tutorial</div>
+            <div :class="{ active: StateStore.data.step === 'testing' }">Testing</div>
             <div :class="{ active: StateStore.data.step === 'speaker' }">Speaker</div>
             <div :class="{ active: StateStore.data.step === 'queue' }">Queue</div>
-            <div :class="{ active: StateStore.data.step === 'record' }">Record</div>
-            <div :class="{ active: StateStore.data.step === 'publish' }">Publish</div>
+            <div :class="{ active: StateStore.data.step === 'studio' }">Studio</div>
+            <div :class="{ active: StateStore.data.step === 'finish' }">Finish</div>
         </div>
 
         <div id="mwe-rw-main">
@@ -99,15 +99,15 @@ onBeforeUnmount(() => {
                     v-show="StateStore.data.isBrowserReady && StateStore.data.step !== 'publish'"
                 />
 
-                <WizardButton
-                    id="mwe-rw-publish"
-                    icon="upload"
-                    label="Publish"
-                    flags="progressive primary"
-                    :disabled="StateStore.hasPendingRequests"
-                    @click="next"
-                    v-show="StateStore.data.step === 'publish' && (StateStore.data.isPublishing === false || StateStore.hasPendingRequests === true)"
-                />
+<!--                <WizardButton-->
+<!--                    id="mwe-rw-publish"-->
+<!--                    icon="upload"-->
+<!--                    label="Publish"-->
+<!--                    flags="progressive primary"-->
+<!--                    :disabled="StateStore.hasPendingRequests"-->
+<!--                    @click="next"-->
+<!--                    v-show="StateStore.data.step === 'publish' && (StateStore.data.isPublishing === false || StateStore.hasPendingRequests === true)"-->
+<!--                />-->
 
                 <WizardButton
                     id="mwe-rw-restart"
@@ -132,8 +132,8 @@ onBeforeUnmount(() => {
             </div>
 
             <div v-if="StateStore.data.isContentVisible" id="mwe-rw-content">
-                <div class="mwe-rw-content" id="mwe-rw-tutorial" v-if="StateStore.data.step === 'tutorial'">
-                    <Tutorial/>
+                <div class="mwe-rw-content" id="mwe-rw-tutorial" v-if="StateStore.data.step === 'testing'">
+                    <Testing/>
                 </div>
                 <div class="mwe-rw-content" id="mwe-rw-speaker" v-if="StateStore.data.step === 'speaker'">
                     <Speaker/>
@@ -141,11 +141,11 @@ onBeforeUnmount(() => {
                 <div class="mwe-rw-content" id="mwe-rw-queue" v-if="StateStore.data.step === 'queue'">
                     <Queue/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-studio" v-if="StateStore.data.step === 'record'">
-                    <Record/>
+                <div class="mwe-rw-content" id="rw-studio" v-if="StateStore.data.step === 'studio'">
+                    <Studio/>
                 </div>
-                <div class="mwe-rw-content" id="mwe-rw-publish" v-if="StateStore.data.step === 'publish'">
-                    <Publish/>
+                <div class="mwe-rw-content" id="mwe-rw-review" v-if="StateStore.data.step === 'finish'">
+                    <Finish/>
                 </div>
             </div>
         </div>

@@ -6,14 +6,16 @@ export const useStateStore = defineStore('StateStore', () => {
     const RecordStore = useRecordStore();
 
     const data = reactive({
-        step: 'tutorial',
+        step: 'testing',
         isFrozen: false,
         isBrowserReady: false,
+        isRecording: false,
         isPublishing: false,
+        isContentVisible: false,
     });
 
     const steps = {
-        tutorial: {
+        testing: {
             canMovePrev: () => false,
             canMoveNext: () => true,
         },
@@ -25,30 +27,30 @@ export const useStateStore = defineStore('StateStore', () => {
             canMovePrev: () => true,
             canMoveNext: () => RecordStore.data.pronunciations.length > 0,
         },
-        record: {
+        studio: {
             canMovePrev: () => true,
             canMoveNext: () => RecordStore.data.statusCount.stashed > 0,
         },
-        publish: {
+        finish: {
             canMovePrev: () => true,
             canMoveNext: () => false,
         }
     };
 
     const prevStep = {
-        tutorial: 'tutorial',
-        speaker: 'tutorial',
+        testing: 'testing',
+        speaker: 'testing',
         queue: 'speaker',
-        record: 'queue',
-        publish: 'record'
+        studio: 'queue',
+        finish: 'studio'
     };
 
     const nextStep = {
-        tutorial: 'speaker',
+        testing: 'speaker',
         speaker: 'queue',
-        queue: 'record',
-        record: 'publish',
-        publish: 'queue'
+        queue: 'studio',
+        studio: 'finish',
+        finish: 'queue'
     };
 
     const prevDisabled = computed(() => data.isFrozen);
@@ -60,9 +62,7 @@ export const useStateStore = defineStore('StateStore', () => {
     });
 
     const showRetry = computed(() => {
-        return (
-            data.step === 'record' || data.step === 'publish'
-        ) && RecordStore.data.statusCount.error > 0;
+        return data.step === 'studio' && RecordStore.data.statusCount.error > 0;
     });
 
     const hasPendingRequests = computed(() => {

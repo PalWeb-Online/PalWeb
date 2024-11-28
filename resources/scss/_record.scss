@@ -402,8 +402,7 @@ body.mw-special-RecordWizard #contentHeading {
 }
 
 /* STUDIO */
-#mwe-rw-studio .wizard-section-container,
-#mwe-rw-publish .wizard-section-container {
+#rw-studio .wizard-section-container {
     height: 48rem;
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -415,7 +414,7 @@ body.mw-special-RecordWizard #contentHeading {
 
     section:last-child {
         display: grid;
-        grid-template-rows: auto min-content;
+        grid-template-rows: auto min-content min-content;
     }
 
     @media screen and (max-width: 799px) {
@@ -434,6 +433,226 @@ body.mw-special-RecordWizard #contentHeading {
             width: 100%;
         }
     }
+}
+
+.mwe-rw-core {
+    display: grid;
+    grid-template-rows: auto min-content;
+    gap: 1.6rem;
+    padding: 3.2rem;
+    background: $accent-yellow-pastel;
+
+    & > audio {
+        border-radius: 3.2rem;
+        height: 3.2rem;
+        width: 100%;
+    }
+
+    .mwe-rw-itembox {
+        border-radius: 1.6rem;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.6rem;
+        gap: 1.6rem;
+
+        .mwe-rw-item {
+            flex-grow: 1;
+            text-align: center;
+
+            & > div:nth-child(1) {
+                font-size: 3.2rem;
+                font-family: $ar_bodyFont;
+                font-weight: 700;
+            }
+
+            & > div:nth-child(2) {
+                font-size: 2.0rem;
+            }
+        }
+
+        .arrow {
+            cursor: pointer;
+            width: 3.2rem;
+        }
+    }
+
+    #mwe-rws-skip {
+        .oo-ui-labelElement-label {
+            color: #a2a9b1;
+            font-family: HelveticaNeue;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .oo-ui-buttonElement-button {
+            height: 32px;
+            padding-top: 0.4em;
+
+            padding-right: 28px;
+            padding-left: 0.85714286em;
+        }
+
+        .oo-ui-iconElement-icon {
+            height: 10px;
+            width: 10px;
+            top: 6px;
+            min-width: unset;
+            filter: invert(76%) brightness(75%) contrast(87%); /* ~ #a2a9b1 */
+
+            left: unset; /* flip standard positionning of the icon */
+            right: 10px;
+        }
+    }
+}
+
+.rw-actions {
+    &.disabled {
+        background: $accent-yellow-pastel;
+
+        & > * {
+            visibility: hidden;
+        }
+    }
+
+    .rw-actions-title {
+        background: $purple-pastel;
+        color: $purple-primary;
+        font-family: $headFont;
+        font-size: 1.6rem;
+        font-weight: 700;
+        padding: 0.6rem 1.2rem 0.4rem;
+    }
+
+    .rw-actions-content {
+        display: flex;
+        align-items: center;
+        padding: 1.6rem;
+        gap: 3.2rem;
+        height: 6.4rem;
+
+        font-size: 1.4rem;
+        font-family: $headFont;
+        color: $purple-primary;
+
+        .rw-actions-bar {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 0.8rem;
+        }
+
+        .rw-actions-counter {
+            font-size: 2.0rem;
+            font-weight: 700;
+            padding-block-start: 0.2rem;
+            white-space: nowrap;
+        }
+    }
+
+    .wizard-progress-container {
+        width: 100%;
+        background-color: $accent-yellow-pastel;
+        border-radius: 3.2rem;
+        height: 1.6rem;
+        overflow: hidden;
+    }
+
+    .wizard-progress-bar {
+        height: 100%;
+        background: $purple-primary;
+        transition: width 0.3s ease;
+
+        &.complete {
+            background: $accent-yellow;
+        }
+    }
+
+    .toggle-record,
+    .is-recording,
+    .audio,
+    .upload {
+        cursor: pointer;
+        width: 3.2rem;
+    }
+
+    .trash {
+        cursor: pointer;
+        width: 2.4rem;
+    }
+}
+
+#mwe-rws-record {
+    margin-right: 18px;
+}
+
+#mwe-rws-record > .oo-ui-buttonElement-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+}
+
+#mwe-rws-record .oo-ui-iconElement-icon {
+    width: 35px;
+    left: 17px;
+    margin-left: 0;
+}
+
+.mwe-rws-audio .oo-ui-icon-ll-record {
+    background-image: url('../icons/mic-white.svg')
+}
+
+.mwe-rws-audio.mwe-rws-recording .oo-ui-icon-ll-record {
+    background-image: url('../icons/stop.svg')
+}
+
+#wizard-vumeter {
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+    list-style: none;
+    gap: 0.8rem;
+    padding: 0;
+
+    li {
+        width: 0.8rem;
+        padding-block: 1.2rem;
+        border-radius: 0.4rem;
+        background: $accent-yellow-pastel;
+    }
+
+    &.recording li {
+        background: $purple-pastel;
+
+        &.active {
+            background: $purple-primary;
+        }
+    }
+
+    &.saturated li,
+    &.saturated li.active {
+        background: red;
+    }
+}
+
+#mwe-rws-record-indicator {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+
+.mwe-rw-othercounter {
+    display: inline-block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    font-size: 17px;
+    width: 120px; /* hack to avoid text going back to a new line in most cases */
+}
+
+.mwe-rw-othercounter i {
+    display: inline-block;
 }
 
 .mwe-rw-content-title .oo-ui-numberInputWidget-buttoned > .oo-ui-labelElement-label {
@@ -533,6 +752,7 @@ body.mw-special-RecordWizard #contentHeading {
     list-style: none;
 
     li {
+        user-select: none;
         padding: 0.8rem 3.2rem;
         border-radius: 0.8rem;
         font-family: $ar_bodyFont;
@@ -671,204 +891,6 @@ body.mw-special-RecordWizard #contentHeading {
 
 #mwe-rws-info-audio i {
     background-image: url('../icons/mic-blue.svg');
-}
-
-.mwe-rw-core {
-    display: grid;
-    grid-template-rows: auto min-content;
-    gap: 1.6rem;
-    padding: 3.2rem;
-    background: $accent-yellow-pastel;
-
-    & > audio {
-        border-radius: 3.2rem;
-        height: 3.2rem;
-        width: 100%;
-    }
-
-    .mwe-rw-itembox {
-        border-radius: 1.6rem;
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 1.6rem;
-        gap: 1.6rem;
-
-        .mwe-rw-item {
-            flex-grow: 1;
-            text-align: center;
-
-            & > div:nth-child(1) {
-                font-size: 3.2rem;
-                font-family: $ar_bodyFont;
-                font-weight: 700;
-            }
-
-            & > div:nth-child(2) {
-                font-size: 2.0rem;
-            }
-        }
-
-        .arrow {
-            cursor: pointer;
-            width: 3.2rem;
-        }
-    }
-
-    .wizard-item-options {
-        display: flex;
-        gap: 1.6rem;
-        justify-content: center;
-
-        .trash, .skip {
-            cursor: pointer;
-            width: 2.4rem;
-        }
-
-        .audio {
-            cursor: pointer;
-            width: 3.2rem;
-        }
-    }
-
-    #mwe-rws-skip {
-        .oo-ui-labelElement-label {
-            color: #a2a9b1;
-            font-family: HelveticaNeue;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .oo-ui-buttonElement-button {
-            height: 32px;
-            padding-top: 0.4em;
-
-            padding-right: 28px;
-            padding-left: 0.85714286em;
-        }
-
-        .oo-ui-iconElement-icon {
-            height: 10px;
-            width: 10px;
-            top: 6px;
-            min-width: unset;
-            filter: invert(76%) brightness(75%) contrast(87%); /* ~ #a2a9b1 */
-
-            left: unset; /* flip standard positionning of the icon */
-            right: 10px;
-        }
-    }
-}
-
-.mwe-rw-actions {
-    display: flex;
-    align-items: center;
-    border-top: 1px solid $accent-yellow;
-    padding: 3.2rem;
-    gap: 1.6rem;
-
-    .toggle-record,
-    .is-recording,
-    .redo-record {
-        cursor: pointer;
-        width: 3.2rem;
-    }
-}
-
-#mwe-rws-record {
-    margin-right: 18px;
-}
-
-#mwe-rws-record > .oo-ui-buttonElement-button {
-    width: 70px;
-    height: 70px;
-    border-radius: 100%;
-}
-
-#mwe-rws-record .oo-ui-iconElement-icon {
-    width: 35px;
-    left: 17px;
-    margin-left: 0;
-}
-
-.mwe-rws-audio .oo-ui-icon-ll-record {
-    background-image: url('../icons/mic-white.svg')
-}
-
-.mwe-rws-audio.mwe-rws-recording .oo-ui-icon-ll-record {
-    background-image: url('../icons/stop.svg')
-}
-
-#wizard-vumeter {
-    display: flex;
-    flex-flow: row nowrap;
-    flex-grow: 1;
-    list-style: none;
-    gap: 0.8rem;
-    padding: 0;
-
-    li {
-        width: 0.8rem;
-        padding-block: 1.2rem;
-        border-radius: 0.4rem;
-        background: $accent-yellow-pastel;
-    }
-
-    &.recording li {
-        background: $purple-pastel;
-
-        &.active {
-            background: $purple-primary;
-        }
-    }
-
-    &.saturated li,
-    &.saturated li.active {
-        background: red;
-    }
-}
-
-.wizard-record-counter {
-    font-family: $headFont;
-    font-size: 2.0rem;
-    font-weight: 700;
-    color: $purple-primary;
-    padding-block-start: 0.2rem;
-    white-space: nowrap;
-}
-
-.wizard-progress-container {
-    width: 100%;
-    background-color: $purple-pastel;
-    border-radius: 3.2rem;
-    height: 1.6rem;
-    overflow: hidden;
-}
-
-.wizard-progress-bar {
-    height: 100%;
-    background-color: $purple-primary;
-    transition: width 0.3s ease;
-}
-
-#mwe-rws-record-indicator {
-    color: #ff0000;
-    font-weight: bold;
-}
-
-
-.mwe-rw-othercounter {
-    display: inline-block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    font-size: 17px;
-    width: 120px; /* hack to avoid text going back to a new line in most cases */
-}
-
-.mwe-rw-othercounter i {
-    display: inline-block;
 }
 
 #mwe-rw-tutorial .wizard-section-container {

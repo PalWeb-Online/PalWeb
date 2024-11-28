@@ -3,7 +3,6 @@ import {computed} from 'vue';
 
 const props = defineProps({
     value: {type: Number, default: 0},
-    disabled: {type: Boolean, default: false}
 });
 
 const progressPercentage = computed(() => {
@@ -13,6 +12,6 @@ const progressPercentage = computed(() => {
 
 <template>
     <div class="wizard-progress-container">
-        <div class="wizard-progress-bar" :style="{ width: `${progressPercentage}%` }"></div>
+        <div :class="{ 'wizard-progress-bar': true, 'complete': progressPercentage === 100 }" :style="{ width: `${progressPercentage}%` }"></div>
     </div>
 </template>
