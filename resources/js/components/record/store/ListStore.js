@@ -5,7 +5,6 @@ import {useRecordStore} from './RecordStore';
 export const useListStore = defineStore('ListStore', () => {
     const RecordStore = useRecordStore();
 
-    const pronunciations = ref(RecordStore.data.pronunciations);
     const selected = ref(0);
     const autoScroll = ref(true);
     const selectedArray = reactive([]);
@@ -18,12 +17,12 @@ export const useListStore = defineStore('ListStore', () => {
 
     const initSelection = () => {
         selectedArray.splice(0, selectedArray.length);
-        for (let i = 0; i < pronunciations.value.length; i++) {
+        for (let i = 0; i < RecordStore.data.pronunciations.length; i++) {
             selectedArray.push(false);
         }
 
-        for (let i = 0; i < pronunciations.value.length; i++) {
-            if (isSelectable(pronunciations.value[i])) {
+        for (let i = 0; i < RecordStore.data.pronunciations.length; i++) {
+            if (isSelectable(RecordStore.data.pronunciations[i])) {
                 selectWord(i);
                 break;
             }
@@ -40,7 +39,7 @@ export const useListStore = defineStore('ListStore', () => {
 
     const moveBackward = () => {
         for (let i = selected.value - 1; i >= 0; i--) {
-            if (isSelectable(pronunciations.value[i])) {
+            if (isSelectable(RecordStore.data.pronunciations[i])) {
                 selectWord(i);
                 return true;
             }
@@ -49,8 +48,8 @@ export const useListStore = defineStore('ListStore', () => {
     };
 
     const moveForward = () => {
-        for (let i = selected.value + 1; i < pronunciations.value.length; i++) {
-            if (isSelectable(pronunciations.value[i])) {
+        for (let i = selected.value + 1; i < RecordStore.data.pronunciations.length; i++) {
+            if (isSelectable(RecordStore.data.pronunciations[i])) {
                 selectWord(i);
                 return true;
             }
@@ -58,13 +57,14 @@ export const useListStore = defineStore('ListStore', () => {
         return false;
     };
 
-    // Replace these with actual logic as needed
-    const isSelectable = () => true;
+    const isSelectable = (element) => {
+        return !['up', 'ready', 'stashing'].includes(RecordStore.data.status[element]);
+    }
+
     const beforeSelectionChange = () => true;
     const afterSelectionChange = () => true;
 
     return {
-        pronunciations,
         selected,
         selectedArray,
         autoScroll,

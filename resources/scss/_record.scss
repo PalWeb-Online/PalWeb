@@ -716,9 +716,20 @@ body.mw-special-RecordWizard #contentHeading {
         }
     }
 
-    .trash {
-        cursor: pointer;
-        width: 2.4rem;
+    .wizard-item-options {
+        display: flex;
+        gap: 1.6rem;
+        justify-content: center;
+
+        .trash, .skip {
+            cursor: pointer;
+            width: 2.4rem;
+        }
+
+        .audio {
+            cursor: pointer;
+            width: 3.2rem;
+        }
     }
 
     #mwe-rws-skip {
@@ -757,7 +768,10 @@ body.mw-special-RecordWizard #contentHeading {
     padding: 3.2rem;
     gap: 1.6rem;
 
-    .toggle-record, .is-recording {
+    .toggle-record,
+    .is-recording,
+    .redo-record {
+        cursor: pointer;
         width: 3.2rem;
     }
 }
