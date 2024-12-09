@@ -17,4 +17,3 @@ yarn-error.log
 /.idea
 /.vscode
 /database/backup.sql
-auth.json
