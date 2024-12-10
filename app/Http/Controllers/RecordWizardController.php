@@ -22,40 +22,6 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function getAutoItems(Request $request)
-    {
-        $speakerId = $request->input('speaker_id');
-        $dialectId = $request->input('dialect_id');
-        $listed = $request->input('listedPronunciations', []);
-        $listedIds = collect($listed)->pluck('id');
-        $highestId = $listedIds->max();
-
-        $query = Pronunciation::where('dialect_id', $dialectId)
-            ->whereNotIn('id', $listedIds)
-            ->whereDoesntHave('audios', function ($query) use ($speakerId) {
-                $query->where('speaker_id', $speakerId);
-            });
-
-        if ($highestId) {
-            $query->where('id', '>', $highestId);
-        }
-
-        $query->withCount('audios')
-            ->orderBy('audios_count')
-            ->orderBy('id');
-
-        $limit = max(0, 100 - count($listed));
-        $pronunciations = $query->take($limit)->get()->map(function ($pronunciation) {
-            return array_merge($pronunciation->toArray(), [
-                'term' => $pronunciation->term->term,
-            ]);
-        });
-
-        return response()->json([
-            'pronunciations' => $pronunciations,
-        ]);
-    }
-
     public function getSavedDecks(Request $request)
     {
         try {
@@ -101,12 +67,46 @@ class RecordWizardController extends Controller
 
             return response()->json([
                 'deck' => $deck,
-                'pronunciations' => $pronunciations
+                'items' => $pronunciations
             ]);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch deck items.'], 500);
         }
+    }
+
+    public function getAutoItems(Request $request)
+    {
+        $speakerId = $request->input('speaker_id');
+        $dialectId = $request->input('dialect_id');
+        $queued = $request->input('queuedItems', []);
+        $queuedIds = collect($queued)->pluck('id');
+        $highestId = $queuedIds->max();
+
+        $query = Pronunciation::where('dialect_id', $dialectId)
+            ->whereNotIn('id', $queuedIds)
+            ->whereDoesntHave('audios', function ($query) use ($speakerId) {
+                $query->where('speaker_id', $speakerId);
+            });
+
+        if ($highestId) {
+            $query->where('id', '>', $highestId);
+        }
+
+        $query->withCount('audios')
+            ->orderBy('audios_count')
+            ->orderBy('id');
+
+        $limit = max(0, 100 - count($queued));
+        $pronunciations = $query->take($limit)->get()->map(function ($pronunciation) {
+            return array_merge($pronunciation->toArray(), [
+                'term' => $pronunciation->term->term,
+            ]);
+        });
+
+        return response()->json([
+            'items' => $pronunciations,
+        ]);
     }
 
     public function uploadRecords(Request $request)

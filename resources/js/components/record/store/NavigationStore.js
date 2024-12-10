@@ -10,18 +10,13 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     const SpeakerStore = useSpeakerStore();
     const RecordStore = useRecordStore();
 
-    const prev = async () => {
+    const back = async () => {
         const currentStep = StateStore.data.step;
 
-        if (currentStep === 'queue') {
-            const flushed = await QueueStore.flushQueue();
-            if (!flushed) return;
-        }
-
-        const process = StateStore.steps[currentStep]?.canMovePrev();
+        const process = StateStore.steps[currentStep]?.canMoveBack();
 
         if (process === true) {
-            StateStore.movePrev();
+            StateStore.moveBack();
 
         } else if (process === false) {
             return;
@@ -29,26 +24,25 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         } else {
             StateStore.freeze();
             process
-                .then(() => StateStore.movePrev())
+                .then(() => StateStore.moveBack())
                 .finally(() => StateStore.unfreeze());
         }
     };
 
     const next = async () => {
         const currentStep = StateStore.data.step;
-
-        if (currentStep === 'speaker') {
-            const saved = await SpeakerStore.saveSpeaker();
-            if (!saved) return;
-        }
-
-        if (currentStep === 'studio' && RecordStore.data.statusCount.stashed > 0) {
-            if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Review step & return to the Studio step to continue, but if you exit the Record Wizard without uploading your stashed recordings, they will be deleted.')) return;
-        }
-
         const process = StateStore.steps[currentStep]?.canMoveNext();
 
         if (process === true) {
+            if (currentStep === 'speaker') {
+                const saved = await SpeakerStore.saveSpeaker();
+                if (!saved) return;
+            }
+
+            if (currentStep === 'record' && RecordStore.data.statusCount.stashed > 0) {
+                if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Record Wizard without uploading your stashed recordings, they will be deleted.')) return;
+            }
+
             StateStore.moveNext();
 
         } else if (process === false || process === undefined || process === null) {
@@ -81,7 +75,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     };
 
     return {
-        prev,
+        back,
         next,
         retry,
     };

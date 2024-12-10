@@ -1,9 +1,11 @@
 import {defineStore} from 'pinia';
 import {reactive, ref, watch} from 'vue';
+import {useStateStore} from "./StateStore.js";
 import {useSpeakerStore} from "./SpeakerStore.js";
 import {useRecordStore} from './RecordStore';
 
 export const useQueueStore = defineStore('QueueStore', () => {
+    const StateStore = useStateStore();
     const SpeakerStore = useSpeakerStore();
     const RecordStore = useRecordStore();
 
@@ -34,22 +36,20 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
         for (let i = 0; i < data.items.length; i++) {
             if (isSelectable(data.items[i])) {
-                selectWord(i);
+                selectItem(i);
                 break;
             }
         }
     };
 
-    const selectWord = (index) => {
+    const selectItem = (index) => {
         selectedArray[selected.value] = false;
         selected.value = index;
         selectedArray[index] = 'selected';
 
-        const selectedPronunciation = data.items[index];
-        if (RecordStore.data.status[selectedPronunciation.id] === 'stashed') {
-            // TODO: If you start recording & don't stop the recorder, then click on an item with a previously stashed audio, you will still be recording & will thus overwrite the stashed audio.
-            //  If the recording has already been stashed, the recorder should be stopped. The problem is that the recorder object is in the Studio page; I don't think it is accessible here.
-            //  I wish I could hit the `cancelRecord()` method in the Studio page from here.
+        const newSelected = data.items[index];
+        if (RecordStore.data.status[newSelected.id] === 'stashed') {
+            if (StateStore.data.isRecording) RecordStore.stopRecording();
             RecordStore.playRecord();
         }
     };
@@ -57,7 +57,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const moveBackward = () => {
         for (let i = selected.value - 1; i >= 0; i--) {
             if (isSelectable(data.items[i])) {
-                selectWord(i);
+                selectItem(i);
                 return true;
             }
         }
@@ -67,7 +67,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const moveForward = () => {
         for (let i = selected.value + 1; i < data.items.length; i++) {
             if (isSelectable(data.items[i])) {
-                selectWord(i);
+                selectItem(i);
                 return true;
             }
         }
@@ -92,7 +92,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
         }
     };
 
-    const fetchDeck = async (deckId) => {
+    const fetchDeckItems = async (deckId) => {
         try {
             const response = await axios.get(`/record/decks/${deckId}`);
             if (response.data) {
@@ -104,16 +104,16 @@ export const useQueueStore = defineStore('QueueStore', () => {
         }
     };
 
-    const fetchAuto = async () => {
+    const fetchAutoItems = async () => {
         try {
             const response = await axios.post('/record/pronunciations', {
                 speaker_id: SpeakerStore.data.speaker.id,
                 dialect_id: SpeakerStore.data.speaker.dialect_id,
-                listedPronunciations: data.items,
+                queuedItems: data.items,
             });
 
             if (response.data) {
-                data.items.push(...response.data.pronunciations);
+                data.items.push(...response.data.items);
                 data.queue.name = 'Auto Queue';
             }
         } catch (error) {
@@ -137,14 +137,14 @@ export const useQueueStore = defineStore('QueueStore', () => {
     };
 
     const flushQueue = async () => {
-        // TODO: this should also clear the stash. e.g. try recording, then moving back to Speaker, then back to Studio.
-
-        if (data.items.length === 0 || confirm('Doing this will clear your Queue. Proceed?')) {
+        if (data.items.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
             data.items = [];
             data.queue = {
                 type: '',
                 name: ''
             };
+
+            RecordStore.clearStash();
             return true;
         }
         return false;
@@ -156,13 +156,13 @@ export const useQueueStore = defineStore('QueueStore', () => {
         selectedArray,
         autoScroll,
         initSelection,
-        selectWord,
+        selectItem,
         moveBackward,
         moveForward,
         isSelectable,
         fetchSavedDecks,
-        fetchDeck,
-        fetchAuto,
+        fetchDeckItems,
+        fetchAutoItems,
         removeItem,
         flushQueue,
     };

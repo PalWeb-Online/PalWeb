@@ -39,15 +39,15 @@ onMounted(() => {
 
 <template>
     <div class="wizard-page-title">
-        <h2>Review</h2>
+        <h2>Check</h2>
     </div>
     <div class="tip">
         <div class="material-symbols-rounded">info</div>
         <div class="tip-content">
-            <p>Review the Audios you have just published. If you'd like to continue recording, simply return to the
-                Queue step & another 100 Pronunciations will be added to the recording queue. However, the maximum
-                number of Audios that may be uploaded in one session is 500; simply refresh the Record Wizard to
-                continue past that.</p>
+            <p>Check the Audios you have just published. Only the Audios published in this session of the Record Wizard
+                are shown here; a full list of all the Audios you have ever published is available on your Profile. If
+                you would like to continue recording more, simply return to the <b>Queue</b> step to add more items —
+                rinse & repeat!</p>
         </div>
     </div>
 

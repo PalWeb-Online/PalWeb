@@ -1,8 +1,9 @@
 import {defineStore} from 'pinia';
-import {reactive} from 'vue';
+import {computed, reactive, ref, watch} from 'vue';
 import axios from 'axios';
 import Record from "../../../utils/Record.js";
 import RequestQueue from "../../../utils/RequestQueue.js";
+import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 import {useStateStore} from "./StateStore.js";
 import {useSpeakerStore} from "./SpeakerStore.js";
 import {useQueueStore} from "./QueueStore.js";
@@ -25,10 +26,125 @@ export const useRecordStore = defineStore('RecordStore', () => {
         },
     });
 
+    let recorder = null;
+    const vumeter = ref(0);
+    const saturated = ref(false);
     const StateStore = useStateStore();
     const QueueStore = useQueueStore();
     const SpeakerStore = useSpeakerStore();
     const requestQueue = new RequestQueue();
+
+    const openRecorder = (audioParams) => {
+        recorder = new LinguaRecorder({
+            autoStart: true,
+            autoStop: true,
+            startThreshold: audioParams.startThreshold,
+            stopThreshold: audioParams.stopThreshold,
+            saturationThreshold: audioParams.saturationThreshold,
+            stopDuration: audioParams.stopDuration,
+            marginBefore: audioParams.marginBefore,
+            marginAfter: audioParams.marginAfter,
+        });
+
+        recorder.on('ready', () => {
+            console.log('Recorder is ready to go!');
+        });
+
+        recorder.on('readyFail', showError);
+
+        recorder.on('recording', (samples) => {
+            console.log('Recorder is recording!');
+            vumeter.value = Math.max(...samples) * 1000;
+        });
+
+        recorder.on('stopped', (record) => {
+            onDataAvailable(record);
+        });
+
+        recorder.on('saturated', () => {
+            saturated.value = true;
+        });
+    };
+
+    const closeRecorder = () => {
+        if (recorder) {
+            // TODO: is all of this necessary? not, apparently?
+            recorder.off('ready');
+            recorder.off('readyFail');
+            recorder.off('recording');
+            recorder.off('saturated');
+            recorder.off('stopped');
+            recorder.stop(true);
+
+            recorder.close();
+            recorder = null;
+
+            console.log('Recorder has been shut off!');
+        }
+    };
+
+    const startRecording = () => {
+        if (!recorder) return;
+        StateStore.data.isRecording = true;
+        // saturated.value = false;
+        recorder.start();
+        console.log('Recorder has started recording!');
+    };
+
+    const stopRecording = () => {
+        if (!recorder) return;
+        StateStore.data.isRecording = false;
+        vumeter.value = 0;
+        saturated.value = false;
+        recorder.cancel();
+        console.log('Recorder has stopped recording!');
+    };
+
+    const toggleRecording = () => {
+        if (StateStore.data.isRecording) {
+            stopRecording();
+        } else {
+            if (QueueStore.data.items[QueueStore.selected]) startRecording();
+        }
+    };
+
+    const showError = (error) => {
+        const errorMessageAssociation = {
+            AbortError: 'Technical issue with the microphone.',
+            NotAllowedError: 'Microphone access was not allowed.',
+            NotFoundError: 'Microphone not found.',
+            NotReadableError: 'Technical issue with the microphone.',
+            OverconstrainedError: 'Microphone not found.',
+            SecurityError: 'Technical issue with the microphone.',
+        };
+
+        alert(errorMessageAssociation[error.name] || 'An unknown error occurred.');
+    };
+
+    const onDataAvailable = async (record) => {
+        const currentPronunciation = QueueStore.data.items[QueueStore.selected];
+
+        if (currentPronunciation) {
+            const blob = record.getBlob();
+
+            if (blob) {
+                try {
+                    await stashRecord(currentPronunciation, blob);
+
+                    if (data.status[currentPronunciation.id] === 'stashed') {
+                        stopRecording();
+                        QueueStore.moveForward();
+
+                        if (data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed') startRecording();
+                    }
+
+                } catch (error) {
+                    console.error('Error during stashing:', error);
+                    stopRecording();
+                }
+            }
+        }
+    };
 
     const setStatus = (pronunciation, status) => {
         if (!data.status[pronunciation]) {
@@ -148,7 +264,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
             //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
             //     const nextRecordId = recordIds[nextIndex];
             //     const nextPronunciationIndex = QueueStore.data.items.findIndex(p => p.id === Number(nextRecordId));
-            //     QueueStore.selectWord(nextPronunciationIndex);
+            //     QueueStore.selectItem(nextPronunciationIndex);
             //
             // } else {
             //     console.log("No more records available to select.");
@@ -164,6 +280,14 @@ export const useRecordStore = defineStore('RecordStore', () => {
         fetch(`/api/record/clear/${SpeakerStore.data.speaker.id}`, {method: 'DELETE'})
             .then(response => {
                 if (response.ok) {
+                    Object.keys(data.status).forEach(key => {
+                        if (data.status[key] === 'stashed') {
+                            delete data.records[key];
+                            delete data.status[key];
+                            delete data.errors[key];
+                            data.statusCount.stashed--;
+                        }
+                    });
                     console.log('Stash directory cleaned up successfully.');
 
                 } else {
@@ -174,7 +298,6 @@ export const useRecordStore = defineStore('RecordStore', () => {
             .catch(error => console.error('Error during stash cleanup:', error));
     };
 
-    // TODO: Stop recording before uploading.
     const uploadRecords = async () => {
         if (confirm('Are you sure you want to upload all of your recordings?')) {
             StateStore.data.isUploading = true;
@@ -190,7 +313,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     );
 
                     if (pronunciationIndex !== -1) {
-                        QueueStore.selectWord(pronunciationIndex);
+                        QueueStore.selectItem(pronunciationIndex);
                     }
 
                     setStatus(id, 'uploading');
@@ -224,6 +347,13 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
     return {
         data,
+        vumeter,
+        saturated,
+        openRecorder,
+        closeRecorder,
+        toggleRecording,
+        startRecording,
+        stopRecording,
         setStatus,
         setError,
         stashRecord,

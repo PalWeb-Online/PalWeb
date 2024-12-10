@@ -5,16 +5,15 @@ import {useRecordStore} from "./store/RecordStore.js";
 import {useNavigationStore} from './store/NavigationStore';
 import Speaker from './pages/Speaker.vue';
 import Queue from './pages/Queue.vue';
-import Studio from './pages/Studio.vue';
-import Review from './pages/Review.vue';
+import Record from './pages/Record.vue';
+import Check from './pages/Check.vue';
 import WizardButton from './ui/WizardButton.vue';
 import WizardDialog from "./ui/WizardDialog.vue";
-import Record from "../../utils/Record.js";
 
 const StateStore = useStateStore();
 const RecordStore = useRecordStore();
 const {
-    prev,
+    back,
     next,
     retry,
 } = useNavigationStore();
@@ -51,13 +50,17 @@ onBeforeUnmount(() => {
         <h1>Record Wizard</h1>
 
         <div id="rw-nav">
-            <img :class="StateStore.prevDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"
-                 @click="prev"/>
+            <img :class="StateStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"
+                 @click="back"/>
             <div class="rw-nav-steps">
-                <div :class="{ active: StateStore.data.step === 'speaker' }">Speaker</div>
-                <div :class="{ active: StateStore.data.step === 'queue' }">Queue</div>
-                <div :class="{ active: StateStore.data.step === 'studio' }">Studio</div>
-                <div :class="{ active: StateStore.data.step === 'review' }">Review</div>
+                <div v-if="StateStore.data.step === 'speaker'" :class="{ active: StateStore.data.step === 'speaker' }">
+                    Speaker
+                </div>
+                <template v-else>
+                    <div :class="{ active: StateStore.data.step === 'queue' }">Queue</div>
+                    <div :class="{ active: StateStore.data.step === 'record' }">Record</div>
+                    <div :class="{ active: StateStore.data.step === 'check' }">Check</div>
+                </template>
             </div>
             <img :class="StateStore.nextDisabled ? 'disabled' : ''" alt="Next" src="/img/finger-next.svg"
                  @click="next"/>
@@ -69,16 +72,6 @@ onBeforeUnmount(() => {
                 @click="retry"
                 v-show="StateStore.showRetry"
             />
-
-            <!--                TODO: Return from Review to Queue. -->
-            <!--                <WizardButton-->
-            <!--                    id="mwe-rw-restart"-->
-            <!--                    icon="next"-->
-            <!--                    label="Restart"-->
-            <!--                    flags="progressive primary"-->
-            <!--                    @click="next"-->
-            <!--                    v-show="StateStore.data.isUploading === true && !StateStore.hasPendingRequests"-->
-            <!--                />-->
         </div>
     </div>
 
@@ -96,11 +89,11 @@ onBeforeUnmount(() => {
                 <div id="rw-queue" v-if="StateStore.data.step === 'queue'">
                     <Queue/>
                 </div>
-                <div id="rw-studio" v-if="StateStore.data.step === 'studio'">
-                    <Studio/>
+                <div id="rw-studio" v-if="StateStore.data.step === 'record'">
+                    <Record/>
                 </div>
-                <div id="rw-review" v-if="StateStore.data.step === 'review'">
-                    <Review/>
+                <div id="rw-review" v-if="StateStore.data.step === 'check'">
+                    <Check/>
                 </div>
             </div>
 

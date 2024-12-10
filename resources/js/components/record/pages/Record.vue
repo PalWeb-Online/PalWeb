@@ -1,19 +1,18 @@
 <script setup>
-import {onMounted, onUnmounted, reactive, ref, watch} from 'vue';
+import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import {useStateStore} from "../store/StateStore.js";
 import {useRecordStore} from '../store/RecordStore';
 import {useQueueStore} from '../store/QueueStore.js';
+import Record from "../../../utils/Record.js";
+import WizardDialog from "../ui/WizardDialog.vue";
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
-import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 import WizardProgressBar from "../ui/WizardProgressBar.vue";
 
 const StateStore = useStateStore();
 const RecordStore = useRecordStore();
 const QueueStore = useQueueStore();
 
-let recorder;
-const vumeter = ref(0);
-const saturated = ref(false);
+const dialogLimitReached = ref(null);
 
 const audioParams = reactive({
     startThreshold: 0.1,
@@ -24,132 +23,38 @@ const audioParams = reactive({
     marginAfter: 0.25,
 });
 
-const showError = (error) => {
-    const errorMessageAssociation = {
-        AbortError: 'Technical issue with the microphone.',
-        NotAllowedError: 'Microphone access was not allowed.',
-        NotFoundError: 'Microphone not found.',
-        NotReadableError: 'Technical issue with the microphone.',
-        OverconstrainedError: 'Microphone not found.',
-        SecurityError: 'Technical issue with the microphone.',
-    };
-
-    alert(errorMessageAssociation[error.name] || 'An unknown error occurred.');
-};
-
-const toggleRecord = () => {
-    if (StateStore.data.isRecording) {
-        cancelRecord();
-    } else {
-        if (QueueStore.data.items[QueueStore.selected]) startRecord();
-    }
-};
-
-const startRecord = () => {
-    StateStore.data.isRecording = true;
-    saturated.value = false;
-
-    recorder.start();
-};
-
-const cancelRecord = () => {
-    StateStore.data.isRecording = false;
-    saturated.value = false;
-    vumeter.value = 0;
-
-    recorder.cancel();
-};
-
-const onDataAvailable = async (record) => {
-    const currentPronunciation = QueueStore.data.items[QueueStore.selected];
-    if (currentPronunciation) {
-        const blob = record.getBlob();
-
-        if (blob) {
-            try {
-                await RecordStore.stashRecord(currentPronunciation, blob);
-
-                if (RecordStore.data.status[currentPronunciation.id] === 'stashed') {
-                    cancelRecord();
-                    QueueStore.moveForward();
-
-                    if (RecordStore.data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed') startRecord();
-                }
-
-            } catch (error) {
-                console.error('Error during stashing:', error);
-                cancelRecord();
-            }
-
-        } else {
-            console.error('No audio blob available to stash.');
-            cancelRecord();
-        }
-    } else {
-        console.warn('No pronunciation selected for stashing.');
-    }
-};
-
-const onSaturate = () => {
-    RecordStore.saturated = true;
-};
-
 onMounted(() => {
-    recorder = new LinguaRecorder({
-        autoStart: true,
-        autoStop: true,
-        startThreshold: audioParams.startThreshold,
-        stopThreshold: audioParams.stopThreshold,
-        saturationThreshold: audioParams.saturationThreshold,
-        stopDuration: audioParams.stopDuration,
-        marginBefore: audioParams.marginBefore,
-        marginAfter: audioParams.marginAfter,
-    });
-
-    recorder.on('ready', () => {
-        console.log('Recorder is ready!');
-    });
-
-    recorder.on('readyFail', showError);
-
-    recorder.on('recording', (samples) => {
-        vumeter.value = Math.max(...samples) * 1000;
-    });
-
-    recorder.on('saturated', onSaturate);
-
-    recorder.on('stopped', (record) => {
-        console.log('Recorder has been stopped!');
-
-        onDataAvailable(record);
-    });
-
+    RecordStore.openRecorder(audioParams);
     QueueStore.initSelection();
-
-    return () => {
-        if (recorder) {
-            recorder.close();
-        }
-    };
 });
 
 onUnmounted(() => {
-    if (recorder) {
-        recorder.off('ready');
-        recorder.off('readyFail');
-        recorder.off('recording');
-        recorder.off('saturated');
-        recorder.off('stopped');
-        recorder.stop(true);
-        recorder.close();
-    }
+    RecordStore.closeRecorder();
 });
 
-watch(audioParams, (newParams) => {
-    if (recorder) {
-        recorder.setConfig(newParams);
+const canRecord = computed(() => {
+    return RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done < 500;
+});
+
+watch(
+    () => RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done,
+    (newTotal) => {
+        if (newTotal >= 500) {
+            RecordStore.stopRecording();
+            RecordStore.closeRecorder();
+            dialogLimitReached.value?.openDialog();
+
+        } else if (newTotal < 2) {
+            RecordStore.openRecorder(audioParams);
+        }
     }
-}, {deep: true});
+);
+
+// watch(audioParams, (newParams) => {
+//     if (recorder) {
+//         recorder.setConfig(newParams);
+//     }
+// }, {deep: true});
 </script>
 
 <template>
@@ -159,7 +64,10 @@ watch(audioParams, (newParams) => {
 
     <div class="wizard-section-container mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
         <section>
-            <div class="rw-queue-name">{{ QueueStore.data.queue.name }}</div>
+            <div class="rw-queue-name">{{
+                    QueueStore.data.queue.name !== '' ? QueueStore.data.queue.name : 'Queue'
+                }}
+            </div>
             <ul class="mwe-rw-list">
                 <li
                     v-for="(pronunciation, index) in QueueStore.data.items"
@@ -168,8 +76,8 @@ watch(audioParams, (newParams) => {
                         'selected': QueueStore.selected === index,
                         [`${RecordStore.data.status[pronunciation.id]}`]: true,
                         'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
-                        }"
-                    @click="QueueStore.selectWord(index)"
+                    }"
+                    @click="QueueStore.selectItem(index)"
                 >
                     {{ pronunciation.term }}
                 </li>
@@ -180,7 +88,10 @@ watch(audioParams, (newParams) => {
             <div class="mwe-rw-core">
                 <div class="mwe-rw-itembox">
                     <img
-                        class="arrow"
+                        :class="{
+                            'arrow': true,
+                            'disabled': QueueStore.selected - 1 < 0
+                        }"
                         src="/img/reverse.svg"
                         alt="Back"
                         @click="QueueStore.moveBackward"
@@ -194,7 +105,10 @@ watch(audioParams, (newParams) => {
                         </div>
                     </div>
                     <img
-                        class="arrow"
+                        :class="{
+                            'arrow': true,
+                            'disabled': QueueStore.selected + 1 >= QueueStore.data.items.length
+                        }"
                         src="/img/play.svg"
                         alt="Forward"
                         @click="QueueStore.moveForward"
@@ -202,7 +116,7 @@ watch(audioParams, (newParams) => {
                 </div>
             </div>
 
-<!--           TODO: disable it if no word is selected -->
+            <!--           TODO: disable it if no word is selected -->
             <div :class="`rw-actions ${StateStore.data.isUploading && 'disabled'}`">
                 <div class="rw-actions-title">
                     Record
@@ -211,16 +125,18 @@ watch(audioParams, (newParams) => {
                     <div class="rw-actions-bar">
                         <template
                             v-if="RecordStore.data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed'">
-                            <img
-                                class="toggle-record"
-                                :src="`/img/${!StateStore.data.isRecording ? 'record' : 'stop'}.svg`"
-                                :alt="!StateStore.data.isRecording ? 'Record' : 'Stop'"
-                                @click="toggleRecord"
-                            />
-                            <WizardVUMeter id="wizard-vumeter"
-                                           :value="vumeter"
-                                           :class="{ 'saturated': saturated, 'recording': StateStore.data.isRecording }"
-                            />
+                            <template v-if="canRecord">
+                                <img
+                                    class="toggle-record"
+                                    :src="`/img/${!StateStore.data.isRecording ? 'record' : 'stop'}.svg`"
+                                    :alt="!StateStore.data.isRecording ? 'Record' : 'Stop'"
+                                    @click="RecordStore.toggleRecording"
+                                />
+                                <WizardVUMeter id="wizard-vumeter"
+                                               :value="RecordStore.vumeter"
+                                               :class="{ 'saturated': RecordStore.saturated, 'recording': StateStore.data.isRecording }"
+                                />
+                            </template>
                         </template>
                         <template v-else>
                             <img
@@ -309,4 +225,12 @@ watch(audioParams, (newParams) => {
             </div>
         </section>
     </div>
+
+    <WizardDialog ref="dialogLimitReached" title="Limit Reached" size="large">
+        <template #content>
+            <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
+                Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
+                more.</p>
+        </template>
+    </WizardDialog>
 </template>

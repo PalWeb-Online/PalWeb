@@ -29,18 +29,17 @@ const queueDeck = async () => {
         if (!flushed) return;
 
         QueueStore.data.queue.type = 'deck';
-        QueueStore.data.queue.name = null;
+        QueueStore.data.queue.name = '';
     }
 }
 
-// TODO: Is this needed?
-const fetchAuto = async () => {
-    await QueueStore.fetchAuto();
+const fetchAutoItems = async () => {
+    await QueueStore.fetchAutoItems();
 };
 
-const fetchDeck = async (id) => {
+const fetchDeckItems = async (id) => {
     await QueueStore.flushQueue();
-    await QueueStore.fetchDeck(id);
+    await QueueStore.fetchDeckItems(id);
     dialogSelectDeck.value?.closeDialog();
 }
 
@@ -96,7 +95,7 @@ onMounted(async () => {
 
             <button v-if="QueueStore.data.queue.type === 'auto'"
                     :disabled="QueueStore.data.items.length >= 100"
-                    @click="fetchAuto">Fetch Items
+                    @click="fetchAutoItems">Fetch Items
             </button>
 
             <button v-if="QueueStore.data.queue.type === 'deck'"
@@ -107,7 +106,7 @@ onMounted(async () => {
 
     <WizardDialog ref="dialogSelectDeck" title="Pinned Decks" size="large">
         <template #content>
-            <button v-for="deck in QueueStore.data.decks" @click="fetchDeck(deck.id)">
+            <button v-for="deck in QueueStore.data.decks" @click="fetchDeckItems(deck.id)">
                 {{ deck.name }}
             </button>
         </template>

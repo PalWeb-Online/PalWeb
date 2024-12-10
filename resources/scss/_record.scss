@@ -609,6 +609,10 @@ body.app {
         .arrow {
             cursor: pointer;
             width: 3.2rem;
+
+            &.disabled {
+                visibility: hidden;
+            }
         }
     }
 

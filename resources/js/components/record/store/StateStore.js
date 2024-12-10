@@ -15,48 +15,47 @@ export const useStateStore = defineStore('StateStore', () => {
         hasPermission: false,
         isRecording: false,
         isUploading: false,
-
         isFrozen: false,
         // isContentVisible: false,
     });
 
     const steps = {
         speaker: {
-            canMovePrev: () => false,
+            canMoveBack: () => false,
             canMoveNext: () => data.hasPermission && SpeakerStore.data.speaker.exists,
         },
         queue: {
-            canMovePrev: () => true,
-            canMoveNext: () => QueueStore.data.items.length > 0,
+            canMoveBack: () => false,
+            canMoveNext: () => QueueStore.data.items.length > 0 || RecordStore.data.statusCount.done > 0,
         },
-        studio: {
-            canMovePrev: () => true,
+        record: {
+            canMoveBack: () => true,
             canMoveNext: () => RecordStore.data.statusCount.done > 0,
         },
-        review: {
-            canMovePrev: () => true,
+        check: {
+            canMoveBack: () => true,
             canMoveNext: () => false,
         }
     };
 
-    const prevStep = {
-        speaker: 'speaker',
-        queue: 'speaker',
-        studio: 'queue',
-        review: 'studio'
+    const backStep = {
+        speaker: null,
+        queue: null,
+        record: 'queue',
+        check: 'record',
     };
 
     const nextStep = {
         speaker: 'queue',
-        queue: 'studio',
-        studio: 'review',
-        review: 'queue'
+        queue: 'record',
+        record: 'check',
+        check: null,
     };
 
-    const prevDisabled = computed(() => {
+    const backDisabled = computed(() => {
         const currentStep = data.step;
-        const canMovePrev = steps[currentStep]?.canMovePrev();
-        return data.isFrozen || !canMovePrev;
+        const canMoveBack = steps[currentStep]?.canMoveBack();
+        return data.isFrozen || !canMoveBack;
         // return data.isFrozen || hasPendingRequests || !canMoveNext;
     });
 
@@ -68,7 +67,7 @@ export const useStateStore = defineStore('StateStore', () => {
     });
 
     const showRetry = computed(() => {
-        return data.step === 'studio' && RecordStore.data.statusCount.error > 0;
+        return data.step === 'record' && RecordStore.data.statusCount.error > 0;
     });
 
     // TODO: this can kind of be replaced with isRecording (i.e. stashing) & isUploading (i.e. uploading)
@@ -78,8 +77,8 @@ export const useStateStore = defineStore('StateStore', () => {
         return (stashing + uploading + finalizing) > 1;
     });
 
-    function movePrev() {
-        data.step = prevStep[data.step];
+    function moveBack() {
+        data.step = backStep[data.step];
     }
 
     function moveNext() {
@@ -109,11 +108,11 @@ export const useStateStore = defineStore('StateStore', () => {
     return {
         data,
         steps,
-        prevDisabled,
-        nextDisabled,
         showRetry,
         hasPendingRequests,
-        movePrev,
+        backDisabled,
+        nextDisabled,
+        moveBack,
         moveNext,
         freeze,
         unfreeze,
