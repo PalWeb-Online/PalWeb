@@ -2,22 +2,19 @@ import AudioRecord from './AudioRecord.js';
 
 export default class Record {
     constructor(pronunciation) {
-        this.file = null;
+        this.id = null;
+        this.url = '';
+        this.audioRecord = null;
         this.stashkey = null;
-        this.imageInfo = null;
         this.license = 'CC BY-SA';
         this.language = 'apc';
         this.speaker = null;
         this.pronunciation = pronunciation;
-        this.audioRecord = null;
+        this.qualifier = null;
         this.extra = {};
         this.date = null;
-        this.qualifier = null;
     }
 
-    /**
-     * Add extra metadata to the record.
-     */
     setExtra(extra) {
         this.extra = extra;
     }
@@ -26,7 +23,11 @@ export default class Record {
         const illegalChars = /[#<>[\]|{}:/\\]/g;
 
         let filename =
-            this.language + '-' + this.speaker.dialect_id + '-' + this.pronunciation.translit + '-' + this.speaker.name + '.wav';
+            this.language + '-' +
+            this.speaker.dialect_id + '-' +
+            this.speaker.location_id + '-' +
+            this.pronunciation.translit + '-' +
+            this.speaker.id + '.wav';
 
         return filename.replace(illegalChars, '-');
     }
@@ -62,76 +63,65 @@ export default class Record {
         }
     }
 
-    /**
-     * Clear the audio record file.
-     */
-    remove() {
-        this.file = null;
-    }
-
-    /**
-     * Reset the record object.
-     */
     reset() {
-        this.file = null;
         this.stashkey = null;
-        this.imageInfo = null;
     }
 
-    async uploadToStash() {
-        if (!this.audioRecord) {
-            return Promise.reject('[Record] cannot stash; no audio record initialized.');
-        }
+    async stashRecord() {
+        if (!this.audioRecord) throw new Error('AudioRecord instance not initialized. Cannot stash.');
 
         const formData = new FormData();
         formData.append('file', this.audioRecord.getBlob(), this.getFilename());
+        formData.append('speakerId', this.speaker.id);
 
         try {
             const response = await fetch('/api/record/stash', {
                 method: 'POST',
                 body: formData,
             });
-            const result = await response.json();
 
+            if (!response.ok) throw new Error(`[Record] stash upload failed: ${response.statusText}`);
+
+            const result = await response.json();
             this.stashkey = result.stashkey;
             this.url = result.url;
 
         } catch (error) {
-            return Promise.reject('[Record] stash upload failed: ' + error.message);
+            throw new Error(`[Record] stash upload failed: ${error.message}`);
         }
-
-        return Promise.resolve();
     }
 
-    async finishUpload(apiEndpoint) {
+    async uploadRecord() {
         if (!this.stashkey) {
-            return Promise.reject('[Record] cannot upload; no stashkey.');
+            throw new Error('[Record] cannot upload; no stashkey.');
         }
 
         try {
-            const response = await fetch(apiEndpoint, {
+            const response = await fetch('/api/record/upload', {
                 method: 'POST',
                 body: JSON.stringify({
                     stashkey: this.stashkey,
-                    metadata: {
-                        speaker: this.speaker,
-                        language: this.language,
-                        pronunciation: this.pronunciation,
-                        qualifier: this.qualifier,
-                        license: this.license,
-                        extra: this.extra
-                    }
+                    language: this.language,
+                    speaker: this.speaker,
+                    pronunciation: this.pronunciation,
                 }),
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
-            const result = await response.json();
-            this.imageInfo = result.imageInfo; // Adjust based on your API's response format
-        } catch (error) {
-            return Promise.reject('[Record] upload failed.');
-        }
 
-        return Promise.resolve();
+            if (!response.ok) throw new Error(`[Record] Upload failed with status ${response.status}`);
+
+            const result = await response.json();
+            this.id = result.id;
+            this.url = result.url;
+            this.stashkey = null;
+
+            if (!result.success) throw new Error(result.message || '[Record] Upload failed.');
+
+        } catch (error) {
+            console.error(error);
+            throw new Error(`[Record] Upload failed: ${error.message}`);
+        }
     }
 }

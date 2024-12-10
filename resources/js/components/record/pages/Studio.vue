@@ -67,7 +67,7 @@ const onDataAvailable = async (record) => {
 
         if (blob) {
             try {
-                await RecordStore.doStash(currentPronunciation, blob);
+                await RecordStore.stashRecord(currentPronunciation, blob);
 
                 if (RecordStore.data.status[currentPronunciation.id] === 'stashed') {
                     cancelRecord();
@@ -159,6 +159,7 @@ watch(audioParams, (newParams) => {
 
     <div class="wizard-section-container mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
         <section>
+            <div class="rw-queue-name">{{ RecordStore.data.queue.name }}</div>
             <ul class="mwe-rw-list">
                 <li
                     v-for="(pronunciation, index) in RecordStore.data.pronunciations"
@@ -202,7 +203,7 @@ watch(audioParams, (newParams) => {
             </div>
 
 <!--           TODO: disable it if no word is selected -->
-            <div :class="`rw-actions ${StateStore.data.isPublishing && 'disabled'}`">
+            <div :class="`rw-actions ${StateStore.data.isUploading && 'disabled'}`">
                 <div class="rw-actions-title">
                     Record
                 </div>
@@ -262,7 +263,7 @@ watch(audioParams, (newParams) => {
 
             <div class="rw-actions">
                 <div class="rw-actions-title">
-                    Publish
+                    Upload
                 </div>
                 <div class="rw-actions-content">
                     <template v-if="Object.keys(RecordStore.data.records).length !== 0">
@@ -271,9 +272,12 @@ watch(audioParams, (newParams) => {
                                 v-if="RecordStore.data.statusCount.done < Object.keys(RecordStore.data.records).length"
                                 class="upload"
                                 src="/img/upload.svg"
-                                alt="Publish"
+                                alt="Upload"
                                 @click="RecordStore.uploadRecords"
                             />
+<!--                    :disabled="StateStore.hasPendingRequests"-->
+<!--                            (StateStore.data.isUploading === false || StateStore.hasPendingRequests === true)-->
+
                             <WizardProgressBar
                                 :value="(100 * RecordStore.data.statusCount.done / Object.keys(RecordStore.data.records).length)"
                             />

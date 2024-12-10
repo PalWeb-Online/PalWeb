@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AudioController;
 use App\Http\Controllers\DiscordController;
 use App\Http\Controllers\RecordWizardController;
 use Illuminate\Http\Request;
@@ -21,9 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
-    Route::post('/stash', 'stash');
-    Route::delete('/clear-stash', 'clearStash');
-    Route::delete('/discard-record/{stashkey}', 'discardRecord');
+    Route::post('/stash', 'stashRecord');
+    Route::delete('/discard/{stashkey}', 'discardRecord');
+    Route::delete('/clear/{speakerId}', 'clearStash');
+    Route::post('/upload', 'uploadRecords');
 });
+
+Route::delete('/audio/{audio}', [AudioController::class, 'destroy']);
 
 Route::post('/api/discord/joined', [DiscordController::class, 'joined']);

@@ -10,6 +10,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MissingTermController;
 use App\Http\Controllers\RecordWizardController;
 use App\Http\Controllers\SentenceController;
+use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TextController;
 use App\Http\Controllers\UnitController;
@@ -203,12 +204,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
-    Route::get('/', 'index')->middleware('admin')->name('record');
-    Route::get('/speaker', 'getSpeaker');
-    Route::get('/options', 'getSpeakerOptions');
-    Route::post('/speaker', 'saveSpeaker');
-    Route::post('/pronunciations', 'getPronunciations');
+Route::prefix('/record')->group(function () {
+    Route::controller(RecordWizardController::class)->group(function () {
+        Route::get('/', 'index')->middleware('admin')->name('record');
+        Route::post('/pronunciations', 'getAutoItems');
+        Route::get('/decks', 'getSavedDecks');
+        Route::get('/decks/{deck}', 'getDeckItems');
+    });
+
+    Route::controller(SpeakerController::class)->group(function () {
+        Route::get('/speaker', 'getSpeaker');
+        Route::get('/options', 'getSpeakerOptions');
+        Route::post('/speaker', 'saveSpeaker');
+    });
 });
 
 //Route::get('sitemap', function () {

@@ -8,15 +8,22 @@ import {useStateStore} from "./StateStore.js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
     const data = reactive({
-        metadata: {
-            speaker: {
-                name: '',
-                user_id: null,
-                dialect_id: null,
-                location_id: null,
-                gender: null,
-            },
+        speaker: {
+            id: '',
+            name: '',
+            avatar: '',
+            user_id: null,
+            dialect_id: null,
+            location_id: null,
+            fluency: '',
+            gender: '',
+            exists: false,
         },
+        queue: {
+            type: '',
+            name: null,
+        },
+        decks: [],
         pronunciations: [],
         records: {},
         status: {},
@@ -39,32 +46,41 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const requestQueue = new RequestQueue();
 
     const fetchSpeaker = async () => {
-        try {
-            const response = await axios.get('/record/speaker');
-            if (response.data) {
-                data.metadata.speaker = response.data.speaker;
-                data.metadata.speaker.name = response.data.name;
+        if (!data.speaker.user_id) {
+            try {
+                const response = await axios.get('/record/speaker');
+                if (response.data) {
+                    data.speaker = response.data.speaker;
+                    data.speaker.name = response.data.name;
+                    data.speaker.avatar = response.data.avatar;
+                    data.speaker.exists = response.data.exists;
+                }
+            } catch (error) {
+                console.error('Error loading speaker:', error);
             }
-        } catch (error) {
-            console.error('Error loading speaker:', error);
         }
     };
 
     const saveSpeaker = async () => {
         try {
             const response = await axios.post('/record/speaker', {
-                user_id: data.metadata.speaker.user_id,
-                dialect_id: data.metadata.speaker.dialect_id,
-                location_id: data.metadata.speaker.location_id,
-                gender: data.metadata.speaker.gender,
+                user_id: data.speaker.user_id,
+                dialect_id: data.speaker.dialect_id,
+                location_id: data.speaker.location_id,
+                fluency: data.speaker.fluency,
+                gender: data.speaker.gender,
             });
 
             alert(response.data.message);
-            data.metadata.speaker = response.data.speaker;
-            data.metadata.speaker.name = response.data.name;
+            data.speaker = response.data.speaker;
+            data.speaker.name = response.data.name;
+            data.speaker.avatar = response.data.avatar;
+            data.speaker.exists = true;
+            return true;
 
         } catch (error) {
             console.error('Error saving speaker:', error);
+            return false;
         }
     };
 
@@ -93,14 +109,12 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const fetchPronunciations = async (listedPronunciations = []) => {
-        // TODO: discard pronunciations that had previously been loaded in
-        // e.g. check if there is already data.records[pronunciation.id]
-
+    const fetchAuto = async () => {
         try {
             const response = await axios.post('/record/pronunciations', {
-                dialect_id: data.metadata.speaker.dialect_id,
-                listedPronunciations,
+                speaker_id: data.speaker.id,
+                dialect_id: data.speaker.dialect_id,
+                listedPronunciations: data.pronunciations,
             });
 
             if (response.data) {
@@ -110,6 +124,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
                         data.pronunciations.push(pronunciation);
                     }
                 });
+
+                data.queue.name = 'Auto Queue';
             }
 
         } catch (error) {
@@ -117,28 +133,76 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const removePronunciation = (pronunciation) => {
+    const removePronunciation = async (pronunciation) => {
         const index = data.pronunciations.indexOf(pronunciation);
 
-        if (index === -1) return false;
+        if (data.records[pronunciation.id]) {
+            const confirmed = confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be deleted.');
+            if (!confirmed) return false;
 
-        data.statusCount[data.status[pronunciation]]--;
-        if (data.errors[pronunciation] !== false) {
-            data.statusCount.error--;
+            const discarded = await discardRecord(pronunciation.id);
+            if (!discarded) return false;
         }
-
-        delete data.records[pronunciation];
-        delete data.status[pronunciation];
-        delete data.errors[pronunciation];
 
         data.pronunciations.splice(index, 1);
         return true;
     };
 
-    const doStash = async (pronunciation, blob) => {
+    const fetchSavedDecks = async () => {
+        try {
+            const response = await axios.get('/record/decks');
+            if (response.data && response.data.decks) {
+                data.decks = response.data.decks;
+            }
+        } catch (error) {
+            console.error('Error fetching saved decks:', error);
+        }
+    };
+
+    const fetchDeck = async (deckId) => {
+        try {
+            const response = await axios.get(`/record/decks/${deckId}`);
+            if (response.data) {
+                response.data.pronunciations.forEach((pronunciation) => {
+                    const exists = data.pronunciations.some(p => p.id === pronunciation.id);
+                    if (!exists) {
+                        data.pronunciations.push(pronunciation);
+                    }
+                });
+
+                data.queue = {
+                    type: 'deck',
+                    name: response.data.deck.name,
+                };
+            }
+        } catch (error) {
+            console.error(`Error fetching deck with ID ${deckId}:`, error);
+        }
+    };
+
+    const flushQueue = async () => {
+        if (data.pronunciations.length === 0 || confirm('Doing this will clear your Queue. Proceed?')) {
+            data.records = {};
+            data.status = {};
+            data.errors = {};
+            data.pronunciations = [];
+
+            data.queue = {
+                type: '',
+                name: null,
+            };
+
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    const stashRecord = async (pronunciation, blob) => {
         if (!data.records[pronunciation.id]) {
             data.records[pronunciation.id] = new Record(pronunciation);
-            data.records[pronunciation.id].setSpeaker(data.metadata.speaker);
+            data.records[pronunciation.id].setSpeaker(data.speaker);
         }
 
         const record = data.records[pronunciation.id];
@@ -149,32 +213,29 @@ export const useRecordStore = defineStore('RecordStore', () => {
         if (blob) {
             try {
                 await record.setBlob(blob);
+
             } catch (error) {
                 setError(pronunciation.id, 'Audio record initialization failed.');
                 console.error(error);
-
-                return Promise.reject('Audio record initialization failed.');
+                throw new Error('Audio record initialization failed.');
             }
         }
 
         setStatus(pronunciation.id, 'stashing');
 
-        return new Promise((resolve, reject) => {
-            requestQueue.push(async () => {
-                try {
-                    await record.uploadToStash();
-                    data.records[pronunciation.id].url = record.url;
+        try {
+            await requestQueue.push(async () => {
+                await record.stashRecord();
+                data.records[pronunciation.id].url = record.url;
 
-                    setStatus(pronunciation.id, 'stashed');
-                    resolve();
-
-                } catch (error) {
-                    setError(pronunciation.id, error.message || 'Stash upload failed.');
-                    console.error(`Error uploading pronunciation ${pronunciation.translit}:`, error);
-                    reject(error);
-                }
+                setStatus(pronunciation.id, 'stashed');
             });
-        });
+
+        } catch (error) {
+            setError(pronunciation.id, error.message || 'Stash upload failed.');
+            console.error(`Error stashing pronunciation ${pronunciation.translit}:`, error);
+            throw error;
+        }
     };
 
     const playRecord = () => {
@@ -191,58 +252,76 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const discardRecord = async (id) => {
-        if (confirm('Are you sure you want to discard this recording?')) {
-            const record = data.records[id];
-            if (!record) {
-                console.warn(`Record with ID ${id} not found.`);
-                return;
+        const confirmed = confirm('Are you sure you want to discard this recording?');
+        if (!confirmed) return false;
+
+        const record = data.records[id];
+        if (!record) {
+            console.warn(`Record with ID ${id} not found.`);
+            return false;
+        }
+
+        const stashkey = record.stashkey;
+        if (!stashkey) {
+            console.error(`No stashkey found for Record with ID ${id}.`);
+            return false;
+        }
+
+        try {
+            const response = await axios.delete(`/api/record/discard/${stashkey}`);
+
+            if (response.status === 200) {
+                console.log(`Recording with stashkey ${stashkey} discarded successfully.`);
+
+            } else {
+                console.error(`Failed to discard recording with stashkey ${stashkey}.`);
+                return false;
             }
 
-            const stashkey = record.stashkey;
-            if (!stashkey) {
-                console.error(`No stashkey found for Record with ID ${id}.`);
-                return;
-            }
+            delete data.records[id];
+            delete data.status[id];
+            delete data.errors[id];
+            data.statusCount.stashed--;
+            data.errors[id] && data.statusCount.error--;
+            return true;
 
-            try {
-                const response = await axios.delete(`/api/record/discard-record/${stashkey}`);
+            // const recordIds = Object.keys(data.records);
+            //
+            // if (recordIds.length > 0) {
+            //     const currentIndex = recordIds.indexOf(String(id));
+            //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
+            //     const nextRecordId = recordIds[nextIndex];
+            //     const nextPronunciationIndex = data.pronunciations.findIndex(p => p.id === Number(nextRecordId));
+            //     ListStore.selectWord(nextPronunciationIndex);
+            //
+            // } else {
+            //     console.log("No more records available to select.");
+            // }
 
-                if (response.status === 200) {
-                    console.log(`Recording with stashkey ${stashkey} discarded successfully.`);
-
-                } else {
-                    console.error(`Failed to discard recording with stashkey ${stashkey}.`);
-                }
-
-                delete data.records[id];
-                delete data.status[id];
-                delete data.errors[id];
-                data.statusCount.stashed--;
-
-                // const recordIds = Object.keys(data.records);
-                //
-                // if (recordIds.length > 0) {
-                //     const currentIndex = recordIds.indexOf(String(id));
-                //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
-                //     const nextRecordId = recordIds[nextIndex];
-                //     const nextPronunciationIndex = data.pronunciations.findIndex(p => p.id === Number(nextRecordId));
-                //     ListStore.selectWord(nextPronunciationIndex);
-                //
-                // } else {
-                //     console.log("No more records available to select.");
-                // }
-
-            } catch (error) {
-                console.error(`Error discarding recording with stashkey ${stashkey}:`, error);
-            }
+        } catch (error) {
+            console.error(`Error discarding recording with stashkey ${stashkey}:`, error);
+            return false;
         }
     };
 
-    const uploadRecords = async () => {
-        // TODO: Stop recording before uploading.
+    const clearStash = () => {
+        fetch(`/api/record/clear/${data.speaker.id}`, {method: 'DELETE'})
+            .then(response => {
+                if (response.ok) {
+                    console.log('Stash directory cleaned up successfully.');
 
+                } else {
+                    console.error('Failed to clean up stash directory.');
+                }
+
+            })
+            .catch(error => console.error('Error during stash cleanup:', error));
+    };
+
+    // TODO: Stop recording before uploading.
+    const uploadRecords = async () => {
         if (confirm('Are you sure you want to upload all of your recordings?')) {
-            StateStore.data.isPublishing = true;
+            StateStore.data.isUploading = true;
 
             const stashedIds = Object.keys(data.status).filter(
                 (id) => data.status[id] === 'stashed'
@@ -253,10 +332,19 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     const pronunciationIndex = data.pronunciations.findIndex(
                         (p) => p.id === Number(id)
                     );
-                    ListStore.selectWord(pronunciationIndex);
+
+                    if (pronunciationIndex !== -1) {
+                        ListStore.selectWord(pronunciationIndex);
+                    }
 
                     setStatus(id, 'uploading');
-                    await new Promise((resolve) => setTimeout(resolve, 500));
+
+                    const record = data.records[id];
+                    if (!record) {
+                        throw new Error(`Record with ID ${id} not found.`);
+                    }
+
+                    await record.uploadRecord();
 
                     setStatus(id, 'uploaded');
 
@@ -268,12 +356,12 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     setStatus(id, 'done');
 
                 } catch (error) {
-                    console.error(`Simulated upload failed for record ID: ${id}`, error);
-                    setError(id, 'Upload simulation failed.');
+                    console.error(`Error uploading pronunciation ID ${id}:`, error);
+                    setError(id, error.message || 'Upload failed.');
                 }
             }
 
-            StateStore.data.isPublishing = false;
+            StateStore.data.isUploading = false;
             console.log('All recordings uploaded successfully.');
         }
     };
@@ -284,11 +372,15 @@ export const useRecordStore = defineStore('RecordStore', () => {
         saveSpeaker,
         setStatus,
         setError,
-        fetchPronunciations,
+        fetchSavedDecks,
+        fetchDeck,
+        fetchAuto,
         removePronunciation,
-        doStash,
+        flushQueue,
+        stashRecord,
         playRecord,
         discardRecord,
+        clearStash,
         uploadRecords,
     };
 });
