@@ -1,11 +1,18 @@
-/* General layout */
-body.mw-special-RecordWizard #contentHeading {
-    display: none;
-}
-
 #recordWizard {
     display: grid;
     gap: 3.2rem;
+}
+
+#rw-head {
+    display: grid;
+    justify-items: center;
+    border-block-end: 0.8rem solid $purple-pastel-dark;
+    position: relative;
+
+    button {
+        justify-self: start;
+        @include link-button-deep;
+    }
 
     h1 {
         text-align: center;
@@ -13,38 +20,76 @@ body.mw-special-RecordWizard #contentHeading {
         font-weight: 400;
         font-size: 6.4rem;
         margin: 0;
+        padding-block-end: 0.8rem;
         color: $purple-deep;
-        border-block-end: 0.8rem solid $purple-pastel-dark;
+    }
+
+    .rw-exit-button {
+        cursor: pointer;
+        width: 6.4rem;
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 }
 
-#mwe-rw {
+//    Style 2
+body.app {
+    background: $purple-primary url(../../public/img/waves.svg) no-repeat center center;
+    background-attachment: fixed;
+    background-size: cover;
+
+    #page-body {
+        margin: 0 0 3.2rem 0;
+    }
+
+    #rw-head {
+        background: white;
+        padding: 1.6rem 3.2rem 2.4rem;
+        border-block-end: 0.2rem solid $purple-deep;
+        box-shadow: 0 0.2rem 0 rgba(black, 0.25);
+    }
+}
+
+#rw-nav {
     display: flex;
     flex-flow: row wrap;
-    gap: 1.6rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4.8rem;
 
-    #mwe-rw-steps {
-        flex: 0 1 20%;
+    & > img {
+        width: 3.6rem;
+        cursor: pointer;
 
-        display: grid;
-        align-content: start;
-        gap: 3.2rem;
-        padding: 1.6rem;
+        &.disabled {
+            opacity: 25%;
+            cursor: not-allowed;
+        }
+    }
+
+    .rw-nav-steps {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
 
         div {
+            border-radius: 0.8rem;
+            padding: 0.8rem 1.6rem 0.6rem;
             font-family: $headFont;
             font-weight: 700;
-            font-size: 2.0rem;
+            font-size: 1.8rem;
             color: $purple-deep;
             user-select: none;
         }
 
         div.active {
-            color: $accent-yellow;
+            color: $purple-primary;
+            background: $accent-yellow-pastel;
         }
 
         div.active ~ div {
-            color: $purple-pastel-dark;
+            color: $purple-pastel;
         }
 
         div span {
@@ -91,14 +136,13 @@ body.mw-special-RecordWizard #contentHeading {
             display: none;
         }
     }
+}
 
-    #mwe-rw-main {
-        max-width: 96rem;
-        flex-grow: 1;
-
-        display: grid;
-        gap: 1.6rem;
-    }
+#rw-main {
+    width: 96rem;
+    display: grid;
+    justify-self: center;
+    gap: 1.6rem;
 }
 
 #mwe-rw-title {
@@ -155,8 +199,12 @@ body.mw-special-RecordWizard #contentHeading {
 //}
 
 /* Content box */
-#mwe-rw-content,
-#mwe-rw-spinner {
+.rw-content-wrapper {
+    position: relative;
+}
+
+.rw-content,
+.rw-spinner {
     min-height: 24rem;
     background-color: #ffffff;
     border-radius: 1.6rem;
@@ -165,27 +213,36 @@ body.mw-special-RecordWizard #contentHeading {
     overflow: hidden;
 }
 
-.mwe-rw-content {
-    position: relative;
-}
+.rw-content-wrapper > .rw-dialog-wrapper {
+    position: absolute;
+    top: -1.6rem;
+    right: 0;
 
-.mwe-rw-content > * {
-    //padding-left: 35px;
-    //padding-right: 35px;
+    .rw-dialog-trigger {
+        cursor: pointer;
+        @include pop-on-hover;
+
+        img {
+            width: 4.8rem;
+        }
+    }
 }
 
 .wizard-page-title {
     display: flex;
+    align-items: center;
+    background: $purple-deep;
+    padding: 1.2rem 1.2rem 1.6rem 2.4rem;
+    color: white;
+    position: relative;
 
     h2 {
         flex-grow: 1;
-        background: $purple-deep;
         font-family: $displayFont;
         font-weight: 400;
-        font-size: 3.2rem;
-        color: white;
+        font-size: 3.6rem;
         margin: 0;
-        padding: 1.2rem 2.4rem;
+        color: white;
     }
 
     & + .tip {
@@ -193,15 +250,6 @@ body.mw-special-RecordWizard #contentHeading {
         border-radius: 0;
         padding-block-end: 0.4rem;
     }
-}
-
-#mw-content-text .mwe-rw-content-title h3 {
-    margin-right: auto;
-    margin-top: 0 !important;
-}
-
-#mwe-rw-content > .mwe-rw-content > section {
-    padding-top: 22px;
 }
 
 .mwe-rw-warning {
@@ -228,15 +276,6 @@ body.mw-special-RecordWizard #contentHeading {
 
     position: absolute;
     left: 16px;
-}
-
-/* Navigation */
-#wizard-navigation {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    flex-direction: row;
-    margin-inline: 1.6rem;
 }
 
 .wizard-select {
@@ -306,18 +345,86 @@ body.mw-special-RecordWizard #contentHeading {
 }
 
 /* Queue */
-#mwe-rw-queue .wizard-section-container {
+#rw-review .wizard-section-container {
     padding: 3.2rem;
 }
 
+#rw-review #wizard-queue {
+    column-count: 1;
+}
+
+#rw-queue .wizard-section-container {
+    display: grid;
+}
+
+.rw-queue-head {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.1rem;
+    background: $purple-primary;
+    border-block: 0.1rem solid $purple-primary;
+
+    * {
+        font-family: $headFont;
+        color: $purple-primary;
+        background: white;
+    }
+
+    button {
+        font-size: 1.6rem;
+        font-weight: 700;
+        padding-block: 0.8rem;
+        background: $purple-pastel-light;
+        width: 100%;
+
+        &:hover {
+            background: $purple-pastel;
+        }
+    }
+
+    button.active {
+        color: white;
+        background: $purple-primary;
+    }
+
+    .rw-queue-name {
+        grid-column: span 2;
+        font-size: 1.4rem;
+        padding-block: 0.4rem;
+        text-align: center;
+    }
+}
+
+.rw-queue-body {
+    padding: 1.6rem 2.4rem;
+    display: grid;
+    border-block-end: 0.1rem solid $accent-yellow;
+
+    p {
+        margin-block: 0;
+        font-size: 1.6rem;
+    }
+}
+
+.rw-queue-foot {
+    padding-inline: 2.4rem;
+    display: flex;
+    flex-flow: row-reverse wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+        @include link-button-deep;
+    }
+}
 
 #wizard-queue {
     column-count: 3;
     list-style: none;
-    margin-block-end: 3.2rem;
 
     li {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         cursor: pointer;
         border-radius: 0.8rem;
@@ -331,14 +438,29 @@ body.mw-special-RecordWizard #contentHeading {
             font-weight: 700;
         }
 
-        img {
+        & > div {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+
+        }
+
+        .audio {
+            cursor: pointer;
+            width: 2.4rem;
+        }
+
+        .trash {
+            cursor: pointer;
+            width: 1.6rem;
             opacity: 0.25;
+
         }
 
         &:hover {
             background: $accent-yellow-pastel;
 
-            img {
+            .trash {
                 opacity: 1;
             }
         }
@@ -410,6 +532,18 @@ body.mw-special-RecordWizard #contentHeading {
     section:first-child {
         overflow-y: scroll;
         border-inline-end: 1px solid $accent-yellow;
+        position: relative;
+
+        .rw-queue-name {
+            position: sticky;
+            top: 0;
+            background: $purple-pastel;
+            color: $purple-primary;
+            font-family: $headFont;
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0.6rem 1.2rem 0.4rem;
+        }
     }
 
     section:last-child {
@@ -655,10 +789,6 @@ body.mw-special-RecordWizard #contentHeading {
     display: inline-block;
 }
 
-.mwe-rw-content-title .oo-ui-numberInputWidget-buttoned > .oo-ui-labelElement-label {
-    right: 35px;
-}
-
 .oo-ui-popupWidget-body {
     overflow-x: hidden;
 }
@@ -893,113 +1023,9 @@ body.mw-special-RecordWizard #contentHeading {
     background-image: url('../icons/mic-blue.svg');
 }
 
-#mwe-rw-tutorial .wizard-section-container {
-    section {
-        flex-basis: 40%;
-
-        &:nth-child(1) {
-            flex-grow: 1;
-
-            ol {
-                margin-block-end: 1.6rem;
-            }
-        }
-
-        &:nth-child(2) {
-            border-radius: 0.8rem;
-            background-color: $purple-pastel-light;
-            padding: 1.6rem;
-
-            p {
-                font-size: 1.6rem;
-            }
-        }
-    }
-
-    .wizard-test-status {
-        font-family: $monoFont;
-        font-weight: 700;
-        text-align: center;
-        text-transform: uppercase;
-        padding-block: 0.8rem;
-
-        div:nth-child(1) {
-            font-size: 2.0rem;
-        }
-
-        div:nth-child(2) {
-            font-size: 1.4rem;
-        }
-
-        &.is-recording {
-            div:nth-child(1) {
-                color: red;
-                animation: flasher 1s infinite;
-            }
-        }
-    }
-}
-
-#mwe-rw-speaker .wizard-section-container {
-    section:nth-child(1) {
-        justify-items: center;
-
-        .user-avatar {
-            width: 24rem;
-            height: 24rem;
-        }
-
-        .user-name {
-            font-family: $headFont;
-            font-weight: 700;
-            font-size: 2.0rem;
-            color: $purple-deep;
-        }
-    }
-
-    section:nth-child(2) {
-        flex-grow: 1;
-        padding-block: 1.6rem;
-        gap: 2.4rem;
-
-        .mwe-rw-field {
-            display: flex;
-            align-items: center;
-            gap: 1.6rem;
-
-            label {
-                flex-grow: 1;
-
-                font-family: $headFont;
-                font-weight: 700;
-                font-size: 1.6rem;
-                color: $purple-deep;
-            }
-        }
-
-        & > .wizard-button {
-            margin-block-start: 1.2rem;
-        }
-    }
-}
-
-#mwe-rw-tutorial .wizard-section-container,
-#mwe-rw-speaker .wizard-section-container {
+#rw-speaker .wizard-section-container {
     display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    align-items: start;
-    padding: 3.2rem;
-    gap: 3.2rem;
-
-    section {
-        display: grid;
-        gap: 1.6rem;
-
-        p {
-            margin-block: 0;
-        }
-    }
+    gap: 0.8rem;
 
     h4 {
         margin-bottom: 6px;
@@ -1012,6 +1038,188 @@ body.mw-special-RecordWizard #contentHeading {
         margin-left: 15px;
         padding-left: 2px;
     }
+
+    p {
+        font-size: 1.4rem;
+    }
+
+    section:nth-child(1) {
+        display: grid;
+        grid-template-rows: auto repeat(5, min-content);
+        flex-basis: 60%;
+        flex-grow: 0;
+        gap: 1.6rem;
+        padding: 3.2rem;
+
+        .rw-speaker-profile-head {
+
+        }
+
+        .rw-speaker-name {
+            font-family: $headFont;
+            font-weight: 700;
+            font-size: 2.0rem;
+            color: $purple-deep;
+        }
+
+        .rw-speaker-field {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            gap: 0 1.6rem;
+
+            label {
+                flex-grow: 1;
+
+                font-family: $headFont;
+                font-weight: 700;
+                font-size: 1.6rem;
+                color: $purple-deep;
+            }
+        }
+    }
+
+    section:nth-child(2) {
+        flex-grow: 1;
+        display: grid;
+        grid-template-rows: auto min-content;
+        border-inline-start: 0.1rem solid $accent-yellow;
+
+        .rw-test-booth {
+            display: grid;
+            grid-template-areas: 'overlap';
+            justify-items: center;
+            align-items: center;
+            background: $accent-yellow-pastel;
+            border-block-end: 0.1rem solid $accent-yellow;
+            padding-block: 2.4rem 3.2rem;
+
+            .user-avatar {
+                grid-area: overlap;
+                width: 24rem;
+                height: 24rem;
+            }
+
+            .rw-test-booth-prompt {
+                grid-area: overlap;
+                width: 9.6rem;
+                z-index: 99;
+            }
+        }
+
+        .rw-test-status {
+            padding: 2.4rem;
+            display: flex;
+            align-items: center;
+
+            .rw-test-status-info {
+                flex-grow: 1;
+
+                div:nth-child(1) {
+                    color: $purple-deep;
+                    font-family: $headFont;
+                    font-weight: 700;
+                    font-size: 2.0rem;
+                }
+
+                div:nth-child(2) {
+                    font-size: 1.4rem;
+                }
+            }
+
+            .rw-test-button {
+                cursor: pointer;
+                width: 4.8rem;
+
+                &.disabled {
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}
+
+.rw-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 0.33);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .rw-dialog {
+        color: black;
+        background: white;
+        border-radius: 0.8rem;
+        max-width: 80%;
+        overflow: hidden;
+        box-shadow: 0 0 1.6rem rgba(black, 0.25);
+    }
+
+    .rw-dialog-tab {
+        display: flex;
+        align-items: center;
+        min-height: 3.2rem;
+        background: $purple-deep;
+        position: relative;
+
+        .rw-dialog-title {
+            color: white;
+            font-family: $bodyFont;
+            font-weight: 700;
+            font-size: 2.0rem;
+            padding: 0.8rem 1.6rem;
+        }
+
+        .rw-dialog-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            width: 6.4rem;
+        }
+    }
+
+    .rw-dialog-body {
+        display: grid;
+        justify-items: start;
+        padding: 2.4rem;
+        gap: 1.6rem;
+        max-height: 80vh;
+        overflow: scroll;
+
+        div {
+            color: $purple-deep;
+            font-family: $headFont;
+            font-weight: 700;
+            padding-block-start: 1.6rem;
+        }
+
+        p {
+            margin-block: 0;
+            font-size: 1.6rem;
+        }
+
+        button {
+            @include link-button-deep;
+        }
+    }
+}
+
+.dialog-small {
+    width: 300px;
+}
+
+.dialog-medium {
+    width: 500px;
+}
+
+.dialog-large {
+    width: 800px;
 }
 
 #mwe-rw-tutorial img,

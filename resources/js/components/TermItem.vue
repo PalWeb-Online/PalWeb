@@ -35,7 +35,7 @@ const audio = ref(null);
 
 onMounted(() => {
     audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
+        src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
     });
 
     tooltipTrigger.value.addEventListener('mouseenter', () => {

@@ -23,6 +23,25 @@
     border-radius: 0.8rem;
 }
 
+@mixin link-button-deep {
+    font-family: $bodyFont;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: $purple-deep;
+
+    &:hover {
+        text-decoration: 0.2rem solid underline;
+    }
+}
+
+@mixin pop-on-hover {
+    transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
+
+    &:hover {
+        transform: scale(1.05) rotate(-3deg);
+    }
+}
+
 // PalWeb Fonts
 $logoFont: 'benda', sans-serif;
 $displayFont: 'beastly', 'greycliff-arabic-cf', serif;
@@ -99,7 +118,6 @@ $colors: (
     "mag": $mag,
 );
 
-// TODO: put these elsewhere
 $cast: (
     // students of Arabic literature at Birzeit University
     "ʔakram": $grn, // Akram, from Jericho

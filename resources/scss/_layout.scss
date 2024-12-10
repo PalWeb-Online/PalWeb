@@ -131,11 +131,7 @@ nav {
         position: absolute;
         bottom: -5.2rem;
         filter: drop-shadow(-0.4rem 0.4rem 0 $purple-primary-dark);
-        transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
-
-        &:hover {
-            transform: scale(1.05) rotate(-3deg);
-        }
+        @include pop-on-hover;
     }
 
     .nav-header-body {
