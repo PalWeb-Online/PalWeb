@@ -1,8 +1,12 @@
 import {defineStore} from 'pinia';
 import {computed, reactive} from 'vue';
 import {useRecordStore} from "./RecordStore";
+import {useSpeakerStore} from "./SpeakerStore.js";
+import {useQueueStore} from "./QueueStore.js";
 
 export const useStateStore = defineStore('StateStore', () => {
+    const SpeakerStore = useSpeakerStore();
+    const QueueStore = useQueueStore();
     const RecordStore = useRecordStore();
 
     const data = reactive({
@@ -19,11 +23,11 @@ export const useStateStore = defineStore('StateStore', () => {
     const steps = {
         speaker: {
             canMovePrev: () => false,
-            canMoveNext: () => data.hasPermission && RecordStore.data.speaker.exists,
+            canMoveNext: () => data.hasPermission && SpeakerStore.data.speaker.exists,
         },
         queue: {
             canMovePrev: () => true,
-            canMoveNext: () => RecordStore.data.pronunciations.length > 0,
+            canMoveNext: () => QueueStore.data.items.length > 0,
         },
         studio: {
             canMovePrev: () => true,

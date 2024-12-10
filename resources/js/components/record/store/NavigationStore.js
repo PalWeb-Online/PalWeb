@@ -1,16 +1,20 @@
 import {defineStore} from 'pinia';
 import {useStateStore} from './StateStore';
 import {useRecordStore} from './RecordStore';
+import {useQueueStore} from "./QueueStore.js";
+import {useSpeakerStore} from "./SpeakerStore.js";
 
 export const useNavigationStore = defineStore('NavigationStore', () => {
     const StateStore = useStateStore();
+    const QueueStore = useQueueStore();
+    const SpeakerStore = useSpeakerStore();
     const RecordStore = useRecordStore();
 
     const prev = async () => {
         const currentStep = StateStore.data.step;
 
         if (currentStep === 'queue') {
-            const flushed = await RecordStore.flushQueue();
+            const flushed = await QueueStore.flushQueue();
             if (!flushed) return;
         }
 
@@ -34,7 +38,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         const currentStep = StateStore.data.step;
 
         if (currentStep === 'speaker') {
-            const saved = await RecordStore.saveSpeaker();
+            const saved = await SpeakerStore.saveSpeaker();
             if (!saved) return;
         }
 
@@ -59,9 +63,9 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     };
 
     const retry = () => {
-        Object.keys(RecordStore.errors).forEach((word) => {
-            if (RecordStore.errors[word] !== false) {
-                switch (RecordStore.status[word]) {
+        Object.keys(RecordStore.data.errors).forEach((word) => {
+            if (RecordStore.data.errors[word] !== false) {
+                switch (RecordStore.data.status[word]) {
                     case 'ready':
                         RecordStore.stashRecord(word);
                         break;
@@ -77,11 +81,6 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     };
 
     return {
-        state: StateStore.data,
-        pronunciations: RecordStore.data.pronunciations,
-        status: RecordStore.data.status,
-        errors: RecordStore.data.errors,
-        statusCount: RecordStore.data.statusCount,
         prev,
         next,
         retry,

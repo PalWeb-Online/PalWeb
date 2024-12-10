@@ -1,49 +1,51 @@
 <script setup>
 import {onMounted, ref} from 'vue';
+import {useQueueStore} from "../store/QueueStore.js";
 import {useRecordStore} from '../store/RecordStore';
 import Draggable from 'vuedraggable';
 import WizardDialog from "../ui/WizardDialog.vue";
 
+const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
 
 const dialogSelectDeck = ref(null);
 
 const remove = (index) => {
-    RecordStore.removePronunciation(RecordStore.data.pronunciations[index]);
+    QueueStore.removeItem(QueueStore.data.items[index]);
 };
 
 const queueAuto = async () => {
-    if (RecordStore.data.queue.type !== 'auto') {
-        const flushed = await RecordStore.flushQueue();
+    if (QueueStore.data.queue.type !== 'auto') {
+        const flushed = await QueueStore.flushQueue();
         if (!flushed) return;
 
-        RecordStore.data.queue.type = 'auto';
+        QueueStore.data.queue.type = 'auto';
     }
 };
 
 const queueDeck = async () => {
-    if (RecordStore.data.queue.type !== 'deck') {
-        const flushed = await RecordStore.flushQueue();
+    if (QueueStore.data.queue.type !== 'deck') {
+        const flushed = await QueueStore.flushQueue();
         if (!flushed) return;
 
-        RecordStore.data.queue.type = 'deck';
-        RecordStore.data.queue.name = null;
+        QueueStore.data.queue.type = 'deck';
+        QueueStore.data.queue.name = null;
     }
 }
 
 // TODO: Is this needed?
 const fetchAuto = async () => {
-    await RecordStore.fetchAuto();
+    await QueueStore.fetchAuto();
 };
 
 const fetchDeck = async (id) => {
-    await RecordStore.flushQueue();
-    await RecordStore.fetchDeck(id);
+    await QueueStore.flushQueue();
+    await QueueStore.fetchDeck(id);
     dialogSelectDeck.value?.closeDialog();
 }
 
 onMounted(async () => {
-    await RecordStore.fetchSavedDecks();
+    await QueueStore.fetchSavedDecks();
 });
 </script>
 
@@ -62,17 +64,17 @@ onMounted(async () => {
 
     <div class="wizard-section-container">
         <div class="rw-queue-head">
-            <button :class="RecordStore.data.queue.type === 'auto' ? 'active' : ''" @click="queueAuto">Auto Queue
+            <button :class="QueueStore.data.queue.type === 'auto' ? 'active' : ''" @click="queueAuto">Auto Queue
             </button>
-            <button :class="RecordStore.data.queue.type === 'deck' ? 'active' : ''" @click="queueDeck">Queue Deck
+            <button :class="QueueStore.data.queue.type === 'deck' ? 'active' : ''" @click="queueDeck">Queue Deck
             </button>
-            <div class="rw-queue-name" v-if="RecordStore.data.queue.type === 'deck' && RecordStore.data.queue.name">{{ RecordStore.data.queue.name }}</div>
+            <div class="rw-queue-name" v-if="QueueStore.data.queue.type === 'deck' && QueueStore.data.queue.name">{{ QueueStore.data.queue.name }}</div>
         </div>
 
         <div class="rw-queue-body"
-             v-if="RecordStore.data.pronunciations.length > 0 || (RecordStore.data.queue.type === 'deck' && RecordStore.data.queue.name)">
-            <draggable v-if="RecordStore.data.pronunciations.length > 0"
-                :list="RecordStore.data.pronunciations" id="wizard-queue">
+             v-if="QueueStore.data.items.length > 0 || (QueueStore.data.queue.type === 'deck' && QueueStore.data.queue.name)">
+            <draggable v-if="QueueStore.data.items.length > 0"
+                :list="QueueStore.data.items" id="wizard-queue">
                 <template #item="{ element, index }">
                     <li>
                         <div>
@@ -90,14 +92,14 @@ onMounted(async () => {
         </div>
 
         <div class="rw-queue-foot">
-            <div class="wizard-queue-count">{{ RecordStore.data.pronunciations.length }} of 100</div>
+            <div class="wizard-queue-count">{{ QueueStore.data.items.length }} of 100</div>
 
-            <button v-if="RecordStore.data.queue.type === 'auto'"
-                    :disabled="RecordStore.data.pronunciations.length >= 100"
+            <button v-if="QueueStore.data.queue.type === 'auto'"
+                    :disabled="QueueStore.data.items.length >= 100"
                     @click="fetchAuto">Fetch Items
             </button>
 
-            <button v-if="RecordStore.data.queue.type === 'deck'"
+            <button v-if="QueueStore.data.queue.type === 'deck'"
                     @click="dialogSelectDeck?.openDialog()">Select Deck
             </button>
         </div>
@@ -105,7 +107,7 @@ onMounted(async () => {
 
     <WizardDialog ref="dialogSelectDeck" title="Pinned Decks" size="large">
         <template #content>
-            <button v-for="deck in RecordStore.data.decks" @click="fetchDeck(deck.id)">
+            <button v-for="deck in QueueStore.data.decks" @click="fetchDeck(deck.id)">
                 {{ deck.name }}
             </button>
         </template>

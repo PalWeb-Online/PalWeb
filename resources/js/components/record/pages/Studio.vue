@@ -2,14 +2,14 @@
 import {onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import {useStateStore} from "../store/StateStore.js";
 import {useRecordStore} from '../store/RecordStore';
-import {useListStore} from '../store/ListStore';
+import {useQueueStore} from '../store/QueueStore.js';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 import WizardProgressBar from "../ui/WizardProgressBar.vue";
 
 const StateStore = useStateStore();
 const RecordStore = useRecordStore();
-const ListStore = useListStore();
+const QueueStore = useQueueStore();
 
 let recorder;
 const vumeter = ref(0);
@@ -41,7 +41,7 @@ const toggleRecord = () => {
     if (StateStore.data.isRecording) {
         cancelRecord();
     } else {
-        if (RecordStore.data.pronunciations[ListStore.selected]) startRecord();
+        if (QueueStore.data.items[QueueStore.selected]) startRecord();
     }
 };
 
@@ -61,7 +61,7 @@ const cancelRecord = () => {
 };
 
 const onDataAvailable = async (record) => {
-    const currentPronunciation = RecordStore.data.pronunciations[ListStore.selected];
+    const currentPronunciation = QueueStore.data.items[QueueStore.selected];
     if (currentPronunciation) {
         const blob = record.getBlob();
 
@@ -71,9 +71,9 @@ const onDataAvailable = async (record) => {
 
                 if (RecordStore.data.status[currentPronunciation.id] === 'stashed') {
                     cancelRecord();
-                    ListStore.moveForward();
+                    QueueStore.moveForward();
 
-                    if (RecordStore.data.status[RecordStore.data.pronunciations[ListStore.selected]?.id] !== 'stashed') startRecord();
+                    if (RecordStore.data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed') startRecord();
                 }
 
             } catch (error) {
@@ -124,7 +124,7 @@ onMounted(() => {
         onDataAvailable(record);
     });
 
-    ListStore.initSelection();
+    QueueStore.initSelection();
 
     return () => {
         if (recorder) {
@@ -159,17 +159,17 @@ watch(audioParams, (newParams) => {
 
     <div class="wizard-section-container mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
         <section>
-            <div class="rw-queue-name">{{ RecordStore.data.queue.name }}</div>
+            <div class="rw-queue-name">{{ QueueStore.data.queue.name }}</div>
             <ul class="mwe-rw-list">
                 <li
-                    v-for="(pronunciation, index) in RecordStore.data.pronunciations"
+                    v-for="(pronunciation, index) in QueueStore.data.items"
                     :key="pronunciation.id"
                     :class="{
-                        'selected': ListStore.selected === index,
+                        'selected': QueueStore.selected === index,
                         [`${RecordStore.data.status[pronunciation.id]}`]: true,
                         'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
                         }"
-                    @click="ListStore.selectWord(index)"
+                    @click="QueueStore.selectWord(index)"
                 >
                     {{ pronunciation.term }}
                 </li>
@@ -183,21 +183,21 @@ watch(audioParams, (newParams) => {
                         class="arrow"
                         src="/img/reverse.svg"
                         alt="Back"
-                        @click="ListStore.moveBackward"
+                        @click="QueueStore.moveBackward"
                     />
                     <div class="mwe-rw-item">
                         <div>
-                            {{ RecordStore.data.pronunciations[ListStore.selected]?.term || '' }}
+                            {{ QueueStore.data.items[QueueStore.selected]?.term || '' }}
                         </div>
                         <div>
-                            {{ RecordStore.data.pronunciations[ListStore.selected]?.translit || '' }}
+                            {{ QueueStore.data.items[QueueStore.selected]?.translit || '' }}
                         </div>
                     </div>
                     <img
                         class="arrow"
                         src="/img/play.svg"
                         alt="Forward"
-                        @click="ListStore.moveForward"
+                        @click="QueueStore.moveForward"
                     />
                 </div>
             </div>
@@ -210,7 +210,7 @@ watch(audioParams, (newParams) => {
                 <div class="rw-actions-content">
                     <div class="rw-actions-bar">
                         <template
-                            v-if="RecordStore.data.status[RecordStore.data.pronunciations[ListStore.selected]?.id] !== 'stashed'">
+                            v-if="RecordStore.data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed'">
                             <img
                                 class="toggle-record"
                                 :src="`/img/${!StateStore.data.isRecording ? 'record' : 'stop'}.svg`"
@@ -227,7 +227,7 @@ watch(audioParams, (newParams) => {
                                 class="trash"
                                 src="/img/trash.svg"
                                 alt="Discard"
-                                @click="RecordStore.discardRecord(RecordStore.data.pronunciations[ListStore.selected]?.id)"
+                                @click="RecordStore.discardRecord(QueueStore.data.items[QueueStore.selected]?.id)"
                             />
                             <img
                                 class="audio"
@@ -239,7 +239,7 @@ watch(audioParams, (newParams) => {
                     </div>
 
                     <div class="rw-actions-counter">
-                        {{ RecordStore.data.statusCount.stashed }} of {{ RecordStore.data.pronunciations.length }}
+                        {{ RecordStore.data.statusCount.stashed }} of {{ QueueStore.data.items.length }}
                     </div>
                 </div>
 

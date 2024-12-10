@@ -1,13 +1,16 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
+import {useStateStore} from "../store/StateStore.js";
+import {useSpeakerStore} from "../store/SpeakerStore.js";
 import {useRecordStore} from '../store/RecordStore';
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardButton from "../ui/WizardButton.vue";
-import {useStateStore} from "../store/StateStore.js";
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
-import WizardDialog from "../ui/WizardDialog.vue";
 
+const StateStore = useStateStore();
+const SpeakerStore = useSpeakerStore();
 const RecordStore = useRecordStore();
+
 const dialects = ref([]);
 const locations = ref([]);
 const genders = ref([
@@ -38,7 +41,7 @@ const fetchSpeakerOptions = async () => {
 }
 
 function validateForm() {
-    const speaker = RecordStore.data.speaker;
+    const speaker = SpeakerStore.data.speaker;
     if (!speaker.dialect_id || !speaker.location_id || !speaker.gender) {
         alert('Please fill out all the fields.');
         return false;
@@ -46,7 +49,6 @@ function validateForm() {
     return true;
 }
 
-const StateStore = useStateStore();
 const recorder = ref(null);
 const errorMessageAssociation = reactive({
     AbortError: 'Technical issue with the microphone.',
@@ -121,7 +123,7 @@ const testPlay = (record) => {
 
 onMounted(async () => {
     getAudioStream();
-    await RecordStore.fetchSpeaker();
+    await SpeakerStore.fetchSpeaker();
     await fetchSpeakerOptions();
 });
 
@@ -160,14 +162,15 @@ watch(StateStore.data.testState, (newState) => {
         <div class="wizard-section-container">
             <section>
                 <div class="rw-speaker-profile-head">
-                    <div class="rw-speaker-name">Welcome, {{ RecordStore.data.speaker.name ?? 'Loading...' }}!</div>
-                    <div class="rw-test-info" v-if="!RecordStore.data.speaker.exists">
+                    <div class="rw-speaker-name">Welcome, {{ SpeakerStore.data.speaker.name ?? 'Loading...' }}!</div>
+                    <div class="rw-test-info" v-if="!SpeakerStore.data.speaker.exists">
                         <p>It looks like you don't have a Speaker profile yet. Let's get you set up. Fill out this form
                             & click Create to get started. You can change these details at any time.</p>
                     </div>
                     <div class="rw-test-info" v-else>
                         <p>Here is the information you have provided for your Speaker profile. If everything looks good,
-                            proceed to the next step! Don't forget to test your mic! (If you need help configuring your mic, visit <a
+                            proceed to the next step! Don't forget to test your mic! (If you need help configuring your
+                            mic, visit <a
                                 href="https://lingualibre.org/wiki/Help:Configure_your_microphone" target="_blank">this
                                 page</a>.)</p>
                     </div>
@@ -177,7 +180,7 @@ watch(StateStore.data.testState, (newState) => {
                     <WizardDropdown
                         id="dialect"
                         :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                        v-model="RecordStore.data.speaker.dialect_id"
+                        v-model="SpeakerStore.data.speaker.dialect_id"
                     />
                 </div>
                 <div class="rw-speaker-field">
@@ -185,7 +188,7 @@ watch(StateStore.data.testState, (newState) => {
                     <WizardDropdown
                         id="location"
                         :options="locations.map(location => ({ data: location.id, label: location.name }))"
-                        v-model="RecordStore.data.speaker.location_id"
+                        v-model="SpeakerStore.data.speaker.location_id"
                     />
                 </div>
                 <div class="rw-speaker-field">
@@ -193,7 +196,7 @@ watch(StateStore.data.testState, (newState) => {
                     <WizardDropdown
                         id="location"
                         :options="levels"
-                        v-model="RecordStore.data.speaker.fluency"
+                        v-model="SpeakerStore.data.speaker.fluency"
                     />
                 </div>
                 <div class="rw-speaker-field">
@@ -201,20 +204,20 @@ watch(StateStore.data.testState, (newState) => {
                     <WizardDropdown
                         id="gender"
                         :options="genders"
-                        v-model="RecordStore.data.speaker.gender"
+                        v-model="SpeakerStore.data.speaker.gender"
                     />
                 </div>
 
                 <WizardButton
-                    :label="RecordStore.data.speaker.exists ? 'Update' : 'Create'"
-                    @click="() => { if (validateForm()) RecordStore.saveSpeaker(); }"
+                    :label="SpeakerStore.data.speaker.exists ? 'Update' : 'Create'"
+                    @click="() => { if (validateForm()) SpeakerStore.saveSpeaker(); }"
                 />
             </section>
             <section>
                 <div class="rw-test-booth">
                     <div class="user-avatar">
                         <img alt="Profile Picture"
-                             :src="`/img/avatars/${ RecordStore.data.speaker.avatar }`"/>
+                             :src="`/img/avatars/${ SpeakerStore.data.speaker.avatar }`"/>
                     </div>
                     <img
                         v-if="StateStore.data.testState !== 'ready'"

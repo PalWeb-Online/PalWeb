@@ -3,28 +3,12 @@ import {reactive} from 'vue';
 import axios from 'axios';
 import Record from "../../../utils/Record.js";
 import RequestQueue from "../../../utils/RequestQueue.js";
-import {useListStore} from "./ListStore.js";
 import {useStateStore} from "./StateStore.js";
+import {useSpeakerStore} from "./SpeakerStore.js";
+import {useQueueStore} from "./QueueStore.js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
     const data = reactive({
-        speaker: {
-            id: '',
-            name: '',
-            avatar: '',
-            user_id: null,
-            dialect_id: null,
-            location_id: null,
-            fluency: '',
-            gender: '',
-            exists: false,
-        },
-        queue: {
-            type: '',
-            name: null,
-        },
-        decks: [],
-        pronunciations: [],
         records: {},
         status: {},
         errors: {},
@@ -42,47 +26,9 @@ export const useRecordStore = defineStore('RecordStore', () => {
     });
 
     const StateStore = useStateStore();
-    const ListStore = useListStore();
+    const QueueStore = useQueueStore();
+    const SpeakerStore = useSpeakerStore();
     const requestQueue = new RequestQueue();
-
-    const fetchSpeaker = async () => {
-        if (!data.speaker.user_id) {
-            try {
-                const response = await axios.get('/record/speaker');
-                if (response.data) {
-                    data.speaker = response.data.speaker;
-                    data.speaker.name = response.data.name;
-                    data.speaker.avatar = response.data.avatar;
-                    data.speaker.exists = response.data.exists;
-                }
-            } catch (error) {
-                console.error('Error loading speaker:', error);
-            }
-        }
-    };
-
-    const saveSpeaker = async () => {
-        try {
-            const response = await axios.post('/record/speaker', {
-                user_id: data.speaker.user_id,
-                dialect_id: data.speaker.dialect_id,
-                location_id: data.speaker.location_id,
-                fluency: data.speaker.fluency,
-                gender: data.speaker.gender,
-            });
-
-            alert(response.data.message);
-            data.speaker = response.data.speaker;
-            data.speaker.name = response.data.name;
-            data.speaker.avatar = response.data.avatar;
-            data.speaker.exists = true;
-            return true;
-
-        } catch (error) {
-            console.error('Error saving speaker:', error);
-            return false;
-        }
-    };
 
     const setStatus = (pronunciation, status) => {
         if (!data.status[pronunciation]) {
@@ -109,100 +55,10 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const fetchAuto = async () => {
-        try {
-            const response = await axios.post('/record/pronunciations', {
-                speaker_id: data.speaker.id,
-                dialect_id: data.speaker.dialect_id,
-                listedPronunciations: data.pronunciations,
-            });
-
-            if (response.data) {
-                response.data.pronunciations.forEach((pronunciation) => {
-                    const exists = data.pronunciations.some(p => p.id === pronunciation.id);
-                    if (!exists) {
-                        data.pronunciations.push(pronunciation);
-                    }
-                });
-
-                data.queue.name = 'Auto Queue';
-            }
-
-        } catch (error) {
-            console.error('Error loading pronunciations:', error);
-        }
-    };
-
-    const removePronunciation = async (pronunciation) => {
-        const index = data.pronunciations.indexOf(pronunciation);
-
-        if (data.records[pronunciation.id]) {
-            const confirmed = confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be deleted.');
-            if (!confirmed) return false;
-
-            const discarded = await discardRecord(pronunciation.id);
-            if (!discarded) return false;
-        }
-
-        data.pronunciations.splice(index, 1);
-        return true;
-    };
-
-    const fetchSavedDecks = async () => {
-        try {
-            const response = await axios.get('/record/decks');
-            if (response.data && response.data.decks) {
-                data.decks = response.data.decks;
-            }
-        } catch (error) {
-            console.error('Error fetching saved decks:', error);
-        }
-    };
-
-    const fetchDeck = async (deckId) => {
-        try {
-            const response = await axios.get(`/record/decks/${deckId}`);
-            if (response.data) {
-                response.data.pronunciations.forEach((pronunciation) => {
-                    const exists = data.pronunciations.some(p => p.id === pronunciation.id);
-                    if (!exists) {
-                        data.pronunciations.push(pronunciation);
-                    }
-                });
-
-                data.queue = {
-                    type: 'deck',
-                    name: response.data.deck.name,
-                };
-            }
-        } catch (error) {
-            console.error(`Error fetching deck with ID ${deckId}:`, error);
-        }
-    };
-
-    const flushQueue = async () => {
-        if (data.pronunciations.length === 0 || confirm('Doing this will clear your Queue. Proceed?')) {
-            data.records = {};
-            data.status = {};
-            data.errors = {};
-            data.pronunciations = [];
-
-            data.queue = {
-                type: '',
-                name: null,
-            };
-
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-
     const stashRecord = async (pronunciation, blob) => {
         if (!data.records[pronunciation.id]) {
             data.records[pronunciation.id] = new Record(pronunciation);
-            data.records[pronunciation.id].setSpeaker(data.speaker);
+            data.records[pronunciation.id].setSpeaker(SpeakerStore.data.speaker);
         }
 
         const record = data.records[pronunciation.id];
@@ -239,7 +95,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const playRecord = () => {
-        const id = data.pronunciations[ListStore.selected].id;
+        const id = QueueStore.data.items[QueueStore.selected].id;
 
         if (data.status[id] === 'stashed') {
             const record = data.records[id];
@@ -291,8 +147,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
             //     const currentIndex = recordIds.indexOf(String(id));
             //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
             //     const nextRecordId = recordIds[nextIndex];
-            //     const nextPronunciationIndex = data.pronunciations.findIndex(p => p.id === Number(nextRecordId));
-            //     ListStore.selectWord(nextPronunciationIndex);
+            //     const nextPronunciationIndex = QueueStore.data.items.findIndex(p => p.id === Number(nextRecordId));
+            //     QueueStore.selectWord(nextPronunciationIndex);
             //
             // } else {
             //     console.log("No more records available to select.");
@@ -305,7 +161,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const clearStash = () => {
-        fetch(`/api/record/clear/${data.speaker.id}`, {method: 'DELETE'})
+        fetch(`/api/record/clear/${SpeakerStore.data.speaker.id}`, {method: 'DELETE'})
             .then(response => {
                 if (response.ok) {
                     console.log('Stash directory cleaned up successfully.');
@@ -329,12 +185,12 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
             for (const id of stashedIds) {
                 try {
-                    const pronunciationIndex = data.pronunciations.findIndex(
+                    const pronunciationIndex = QueueStore.data.items.findIndex(
                         (p) => p.id === Number(id)
                     );
 
                     if (pronunciationIndex !== -1) {
-                        ListStore.selectWord(pronunciationIndex);
+                        QueueStore.selectWord(pronunciationIndex);
                     }
 
                     setStatus(id, 'uploading');
@@ -349,8 +205,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
                     setStatus(id, 'uploaded');
 
                     if (pronunciationIndex !== -1) {
-                        data.pronunciations.splice(pronunciationIndex, 1);
-                        ListStore.selectedArray.splice(pronunciationIndex, 1);
+                        QueueStore.data.items.splice(pronunciationIndex, 1);
+                        QueueStore.selectedArray.splice(pronunciationIndex, 1);
                     }
 
                     setStatus(id, 'done');
@@ -368,15 +224,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
     return {
         data,
-        fetchSpeaker,
-        saveSpeaker,
         setStatus,
         setError,
-        fetchSavedDecks,
-        fetchDeck,
-        fetchAuto,
-        removePronunciation,
-        flushQueue,
         stashRecord,
         playRecord,
         discardRecord,
