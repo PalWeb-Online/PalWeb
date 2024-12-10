@@ -29,4 +29,9 @@ class Dialect extends Model
     {
         return $this->belongsToMany(Dialect::class, 'dialect_hierarchy', 'ancestor_id', 'descendant_id');
     }
+
+    public function speakers(): hasMany
+    {
+        return $this->hasMany(Speaker::class);
+    }
 }

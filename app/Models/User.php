@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'home',
         'private',
         'dialect_id',
+        'speaker_id',
         'discord_id',
         'discord_token',
         'discord_refresh_token'
@@ -120,5 +121,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function badges(): BelongsToMany
     {
         return $this->belongsToMany(Badge::class);
+    }
+
+    public function speaker(): belongsTo
+    {
+        return $this->belongsTo(Speaker::class);
     }
 }

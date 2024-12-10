@@ -20,6 +20,7 @@ class SpeakerFactory extends Factory
             'user_id' => $user->id,
             'dialect_id' => Dialect::inRandomOrder()->first()->id,
             'location_id' => Location::inRandomOrder()->first()->id,
+            'fluency' => $this->faker->numberBetween(1, 5),
             'gender' => $this->faker->randomElement(['male', 'female', 'other']),
         ];
     }

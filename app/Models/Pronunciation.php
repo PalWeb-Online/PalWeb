@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pronunciation extends Model
 {
@@ -29,6 +30,11 @@ class Pronunciation extends Model
     public function dialect(): BelongsTo
     {
         return $this->belongsTo(Dialect::class, 'dialect_id');
+    }
+
+    public function audios(): hasMany
+    {
+        return $this->hasMany(Audio::class);
     }
 
     public function file()
