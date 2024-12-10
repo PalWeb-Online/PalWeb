@@ -124,8 +124,7 @@ class RecordWizardController extends Controller
             .'-'.
             $pronunciation['translit']
             .'-'.
-            $speaker['id']
-            .'.wav';
+            $speaker['id'];
 
         $stashPath = public_path("stash/{$stashkey}");
 

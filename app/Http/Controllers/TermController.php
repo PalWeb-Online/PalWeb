@@ -216,6 +216,8 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request)
     {
+        $term->load(['pronunciations.audios']);
+
         $allPronunciations = $term->pronunciations;
         $userPronunciations = collect();
         $otherPronunciations = collect();

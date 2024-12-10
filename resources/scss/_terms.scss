@@ -193,19 +193,24 @@
     }
 }
 
-.pronunciation-li {
+.pronunciation-item-wrapper {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.pronunciation-item {
     display: flex;
     align-items: center;
     flex-flow: row wrap;
     gap: 0 1.6rem;
 
-    .pronunciation-li-dialect {
+    .pronunciation-item-dialect {
         padding-block-start: 0.2rem;
         font-family: $headFont;
         font-weight: 700;
     }
 
-    .pronunciation-li-phonology {
+    .pronunciation-item-phonology {
         display: flex;
         align-items: center;
         flex-flow: row wrap;
@@ -216,6 +221,34 @@
 
     .play {
         width: 2.8rem;
+    }
+}
+
+.pronunciation-audios {
+    display: grid;
+    justify-items: start;
+    margin-inline-start: 3.2rem;
+    font-size: 1.4rem;
+
+    .audio-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        .audio-item-info {
+            border-radius: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background: $accent-yellow-pastel;
+        }
+
+        .avatar {
+            width: 2.4rem;
+            border-radius: 50%;
+        }
+
+        .play {
+            width: 2.4rem;
+        }
     }
 }
 
