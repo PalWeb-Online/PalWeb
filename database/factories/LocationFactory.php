@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Location>
@@ -19,7 +20,8 @@ class LocationFactory extends Factory
     {
         return [
             'name' => $this->faker->city,
-            'coordinate' => DB::raw("POINT({$this->faker->latitude}, {$this->faker->longitude})"),
+            'qid' => Str::uuid(),
+            'coordinates' => DB::raw("POINT({$this->faker->latitude}, {$this->faker->longitude})"),
         ];
     }
 }

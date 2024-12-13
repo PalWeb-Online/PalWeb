@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         (new RoleSeeder)->run();
         (new TermSeeder)->run();
         (new DeckSeeder)->run();
+        (new AudioSeeder)->run();
         (new SentenceSeeder)->run();
     }
 }

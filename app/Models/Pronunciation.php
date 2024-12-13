@@ -34,7 +34,9 @@ class Pronunciation extends Model
 
     public function audios(): hasMany
     {
-        return $this->hasMany(Audio::class);
+        return $this->hasMany(Audio::class)
+            ->with('speaker')
+            ->orderByFluency();
     }
 
     public function file()
