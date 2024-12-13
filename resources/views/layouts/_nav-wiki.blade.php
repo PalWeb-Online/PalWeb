@@ -1,6 +1,6 @@
 <div class="nav-wiki">
     <x-link :href="route('wiki.show', 'release-notes')"
-            :active="url()->current() == route('wiki.show', 'release-notes')">v1.0 Release Notes
+            :active="url()->current() == route('wiki.show', 'release-notes')">v1.2 Release Notes
     </x-link>
 
     <x-link :href="route('wiki.show', 'faq')"

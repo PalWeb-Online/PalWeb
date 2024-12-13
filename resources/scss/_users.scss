@@ -423,7 +423,7 @@
     }
 }
 
-.user-container {
+.user-profile-container {
     position: relative;
     background: white;
     padding: 2.4rem;
@@ -492,7 +492,7 @@
     gap: 1.6rem;
     padding: 0.8rem;
     border-radius: 1.6rem;
-    margin-block: 3.2rem;
+    margin-block: 1.6rem;
     position: relative;
     background: $purple-deep;
     border: 0.2rem solid $accent-yellow;
@@ -607,6 +607,59 @@
     }
 }
 
+.workbench-portal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4.8rem;
+    height: 32rem;
+    margin-block: 1.6rem 4.8rem;
+
+    .workbench-portal-item {
+        display: grid;
+        grid-template-areas: 'overlap';
+        border-radius: 1.6rem;
+        background: $purple-deep;
+        overflow: hidden;
+        outline: 0.4rem solid $purple-primary;
+        filter: drop-shadow(-0.8rem 0.8rem 0 rgba(black, 0.33));
+        transition: 0.1s;
+
+        &:hover {
+            outline: 0.4rem solid white;
+            filter: drop-shadow(calc(-0.8rem - 0.8rem) calc(0.8rem + 0.8rem) 0 rgba(black, 0.33));
+            transform: translate(0.8rem, -0.8rem);
+        }
+
+        & > * {
+            grid-area: overlap;
+        }
+
+        & > *:nth-child(1) {
+            align-self: end;
+            font-family: $displayFont;
+            font-size: 7.2rem;
+            line-height: 0.75;
+            hyphens: none;
+            word-break: break-all;
+            text-align: center;
+            text-transform: uppercase;
+            color: $purple-deep-dark;
+            scale: 1.2;
+            rotate: -3deg;
+        }
+
+        & > *:nth-child(2) {
+            padding: 1.6rem;
+            font-family: $headFont;
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: white;
+            z-index: 1;
+        }
+    }
+}
+
+
 .workbench-options {
     display: flex;
     gap: 1.6rem;
@@ -656,11 +709,32 @@
         }
     }
 
-    .user-container {
+    .user-profile-container {
         box-shadow: -0.6rem 0.6rem 0 0 $purple-primary-dark;
     }
 
     .badges-container {
         box-shadow: -0.6rem 0.6rem 0 0 $accent-yellow;
+    }
+}
+
+.mini-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: $bodyFont;
+
+    img {
+        width: 2.4rem;
+        border-radius: 50%;
+    }
+
+    a {
+        color: $purple-primary;
+        font-weight: 700;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }

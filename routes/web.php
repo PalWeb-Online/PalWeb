@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeckController;
@@ -77,8 +78,9 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
 
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
-        Route::get('/{term:slug}/usages', 'usages')->name('terms.usages');
         Route::get('/{term:slug}', 'show')->name('terms.show');
+        Route::get('/{term:slug}/usages', 'usages')->name('terms.usages');
+        Route::get('/{term:slug}/audios', 'audios')->name('terms.audios');
 
         // Auth
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
@@ -100,13 +102,19 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
  * Community Routes
  */
 Route::prefix('/community')->middleware(['auth', 'verified'])->group(function () {
-
     Route::get('/', function () {
         return view('community.index');
     })->middleware('pageTitle:Community')->name('community.index');
 
     // User Routes
-    Route::get('users/{user:username}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
+
+    // Audio Routes
+    Route::prefix('/audios')->controller(AudioController::class)->group(function () {
+        Route::get('/', 'index')->name('audios.index');
+        Route::get('/{speaker}', 'speaker')->name('audios.speaker');
+        Route::delete('/{audio}', 'destroy')->name('audios.destroy');
+    });
 
     // Deck Routes
     Route::resource('/decks', DeckController::class);
@@ -135,13 +143,11 @@ Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('/academy')->group(function () {
-
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('academy.index');
             Route::get('/{unit}', 'unit')->name('academy.unit');
             Route::get('/{unit}/{lesson}', 'lesson')->name('academy.lesson');
         });
-
         Route::prefix('/texts')->controller(TextController::class)->group(function () {
             Route::get('/', 'index')->name('texts.index');
             Route::get('/{page}', 'show')->name('texts.show');
@@ -149,7 +155,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/dictionary')->group(function () {
-
         Route::middleware('admin')->group(function () {
             Route::get('/todo/terms',
                 [TermController::class, 'todo'])->name('terms.todo');
@@ -158,7 +163,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/todo/sentences',
                 [SentenceController::class, 'todo'])->name('sentences.todo');
         });
-
 
         Route::get('/request', function () {
             return view('terms.request');
@@ -206,7 +210,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::prefix('/record')->group(function () {
     Route::controller(RecordWizardController::class)->group(function () {
-        Route::get('/', 'index')->middleware('admin')->name('record');
+        Route::get('/', 'index')->name('audios.record');
         Route::post('/pronunciations', 'getAutoItems');
         Route::get('/decks', 'getSavedDecks');
         Route::get('/decks/{deck}', 'getDeckItems');

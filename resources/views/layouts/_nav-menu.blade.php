@@ -24,7 +24,6 @@
             <a href="{{ route('explore.index') }}">{{ __('explore') }}</a>
 
             <div class="dropdown-section-title">Tools</div>
-            <a href="{{ route('wiki.show', 'dictionary') }}">User Manual</a>
             <a href="{{ route('terms.random') }}">{{ __('terms.random') }}</a>
             <a href="{{ route('terms.request') }}">{{ __('terms.request') }}</a>
         </x-slot>
@@ -36,16 +35,28 @@
             </x-link>
         </x-slot>
         <x-slot name="content">
-            <div class="dropdown-section-title">Share</div>
-            <a href="{{ route('decks.index') }}">Deck Library</a>
+            <div class="dropdown-section-title">Portals</div>
+            <a href="{{ route('decks.index') }}">Decks</a>
+            <a href="{{ route('audios.index') }}">Audios</a>
+
+            <div class="dropdown-section-title">Tools</div>
             <a href="{{ route('decks.create') }}">Deck Builder</a>
+            <a href="{{ route('audios.record') }}">Record Wizard</a>
+        </x-slot>
+    </x-dropdown>
+    <x-dropdown>
+        <x-slot name="trigger">
+            <x-link :href="route('wiki.index')"
+                    :active="request()->routeIs('wiki.index', 'wiki.show')">{{ __('wiki') }}</x-link>
+        </x-slot>
+        <x-slot name="content">
+            <div class="dropdown-section-title">Welcome</div>
+            <a href="{{ route('wiki.show', 'dictionary') }}">User Guide</a>
+            <a href="{{ route('wiki.show', 'contributing') }}">Contributing</a>
 
             <div class="dropdown-section-title">Support</div>
-            <a href="{{ route('wiki.show', 'contributing') }}">Contributing</a>
             <a href="{{ route('dashboard.subscription') }}">Subscribe</a>
             <a href="https://www.ko-fi.com/palweb" target="_blank">Ko-fi</a>
         </x-slot>
     </x-dropdown>
-    <x-link :href="route('wiki.index')"
-            :active="request()->routeIs('wiki.index', 'wiki.show')">{{ __('wiki') }}</x-link>
 </div>

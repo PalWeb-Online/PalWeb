@@ -1,4 +1,4 @@
-<div class="user-container">
+<div class="user-profile-container">
     <div class="user-wrapper">
         <div class="user-avatar">
             @if(auth()->user() && $user->id === auth()->user()->id)

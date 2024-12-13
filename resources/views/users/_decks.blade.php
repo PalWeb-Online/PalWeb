@@ -7,7 +7,7 @@
         @endforeach
     @else
         <x-tip>
-            <p>Seems like they haven't created any Public Decks yet.</p>
+            <p>{{ $user->name }} has not created any Public Decks yet.</p>
         </x-tip>
     @endif
 </div>

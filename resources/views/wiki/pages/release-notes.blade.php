@@ -5,7 +5,7 @@
 </x-page-head>
 
 <div class="doc-section">
-    <h1 style="text-transform: none">PalWeb v1.1</h1>
+    <h1 style="text-transform: none">PalWeb v1.2</h1>
     <p>As usual, the development of PalWeb proceeds with a mind of its own. Sometimes, what seems feasible at first
         turns out to be far more challenging & time-consuming than expected, while daunting tasks come together
         naturally & everything falls quickly into place. Meanwhile, the political moment we live in permits no leisure
