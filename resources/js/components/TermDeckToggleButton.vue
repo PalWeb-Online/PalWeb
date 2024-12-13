@@ -80,7 +80,7 @@ const toggle = async (deck) => {
                 </button>
             </form>
             <a v-else>
-                No Decks. Create one to get started.
+                No Decks Available.
             </a>
             <Transition name="notification">
                 <div ref="notification" :style="notificationStyles" v-if="notifVisible" class="notification">

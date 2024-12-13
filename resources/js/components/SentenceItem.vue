@@ -26,8 +26,9 @@ const props = defineProps({
 const audio = ref(null);
 
 onMounted(() => {
+    if (props.sentence.audio)
     audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.sentence.file}.mp3`],
+        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.sentence.audio}.mp3`],
     });
 
     // I could show the gloss of each term in a tooltip on hover

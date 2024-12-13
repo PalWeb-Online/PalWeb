@@ -22,9 +22,11 @@ const props = defineProps({
 const audio = ref(null);
 
 onMounted(() => {
-    audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
-    });
+    if (props.term.audio) {
+        audio.value = new Howl({
+            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.audio}.mp3`],
+        });
+    }
 });
 
 function playAudio() {
@@ -39,7 +41,7 @@ function playAudio() {
     <div class="term-headword-arb">{{ term.term }}</div>
     <div class="term-headword-eng">({{ term.translit }})</div>
 
-    <img class="play" :src="`${imageURL}/play.svg`" @click="playAudio" alt="play"/>
+    <img v-if="term.audio" class="play" :src="`${imageURL}/audio.svg`" @click="playAudio" alt="play"/>
     <ContextActions
         modelType="term"
         :imageURL="imageURL"

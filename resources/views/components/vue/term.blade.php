@@ -27,7 +27,7 @@
         $termObject = [
             'term' => $term->term,
             'translit' => $term->pronunciation->translit,
-            'file' => $term->pronunciation->audify(),
+            'audio' => $term->pronunciation->audios[0]->filename ?? null,
             'gloss' => $gloss->gloss ?? $term->glosses[0]->gloss,
             'size' => $size,
         ];

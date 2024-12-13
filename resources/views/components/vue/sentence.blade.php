@@ -11,7 +11,7 @@
         $sentenceObject = [
             'sentence' => $sentence->sentence,
             'trans' => $sentence->trans,
-            'file' => $sentence->audify(),
+            'audio' => null,
             'terms' => $sentence->allTerms()->map(function ($term) use ($currentTerm) {
                 return [
                     'slug' => $term->slug,

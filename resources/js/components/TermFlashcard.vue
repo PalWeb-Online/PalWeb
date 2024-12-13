@@ -38,9 +38,11 @@ const flipCard = () => {
 };
 
 onMounted(() => {
-    audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
-    });
+    if (props.term.audio) {
+        audio.value = new Howl({
+            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.audio}.mp3`],
+        });
+    }
 
     VanillaTilt.init(trigger.value, {
         max: 10,
@@ -83,7 +85,7 @@ const handleKeydown = (event) => {
 
 <template>
     <div class="term-flashcard-wrapper">
-        <img class="play" :src="`${imageURL}/play.svg`" alt="play" @click="playAudio"/>
+        <img v-if="term.audio" class="play" :src="`${imageURL}/audio.svg`" alt="play" @click="playAudio"/>
 
         <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="term.id" ref="trigger" @click="flipCard">
             <div class="term-flashcard-front">

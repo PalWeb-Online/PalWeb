@@ -1,7 +1,6 @@
 <script setup>
 import {Howl} from 'howler';
 import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue';
-import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import TermActions from "./TermActions.vue";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
@@ -20,30 +19,14 @@ const props = defineProps({
     userDecks: Object,
 });
 
-const isOpenTooltip = ref(false);
-const tooltipTrigger = ref(null);
-const tooltip = ref(null);
-const {floatingStyles} = useFloating(tooltipTrigger, tooltip, {
-    placement: 'right',
-    middleware: [offset({
-        mainAxis: 4,
-        crossAxis: -1,
-    }), flip(), shift()]
-});
-
 const audio = ref(null);
 
 onMounted(() => {
-    audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.file}.mp3`],
-    });
-
-    tooltipTrigger.value.addEventListener('mouseenter', () => {
-        isOpenTooltip.value = true;
-    });
-    tooltipTrigger.value.addEventListener('mouseleave', () => {
-        isOpenTooltip.value = false;
-    });
+    if (props.term.audio) {
+        audio.value = new Howl({
+            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.audio}.mp3`],
+        });
+    }
 });
 
 function playAudio() {
@@ -130,9 +113,6 @@ onBeforeUnmount(() => {
             <TermDeckToggleButton v-if="isUser" :userDecks="userDecks" :route="routes.deckToggle" :imageURL="imageURL"/>
         </div>
 
-        <img class="play" ref="tooltipTrigger" :src="`${imageURL}/play.svg`" alt="play" @click="playAudio"/>
-        <div ref="tooltip" v-if="isOpenTooltip" :style="floatingStyles" class="notification">
-            {{ term.translit }}
-        </div>
+        <img v-if="term.audio" class="play" :src="`${imageURL}/audio.svg`" alt="play" @click="playAudio"/>
     </div>
 </template>
