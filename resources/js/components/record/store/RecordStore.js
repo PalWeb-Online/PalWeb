@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {computed, reactive, ref, watch} from 'vue';
+import {reactive, ref} from 'vue';
 import axios from 'axios';
 import Record from "../../../utils/Record.js";
 import RequestQueue from "../../../utils/RequestQueue.js";
@@ -26,7 +26,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         },
     });
 
-    let recorder = null;
+    const recorder = ref(null);
     const vumeter = ref(0);
     const saturated = ref(false);
     const StateStore = useStateStore();
@@ -35,7 +35,9 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const requestQueue = new RequestQueue();
 
     const openRecorder = (audioParams) => {
-        recorder = new LinguaRecorder({
+        if (recorder.value) return;
+
+        recorder.value = new LinguaRecorder({
             autoStart: true,
             autoStop: true,
             startThreshold: audioParams.startThreshold,
@@ -46,57 +48,51 @@ export const useRecordStore = defineStore('RecordStore', () => {
             marginAfter: audioParams.marginAfter,
         });
 
-        recorder.on('ready', () => {
+        recorder.value.on('ready', () => {
             console.log('Recorder is ready to go!');
         });
 
-        recorder.on('readyFail', showError);
+        recorder.value.on('readyFail', showError);
 
-        recorder.on('recording', (samples) => {
+        recorder.value.on('recording', (samples) => {
             console.log('Recorder is recording!');
             vumeter.value = Math.max(...samples) * 1000;
         });
 
-        recorder.on('stopped', (record) => {
+        recorder.value.on('stopped', (record) => {
             onDataAvailable(record);
         });
 
-        recorder.on('saturated', () => {
+        recorder.value.on('saturated', () => {
             saturated.value = true;
         });
     };
 
     const closeRecorder = () => {
-        if (recorder) {
-            // TODO: is all of this necessary? not, apparently?
-            recorder.off('ready');
-            recorder.off('readyFail');
-            recorder.off('recording');
-            recorder.off('saturated');
-            recorder.off('stopped');
-            recorder.stop(true);
+        if (!recorder.value) return;
 
-            recorder.close();
-            recorder = null;
+        stopRecording();
+        recorder.value.close();
+        recorder.value = null;
 
-            console.log('Recorder has been shut off!');
-        }
+        console.log('Recorder has been shut off!');
     };
 
     const startRecording = () => {
-        if (!recorder) return;
+        if (!recorder.value) return;
+
         StateStore.data.isRecording = true;
-        // saturated.value = false;
-        recorder.start();
-        console.log('Recorder has started recording!');
+        recorder.value.start();
+        console.log('Recorder is listening!');
     };
 
     const stopRecording = () => {
-        if (!recorder) return;
+        if (!recorder.value) return;
+
         StateStore.data.isRecording = false;
         vumeter.value = 0;
         saturated.value = false;
-        recorder.cancel();
+        recorder.value.cancel();
         console.log('Recorder has stopped recording!');
     };
 
@@ -348,6 +344,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     return {
         data,
         vumeter,
+        recorder,
         saturated,
         openRecorder,
         closeRecorder,

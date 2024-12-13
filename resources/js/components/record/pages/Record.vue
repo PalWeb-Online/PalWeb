@@ -39,12 +39,11 @@ const canRecord = computed(() => {
 watch(
     () => RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done,
     (newTotal) => {
-        if (newTotal >= 500) {
-            RecordStore.stopRecording();
+        if (newTotal >= 500 && RecordStore.recorder) {
             RecordStore.closeRecorder();
             dialogLimitReached.value?.openDialog();
 
-        } else if (newTotal < 2) {
+        } else if (newTotal < 500 && !RecordStore.recorder) {
             RecordStore.openRecorder(audioParams);
         }
     }

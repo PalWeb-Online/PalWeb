@@ -19,8 +19,12 @@ const {
 } = useNavigationStore();
 
 const exit = async () => {
-    if (confirm('Are you sure you want to leave the wizard? All your stashed recordings will be lost.')) {
-        await RecordStore.clearStash();
+    if (RecordStore.data.statusCount.stashed > 0) {
+        if (confirm(`Are you sure you want to leave the wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`)) {
+            await RecordStore.clearStash();
+            window.location.href = '/dashboard/workbench';
+        }
+    } else {
         window.location.href = '/dashboard/workbench';
     }
 };
