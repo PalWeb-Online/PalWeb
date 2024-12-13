@@ -72,12 +72,14 @@
                 @endif
             </div>
 
-            @unless(request()->routeIs('terms.usages'))
+            @if(request()->routeIs(['terms.show', 'terms.audios']))
                 <div class="term-container-data">
-                    <div class="term-etymology">
-                        <div class="featured-title">{{ __('etymology') }}</div>
-                        @include('terms._etymology')
-                    </div>
+                    @if(request()->routeIs('terms.show'))
+                        <div class="term-etymology">
+                            <div class="featured-title">{{ __('etymology') }}</div>
+                            @include('terms._etymology')
+                        </div>
+                    @endif
 
                     <div class="term-pronunciation" x-data="{ open: false }">
                         <div class="featured-title">{{ __('pronunciation') }}</div>
@@ -107,88 +109,90 @@
                         @endif
                     </div>
                 </div>
-            @endunless
+            @endif
 
-            <div class="term-container-glosses">
-                @foreach ($term->glosses as $i => $gloss)
-                    <div class="gloss-li-container">
-                        <div class="gloss-li">
-                            <div class="gloss-li-label">
-                                {{ $i + 1 }}
-                            </div>
-
-                            <div class="gloss-li-content">
-                                @foreach($gloss->attributes as $attribute)
-                                    <div class="gloss-li-attribute">
-                                        @isset($attribute->category)
-                                            [{{ $attribute->category }}]
-                                        @endisset
-                                        {{ $attribute->attribute }}
-                                    </div>
-                                @endforeach
-
-                                <div class="gloss-li-content-gloss">
-                                    {{ $gloss->gloss }}
+            @if(request()->routeIs(['terms.show', 'terms.usages']))
+                <div class="term-container-glosses">
+                    @foreach ($term->glosses as $i => $gloss)
+                        <div class="gloss-li-container">
+                            <div class="gloss-li">
+                                <div class="gloss-li-label">
+                                    {{ $i + 1 }}
                                 </div>
 
-                                @if(count($gloss->synonyms) > 0)
-                                    <div>
-                                        syn.
-                                        @foreach($gloss->synonyms as $synonym)
-                                            <a href="{{ route('terms.show', $synonym) }}">{{ $synonym->term }}
-                                                ({{ $synonym->translit }})
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                @if(count($gloss->antonyms) > 0)
-                                    <div>
-                                        ant.
-                                        @foreach($gloss->antonyms as $antonym)
-                                            <a href="{{ route('terms.show', $antonym) }}">{{ $antonym->term }}
-                                                ({{ $antonym->translit }})
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                @if(count($gloss->valences) > 0)
-                                    @foreach($gloss->valences as $pair)
-                                        <div>
-                                            {{ $pair->pivot->type }}
-                                            <a href="{{ route('terms.show', $pair) }}">{{ $pair->term }}
-                                                ({{ $pair->translit }})
-                                            </a>
+                                <div class="gloss-li-content">
+                                    @foreach($gloss->attributes as $attribute)
+                                        <div class="gloss-li-attribute">
+                                            @isset($attribute->category)
+                                                [{{ $attribute->category }}]
+                                            @endisset
+                                            {{ $attribute->attribute }}
                                         </div>
                                     @endforeach
-                                @endif
+
+                                    <div class="gloss-li-content-gloss">
+                                        {{ $gloss->gloss }}
+                                    </div>
+
+                                    @if(count($gloss->synonyms) > 0)
+                                        <div>
+                                            syn.
+                                            @foreach($gloss->synonyms as $synonym)
+                                                <a href="{{ route('terms.show', $synonym) }}">{{ $synonym->term }}
+                                                    ({{ $synonym->translit }})
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    @if(count($gloss->antonyms) > 0)
+                                        <div>
+                                            ant.
+                                            @foreach($gloss->antonyms as $antonym)
+                                                <a href="{{ route('terms.show', $antonym) }}">{{ $antonym->term }}
+                                                    ({{ $antonym->translit }})
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    @if(count($gloss->valences) > 0)
+                                        @foreach($gloss->valences as $pair)
+                                            <div>
+                                                {{ $pair->pivot->type }}
+                                                <a href="{{ route('terms.show', $pair) }}">{{ $pair->term }}
+                                                    ({{ $pair->translit }})
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+
                             </div>
 
-                        </div>
-
-                        @if(count($term->sentences($gloss->id)->get()) > 0)
-                            @if(request()->routeIs('terms.usages'))
-                                @foreach ($term->sentences($gloss->id)->get() as $sentence)
-                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence"
-                                                    :currentTerm="$term->id"/>
-                                @endforeach
-                            @else
-                                @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
-                                    <x-vue.sentence component="SentenceItem" :sentence="$sentence"
-                                                    :currentTerm="$term->id"/>
-                                @endforeach
-                                @if(count($term->sentences($gloss->id)->get()) > 2)
-                                    <a href="{{ route('terms.usages', $term) }}">See All Usages
-                                        ({{ count($term->sentences($gloss->id)->get()) }})</a>
+                            @if(count($term->sentences($gloss->id)->get()) > 0)
+                                @if(request()->routeIs('terms.usages'))
+                                    @foreach ($term->sentences($gloss->id)->get() as $sentence)
+                                        <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                        :currentTerm="$term->id"/>
+                                    @endforeach
+                                @else
+                                    @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
+                                        <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                        :currentTerm="$term->id"/>
+                                    @endforeach
+                                    @if(count($term->sentences($gloss->id)->get()) > 2)
+                                        <a href="{{ route('terms.usages', $term) }}">See All Usages
+                                            ({{ count($term->sentences($gloss->id)->get()) }})</a>
+                                    @endif
                                 @endif
                             @endif
-                        @endif
-                    </div>
-                @endforeach
-            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
 
-            @unless(request()->routeIs('terms.usages'))
+            @if(request()->routeIs('terms.show'))
 
                 @include('terms._inflections')
 
@@ -229,7 +233,7 @@
                         </div>
                     </div>
                 @endif
-            @endunless
+            @endif
         </div>
 
         @if(!request()->routeIs('terms.usages') && $term->root)

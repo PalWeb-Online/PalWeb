@@ -3,7 +3,7 @@
 @section('page-hero')
     <div id="hero-panel" class="with-feature">
         <a href="{{ route('wiki.show', 'release-notes') }}" class="feature-callout">
-            v1.1 Release Notes ->
+            v1.2 Release Notes ->
         </a>
 
         <div style="display: flex; flex-flow: column; align-items: center; gap: 4.8rem; margin-block: 3.2rem">

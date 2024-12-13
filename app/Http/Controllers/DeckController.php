@@ -75,7 +75,7 @@ class DeckController extends Controller
             ->groupBy('decks.id')
             ->havingRaw('COUNT(markable_bookmarks.user_id) > 1')
             ->orderByDesc('users_count')
-            ->with('author')  // Load author in same query to reduce SQL queries
+            ->with('author')
             ->take(5)
             ->get();
 

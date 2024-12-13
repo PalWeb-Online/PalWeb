@@ -59,6 +59,53 @@ class TermController extends Controller
         ]);
     }
 
+    public function audios(Term $term, Request $request)
+    {
+        $terms = [];
+
+        $pronunciations = $this->loadPronunciations($term, $request);
+
+        $terms[] = $term;
+
+        return view('terms.show', [
+            'terms' => $terms,
+            'userPronunciations' => $pronunciations['user'],
+            'otherPronunciations' => $pronunciations['other']
+        ]);
+    }
+
+    public function loadPronunciations(Term $term, Request $request)
+    {
+        $term->load(['pronunciations.audios.speaker']);
+
+        $allAudios = $request->routeIs('terms.audios');
+
+        $term->pronunciations->each(function ($pronunciation) use ($allAudios) {
+            $pronunciation->audio_count = $pronunciation->audios->count();
+
+            if (!$allAudios) {
+                $pronunciation->audios = $pronunciation->audios->take(1);
+            }
+        });
+
+        $userPronunciations = collect();
+        $otherPronunciations = collect();
+
+        if (auth()->check()) {
+            $dialect = auth()->user()->dialect_id;
+            $dialects = Dialect::find($dialect)->ancestors->pluck('id')
+                ->merge(Dialect::find($dialect)->descendants->pluck('id'))
+                ->push($dialect);
+            $userPronunciations = $term->pronunciations->whereIn('dialect_id', $dialects);
+            $otherPronunciations = $term->pronunciations->whereNotIn('dialect_id', $dialects);
+        }
+
+        return [
+            'user' => $userPronunciations,
+            'other' => $otherPronunciations
+        ];
+    }
+
     /**
      * Loads the Dictionary Index
      */
@@ -216,20 +263,7 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request)
     {
-        $term->load(['pronunciations.audios']);
-
-        $allPronunciations = $term->pronunciations;
-        $userPronunciations = collect();
-        $otherPronunciations = collect();
-
-        if (auth()->check()) {
-            $dialect = auth()->user()->dialect_id;
-            $dialects = Dialect::find($dialect)->ancestors->pluck('id')
-                ->merge(Dialect::find($dialect)->descendants->pluck('id'))
-                ->push($dialect);
-            $userPronunciations = $allPronunciations->whereIn('dialect_id', $dialects);
-            $otherPronunciations = $allPronunciations->whereNotIn('dialect_id', $dialects);
-        }
+        $pronunciations = $this->loadPronunciations($term, $request);
 
         $likeTerms = $this->termRepository->getLikeTerms($term);
         $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
@@ -246,9 +280,9 @@ class TermController extends Controller
 
         return view('terms.show', [
             'terms' => $terms,
-            'allPronunciations' => $allPronunciations,
-            'userPronunciations' => $userPronunciations,
-            'otherPronunciations' => $otherPronunciations,
+            'allPronunciations' => $term->pronunciations,
+            'userPronunciations' => $pronunciations['user'],
+            'otherPronunciations' => $pronunciations['other'],
         ]);
     }
 

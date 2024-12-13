@@ -1,0 +1,147 @@
+.speaker-profile-container {
+    display: grid;
+    gap: 0.8rem;
+    background: $accent-yellow-pastel;
+    padding: 1.6rem;
+    border-radius: 1.6rem;
+    border: 0.1rem solid $accent-yellow;
+    margin-block-start: 3.2rem;
+
+    .speaker-profile-head {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.8rem;
+        margin-block-start: -4.8rem;
+
+        & > * {
+            border: 0.1rem solid $accent-yellow;
+            background: $accent-yellow-pastel;
+            color: $purple-deep;
+        }
+
+        & > *:nth-child(1) {
+            padding: 0.2rem 1.6rem 0.4rem 1.6rem;
+            border-radius: 0.8rem;
+            font-size: 4.8rem;
+            font-family: $displayFont;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        & > *:nth-child(2) {
+            border-radius: 3.2rem 3.2rem;
+            padding: 0.8rem 0.8rem 0.8rem 1.6rem;
+            font-weight: 700;
+        }
+    }
+
+    .speaker-profile-body {
+        display: grid;
+        gap: 0.1rem;
+        border-radius: 0.8rem;
+        background: $accent-yellow-pastel;
+        overflow: hidden;
+
+        .speaker-profile-row {
+            background: white;
+            display: grid;
+            gap: 1.6rem;
+            grid-template-columns: 1fr 3fr;
+            align-content: center;
+            padding: 1.2rem 1.6rem;
+        }
+    }
+
+    .speaker-profile-row {
+        color: $purple-deep;
+
+        & > div:nth-child(1) {
+            font-family: $headFont;
+            font-weight: 700;
+            padding-block-start: 0.2rem;
+        }
+    }
+}
+
+.audios-list {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.pronunciation-item-wrapper {
+    display: grid;
+    background: white;
+    border-radius: 0.8rem;
+    border: 0.1rem solid $purple-pastel;
+    overflow: hidden;
+
+    .pronunciation-audios {
+        display: grid;
+        gap: 0.4rem;
+        justify-items: start;
+        padding: 0.4rem 0.8rem;
+        font-size: 1.4rem;
+        border-block-start: 0.1rem solid $purple-pastel;
+    }
+
+    & > a {
+        text-align: center;
+        background: $purple-pastel-light;
+        border-block-start: 0.1rem solid $purple-pastel;
+
+        &:hover {
+            text-decoration: none;
+            background: $purple-pastel;
+        }
+    }
+}
+
+.pronunciation-item {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    gap: 0 1.6rem;
+    padding: 0.4rem 0.8rem;
+    background: $accent-yellow-pastel;
+
+    .pronunciation-item-dialect {
+        padding-block-end: 0.1rem;
+        font-family: $bodyFont;
+        font-weight: 700;
+    }
+
+    .pronunciation-item-phonology {
+        font-family: $monoFont;
+        font-size: 1.4rem;
+    }
+
+    .play {
+        width: 2.8rem;
+    }
+}
+
+.audio-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    .audio-item-info {
+        flex-grow: 1;
+    }
+
+    .play {
+        width: 2.4rem;
+    }
+
+    form {
+        display: flex;
+        align-items: center;
+
+        .trash {
+            width: 1.6rem;
+            cursor: pointer;
+        }
+    }
+
+}

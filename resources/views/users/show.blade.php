@@ -12,6 +12,10 @@
 
     @include('users._badges')
 
+    @if($user->speaker)
+        @include('users._speaker', ['speaker' => $user->speaker])
+    @endif
+
     @include('users._decks')
 
 @endsection
