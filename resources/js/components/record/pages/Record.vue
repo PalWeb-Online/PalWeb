@@ -13,6 +13,7 @@ const RecordStore = useRecordStore();
 const QueueStore = useQueueStore();
 
 const dialogLimitReached = ref(null);
+const dialogQueueCompleted = ref(null);
 
 const audioParams = reactive({
     startThreshold: 0.1,
@@ -38,13 +39,22 @@ const canRecord = computed(() => {
 
 watch(
     () => RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done,
-    (newTotal) => {
-        if (newTotal >= 500 && RecordStore.recorder) {
+    (recorded) => {
+        if (recorded >= 500 && RecordStore.recorder) {
             RecordStore.closeRecorder();
             dialogLimitReached.value?.openDialog();
-
-        } else if (newTotal < 500 && !RecordStore.recorder) {
+        } else if (recorded < 500 && !RecordStore.recorder) {
             RecordStore.openRecorder(audioParams);
+        }
+    }
+);
+
+watch(
+    // todo: I think the queue is emptied, so this always triggers
+    () => RecordStore.data.statusCount.done,
+    (uploaded) => {
+        if (uploaded >= Object.keys(QueueStore.data.queue).length) {
+            dialogQueueCompleted.value?.openDialog();
         }
     }
 );
@@ -190,8 +200,8 @@ watch(
                                 alt="Upload"
                                 @click="RecordStore.uploadRecords"
                             />
-<!--                    :disabled="StateStore.hasPendingRequests"-->
-<!--                            (StateStore.data.isUploading === false || StateStore.hasPendingRequests === true)-->
+                            <!--                    :disabled="StateStore.hasPendingRequests"-->
+                            <!--                            (StateStore.data.isUploading === false || StateStore.hasPendingRequests === true)-->
 
                             <WizardProgressBar
                                 :value="(100 * RecordStore.data.statusCount.done / Object.keys(RecordStore.data.records).length)"
@@ -230,6 +240,12 @@ watch(
             <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
                 Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
                 more.</p>
+        </template>
+    </WizardDialog>
+    <WizardDialog ref="dialogQueueCompleted" title="Queue Completed" size="large">
+        <template #content>
+            <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
+                uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
         </template>
     </WizardDialog>
 </template>

@@ -28,6 +28,4 @@ Route::prefix('/record')->controller(RecordWizardController::class)->group(funct
     Route::post('/upload', 'uploadRecords');
 });
 
-Route::delete('/audio/{audio}', [AudioController::class, 'destroy']);
-
 Route::post('/api/discord/joined', [DiscordController::class, 'joined']);

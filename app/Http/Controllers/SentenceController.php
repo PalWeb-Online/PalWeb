@@ -181,7 +181,7 @@ class SentenceController extends Controller
                 }
 
                 if (count($terms) === 100) {
-                    return false; // This will break the execution of the chunk
+                    return false;
                 }
             }
         });

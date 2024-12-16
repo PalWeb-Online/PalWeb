@@ -25,7 +25,8 @@ body {
 
     &.hero-yellow {
         #hero-panel {
-            background: $accent-yellow;
+            background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
+            background-size: 144rem auto;
 
             h1, h2, .hero-title {
                 text-shadow: -0.4rem 0.4rem 0 $purple-primary-dark;
@@ -36,6 +37,17 @@ body {
                 font-size: 12.8rem;
                 font-weight: 700;
                 line-height: 1;
+            }
+
+            svg {
+                font-family: $logoFont;
+                font-size: 4.8rem;
+                font-weight: 700;
+                fill: white;
+                stroke: $purple-primary-dark;
+                paint-order: stroke fill;
+                stroke-width: 2;
+                text-shadow: -0.4rem 0.4rem 0 $purple-primary-dark;
             }
         }
     }

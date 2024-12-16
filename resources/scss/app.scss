@@ -388,9 +388,6 @@ Search Tools
 }
 
 .dictionary-filters {
-    text-align: center;
-    font-family: $monoFont;
-    font-weight: 700;
     display: grid;
     gap: 0.8rem;
 
@@ -410,6 +407,9 @@ Search Tools
     border-radius: 0.8rem;
     padding: 0.4rem;
     gap: 0.4rem;
+    text-align: center;
+    font-family: $monoFont;
+    font-weight: 700;
 
     .filter-name {
         color: $purple-deep;

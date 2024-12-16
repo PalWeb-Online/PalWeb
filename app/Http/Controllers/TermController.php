@@ -21,7 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
 
@@ -544,7 +543,7 @@ class TermController extends Controller
                 if (!in_array($term->slug, $attachedTerms)) {
                     $origin->relatives()->attach($term, ['type' => $item['relation']]);
 
-                    switch($item['relation']) {
+                    switch ($item['relation']) {
                         case 'variant':
                             $term->relatives()->attach($origin, ['type' => 'variant']);
                             break;

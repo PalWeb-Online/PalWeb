@@ -23,6 +23,17 @@
     border-radius: 0.8rem;
 }
 
+@mixin link-primary {
+    font-family: $bodyFont;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: $purple-primary;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 @mixin link-button-deep {
     font-family: $bodyFont;
     font-weight: 700;

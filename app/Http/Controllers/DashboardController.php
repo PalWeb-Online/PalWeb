@@ -59,6 +59,7 @@ class DashboardController
             'decks' => $decks,
             'terms' => $terms,
             'sentences' => $sentences,
+            'bodyBackground' => 'hero-yellow'
         ]);
     }
 
@@ -68,6 +69,7 @@ class DashboardController
 
         return view('users.dashboard.subscription', [
             'user' => auth()->user(),
+            'bodyBackground' => 'hero-yellow'
         ]);
     }
 }

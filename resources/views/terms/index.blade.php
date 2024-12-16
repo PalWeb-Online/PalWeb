@@ -20,7 +20,7 @@
             </div>
             <div class="portal-button-body">
                 <a href="{{ route('explore.index') }}" class="portal-button">Explore Portal</a>
-                <a href="{{ route('sentences.index') }}" class="portal-button">Sentence Library</a>
+                <a href="{{ route('sentences.index') }}" class="portal-button">Phrasebook</a>
                 <a href="{{ route('wiki.show', 'dictionary') }}" class="portal-button">User Manual</a>
             </div>
         </div>
@@ -45,8 +45,8 @@
                     <p>Displaying all {{ number_format($totalCount) }} terms in the Dictionary.</p>
                 </x-tip>
             @endif
-            <ul class="search-results">
 
+            <ul class="search-results">
                 @foreach ($terms as $term)
                     <li>
                         <a class="search-result" href="{{  route('terms.show', $term) }}">
