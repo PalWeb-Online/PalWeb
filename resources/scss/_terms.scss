@@ -8,9 +8,6 @@
     border: 0.2rem solid $purple-primary-dark;
 
     .term-container-head {
-        padding-block-end: 2.4rem;
-        border-block-end: 0.1rem solid $purple-primary;
-
         .term-references, .term-inflections {
             display: flex;
             flex-flow: row wrap;
@@ -19,11 +16,9 @@
         }
     }
 
-    .term-container-data {
-        .term-pronunciation, .term-etymology {
-            display: grid;
-            gap: 0.4rem;
-        }
+    .term-pronunciation, .term-etymology {
+        display: grid;
+        gap: 0.4rem;
 
         .featured-title {
             font-size: 2.4rem;
@@ -67,18 +62,13 @@
     }
 }
 
-.term-container-head, .term-container-data {
-    display: grid;
-    gap: 1.6rem;
-}
-
 // must be outside .term-container for it to work in Word of the Day
 .term-container-glosses, .term-container-decks {
     display: grid;
     gap: 3.2rem;
 }
 
-.term-container-head, .term-container-data, .gloss-li-container, .term-root {
+.term-container-head, .term-etymology, .gloss-li-container, .term-root {
     a {
         color: $purple-primary;
         font-weight: 700;

@@ -42,6 +42,7 @@
                  'routes' => [
                      'view' => route('terms.show', $term),
                      'usages' => route('terms.usages', $term),
+                     'audios' => route('terms.audios', $term),
                      'edit' => route('terms.edit', $term),
                      'delete' => route('terms.destroy', $term),
                      'pin' => route('terms.pin', $term),

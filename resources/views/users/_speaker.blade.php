@@ -28,20 +28,19 @@
         </div>
         <div class="speaker-profile-row">
             <div>Fluency</div>
-            <div>{{ $speaker->fluency }}</div>
+            <div>{{ $speaker->fluency_alias }}</div>
+        </div>
+        <div class="speaker-profile-row">
+            <div>Audios</div>
+            <div>{{ $speaker->audios->count() }}</div>
         </div>
     </div>
 
-    @if(!request()->routeIs('audios.speaker'))
-        <div class="speaker-profile-row">
-            <div>Audios</div>
-            <div>
-                {{--                TODO: link should be underlined--}}
-                <div>
-                    {{ count($speaker->audios) }}
-                    (<a href="{{ route('audios.speaker', $speaker) }}">See All</a>)
-                </div>
-            </div>
-        </div>
+    @if(!request()->routeIs('audios.speaker') && $speaker->audios->count() > 0)
+        <a href="{{ route('audios.speaker', $speaker) }}">See All Audios by this Speaker</a>
+        <div class="featured-title s">Latest</div>
+        @foreach($speaker->audios->take(5) as $audio)
+            <x-pronunciation-item :pronunciation="$audio->pronunciation" :audio="$audio"/>
+        @endforeach
     @endif
 </div>

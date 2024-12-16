@@ -17,4 +17,5 @@ const props = defineProps({
     </template>
 
     <a :href="routes.usages">See Usages</a>
+    <a :href="routes.audios">See Audios</a>
 </template>

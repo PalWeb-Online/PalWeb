@@ -4,35 +4,36 @@
 
 @if($audio)
     <div class="audio-item">
-        <img class="play" src="{{ asset('img/audio.svg') }}" alt="play"
+        <img class="play" src="{{ asset('img/audio.svg') }}" alt="Play"
              onclick="{{ '_'.$audio->id }}.play()"/>
+        <script type="text/javascript">
+            const {{ '_'.$audio->id }} = new Howl({
+                src: ['https://abdulbaha.fra1.digitaloceanspaces.com/audio/{{ $audio->filename }}.mp3']
+            });
+        </script>
 
-        @unless ($audio->speaker->user->private)
-            <div class="mini-user-profile">
+        <div class="mini-user-profile">
+            @unless($audio->speaker->user->private)
                 <div>by
                     <a href="{{ route('audios.speaker', $audio->speaker) }}">{{ $audio->speaker->user->name }}</a>
                 </div>
                 <img class="avatar" alt="User Avatar"
                      src="{{ asset('img/avatars/'.$audio->speaker->user->avatar) }}"/>
-            </div>
-        @else
-            <div>by
-                <a href="{{ route('audios.speaker', $audio->speaker) }}">Speaker #{{$audio->speaker->id}}</a>
-            </div>
-        @endif
-
-        <div class="audio-item-info">
-            Lv. {{ $audio->speaker->fluency }}
-            {{ $audio->speaker->dialect->name }}
-            <span style="text-transform: capitalize">{{ $audio->speaker->gender }}</span>
-            from {{ $audio->speaker->location->name }}
+            @else
+                <div>by
+                    <a href="{{ route('audios.speaker', $audio->speaker) }}">Speaker #{{$audio->speaker->id}}</a>
+                </div>
+            @endif
         </div>
 
-        <script type="text/javascript">
-            const {{ '_'.$audio->id }} = new Howl({
-                src: ['https://abdulbaha.fra1.cdn.digitaloceanspaces.com/audio/{{ $audio->filename }}.mp3']
-            });
-        </script>
+        <div class="audio-item-info">
+            {{ $audio->speaker->fluency_alias }}
+            <span style="text-transform: capitalize">{{ $audio->speaker->gender !== 'other' ? $audio->speaker->gender : '' }}</span>
+            Speaker from {{ $audio->speaker->location->name }}
+        </div>
+        <div class="audio-item-date">
+            {{ $audio->created_at->format('j F Y') }}
+        </div>
 
         @auth
             @if($audio->speaker_id === auth()->user()->id)

@@ -73,42 +73,38 @@
             </div>
 
             @if(request()->routeIs(['terms.show', 'terms.audios']))
-                <div class="term-container-data">
-                    @if(request()->routeIs('terms.show'))
-                        <div class="term-etymology">
-                            <div class="featured-title">{{ __('etymology') }}</div>
-                            @include('terms._etymology')
-                        </div>
-                    @endif
-
-                    <div class="term-pronunciation" x-data="{ open: false }">
-                        <div class="featured-title">{{ __('pronunciation') }}</div>
-                        @if(auth()->check())
-                            @unless($userPronunciations->isEmpty())
-                                @include('terms._pronunciations', ['pronunciations' => $userPronunciations])
-                            @else
-                                <div class="inline-chart" style="padding: 0">
-                                    <div
-                                        style="background: rgba(255, 194, 14, 0.25); border-radius: 1.6rem; padding: 1.2rem; font-weight: 400; text-align: left">
-                                        <b>WARNING</b> Your target dialect ({{ auth()->user()->dialect->name }}) does
-                                        not use this term. Here are its pronunciations in other dialects.
-                                    </div>
-                                </div>
-                            @endunless
-
-                            @unless($otherPronunciations->isEmpty())
-                                <div x-show="open">
-                                    @include('terms._pronunciations', ['pronunciations' => $otherPronunciations])
-                                </div>
-                                <button @click="open = !open" x-text="open ? 'expand_less' : 'expand_more'"
-                                        class="toggle-button material-symbols-rounded">
-                                </button>
-                            @endunless
+                <div class="term-pronunciation">
+                    @if(auth()->check())
+                        @unless($userPronunciations->isEmpty())
+                            @foreach ($userPronunciations as $pronunciation)
+                                <x-pronunciation-item :pronunciation="$pronunciation"/>
+                            @endforeach
                         @else
-                            @include('terms._pronunciations', ['pronunciations' => $allPronunciations])
-                        @endif
-                    </div>
+                            <x-tip>
+                                <p>Your target Dialect ({{ auth()->user()->dialect->name }}) does not use this Term.
+                                    Here are its Pronunciations in other Dialects.</p>
+                            </x-tip>
+                        @endunless
+
+                        @unless($otherPronunciations->isEmpty())
+                            @foreach ($otherPronunciations as $pronunciation)
+                                <x-pronunciation-item :pronunciation="$pronunciation"/>
+                            @endforeach
+                        @endunless
+
+                    @else
+                        @foreach ($allPronunciations as $pronunciation)
+                            <x-pronunciation-item :pronunciation="$pronunciation"/>
+                        @endforeach
+                    @endif
                 </div>
+
+                @if(request()->routeIs('terms.show'))
+                    <div class="term-etymology">
+                        <div class="featured-title">{{ __('etymology') }}</div>
+                        @include('terms._etymology')
+                    </div>
+                @endif
             @endif
 
             @if(request()->routeIs(['terms.show', 'terms.usages']))

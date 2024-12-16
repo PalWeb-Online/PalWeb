@@ -13,6 +13,19 @@ class Speaker extends Model
 
     protected $guarded = [];
 
+    protected static $fluencyLevels = [
+        1 => 'Beginner',
+        2 => 'Intermediate',
+        3 => 'Advanced',
+        4 => 'Fluent',
+        5 => 'Native',
+    ];
+
+    public function getFluencyAliasAttribute(): string
+    {
+        return self::$fluencyLevels[$this->fluency] ?? 'Unknown';
+    }
+
     public function user(): belongsTo
     {
         return $this->belongsTo(User::class);
