@@ -53,7 +53,6 @@ class AudioController extends Controller
             'totalCount' => $totalCount,
             'locations' => Location::whereHas('speakers.audios')->get(),
             'dialects' => Dialect::whereHas('speakers.audios')->get(),
-            'bodyBackground' => 'purple-pastel',
             'currentSort' => $sort,
         ]);
     }
@@ -70,7 +69,6 @@ class AudioController extends Controller
             'user' => $speaker->user,
             'speaker' => $speaker,
             'audios' => $audios,
-            'bodyBackground' => 'purple-pastel'
         ]);
     }
 

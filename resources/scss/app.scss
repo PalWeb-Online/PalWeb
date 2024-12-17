@@ -328,6 +328,20 @@ Search Tools
     margin-block-end: 3.2rem;
 }
 
+.search-tools {
+    min-width: 66%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.2rem;
+    padding: 3.2rem;
+    border-radius: 2.4rem;
+    background: $purple-deep;
+
+    @media (min-width: 960px) {
+        box-shadow: -0.6rem 0.6rem 0 rgba(black, 0.25);
+    }
+}
+
 .search-bar {
     position: relative;
     display: flex;
@@ -372,56 +386,38 @@ Search Tools
     }
 }
 
-.search-tools {
-    justify-self: stretch;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3.2rem;
-    padding: 3.2rem;
-    border-radius: 3.2rem;
-    background: $purple-deep;
-
-    @media (min-width: 960px) {
-        box-shadow: -0.6rem 0.6rem 0 rgba(black, 0.25);
-    }
-}
-
-.dictionary-filters {
-    display: grid;
+.search-filters {
+    display: flex;
     gap: 0.8rem;
 
-    // Mobile
-    grid-template-columns: repeat(1, 1fr);
-
-    // Tablet & Desktop
-    @media (min-width: 960px) {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-.filter-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    background: white;
-    border-radius: 0.8rem;
-    padding: 0.4rem;
-    gap: 0.4rem;
-    text-align: center;
-    font-family: $monoFont;
-    font-weight: 700;
-
-    .filter-name {
-        color: $purple-deep;
-        padding: 0.4rem 0;
-        text-transform: uppercase;
+    & > * {
+        flex-grow: 1;
     }
 
-    select {
+    .filter-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        background: white;
+        border-radius: 0.8rem;
+        padding: 0.4rem;
+        gap: 0.4rem;
+        text-align: center;
+        font-family: $monoFont;
         font-weight: 700;
-        font-size: 1.4rem;
-        border-radius: 0.6rem;
+
+        .filter-name {
+            color: $purple-deep;
+            padding: 0.4rem 0;
+            text-transform: uppercase;
+        }
+
+        select {
+            font-weight: 700;
+            font-size: 1.4rem;
+            border-radius: 0.6rem;
+        }
     }
+
 }
 
 .search-buttons {

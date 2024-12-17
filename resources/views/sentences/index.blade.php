@@ -4,9 +4,7 @@
     <div id="hero-panel">
         <h1>{{ __('phrasebook') }}</h1>
         <div class="hero-blurb">Find all uses of a term to understand it in context!</div>
-        <x-search-tools route="sentences.index">
-            <button type="button" onclick="location.href='/dictionary/sentences'">clear</button>
-        </x-search-tools>
+        <x-search-bar route="sentences.index"/>
     </div>
 @endsection
 

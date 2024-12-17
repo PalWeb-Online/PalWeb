@@ -5,7 +5,4 @@
             <img src="{{ asset('/img/search.svg') }}" alt="Search"/>
         </button>
     </div>
-    <div class="search-buttons">
-        {{ $slot }}
-    </div>
 </form>

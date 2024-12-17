@@ -299,6 +299,37 @@
     }
 }
 
+.user-portrait-array {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3.2rem 0.8rem;
+}
+
+.user-portrait-wrapper {
+    display: grid;
+    grid-template-areas: 'overlap';
+    align-items: end;
+    justify-items: center;
+    gap: 1.6rem;
+
+    .user-portrait-name {
+        @include caption;
+        margin-block-end: -0.8rem;
+        z-index: 3;
+    }
+
+    .user-avatar, .user-portrait-name {
+        grid-area: overlap;
+    }
+
+    .user-creations-count {
+        font-family: $headFont;
+        font-weight: 700;
+        color: $purple-deep;
+        font-size: 1.6rem;
+    }
+}
+
 .user-avatar {
     width: 14.4rem;
     height: 14.4rem;

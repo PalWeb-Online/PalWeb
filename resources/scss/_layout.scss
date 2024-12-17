@@ -723,10 +723,8 @@ nav {
 .feature-panel {
     display: grid;
     gap: 4.8rem;
-
-    .feature-panel-content, .feature-panel-feature {
-        max-width: 96rem;
-    }
+    width: 100%;
+    max-width: 96rem;
 
     .feature-panel-content {
         display: grid;
@@ -758,6 +756,7 @@ nav {
     }
 
     .feature-panel-feature {
+        width: 100%;
         justify-self: center;
     }
 

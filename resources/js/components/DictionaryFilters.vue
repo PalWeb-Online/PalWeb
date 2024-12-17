@@ -72,7 +72,7 @@ export default {
     <form id="dictionary_search" class="search-tools" method="GET">
         <SearchBar/>
 
-        <div class="dictionary-filters">
+        <div class="search-filters">
             <div class="filter-container">
                 <div class="filter-name">category</div>
                 <select v-model="selectedCategory" @change="onCategoryChange">

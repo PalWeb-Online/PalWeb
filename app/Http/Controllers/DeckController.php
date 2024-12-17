@@ -60,38 +60,11 @@ class DeckController extends Controller
             ->onEachSide(1);
         $totalCount = $decks->total();
 
-        $newest = Deck::with('author')
-            ->where('private', 0)
-            ->orderByDesc('id')
-            ->take(5)
-            ->get();
-
-        $mostSaved = Deck::where('private', 0)
-            ->join('markable_bookmarks', function ($join) {
-                $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
-                    ->where('markable_bookmarks.markable_type', Deck::class);
-            })
-            ->select('decks.*', DB::raw('COUNT(markable_bookmarks.user_id) as users_count'))
-            ->groupBy('decks.id')
-            ->havingRaw('COUNT(markable_bookmarks.user_id) > 1')
-            ->orderByDesc('users_count')
-            ->with('author')
-            ->take(5)
-            ->get();
-
-        $featuredDeck = Cache::get('featured-deck');
-        if (!$featuredDeck) {
-            $featuredDeck = Deck::inRandomOrder()->first();
-        }
-
         View::share('pageTitle', 'Deck Library');
 
         return view('decks.index', [
             'decks' => $decks,
-            'newest' => $newest,
-            'mostSaved' => $mostSaved,
             'totalCount' => $totalCount,
-            'featuredDeck' => $featuredDeck,
         ]);
     }
 

@@ -126,18 +126,10 @@ figure.unit-image {
     }
 
     figcaption {
+        @include caption;
         position: absolute;
         top: 3.2rem;
         right: -1.2rem;
-        padding: 0.6rem 1.8rem;
-        color: $purple-deep;
-        border: 0.2rem solid $purple-deep;
-        border-radius: 1.2rem;
-        box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
-        font-family: $headFont;
-        font-size: 1.6rem;
-        background: white;
-        text-decoration: none;
         transition: 0.2s;
     }
 

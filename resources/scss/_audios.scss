@@ -71,16 +71,7 @@
 
 .audios-list {
     display: grid;
-    gap: 0.8rem;
-}
-
-.audio-filters {
-    display: flex;
-    gap: 0.8rem;
-
-    & > * {
-        flex-grow: 1;
-    }
+    gap: 1.6rem;
 }
 
 .pronunciation-item-wrapper {

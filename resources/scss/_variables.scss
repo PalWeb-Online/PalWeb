@@ -45,6 +45,19 @@
     }
 }
 
+@mixin caption {
+    padding: 0.6rem 1.8rem;
+    color: $purple-deep;
+    background: white;
+    border: 0.2rem solid $purple-deep;
+    border-radius: 1.2rem;
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
+    font-family: $headFont;
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
 @mixin pop-on-hover {
     transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
 

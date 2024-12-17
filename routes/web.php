@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
@@ -102,23 +103,14 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
  * Community Routes
  */
 Route::prefix('/community')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', function () {
-        return view('community.index');
-    })->middleware('pageTitle:Community')->name('community.index');
+    // Community Routes
+    Route::get('/', [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
 
     // User Routes
     Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
 
-    // Audio Routes
-    Route::prefix('/audios')->controller(AudioController::class)->group(function () {
-        Route::get('/', 'index')->name('audios.index');
-        Route::get('/{speaker}', 'speaker')->name('audios.speaker');
-        Route::delete('/{audio}', 'destroy')->name('audios.destroy');
-    });
-
     // Deck Routes
     Route::resource('/decks', DeckController::class);
-
     Route::prefix('/decks')->controller(DeckController::class)->group(function () {
         Route::get('/{deck}/get', 'get')->name('decks.get');
         Route::post('/{deck}/pin', 'pin')->name('decks.pin');
@@ -126,6 +118,13 @@ Route::prefix('/community')->middleware(['auth', 'verified'])->group(function ()
         Route::post('/{deck}/export', 'export')->name('decks.export');
         Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
         Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
+    });
+
+    // Audio Routes
+    Route::prefix('/audios')->controller(AudioController::class)->group(function () {
+        Route::get('/', 'index')->name('audios.index');
+        Route::get('/{speaker}', 'speaker')->name('audios.speaker');
+        Route::delete('/{audio}', 'destroy')->name('audios.destroy');
     });
 });
 

@@ -68,53 +68,6 @@
                     <x-vue.deck component="DeckFlashcard" :deck="\App\Models\Deck::find(100)"/>
                 </div>
             </div>
-
-{{--            @php--}}
-{{--                $term = \App\Models\Term::firstWhere('slug', 'phrase-ʔahla w-sahla');--}}
-{{--                $term = [--}}
-{{--                    'id' => $term->id,--}}
-{{--                    'term' => $term->term,--}}
-{{--                    'category' => $term->category,--}}
-{{--                    'translit' => $term->translit,--}}
-{{--                    'file' => $term->pronunciations[0]->audify(),--}}
-{{--                    'inflections' => $term->inflections->map(function ($inflection) {--}}
-{{--                        return [--}}
-{{--                            'inflection' => $inflection->inflection,--}}
-{{--                            'translit' => $inflection->translit,--}}
-{{--                        ];--}}
-{{--                    }),--}}
-{{--                    'glosses' => $term->glosses->map(function ($gloss) {--}}
-{{--                        return [--}}
-{{--                            'id' => $gloss->id,--}}
-{{--                            'gloss' => $gloss->gloss,--}}
-{{--                        ];--}}
-{{--                    })->toArray(),--}}
-{{--                    'routes' => [--}}
-{{--                        'view' => route('terms.show', $term),--}}
-{{--                        'edit' => route('terms.edit', $term),--}}
-{{--                        'delete' => route('terms.destroy', $term),--}}
-{{--                        'usages' => route('terms.usages', $term),--}}
-{{--                    ],--}}
-{{--                ];--}}
-{{--            @endphp--}}
-
-{{--            <div data-vue-component="TermFlashcard"--}}
-{{--                 data-props="{{ json_encode([--}}
-{{--                 'term' => $term,--}}
-{{--                 'imageURL' => asset('/img'),--}}
-{{--                 'isUser' => auth()->check(),--}}
-{{--                 'isAdmin' => auth()->check() && auth()->user()->isAdmin(),--}}
-{{--                 'showTerm' => true,--}}
-{{--                 'showTranslit' => true,--}}
-{{--             ]) }}"--}}
-{{--            >--}}
-{{--            </div>--}}
-
-{{--            <div class="feature-panel-feature" style="width: 100%">--}}
-{{--                <x-vue.deck component="DeckItem" :deck="\App\Models\Deck::find(19)"/>--}}
-{{--                <x-vue.deck component="DeckItem" :deck="\App\Models\Deck::find(27)"/>--}}
-{{--                <x-vue.deck component="DeckItem" :deck="\App\Models\Deck::find(9)"/>--}}
-{{--            </div>--}}
         </div>
 
         <div>
@@ -140,6 +93,13 @@
                 <div class="model-counter-count">{{ \App\Models\Deck::count() }}</div>
                 <div class="model-counter-body">
                     <span class="model-counter-model">Decks</span>
+                    <span class="model-counter-description">in the Library</span>
+                </div>
+            </div>
+            <div class="model-counter">
+                <div class="model-counter-count">{{ \App\Models\Audio::count() }}</div>
+                <div class="model-counter-body">
+                    <span class="model-counter-model">Audios</span>
                     <span class="model-counter-description">in the Library</span>
                 </div>
             </div>

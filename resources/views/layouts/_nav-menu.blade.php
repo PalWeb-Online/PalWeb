@@ -30,7 +30,7 @@
     </x-dropdown>
     <x-dropdown>
         <x-slot name="trigger">
-            <x-link :href="route('decks.index')"
+            <x-link :href="route('community.index')"
                     :active="request()->routeIs('community.index', 'users.show', 'decks.index', 'decks.show')">{{ __('community') }}
             </x-link>
         </x-slot>

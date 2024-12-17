@@ -336,6 +336,61 @@ h3 {
     }
 }
 
+.portal-section {
+    margin-block-end: 1.6rem;
+
+    .portal-section-head {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-end;
+        gap: 0.8rem;
+
+        .portal-section-title {
+            flex-grow: 1;
+            display: grid;
+            align-items: end;
+            grid-template-areas: 'overlap';
+
+            font-family: $displayFont;
+            color: $purple-deep;
+
+            // todo: clamp
+            font-size: 12.8rem;
+
+            & > * {
+                grid-area: overlap;
+            }
+
+            img {
+                width: 19.2rem;
+            }
+
+            div {
+                text-transform: uppercase;
+            }
+
+        }
+
+        .portal-button {
+            margin-block-end: 3.2rem;
+        }
+    }
+
+    .portal-section-blurb {
+        margin-block-start: -0.8rem;
+        padding: 1.2rem 2.4rem;
+        background: white;
+        border-radius: 3.2rem;
+
+        justify-self: start;
+        text-align: start;
+        color: $purple-deep;
+        font-size: 2.0rem;
+        font-weight: 700;
+    }
+}
+
+
 .portal-button-wrapper {
     display: grid;
     gap: 3.2rem;
@@ -360,23 +415,24 @@ h3 {
         justify-content: center;
         padding-block-end: 0.8rem;
 
-        .portal-button {
-            color: $purple-deep;
-            background: $accent-yellow;
-            font-family: $headFont;
-            font-size: 2.4rem;
-            font-weight: 700;
-            text-transform: capitalize;
-            padding: 1.6rem 3.2rem;
-            border-radius: 3.2rem;
-            transform: rotate(-1deg);
-            transition: 0.2s;
+    }
+}
 
-            &:hover {
-                transform: rotate(1deg) translate(0.3rem, -0.6rem);
-                box-shadow: -0.3rem 0.6rem 0 $purple-primary;
-            }
-        }
+.portal-button {
+    color: $purple-deep;
+    background: $accent-yellow;
+    font-family: $headFont;
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    padding: 1.6rem 3.2rem;
+    border-radius: 3.2rem;
+    transform: rotate(-1deg);
+    transition: 0.2s;
+
+    &:hover {
+        transform: rotate(1deg) translate(0.3rem, -0.6rem);
+        box-shadow: -0.3rem 0.6rem 0 $purple-primary;
     }
 }
 
@@ -549,7 +605,10 @@ h3 {
     }
 
     .tip-content {
-        margin-block: 1.6rem; display: flex; flex-flow: column; gap: 0.4rem;
+        margin-block: 1.6rem;
+        display: flex;
+        flex-flow: column;
+        gap: 0.4rem;
 
         p {
             margin: 0;
