@@ -21,7 +21,7 @@ const closeDialog = () => {
 };
 
 const sizeClass = computed(() => {
-    return `dialog-${props.size}`;
+    return `app-dialog-${props.size}`;
 });
 
 defineExpose({
@@ -31,23 +31,23 @@ defineExpose({
 </script>
 
 <template>
-    <div class="rw-dialog-wrapper">
-        <div class="rw-dialog-trigger" @click="openDialog">
+    <div class="app-dialog-wrapper">
+        <div class="app-dialog-trigger" @click="openDialog">
             <slot name="trigger"></slot>
         </div>
 
-        <div v-if="isDialogVisible" class="rw-dialog-overlay" @click.self="closeDialog">
-            <div class="rw-dialog" :class="sizeClass">
-                <div class="rw-dialog-tab">
-                    <div class="rw-dialog-title">
+        <div v-if="isDialogVisible" class="app-dialog-overlay" @click.self="closeDialog">
+            <div class="app-dialog" :class="sizeClass">
+                <div class="app-dialog-tab">
+                    <div class="app-dialog-title">
                         {{ title }}
                     </div>
-                    <img class="rw-dialog-close"
+                    <img class="app-dialog-close"
                          @click="closeDialog"
                          alt="Close"
                          src="/img/close.svg"/>
                 </div>
-                <div class="rw-dialog-body">
+                <div class="app-dialog-body">
                     <slot name="content"></slot>
                 </div>
             </div>

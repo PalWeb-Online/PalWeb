@@ -6,7 +6,6 @@ const props = defineProps({
     isPinned: Boolean,
     pinCount: Number,
     route: String,
-    imageURL: String,
 });
 
 let isPinned = ref(props.isPinned);
@@ -46,9 +45,9 @@ const pin = async () => {
 </script>
 
 <template>
-    <img ref="reference" :class="['pin', { unpinned: !isPinned }]" :src="`${imageURL}/pin.svg`" @click="pin" alt="pin"/>
+    <img ref="reference" :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
     <div v-if="pinCount > 1" class="pin-counter">
-        <img :src="`${imageURL}/heart.svg`" alt="heart"/>
+        <img src="/img/heart.svg" alt="heart"/>
         <div>{{ pinCount }}</div>
     </div>
 

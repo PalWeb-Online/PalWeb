@@ -17,7 +17,7 @@ class RecordWizardController extends Controller
     {
         View::share('pageTitle', 'Record Wizard');
 
-        return view('record.index', [
+        return view('users.record.index', [
             'layout' => 'app'
         ]);
     }

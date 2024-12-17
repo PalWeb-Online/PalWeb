@@ -1,14 +1,10 @@
 <script setup>
-import {Howl} from 'howler';
 import {onMounted, onUnmounted, ref, watch} from 'vue';
-import ContextActions from "./ContextActions.vue";
+import {Howl} from 'howler';
 import VanillaTilt from "vanilla-tilt";
 
 const props = defineProps({
     term: Object,
-    imageURL: String,
-    isUser: Boolean,
-    isAdmin: Boolean,
     isActive: Boolean,
     flipDefault: Boolean,
     flipDefaultInflections: Boolean,
@@ -17,24 +13,32 @@ const props = defineProps({
 });
 
 const audio = ref(null);
-const trigger = ref(null);
+const card = ref(null);
 
 function playAudio() {
-    const cardElement = trigger.value.closest('.carousel__slide');
-    if (cardElement && cardElement.classList.contains('carousel__slide--clone')) {
-        return;
-    }
+    const cardElement = card.value.closest('.carousel__slide');
+    if (cardElement && cardElement.classList.contains('carousel__slide--clone')) return;
 
-    if (audio.value) {
-        audio.value.play();
-    }
+    if (audio.value) audio.value.play();
 }
 
 const flipCard = () => {
-    const cardElements = document.querySelectorAll(`[data-id="${props.term.id}"]`);  // Find both original and cloned cards
+    const cardElements = document.querySelectorAll(`[data-id="${props.term.id}"]`);
     cardElements.forEach(card => {
         card.classList.toggle('flipped');
     });
+};
+
+const handleKeydown = (event) => {
+    if (event.key === 'ArrowDown' || event.key === 's') {
+        event.preventDefault();
+        flipCard();
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'w') {
+        event.preventDefault();
+        playAudio();
+    }
 };
 
 onMounted(() => {
@@ -44,12 +48,10 @@ onMounted(() => {
         });
     }
 
-    VanillaTilt.init(trigger.value, {
+    VanillaTilt.init(card.value, {
         max: 10,
         speed: 400,
         scale: 1,
-        glare: true,
-        "max-glare": 0.1,
     });
 
     if (props.isActive) {
@@ -64,30 +66,18 @@ onUnmounted(() => {
 watch(() => props.isActive, (newVal) => {
     if (newVal) {
         window.addEventListener('keydown', handleKeydown);
+
     } else {
         window.removeEventListener('keydown', handleKeydown);
     }
 });
-
-const handleKeydown = (event) => {
-    if (event.key === 'ArrowDown' || event.key === 's') {
-        event.preventDefault();
-        flipCard();
-    }
-
-    if (event.key === 'ArrowUp' || event.key === 'w') {
-        event.preventDefault();
-        playAudio();
-    }
-};
-
 </script>
 
 <template>
     <div class="term-flashcard-wrapper">
-        <img v-if="term.audio" class="play" :src="`${imageURL}/audio.svg`" alt="play" @click="playAudio"/>
+        <img v-if="term.audio" class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>
 
-        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="term.id" ref="trigger" @click="flipCard">
+        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="term.id" ref="card" @click="flipCard">
             <div class="term-flashcard-front">
                 <div class="term-flashcard-term">
                     <div>{{ term.term }}</div>
@@ -123,12 +113,5 @@ const handleKeydown = (event) => {
                 </div>
             </div>
         </div>
-        <ContextActions
-            modelType="term"
-            :imageURL="imageURL"
-            :routes="term.routes"
-            :isUser="isUser"
-            :isAdmin="isAdmin"
-        />
     </div>
 </template>

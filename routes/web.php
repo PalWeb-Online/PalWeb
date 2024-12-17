@@ -185,8 +185,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('/dashboard')->group(function () {
         Route::prefix('/flashcards')->controller(FlashcardController::class)->group(function () {
-            Route::get('/{deck}', 'study')->name('flashcards.study');
-            Route::get('/{deck}/get', 'get')->name('flashcards.study.get');
+            Route::get('/', 'index')->name('flashcards.study');
+            Route::get('/decks', 'getDecks');
+            Route::get('/decks/{deck}', 'getCards');
         });
 
         Route::controller(DashboardController::class)->group(function () {

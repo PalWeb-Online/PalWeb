@@ -6,7 +6,6 @@ import DeckActions from "./DeckActions.vue";
 import SentenceActions from "./SentenceActions.vue";
 
 const props = defineProps({
-    imageURL: String,
     modelType: String,
 
     // ModelActions
@@ -85,7 +84,7 @@ const getFilteredProps = computed(() => {
 
 <template>
     <div class="popup-menu-wrapper">
-        <img ref="reference" class="gear" :src="`${imageURL}/gear.svg`" @click="toggleMenu" alt="options"/>
+        <img ref="reference" class="gear" src="/img/gear.svg" @click="toggleMenu" alt="options"/>
 
         <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
             <component :is="getActionsComponent" v-bind="getFilteredProps"/>

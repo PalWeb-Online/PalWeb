@@ -3,8 +3,8 @@ import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import {useStateStore} from "../store/StateStore.js";
 import {useRecordStore} from '../store/RecordStore';
 import {useQueueStore} from '../store/QueueStore.js';
+import AppDialog from "../../AppDialog.vue";
 import Record from "../../../utils/Record.js";
-import WizardDialog from "../ui/WizardDialog.vue";
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 import WizardProgressBar from "../ui/WizardProgressBar.vue";
 
@@ -235,17 +235,17 @@ watch(
         </section>
     </div>
 
-    <WizardDialog ref="dialogLimitReached" title="Limit Reached" size="large">
+    <AppDialog ref="dialogLimitReached" title="Limit Reached" size="large">
         <template #content>
             <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
                 Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
                 more.</p>
         </template>
-    </WizardDialog>
-    <WizardDialog ref="dialogQueueCompleted" title="Queue Completed" size="large">
+    </AppDialog>
+    <AppDialog ref="dialogQueueCompleted" title="Queue Completed" size="large">
         <template #content>
             <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
                 uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
         </template>
-    </WizardDialog>
+    </AppDialog>
 </template>

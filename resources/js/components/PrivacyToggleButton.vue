@@ -5,7 +5,6 @@ import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 const props = defineProps({
     isPrivate: Boolean,
     route: String,
-    imageURL: String,
 });
 
 let isPrivate = ref(props.isPrivate);
@@ -40,7 +39,7 @@ const togglePrivacy = async () => {
 </script>
 
 <template>
-    <img ref="reference" :class="['lock', { public: !isPrivate }]" :src="`${imageURL}/${isPrivate ? 'lock.svg' : 'lock-open.svg'}`" @click="togglePrivacy" alt="lock"/>
+    <img ref="reference" :class="['lock', { public: !isPrivate }]" :src="`/img/${isPrivate ? 'lock.svg' : 'lock-open.svg'}`" @click="togglePrivacy" alt="lock"/>
 
     <Transition name="notification">
         <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">

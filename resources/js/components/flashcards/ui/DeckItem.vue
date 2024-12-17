@@ -1,21 +1,10 @@
 <script setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue';
-import PinButton from "./PinButton.vue";
-import PrivacyToggleButton from "./PrivacyToggleButton.vue";
-import DeckActions from "./DeckActions.vue";
+import {computed, onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
     deck: Object,
-    isPinned: Boolean,
-
-    // ModelActions
-    routes: Object,
-    isUser: Boolean,
-
-    // DeckActions
-    isAuthor: Boolean,
+    active: false,
 });
 
 const description = computed(() => {
@@ -23,13 +12,6 @@ const description = computed(() => {
         ? props.deck.description.substring(0, 317) + '...'
         : props.deck.description;
 });
-
-const flipCard = (event) => {
-    const card = event.target.closest('.deck-flashcard-wrapper').querySelector('.deck-flashcard');
-    if (card) {
-        card.classList.toggle('flipped');
-    }
-};
 
 const trigger = ref(null);
 
@@ -44,8 +26,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="deck-flashcard-wrapper">
-        <div class="deck-flashcard" ref="trigger" @click="flipCard">
+    <div :class="['deck-flashcard-wrapper', { active: active }]">
+        <div :class="['deck-flashcard', {flipped: active }]" ref="trigger">
             <div class="deck-flashcard-front">
                 <div class="deck-flashcard-front-head">
                     <div class="deck-title">{{ deck.name }}</div>
@@ -67,22 +49,5 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-
-        <PinButton v-if="isUser"
-                   :route="routes.pin"
-                   :isPinned="isPinned"
-                   :pinCount="deck.pinCount"
-        />
-        <PrivacyToggleButton v-if="isAuthor"
-                             :route="routes.privacyToggle"
-                             :isPrivate="deck.isPrivate"
-        />
-
-        <ContextActions
-            modelType="deck"
-            :routes="routes"
-            :isUser="isUser"
-            :isAuthor="isAuthor"
-        />
     </div>
 </template>

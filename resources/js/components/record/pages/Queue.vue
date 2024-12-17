@@ -3,7 +3,7 @@ import {onMounted, ref} from 'vue';
 import {useQueueStore} from "../store/QueueStore.js";
 import {useRecordStore} from '../store/RecordStore';
 import Draggable from 'vuedraggable';
-import WizardDialog from "../ui/WizardDialog.vue";
+import AppDialog from "../../AppDialog.vue";
 
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
@@ -104,11 +104,11 @@ onMounted(async () => {
         </div>
     </div>
 
-    <WizardDialog ref="dialogSelectDeck" title="Pinned Decks" size="large">
+    <AppDialog ref="dialogSelectDeck" title="Pinned Decks" size="large">
         <template #content>
             <button v-for="deck in QueueStore.data.decks" @click="fetchDeckItems(deck.id)">
                 {{ deck.name }}
             </button>
         </template>
-    </WizardDialog>
+    </AppDialog>
 </template>

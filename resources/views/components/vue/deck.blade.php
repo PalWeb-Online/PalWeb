@@ -29,7 +29,6 @@
                      'view' => route('decks.show', $deck),
                      'edit' => route('decks.edit', $deck),
                      'delete' => route('decks.destroy', $deck),
-                     'study' => route('flashcards.study', $deck),
                      'creator' => route('users.show', $deck->author->username),
                      'pin' => route('decks.pin', $deck),
                      'privacyToggle' => route('decks.privacy.toggle', $deck),

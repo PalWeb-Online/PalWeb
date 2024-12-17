@@ -11,14 +11,6 @@ const props = defineProps({
     isPinned: Boolean,
 });
 
-const isOpen = ref(false);
-const reference = ref(null);
-const floating = ref(null);
-const {floatingStyles} = useFloating(reference, floating, {
-    placement: 'right',
-    middleware: [offset(8), flip(), shift()]
-});
-
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const confirmCopy = (event) => {
@@ -36,16 +28,6 @@ const copyLink = (event) => {
         alert('Could not copy text: ', err);
     });
 };
-
-onMounted(() => {
-    reference.value.addEventListener('mouseenter', () => {
-        isOpen.value = true;
-    });
-    reference.value.addEventListener('mouseleave', () => {
-        isOpen.value = false;
-    });
-});
-
 </script>
 
 <template>
@@ -55,8 +37,6 @@ onMounted(() => {
         <a :href="routes.edit">Edit Deck</a>
         <DeleteButton :modelType="modelType" :route="routes.delete"/>
     </template>
-
-    <a ref="reference" :href="routes.study">Study Deck</a>
 
     <template v-if="isUser">
         <a :href="routes.creator">View Creator</a>
