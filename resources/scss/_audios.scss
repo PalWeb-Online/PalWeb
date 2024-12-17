@@ -134,13 +134,14 @@
     background: $accent-yellow-pastel;
 
     .pronunciation-item-term {
-        flex-basis: 10%;
+        flex-basis: 15%;
         padding-block-start: 0.1rem;
-        padding-inline-end: 1.6rem;
+        padding-inline-start: 1.6rem;
         font-family: $ar_bodyFont;
         font-weight: 700;
-        border-inline-end: 0.1rem solid $accent-yellow;
+        text-align: end;
         white-space: nowrap;
+        border-inline-start: 0.1rem solid $accent-yellow;
     }
 
     .pronunciation-item-dialect {
@@ -152,6 +153,7 @@
     }
 
     .pronunciation-item-phonology {
+        flex-grow: 1;
         font-family: $monoFont;
         font-size: 1.2rem;
     }

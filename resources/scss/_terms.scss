@@ -113,6 +113,7 @@
         }
 
         .term-deck-toggle {
+            position: absolute;
             width: 4.8rem;
             top: -2.4rem;
             right: 1.6rem;
@@ -238,7 +239,7 @@
 
 .terms-list {
     display: grid;
-    gap: 0.8rem;
+    gap: 1.6rem;
 
     h1 {
         font-size: 2.4rem;
@@ -264,25 +265,16 @@
     gap: 0.8rem;
     align-items: center;
     width: 100%;
-    padding-block-start: 0.8rem;
 
     .play {
-        width: 2.8rem;
+        width: 2.4rem;
     }
 
     &.s {
-        padding: 0;
-
         .term-item {
             display: block;
-            border: none;
-            background: none;
 
-            .arb {
-                margin: 0;
-            }
-
-            .eng {
+            .term-item-body {
                 display: none;
             }
         }
@@ -294,60 +286,61 @@
 }
 
 .term-item {
-    direction: rtl;
     flex-grow: 1;
-    position: relative;
-    display: grid;
-    align-items: start;
-    background: $purple-pastel-light;
-    border: 0.1rem solid $purple-primary;
-    line-height: 2rem;
+    direction: rtl;
+    display: flex;
+    flex-flow: row wrap;
+
+    background: white;
+    border: 0.1rem solid $accent-yellow;
     border-radius: 0.8rem;
-    font-family: $monoFont, $ar_bodyFont;
     font-size: 1.6rem;
-    text-align: center;
-    grid-template-columns: 33% auto;
+    position: relative;
 
-    .arb {
-        font-size: 1.8rem;
-        font-weight: 700;
-        padding: 1.2rem;
+    .term-item-head {
+        min-width: 30%;
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 1.2rem;
+        background: $accent-yellow-pastel;
         border-radius: 0.8rem;
-        background: white;
-        border: 0.1rem solid $purple-primary-dark;
-        box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
-        margin: -0.8rem calc(0.8rem - 0.2rem) 0 calc(0.8rem + 0.2rem);
-        user-select: none;
-        cursor: pointer;
-        width: 100%;
-        justify-self: normal;
-        z-index: 1;
-        transition: 0.05s;
-
-        &:hover {
-            box-shadow: none;
-            transform: translate(-0.2rem, 0.2rem);
-        }
-    }
-
-    @media (min-width: 960px) {
-        grid-template-columns: 25% auto;
+        gap: 1.6rem;
 
         .arb {
-            font-size: 2.0rem;
+            flex-basis: 6.4rem;
+            font-family: $ar_bodyFont;
+            font-size: 1.6rem;
+            font-weight: 700;
+            border-inline-end: 0.1rem solid $accent-yellow;
+            padding-inline-end: 1.6rem;
+            white-space: nowrap;
+        }
+
+        .translit {
+            flex-shrink: 0;
+            font-family: $monoFont;
+            font-size: 1.2rem;
+            padding-inline-end: 0.8rem;
         }
     }
 
-    .eng {
-        text-align: start;
+    .term-item-body {
+        flex-grow: 1;
+        display: flex;
+        gap: 1.6rem;
+        align-items: center;
+        justify-content: space-between;
         direction: ltr;
-        font-size: 1.4rem;
-        flex: 1 0 100%;
-        font-weight: 400;
-        padding: 1.2rem 1.8rem;
+        padding-block: 0.8rem;
+        padding-inline: 1.6rem 0.8rem;
         background: white;
-        border-inline-end: 0.1rem solid $purple-primary;
-        border-radius: 0.8rem 0 0 0.8rem;
+        border-radius: 0.8rem;
+
+        .eng {
+            font-family: $bodyFont;
+            font-size: 1.4rem;
+            font-weight: 400;
+        }
     }
 
     &.subterm {
@@ -410,8 +403,6 @@
 
     .term-deck-toggle {
         width: 2.4rem;
-        bottom: 0;
-        left: -1.2rem;
     }
 
     .popup-menu {

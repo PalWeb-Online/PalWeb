@@ -201,12 +201,9 @@ h3 {
 }
 
 .popup-menu-wrapper {
+    display: flex;
     direction: ltr;
     flex-shrink: 0;
-
-    &:has(.gear) {
-        margin-block-start: 0.4rem;
-    }
 
     .gear {
         width: 2.4rem;
@@ -299,10 +296,6 @@ h3 {
     &:hover {
         transform: rotate(15deg);
     }
-}
-
-.term-deck-toggle {
-    position: absolute;
 }
 
 .flip {

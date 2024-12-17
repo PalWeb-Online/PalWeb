@@ -6,11 +6,6 @@
 @if($pronunciation)
     <div class="pronunciation-item-wrapper">
         <div class="pronunciation-item">
-            @if($audio)
-                <div class="pronunciation-item-term">
-                    <a href="{{ route('terms.show', $pronunciation->term) }}">{{ $pronunciation->term->term }}</a>
-                </div>
-            @endif
             <div class="pronunciation-item-dialect">{{ $pronunciation->dialect->name }}</div>
             <div class="pronunciation-item-phonology">
                 {{ $pronunciation->borrowed === true ? '(Borrowed)' : '' }}
@@ -19,6 +14,10 @@
                 {{ $pronunciation->phonemic }}
                 {{ $pronunciation->phonetic }}
             </div>
+            @if($audio)
+                <a class="pronunciation-item-term"
+                   href="{{ route('terms.show', $pronunciation->term) }}">{{ $pronunciation->term->term }}</a>
+            @endif
         </div>
 
         @if($audio)
