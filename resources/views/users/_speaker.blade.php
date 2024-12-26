@@ -39,7 +39,7 @@
     @if(!request()->routeIs('audios.speaker') && $speaker->audios->count() > 0)
         <a href="{{ route('audios.speaker', $speaker) }}">See All Audios by this Speaker</a>
         <div class="featured-title s">Latest</div>
-        @foreach($speaker->audios->take(5) as $audio)
+        @foreach($speaker->audios->sortByDesc('id')->take(5) as $audio)
             <x-pronunciation-item :pronunciation="$audio->pronunciation" :audio="$audio"/>
         @endforeach
     @endif

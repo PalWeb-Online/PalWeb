@@ -19,12 +19,22 @@ export const useQueueStore = defineStore('QueueStore', () => {
     });
 
     const selected = ref(0);
-    const autoScroll = ref(true);
     const selectedArray = reactive([]);
 
-    watch(selected, () => {
-        if (autoScroll.value) {
-            // Logic for auto-scrolling
+    watch(selected, (newIndex) => {
+        const container = document.querySelector('section:first-child');
+        const selectedItem = container?.querySelectorAll('.rw-record-queue > div')[newIndex];
+
+        if (selectedItem && container) {
+            const itemOffsetTop = selectedItem.offsetTop;
+            const itemHeight = selectedItem.offsetHeight;
+            const containerHeight = container.offsetHeight;
+
+            const scrollPosition = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
+            container.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth',
+            });
         }
     });
 
@@ -154,7 +164,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
         data,
         selected,
         selectedArray,
-        autoScroll,
         initSelection,
         selectItem,
         moveBackward,

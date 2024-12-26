@@ -1,11 +1,12 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from 'vue';
-import {useStateStore} from "../store/StateStore.js";
-import {useSpeakerStore} from "../store/SpeakerStore.js";
-import {useRecordStore} from '../store/RecordStore';
+import {useStateStore} from "../stores/StateStore.js";
+import {useSpeakerStore} from "../stores/SpeakerStore.js";
+import {useRecordStore} from '../stores/RecordStore';
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardButton from "../ui/WizardButton.vue";
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
+import AppDialog from "../../AppDialog.vue";
 
 const StateStore = useStateStore();
 const SpeakerStore = useSpeakerStore();
@@ -126,19 +127,58 @@ onMounted(async () => {
     await SpeakerStore.fetchSpeaker();
     await fetchSpeakerOptions();
 });
-
-watch(StateStore.data.testState, (newState) => {
-    if (newState === false) {
-        getAudioStream();
-    } else if (!recorder.value) {
-        unloadRecorder();
-    }
-});
 </script>
 
 <template>
-    <div class="wizard-page-title">
+    <div class="rw-page-title">
         <h2>Speaker</h2>
+
+        <AppDialog size="large">
+            <template #trigger>
+                <img alt="Info" src="/img/idea.svg"/>
+            </template>
+            <template #content>
+                <div>What is my Speaker profile?</div>
+                <p>Your Speaker profile contains linguistic data about you that will be connected to every
+                    Recording you
+                    create, so that others can know the dialect & other sociolinguistic information behind what
+                    they're
+                    hearing. Your Speaker profile is distinct from your User profile; it does not include your
+                    name,
+                    etc. By default, however, your Recordings will link to your User profile. If you would like
+                    for your
+                    Speaker profile to remain anonymous, simply return to the Dashboard & set your User profile
+                    to
+                    Private. You can change this at any time.</p>
+                <div>What is my Location?</div>
+                <p>Your Location is the place where you learned Arabic, or the place that the people with whom
+                    you
+                    learned Arabic (e.g. your relatives) are from. It is up to you to decide the most
+                    appropriate choice
+                    to select. If you have lived most of your life in a given town, but your family & you have
+                    an accent
+                    characteristic of another town, then the town of your ancestry may be a more appropriate
+                    selection. Select the Location that you feel best represents your manner of speaking.</p>
+                <p><b>Note:</b> These Locations were imported from Wikidata by means of a script. There was no
+                    way to
+                    reliably distinguish Israeli towns in the 1948 Territories from Palestinian ones, so all
+                    towns
+                    currently located in the 1948 Territories — including Israeli towns — are listed. Israeli
+                    settlements in the West Bank & the Golan Heights have been discarded, however.
+                </p>
+                <div>What is my Fluency level?</div>
+                <p>Your Fluency level reflects how natural your pronunciation is, according to your own
+                    assessment. Only
+                    choose <b>Native</b> if you were raised speaking the language & have used it throughout your
+                    life,
+                    especially in a region where the language is spoken natively. Choose <b>Fluent</b> if your
+                    pronunciation of the language is naturalistic for any other reason. Most learners should not
+                    select
+                    anything higher than <b>Advanced</b>. Heritage speakers may fall anywhere on this spectrum.
+                    Err on
+                    the side of underestimation.</p>
+            </template>
+        </AppDialog>
     </div>
 
     <template v-if="!StateStore.data.hasPermission">
@@ -150,7 +190,7 @@ watch(StateStore.data.testState, (newState) => {
             </div>
         </div>
 
-        <div class="wizard-section-container">
+        <div class="rw-page__speaker">
             <section style="flex-grow: 1; grid-template-rows: auto">
                 <WizardButton id="mwe-rwt-reopenpopup" label="prompt again"
                               @click="getAudioStream"/>
@@ -159,7 +199,7 @@ watch(StateStore.data.testState, (newState) => {
     </template>
 
     <template v-else>
-        <div class="wizard-section-container">
+        <div class="rw-page__speaker">
             <section>
                 <div class="rw-speaker-profile-head">
                     <div class="rw-speaker-name">Welcome, {{ SpeakerStore.data.speaker.name ?? 'Loading...' }}!</div>

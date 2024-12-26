@@ -639,26 +639,29 @@
 }
 
 .workbench-portal-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4.8rem;
-    height: 32rem;
+    display: flex;
+    flex-flow: column;
+    gap: 2.4rem;
+    justify-content: center;
     margin-block-end: 4.8rem;
 
     .workbench-portal-item {
+        flex: 1 0 30%;
         display: grid;
+        max-height: 16rem;
         grid-template-areas: 'overlap';
         border-radius: 1.6rem;
         background: $purple-deep;
         overflow: hidden;
         outline: 0.4rem solid $purple-primary;
-        filter: drop-shadow(-0.8rem 0.8rem 0 rgba(black, 0.33));
+        box-shadow: -1.2rem 1.2rem 0 rgba(black, 0.33);
         transition: 0.1s;
+        margin: 0 0 0.6rem 0.6rem;
 
         &:hover {
             outline: 0.4rem solid white;
-            filter: drop-shadow(calc(-0.8rem - 0.8rem) calc(0.8rem + 0.8rem) 0 rgba(black, 0.33));
-            transform: translate(0.8rem, -0.8rem);
+            box-shadow: calc(-1.2rem - 0.6rem) calc(1.2rem + 0.6rem) 0 rgba(black, 0.33);
+            transform: translate(0.6rem, -0.6rem);
         }
 
         & > * {
@@ -686,6 +689,14 @@
             font-weight: 700;
             color: white;
             z-index: 1;
+        }
+    }
+
+    @media (min-width: 720px) {
+        flex-flow: row wrap;
+
+        .workbench-portal-item {
+            max-height: 32rem;
         }
     }
 }

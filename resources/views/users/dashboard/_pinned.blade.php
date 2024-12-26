@@ -3,6 +3,23 @@
     <button name="sort" value="newest" class="{{ request()->input('sort') == 'newest' ? 'active' : '' }}">Newest First</button>
 </form>
 
+<div class="decks-list">
+    <div class="featured-title l">Decks: {{ App\Models\Deck::whereHasBookmark(auth()->user())->count() }}</div>
+    @if(count($decks) > 0)
+        @foreach($decks as $deck)
+            <x-vue.deck component="DeckItem" :deck="$deck"/>
+        @endforeach
+    @else
+        <x-tip>
+            <p>Seems like you haven't pinned any Decks yet; for now, this section is empty & sad. Head over
+                to the
+                <a href="{{ route('decks.index') }}">Deck Library</a> to get started
+                learning
+                Palestinian Arabic!</p>
+        </x-tip>
+    @endif
+</div>
+
 <div class="terms-list">
     <div class="featured-title l">Terms: {{ App\Models\Term::whereHasBookmark(auth()->user())->count() }}</div>
     @if(count($terms) > 0)
@@ -13,7 +30,7 @@
         <x-tip>
             <p>Seems like you haven't pinned any Terms yet; for now, this section is empty & sad. Head over
                 to the
-                <a href="/dictionary">Dictionary</a> or the <a href="/lessons">Curriculum</a> to get started
+                <a href="{{ route('terms.index') }}">Dictionary</a> or the <a href="{{ route('academy.index') }}">Curriculum</a> to get started
                 learning
                 Palestinian Arabic!</p>
         </x-tip>

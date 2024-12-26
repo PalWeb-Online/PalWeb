@@ -715,30 +715,6 @@ h3 {
 }
 
 /*
-Tooltips
- */
-
-.tippy-box {
-    font-family: $monoFont;
-    font-weight: 400;
-    font-size: 1.2rem;
-    text-align: center;
-    hyphens: none;
-    padding: 0 0.2rem;
-    border-radius: 0.6rem;
-    color: $purple-primary-dark;
-    background: white;
-    border: 0.1rem solid $purple-deep;
-    box-shadow: -0.1rem 0.1rem 0 $purple-primary-dark;
-    margin: 0;
-    rotate: -2deg;
-}
-
-.tippy-arrow {
-    display: none;
-}
-
-/*
 Flash Notifications
  */
 

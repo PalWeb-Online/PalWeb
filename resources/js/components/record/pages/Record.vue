@@ -1,8 +1,8 @@
 <script setup>
 import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
-import {useStateStore} from "../store/StateStore.js";
-import {useRecordStore} from '../store/RecordStore';
-import {useQueueStore} from '../store/QueueStore.js';
+import {useStateStore} from "../stores/StateStore.js";
+import {useRecordStore} from '../stores/RecordStore';
+import {useQueueStore} from '../stores/QueueStore.js';
 import AppDialog from "../../AppDialog.vue";
 import Record from "../../../utils/Record.js";
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
@@ -11,6 +11,8 @@ import WizardProgressBar from "../ui/WizardProgressBar.vue";
 const StateStore = useStateStore();
 const RecordStore = useRecordStore();
 const QueueStore = useQueueStore();
+
+const originalQueueLength = QueueStore.data.items.length;
 
 const dialogLimitReached = ref(null);
 const dialogQueueCompleted = ref(null);
@@ -50,10 +52,9 @@ watch(
 );
 
 watch(
-    // todo: I think the queue is emptied, so this always triggers
     () => RecordStore.data.statusCount.done,
     (uploaded) => {
-        if (uploaded >= Object.keys(QueueStore.data.queue).length) {
+        if (uploaded >= originalQueueLength) {
             dialogQueueCompleted.value?.openDialog();
         }
     }
@@ -67,62 +68,66 @@ watch(
 </script>
 
 <template>
-    <div class="wizard-page-title">
-        <h2>Studio</h2>
+    <div class="rw-page-title">
+        <h2>Record</h2>
+    </div>
+    <div v-if="StateStore.data.errorMessage" class="tip error">
+        <div class="material-symbols-rounded">info</div>
+        <div class="tip-content">
+            <p>{{ StateStore.data.errorMessage }}</p>
+        </div>
     </div>
 
-    <div class="wizard-section-container mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
+    <div class="rw-page__record mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
         <section>
             <div class="rw-queue-name">{{
                     QueueStore.data.queue.name !== '' ? QueueStore.data.queue.name : 'Queue'
                 }}
             </div>
-            <ul class="mwe-rw-list">
-                <li
+            <div class="rw-record-queue">
+                <div
                     v-for="(pronunciation, index) in QueueStore.data.items"
                     :key="pronunciation.id"
                     :class="{
                         'selected': QueueStore.selected === index,
-                        [`${RecordStore.data.status[pronunciation.id]}`]: true,
                         'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
+                        [RecordStore.data.status[pronunciation.id]]: !!RecordStore.data.status[pronunciation.id]
                     }"
                     @click="QueueStore.selectItem(index)"
                 >
                     {{ pronunciation.term }}
-                </li>
-            </ul>
+                </div>
+            </div>
         </section>
 
         <section>
-            <div class="mwe-rw-core">
-                <div class="mwe-rw-itembox">
-                    <img
-                        :class="{
+            <div class="rw-record-item-container">
+                <img
+                    :class="{
                             'arrow': true,
                             'disabled': QueueStore.selected - 1 < 0
                         }"
-                        src="/img/reverse.svg"
-                        alt="Back"
-                        @click="QueueStore.moveBackward"
-                    />
-                    <div class="mwe-rw-item">
-                        <div>
-                            {{ QueueStore.data.items[QueueStore.selected]?.term || '' }}
-                        </div>
-                        <div>
-                            {{ QueueStore.data.items[QueueStore.selected]?.translit || '' }}
-                        </div>
+                    src="/img/reverse.svg"
+                    alt="Back"
+                    @click="QueueStore.moveBackward"
+                />
+                <div class="rw-record-item">
+                    <div>
+                        {{ QueueStore.data.items[QueueStore.selected]?.term || '' }}
                     </div>
-                    <img
-                        :class="{
+                    <div>
+                        {{ QueueStore.data.items[QueueStore.selected]?.translit || '' }}
+                    </div>
+                </div>
+                <img
+                    :class="{
                             'arrow': true,
                             'disabled': QueueStore.selected + 1 >= QueueStore.data.items.length
                         }"
-                        src="/img/play.svg"
-                        alt="Forward"
-                        @click="QueueStore.moveForward"
-                    />
-                </div>
+                    src="/img/play.svg"
+                    alt="Forward"
+                    @click="QueueStore.moveForward"
+                />
             </div>
 
             <!--           TODO: disable it if no word is selected -->
@@ -141,7 +146,7 @@ watch(
                                     :alt="!StateStore.data.isRecording ? 'Record' : 'Stop'"
                                     @click="RecordStore.toggleRecording"
                                 />
-                                <WizardVUMeter id="wizard-vumeter"
+                                <WizardVUMeter id="rw-vumeter"
                                                :value="RecordStore.vumeter"
                                                :class="{ 'saturated': RecordStore.saturated, 'recording': StateStore.data.isRecording }"
                                 />
@@ -163,7 +168,7 @@ watch(
                         </template>
                     </div>
 
-                    <div class="rw-actions-counter">
+                    <div class="rw-item-counter">
                         {{ RecordStore.data.statusCount.stashed }} of {{ QueueStore.data.items.length }}
                     </div>
                 </div>
@@ -208,7 +213,7 @@ watch(
                             />
                         </div>
 
-                        <div class="rw-actions-counter">
+                        <div class="rw-item-counter">
                             <span>{{ RecordStore.data.statusCount.done }}</span>
                             of
                             <span>{{ Object.keys(RecordStore.data.records).length }}</span>

@@ -1,6 +1,6 @@
-<x-page-head title="{{ __('features') }}">
+<x-page-head title="{{ __('academy') }}">
     <x-link :href="route('wiki.index')">{{ __('wiki') }}</x-link>
-    <x-link :href="route('wiki.show', 'features')">{{ __('features') }}</x-link>
+    <x-link :href="route('wiki.show', 'academy')">{{ __('academy') }}</x-link>
 </x-page-head>
 
 <div class="doc-section">

@@ -41,13 +41,19 @@ body {
 
             svg {
                 font-family: $logoFont;
-                font-size: 4.8rem;
+                font-size: 7.2rem;
                 font-weight: 700;
                 fill: white;
                 stroke: $purple-primary-dark;
                 paint-order: stroke fill;
                 stroke-width: 2;
                 text-shadow: -0.4rem 0.4rem 0 $purple-primary-dark;
+            }
+
+            @media (min-width: 960px) {
+                svg {
+                    font-size: 4.8rem;
+                }
             }
         }
     }

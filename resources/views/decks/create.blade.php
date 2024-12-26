@@ -12,10 +12,8 @@
         <div class="sp-head">
             <div>{{ __('decks.new') }}</div>
             <p>Welcome to the <b>Deck Builder</b>! Use this form to create a new <b>Deck</b>. By creating a <b>Deck</b>,
-                you'll be able to group terms from the Dictionary in any way you want — & share these lists with others!
-                In future updates, additional functionality will be added that will allow you to study these terms as
-                Flashcards. <a href="https://youtu.be/R26-A9dgxCY" target="_blank">Watch the tutorial to get
-                    started!</a>
+                you'll be able to group terms from the Dictionary in any way you want. You'll be able to study them as
+                Flashcards & share them with others!
             </p>
         </div>
 

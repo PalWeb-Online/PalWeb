@@ -12,6 +12,7 @@ export const useStateStore = defineStore('StateStore', () => {
     const data = reactive({
         step: 'speaker',
         testState: 'ready',
+        errorMessage: false,
         hasPermission: false,
         isRecording: false,
         isUploading: false,
@@ -21,47 +22,39 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const steps = {
         speaker: {
+            backStep: null,
+            nextStep: 'queue',
             canMoveBack: () => false,
             canMoveNext: () => data.hasPermission && SpeakerStore.data.speaker.exists,
         },
         queue: {
+            backStep: null,
+            nextStep: 'record',
             canMoveBack: () => false,
             canMoveNext: () => QueueStore.data.items.length > 0 || RecordStore.data.statusCount.done > 0,
         },
         record: {
+            backStep: 'queue',
+            nextStep: 'check',
             canMoveBack: () => true,
             canMoveNext: () => RecordStore.data.statusCount.done > 0,
         },
         check: {
+            backStep: 'record',
+            nextStep: null,
             canMoveBack: () => true,
             canMoveNext: () => false,
         }
     };
 
-    const backStep = {
-        speaker: null,
-        queue: null,
-        record: 'queue',
-        check: 'record',
-    };
-
-    const nextStep = {
-        speaker: 'queue',
-        queue: 'record',
-        record: 'check',
-        check: null,
-    };
-
     const backDisabled = computed(() => {
-        const currentStep = data.step;
-        const canMoveBack = steps[currentStep]?.canMoveBack();
+        const canMoveBack = steps[data.step]?.canMoveBack();
         return data.isFrozen || !canMoveBack;
         // return data.isFrozen || hasPendingRequests || !canMoveNext;
     });
 
     const nextDisabled = computed(() => {
-        const currentStep = data.step;
-        const canMoveNext = steps[currentStep]?.canMoveNext();
+        const canMoveNext = steps[data.step]?.canMoveNext();
         return data.isFrozen || !canMoveNext;
         // return data.isFrozen || hasPendingRequests || !canMoveNext;
     });
@@ -77,12 +70,44 @@ export const useStateStore = defineStore('StateStore', () => {
         return (stashing + uploading + finalizing) > 1;
     });
 
-    function moveBack() {
-        data.step = backStep[data.step];
-    }
+    const back = async () => {
+        const currentStep = steps[data.step];
 
-    function moveNext() {
-        data.step = nextStep[data.step];
+        if (currentStep?.canMoveBack()) {
+            data.step = currentStep.backStep;
+
+        } else {
+            freeze();
+            currentStep?.canMoveBack()
+                .then(() => data.step = currentStep.backStep)
+                .finally(() => unfreeze());
+        }
+    };
+
+    const next = async () => {
+        const currentStep = steps[data.step];
+
+        if (currentStep?.canMoveNext()) {
+            if (currentStep === 'speaker') {
+                const saved = await SpeakerStore.saveSpeaker();
+                if (!saved) return;
+            }
+            if (currentStep === 'record' && RecordStore.data.statusCount.stashed > 0) {
+                if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Record Wizard without uploading your stashed recordings, they will be deleted.')) return;
+            }
+
+            data.step = currentStep.nextStep;
+
+        } else {
+            freeze();
+            currentStep?.canMoveNext()
+                .then(() => data.step = currentStep.nextStep)
+                .finally(() => unfreeze());
+        }
+    };
+
+    function setPermission(isReady) {
+        data.hasPermission = isReady;
     }
 
     function freeze() {
@@ -93,18 +118,6 @@ export const useStateStore = defineStore('StateStore', () => {
         data.isFrozen = false;
     }
 
-
-    /**
-     * Sets the readiness status of the browser (i.e. if the user agent has allowed usage of the microphone).
-     *
-     * @param {boolean} isReady - The readiness status of the browser. True if the browser is ready, false otherwise.
-     *
-     * @return {void}
-     */
-    function setPermission(isReady) {
-        data.hasPermission = isReady;
-    }
-
     return {
         data,
         steps,
@@ -112,10 +125,8 @@ export const useStateStore = defineStore('StateStore', () => {
         hasPendingRequests,
         backDisabled,
         nextDisabled,
-        moveBack,
-        moveNext,
-        freeze,
-        unfreeze,
+        back,
+        next,
         setPermission,
     };
 });

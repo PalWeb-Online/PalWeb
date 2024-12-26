@@ -82,6 +82,7 @@
     overflow: hidden;
 
     .pronunciation-audios {
+        flex-shrink: 0;
         display: grid;
         gap: 0.4rem;
         justify-items: start;
@@ -120,6 +121,7 @@
     display: flex;
     align-items: center;
     flex-flow: row wrap;
+    direction: rtl;
     padding: 0.4rem 1.6rem;
     gap: 1.6rem;
     background: $accent-yellow-pastel;
@@ -127,12 +129,11 @@
     .pronunciation-item-term {
         flex-basis: 15%;
         padding-block-start: 0.1rem;
-        padding-inline-start: 1.6rem;
         font-family: $ar_bodyFont;
         font-weight: 700;
-        text-align: end;
         white-space: nowrap;
-        border-inline-start: 0.1rem solid $accent-yellow;
+        padding-inline-end: 1.6rem;
+        border-inline-end: 0.1rem solid $accent-yellow;
     }
 
     .pronunciation-item-dialect {
@@ -144,6 +145,7 @@
     }
 
     .pronunciation-item-phonology {
+        text-align: end;
         flex-grow: 1;
         font-family: $monoFont;
         font-size: 1.2rem;

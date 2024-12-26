@@ -22,7 +22,7 @@ class Audio extends Model
 
     public function url()
     {
-        return Storage::disk('s3')->url('/audio/'.$this->filename);
+        return Storage::disk('s3')->url('audios/'.$this->filename);
     }
 
     public function speaker(): BelongsTo

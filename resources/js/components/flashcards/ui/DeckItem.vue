@@ -1,10 +1,11 @@
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 
 const props = defineProps({
     deck: Object,
     active: false,
+    unflip: Boolean,
 });
 
 const description = computed(() => {
@@ -21,6 +22,13 @@ onMounted(() => {
         speed: 400,
         scale: 1,
     });
+});
+
+watch(() => props.unflip, (newValue) => {
+    if (newValue) {
+        const cardElement = trigger.value;
+        cardElement?.classList.remove('flipped');
+    }
 });
 
 </script>

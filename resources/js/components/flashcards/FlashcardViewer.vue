@@ -24,11 +24,13 @@ const StateStore = useStateStore();
     </div>
 
     <div id="app-body">
-        <div id="fv-page-decks" v-if="StateStore.data.step === 'decks'">
-            <Decks/>
-        </div>
-        <div id="fv-page-cards" v-if="StateStore.data.step === 'cards'">
-            <Cards/>
+        <div class="fv-container">
+            <div id="fv-page-decks" v-if="StateStore.data.step === 'decks'">
+                <Decks/>
+            </div>
+            <div id="fv-page-cards" v-if="StateStore.data.step === 'cards'">
+                <Cards/>
+            </div>
         </div>
     </div>
 </template>

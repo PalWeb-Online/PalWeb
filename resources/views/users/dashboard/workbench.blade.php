@@ -9,7 +9,6 @@
 @endsection
 
 @section('content')
-
     <div class="workbench-portal-grid">
         <a class="workbench-portal-item" href="{{ route('decks.create') }}">
             <div>deckbuilderdeckbuilderdeckbuilder</div>
@@ -24,7 +23,5 @@
             <div>Record Wizard</div>
         </a>
     </div>
-
     @include('users.dashboard._pinned')
-
 @endsection

@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted} from 'vue';
-import {useSpeakerStore} from "../store/SpeakerStore.js";
-import {useRecordStore} from "../store/RecordStore.js";
+import {useSpeakerStore} from "../stores/SpeakerStore.js";
+import {useRecordStore} from "../stores/RecordStore.js";
 import axios from "axios";
 
 const SpeakerStore = useSpeakerStore();
@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="wizard-page-title">
+    <div class="rw-page-title">
         <h2>Check</h2>
     </div>
     <div class="tip">
@@ -55,7 +55,7 @@ onMounted(() => {
         </div>
     </div>
 
-    <div class="wizard-section-container">
+    <div class="rw-page__check">
         <section>
             <div class="audios-list">
                 <div v-for="(audio, index) in audios" :key="index" class="pronunciation-item-wrapper inline">

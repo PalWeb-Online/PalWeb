@@ -5,7 +5,7 @@ export default class Record {
         this.id = null;
         this.url = '';
         this.audioRecord = null;
-        this.stashkey = null;
+        this.stashKey = null;
         this.license = 'CC BY-SA';
         this.language = 'apc';
         this.speaker = null;
@@ -26,8 +26,9 @@ export default class Record {
             this.language + '-' +
             this.speaker.dialect_id + '-' +
             this.speaker.location_id + '-' +
+            this.pronunciation.id + '-' +
             this.pronunciation.translit + '-' +
-            this.speaker.id + '.wav';
+            this.speaker.id;
 
         return filename.replace(illegalChars, '-');
     }
@@ -64,14 +65,14 @@ export default class Record {
     }
 
     reset() {
-        this.stashkey = null;
+        this.stashKey = null;
     }
 
     async stashRecord() {
         if (!this.audioRecord) throw new Error('AudioRecord instance not initialized. Cannot stash.');
 
         const formData = new FormData();
-        formData.append('file', this.audioRecord.getBlob(), this.getFilename());
+        formData.append('file', this.audioRecord.getBlob(), this.getFilename() + '.wav');
         formData.append('speakerId', this.speaker.id);
 
         try {
@@ -83,7 +84,7 @@ export default class Record {
             if (!response.ok) throw new Error(`[Record] stash upload failed: ${response.statusText}`);
 
             const result = await response.json();
-            this.stashkey = result.stashkey;
+            this.stashKey = result.stashKey;
             this.url = result.url;
 
         } catch (error) {
@@ -92,16 +93,16 @@ export default class Record {
     }
 
     async uploadRecord() {
-        if (!this.stashkey) {
-            throw new Error('[Record] cannot upload; no stashkey.');
+        if (!this.stashKey) {
+            throw new Error('[Record] cannot upload; no stashKey.');
         }
 
         try {
             const response = await fetch('/api/record/upload', {
                 method: 'POST',
                 body: JSON.stringify({
-                    stashkey: this.stashkey,
-                    language: this.language,
+                    stashKey: this.stashKey,
+                    filename: this.getFilename(),
                     speaker: this.speaker,
                     pronunciation: this.pronunciation,
                 }),
@@ -115,7 +116,6 @@ export default class Record {
             const result = await response.json();
             this.id = result.id;
             this.url = result.url;
-            this.stashkey = null;
 
             if (!result.success) throw new Error(result.message || '[Record] Upload failed.');
 

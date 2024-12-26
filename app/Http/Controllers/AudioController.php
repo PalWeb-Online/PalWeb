@@ -6,6 +6,7 @@ use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Models\Speaker;
+use App\Services\AudioService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,7 @@ class AudioController extends Controller
 {
     public function __construct(
         protected FlasherInterface $flasher,
+        protected AudioService $audioService
     ) {
     }
 
@@ -74,49 +76,34 @@ class AudioController extends Controller
 
     public function destroy(Audio $audio)
     {
-        if (auth()->check()) {
-            $user = auth()->user();
+        if (!auth()->check() || $audio->speaker->user_id !== auth()->id()) {
+            return request()->expectsJson()
+                ? response()->json(['error' => 'Unauthorized.'], 403)
+                : abort(403, 'Unauthorized');
+        }
 
-            if ($audio->speaker->user_id === $user->id) {
-                $success = $this->deleteRemote($audio->filename);
+        try {
+            $this->audioService->deleteAudio($audio->filename);
+            $audio->delete();
 
-                if ($success) {
-                    $audio->delete();
+            $message = __('deleted', ['thing' => $audio->filename]);
 
-                    if (request()->expectsJson()) {
-                        return response()->json(['message' => __('deleted', ['thing' => $audio->filename])]);
-
-                    } else {
-                        $this->flasher->addSuccess(__('deleted', ['thing' => $audio->filename]));
-                    }
-
-                } else {
-                    if (request()->expectsJson()) {
-                        return response()->json(['error' => 'Unable to delete file from cloud storage.'], 500);
-
-                    } else {
-                        $this->flasher->addError('Unable to delete file from cloud storage.');
-                    }
-                }
-
-                return to_route('audios.speaker', $user->speaker);
-
+            if (request()->expectsJson()) {
+                return response()->json(['message' => $message]);
             } else {
-                if (request()->expectsJson()) {
-                    response()->json(['error' => 'Unauthorized.'], 403);
-                }
+                $this->flasher->addSuccess($message);
+                return redirect()->route('audios.speaker', $audio->speaker);
             }
 
-        } else {
+        } catch (\Exception $e) {
+            $error = 'Unable to delete file from cloud storage.';
+
             if (request()->expectsJson()) {
-                response()->json(['error' => 'Unauthorized.'], 403);
+                return response()->json(['error' => $error, 'details' => $e->getMessage()], 500);
+            } else {
+                $this->flasher->addError($error);
+                return redirect()->route('audios.speaker', $audio->speaker);
             }
         }
-    }
-
-    private function deleteRemote(string $filename)
-    {
-//        TODO: Delete file from cloud server.
-        return true;
     }
 }

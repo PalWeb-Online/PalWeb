@@ -118,16 +118,16 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const onDataAvailable = async (record) => {
-        const currentPronunciation = QueueStore.data.items[QueueStore.selected];
+        const currentItem = QueueStore.data.items[QueueStore.selected];
 
-        if (currentPronunciation) {
+        if (currentItem) {
             const blob = record.getBlob();
 
             if (blob) {
                 try {
-                    await stashRecord(currentPronunciation, blob);
+                    await stashRecord(currentItem, blob);
 
-                    if (data.status[currentPronunciation.id] === 'stashed') {
+                    if (data.status[currentItem.id] === 'stashed') {
                         stopRecording();
                         QueueStore.moveForward();
 
@@ -142,24 +142,26 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const setStatus = (pronunciation, status) => {
-        if (!data.status[pronunciation]) {
-            data.status[pronunciation] = status;
+    const setStatus = (item, status) => {
+        if (!data.status[item]) {
+            data.status[item] = status;
         } else {
-            data.statusCount[data.status[pronunciation]]--;
-            data.status[pronunciation] = status;
+            data.statusCount[data.status[item]]--;
+            data.status[item] = status;
         }
         data.statusCount[status]++;
     };
 
-    const setError = (pronunciation, error) => {
-        if (!data.errors[pronunciation]) {
-            data.errors[pronunciation] = error;
+    const setError = (item, error, message) => {
+        if (!data.errors[item]) {
+            data.errors[item] = error;
+            StateStore.data.errorMessage = message;
+
         } else {
-            if (data.errors[pronunciation] !== false) {
+            if (data.errors[item] !== false) {
                 data.statusCount.error--;
             }
-            data.errors[pronunciation] = error;
+            data.errors[item] = error;
         }
 
         if (error !== false) {
@@ -167,41 +169,37 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const stashRecord = async (pronunciation, blob) => {
-        if (!data.records[pronunciation.id]) {
-            data.records[pronunciation.id] = new Record(pronunciation);
-            data.records[pronunciation.id].setSpeaker(SpeakerStore.data.speaker);
+    const stashRecord = async (item, blob) => {
+        if (!data.records[item.id]) {
+            data.records[item.id] = new Record(item);
+            data.records[item.id].setSpeaker(SpeakerStore.data.speaker);
         }
 
-        const record = data.records[pronunciation.id];
+        const record = data.records[item.id];
+        setError(item.id, false, false);
 
-        setStatus(pronunciation.id, 'ready');
-        setError(pronunciation.id, false);
-
+        setStatus(item.id, 'ready');
         if (blob) {
             try {
                 await record.setBlob(blob);
 
             } catch (error) {
-                setError(pronunciation.id, 'Audio record initialization failed.');
-                console.error(error);
-                throw new Error('Audio record initialization failed.');
+                setError(item.id, error.message, 'Record could not be initialized.');
+                throw error;
             }
         }
 
-        setStatus(pronunciation.id, 'stashing');
-
+        setStatus(item.id, 'stashing');
         try {
             await requestQueue.push(async () => {
                 await record.stashRecord();
-                data.records[pronunciation.id].url = record.url;
+                data.records[item.id].url = record.url;
 
-                setStatus(pronunciation.id, 'stashed');
+                setStatus(item.id, 'stashed');
             });
 
         } catch (error) {
-            setError(pronunciation.id, error.message || 'Stash upload failed.');
-            console.error(`Error stashing pronunciation ${pronunciation.translit}:`, error);
+            setError(item.id, error.message, 'Record could not be stashed. Please try to record the item again.');
             throw error;
         }
     };
@@ -229,22 +227,14 @@ export const useRecordStore = defineStore('RecordStore', () => {
             return false;
         }
 
-        const stashkey = record.stashkey;
-        if (!stashkey) {
-            console.error(`No stashkey found for Record with ID ${id}.`);
+        const stashKey = record.stashKey;
+        if (!stashKey) {
+            console.error(`No stashKey found for Record with ID ${id}.`);
             return false;
         }
 
         try {
-            const response = await axios.delete(`/api/record/discard/${stashkey}`);
-
-            if (response.status === 200) {
-                console.log(`Recording with stashkey ${stashkey} discarded successfully.`);
-
-            } else {
-                console.error(`Failed to discard recording with stashkey ${stashkey}.`);
-                return false;
-            }
+            const response = await axios.delete(`/api/record/discard/${stashKey}`);
 
             delete data.records[id];
             delete data.status[id];
@@ -267,7 +257,8 @@ export const useRecordStore = defineStore('RecordStore', () => {
             // }
 
         } catch (error) {
-            console.error(`Error discarding recording with stashkey ${stashkey}:`, error);
+            console.error(`Error discarding recording with stashKey ${stashKey}:`, error);
+            StateStore.data.errorMessage = 'Record could not be discarded. Please try again.';
             return false;
         }
     };
@@ -304,14 +295,15 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
             for (const id of stashedIds) {
                 try {
-                    const pronunciationIndex = QueueStore.data.items.findIndex(
+                    const itemIndex = QueueStore.data.items.findIndex(
                         (p) => p.id === Number(id)
                     );
 
-                    if (pronunciationIndex !== -1) {
-                        QueueStore.selectItem(pronunciationIndex);
+                    if (itemIndex !== -1) {
+                        QueueStore.selectItem(itemIndex);
                     }
 
+                    setError(id, false, false);
                     setStatus(id, 'uploading');
 
                     const record = data.records[id];
@@ -323,16 +315,15 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
                     setStatus(id, 'uploaded');
 
-                    if (pronunciationIndex !== -1) {
-                        QueueStore.data.items.splice(pronunciationIndex, 1);
-                        QueueStore.selectedArray.splice(pronunciationIndex, 1);
+                    if (itemIndex !== -1) {
+                        QueueStore.data.items.splice(itemIndex, 1);
+                        QueueStore.selectedArray.splice(itemIndex, 1);
                     }
 
                     setStatus(id, 'done');
 
                 } catch (error) {
-                    console.error(`Error uploading pronunciation ID ${id}:`, error);
-                    setError(id, error.message || 'Upload failed.');
+                    setError(id, error.message, 'Record could not be uploaded. Please try again.');
                 }
             }
 

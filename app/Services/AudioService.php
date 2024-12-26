@@ -9,6 +9,8 @@ use App\Models\Sentence;
 use App\Repositories\Audio\AudioDirectoryRepository;
 use App\Repositories\Audio\UploadAudioFileRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AudioService
 {
@@ -17,6 +19,53 @@ class AudioService
         protected UploadAudioFileRepository $audioUploader,
     )
     {
+    }
+
+    public function uploadAudio(string $stashPath, string $filename): void
+    {
+        $mp3Path = str_replace('.wav', '.mp3', $stashPath);
+
+        try {
+            $this->convertToMp3($stashPath, $mp3Path);
+
+            Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
+
+        } catch (\Exception $e) {
+            \Log::error("Failed to upload audio file: " . $e->getMessage());
+            throw $e;
+
+        } finally {
+            File::delete($mp3Path);
+        }
+    }
+
+    protected function convertToMp3(string $wavPath, string $mp3Path): void
+    {
+        if (!file_exists($wavPath)) {
+            throw new \Exception("Source file not found: {$wavPath}");
+        }
+
+        $command = "ffmpeg -i " . escapeshellarg($wavPath) . " -b:a 128k " . escapeshellarg($mp3Path);
+        $output = [];
+        $returnVar = null;
+
+        exec($command, $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: " . implode("\n", $output));
+        }
+    }
+
+    public function deleteAudio(string $filename): void
+    {
+        $filePath = 'audios/' . $filename;
+
+        try {
+            Storage::disk('s3')->delete($filePath);
+
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to delete file: {$filePath}. Error: " . $e->getMessage(), 0, $e);
+        }
     }
 
     /**

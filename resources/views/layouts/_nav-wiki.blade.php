@@ -12,11 +12,14 @@
 
     <div class="nav-wiki-section">
         <a>the Website</a>
-        <x-link :href="route('wiki.show', 'features')"
-                :active="url()->current() == route('wiki.show', 'features')">Features
+        <x-link :href="route('wiki.show', 'academy')"
+                :active="url()->current() == route('wiki.show', 'academy')">Academy
         </x-link>
         <x-link :href="route('wiki.show', 'dictionary')"
                 :active="url()->current() == route('wiki.show', 'dictionary')">Dictionary
+        </x-link>
+        <x-link :href="route('wiki.show', 'workbench')"
+                :active="url()->current() == route('wiki.show', 'workbench')">Workbench
         </x-link>
         <x-link :href="route('wiki.show', 'contributing')"
                 :active="url()->current() == route('wiki.show', 'contributing')">Contributing

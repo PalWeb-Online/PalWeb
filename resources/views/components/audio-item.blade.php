@@ -8,7 +8,7 @@
              onclick="{{ '_'.$audio->id }}.play()"/>
         <script type="text/javascript">
             const {{ '_'.$audio->id }} = new Howl({
-                src: ['https://abdulbaha.fra1.digitaloceanspaces.com/audio/{{ $audio->filename }}.mp3']
+                src: ['https://abdulbaha.fra1.digitaloceanspaces.com/audios/{{ $audio->filename }}']
             });
         </script>
 
@@ -37,7 +37,6 @@
 
         @auth
             @if($audio->speaker_id === auth()->user()->id)
-
                 <form method="post" action="{{ route('audios.destroy', $audio) }}">
                     @csrf
                     @method('DELETE')
@@ -46,7 +45,6 @@
                         class="trash" alt="Delete"
                         src="{{ asset('img/trash.svg') }}"/>
                 </form>
-
             @endif
         @endauth
     </div>

@@ -24,7 +24,7 @@ const audio = ref(null);
 onMounted(() => {
     if (props.term.audio) {
         audio.value = new Howl({
-            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audio/${props.term.audio}.mp3`],
+            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${props.term.audio}`],
         });
     }
 });

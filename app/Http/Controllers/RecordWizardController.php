@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Audio;
 use App\Models\Deck;
-use App\Models\Dialect;
-use App\Models\Location;
 use App\Models\Pronunciation;
+use App\Services\AudioService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File as FileFacade;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 
 class RecordWizardController extends Controller
 {
+    public function __construct(protected AudioService $audioService)
+    {
+    }
+
     public function index()
     {
         View::share('pageTitle', 'Record Wizard');
@@ -109,56 +112,6 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function uploadRecords(Request $request)
-    {
-        $stashkey = $request->input('stashkey');
-
-        $speaker = $request->input('speaker');
-        $pronunciation = $request->input('pronunciation');
-
-        $filename = $request->input('language')
-            .'-'.
-            Dialect::find($speaker['dialect_id'])->name
-            .'-'.
-            Location::find($speaker['location_id'])->name
-            .'-'.
-            $pronunciation['translit']
-            .'-'.
-            $speaker['id'];
-
-        $stashPath = public_path("stash/{$stashkey}");
-
-        if (!FileFacade::exists($stashPath)) {
-            return response()->json(['message' => 'File not found in stash.'], 404);
-
-        } else {
-//            Storage::disk('s3')->putFileAs('uploads', new File($stashPath), $filename);
-            FileFacade::delete($stashPath);
-
-            $audio = Audio::create([
-                'filename' => $filename,
-                'speaker_id' => $speaker['id'],
-                'pronunciation_id' => $pronunciation['id'],
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'id' => $audio->id,
-                'url' => $audio->url(),
-                'message' => 'File uploaded successfully',
-            ]);
-        }
-    }
-
-    public function updatePreferences(Request $request)
-    {
-        $user = auth()->user();
-        $user->preferences = $request->input('preferences');
-        $user->save();
-
-        return response()->json(['status' => 'success']);
-    }
-
     public function stashRecord(Request $request)
     {
         $request->validate([
@@ -167,16 +120,16 @@ class RecordWizardController extends Controller
 
         try {
             $file = $request->file('file');
-            $filename =
-                $request->input('speakerId') . '_' .
+            $stashKey =
+                $request->input('speakerId').'_'.
                 $file->getClientOriginalName();
 
-            $file->storeAs('stash', $filename, 'public');
+            $file->storeAs('stash', $stashKey, 'public');
 
             return response()->json([
                 'message' => 'File stashed successfully.',
-                'stashkey' => $filename,
-                'url' => asset("stash/{$filename}"),
+                'stashKey' => $stashKey,
+                'url' => asset("stash/{$stashKey}"),
             ], 201);
 
         } catch (\Exception $e) {
@@ -187,16 +140,16 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function discardRecord($stashkey)
+    public function discardRecord($stashKey)
     {
-        $filePath = public_path("stash/{$stashkey}");
+        $filePath = public_path("stash/{$stashKey}");
 
-        if (FileFacade::exists($filePath)) {
-            FileFacade::delete($filePath);
-            return response()->json(['message' => "Recording with stashkey {$stashkey} discarded successfully."], 200);
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+            return response()->json(['message' => "Recording with stashKey {$stashKey} discarded successfully."], 200);
 
         } else {
-            return response()->json(['message' => "Recording with stashkey {$stashkey} not found."], 404);
+            return response()->json(['message' => "Recording with stashKey {$stashKey} not found."], 404);
         }
     }
 
@@ -204,12 +157,12 @@ class RecordWizardController extends Controller
     {
         $path = public_path('stash');
 
-        if (FileFacade::isDirectory($path)) {
-            $files = FileFacade::files($path);
+        if (File::isDirectory($path)) {
+            $files = File::files($path);
 
             foreach ($files as $file) {
                 if (str_starts_with($file->getFilename(), $speakerId.'_')) {
-                    FileFacade::delete($file);
+                    File::delete($file);
                 }
             }
 
@@ -217,6 +170,37 @@ class RecordWizardController extends Controller
 
         } else {
             return response()->json(['message' => 'Stash directory not found.'], 404);
+        }
+    }
+
+    public function uploadRecords(Request $request)
+    {
+        $filename = $request->input('filename') . '.mp3';
+        $stashPath = public_path("stash/{$request->input('stashKey')}");
+
+        if (!File::exists($stashPath)) {
+            return response()->json(['message' => 'File not found in stash.'], 404);
+        }
+
+        try {
+            $this->audioService->uploadAudio($stashPath, $filename);
+            File::delete($stashPath);
+
+            $audio = Audio::create([
+                'filename' => $filename,
+                'speaker_id' => $request->input('speaker')['id'],
+                'pronunciation_id' => $request->input('pronunciation')['id'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'id' => $audio->id,
+                'url' => $audio->url(),
+                'message' => 'File uploaded successfully',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to upload file.', 'error' => $e->getMessage()], 500);
         }
     }
 }

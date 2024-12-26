@@ -7,6 +7,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const data = reactive({
         step: 'decks',
+        transitioning: false,
     });
 
     const steps = {
@@ -37,7 +38,18 @@ export const useStateStore = defineStore('StateStore', () => {
     const next = async () => {
         const currentStep = steps[data.step];
         if (currentStep?.canMoveNext()) {
-            data.step = currentStep.nextStep;
+            if (data.step === 'decks') {
+                data.transitioning = true;
+                await new Promise(resolve => setTimeout(resolve, 750));
+                data.step = currentStep.nextStep;
+                data.transitioning = false;
+
+            } else if (data.step === 'cards') {
+                data.step = currentStep.nextStep;
+
+            } else {
+                data.step = currentStep.nextStep;
+            }
         }
     };
 
