@@ -3,6 +3,7 @@ import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import {onMounted} from "vue";
 import DeckItem from "../ui/DeckItem.vue";
+import SearchGenie from "../../search/SearchGenie.vue";
 
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
@@ -13,6 +14,8 @@ onMounted(async () => {
 </script>
 
 <template>
+    <SearchGenie/>
+
     <div class="app-prompt-heading">
         Select one of your Pinned Decks
     </div>

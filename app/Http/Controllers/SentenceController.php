@@ -6,6 +6,7 @@ use App\Events\ModelPinned;
 use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Models\Term;
+use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,24 +35,36 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function index(Request $request)
+    public function index(Request $request, SearchService $searchService)
     {
         View::share('pageTitle', 'the Phrasebook');
         View::share('pageDescription',
             'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
-        $query = Sentence::query();
+        $searchTerm = $request->input('search');
 
-        if ($searchTerm = $request->search) {
-            $query->where('sentence', 'LIKE', '%'.$searchTerm.'%');
+        if ($searchTerm) {
+            $allResults = $searchService->search($searchTerm, true, false)['sentences'];
+            $totalCount = $allResults->count();
+
+            $perPage = 25;
+            $currentPage = $request->input('page', 1);
+            $sentences = $allResults->forPage($currentPage, $perPage);
+
+            $sentences = new \Illuminate\Pagination\LengthAwarePaginator(
+                $sentences,
+                $totalCount,
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+        } else {
+            $sentences = Sentence::orderByDesc('id')
+                ->paginate(25)
+                ->onEachSide(1);
+            $totalCount = $sentences->total();
         }
-
-        $sentences = $query
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-
-        $totalCount = $sentences->total();
 
         return view('sentences.index', compact('sentences', 'totalCount'));
     }

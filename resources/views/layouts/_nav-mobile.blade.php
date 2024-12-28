@@ -3,9 +3,9 @@
         <img src="{{ asset('/img/logo.svg') }}" alt="PalWeb Logo"/>
     </a>
 
-    <form method="GET" action="{{ route('terms.index') }}">
-        <div data-vue-component="SearchBar"></div>
-    </form>
+{{--    <button class="sg-trigger" onclick="window.dispatchEvent(new CustomEvent('open-search-genie'))">--}}
+{{--        <img src="{{ asset('img/search.svg') }}" alt="Search"/>--}}
+{{--    </button>--}}
 
     <div class="nav-mobile-main">
         <div class="nav-mobile-section">

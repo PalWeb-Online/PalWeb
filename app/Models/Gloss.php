@@ -23,15 +23,15 @@ class Gloss extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
+    public function synonyms()
+    {
+        return $this->relatives()->wherePivot('type', 'synonym');
+    }
+
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')
             ->withPivot('type');
-    }
-
-    public function synonyms()
-    {
-        return $this->relatives()->wherePivot('type', 'synonym');
     }
 
     public function antonyms()
@@ -42,5 +42,13 @@ class Gloss extends Model
     public function valences()
     {
         return $this->relatives()->wherePivotIn('type', ['isPatient', 'noPatient', 'hasObject']);
+    }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->whereRaw("MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search])
+                ->orWhere('gloss', 'like', $search);
+        });
     }
 }

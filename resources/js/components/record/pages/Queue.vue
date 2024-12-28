@@ -4,6 +4,7 @@ import {useQueueStore} from "../stores/QueueStore.js";
 import {useRecordStore} from '../stores/RecordStore';
 import Draggable from 'vuedraggable';
 import AppDialog from "../../AppDialog.vue";
+import SearchGenie from "../../search/SearchGenie.vue";
 
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
@@ -49,6 +50,8 @@ onMounted(async () => {
 </script>
 
 <template>
+    <SearchGenie/>
+
     <div class="rw-page-title">
         <h2>Queue</h2>
 

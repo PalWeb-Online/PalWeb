@@ -4,7 +4,7 @@
     <div id="hero-panel">
         <a href="{{ route('decks.create') }}" class="feature-callout">Build Your Own! -></a>
         <h1>{{ __('decks') }}</h1>
-        <x-search-bar route="decks.index" />
+        <x-sg-trigger/>
     </div>
 @endsection
 
@@ -35,6 +35,6 @@
         </x-tip>
     @endif
 
-    {{ $decks->links() }}
+    {{ $decks->appends(request()->query())->links() }}
 
 @endsection

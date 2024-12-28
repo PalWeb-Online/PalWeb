@@ -3,8 +3,7 @@
 @section('page-hero')
     <div id="hero-panel">
         <h1>{{ __('phrasebook') }}</h1>
-        <div class="hero-blurb">Find all uses of a term to understand it in context!</div>
-        <x-search-bar route="sentences.index"/>
+        <x-sg-trigger/>
     </div>
 @endsection
 
@@ -39,6 +38,6 @@
         </x-tip>
     @endif
 
-    {{ $sentences->links() }}
+    {{ $sentences->appends(request()->query())->links() }}
 
 @endsection

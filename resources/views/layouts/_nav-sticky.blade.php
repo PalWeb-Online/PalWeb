@@ -4,8 +4,4 @@
     </a>
 
     @include('layouts._nav-menu')
-
-    <form method="GET" action="{{ route('terms.index') }}">
-        <div data-vue-component="SearchBar"></div>
-    </form>
 </nav>

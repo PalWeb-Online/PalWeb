@@ -1,17 +1,18 @@
 @extends ('layouts.main')
 
 @section('page-hero')
-    <div id="hero-panel" class="with-feature">
+    <div id="hero-panel">
         <a href="{{ route('terms.random') }}" class="feature-callout">I'm Feeling Lucky! -></a>
         <h1>{{ __('dictionary') }}</h1>
+        <x-sg-trigger/>
     </div>
 @endsection
 
 @section('content')
 
-    <div id="dictionaryFilters">
-        <dictionary-filters></dictionary-filters>
-    </div>
+{{--    <div id="dictionaryFilters">--}}
+{{--        <dictionary-filters></dictionary-filters>--}}
+{{--    </div>--}}
 
     @if (! (bool) request()->query())
         <div class="portal-button-wrapper">

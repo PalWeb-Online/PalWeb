@@ -52,12 +52,4 @@ class Pronunciation extends Model
 
         return null;
     }
-
-    public function audify()
-    {
-        $find = [' ', '-'];
-        $fix = ['_', ''];
-
-        return str_replace($find, $fix, $this->translit);
-    }
 }

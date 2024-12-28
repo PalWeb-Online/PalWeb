@@ -31,25 +31,23 @@ defineExpose({
 </script>
 
 <template>
-    <div class="app-dialog-wrapper">
-        <div class="app-dialog-trigger" @click="openDialog">
-            <slot name="trigger"></slot>
-        </div>
+    <div class="app-dialog-trigger" @click="openDialog">
+        <slot name="trigger"></slot>
+    </div>
 
-        <div v-if="isDialogVisible" class="app-dialog-overlay" @click.self="closeDialog">
-            <div class="app-dialog" :class="sizeClass">
-                <div class="app-dialog-tab">
-                    <div class="app-dialog-title">
-                        {{ title }}
-                    </div>
-                    <img class="app-dialog-close"
-                         @click="closeDialog"
-                         alt="Close"
-                         src="/img/close.svg"/>
+    <div v-if="isDialogVisible" class="app-dialog-overlay" @click.self="closeDialog">
+        <div class="app-dialog" :class="sizeClass">
+            <div class="app-dialog-tab">
+                <div class="app-dialog-title">
+                    {{ title }}
                 </div>
-                <div class="app-dialog-body">
-                    <slot name="content"></slot>
-                </div>
+                <img class="app-dialog-close"
+                     @click="closeDialog"
+                     alt="Close"
+                     src="/img/close.svg"/>
+            </div>
+            <div class="app-dialog-body">
+                <slot name="content"></slot>
             </div>
         </div>
     </div>

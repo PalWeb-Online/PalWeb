@@ -158,15 +158,20 @@ nav {
         flex-flow: row wrap;
         gap: 1.6rem 3.2rem;
 
-        & > form {
-            flex-grow: 1;
+        .sg-trigger {
+            height: 3.6rem;
+
+            img {
+                width: 6.4rem;
+            }
         }
     }
 
     .nav-menu {
         gap: 1.6rem;
+        flex-grow: 1;
         font-size: min(1.6rem, 4vw);
-        justify-content: space-around;
+        justify-content: flex-start;
 
         & > a, & > * > a {
             color: $purple-deep;
@@ -208,7 +213,7 @@ nav {
     width: 100%;
     display: grid;
     gap: 4.8rem;
-    justify-content: stretch;
+    justify-content: center;
     align-content: start;
     padding: 6.4rem;
     color: white;
@@ -229,8 +234,8 @@ nav {
         filter: drop-shadow(-0.8rem 0.8rem 0 rgba(black, 0.25));
     }
 
-    .search-bar input {
-        font-size: 2.0rem;
+    .sg-trigger img {
+        width: 9.6rem;
     }
 
     .nav-mobile-main {
@@ -331,10 +336,14 @@ nav {
         }
     }
 
-    .search-bar {
+    .sg-trigger {
         position: absolute;
-        top: 0.8rem;
-        right: 2.0rem;
+        top: 0;
+        right: 3.2rem;
+
+        img {
+            width: 4.8rem;
+        }
     }
 }
 

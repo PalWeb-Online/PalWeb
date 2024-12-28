@@ -11,6 +11,7 @@ use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MissingTermController;
 use App\Http\Controllers\RecordWizardController;
+use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
@@ -55,6 +56,8 @@ Route::get('/unauth', function () {
  */
 Route::post("/lang/{lang}", [LanguageController::class, 'change'])->name("language.change");
 
+Route::post("/search", [SearchGenieController::class, 'search']);
+
 /**
  * Email Routes
  */
@@ -74,7 +77,7 @@ Route::prefix('/email')->middleware('auth')->group(function () {
 });
 
 Route::prefix('/dictionary')->controller(TermController::class)->group(function () {
-    Route::post('/search', 'search')->name('dictionary.search');
+//    Route::post('/search', 'search')->name('dictionary.search');
     Route::get('/random', 'random')->name('terms.random');
 
     Route::prefix('/terms')->group(function () {

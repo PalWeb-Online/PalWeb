@@ -75,16 +75,4 @@ class Sentence extends Model
         }
         return null;
     }
-
-    /**
-     * Replace specific characters in the given string with other characters to audify it.
-     *
-     * @return string The audified string.
-     */
-    public function audify()
-    {
-        $find = array(' ', '-');
-        $fix = array('_', '');
-        return str_replace($find, $fix, $this->translit);
-    }
 }

@@ -2,16 +2,36 @@
 
 namespace App\Repositories;
 
+use App\Models\Gloss;
 use App\Models\Term;
 
 class TermRepository
 {
-    /**
-     * Returns a paginated list of terms filtered by the provided array.
-     * This method was pulled from TermController::index
-     *
-     * @return mixed
-     */
+    public function findMatchingTerms(string $searchTerm)
+    {
+        return Term::query()
+            ->select('id')
+            ->filter(['search' => $searchTerm])
+            ->pluck('id');
+    }
+
+    public function findMatchingGlosses(string $searchTerm)
+    {
+        return Gloss::query()
+            ->select('id', 'term_id')
+            ->filter(['search' => $searchTerm])
+            ->get();
+    }
+
+    public function searchTerms($termIds)
+    {
+        return Term::query()
+            ->whereIn('id', $termIds)
+            ->with('glosses')
+            ->take(10)
+            ->get();
+    }
+
     public function getTerms(array $filter = [], $perPage = 100)
     {
         return Term::query()

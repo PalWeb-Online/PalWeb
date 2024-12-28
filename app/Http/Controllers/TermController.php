@@ -222,44 +222,6 @@ class TermController extends Controller
         ];
     }
 
-    public function search(Request $request)
-    {
-        if ($request->searchTerm == null) {
-            $searchResults = [];
-            return response()->json(compact('searchResults'));
-        }
-
-        $search = $request->searchTerm;
-
-        $results = Term::query()
-            ->select('terms.*')
-            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-            ->filter(['search' => $search])
-            ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
-            ->orderBy('terms.term', 'ASC')
-            ->with('glosses')
-            ->take(10)
-            ->get();
-
-        $searchResults = $results->map(function ($term) {
-            return [
-                'id' => $term->id,
-                'term' => $term->term,
-                'slug' => $term->slug,
-                'category' => $term->category,
-                'translit' => $term->translit,
-                'glosses' => $term->glosses->map(function ($gloss) {
-                    return [
-                        'id' => $gloss->id,
-                        'gloss' => $gloss->gloss,
-                    ];
-                })->toArray(),
-            ];
-        })->toArray();
-
-        return response()->json(compact('searchResults'));
-    }
-
     public function show(Term $term, Request $request)
     {
         $pronunciations = $this->loadPronunciations($term, $request);

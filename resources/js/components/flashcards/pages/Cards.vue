@@ -6,6 +6,7 @@ import {Carousel, Pagination, Slide} from "vue3-carousel";
 import 'vue3-carousel/dist/carousel.css';
 import CardItem from "../ui/CardItem.vue";
 import AppDialog from "../../AppDialog.vue";
+import SearchGenie from "../../search/SearchGenie.vue";
 
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
@@ -79,6 +80,8 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <SearchGenie/>
+
     <div class="flashcard-portal-box">
         <div>Options</div>
         <div>

@@ -6,11 +6,10 @@ use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Models\Deck;
 use App\Models\Term;
+use App\Services\SearchService;
 use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
@@ -40,32 +39,38 @@ class DeckController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function index(Request $request, SearchService $searchService)
     {
-        $query = Deck::query();
-
-        if ($searchTerm = $request->search) {
-            $query->where('name', 'LIKE', '%'.$searchTerm.'%');
-        }
-
-        $decks = $query->with('author')
-            ->where('private', 0)
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-        $totalCount = $decks->total();
-
         View::share('pageTitle', 'Deck Library');
 
-        return view('decks.index', [
-            'decks' => $decks,
-            'totalCount' => $totalCount,
-        ]);
+        $searchTerm = $request->input('search');
+
+        if ($searchTerm) {
+            $allResults = $searchService->search($searchTerm, false, true)['decks'];
+            $totalCount = $allResults->count();
+
+            $perPage = 25;
+            $currentPage = $request->input('page', 1);
+            $decks = $allResults->forPage($currentPage, $perPage);
+
+            $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+                $decks,
+                $totalCount,
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+        } else {
+            $decks = Deck::orderByDesc('id')
+                ->with('author')
+                ->where('private', 0)
+                ->paginate(25)
+                ->onEachSide(1);
+            $totalCount = $decks->total();
+        }
+
+        return view('decks.index', compact('decks', 'totalCount'));
     }
 
     public function get($id)

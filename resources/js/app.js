@@ -3,7 +3,6 @@ import TermEditor from "./components/TermEditor.vue";
 import SentenceEditor from "./components/SentenceEditor.vue";
 import DeckBuilder from "./components/DeckBuilder.vue";
 import DictionaryFilters from "./components/DictionaryFilters.vue";
-import SearchBar from "./components/SearchBar.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckHead from "./components/DeckHead.vue";
@@ -13,6 +12,7 @@ import SentenceItem from "./components/SentenceItem.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
+import SearchGenie from './components/search/SearchGenie.vue';
 import RecordWizard from './components/record/RecordWizard.vue';
 import FlashcardViewer from "./components/flashcards/FlashcardViewer.vue";
 
@@ -29,7 +29,6 @@ window.Alpine = Alpine;
 Alpine.start();
 
 const multiMountComponents = [
-    { selector: '[data-vue-component="SearchBar"]', component: SearchBar },
     { selector: '[data-vue-component="ContextActions"]', component: ContextActions },
     { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
@@ -53,6 +52,12 @@ function mountMultiComponents(selector, component) {
 multiMountComponents.forEach(({ selector, component }) => {
     mountMultiComponents(selector, component);
 });
+
+if (document.querySelector('#search-genie')) {
+    const searchGenieApp = createApp(SearchGenie);
+    searchGenieApp.use(pinia);
+    searchGenieApp.mount('#search-genie');
+}
 
 if (document.querySelector('#recordWizard')) {
     const recordWizardApp = createApp(RecordWizard);

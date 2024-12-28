@@ -2,6 +2,7 @@
 import {useStateStore} from "./stores/StateStore.js";
 import Decks from "./pages/Decks.vue";
 import Cards from "./pages/Cards.vue";
+import SearchGenie from "../search/SearchGenie.vue";
 
 const StateStore = useStateStore();
 </script>

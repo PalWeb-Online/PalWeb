@@ -57,10 +57,11 @@
 @include('layouts._nav-header')
 
 @yield('page-hero')
-
 @yield('page-body')
 
 @include("layouts._footer")
+
+<div id="search-genie"></div>
 
 </body>
 
