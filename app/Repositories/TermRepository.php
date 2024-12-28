@@ -28,7 +28,6 @@ class TermRepository
         return Term::query()
             ->whereIn('id', $terms)
             ->with('glosses')
-            ->take(10)
             ->get();
     }
 

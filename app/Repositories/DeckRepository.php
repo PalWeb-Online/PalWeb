@@ -17,7 +17,6 @@ class DeckRepository
                 $query->orWhereHas('terms', fn($query) => $query->whereIn('terms.id', $terms));
             })
             ->with('author')
-            ->take(10)
             ->get();
     }
 }

@@ -69,6 +69,14 @@ export const useSearchStore = defineStore('SearchStore', {
         closeSearchGenie() {
             this.isOpen = false;
             this.searchTerm = '';
+            this.activeModel = 'terms';
+            this.filters = {
+                category: '',
+                    attribute: '',
+                    form: '',
+                    singular: '',
+                    plural: ''
+            };
             this.searchResults = {
                 terms: [],
                 sentences: [],

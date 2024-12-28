@@ -17,7 +17,11 @@ class SearchGenieController extends Controller
 
         $results = $searchService->search($searchTerm, $filters, true, true);
 
-        return response()->json($results);
+        return response()->json([
+            'terms' => $results['terms']->take(10),
+            'sentences' => $results['sentences']->take(10),
+            'decks' => $results['decks']->take(10),
+        ]);
     }
 
     public function getFilterOptions()

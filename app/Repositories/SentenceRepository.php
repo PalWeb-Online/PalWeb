@@ -14,7 +14,6 @@ class SentenceRepository
         $sentencesFromDirectTerms = Sentence::query()
             ->whereHas('terms', fn($query) => $query->whereIn('terms.id', $terms))
             ->with('terms')
-            ->take(10)
             ->get();
 
         $sentencesFromGlossTerms = Sentence::query()
@@ -24,9 +23,8 @@ class SentenceRepository
                 'terms' => fn($query) => $query->whereHas('glosses',
                     fn($query) => $query->whereIn('glosses.id', $glossIds))
             ])
-            ->take(10)
             ->get();
 
-        return $sentencesFromDirectTerms->merge($sentencesFromGlossTerms)->unique('id')->take(10);
+        return $sentencesFromDirectTerms->merge($sentencesFromGlossTerms)->unique('id');
     }
 }
