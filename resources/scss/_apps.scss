@@ -325,7 +325,34 @@ body.app {
                 background: $purple-primary;
                 font-weight: 700;
             }
+
         }
+
+        button.persisting {
+            background: $accent-yellow-pastel;
+
+            &.active {
+                background: $accent-yellow;
+            }
+        }
+    }
+
+    .sg-filters {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-inline: 1.2rem;
+        margin-block-end: 1.2rem;
+
+        select {
+            flex-grow: 1;
+
+            &.persisting {
+                background: $accent-yellow-pastel;
+            }
+        }
+
     }
 
     .sg-results {

@@ -157,21 +157,25 @@ class Term extends Model
         $query->when($filters['category'] ?? false, fn($query, $category) => $query
             ->where('category', $category)
         );
+
         $query->when($filters['attribute'] ?? false, fn($query, $attribute) => $query
             ->whereHas('attributes', fn($query) => $query
                 ->where('attribute', $attribute)
             )
         );
+
         $query->when($filters['form'] ?? false, fn($query, $form) => $query
             ->whereHas('patterns', fn($query) => $query
                 ->where('form', $form)
             )
         );
+
         $query->when($filters['singular'] ?? false, fn($query, $singular) => $query
             ->whereHas('patterns', fn($query) => $query
                 ->where('pattern', $singular)->where('type', 'singular')
             )
         );
+
         $query->when($filters['plural'] ?? false, fn($query, $plural) => $query
             ->whereHas('patterns', fn($query) => $query
                 ->where('pattern', $plural)->where('type', 'plural')

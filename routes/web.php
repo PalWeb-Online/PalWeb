@@ -56,7 +56,10 @@ Route::get('/unauth', function () {
  */
 Route::post("/lang/{lang}", [LanguageController::class, 'change'])->name("language.change");
 
-Route::post("/search", [SearchGenieController::class, 'search']);
+Route::prefix('/search')->controller(SearchGenieController::class)->group(function () {
+    Route::post('', 'search');
+    Route::get('/filter-options', 'getFilterOptions');
+});
 
 /**
  * Email Routes

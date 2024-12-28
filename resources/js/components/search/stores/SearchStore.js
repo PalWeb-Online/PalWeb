@@ -6,6 +6,20 @@ export const useSearchStore = defineStore('SearchStore', {
         isOpen: false,
         searchTerm: '',
         activeModel: 'terms',
+        filters: {
+            category: '',
+            attribute: '',
+            form: '',
+            singular: '',
+            plural: ''
+        },
+        filterOptions: {
+            categories: [],
+            attributes: [],
+            forms: [],
+            singularPatterns: [],
+            pluralPatterns: [],
+        },
         searchResults: {
             terms: [],
             sentences: [],
@@ -28,6 +42,20 @@ export const useSearchStore = defineStore('SearchStore', {
     }),
 
     actions: {
+        async fetchFilterOptions() {
+            try {
+                const response = await axios.get('/search/filter-options');
+                this.filterOptions = response.data;
+            } catch (error) {
+                console.error('Failed to fetch filter options:', error);
+            }
+        },
+
+        updateFilter(key, value) {
+            this.filters[key] = value;
+            this.search();
+        },
+
         openSearchGenie() {
             const triggerButtons = document.querySelectorAll('.sg-trigger');
             triggerButtons.forEach((button) => {
@@ -56,7 +84,7 @@ export const useSearchStore = defineStore('SearchStore', {
         },
 
         async search() {
-            if (!this.searchTerm) {
+            if (!this.searchTerm && Object.values(this.filters).every(value => !value)) {
                 this.searchResults = {
                     terms: [],
                     sentences: [],
@@ -66,7 +94,10 @@ export const useSearchStore = defineStore('SearchStore', {
             }
 
             try {
-                const response = await axios.post('/search', {search: this.searchTerm});
+                const response = await axios.post('/search', {
+                    search: this.searchTerm || '',
+                    ...this.filters,
+                });
                 this.searchResults = response.data;
 
             } catch (error) {

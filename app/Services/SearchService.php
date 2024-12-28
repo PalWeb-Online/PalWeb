@@ -22,10 +22,10 @@ class SearchService
         $this->deckRepository = $deckRepository;
     }
 
-    public function search(string $searchTerm, bool $withSentences = false, bool $withDecks = false): array
+    public function search(string $searchTerm = '', array $filters = [], bool $withSentences = false, bool $withDecks = false): array
     {
-        $terms = $this->termRepository->findMatchingTerms($searchTerm);
-        $glosses = $this->termRepository->findMatchingGlosses($searchTerm);
+        $terms = $this->termRepository->findMatchingTerms($searchTerm, $filters);
+        $glosses = $this->termRepository->findMatchingGlosses($searchTerm, $filters);
 
         $results = [
             'terms' => $this->termRepository->searchTerms($terms->merge($glosses->pluck('term_id'))->unique()),

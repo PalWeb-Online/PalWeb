@@ -41,10 +41,17 @@ class SentenceController extends Controller
         View::share('pageDescription',
             'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
-        $searchTerm = $request->input('search');
+        $searchTerm = $request->input('search', '') ?? '';
+        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
 
-        if ($searchTerm) {
-            $allResults = $searchService->search($searchTerm, true, false)['sentences'];
+        if (empty($searchTerm) && empty(array_filter($filters))) {
+            $sentences = Sentence::orderByDesc('id')
+                ->paginate(25)
+                ->onEachSide(1);
+            $totalCount = $sentences->total();
+
+        } else {
+            $allResults = $searchService->search($searchTerm, $filters, true, false)['sentences'];
             $totalCount = $allResults->count();
 
             $perPage = 25;
@@ -59,11 +66,6 @@ class SentenceController extends Controller
                 ['path' => $request->url(), 'query' => $request->query()]
             );
 
-        } else {
-            $sentences = Sentence::orderByDesc('id')
-                ->paginate(25)
-                ->onEachSide(1);
-            $totalCount = $sentences->total();
         }
 
         return view('sentences.index', compact('sentences', 'totalCount'));

@@ -7,26 +7,26 @@ use App\Models\Term;
 
 class TermRepository
 {
-    public function findMatchingTerms(string $searchTerm)
+    public function findMatchingTerms(string $searchTerm = '', array $filters = [])
     {
         return Term::query()
             ->select('id')
-            ->filter(['search' => $searchTerm])
+            ->filter(array_merge(['search' => $searchTerm], $filters))
             ->pluck('id');
     }
 
-    public function findMatchingGlosses(string $searchTerm)
+    public function findMatchingGlosses(string $searchTerm = '', array $filters = [])
     {
         return Gloss::query()
             ->select('id', 'term_id')
-            ->filter(['search' => $searchTerm])
+            ->filter(array_merge(['search' => $searchTerm], $filters))
             ->get();
     }
 
-    public function searchTerms($termIds)
+    public function searchTerms($terms)
     {
         return Term::query()
-            ->whereIn('id', $termIds)
+            ->whereIn('id', $terms)
             ->with('glosses')
             ->take(10)
             ->get();

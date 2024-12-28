@@ -43,10 +43,19 @@ class DeckController extends Controller
     {
         View::share('pageTitle', 'Deck Library');
 
-        $searchTerm = $request->input('search');
+        $searchTerm = $request->input('search', '') ?? '';
+        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
 
-        if ($searchTerm) {
-            $allResults = $searchService->search($searchTerm, false, true)['decks'];
+        if (empty($searchTerm) && empty(array_filter($filters))) {
+            $decks = Deck::orderByDesc('id')
+                ->with('author')
+                ->where('private', 0)
+                ->paginate(25)
+                ->onEachSide(1);
+            $totalCount = $decks->total();
+
+        } else {
+            $allResults = $searchService->search($searchTerm, $filters, false, true)['decks'];
             $totalCount = $allResults->count();
 
             $perPage = 25;
@@ -60,14 +69,6 @@ class DeckController extends Controller
                 $currentPage,
                 ['path' => $request->url(), 'query' => $request->query()]
             );
-
-        } else {
-            $decks = Deck::orderByDesc('id')
-                ->with('author')
-                ->where('private', 0)
-                ->paginate(25)
-                ->onEachSide(1);
-            $totalCount = $decks->total();
         }
 
         return view('decks.index', compact('decks', 'totalCount'));

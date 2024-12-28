@@ -50,5 +50,25 @@ class Gloss extends Model
             $query->whereRaw("MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search])
                 ->orWhere('gloss', 'like', $search);
         });
+
+        $query->when($filters['category'] ?? false, fn($query, $category) => $query
+            ->whereHas('term', fn($query) => $query->where('category', $category))
+        );
+
+        $query->when($filters['attribute'] ?? false, fn($query, $attribute) => $query
+            ->whereHas('term.attributes', fn($query) => $query->where('attribute', $attribute))
+        );
+
+        $query->when($filters['form'] ?? false, fn($query, $form) => $query
+            ->whereHas('term.patterns', fn($query) => $query->where('form', $form))
+        );
+
+        $query->when($filters['singular'] ?? false, fn($query, $singular) => $query
+            ->whereHas('term.patterns', fn($query) => $query->where('pattern', $singular)->where('type', 'singular'))
+        );
+
+        $query->when($filters['plural'] ?? false, fn($query, $plural) => $query
+            ->whereHas('term.patterns', fn($query) => $query->where('pattern', $plural)->where('type', 'plural'))
+        );
     }
 }

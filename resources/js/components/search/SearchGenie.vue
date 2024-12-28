@@ -2,6 +2,7 @@
 import {useSearchStore} from './stores/SearchStore';
 import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import AppDialog from "../AppDialog.vue";
+import TermFilters from "./TermFilters.vue";
 
 const SearchStore = useSearchStore();
 const activeIndex = ref(-1);
@@ -119,12 +120,14 @@ watch(() => SearchStore.searchResults, () => {
                 <button
                     v-for="tab in SearchStore.tabs"
                     :key="tab.value"
-                    :class="{ active: SearchStore.activeModel === tab.value }"
+                    :class="{ active: SearchStore.activeModel === tab.value, persisting: tab.value === 'terms' && !Object.values(SearchStore.filters).every(value => !value) }"
                     @click="setActiveModel(tab.value)"
                 >
                     {{ tab.label }}
                 </button>
             </div>
+
+            <TermFilters v-if="SearchStore.activeModel === 'terms' || !Object.values(SearchStore.filters).every(value => !value)"/>
 
             <div class="sg-results">
                 <template v-if="SearchStore.activeModel === 'terms'">
@@ -180,19 +183,19 @@ watch(() => SearchStore.searchResults, () => {
             </div>
             <div class="sg-all-results"
                  v-if="SearchStore.activeModel === 'terms' && SearchStore.searchResults.terms.length > 0">
-                <a :href="`/dictionary/terms?search=${encodeURIComponent(SearchStore.searchTerm)}`">
+                <a :href="`/dictionary/terms?search=${encodeURIComponent(SearchStore.searchTerm)}&category=${SearchStore.filters.category}&attribute=${SearchStore.filters.attribute}&form=${SearchStore.filters.form}&singular=${SearchStore.filters.singular}&plural=${SearchStore.filters.plural}`">
                     See All Results
                 </a>
             </div>
             <div class="sg-all-results"
                  v-if="SearchStore.activeModel === 'sentences' && SearchStore.searchResults.sentences.length > 0">
-                <a :href="`/dictionary/sentences?search=${encodeURIComponent(SearchStore.searchTerm)}`">
+                <a :href="`/dictionary/sentences?search=${encodeURIComponent(SearchStore.searchTerm)}&category=${SearchStore.filters.category}&attribute=${SearchStore.filters.attribute}&form=${SearchStore.filters.form}&singular=${SearchStore.filters.singular}&plural=${SearchStore.filters.plural}`">
                     See All Results
                 </a>
             </div>
             <div class="sg-all-results"
                  v-if="SearchStore.activeModel === 'decks' && SearchStore.searchResults.decks.length > 0">
-                <a :href="`/community/decks?search=${encodeURIComponent(SearchStore.searchTerm)}`">
+                <a :href="`/community/decks?search=${encodeURIComponent(SearchStore.searchTerm)}&category=${SearchStore.filters.category}&attribute=${SearchStore.filters.attribute}&form=${SearchStore.filters.form}&singular=${SearchStore.filters.singular}&plural=${SearchStore.filters.plural}`">
                     See All Results
                 </a>
             </div>
