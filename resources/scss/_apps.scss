@@ -204,6 +204,20 @@ body.app {
     font-size: 2.0rem;
 }
 
+.app-tooltip {
+    position: fixed;
+    color: $purple-deep;
+    background-color: white;
+    border: 0.1rem solid $purple-deep;
+    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    font-family: $monoFont;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1000;
+}
 
 .sg-trigger-wrapper.inline {
     width: 33%;

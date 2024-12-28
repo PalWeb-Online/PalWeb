@@ -3,10 +3,39 @@ import {useSearchStore} from './stores/SearchStore';
 import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import AppDialog from "../AppDialog.vue";
 import TermFilters from "./TermFilters.vue";
+import AppTooltip from "../AppTooltip.vue";
 
 const SearchStore = useSearchStore();
 const activeIndex = ref(-1);
 const searchInput = ref(null);
+
+const context = ref('navigate');
+const tooltip = ref(null);
+
+function handleMouseMove(term, event) {
+    let message = '';
+
+    switch (context.value) {
+        case "navigate":
+            message = "Navigate to this item's page.";
+            break;
+        case "queue":
+            message = "Queue this item.";
+            break;
+        case "pin":
+            message = "Pin this item.";
+            break;
+        case "add":
+            message = "Add this item.";
+            break;
+    }
+
+    tooltip.value.showTooltip(message, event);
+}
+
+function handleMouseLeave() {
+    tooltip.value.hideTooltip();
+}
 
 const exit = (event) => {
     if (event.target.classList.contains('app-dialog-overlay')) {
@@ -137,6 +166,8 @@ watch(() => SearchStore.searchResults, () => {
                             :key="term.id"
                             class="sg-result-item term"
                             :class="{ active: activeIndex === index }"
+                            @mousemove="handleMouseMove(term, $event)"
+                            @mouseleave="handleMouseLeave"
                             @mouseover="activeIndex = index"
                             :href="`/dictionary/terms/${term.slug}`"
                         >
@@ -155,6 +186,8 @@ watch(() => SearchStore.searchResults, () => {
                        :key="sentence.id"
                        class="sg-result-item sentence"
                        :class="{ active: activeIndex === index }"
+                       @mousemove="handleMouseMove(sentence, $event)"
+                       @mouseleave="handleMouseLeave"
                        @mouseover="activeIndex = index"
                        :href="`/dictionary/sentences/${sentence.id}`"
                     >
@@ -171,6 +204,8 @@ watch(() => SearchStore.searchResults, () => {
                         :key="deck.id"
                         class="sg-result-item deck"
                         :class="{ active: activeIndex === index }"
+                        @mousemove="handleMouseMove(deck, $event)"
+                        @mouseleave="handleMouseLeave"
                         @mouseover="activeIndex = index"
                         :href="`/community/decks/${deck.id}`"
                     >
@@ -238,4 +273,6 @@ watch(() => SearchStore.searchResults, () => {
             </AppDialog>
         </div>
     </div>
+
+    <AppTooltip ref="tooltip" />
 </template>
