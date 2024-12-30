@@ -7,7 +7,6 @@ import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 
 const props = defineProps({
     term: Object,
-    imageURL: String,
     isPinned: Boolean,
 
     // ModelActions
@@ -37,17 +36,22 @@ function playAudio() {
 </script>
 
 <template>
-    <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"/>
+    <PinButton v-if="isUser"
+               :isPinned="isPinned"
+               :route="routes.pin"
+    />
     <div class="term-headword-arb">{{ term.term }}</div>
     <div class="term-headword-eng">({{ term.translit }})</div>
 
-    <img v-if="term.audio" class="play" :src="`${imageURL}/audio.svg`" @click="playAudio" alt="play"/>
+    <img v-if="term.audio" class="play" src="/img/audio.svg" @click="playAudio" alt="play"/>
     <ContextActions
         modelType="term"
-        :imageURL="imageURL"
         :routes="routes"
         :isUser="isUser"
         :isAdmin="isAdmin"
     />
-    <TermDeckToggleButton v-if="isUser" :userDecks="userDecks" :route="routes.deckToggle" :imageURL="imageURL"/>
+    <TermDeckToggleButton v-if="isUser"
+                          :userDecks="userDecks"
+                          :route="routes.deckToggle"
+    />
 </template>

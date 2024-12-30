@@ -3,7 +3,6 @@ import {onBeforeUnmount, ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 
 const props = defineProps({
-    imageURL: String,
     route: String,
     userDecks: Object,
 });
@@ -69,7 +68,7 @@ const toggle = async (deck) => {
 <template>
     <div class="popup-menu-wrapper">
         <img ref="submenuTrigger" class="term-deck-toggle"
-             :src="`${imageURL}/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="showDecks" alt="pin"/>
+             :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="showDecks" alt="pin"/>
         <div ref="submenu" v-if="isOpen" :style="submenuStyles" class="popup-menu">
             <form v-if="decks.length > 0" ref="notificationTrigger">
                 <button v-for="deck in decks" @click.prevent="toggle(deck)">

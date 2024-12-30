@@ -1,7 +1,6 @@
 import { createApp, h } from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
 import SentenceEditor from "./components/SentenceEditor.vue";
-import DeckBuilder from "./components/DeckBuilder.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckHead from "./components/DeckHead.vue";
@@ -12,8 +11,9 @@ import BadgeItem from "./components/BadgeItem.vue";
 import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
+import DeckBuilder from "./components/decks/DeckBuilder.vue";
+import CardViewer from "./components/decks/CardViewer.vue";
 import RecordWizard from './components/record/RecordWizard.vue';
-import FlashcardViewer from "./components/flashcards/FlashcardViewer.vue";
 
 import axios from 'axios';
 import Alpine from 'alpinejs';
@@ -64,10 +64,16 @@ if (document.querySelector('#recordWizard')) {
     recordWizardApp.mount('#recordWizard');
 }
 
-if (document.querySelector('#flashcardViewer')) {
-    const flashcardViewerApp = createApp(FlashcardViewer);
-    flashcardViewerApp.use(pinia);
-    flashcardViewerApp.mount('#flashcardViewer');
+if (document.querySelector('#cardViewer')) {
+    const cardViewerApp = createApp(CardViewer);
+    cardViewerApp.use(pinia);
+    cardViewerApp.mount('#cardViewer');
+}
+
+if (document.querySelector('#deckBuilder')) {
+    const deckBuilderApp = createApp(DeckBuilder);
+    deckBuilderApp.use(pinia);
+    deckBuilderApp.mount('#deckBuilder');
 }
 
 // TODO: Simplify the following initializations as well.
@@ -82,16 +88,4 @@ if (document.querySelector('#sentenceEditor')) {
     const sentenceEditorApp = createApp({});
     sentenceEditorApp.component('SentenceEditor', SentenceEditor);
     sentenceEditorApp.mount('#sentenceEditor');
-}
-
-if (document.querySelector('#deckBuilder')) {
-    const DeckBuilderApp = createApp({});
-    DeckBuilderApp.component('DeckBuilder', DeckBuilder);
-    DeckBuilderApp.mount('#deckBuilder');
-}
-
-if (document.querySelector('#dictionaryFilters')) {
-    const dictionaryFiltersApp = createApp({});
-    dictionaryFiltersApp.component('DictionaryFilters', DictionaryFilters);
-    dictionaryFiltersApp.mount('#dictionaryFilters');
 }

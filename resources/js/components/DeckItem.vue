@@ -6,7 +6,6 @@ import DeckActions from "./DeckActions.vue";
 
 const props = defineProps({
     deck: Object,
-    imageURL: String,
     isPinned: Boolean,
 
     // ModelActions
@@ -111,13 +110,11 @@ onBeforeUnmount(() => {
 
         <PinButton v-if="isUser"
                    :route="routes.pin"
-                   :imageURL="imageURL"
                    :isPinned="isPinned"
                    :pinCount="deck.pinCount"
         />
         <PrivacyToggleButton v-if="isAuthor"
                              :route="routes.privacyToggle"
-                             :imageURL="imageURL"
                              :isPrivate="deck.isPrivate"
         />
     </div>

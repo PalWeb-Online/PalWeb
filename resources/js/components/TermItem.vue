@@ -7,7 +7,6 @@ import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
     term: Object,
-    imageURL: String,
     isPinned: Boolean,
 
     // ModelActions
@@ -48,20 +47,21 @@ const gloss = computed(() => {
         <div class="term-item">
             <div class="term-item-head">
                 <div class="arb">{{ term.term }}</div>
-                <img class="play" v-if="term.audio" :src="`${imageURL}/audio.svg`" alt="play" @click="playAudio"/>
+                <img class="play" v-if="term.audio" :src="`/img/audio.svg`" alt="play" @click="playAudio"/>
                 <div class="translit">{{ term.translit }}</div>
             </div>
             <div class="term-item-body">
                 <div class="eng">{{ gloss }}</div>
-                <TermDeckToggleButton v-if="isUser" :userDecks="userDecks" :route="routes.deckToggle"
-                                      :imageURL="imageURL"/>
+                <TermDeckToggleButton v-if="isUser"
+                    :userDecks="userDecks"
+                    :route="routes.deckToggle"/>
             </div>
-            <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"/>
+            <PinButton v-if="isUser"
+                :isPinned="isPinned"
+                :route="routes.pin"/>
         </div>
 
-        <ContextActions
-            modelType="term"
-            :imageURL="imageURL"
+        <ContextActions modelType="term"
             :routes="routes"
             :isUser="isUser"
             :isAdmin="isAdmin"

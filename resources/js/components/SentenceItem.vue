@@ -6,7 +6,6 @@ import PinButton from "./PinButton.vue";
 
 const props = defineProps({
     sentence: Object,
-    imageURL: String,
     isPinned: Boolean,
 
     // ModelActions
@@ -72,12 +71,14 @@ function playAudio() {
             <div class="sentence-eng">
                 {{ sentence.trans }}
             </div>
-            <PinButton v-if="isUser" :isPinned="isPinned" :route="routes.pin" :imageURL="imageURL"/>
+            <PinButton v-if="isUser"
+                       :isPinned="isPinned"
+                       :route="routes.pin"
+            />
         </div>
 
         <ContextActions
             modelType="sentence"
-            :imageURL="imageURL"
             :routes="routes"
             :isAdmin="isAdmin"
         />

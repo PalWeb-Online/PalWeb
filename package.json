@@ -20,6 +20,7 @@
         "howler": "^2.2.4",
         "pinia": "^2.2.6",
         "swiper": "^11.1.14",
+        "uuid": "^11.0.3",
         "vanilla-tilt": "^1.8.1",
         "vue": "^3.5.6",
         "vue3-carousel": "^0.3.4",

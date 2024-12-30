@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\CardViewerController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeckBuilderController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MissingTermController;
 use App\Http\Controllers\RecordWizardController;
@@ -57,7 +58,7 @@ Route::get('/unauth', function () {
 Route::post("/lang/{lang}", [LanguageController::class, 'change'])->name("language.change");
 
 Route::prefix('/search')->controller(SearchGenieController::class)->group(function () {
-    Route::post('', 'search');
+    Route::post('/', 'search');
     Route::get('/filter-options', 'getFilterOptions');
 });
 
@@ -80,9 +81,6 @@ Route::prefix('/email')->middleware('auth')->group(function () {
 });
 
 Route::prefix('/dictionary')->controller(TermController::class)->group(function () {
-//    Route::post('/search', 'search')->name('dictionary.search');
-    Route::get('/random', 'random')->name('terms.random');
-
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
@@ -103,6 +101,8 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
             Route::delete('/{term}', 'destroy')->name('terms.destroy');
         });
     });
+
+    Route::get('/random', 'random')->name('terms.random');
 });
 
 /*
@@ -118,12 +118,12 @@ Route::prefix('/community')->middleware(['auth', 'verified'])->group(function ()
     // Deck Routes
     Route::resource('/decks', DeckController::class);
     Route::prefix('/decks')->controller(DeckController::class)->group(function () {
-        Route::get('/{deck}/get', 'get')->name('decks.get');
         Route::post('/{deck}/pin', 'pin')->name('decks.pin');
         Route::post('/{deck}/copy', 'copy')->name('decks.copy');
         Route::post('/{deck}/export', 'export')->name('decks.export');
         Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
         Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
+
     });
 
     // Audio Routes
@@ -190,15 +190,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/dashboard')->group(function () {
-        Route::prefix('/flashcards')->controller(FlashcardController::class)->group(function () {
-            Route::get('/', 'index')->name('flashcards.study');
-            Route::get('/decks', 'getDecks');
-            Route::get('/decks/{deck}', 'getCards');
-        });
-
         Route::controller(DashboardController::class)->group(function () {
             Route::get('/workbench', 'workbench')->name('dashboard.workbench');
             Route::get('/subscription', 'subscription')->name('dashboard.subscription');
+        });
+
+        Route::prefix('/workbench')->group(function () {
+            Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
+                Route::get('/', 'index')->name('decks.create');
+                Route::get('/decks', 'getCreatedDecks');
+                Route::get('/decks/{deck}', 'getTerms');
+            });
+
+            Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
+                Route::get('/', 'index')->name('flashcards.study');
+                Route::get('/decks', 'getPinnedDecks');
+                Route::get('/decks/{deck}', 'getCards');
+            });
+
+            Route::prefix('/record-wizard')->group(function () {
+                Route::controller(RecordWizardController::class)->group(function () {
+                    Route::get('/', 'index')->name('audios.record');
+                    Route::post('/pronunciations', 'getAutoItems');
+                    Route::get('/decks', 'getSavedDecks');
+                    Route::get('/decks/{deck}', 'getDeckItems');
+                });
+                Route::controller(SpeakerController::class)->group(function () {
+                    Route::get('/speaker', 'getSpeaker');
+                    Route::get('/options', 'getSpeakerOptions');
+                    Route::post('/speaker', 'saveSpeaker');
+                });
+            });
         });
 
         Route::prefix('/settings')->controller(UserSettingsController::class)->group(function () {
@@ -213,47 +235,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     });
 });
-
-Route::prefix('/record')->group(function () {
-    Route::controller(RecordWizardController::class)->group(function () {
-        Route::get('/', 'index')->name('audios.record');
-        Route::post('/pronunciations', 'getAutoItems');
-        Route::get('/decks', 'getSavedDecks');
-        Route::get('/decks/{deck}', 'getDeckItems');
-    });
-
-    Route::controller(SpeakerController::class)->group(function () {
-        Route::get('/speaker', 'getSpeaker');
-        Route::get('/options', 'getSpeakerOptions');
-        Route::post('/speaker', 'saveSpeaker');
-    });
-});
-
-//Route::get('sitemap', function () {
-//    $sitemap = Sitemap::create()->add(Url::create('/'))->add(Url::create('/dictionary'))->add(Url::create('/units'))->add(Url::create('/texts'))->add(Url::create('/docs'));
-//
-//    $terms = DB::table('terms')->join('categories', 'terms.category_id', '=', 'categories.id')->select('terms.*',
-//        'categories.category')->get();
-//
-//    foreach ($terms as $term) {
-//        $sitemap->add(Url::create("/dictionary/$term->category/$term->translit"));
-//    }
-//
-//    $sitemap->writeToFile(public_path('sitemap.xml'));
-//
-//    return 'Sitemap created succesfully!';
-//});
-//
-//Route::get('/flashcard', function () {
-//    return view('components.flashcard-demo', ['term' => Term::firstWhere('translit', 'b-')]);
-//})->name("flashcard");
-//
-//Route::get('/screenshot', function () {
-//    return view('components.screenshot');
-//});
-//
-//Route::get('/cv', function () {
-//    return view('cv');
-//})->name("cv");
 
 require __DIR__.'/auth.php';

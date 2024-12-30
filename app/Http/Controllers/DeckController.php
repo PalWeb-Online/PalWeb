@@ -10,7 +10,6 @@ use App\Services\SearchService;
 use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
 
@@ -74,37 +73,6 @@ class DeckController extends Controller
         return view('decks.index', compact('decks', 'totalCount'));
     }
 
-    public function get($id)
-    {
-        $deck = Deck::findOrFail($id);
-
-        $terms = [];
-        foreach ($deck->terms as $term) {
-            $terms[] = [
-                'term' => [
-                    'term' => $term->term,
-                    'category' => $term->category,
-                    'translit' => $term->translit,
-                    'glosses' => $term->glosses->map(function ($gloss) {
-                        return [
-                            'id' => $gloss->id,
-                            'gloss' => $gloss->gloss,
-                        ];
-                    })->toArray(),
-                ],
-                'term_id' => $term->id,
-                'gloss_id' => $term->pivot->gloss_id,
-                'position' => $term->pivot->position,
-                'selected' => true,
-            ];
-        }
-
-        return response()->json([
-            'deck' => $deck,
-            'terms' => $terms
-        ]);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -143,21 +111,10 @@ class DeckController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        View::share('pageTitle', 'Build Deck');
-        return view('decks.create');
-    }
-
     private function linkTerms($deck, $terms)
     {
         foreach ($terms as $termData) {
-            $term = Term::find($termData['term_id']);
+            $term = Term::find($termData['id']);
 
             if ($term) {
                 $deck->terms()->syncWithoutDetaching([
@@ -170,7 +127,7 @@ class DeckController extends Controller
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->id, array_column($terms, 'term_id'))) {
+            if (!in_array($term->id, array_column($terms, 'id'))) {
                 $deck->terms()->detach($term->id);
             }
         }
@@ -195,25 +152,6 @@ class DeckController extends Controller
 
         View::share('pageTitle', 'Deck: '.$deck->name);
         return view('decks.show', ['deck' => $deck]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Deck  $deck
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Deck $deck)
-    {
-        if (Gate::denies('modify', $deck)) {
-            $this->flasher->addFlash('error', __('unauthorized.foreign.deck'), __('unauthorized'));
-            return back();
-        }
-
-        View::share('pageTitle', 'Edit Deck');
-        return view('decks.edit', [
-            'deck' => $deck
-        ]);
     }
 
     /**

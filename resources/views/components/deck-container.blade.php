@@ -1,6 +1,6 @@
 @if($deck)
     <div class="deck-container">
-        <x-vue.deck :deck="$deck" component="DeckHead" />
+        <x-vue.deck component="DeckHead" :deck="$deck" />
 
         <div class="user-wrapper">
             <div class="user-avatar">

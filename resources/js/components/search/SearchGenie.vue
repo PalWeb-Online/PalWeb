@@ -2,31 +2,40 @@
 import {useSearchStore} from './stores/SearchStore';
 import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import AppDialog from "../AppDialog.vue";
-import TermFilters from "./TermFilters.vue";
+import TermFilters from "./_TermFilters.vue";
 import AppTooltip from "../AppTooltip.vue";
 
 const SearchStore = useSearchStore();
+
+const props = defineProps({
+    context: {type: String, default: 'search'}
+});
+
+const emit = defineEmits([
+    'emitTerm',
+    'pinDeck'
+]);
+
 const activeIndex = ref(-1);
 const searchInput = ref(null);
 
-const context = ref('navigate');
 const tooltip = ref(null);
 
 function handleMouseMove(term, event) {
     let message = '';
 
-    switch (context.value) {
-        case "navigate":
+    switch (props.context) {
+        case "search":
             message = "Navigate to this item's page.";
             break;
-        case "queue":
+        case "wizard":
             message = "Queue this item.";
             break;
-        case "pin":
-            message = "Pin this item.";
+        case "viewer":
+            message = "Pin this Deck.";
             break;
-        case "add":
-            message = "Add this item.";
+        case "builder":
+            message = "Add this Term.";
             break;
     }
 
@@ -61,11 +70,43 @@ const setActiveModel = (model) => {
 };
 
 const openSearchGenie = () => {
-    SearchStore.openSearchGenie();
+    SearchStore.openSearchGenie(props.context);
     nextTick(() => {
         searchInput.value?.focus();
     });
 }
+
+const selectTerm = (term) => {
+    if (props.context === 'builder') {
+        emit('emitTerm', term);
+    } else {
+        window.location.href = `/dictionary/terms/${term.slug}`;
+    }
+};
+
+const selectSentence = (sentence) => {
+    window.location.href = `/dictionary/sentences/${sentence.id}`;
+};
+
+const selectDeck = (deck) => {
+    if (props.context === 'viewer') {
+        pinDeck(deck.id);
+        emit('pinDeck');
+
+    } else {
+        window.location.href = `/community/decks/${deck.id}`;
+    }
+};
+
+const pinDeck = async (id) => {
+    try {
+        const response = await axios.post('/community/decks/' + id + '/pin');
+        console.log(response);
+
+    } catch (error) {
+        console.error('Pin Failed', error);
+    }
+};
 
 onMounted(() => {
     const globalListener = (event) => {
@@ -104,6 +145,7 @@ onMounted(() => {
                 break;
             case 'Enter':
                 if (activeIndex.value >= 0 && activeIndex.value < results.length) {
+                    // todo: this won't work
                     selectResult(results[activeIndex.value]);
                 }
                 break;
@@ -149,19 +191,24 @@ watch(() => SearchStore.searchResults, () => {
                 <button
                     v-for="tab in SearchStore.tabs"
                     :key="tab.value"
-                    :class="{ active: SearchStore.activeModel === tab.value, persisting: tab.value === 'terms' && !Object.values(SearchStore.filters).every(value => !value) }"
-                    @click="setActiveModel(tab.value)"
+                    :class="{
+                        active: SearchStore.activeModel === tab.value,
+                        persisting: tab.value === 'terms' && !Object.values(SearchStore.filters).every(value => !value),
+                        disabled: tab.disabled
+                    }"
+                    @click="!tab.disabled && setActiveModel(tab.value)"
                 >
                     {{ tab.label }}
                 </button>
             </div>
 
-            <TermFilters v-if="SearchStore.activeModel === 'terms' || !Object.values(SearchStore.filters).every(value => !value)"/>
+            <TermFilters
+                v-if="SearchStore.activeModel === 'terms' || !Object.values(SearchStore.filters).every(value => !value)"/>
 
             <div class="sg-results">
                 <template v-if="SearchStore.activeModel === 'terms'">
                     <template v-if="SearchStore.searchResults.terms.length > 0">
-                        <a
+                        <div
                             v-for="(term, index) in SearchStore.searchResults.terms"
                             :key="term.id"
                             class="sg-result-item term"
@@ -169,11 +216,11 @@ watch(() => SearchStore.searchResults, () => {
                             @mousemove="handleMouseMove(term, $event)"
                             @mouseleave="handleMouseLeave"
                             @mouseover="activeIndex = index"
-                            :href="`/dictionary/terms/${term.slug}`"
+                            @click="selectTerm(term)"
                         >
                             <div>{{ term.term }}</div>
                             <div>({{ term.translit }}) {{ term.category }}.</div>
-                        </a>
+                        </div>
                     </template>
 
                     <div v-else class="sg-empty">
@@ -181,24 +228,24 @@ watch(() => SearchStore.searchResults, () => {
                     </div>
                 </template>
                 <template v-if="SearchStore.activeModel === 'sentences'">
-                    <a v-if="SearchStore.searchResults.sentences.length > 0"
-                       v-for="(sentence, index) in SearchStore.searchResults.sentences"
-                       :key="sentence.id"
-                       class="sg-result-item sentence"
-                       :class="{ active: activeIndex === index }"
-                       @mousemove="handleMouseMove(sentence, $event)"
-                       @mouseleave="handleMouseLeave"
-                       @mouseover="activeIndex = index"
-                       :href="`/dictionary/sentences/${sentence.id}`"
+                    <div v-if="SearchStore.searchResults.sentences.length > 0"
+                         v-for="(sentence, index) in SearchStore.searchResults.sentences"
+                         :key="sentence.id"
+                         class="sg-result-item sentence"
+                         :class="{ active: activeIndex === index }"
+                         @mousemove="handleMouseMove(sentence, $event)"
+                         @mouseleave="handleMouseLeave"
+                         @mouseover="activeIndex = index"
+                         @click="selectSentence(sentence)"
                     >
                         <div>{{ sentence.sentence }}</div>
-                    </a>
+                    </div>
                     <div v-else class="sg-empty">
                         Nothing yet.
                     </div>
                 </template>
                 <template v-if="SearchStore.activeModel === 'decks'">
-                    <a
+                    <div
                         v-if="SearchStore.searchResults.decks.length > 0"
                         v-for="(deck, index) in SearchStore.searchResults.decks"
                         :key="deck.id"
@@ -207,10 +254,10 @@ watch(() => SearchStore.searchResults, () => {
                         @mousemove="handleMouseMove(deck, $event)"
                         @mouseleave="handleMouseLeave"
                         @mouseover="activeIndex = index"
-                        :href="`/community/decks/${deck.id}`"
+                        @click="selectDeck(deck)"
                     >
                         <div>{{ deck.name }}</div>
-                    </a>
+                    </div>
                     <div v-else class="sg-empty">
                         Nothing yet.
                     </div>
@@ -274,5 +321,5 @@ watch(() => SearchStore.searchResults, () => {
         </div>
     </div>
 
-    <AppTooltip ref="tooltip" />
+    <AppTooltip ref="tooltip"/>
 </template>

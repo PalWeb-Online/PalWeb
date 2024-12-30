@@ -7,7 +7,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-class FlashcardController extends Controller
+class CardViewerController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher)
     {
@@ -15,68 +15,69 @@ class FlashcardController extends Controller
 
     public function index()
     {
-        View::share('pageTitle', 'Flashcard Viewer');
+        View::share('pageTitle', 'Card Viewer');
 
-        return view('users.flashcards.index', [
+        return view('decks.view', [
             'layout' => 'app'
         ]);
     }
 
-    public function getDecks(Request $request)
+    public function getPinnedDecks(Request $request)
     {
-//        TODO: What happens if a Deck you've pinned becomes private?
+//        TODO: disallow empty Decks, maybe passing "disabled" if it's empty
 
         try {
             $user = $request->user();
-            $decks = [];
+            $pinnedDecks = [];
 
-            $pinnedDecks = Deck::select('decks.*')
+            $decks = Deck::select('decks.*')
                 ->join('markable_bookmarks', function ($join) use ($user) {
                     $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                         ->where('markable_bookmarks.markable_type', '=', Deck::class)
                         ->where('markable_bookmarks.user_id', '=', $user->id);
                 })
-                ->orderBy('markable_bookmarks.id')
+                ->orderByDesc('markable_bookmarks.id')
                 ->get();
 
-            foreach ($pinnedDecks as $deck) {
-                $decks[] = [
+//        TODO: What happens if a Deck you've pinned becomes private? This isn't filtering out private Decks.
+
+            foreach ($decks as $deck) {
+                $pinnedDecks[] = [
                     'id' => $deck->id,
                     'name' => $deck->name,
                     'description' => $deck->description,
+                    'terms' => $deck->terms->pluck('term'),
                     'count' => count($deck->terms),
                     'authorName' => $deck->author->name,
-                    'authorAvatar' => asset('img/avatars/' . $deck->author->avatar),
-                    'terms' => $deck->terms->pluck('term'),
-//        TODO: disallow empty Decks, maybe passing "disabled" if it's empty
-
+                    'authorAvatar' => asset('img/avatars/'.$deck->author->avatar),
                 ];
             }
 
-            return response()->json(['decks' => $decks]);
+            return response()->json(['pinnedDecks' => $pinnedDecks]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch saved decks.'], 500);
+            return response()->json(['error' => 'Failed to fetch Pinned Decks.'], 500);
         }
     }
 
     public function getCards($id)
     {
-        $deck = Deck::findOrFail($id);
-        $cards = [];
+        $terms = [];
 
-        foreach ($deck->terms as $term) {
+        foreach (Deck::findOrFail($id)->terms as $term) {
             $term->pronunciation = $term->pronunciations->first();
             $pronunciation = $term->pronunciations->firstWhere('dialect_id', auth()->user()->dialect_id);
             $pronunciation && $term->pronunciation = $pronunciation;
 
-            $cards[] = [
+            $terms[] = [
                 'id' => $term->id,
                 'term' => $term->term,
                 'category' => $term->category,
                 'translit' => $term->pronunciation->translit,
                 'file' => $term->pronunciation->audios[0]->filename ?? null,
-                'inflections' => $term->inflections->whereNotIn('form', ['accusative', 'genitive'])->map(function ($inflection) {
+                'inflections' => $term->inflections->whereNotIn('form', ['accusative', 'genitive'])->map(function (
+                    $inflection
+                ) {
                     return [
                         'inflection' => $inflection->inflection,
                         'translit' => $inflection->translit,
@@ -92,7 +93,7 @@ class FlashcardController extends Controller
         }
 
         return response()->json([
-            'cards' => $cards,
+            'terms' => $terms,
         ]);
     }
 }

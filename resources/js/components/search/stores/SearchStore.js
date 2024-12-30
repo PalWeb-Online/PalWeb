@@ -28,15 +28,18 @@ export const useSearchStore = defineStore('SearchStore', {
         tabs: [
             {
                 label: 'Terms',
-                value: 'terms'
+                value: 'terms',
+                disabled: false,
             },
             {
                 label: 'Sentences',
-                value: 'sentences'
+                value: 'sentences',
+                disabled: false,
             },
             {
                 label: 'Decks',
-                value: 'decks'
+                value: 'decks',
+                disabled: false,
             },
         ],
     }),
@@ -56,10 +59,27 @@ export const useSearchStore = defineStore('SearchStore', {
             this.search();
         },
 
-        openSearchGenie() {
+        openSearchGenie(context) {
             const triggerButtons = document.querySelectorAll('.sg-trigger');
             triggerButtons.forEach((button) => {
                 button.classList.add('active');
+            });
+
+            this.tabs = this.tabs.map(tab => {
+                if (context === 'builder') {
+                    this.activeModel = 'terms';
+                    return {
+                        ...tab,
+                        disabled: tab.value !== 'terms',
+                    };
+                } else if (context === 'viewer') {
+                    this.activeModel = 'decks';
+                    return {
+                        ...tab,
+                        disabled: tab.value !== 'decks',
+                    };
+                }
+                return {...tab, disabled: false};
             });
 
             this.isOpen = true;
@@ -72,10 +92,10 @@ export const useSearchStore = defineStore('SearchStore', {
             this.activeModel = 'terms';
             this.filters = {
                 category: '',
-                    attribute: '',
-                    form: '',
-                    singular: '',
-                    plural: ''
+                attribute: '',
+                form: '',
+                singular: '',
+                plural: ''
             };
             this.searchResults = {
                 terms: [],

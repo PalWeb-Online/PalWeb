@@ -341,6 +341,14 @@
             font-size: 1.4rem;
             font-weight: 400;
         }
+
+        select.eng {
+            width: 100%;
+            color: black;
+            padding: 0;
+            background: none;
+            min-height: 2.4rem;
+        }
     }
 
     &.subterm {
@@ -863,7 +871,7 @@ Sentences
     border: 0.1rem solid $purple-pastel;
     padding: 0.4rem;
 
-    .builder-item-term {
+    .db-item-term {
         display: flex;
         flex-flow: row-reverse;
         gap: 0.4rem;
@@ -884,7 +892,7 @@ Sentences
         }
     }
 
-    .builder-item-gloss {
+    .db-item-gloss {
         display: flex;
         align-items: center;
         gap: 0.4rem 0.8rem;

@@ -61,6 +61,13 @@ body.app {
     display: grid;
     justify-items: center;
     margin: 3.2rem 1.6rem;
+    position: relative;
+
+    .app-dialog-trigger {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 
     @media (min-width: 960px) {
         margin: 3.2rem;
@@ -219,6 +226,53 @@ body.app {
     z-index: 1000;
 }
 
+.app-button {
+    background: white;
+    padding: 0.6rem 1.6rem 0.4rem;
+    border-radius: 0.8rem;
+    color: $purple-deep;
+    border: 0.2rem solid $purple-deep;
+    box-shadow: -0.2rem 0.2rem 0 $purple-deep;
+    font-family: $headFont;
+    font-weight: 700;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+
+    &:active {
+        box-shadow: none;
+        translate: -0.2rem 0.2rem;
+    }
+}
+
+.app-notification {
+    position: fixed;
+    bottom: 0.8rem;
+    padding: 1.2rem 2.4rem 1.4rem;
+    margin: 0.8rem;
+    border-radius: 1.6rem;
+    color: $purple-deep;
+    background: white;
+    border: 0.2rem solid $purple-deep;
+    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    font-family: $bodyFont;
+    font-size: 2.0rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0);
+    z-index: 1000;
+    user-select: none;
+
+    &.error {
+        color: red;
+    }
+
+    &.hidden {
+        transform: translateY(200%);
+    }
+}
+
 .sg-trigger-wrapper.inline {
     width: 33%;
     position: relative;
@@ -327,12 +381,12 @@ body.app {
             flex: 1;
             padding: 0.8rem 1.6rem;
             border: none;
-            cursor: pointer;
             color: $purple-deep;
             background: $purple-pastel-light;
             border-radius: 0.6rem;
             font-size: 1.4rem;
             font-family: $monoFont;
+            cursor: pointer;
 
             &.active {
                 color: white;
@@ -340,6 +394,10 @@ body.app {
                 font-weight: 700;
             }
 
+            &.disabled {
+                cursor: not-allowed;
+                filter: grayscale(100%) opacity(33%);
+            }
         }
 
         button.persisting {

@@ -11,15 +11,15 @@
 @section('content')
     <div class="workbench-portal-grid">
         <a class="workbench-portal-item" href="{{ route('decks.create') }}">
-            <div>deckbuilderdeckbuilderdeckbuilder</div>
+            <div>deckbuilderdeckbuilderdeckbuilderdeckbuilder</div>
             <div>Deck Builder</div>
         </a>
         <a class="workbench-portal-item" href="{{ route('flashcards.study') }}">
-            <div>flashcardviewerflashcardviewerflashcardviewer</div>
-            <div>Flashcard Viewer</div>
+            <div>cardviewercardviewercardviewercardviewer</div>
+            <div>Card Viewer</div>
         </a>
         <a class="workbench-portal-item" href="{{ route('audios.record') }}">
-            <div>recordwizardrecordwizardrecordwizard</div>
+            <div>recordwizardrecordwizardrecordwizardrecordwizard</div>
             <div>Record Wizard</div>
         </a>
     </div>

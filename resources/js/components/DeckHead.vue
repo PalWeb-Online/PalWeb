@@ -6,7 +6,6 @@ import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 
 const props = defineProps({
     deck: Object,
-    imageURL: String,
     isPinned: Boolean,
 
     // ModelActions
@@ -31,19 +30,16 @@ const description = computed(() => {
 
         <PinButton v-if="isUser"
                    :route="routes.pin"
-                   :imageURL="imageURL"
                    :isPinned="isPinned"
                    :pinCount="deck.pinCount"
         />
         <PrivacyToggleButton v-if="isAuthor"
                              :route="routes.privacyToggle"
-                             :imageURL="imageURL"
                              :isPrivate="deck.isPrivate"
         />
 
         <ContextActions
             modelType="deck"
-            :imageURL="imageURL"
             :routes="routes"
             :isUser="isUser"
             :isAuthor="isAuthor"

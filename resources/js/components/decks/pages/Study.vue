@@ -80,8 +80,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <SearchGenie/>
-
     <div class="flashcard-portal-box">
         <div>Options</div>
         <div>
@@ -123,7 +121,7 @@ onUnmounted(() => {
         @slide-end="handleSlideEnd"
     >
         <template #slides>
-            <Slide v-for="(term, index) in DeckStore.data.cards" :key="term.id">
+            <Slide v-for="(term, index) in DeckStore.data.terms" :key="term.id">
                 <CardItem
                     :term="term"
                     :isActive="index === DeckStore.currentSlideIndex && !isSliding"
@@ -137,7 +135,7 @@ onUnmounted(() => {
         <template #addons>
             <Pagination/>
             <div class="carousel-index">{{ DeckStore.currentSlideIndex + 1 }} out of {{
-                    DeckStore.data.cards.length
+                    DeckStore.data.terms.length
                 }}
             </div>
         </template>

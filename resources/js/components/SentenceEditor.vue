@@ -149,14 +149,14 @@ export default {
 
                 <template #item="{ element, index }">
                     <div class="sentence-builder-item">
-                        <div class="builder-item-term">
+                        <div class="db-item-term">
                             <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
                                    type="text" v-model="element.sent_term"/>
                             <input :id="'terms['+index+'][sent_term]'" :name="'terms['+index+'][sent_term]'"
                                    type="text" v-model="element.sent_translit"/>
                         </div>
 
-                        <div class="builder-item-gloss">
+                        <div class="db-item-gloss">
                             <select v-if="element.term.glosses.length" v-model="element.gloss_id">
                                 <option v-for="gloss in element.term.glosses" :value="gloss.id">
                                     {{ gloss.gloss.length > 60 ? gloss.gloss.slice(0, 60) + "..." : gloss.gloss }}
