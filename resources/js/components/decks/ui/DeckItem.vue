@@ -1,6 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
+import PinButton from "./PinButton.vue";
 
 const props = defineProps({
     id: { type: [String, Number], default: null },
@@ -60,5 +61,10 @@ onMounted(() => {
                 </slot>
             </div>
         </div>
+
+<!--        todo: these are all defaulting to true currently -->
+        <PinButton :id="deck.id" model="deck"
+                   :isPinned="true"
+        />
     </div>
 </template>

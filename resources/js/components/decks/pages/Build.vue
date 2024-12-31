@@ -13,19 +13,27 @@ const DeckStore = useDeckStore();
 const notification = ref(null);
 
 const insertTerm = (term) => {
-    DeckStore.data.terms.push({
-        id: term.id,
-        term: term.term,
-        category: term.category,
-        translit: term.translit,
-        glosses: term.glosses.map((gloss) => ({
-            id: gloss.id,
-            gloss: gloss.gloss,
-        })),
-        gloss_id: term.glosses[0].id,
-        position: '',
-    });
-    updatePosition();
+    const termExists = DeckStore.data.terms.some(existingTerm => existingTerm.id === term.id);
+
+    if (termExists) {
+        notification.value.showNotification('This Term is already in the Deck!', 'error');
+
+    } else {
+        DeckStore.data.terms.push({
+            id: term.id,
+            term: term.term,
+            category: term.category,
+            translit: term.translit,
+            glosses: term.glosses.map((gloss) => ({
+                id: gloss.id,
+                gloss: gloss.gloss,
+            })),
+            gloss_id: term.glosses[0].id,
+            position: '',
+        });
+        updatePosition();
+        notification.value.showNotification(`Added ${term.term} to the Deck!`);
+    }
 }
 
 const removeTerm = (index) => {
@@ -98,10 +106,9 @@ onUnmounted(() => {
                     <div>({{ DeckStore.data.user.username }})</div>
                 </div>
                 <div class="user-comment-body">
-                    <div class="user-comment-body-content">
-                        <textarea id="deck[description]" v-model="DeckStore.data.deck.description"
-                                  name="deck[description]"/>
-                    </div>
+                    <textarea class="user-comment-body-content" id="deck[description]"
+                              v-model="DeckStore.data.deck.description"
+                              name="deck[description]"/>
                 </div>
             </div>
         </div>
@@ -121,7 +128,7 @@ onUnmounted(() => {
     </div>
 
     <AppButton label="Save Deck"
-        @click="saveDeck"
+               @click="saveDeck"
     />
-    <AppNotification ref="notification" />
+    <AppNotification ref="notification"/>
 </template>

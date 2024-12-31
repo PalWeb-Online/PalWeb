@@ -35,8 +35,8 @@ function playAudio() {
 }
 
 const gloss = computed(() => {
-    return props.term.gloss.length > 48
-        ? props.term.gloss.substring(0, 45) + '...'
+    return props.term.gloss.length > 85
+        ? props.term.gloss.substring(0, 85) + '...'
         : props.term.gloss;
 });
 

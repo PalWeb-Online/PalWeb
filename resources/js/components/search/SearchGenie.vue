@@ -4,6 +4,7 @@ import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import AppDialog from "../AppDialog.vue";
 import TermFilters from "./_TermFilters.vue";
 import AppTooltip from "../AppTooltip.vue";
+import {eventBus} from "../../utils/eventBus.js";
 
 const SearchStore = useSearchStore();
 
@@ -13,7 +14,6 @@ const props = defineProps({
 
 const emit = defineEmits([
     'emitTerm',
-    'pinDeck'
 ]);
 
 const activeIndex = ref(-1);
@@ -21,7 +21,7 @@ const searchInput = ref(null);
 
 const tooltip = ref(null);
 
-function handleMouseMove(term, event) {
+function handleMouseMove(event) {
     let message = '';
 
     switch (props.context) {
@@ -32,7 +32,7 @@ function handleMouseMove(term, event) {
             message = "Queue this item.";
             break;
         case "viewer":
-            message = "Pin this Deck.";
+            message = "Pin or Unpin this Deck.";
             break;
         case "builder":
             message = "Add this Term.";
@@ -88,23 +88,18 @@ const selectSentence = (sentence) => {
     window.location.href = `/dictionary/sentences/${sentence.id}`;
 };
 
-const selectDeck = (deck) => {
+const selectDeck = async (deck) => {
     if (props.context === 'viewer') {
-        pinDeck(deck.id);
-        emit('pinDeck');
+        try {
+            const response = await axios.post('/community/decks/' + deck.id + '/pin');
+            eventBus.emit('pinnedModel', {id: deck.id, model: 'deck', isPinned: response.data.isPinned});
+
+        } catch (error) {
+            console.error('Failed to Pin Deck.', error);
+        }
 
     } else {
         window.location.href = `/community/decks/${deck.id}`;
-    }
-};
-
-const pinDeck = async (id) => {
-    try {
-        const response = await axios.post('/community/decks/' + id + '/pin');
-        console.log(response);
-
-    } catch (error) {
-        console.error('Pin Failed', error);
     }
 };
 
@@ -213,7 +208,7 @@ watch(() => SearchStore.searchResults, () => {
                             :key="term.id"
                             class="sg-result-item term"
                             :class="{ active: activeIndex === index }"
-                            @mousemove="handleMouseMove(term, $event)"
+                            @mousemove="handleMouseMove($event)"
                             @mouseleave="handleMouseLeave"
                             @mouseover="activeIndex = index"
                             @click="selectTerm(term)"
@@ -233,7 +228,7 @@ watch(() => SearchStore.searchResults, () => {
                          :key="sentence.id"
                          class="sg-result-item sentence"
                          :class="{ active: activeIndex === index }"
-                         @mousemove="handleMouseMove(sentence, $event)"
+                         @mousemove="handleMouseMove($event)"
                          @mouseleave="handleMouseLeave"
                          @mouseover="activeIndex = index"
                          @click="selectSentence(sentence)"
@@ -251,7 +246,7 @@ watch(() => SearchStore.searchResults, () => {
                         :key="deck.id"
                         class="sg-result-item deck"
                         :class="{ active: activeIndex === index }"
-                        @mousemove="handleMouseMove(deck, $event)"
+                        @mousemove="handleMouseMove($event)"
                         @mouseleave="handleMouseLeave"
                         @mouseover="activeIndex = index"
                         @click="selectDeck(deck)"

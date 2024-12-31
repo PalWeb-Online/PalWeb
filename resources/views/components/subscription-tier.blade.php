@@ -35,28 +35,37 @@
     <div class="tier-item {{ $unlockable ? 'unlockable' : '' }}">
         <div class="tier-head">{{ $tier }}</div>
         <div class="tier-body">
-            <div>Access to <b>Dictionary</b></div>
             <div>Access to <b>Wiki</b></div>
-            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
-                <b>Pin</b> to your <b>Workbench</b>
-            </div>
-            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
-                <b>Request</b> Terms
-            </div>
+            <div>Access to <b>Dictionary</b></div>
             <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
                 Access to <b>Phrasebook</b>
             </div>
             <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
                 Access to <b>Deck Library</b>
             </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                Access to <b>Audio Library</b>
+            </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                <b>Pin</b> to your <b>Workbench</b>
+            </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                Use the <b>Deck Builder</b>
+            </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                Use the <b>Card Viewer</b>
+            </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                Use the <b>Record Wizard</b>
+            </div>
+            <div class="{{ in_array($tier, ['hobbyist', 'student', 'admin']) ? '' : 'disabled' }}">
+                <b>Request</b> Terms
+            </div>
             <div class="{{ in_array($tier, ['student', 'admin']) ? '' : 'disabled' }}">
                 Access to <b>Explore</b> Portal
             </div>
             <div class="{{ in_array($tier, ['student', 'admin']) ? '' : 'disabled' }}">
                 Access to <b>Academy</b></div>
-            <div class="{{ in_array($tier, ['student', 'admin']) ? '' : 'disabled' }}">
-                (Soon) Study <b>Flashcards</b>
-            </div>
             <div class="{{ in_array($tier, ['student', 'admin']) ? '' : 'disabled' }}">
                 Support the Project
             </div>

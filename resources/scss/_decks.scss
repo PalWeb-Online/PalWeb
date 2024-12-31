@@ -401,16 +401,19 @@
 }
 
 #db-page-build {
+    input.deck-container-head-title {
+        width: 100%;
+        padding: 0.8rem 1.2rem 0.4rem;
+    }
 
-}
+    .db-item {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
 
-.db-item {
-    display: flex;
-    align-items: center;
-    gap: 1.6rem;
-
-    img {
-        width: 2.0rem;
+        img {
+            width: 2.0rem;
+        }
     }
 }
 
