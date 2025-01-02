@@ -68,6 +68,7 @@ onUnmounted(() => {
         <!--        </DeckItem>-->
 
         <DeckItem v-for="(deck, index) in DeckStore.data.decks" :key="deck.id" :deck="deck"
+                  :context="StateStore.data.context"
                   :isActive="activeId === deck.id"
                   @flip="toggleActive(deck.id, index)"
         />

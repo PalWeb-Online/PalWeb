@@ -877,8 +877,7 @@ nav {
     color: white;
     font-size: 1.6rem;
     padding: 4.8rem min(5vw, 3.6rem) 0;
-    margin: calc(2 * 3.2rem + 1.6rem) 1.6rem 1.6rem;
-    border-radius: 2.4rem;
+    margin-block-start: calc(2 * 3.2rem + 1.6rem);
     background: $purple-primary-dark;
     position: relative;
 
@@ -887,8 +886,7 @@ nav {
     }
 
     @media (min-width: 960px) {
-        box-shadow: -0.6rem 0.6rem 0 rgba(black, 0.2);
-        margin: calc(2 * 4.8rem + 2.4rem) 2.4rem 2.4rem;
+        margin-block-start: calc(2 * 4.8rem + 2.4rem);
     }
 
     .footer-social {

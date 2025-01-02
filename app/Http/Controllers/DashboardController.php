@@ -20,6 +20,7 @@ class DashboardController
         $sentences = Sentence::whereHasBookmark(auth()->user())->get();
 
         $decks = Deck::select('decks.*')
+            ->where('private', '0')
             ->join('markable_bookmarks', function ($join) use ($user) {
                 $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                     ->where('markable_bookmarks.markable_type', '=', Deck::class)

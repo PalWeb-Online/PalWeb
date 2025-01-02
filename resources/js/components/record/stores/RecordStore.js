@@ -234,7 +234,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
 
         try {
-            const response = await axios.delete(`/api/record/discard/${stashKey}`);
+            const response = await axios.delete(`/api/record-wizard/discard/${stashKey}`);
 
             delete data.records[id];
             delete data.status[id];
@@ -264,7 +264,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const clearStash = () => {
-        fetch(`/api/record/clear/${SpeakerStore.data.speaker.id}`, {method: 'DELETE'})
+        fetch(`/api/record-wizard/clear/${SpeakerStore.data.speaker.id}`, {method: 'DELETE'})
             .then(response => {
                 if (response.ok) {
                     Object.keys(data.status).forEach(key => {

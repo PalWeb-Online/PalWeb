@@ -17,6 +17,27 @@ class DeckBuilderController extends Controller
         ]);
     }
 
+    public function edit(Request $request, $deckId)
+    {
+        $user = $request->user();
+        $user = [
+            'name' => $user->name,
+            'username' => $user->username,
+            'avatar' => asset('img/avatars/'.$user->avatar),
+        ];
+
+        $deck = Deck::with('terms')->findOrFail($deckId);
+
+        View::share('pageTitle', 'Deck Builder');
+
+        return view('decks.build', [
+            'layout' => 'app',
+            'user' => $user,
+            'deck' => $deck,
+            'action' => 'edit',
+        ]);
+    }
+
     public function getCreatedDecks(Request $request)
     {
         try {
@@ -32,14 +53,15 @@ class DeckBuilderController extends Controller
                     'count' => count($deck->terms),
                     'private' => $deck->private,
                     'authorName' => $user->name,
-                    'authorAvatar' => asset('img/avatars/' . $user->avatar),
+                    'authorAvatar' => asset('img/avatars/'.$user->avatar),
+                    'isPinned' => $deck->isPinned()
                 ];
             }
 
             $user = [
                 'name' => $user->name,
                 'username' => $user->username,
-                'avatar' => asset('img/avatars/' . $user->avatar),
+                'avatar' => asset('img/avatars/'.$user->avatar),
             ];
 
             return response()->json([

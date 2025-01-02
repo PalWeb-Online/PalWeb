@@ -4,7 +4,7 @@
 </form>
 
 <div class="decks-list">
-    <div class="featured-title l">Decks: {{ App\Models\Deck::whereHasBookmark(auth()->user())->count() }}</div>
+    <div class="featured-title l">Decks: {{ count($decks) }}</div>
     @if(count($decks) > 0)
         @foreach($decks as $deck)
             <x-vue.deck component="DeckItem" :deck="$deck"/>
@@ -21,7 +21,7 @@
 </div>
 
 <div class="terms-list">
-    <div class="featured-title l">Terms: {{ App\Models\Term::whereHasBookmark(auth()->user())->count() }}</div>
+    <div class="featured-title l">Terms: {{ count($terms) }}</div>
     @if(count($terms) > 0)
         @foreach($terms as $term)
             <x-term-item :term="$term"/>
@@ -39,7 +39,7 @@
 
 
 <div class="sentence-list">
-    <div class="featured-title l">Sentences: {{ App\Models\Sentence::whereHasBookmark(auth()->user())->count() }}</div>
+    <div class="featured-title l">Sentences: {{ count($sentences) }}</div>
     @if(count($sentences) > 0)
         @foreach($sentences as $sentence)
             <x-sentence-item size="s" :sentence="$sentence"/>

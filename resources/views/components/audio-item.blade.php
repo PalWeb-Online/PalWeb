@@ -36,7 +36,7 @@
         </div>
 
         @auth
-            @if($audio->speaker_id === auth()->user()->id)
+            @if($audio->speaker->user_id === auth()->user()->id)
                 <form method="post" action="{{ route('audios.destroy', $audio) }}">
                     @csrf
                     @method('DELETE')

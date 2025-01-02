@@ -70,6 +70,11 @@
     cursor: pointer;
     user-select: none;
 
+    &.disabled {
+        filter: grayscale(100%) brightness(1.25);
+        pointer-events: none;
+    }
+
     .deck-flashcard-front, .deck-flashcard-back {
         position: absolute;
         width: 100%;

@@ -7,6 +7,7 @@ import draggable from 'vuedraggable';
 import {onMounted, onUnmounted, ref} from "vue";
 import AppButton from "../../AppButton.vue";
 import AppNotification from "../../AppNotification.vue";
+import ContextActions from "../../ContextActions.vue";
 
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
@@ -82,9 +83,11 @@ onUnmounted(() => {
     <div class="app-prompt-heading">Use the Search Genie to add Terms to the Deck!</div>
 
     <div class="deck-container">
+
         <div class="deck-container-head">
             <input class="deck-container-head-title" id="deck[name]" v-model="DeckStore.data.deck.name"
-                   name="deck[name]" required type="text"/>
+                   name="deck[name]" type="text" placeholder="Required: Deck Name"
+            />
 
             <!--        <PrivacyToggleButton v-if="isAuthor"-->
             <!--                             :route="routes.privacyToggle"-->
@@ -95,6 +98,12 @@ onUnmounted(() => {
             <!--                       v-model="DeckStore.data.deck.private">-->
             <!--                <span>Private</span>-->
             <!--            </label>-->
+            <ContextActions
+                modelType="deck"
+                :routes="routes"
+                :isUser="true"
+                :isAuthor="true"
+            />
         </div>
         <div class="user-wrapper">
             <div class="user-avatar">
@@ -108,7 +117,8 @@ onUnmounted(() => {
                 <div class="user-comment-body">
                     <textarea class="user-comment-body-content" id="deck[description]"
                               v-model="DeckStore.data.deck.description"
-                              name="deck[description]"/>
+                              name="deck[description]" placeholder="(Optional) Tell us something about this Deck."
+                    />
                 </div>
             </div>
         </div>

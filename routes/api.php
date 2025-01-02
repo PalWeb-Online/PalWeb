@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('/record')->controller(RecordWizardController::class)->group(function () {
+Route::prefix('/record-wizard')->controller(RecordWizardController::class)->group(function () {
     Route::post('/stash', 'stashRecord');
     Route::delete('/discard/{stashKey}', 'discardRecord');
     Route::delete('/clear/{speakerId}', 'clearStash');

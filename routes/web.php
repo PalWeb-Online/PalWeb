@@ -198,6 +198,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/workbench')->group(function () {
             Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
                 Route::get('/', 'index')->name('decks.create');
+                Route::get('/edit/{deck}', 'edit')->name('decks.edit');
                 Route::get('/decks', 'getCreatedDecks');
                 Route::get('/decks/{deck}', 'getTerms');
             });

@@ -1,11 +1,23 @@
 <script setup>
 import {useStateStore} from "./stores/StateStore.js";
+import {useDeckStore} from "./stores/DeckStore.js";
 import Select from "./pages/Select.vue";
 import Build from "./pages/Build.vue";
 import AppDialog from "../AppDialog.vue";
 
 const StateStore = useStateStore();
+const DeckStore = useDeckStore();
 StateStore.data.context = 'builder';
+
+const preloadDeck = window.deck || null;
+const preloadUser = window.user || null;
+const action = window.action || 'create';
+
+if (action === 'edit') {
+    DeckStore.data.deck = preloadDeck;
+    DeckStore.data.user = preloadUser;
+    StateStore.data.step = 'build';
+}
 </script>
 
 <template>

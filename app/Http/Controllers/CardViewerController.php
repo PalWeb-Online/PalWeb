@@ -24,13 +24,12 @@ class CardViewerController extends Controller
 
     public function getPinnedDecks(Request $request)
     {
-//        TODO: disallow empty Decks, maybe passing "disabled" if it's empty
-
         try {
             $user = $request->user();
             $pinnedDecks = [];
 
             $decks = Deck::select('decks.*')
+                ->where('private', '0')
                 ->join('markable_bookmarks', function ($join) use ($user) {
                     $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                         ->where('markable_bookmarks.markable_type', '=', Deck::class)
@@ -38,8 +37,6 @@ class CardViewerController extends Controller
                 })
                 ->orderByDesc('markable_bookmarks.id')
                 ->get();
-
-//        TODO: What happens if a Deck you've pinned becomes private? This isn't filtering out private Decks.
 
             foreach ($decks as $deck) {
                 $pinnedDecks[] = [
@@ -50,6 +47,7 @@ class CardViewerController extends Controller
                     'count' => count($deck->terms),
                     'authorName' => $deck->author->name,
                     'authorAvatar' => asset('img/avatars/'.$deck->author->avatar),
+                    'isPinned' => $deck->isPinned(),
                 ];
             }
 

@@ -2,9 +2,11 @@
 import {computed, onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 import PinButton from "./PinButton.vue";
+import AppTooltip from "../../AppTooltip.vue";
 
 const props = defineProps({
-    id: { type: [String, Number], default: null },
+    context: {type: String, default: null},
+    id: {type: [String, Number], default: null},
     deck: Object,
     isActive: Boolean,
 });
@@ -12,11 +14,16 @@ const props = defineProps({
 const emit = defineEmits(['flip']);
 
 const id = computed(() => props.id || props.deck?.id);
-const trigger = ref(null);
+const tooltip = ref(null);
+const flashcard = ref(null);
 
 const handleFlip = () => {
     emit('flip', id.value);
 };
+
+const disabled = computed(() => {
+    return props.context === 'viewer' && props.deck.count === 0;
+});
 
 const description = computed(() => {
     return props.deck?.description?.length > 320
@@ -25,7 +32,7 @@ const description = computed(() => {
 });
 
 onMounted(() => {
-    VanillaTilt.init(trigger.value, {
+    VanillaTilt.init(flashcard.value, {
         max: 10,
         speed: 400,
         scale: 1,
@@ -34,8 +41,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <div :class="['deck-flashcard-wrapper', { active: isActive }]">
-        <div :class="['deck-flashcard', {flipped: isActive }]" ref="trigger" @click="handleFlip">
+    <div :class="['deck-flashcard-wrapper', { active: isActive }]"
+         @mousemove="disabled && tooltip.showTooltip('This Deck is empty.', $event);"
+         @mouseleave="disabled && tooltip.hideTooltip()"
+    >
+        <div :class="['deck-flashcard', {flipped: isActive }, { disabled: disabled}]" ref="flashcard"
+             @click="handleFlip">
             <div class="deck-flashcard-front">
                 <slot name="front">
                     <div class="deck-flashcard-front-head">
@@ -62,9 +73,10 @@ onMounted(() => {
             </div>
         </div>
 
-<!--        todo: these are all defaulting to true currently -->
         <PinButton :id="deck.id" model="deck"
-                   :isPinned="true"
+                   :isPinned="deck.isPinned"
         />
     </div>
+
+    <AppTooltip ref="tooltip"/>
 </template>

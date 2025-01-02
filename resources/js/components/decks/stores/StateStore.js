@@ -4,9 +4,17 @@ import {computed, reactive} from "vue";
 export const useStateStore = defineStore('StateStore', () => {
     const data = reactive({
         context: null,
+        action: 'create',
         step: 'select',
         errorMessage: '',
     });
+
+    const initialize = (action = 'create') => {
+        data.action = action;
+        if (action === 'edit') {
+            data.step = 'build';
+        }
+    };
 
     const steps = computed(() => {
         const isBuilder = data.context === 'builder';
@@ -74,6 +82,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
     return {
         data,
+        initialize,
         backDisabled,
         nextDisabled,
         back,

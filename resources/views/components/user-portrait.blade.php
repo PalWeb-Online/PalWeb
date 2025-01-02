@@ -8,8 +8,7 @@
     </div>
 
     <div class="user-creations-count">
-{{--        todo: where not private--}}
-        {{ $user->decks->count() }}
+        {{ $user->decks->where('private', '0')->count() }}
         ·
         {{ $user->speaker ? $user->speaker->audios->count() : '0' }}
     </div>
