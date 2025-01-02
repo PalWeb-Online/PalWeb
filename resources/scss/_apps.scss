@@ -242,6 +242,11 @@ body.app {
         box-shadow: none;
         translate: -0.2rem 0.2rem;
     }
+
+    &[disabled] {
+        opacity: 33%;
+        pointer-events: none;
+    }
 }
 
 .app-notification {
@@ -271,6 +276,16 @@ body.app {
 
     &.hidden {
         transform: translateY(200%);
+    }
+}
+
+.app-loading {
+    display: flex;
+    justify-content: center;
+
+    img {
+        width: 6.4rem;
+        animation: spinner 1s infinite;
     }
 }
 

@@ -406,6 +406,12 @@
 }
 
 #db-page-build {
+    .db-build-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.6rem;
+    }
+
     input.deck-container-head-title {
         width: 100%;
         padding: 0.8rem 1.2rem 0.4rem;

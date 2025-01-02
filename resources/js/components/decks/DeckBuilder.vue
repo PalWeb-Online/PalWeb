@@ -9,12 +9,12 @@ const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 StateStore.data.context = 'builder';
 
-const preloadDeck = window.deck || null;
+const preloadDeck = window.stagedDeck || null;
 const preloadUser = window.user || null;
 const action = window.action || 'create';
 
 if (action === 'edit') {
-    DeckStore.data.deck = preloadDeck;
+    DeckStore.data.stagedDeck = preloadDeck;
     DeckStore.data.user = preloadUser;
     StateStore.data.step = 'build';
 }

@@ -73,12 +73,6 @@ class DeckController extends Controller
         return view('decks.index', compact('decks', 'totalCount'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function store(Request $request)
     {
         $this->validateRequest($request);
@@ -96,11 +90,9 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        return [
-            'status' => 'success',
-            'redirect' => route('decks.show', $deck),
-            'flash' => __('created', ['thing' => $deck->name])
-        ];
+        return response()->json([
+            'deck' => $deck,
+        ]);
     }
 
     private function validateRequest($request)
@@ -154,13 +146,6 @@ class DeckController extends Controller
         return view('decks.show', ['deck' => $deck]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Deck  $deck
-     * @return array
-     */
     public function update(Request $request, Deck $deck)
     {
         $this->authorize('modify', $deck);
@@ -170,27 +155,27 @@ class DeckController extends Controller
         $deck->update($request->deck);
         $this->linkTerms($deck, $request->terms);
 
-        return [
-            'status' => 'success',
-            'redirect' => route('decks.show', $deck),
-            'flash' => __('updated', ['thing' => $deck->name])
-        ];
+        return response()->json([
+            'deck' => $deck,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Deck  $deck
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Deck $deck)
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
-        return to_route('decks.index');
+        if (request()->expectsJson()) {
+            return response()->json([
+                'status' => 'success'
+            ]);
+
+        } else {
+            $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
+            return to_route('decks.index');
+        }
+
     }
 
     public function togglePrivacy(Deck $deck)

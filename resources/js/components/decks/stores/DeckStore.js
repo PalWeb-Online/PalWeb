@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {useStateStore} from "./StateStore.js";
 
 export const useDeckStore = defineStore('DeckStore', () => {
@@ -12,7 +12,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             avatar: '',
         },
         decks: [],
-        deck: {
+        stagedDeck: {
             id: '',
             name: '',
             description: '',
@@ -20,7 +20,15 @@ export const useDeckStore = defineStore('DeckStore', () => {
             count: false,
             private: false,
         },
-        terms: []
+        originalDeck: {
+            id: '',
+            name: '',
+            description: '',
+            terms: [],
+            count: false,
+            private: false,
+        },
+        cards: []
     });
 
     // todo: move this to Cards page?
@@ -36,6 +44,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 data.decks = response.data.createdDecks;
             }
 
+        // todo: if data.stagedDeck.id is not an id in data.decks, then the deck was deleted outside the Deck Builder while it was open; the stagedDeck should be unstaged.
+
         } catch (error) {
             console.error('Error fetching Created Decks:', error);
             StateStore.data.errorMessage = error;
@@ -45,7 +55,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const fetchTerms = async (deckId) => {
         try {
             const response = await axios.get('/dashboard/workbench/deck-builder/decks/' + deckId);
-            data.terms = response.data.terms;
+            data.stagedDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
+            data.originalDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
 
         } catch (error) {
             console.error('Error fetching Deck data:', error);
@@ -68,18 +79,20 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const fetchCards = async (deckId) => {
         try {
             const response = await axios.get("/dashboard/workbench/card-viewer/decks/" + deckId);
-            data.terms = response.data.terms;
+            data.cards = response.data.terms;
             defaultOrder.value = [...response.data.terms];
+            return true;
 
         } catch (error) {
             console.error('Error fetching Deck data:', error);
+            return false;
         }
     };
 
     const toggleSelectDeck = (index) => {
         if (index !== null) {
-            if (data.deck.id === data.decks[index].id) {
-                data.deck = {
+            if (data.stagedDeck.id === data.decks[index].id) {
+                data.stagedDeck = {
                     id: '',
                     name: '',
                     description: '',
@@ -87,14 +100,16 @@ export const useDeckStore = defineStore('DeckStore', () => {
                     count: false,
                     private: false,
                 }
+                data.originalDeck = { ...data.stagedDeck };
 
             } else {
-                data.deck = data.decks[index];
+                data.stagedDeck = JSON.parse(JSON.stringify(data.decks[index]));
+                data.originalDeck = JSON.parse(JSON.stringify(data.decks[index]));
 
             }
 
         } else {
-            data.deck = {
+            data.stagedDeck = {
                 id: '',
                 name: '',
                 description: '',
@@ -102,37 +117,66 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 count: false,
                 private: false,
             }
+            data.originalDeck = { ...data.stagedDeck };
         }
     }
 
     const saveDeck = async () => {
         try {
-            if (data.deck.id === '') {
-                await axios.post('/community/decks', {
-                    deck: data.deck,
-                    terms: data.terms
+            if (data.stagedDeck.id === '') {
+                const response = await axios.post('/community/decks', {
+                    deck: data.stagedDeck,
+                    terms: data.stagedDeck.terms
                 });
+
+                data.stagedDeck.id = response.data.deck.id;
+
             } else {
-                await axios.patch('/community/decks/' + data.deck.id, {
-                    deck: data.deck,
-                    terms: data.terms
+                await axios.patch('/community/decks/' + data.stagedDeck.id, {
+                    deck: data.stagedDeck,
+                    terms: data.stagedDeck.terms
                 });
             }
+
+            data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
+
             StateStore.data.errorMessage = null;
             return true;
+
         } catch (error) {
             StateStore.data.errorMessage = 'Oh no! Your Deck could not be saved.';
             return false;
         }
     };
 
-    const reset = () => {
-        data.terms = [...defaultOrder.value];
+    const resetDeck = async () => {
+        data.stagedDeck = JSON.parse(JSON.stringify(data.originalDeck));
+    };
+
+    const viewDeck = async () => {
+        window.open(`/community/decks/${data.stagedDeck.id}`, '_blank');
+    };
+
+    const deleteDeck = async () => {
+        try {
+            await axios.delete('/community/decks/' + data.stagedDeck.id);
+
+            StateStore.data.errorMessage = null;
+            return true;
+
+        } catch (error) {
+            StateStore.data.errorMessage = 'Oh no! Your Deck could not be deleted.';
+            return false;
+        }
+    };
+
+    const resetCards = () => {
+        data.cards = [...defaultOrder.value];
         currentSlideIndex.value = 0;
     };
 
-    const shuffle = () => {
-        data.terms = [...data.terms].sort(() => Math.random() - 0.5);
+    const shuffleCards = () => {
+        data.cards = [...data.cards].sort(() => Math.random() - 0.5);
         currentSlideIndex.value = 0;
     };
 
@@ -145,7 +189,10 @@ export const useDeckStore = defineStore('DeckStore', () => {
         fetchTerms,
         toggleSelectDeck,
         saveDeck,
-        reset,
-        shuffle,
+        viewDeck,
+        resetDeck,
+        deleteDeck,
+        resetCards,
+        shuffleCards,
     };
 });

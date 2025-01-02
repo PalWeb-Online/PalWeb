@@ -4,7 +4,7 @@ import { computed } from 'vue';
 const props = defineProps({
     label: { type: String, required: false },
     icon: { type: String, required: false },
-    flags: { type: String, default: '' }, // Can be used for different button styles
+    flags: { type: String, default: '' },
     framed: { type: Boolean, default: true },
     disabled: { type: Boolean, default: false },
     href: { type: String, default: '' },
@@ -16,7 +16,7 @@ const emit = defineEmits(['click']);
 const buttonClass = computed(() => {
     return [
         'wizard-button',
-        props.flags, // Assuming flags can be space-separated classes for styling (like 'progressive primary')
+        props.flags,
         { framed: props.framed, disabled: props.disabled }
     ].filter(Boolean).join(' ');
 });

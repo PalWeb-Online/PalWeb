@@ -19,6 +19,8 @@ const toggleActive = (id, index = null) => {
 };
 
 onMounted(async () => {
+    activeId.value = DeckStore.data.stagedDeck.id ?? null;
+
     if (StateStore.data.context === 'builder') {
         await DeckStore.fetchCreatedDecks();
     } else if (StateStore.data.context === 'viewer') {
