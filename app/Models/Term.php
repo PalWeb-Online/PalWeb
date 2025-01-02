@@ -134,23 +134,12 @@ class Term extends Model
     public function scopeFilter($query, array $filters): void
     {
         $query->when($filters['search'] ?? false, function ($query, $search) use ($filters) {
-            $isFullMatch = $filters['full_match'] ?? false;
-
-            $query->where(function ($query) use ($search, $isFullMatch) {
-                if ($isFullMatch) {
-                    $query->where('term', $search)
-                        ->orWhereHas('spellings', fn($query) => $query->where('spelling', $search))
-                        ->orWhereHas('pronunciations', fn($query) => $query->where('translit', $search))
-                        ->orWhereHas('inflections', fn($query) => $query->where('inflection', $search)
-                            ->orWhere('translit', $search));
-
-                } else {
-                    $query->where('term', 'like', $search.'%')
-                        ->orWhereHas('spellings', fn($query) => $query->where('spelling', 'like', $search.'%'))
-                        ->orWhereHas('pronunciations', fn($query) => $query->where('translit', 'like', $search.'%'))
-                        ->orWhereHas('inflections', fn($query) => $query->where('inflection', 'like', $search.'%')
-                            ->orWhere('translit', 'like', $search.'%'));
-                }
+            $query->where(function ($query) use ($search) {
+                $query->where('term', 'like', $search.'%')
+                    ->orWhereHas('spellings', fn($query) => $query->where('spelling', 'like', $search.'%'))
+                    ->orWhereHas('pronunciations', fn($query) => $query->where('translit', 'like', $search.'%'))
+                    ->orWhereHas('inflections', fn($query) => $query->where('inflection', 'like', $search.'%')
+                        ->orWhere('translit', 'like', $search.'%'));
             });
         });
 

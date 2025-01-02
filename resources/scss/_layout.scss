@@ -469,7 +469,7 @@ nav {
         padding: 0.8rem 2.4rem 0.4rem;
 
         &:hover {
-            text-decoration: 0.2rem underline;
+            text-decoration: underline;
         }
     }
 
@@ -665,7 +665,7 @@ nav {
             color: $purple-primary-dark;
 
             & > a:hover {
-                text-decoration: 2px underline;
+                text-decoration: underline;
             }
         }
     }
@@ -862,7 +862,7 @@ nav {
         font-weight: 700;
 
         &:hover {
-            text-decoration: 0.2rem underline;
+            text-decoration: underline;
         }
     }
 }

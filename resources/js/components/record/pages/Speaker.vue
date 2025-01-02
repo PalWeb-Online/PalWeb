@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref, watch} from 'vue';
+import {computed, onMounted, reactive, ref} from 'vue';
 import {useStateStore} from "../stores/StateStore.js";
 import {useSpeakerStore} from "../stores/SpeakerStore.js";
 import {useRecordStore} from '../stores/RecordStore';
@@ -41,14 +41,10 @@ const fetchSpeakerOptions = async () => {
     }
 }
 
-function validateForm() {
+const isFormValid = computed(() => {
     const speaker = SpeakerStore.data.speaker;
-    if (!speaker.dialect_id || !speaker.location_id || !speaker.gender) {
-        alert('Please fill out all the fields.');
-        return false;
-    }
-    return true;
-}
+    return speaker.dialect_id && speaker.location_id && speaker.gender;
+});
 
 const recorder = ref(null);
 const errorMessageAssociation = reactive({
@@ -177,6 +173,19 @@ onMounted(async () => {
                     anything higher than <b>Advanced</b>. Heritage speakers may fall anywhere on this spectrum.
                     Err on
                     the side of underestimation.</p>
+                <div>License Information</div>
+                <p>By using the PalWeb Record Wizard, you agree to the publication and use of your recordings under the
+                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons CC BY
+                        4.0</a> license. This license allows others to share, use, and adapt your recordings, even for
+                    commercial purposes, provided they give proper attribution. Once published, you cannot revoke this
+                    license, meaning you cannot withdraw or restrict the use of your recordings. However, PalWeb will
+                    honor take-down requests to remove recordings from our platform.</p>
+                <p>Your recordings may also be shared on third-party platforms like Wikimedia Commons to increase
+                    accessibility and public utility. These platforms operate independently of PalWeb and have their own
+                    removal and take-down policies; we cannot guarantee the removal of recordings from third-party
+                    platforms once they are uploaded. For Wikimedia’s terms and policies, please visit <a
+                        href="https://commons.wikimedia.org/wiki/Commons:Licensing" target="_blank">Wikimedia Commons
+                        Licensing.</a></p>
             </template>
         </AppDialog>
     </div>
@@ -203,17 +212,14 @@ onMounted(async () => {
             <section>
                 <div class="rw-speaker-profile-head">
                     <div class="rw-speaker-name">Welcome, {{ SpeakerStore.data.speaker.name ?? 'Loading...' }}!</div>
-                    <div class="rw-test-info" v-if="!SpeakerStore.data.speaker.exists">
-                        <p>It looks like you don't have a Speaker profile yet. Let's get you set up. Fill out this form
-                            & click Create to get started. You can change these details at any time.</p>
-                    </div>
-                    <div class="rw-test-info" v-else>
-                        <p>Here is the information you have provided for your Speaker profile. If everything looks good,
-                            proceed to the next step! Don't forget to test your mic! (If you need help configuring your
-                            mic, visit <a
-                                href="https://lingualibre.org/wiki/Help:Configure_your_microphone" target="_blank">this
-                                page</a>.)</p>
-                    </div>
+                    <p v-if="!SpeakerStore.data.speaker.exists">It looks like you don't have a Speaker profile yet.
+                        Let's get you set up. Fill out this form & click Create to get started. You can change these
+                        details at any time.</p>
+                    <p v-else>Here is the information you have provided for your Speaker profile. If everything looks
+                        good, proceed to the next step! Don't forget to test your mic! (If you need help configuring
+                        your mic, visit <a href="https://lingualibre.org/wiki/Help:Configure_your_microphone"
+                                           target="_blank">this page</a>.)</p>
+
                 </div>
                 <div class="rw-speaker-field">
                     <label for="dialect">Dialect</label>
@@ -250,7 +256,8 @@ onMounted(async () => {
 
                 <WizardButton
                     :label="SpeakerStore.data.speaker.exists ? 'Update' : 'Create'"
-                    @click="() => { if (validateForm()) SpeakerStore.saveSpeaker(); }"
+                    :disabled="!isFormValid"
+                    @click="SpeakerStore.saveSpeaker()"
                 />
             </section>
             <section>

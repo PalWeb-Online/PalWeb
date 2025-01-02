@@ -6,7 +6,6 @@ import Speaker from './pages/Speaker.vue';
 import Queue from './pages/Queue.vue';
 import Record from './pages/Record.vue';
 import Check from './pages/Check.vue';
-import WizardButton from './ui/WizardButton.vue';
 
 const StateStore = useStateStore();
 const RecordStore = useRecordStore();

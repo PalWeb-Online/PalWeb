@@ -25,59 +25,6 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function getSavedDecks(Request $request)
-    {
-        try {
-            $user = $request->user();
-            $decks = Deck::select('decks.*')
-                ->join('markable_bookmarks', function ($join) use ($user) {
-                    $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
-                        ->where('markable_bookmarks.markable_type', '=', Deck::class)
-                        ->where('markable_bookmarks.user_id', '=', $user->id);
-                })
-                ->orderBy('markable_bookmarks.id')
-                ->get();
-
-            return response()->json(['decks' => $decks]);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch saved decks.'], 500);
-        }
-    }
-
-    public function getDeckItems(Request $request, $deckId)
-    {
-        try {
-            $user = $request->user();
-            $deck = Deck::firstWhere('id', $deckId);
-            $pronunciations = [];
-
-            foreach ($deck->terms as $term) {
-                foreach ($term->pronunciations as $pronunciation) {
-                    if ($pronunciation->dialect_id === $user->speaker->dialect_id) {
-                        $alreadyRecorded = $pronunciation->audios()
-                            ->where('speaker_id', $user->id)
-                            ->exists();
-
-                        if (!$alreadyRecorded) {
-                            $item = $pronunciation->toArray();
-                            $item['term'] = $pronunciation->term->term;
-                            $pronunciations[] = $item;
-                        }
-                    }
-                }
-            }
-
-            return response()->json([
-                'deck' => $deck,
-                'items' => $pronunciations
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch deck items.'], 500);
-        }
-    }
-
     public function getAutoItems(Request $request)
     {
         $speakerId = $request->input('speaker_id');
@@ -110,6 +57,49 @@ class RecordWizardController extends Controller
         return response()->json([
             'items' => $pronunciations,
         ]);
+    }
+
+    public function getDeckItems(Request $request, $deckId)
+    {
+        try {
+            $user = $request->user();
+            $queued = $request->input('queuedItems', []);
+            $queuedIds = collect($queued)->pluck('id');
+
+            $deck = Deck::firstWhere('id', $deckId);
+            $pronunciations = [];
+
+            foreach ($deck->terms as $term) {
+                foreach ($term->pronunciations as $pronunciation) {
+                    if (
+                        $pronunciation->dialect_id === $user->speaker->dialect_id &&
+                        !$queuedIds->contains($pronunciation->id)
+                    ) {
+                        $alreadyRecorded = $pronunciation->audios()
+                            ->where('speaker_id', $user->id)
+                            ->exists();
+
+                        if (!$alreadyRecorded) {
+                            $item = $pronunciation->toArray();
+                            $item['term'] = $pronunciation->term->term;
+                            $pronunciations[] = $item;
+
+                            if (count($queued) + count($pronunciations) >= 100) {
+                                break 2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return response()->json([
+                'deck' => $deck,
+                'items' => $pronunciations
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch deck items.'], 500);
+        }
     }
 
     public function stashRecord(Request $request)

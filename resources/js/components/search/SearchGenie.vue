@@ -14,6 +14,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     'emitTerm',
+    'emitDeck'
 ]);
 
 const activeIndex = ref(-1);
@@ -28,8 +29,8 @@ function handleMouseMove(event) {
         case "search":
             message = "Navigate to this item's page.";
             break;
-        case "wizard":
-            message = "Queue this item.";
+        case "record":
+            message = "Queue this Deck.";
             break;
         case "viewer":
             message = "Pin or Unpin this Deck.";
@@ -97,6 +98,9 @@ const selectDeck = async (deck) => {
         } catch (error) {
             console.error('Failed to Pin Deck.', error);
         }
+
+    } else if (props.context === 'record') {
+        emit('emitDeck', deck);
 
     } else {
         window.location.href = `/community/decks/${deck.id}`;

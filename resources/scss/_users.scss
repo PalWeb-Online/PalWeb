@@ -279,7 +279,7 @@
         }
 
         a:hover, button:hover {
-            text-decoration: 0.2rem underline;
+            text-decoration: underline;
         }
     }
 }
@@ -716,7 +716,7 @@
         }
 
         &:hover {
-            text-decoration: 2px solid underline;
+            text-decoration: underline;
         }
     }
 }

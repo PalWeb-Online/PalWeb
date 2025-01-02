@@ -213,8 +213,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::controller(RecordWizardController::class)->group(function () {
                     Route::get('/', 'index')->name('audios.record');
                     Route::post('/pronunciations', 'getAutoItems');
-                    Route::get('/decks', 'getSavedDecks');
-                    Route::get('/decks/{deck}', 'getDeckItems');
+                    Route::post('/decks/{deck}', 'getDeckItems');
                 });
                 Route::controller(SpeakerController::class)->group(function () {
                     Route::get('/speaker', 'getSpeaker');

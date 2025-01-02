@@ -78,7 +78,14 @@ export const useSearchStore = defineStore('SearchStore', {
                         ...tab,
                         disabled: tab.value !== 'decks',
                     };
+                } else if (context === 'record') {
+                    this.activeModel = 'decks';
+                    return {
+                        ...tab,
+                        disabled: tab.value !== 'decks',
+                    };
                 }
+
                 return {...tab, disabled: false};
             });
 

@@ -12,7 +12,7 @@ class DeckRepository
             ->where('private', 0)
             ->where(function ($query) use ($terms, $searchTerm) {
                 if (!empty($searchTerm)) {
-                    $query->where('name', 'like', $searchTerm . '%');
+                    $query->where('name', 'like', '%'.$searchTerm.'%');
                 }
                 $query->orWhereHas('terms', fn($query) => $query->whereIn('terms.id', $terms));
             })

@@ -10,11 +10,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const RecordStore = useRecordStore();
 
     const data = reactive({
-        queue: {
-            type: '',
-            name: ''
-        },
-        decks: [],
         items: [],
     });
 
@@ -91,29 +86,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
     // const beforeSelectionChange = () => true;
     // const afterSelectionChange = () => true;
 
-    const fetchSavedDecks = async () => {
-        try {
-            const response = await axios.get('/dashboard/workbench/record-wizard/decks');
-            if (response.data && response.data.decks) {
-                data.decks = response.data.decks;
-            }
-        } catch (error) {
-            console.error('Error fetching saved decks:', error);
-        }
-    };
-
-    const fetchDeckItems = async (deckId) => {
-        try {
-            const response = await axios.get(`/dashboard/workbench/record-wizard/decks/${deckId}`);
-            if (response.data) {
-                data.items.push(...response.data.items);
-                data.queue = {type: 'deck', name: response.data.deck.name};
-            }
-        } catch (error) {
-            console.error(`Error fetching deck with ID ${deckId}:`, error);
-        }
-    };
-
     const fetchAutoItems = async () => {
         try {
             const response = await axios.post('/dashboard/workbench/record-wizard/pronunciations', {
@@ -124,10 +96,23 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
             if (response.data) {
                 data.items.push(...response.data.items);
-                data.queue.name = 'Auto Queue';
             }
         } catch (error) {
             console.error('Error loading items:', error);
+        }
+    };
+
+    const fetchDeckItems = async (id) => {
+        try {
+            const response = await axios.post(`/dashboard/workbench/record-wizard/decks/${id}`, {
+                queuedItems: data.items,
+            });
+
+            if (response.data) {
+                data.items.push(...response.data.items);
+            }
+        } catch (error) {
+            console.error(`Error fetching deck with ID ${id}:`, error);
         }
     };
 
@@ -149,10 +134,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const flushQueue = async () => {
         if (data.items.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
             data.items = [];
-            data.queue = {
-                type: '',
-                name: ''
-            };
 
             RecordStore.clearStash();
             return true;
@@ -169,7 +150,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
         moveBackward,
         moveForward,
         isSelectable,
-        fetchSavedDecks,
         fetchDeckItems,
         fetchAutoItems,
         removeItem,

@@ -8,7 +8,7 @@
 
     .rw-page-content,
     .rw-page-loading {
-        min-height: 24rem;
+        //min-height: 24rem;
         background-color: #ffffff;
         border-radius: 1.6rem;
         border: 0.2rem solid $purple-deep;
@@ -65,6 +65,15 @@
         gap: 1.6rem;
         padding: 3.2rem;
         background: white;
+
+        a {
+            color: $purple-deep;
+            font-weight: 700;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
 
         .rw-speaker-name {
             font-family: $headFont;
@@ -157,44 +166,44 @@
 .rw-page__queue {
     display: grid;
 
-    .rw-queue-head {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.1rem;
-        background: $purple-primary;
-        border-block: 0.1rem solid $purple-primary;
-
-        * {
-            font-family: $headFont;
-            color: $purple-primary;
-            background: white;
-        }
-
-        button {
-            font-size: 1.6rem;
-            font-weight: 700;
-            padding-block: 0.8rem;
-            background: $purple-pastel-light;
-            width: 100%;
-
-            &:hover {
-                background: $purple-pastel;
-            }
-        }
-
-        button.active {
-            color: white;
-            background: $purple-primary;
-            cursor: auto;
-        }
-
-        .rw-queue-name {
-            grid-column: span 2;
-            font-size: 1.4rem;
-            padding-block: 0.4rem;
-            text-align: center;
-        }
-    }
+    //.rw-queue-head {
+    //    display: grid;
+    //    grid-template-columns: repeat(2, 1fr);
+    //    gap: 0.1rem;
+    //    background: $purple-primary;
+    //    border-block: 0.1rem solid $purple-primary;
+    //
+    //    * {
+    //        font-family: $headFont;
+    //        color: $purple-primary;
+    //        background: white;
+    //    }
+    //
+    //    button {
+    //        font-size: 1.6rem;
+    //        font-weight: 700;
+    //        padding-block: 0.8rem;
+    //        background: $purple-pastel-light;
+    //        width: 100%;
+    //
+    //        &:hover {
+    //            background: $purple-pastel;
+    //        }
+    //    }
+    //
+    //    button.active {
+    //        color: white;
+    //        background: $purple-primary;
+    //        cursor: auto;
+    //    }
+    //
+    //    .rw-queue-name {
+    //        grid-column: span 2;
+    //        font-size: 1.4rem;
+    //        padding-block: 0.4rem;
+    //        text-align: center;
+    //    }
+    //}
 
     .rw-queue-body {
         padding: 1.6rem 2.4rem;
@@ -210,12 +219,22 @@
     .rw-queue-foot {
         padding-inline: 2.4rem;
         display: flex;
-        flex-flow: row-reverse wrap;
+        flex-flow: row wrap;
         align-items: center;
         justify-content: space-between;
 
+        .rw-queue-buttons {
+            display: flex;
+            gap: 1.6rem
+        }
+
         button {
-            @include link-button-deep;
+            @include link-purple-deep;
+
+            &.disabled {
+                text-decoration: none;
+                opacity: 33%;
+            }
         }
     }
 }
@@ -299,17 +318,17 @@
         position: relative;
         overflow: scroll;
 
-        .rw-queue-name {
-            position: sticky;
-            top: 0;
-            left: 0;
-            background: $purple-pastel;
-            color: $purple-primary;
-            font-family: $headFont;
-            font-size: 1.6rem;
-            font-weight: 700;
-            padding: 0.6rem 1.2rem 0.4rem;
-        }
+        //.rw-queue-name {
+        //    position: sticky;
+        //    top: 0;
+        //    left: 0;
+        //    background: $purple-pastel;
+        //    color: $purple-primary;
+        //    font-family: $headFont;
+        //    font-size: 1.6rem;
+        //    font-weight: 700;
+        //    padding: 0.6rem 1.2rem 0.4rem;
+        //}
 
         .rw-record-queue {
             display: flex;

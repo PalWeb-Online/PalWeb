@@ -80,10 +80,6 @@ watch(
 
     <div class="rw-page__record mwe-rws-audio" :class="{ 'mwe-rws-recording': StateStore.data.isRecording }">
         <section>
-            <div class="rw-queue-name">{{
-                    QueueStore.data.queue.name !== '' ? QueueStore.data.queue.name : 'Queue'
-                }}
-            </div>
             <div class="rw-record-queue">
                 <div
                     v-for="(pronunciation, index) in QueueStore.data.items"

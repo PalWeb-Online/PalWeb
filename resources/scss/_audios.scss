@@ -64,7 +64,7 @@
     }
 
     & > a {
-        @include link-button-deep;
+        @include link-purple-deep;
         justify-self: end;
     }
 }
@@ -156,7 +156,7 @@
     }
 
     a {
-        @include link-button-deep;
+        @include link-purple-deep;
     }
 }
 

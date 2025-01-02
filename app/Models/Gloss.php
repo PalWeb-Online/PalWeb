@@ -48,7 +48,7 @@ class Gloss extends Model
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->whereRaw("MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search])
-                ->orWhere('gloss', 'like', $search);
+                ->orWhere('gloss', 'like', $search.'%');
         });
 
         $query->when($filters['category'] ?? false, fn($query, $category) => $query
