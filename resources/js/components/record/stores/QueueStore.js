@@ -105,6 +105,8 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const fetchDeckItems = async (id) => {
         try {
             const response = await axios.post(`/dashboard/workbench/record-wizard/decks/${id}`, {
+                speaker_id: SpeakerStore.data.speaker.id,
+                dialect_id: SpeakerStore.data.speaker.dialect_id,
                 queuedItems: data.items,
             });
 

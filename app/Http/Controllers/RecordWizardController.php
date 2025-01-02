@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Audio;
 use App\Models\Deck;
+use App\Models\Dialect;
 use App\Models\Pronunciation;
 use App\Services\AudioService;
 use Illuminate\Http\Request;
@@ -28,12 +29,14 @@ class RecordWizardController extends Controller
     public function getAutoItems(Request $request)
     {
         $speakerId = $request->input('speaker_id');
-        $dialectId = $request->input('dialect_id');
+        $speakerDialect = $request->input('dialect_id');
+        $dialectIds = Dialect::find($speakerDialect)->ancestors->pluck('id')->push($speakerDialect)->toArray();
+
         $queued = $request->input('queuedItems', []);
         $queuedIds = collect($queued)->pluck('id');
         $highestId = $queuedIds->max();
 
-        $query = Pronunciation::where('dialect_id', $dialectId)
+        $query = Pronunciation::whereIn('dialect_id', $dialectIds)
             ->whereNotIn('id', $queuedIds)
             ->whereDoesntHave('audios', function ($query) use ($speakerId) {
                 $query->where('speaker_id', $speakerId);
@@ -62,7 +65,10 @@ class RecordWizardController extends Controller
     public function getDeckItems(Request $request, $deckId)
     {
         try {
-            $user = $request->user();
+            $speakerId = $request->input('speaker_id');
+            $speakerDialect = $request->input('dialect_id');
+            $dialectIds = Dialect::find($speakerDialect)->ancestors->pluck('id')->push($speakerDialect)->toArray();
+
             $queued = $request->input('queuedItems', []);
             $queuedIds = collect($queued)->pluck('id');
 
@@ -72,11 +78,11 @@ class RecordWizardController extends Controller
             foreach ($deck->terms as $term) {
                 foreach ($term->pronunciations as $pronunciation) {
                     if (
-                        $pronunciation->dialect_id === $user->speaker->dialect_id &&
+                        in_array($pronunciation->dialect_id, $dialectIds) &&
                         !$queuedIds->contains($pronunciation->id)
                     ) {
                         $alreadyRecorded = $pronunciation->audios()
-                            ->where('speaker_id', $user->id)
+                            ->where('speaker_id', $speakerId)
                             ->exists();
 
                         if (!$alreadyRecorded) {
@@ -165,7 +171,7 @@ class RecordWizardController extends Controller
 
     public function uploadRecords(Request $request)
     {
-        $filename = $request->input('filename') . '.mp3';
+        $filename = $request->input('filename').'.mp3';
         $stashPath = public_path("stash/{$request->input('stashKey')}");
 
         if (!File::exists($stashPath)) {

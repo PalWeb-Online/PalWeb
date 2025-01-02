@@ -32,7 +32,7 @@ class SpeakerController extends Controller
     public function getSpeakerOptions()
     {
         return response()->json([
-            'dialects' => Dialect::all()->toArray(),
+            'dialects' => Dialect::find([6, 7, 8, 9, 10, 11])->toArray(),
             'locations' => Location::all()->makeHidden('coordinates')->toArray(),
         ]);
     }
