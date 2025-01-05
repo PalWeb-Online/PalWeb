@@ -12,7 +12,7 @@ class DeckBuilderController extends Controller
     {
         View::share('pageTitle', 'Deck Builder');
 
-        return view('decks.build', [
+        return view('decks.builder', [
             'layout' => 'app'
         ]);
     }
@@ -30,7 +30,7 @@ class DeckBuilderController extends Controller
 
         View::share('pageTitle', 'Deck Builder');
 
-        return view('decks.build', [
+        return view('decks.builder', [
             'layout' => 'app',
             'user' => $user,
             'deck' => $deck,

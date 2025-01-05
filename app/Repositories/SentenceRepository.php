@@ -6,7 +6,7 @@ use App\Models\Sentence;
 
 class SentenceRepository
 {
-    public function searchSentences($terms, $glosses)
+    public function searchSentences($terms, $glosses, string $searchTerm = '')
     {
         $termsFromGlosses = $glosses->pluck('term_id')->unique();
         $glossIds = $glosses->pluck('id');
@@ -25,6 +25,20 @@ class SentenceRepository
             ])
             ->get();
 
-        return $sentencesFromDirectTerms->merge($sentencesFromGlossTerms)->unique('id');
+        $sentencesFromPivotMatch = Sentence::query()
+            ->whereHas('terms',
+                fn($query) => $query
+                    ->where(fn($pivotQuery) => $pivotQuery
+                        ->where('sentence_term.sent_term', 'like', '%'.$searchTerm.'%')
+                        ->orWhere('sentence_term.sent_translit', 'like', '%'.$searchTerm.'%')
+                    )
+            )
+            ->with('terms')
+            ->get();
+
+        return $sentencesFromDirectTerms
+            ->merge($sentencesFromGlossTerms)
+            ->merge($sentencesFromPivotMatch)
+            ->unique('id');
     }
 }

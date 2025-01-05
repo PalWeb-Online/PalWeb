@@ -19,7 +19,7 @@
                 @foreach ($locations as $location)
                     <option
                         value="{{ $location->id }}" {{ request('location') == $location->id ? 'selected' : '' }}>
-                        {{ $location->name }}
+                        {{ $location->name_ar }}
                     </option>
                 @endforeach
             </select>

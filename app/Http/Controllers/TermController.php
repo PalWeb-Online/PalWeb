@@ -16,6 +16,7 @@ use App\Models\Term;
 use App\Repositories\TermRepository;
 use App\Rules\ArabicScript;
 use App\Rules\LatinScript;
+use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -60,95 +61,95 @@ class TermController extends Controller
 
     public function audios(Term $term, Request $request)
     {
-        $terms = [];
-
-        $pronunciations = $this->loadPronunciations($term, $request);
-
-        $terms[] = $term;
+        $terms = collect([$term]);
+        $terms = $this->loadPronunciations($terms, $request);
 
         return view('terms.show', [
             'terms' => $terms,
-            'userPronunciations' => $pronunciations['user'],
-            'otherPronunciations' => $pronunciations['other']
         ]);
     }
 
-    public function loadPronunciations(Term $term, Request $request)
+    public function loadPronunciations(Collection $terms, Request $request)
     {
-        $term->load(['pronunciations.audios.speaker']);
+        $terms->each(function ($term) {
+            $term->load(['pronunciations.audios.speaker']);
+        });
 
         $allAudios = $request->routeIs('terms.audios');
 
-        $term->pronunciations->each(function ($pronunciation) use ($allAudios) {
-            $pronunciation->audio_count = $pronunciation->audios->count();
+        foreach ($terms as $term) {
+            $term->pronunciations->each(function ($pronunciation) use ($allAudios) {
+                $pronunciation->audio_count = $pronunciation->audios->count();
 
-            if (!$allAudios) {
-                $pronunciation->audios = $pronunciation->audios->take(1);
+                if (!$allAudios) {
+                    $pronunciation->audios = $pronunciation->audios->take(1);
+                }
+            });
+
+            if (auth()->check()) {
+                $dialect = auth()->user()->dialect_id;
+                $dialects = Dialect::find($dialect)->ancestors->pluck('id')
+                    ->merge(Dialect::find($dialect)->descendants->pluck('id'))
+                    ->push($dialect);
+                $term->userPronunciations = $term->pronunciations->whereIn('dialect_id', $dialects);
+                $term->otherPronunciations = $term->pronunciations->whereNotIn('dialect_id', $dialects);
             }
-        });
-
-        $userPronunciations = collect();
-        $otherPronunciations = collect();
-
-        if (auth()->check()) {
-            $dialect = auth()->user()->dialect_id;
-            $dialects = Dialect::find($dialect)->ancestors->pluck('id')
-                ->merge(Dialect::find($dialect)->descendants->pluck('id'))
-                ->push($dialect);
-            $userPronunciations = $term->pronunciations->whereIn('dialect_id', $dialects);
-            $otherPronunciations = $term->pronunciations->whereNotIn('dialect_id', $dialects);
         }
 
-        return [
-            'user' => $userPronunciations,
-            'other' => $otherPronunciations
-        ];
+        return $terms;
     }
 
     /**
      * Loads the Dictionary Index
      */
-    public function index()
+    public function index(Request $request, SearchService $searchService)
     {
-        $defaultFilters = [
-            'category' => '',
-            'attribute' => '',
-            'form' => '',
-            'singular' => '',
-            'plural' => '',
-            'search' => ''
-        ];
+        View::share('pageTitle', 'the Dictionary');
+        View::share('pageDescription',
+            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 
-        $filter = array_merge($defaultFilters, request()->only(array_keys($defaultFilters)));
-        $terms = $this->termRepository->getTerms($filter);
+        $searchTerm = $request->input('search', '') ?? '';
+        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
 
-        $terms->appends($filter);
+        if (empty($searchTerm) && empty(array_filter($filters))) {
+            $terms = Term::orderByDesc('id')
+                ->paginate(100)
+                ->onEachSide(1);
+            $totalCount = $terms->total();
 
-        $totalCount = $terms->total();
+        } else {
+            $allResults = $searchService->search($searchTerm, $filters)['terms'];
+            $totalCount = $allResults->count();
 
-        if (!(bool) request()->query()) {
+            $perPage = 100;
+            $currentPage = $request->input('page', 1);
+            $terms = $allResults->forPage($currentPage, $perPage);
+
+            $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+                $terms,
+                $totalCount,
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        }
+
+        if (!request()->query()) {
             $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
 
             if (!$wordOfTheDay) {
                 $wordOfTheDay = Term::whereNotNull('image')->inRandomOrder()->first();
             }
-
-        } else {
-            $latestTerms = null;
-            $wordOfTheDay = null;
         }
-
-        View::share('pageTitle', 'the Dictionary');
-        View::share('pageDescription',
-            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 
         return view('terms.index', [
             'terms' => $terms,
-            'filter' => $filter,
-            'wordOfTheDay' => $wordOfTheDay,
-            'latestTerms' => $latestTerms,
-            'totalCount' => $totalCount
+            'searchTerm' => $searchTerm,
+            'filters' => $filters,
+            'totalCount' => $totalCount,
+            'wordOfTheDay' => $wordOfTheDay ?? null,
+            'latestTerms' => $latestTerms ?? null,
         ]);
     }
 
@@ -224,10 +225,13 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request)
     {
-        $pronunciations = $this->loadPronunciations($term, $request);
+        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
+        View::share('pageDescription',
+            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 
         $likeTerms = $this->termRepository->getLikeTerms($term);
         $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
+        $terms = $this->loadPronunciations($terms, $request);
 
         $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
         $sortedAttributes = $term->attributes->sortBy(function ($attr) use ($attributeOrder) {
@@ -235,15 +239,8 @@ class TermController extends Controller
         });
         $term->attributes = $sortedAttributes->values();
 
-        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
-        View::share('pageDescription',
-            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
-
         return view('terms.show', [
             'terms' => $terms,
-            'allPronunciations' => $term->pronunciations,
-            'userPronunciations' => $pronunciations['user'],
-            'otherPronunciations' => $pronunciations['other'],
         ]);
     }
 

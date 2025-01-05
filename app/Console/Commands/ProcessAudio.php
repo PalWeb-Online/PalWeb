@@ -77,7 +77,7 @@ class ProcessAudio extends Command
 
                 $newFilename = $language.'-'.
                     $dialect->name.'-'.
-                    $location->name.'-'.
+                    $location->name_en.'-'.
                     $pronunciation->translit.'-'.
                     $speakerId.'.wav';
 

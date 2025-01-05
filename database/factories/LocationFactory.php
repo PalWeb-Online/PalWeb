@@ -19,8 +19,9 @@ class LocationFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->city,
             'qid' => Str::uuid(),
+            'name_ar' => $this->faker->city,
+            'name_en' => $this->faker->city,
             'coordinates' => DB::raw("POINT({$this->faker->latitude}, {$this->faker->longitude})"),
         ];
     }

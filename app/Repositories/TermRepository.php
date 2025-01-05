@@ -45,14 +45,14 @@ class TermRepository
 
     public function getLikeTerms(Term $mainTerm): object
     {
-        // Get like terms belonging to the same category.
+        // Get like terms belonging to the same category (e.g. ريحة rīħa & ريحا rīħa).
         $duplicates = Term::query()->where('translit', '=', $mainTerm->translit)
             ->where('category', '=', $mainTerm->category)
             ->where('id', '!=', $mainTerm->id)
             ->with('pronunciations')
             ->get();
 
-        // Get like terms belonging to other categories.
+        // Get like terms belonging to other categories (e.g. adj كثير & adv كثير).
         $homophones = Term::query()->where('translit', '=', $mainTerm->translit)
             ->where('category', '!=', $mainTerm->category)
             ->with('pronunciations')

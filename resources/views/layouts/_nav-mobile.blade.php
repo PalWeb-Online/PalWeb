@@ -26,16 +26,18 @@
         </div>
 
         <div class="nav-mobile-section">
+            <x-link :href="route('community.index')"
+                    :active="request()->routeIs('community.index')">{{ __('community') }}</x-link>
             <x-link :href="route('decks.index')"
                     :active="request()->routeIs('decks.index', 'decks.show')">{{ __('decks') }}</x-link>
-            <x-link :href="route('decks.create')"
-                    :active="request()->routeIs('decks.create')">Deck Builder
-            </x-link>
+            <x-link :href="route('audios.index')"
+                    :active="request()->routeIs('audios.index')">{{ __('audios') }}</x-link>
         </div>
 
         <div class="nav-mobile-section">
             <x-link :href="route('wiki.index')"
                     :active="request()->routeIs('wiki.index', 'wiki.show')">{{ __('wiki') }}</x-link>
+            <x-link :href="route('wiki.show', 'user-guide')">{{ __('user guide') }}</x-link>
         </div>
     </div>
 

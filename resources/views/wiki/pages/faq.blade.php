@@ -4,7 +4,7 @@
 </x-page-head>
 
 <x-faq question="Do you give private lessons?">
-    <p>Not as of right now (July 1, 2024).</p>
+    <p>No, sorry.</p>
 </x-faq>
 
 <x-faq question="Do I need to pay to access the content on the site?">

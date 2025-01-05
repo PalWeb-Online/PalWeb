@@ -2,7 +2,6 @@
 import {computed, onMounted, reactive, ref} from 'vue';
 import {useStateStore} from "../stores/StateStore.js";
 import {useSpeakerStore} from "../stores/SpeakerStore.js";
-import {useRecordStore} from '../stores/RecordStore';
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardButton from "../ui/WizardButton.vue";
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
@@ -10,7 +9,6 @@ import AppDialog from "../../AppDialog.vue";
 
 const StateStore = useStateStore();
 const SpeakerStore = useSpeakerStore();
-const RecordStore = useRecordStore();
 
 const dialects = ref([]);
 const locations = ref([]);
@@ -135,26 +133,30 @@ onMounted(async () => {
             </template>
             <template #content>
                 <div>What is my Speaker profile?</div>
-                <p>Your Speaker profile contains linguistic data about you that will be connected to every
-                    Recording you
-                    create, so that others can know the dialect & other sociolinguistic information behind what
-                    they're
-                    hearing. Your Speaker profile is distinct from your User profile; it does not include your
-                    name,
-                    etc. By default, however, your Recordings will link to your User profile. If you would like
-                    for your
-                    Speaker profile to remain anonymous, simply return to the Dashboard & set your User profile
-                    to
+                <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
+                    create, so that others can know the dialect & other sociolinguistic information behind what they're
+                    hearing. Your Speaker profile is distinct from your User profile; it does not include your name,
+                    etc. By default, however, your Recordings will link to your User profile. If you would like for your
+                    Speaker profile to remain anonymous, simply return to the Dashboard & set your User profile to
                     Private. You can change this at any time.</p>
+
+                <div>What is my Dialect?</div>
+                <p>Your Dialect is the variety of Palestinian Arabic that you speak, or that you intend to represent in
+                    your Audios. In the Record Wizard, you will only be shown Pronunciation items valid for the selected
+                    Dialect. PalWeb is an ongoing research project, so the list of Dialects is provisional. If what you
+                    consider to be your Dialect does not appear on the list, simply choose the closest one. You may see
+                    discrepancies between the items presented to you & the way you pronounce them; this is absolutely
+                    normal. Just record the items in the way that comes naturally to you. <b>Once your Speaker profile
+                        is created, your Dialect can only be changed by the site administrator.</b> Check the <b>User
+                        Guide</b> in the Wiki for more information.</p>
+
                 <div>What is my Location?</div>
-                <p>Your Location is the place where you learned Arabic, or the place that the people with whom
-                    you
+                <p>Your Location is the place where you learned Arabic, or the place that the people with whom you
                     learned Arabic (e.g. your relatives) are from. It is up to you to decide the most
-                    appropriate choice
-                    to select. If you have lived most of your life in a given town, but your family & you have
-                    an accent
-                    characteristic of another town, then the town of your ancestry may be a more appropriate
-                    selection. Select the Location that you feel best represents your manner of speaking.</p>
+                    appropriate choice to select. If you have lived most of your life in a given town, but your family &
+                    you have an accent characteristic of another town, then the town of your ancestry may be a more
+                    appropriate selection. Select the Location that you feel best represents your manner of
+                    speaking.</p>
                 <p><b>Note:</b> These Locations were imported from Wikidata by means of a script. There was no
                     way to
                     reliably distinguish Israeli towns in the 1948 Territories from Palestinian ones, so all
@@ -162,6 +164,7 @@ onMounted(async () => {
                     currently located in the 1948 Territories — including Israeli towns — are listed. Israeli
                     settlements in the West Bank & the Golan Heights have been discarded, however.
                 </p>
+
                 <div>What is my Fluency level?</div>
                 <p>Your Fluency level reflects how natural your pronunciation is, according to your own
                     assessment. Only
@@ -173,19 +176,6 @@ onMounted(async () => {
                     anything higher than <b>Advanced</b>. Heritage speakers may fall anywhere on this spectrum.
                     Err on
                     the side of underestimation.</p>
-                <div>License Information</div>
-                <p>By using the PalWeb Record Wizard, you agree to the publication and use of your recordings under the
-                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons CC BY
-                        4.0</a> license. This license allows others to share, use, and adapt your recordings, even for
-                    commercial purposes, provided they give proper attribution. Once published, you cannot revoke this
-                    license, meaning you cannot withdraw or restrict the use of your recordings. However, PalWeb will
-                    honor take-down requests to remove recordings from our platform.</p>
-                <p>Your recordings may also be shared on third-party platforms like Wikimedia Commons to increase
-                    accessibility and public utility. These platforms operate independently of PalWeb and have their own
-                    removal and take-down policies; we cannot guarantee the removal of recordings from third-party
-                    platforms once they are uploaded. For Wikimedia’s terms and policies, please visit <a
-                        href="https://commons.wikimedia.org/wiki/Commons:Licensing" target="_blank">Wikimedia Commons
-                        Licensing.</a></p>
             </template>
         </AppDialog>
     </div>
@@ -213,8 +203,9 @@ onMounted(async () => {
                 <div class="rw-speaker-profile-head">
                     <div class="rw-speaker-name">Welcome, {{ SpeakerStore.data.speaker.name ?? 'Loading...' }}!</div>
                     <p v-if="!SpeakerStore.data.speaker.exists">It looks like you don't have a Speaker profile yet.
-                        Let's get you set up. Fill out this form & click Create to get started. You can change these
-                        details at any time.</p>
+                        Let's get you set up: fill out this form & click Create to get started. Refer to the Info box in
+                        the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
+                            profile is created, your Dialect can only be changed by the site administrator.</b></p>
                     <p v-else>Here is the information you have provided for your Speaker profile. If everything looks
                         good, proceed to the next step! Don't forget to test your mic! (If you need help configuring
                         your mic, visit <a href="https://lingualibre.org/wiki/Help:Configure_your_microphone"
@@ -225,6 +216,7 @@ onMounted(async () => {
                     <label for="dialect">Dialect</label>
                     <WizardDropdown
                         id="dialect"
+                        :disabled="SpeakerStore.data.speaker.exists"
                         :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
                         v-model="SpeakerStore.data.speaker.dialect_id"
                     />
@@ -233,7 +225,7 @@ onMounted(async () => {
                     <label for="location">Location</label>
                     <WizardDropdown
                         id="location"
-                        :options="locations.map(location => ({ data: location.id, label: location.name }))"
+                        :options="locations.map(location => ({ data: location.id, label: location.name_ar }))"
                         v-model="SpeakerStore.data.speaker.location_id"
                     />
                 </div>

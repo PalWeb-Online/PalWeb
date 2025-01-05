@@ -68,7 +68,12 @@ class SentenceController extends Controller
 
         }
 
-        return view('sentences.index', compact('sentences', 'totalCount'));
+        return view('sentences.index', [
+            'sentences' => $sentences,
+            'searchTerm' => $searchTerm,
+            'filters' => $filters,
+            'totalCount' => $totalCount,
+        ]);
     }
 
     public function show(Sentence $sentence)

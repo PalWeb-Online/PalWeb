@@ -14,12 +14,6 @@ class UserController extends Controller
     {
     }
 
-    /**
-     * Show the profile for the given user.
-     *
-     * @param  int  $id
-     * @return View
-     */
     public function show(User $user)
     {
         if (Gate::denies('interact', $user)) {
@@ -27,14 +21,11 @@ class UserController extends Controller
             return back();
         }
 
-        if (auth()->user()->id === $user->id) {
-            $decks = $user->decks
-                ->load('author');
-        } else {
-            $decks = $user->decks
-                ->where('private', 0)
-                ->load('author');
-        }
+        $decks = $user->decks()->with('author')
+            ->where(fn($query) => $query->where('decks.private', false)
+                ->orWhere('decks.user_id', auth()->user()->id)
+            )
+            ->get();
 
         View::share('pageTitle', $user->username);
 

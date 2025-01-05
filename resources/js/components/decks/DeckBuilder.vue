@@ -8,15 +8,13 @@ import AppDialog from "../AppDialog.vue";
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 StateStore.data.context = 'builder';
+StateStore.data.action = window.action || 'create';
 
-const preloadDeck = window.stagedDeck || null;
-const preloadUser = window.user || null;
-const action = window.action || 'create';
-
-if (action === 'edit') {
-    DeckStore.data.stagedDeck = preloadDeck;
-    DeckStore.data.user = preloadUser;
+if (StateStore.data.action === 'edit') {
     StateStore.data.step = 'build';
+    DeckStore.data.user = window.user;
+    DeckStore.data.stagedDeck = JSON.parse(JSON.stringify(window.stagedDeck));
+    DeckStore.data.originalDeck = JSON.parse(JSON.stringify(window.stagedDeck));
 }
 </script>
 
@@ -24,7 +22,6 @@ if (action === 'edit') {
     <div id="app-head">
         <button @click="StateStore.exit">Exit to Workbench</button>
         <h1>Deck Builder</h1>
-
         <div id="app-nav">
             <img :class="StateStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"
                  @click="StateStore.back"/>
@@ -46,18 +43,5 @@ if (action === 'edit') {
                 <Build/>
             </div>
         </div>
-
-        <AppDialog title="Deck Builder" size="large">
-            <template #trigger>
-                <img src="/img/idea.svg" alt="Info"/>
-            </template>
-            <template #content>
-                <p>Welcome to the <b>Deck Builder</b>! Use this form to create a new <b>Deck</b>. By creating a
-                    <b>Deck</b>, you'll be able to group terms from the Dictionary in any way you want. You'll be able
-                    to study them as Flashcards & share them with others!
-                </p>
-            </template>
-        </AppDialog>
     </div>
-
 </template>

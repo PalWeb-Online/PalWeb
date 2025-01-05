@@ -56,11 +56,33 @@ class AudioService
         }
     }
 
+    public function renameAudio(string $currentFilename, string $newFilename): void
+    {
+        $currentPath = 'audios/' . $currentFilename;
+        $newPath = 'audios/' . $newFilename;
+
+        try {
+            if (!Storage::disk('s3')->exists($currentPath)) {
+                throw new \Exception("File not found: {$currentPath}");
+            }
+
+            Storage::disk('s3')->copy($currentPath, $newPath);
+            Storage::disk('s3')->delete($currentPath);
+
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to rename file from {$currentFilename} to {$newFilename}: " . $e->getMessage(), 0, $e);
+        }
+    }
+
     public function deleteAudio(string $filename): void
     {
         $filePath = 'audios/' . $filename;
 
         try {
+            if (!Storage::disk('s3')->exists($filePath)) {
+                throw new \Exception("File not found: {$filePath}");
+            }
+
             Storage::disk('s3')->delete($filePath);
 
         } catch (\Exception $e) {

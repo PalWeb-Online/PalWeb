@@ -14,17 +14,17 @@
 {{--        <dictionary-filters></dictionary-filters>--}}
 {{--    </div>--}}
 
-    @if (! (bool) request()->query())
-        <div class="portal-button-wrapper">
-            <div class="portal-button-head">
-                Power up your Arabic vocabulary!
-            </div>
-            <div class="portal-button-body">
-                <a href="{{ route('explore.index') }}" class="portal-button">Explore Portal</a>
-                <a href="{{ route('sentences.index') }}" class="portal-button">Phrasebook</a>
-                <a href="{{ route('wiki.show', 'dictionary') }}" class="portal-button">User Manual</a>
-            </div>
-        </div>
+    @if (!request()->query())
+{{--        <div class="portal-button-wrapper">--}}
+{{--            <div class="portal-button-head">--}}
+{{--                Power up your Arabic vocabulary!--}}
+{{--            </div>--}}
+{{--            <div class="portal-button-body">--}}
+{{--                <a href="{{ route('explore.index') }}" class="portal-button">Explore Portal</a>--}}
+{{--                <a href="{{ route('sentences.index') }}" class="portal-button">Phrasebook</a>--}}
+{{--                <a href="{{ route('wiki.show', 'dictionary') }}" class="portal-button">User Manual</a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
         @include("terms._featured")
     @endif
@@ -33,13 +33,11 @@
         {{--        using decks-list here just because the usual terms-list is for term-li's --}}
         <div class="decks-list">
             <div class="featured-title l">{{ __('all') }}</div>
-            @if(collect($filter)->filter()->isNotEmpty())
+            @if(request()->query())
                 <x-tip>
-                    <p>
-                        Displaying {{ number_format($totalCount) }} {!! $filter['attribute'] ? '<b>'.ucwords($filter['attribute']).'</b>' : '' !!} {!! $filter['form'] ? '<b>Form '.ucwords($filter['form']).'</b>' : '' !!} {!! $filter['category'] ? '<b>'.ucwords($filter['category']).'s</b>' : 'terms' !!}{!! $filter['singular'] ? ' in the <b>'.$filter['singular'].'</b> pattern' : '' !!}{!! $filter['plural'] ? ' with a <b>'.$filter['plural'].'</b> plural' : '' !!}
-                        matching this query.</p>
-                    <p>Check the Dictionary <a href="{{ route('wiki.show', 'dictionary') }}">User Manual</a> to
-                        ensure you get the results you're looking for.</p>
+                    <p>Displaying {{ number_format($totalCount) }}
+                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$searchTerm.'</b>' : '' !!}.
+                    </p>
                 </x-tip>
             @else
                 <x-tip>
@@ -66,8 +64,6 @@
 
         <x-tip>
             <p>No results matching this query.</p>
-            <p>Check the Dictionary <a href="{{ route('wiki.show', 'dictionary') }}">User Manual</a> to ensure you get
-                the results you're looking for.</p>
             <p>Is a term missing from the Dictionary? <a href="{{ route('terms.request') }}" target="_blank">Request</a>
                 it here!</p>
         </x-tip>

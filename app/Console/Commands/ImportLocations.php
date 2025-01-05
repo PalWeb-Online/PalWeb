@@ -57,16 +57,17 @@ class ImportLocations extends Command
                 DB::table('locations')->updateOrInsert(
                     ['qid' => $location['qid']],
                     [
-                        'name' => $location['name'],
+                        'name_ar' => $location['name_ar'],
+                        'name_en' => $location['name_en'],
                         'coordinates' => DB::raw("ST_GeomFromText('$wkt')"),
                         'created_at' => now(),
                         'updated_at' => now()
                     ]
                 );
 
-                $this->info("Imported: ".$location['name']);
+                $this->info("Imported: ".$location['name_ar']);
             } catch (\Exception $e) {
-                $this->error("Failed to import: ".$location['name']." (QID: ".$location['qid'].")");
+                $this->error("Failed to import: ".$location['name_ar']." (QID: ".$location['qid'].")");
                 $this->error($e->getMessage());
             }
         }

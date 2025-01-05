@@ -8,15 +8,16 @@ class DeckRepository
 {
     public function searchDecks($terms, string $searchTerm = '')
     {
-        return Deck::query()
-            ->where('private', 0)
+        return Deck::with('author')
+            ->where(fn($query) => $query->where('decks.private', false)
+                ->orWhere('decks.user_id', auth()->user()->id ?? null)
+            )
             ->where(function ($query) use ($terms, $searchTerm) {
                 if (!empty($searchTerm)) {
                     $query->where('name', 'like', '%'.$searchTerm.'%');
                 }
                 $query->orWhereHas('terms', fn($query) => $query->whereIn('terms.id', $terms));
             })
-            ->with('author')
             ->get();
     }
 }

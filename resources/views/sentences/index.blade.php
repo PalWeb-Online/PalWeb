@@ -11,18 +11,15 @@
     @if($totalCount > 0)
         <div class="sentence-list">
             <div class="featured-title l">{{ __('all') }}</div>
-
-            @if(request()->query('search'))
+            @if(request()->query())
                 <x-tip>
-                    <p>Displaying {{ number_format($totalCount) }} sentences matching this query.</p>
-                    <p>Check the Dictionary <a href="{{ route('wiki.show', 'dictionary') }}">User Manual</a> to ensure
-                        you
-                        get the results
-                        you're looking for.</p>
+                    <p>Displaying {{ number_format($totalCount) }} Sentences containing
+                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$searchTerm.'</b>' : '' !!}.
+                    </p>
                 </x-tip>
             @else
                 <x-tip>
-                    <p>Displaying all {{ number_format($totalCount) }} sentences in the Dictionary.</p>
+                    <p>Displaying all {{ number_format($totalCount) }} Sentences in the Phrasebook.</p>
                 </x-tip>
             @endif
             @foreach($sentences as $sentence)
@@ -33,8 +30,6 @@
 
         <x-tip>
             <p>No results matching this query.</p>
-            <p>Check the Dictionary <a href="{{ route('wiki.show', 'dictionary') }}">User Manual</a> to ensure you get
-                the results you're looking for.</p>
         </x-tip>
     @endif
 

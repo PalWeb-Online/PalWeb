@@ -11,7 +11,9 @@
     </x-link>
 
     <div class="nav-wiki-section">
-        <a>the Website</a>
+        <x-link :href="route('wiki.show', 'user-guide')"
+                :active="url()->current() == route('wiki.show', 'user-guide')">User Guide
+        </x-link>
         <x-link :href="route('wiki.show', 'academy')"
                 :active="url()->current() == route('wiki.show', 'academy')">Academy
         </x-link>

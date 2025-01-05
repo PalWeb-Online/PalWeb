@@ -17,7 +17,7 @@ class CardViewerController extends Controller
     {
         View::share('pageTitle', 'Card Viewer');
 
-        return view('decks.view', [
+        return view('decks.viewer', [
             'layout' => 'app'
         ]);
     }
@@ -28,13 +28,15 @@ class CardViewerController extends Controller
             $user = $request->user();
             $pinnedDecks = [];
 
-            $decks = Deck::select('decks.*')
-                ->where('private', '0')
-                ->join('markable_bookmarks', function ($join) use ($user) {
-                    $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
-                        ->where('markable_bookmarks.markable_type', '=', Deck::class)
-                        ->where('markable_bookmarks.user_id', '=', $user->id);
-                })
+            $decks = Deck::with('author')
+                ->select('decks.*')
+                ->where(fn($query) => $query->where('decks.private', false)
+                    ->orWhere('decks.user_id', $user->id)
+                )
+                ->join('markable_bookmarks', fn($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
+                    ->where('markable_bookmarks.markable_type', '=', Deck::class)
+                    ->where('markable_bookmarks.user_id', '=', $user->id)
+                )
                 ->orderByDesc('markable_bookmarks.id')
                 ->get();
 
@@ -73,20 +75,20 @@ class CardViewerController extends Controller
                 'category' => $term->category,
                 'translit' => $term->pronunciation->translit,
                 'file' => $term->pronunciation->audios[0]->filename ?? null,
-                'inflections' => $term->inflections->whereNotIn('form', ['accusative', 'genitive'])->map(function (
-                    $inflection
-                ) {
-                    return [
-                        'inflection' => $inflection->inflection,
-                        'translit' => $inflection->translit,
-                    ];
-                }),
-                'glosses' => $term->glosses->map(function ($gloss) {
-                    return [
-                        'id' => $gloss->id,
-                        'gloss' => $gloss->gloss,
-                    ];
-                }),
+                'inflections' => $term->inflections->whereNotIn('form', ['accusative', 'genitive'])
+                    ->map(function ($inflection) {
+                        return [
+                            'inflection' => $inflection->inflection,
+                            'translit' => $inflection->translit,
+                        ];
+                    }),
+                'glosses' => $term->glosses
+                    ->map(function ($gloss) {
+                        return [
+                            'id' => $gloss->id,
+                            'gloss' => $gloss->gloss,
+                        ];
+                    }),
             ];
         }
 

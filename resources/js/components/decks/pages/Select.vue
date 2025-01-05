@@ -19,6 +19,16 @@ const toggleActive = (id, index = null) => {
 };
 
 onMounted(async () => {
+    DeckStore.data.stagedDeck = {
+        id: '',
+        name: '',
+        description: '',
+        terms: [],
+        count: false,
+        private: false,
+    }
+    DeckStore.data.originalDeck = JSON.parse(JSON.stringify(DeckStore.data.stagedDeck));
+
     activeId.value = DeckStore.data.stagedDeck.id ?? null;
 
     if (StateStore.data.context === 'builder') {
