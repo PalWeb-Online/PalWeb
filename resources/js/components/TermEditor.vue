@@ -357,6 +357,7 @@ export default {
                                 <option value="9">Northern Urban Palestinian</option>
                                 <option value="10">Central Rural Palestinian</option>
                                 <option value="11">Northern Rural Palestinian</option>
+                                <option value="12">Southern Urban Palestinian</option>
                             </select>
                         </div>
                         <label class="checkbox" :for="'pronunciations['+index+'][borrowed]'">

@@ -6,13 +6,15 @@ import time
 
 def fetch_wb_gaza_data(location_type, offset=0, limit=50):
     query = f"""
-    SELECT DISTINCT ?item ?itemLabel ?coordinates WHERE {{
+    SELECT DISTINCT ?item ?itemLabelAr ?itemLabelEn ?coordinates WHERE {{
       ?item wdt:P31 wd:{location_type};
             wdt:P625 ?coordinates;
             wdt:P17 wd:Q219060.
       VALUES ?region {{ wd:Q36678 wd:Q39760 }}
       ?item (wdt:P131*) ?region.
-      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "ar,en". }}
+      ?item rdfs:label ?itemLabelAr FILTER(LANG(?itemLabelAr) = "ar").
+      ?item rdfs:label ?itemLabelEn FILTER(LANG(?itemLabelEn) = "en").
+      FILTER(BOUND(?itemLabelAr))
     }}
     LIMIT {limit} OFFSET {offset}
     """
@@ -25,14 +27,16 @@ def fetch_wb_gaza_data(location_type, offset=0, limit=50):
 
 def fetch_israel_data(location_type, offset=0, limit=50):
     query = f"""
-    SELECT DISTINCT ?item ?itemLabel ?coordinates WHERE {{
+    SELECT DISTINCT ?item ?itemLabelAr ?itemLabelEn ?coordinates WHERE {{
       ?item wdt:P31 wd:{location_type};
             wdt:P625 ?coordinates;
             wdt:P17 wd:Q801.
       MINUS {{ ?item (wdt:P131*) wd:Q513200. }}
       MINUS {{ ?item (wdt:P131*) wd:Q83210. }}
       MINUS {{ ?item wdt:P31 wd:Q582706. }}
-      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "ar,en". }}
+      ?item rdfs:label ?itemLabelAr FILTER(LANG(?itemLabelAr) = "ar").
+      ?item rdfs:label ?itemLabelEn FILTER(LANG(?itemLabelEn) = "en").
+      FILTER(BOUND(?itemLabelAr))
     }}
     LIMIT {limit} OFFSET {offset}
     """
@@ -77,7 +81,8 @@ def fetch_all_data(fetch_function, location_type):
                     processed_qids.add(qid)
                     all_data.append({
                         "qid": qid,
-                        "name": result.get("itemLabel", {}).get("value", ""),
+                        "name_ar": result.get("itemLabelAr", {}).get("value", ""),
+                        "name_en": result.get("itemLabelEn", {}).get("value", ""),
                         "coordinates": result.get("coordinates", {}).get("value", "")
                     })
             offset += limit
@@ -101,32 +106,32 @@ def save_results(data):
 
 def main():
     types = {
-        "City": "Q515",
-        "Town": "Q3957",
-        "Village": "Q532"
+        "Cities": "Q515",
+        "Towns": "Q3957",
+        "Villages": "Q532"
     }
 
     all_data = []
 
-    print("Fetching locations in the West Bank and Gaza Strip...")
+    print("Fetching Locations in the West Bank and Gaza Strip...")
     for type_name, type_qid in types.items():
-        print(f"Fetching {type_name}s in the West Bank and Gaza...")
+        print(f"Fetching {type_name} in the West Bank and Gaza...")
         data = fetch_all_data(fetch_wb_gaza_data, type_qid)
         if data:
             all_data.extend(data)
         else:
-            print(f"Data for {type_name}s in the West Bank and Gaza could not be fetched and was skipped.")
+            print(f"Data for {type_name} in the West Bank and Gaza could not be fetched and was skipped.")
 
-    print("Fetching locations in Israel...")
+    print("Fetching Locations in historic Palestine...")
     for type_name, type_qid in types.items():
-        print(f"Fetching {type_name}s in Israel...")
+        print(f"Fetching {type_name} in historic Palestine...")
         data = fetch_all_data(fetch_israel_data, type_qid)
         if data:
             all_data.extend(data)
         else:
-            print(f"Data for {type_name}s in Israel could not be fetched and was skipped.")
+            print(f"Data for {type_name} in historic Palestine could not be fetched and was skipped.")
 
-    all_data = sorted(all_data, key=lambda x: x["name"])
+    all_data = sorted(all_data, key=lambda x: x["name_ar"])
 
     save_results(all_data)
 

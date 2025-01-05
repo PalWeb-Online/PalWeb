@@ -51,8 +51,8 @@
         </x-slot>
         <x-slot name="content">
             <div class="dropdown-section-title">Welcome</div>
-            <a href="{{ route('wiki.show', 'dictionary') }}">User Guide</a>
-            <a href="{{ route('wiki.show', 'contributing') }}">Contributing</a>
+            <a href="{{ route('wiki.show', 'about') }}">About</a>
+            <a href="{{ route('wiki.show', 'user-guide') }}">User Guide</a>
 
             <div class="dropdown-section-title">Support</div>
             <a href="{{ route('dashboard.subscription') }}">Subscribe</a>

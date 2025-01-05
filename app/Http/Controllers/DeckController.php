@@ -46,9 +46,9 @@ class DeckController extends Controller
         $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
 
         if (empty($searchTerm) && empty(array_filter($filters))) {
-            $decks = Deck::orderByDesc('id')
-                ->with('author')
-                ->where('private', 0)
+            $decks = Deck::with('author')
+                ->where('private', false)
+                ->orderByDesc('id')
                 ->paginate(25)
                 ->onEachSide(1);
             $totalCount = $decks->total();
@@ -70,7 +70,12 @@ class DeckController extends Controller
             );
         }
 
-        return view('decks.index', compact('decks', 'totalCount'));
+        return view('decks.index', [
+            'decks' => $decks,
+            'searchTerm' => $searchTerm,
+            'filters' => $filters,
+            'totalCount' => $totalCount,
+        ]);
     }
 
     public function store(Request $request)

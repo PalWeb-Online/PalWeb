@@ -61,8 +61,8 @@
 
 @include("layouts._footer")
 
-@if(!request()->routeIs('flashcards.study', 'decks.create', 'audios.record'))
-    <div id="search-genie"></div>
+@if(!request()->routeIs('decks.study', 'decks.create', 'decks.edit', 'audios.record'))
+    <div id="searchGenie"></div>
 @endif
 
 </body>

@@ -204,7 +204,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
 
             Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
-                Route::get('/', 'index')->name('flashcards.study');
+                Route::get('/', 'index')->name('decks.study');
                 Route::get('/decks', 'getPinnedDecks');
                 Route::get('/decks/{deck}', 'getCards');
             });

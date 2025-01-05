@@ -14,7 +14,7 @@
             <div>deckbuilderdeckbuilderdeckbuilderdeckbuilder</div>
             <div>Deck Builder</div>
         </a>
-        <a class="workbench-portal-item" href="{{ route('flashcards.study') }}">
+        <a class="workbench-portal-item" href="{{ route('decks.study') }}">
             <div>cardviewercardviewercardviewercardviewer</div>
             <div>Card Viewer</div>
         </a>

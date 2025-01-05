@@ -15,12 +15,13 @@ class CommunityController extends Controller
     public function index(Request $request)
     {
         $latestDecks = Deck::with('author')
-            ->where('private', 0)
+            ->where('private', false)
             ->orderByDesc('id')
             ->take(5)
             ->get();
 
-        $popularDecks = Deck::where('private', 0)
+        $popularDecks = Deck::with('author')
+            ->where('private', false)
             ->join('markable_bookmarks', function ($join) {
                 $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                     ->where('markable_bookmarks.markable_type', Deck::class);
@@ -29,7 +30,6 @@ class CommunityController extends Controller
             ->groupBy('decks.id')
             ->havingRaw('COUNT(markable_bookmarks.user_id) > 1')
             ->orderByDesc('users_count')
-            ->with('author')
             ->take(5)
             ->get();
 

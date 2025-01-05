@@ -28,11 +28,11 @@ const pin = async () => {
 
         notifContent.value = response.data.message;
         notifVisible.value = true;
+
         setTimeout(() => {
             notifVisible.value = false;
             eventBus.emit('pinnedModel', {id: props.id, model: props.model, isPinned: response.data.isPinned});
         }, 1000);
-
 
     } catch (error) {
         console.error('Pin Failed', error);

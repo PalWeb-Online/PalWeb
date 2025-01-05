@@ -104,15 +104,9 @@ onMounted(async () => {
                    name="deck[name]" type="text" placeholder="Required: Deck Name"
             />
 
-            <!--        <PrivacyToggleButton v-if="isAuthor"-->
-            <!--                             :route="routes.privacyToggle"-->
-            <!--                             :isPrivate="deck.isPrivate"-->
-            <!--        />-->
-            <!--            <label class="checkbox" for="deck[private]">-->
-            <!--                <input type="checkbox" value=1 id="deck[private]" name="deck[private]"-->
-            <!--                       v-model="DeckStore.data.deck.private">-->
-            <!--                <span>Private</span>-->
-            <!--            </label>-->
+            <img :class="['lock', { public: !DeckStore.data.stagedDeck.private }]"
+                 :src="`/img/${DeckStore.data.stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
+                 @click="DeckStore.data.stagedDeck.private = !DeckStore.data.stagedDeck.private" alt="lock"/>
         </div>
         <div class="user-wrapper">
             <div class="user-avatar">

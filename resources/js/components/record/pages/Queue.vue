@@ -1,12 +1,12 @@
 <script setup>
-import {useQueueStore} from "../stores/QueueStore.js";
+import {ref} from 'vue';
+import {useQueueStore} from '../stores/QueueStore.js';
 import {useRecordStore} from '../stores/RecordStore';
-import {ref} from "vue";
-import SearchGenie from "../../search/SearchGenie.vue";
-import AppDialog from "../../AppDialog.vue";
-import AppTooltip from "../../AppTooltip.vue";
+import SearchGenie from '../../search/SearchGenie.vue';
+import AppDialog from '../../AppDialog.vue';
+import AppTooltip from '../../AppTooltip.vue';
 import Draggable from 'vuedraggable';
-import AppNotification from "../../AppNotification.vue";
+import AppNotification from '../../AppNotification.vue';
 
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();

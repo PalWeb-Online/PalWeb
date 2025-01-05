@@ -20,7 +20,7 @@
         </div>
         <div class="speaker-profile-row">
             <div>Location</div>
-            <div>{{ $speaker->location->name }}</div>
+            <div>{{ $speaker->location->name_ar }} ({{ $speaker->location->name_en }})</div>
         </div>
         <div class="speaker-profile-row">
             <div>Gender</div>

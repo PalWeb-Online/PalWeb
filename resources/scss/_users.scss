@@ -302,7 +302,7 @@
 .user-portrait-array {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 3.2rem 0.8rem;
+    gap: 0.8rem 3.2rem;
 }
 
 .user-portrait-wrapper {
@@ -327,6 +327,16 @@
         font-weight: 700;
         color: $purple-deep;
         font-size: 1.6rem;
+    }
+
+    &.l .user-avatar {
+        width: 19.2rem;
+        height: 19.2rem;
+    }
+
+    &.s .user-avatar {
+        width: 14.4rem;
+        height: 14.4rem;
     }
 }
 

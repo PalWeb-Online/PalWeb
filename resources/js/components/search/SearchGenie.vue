@@ -145,7 +145,18 @@ onMounted(() => {
             case 'Enter':
                 if (activeIndex.value >= 0 && activeIndex.value < results.length) {
                     // todo: this won't work
-                    selectResult(results[activeIndex.value]);
+
+                    switch (SearchStore.activeModel) {
+                        case 'terms':
+                            selectTerm(results[activeIndex.value]);
+                            break;
+                        case 'sentences':
+                            selectSentence(results[activeIndex.value]);
+                            break;
+                        case 'decks':
+                            selectDeck(results[activeIndex.value]);
+                            break;
+                    }
                 }
                 break;
         }

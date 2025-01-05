@@ -29,7 +29,7 @@
         <div class="audio-item-info">
             {{ $audio->speaker->fluency_alias }}
             <span style="text-transform: capitalize">{{ $audio->speaker->gender !== 'other' ? $audio->speaker->gender : '' }}</span>
-            Speaker from {{ $audio->speaker->location->name }}
+            Speaker from {{ $audio->speaker->location->name_ar }} ({{ $audio->speaker->location->name_en }})
         </div>
         <div class="audio-item-date">
             {{ $audio->created_at->format('j F Y') }}

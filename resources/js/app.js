@@ -52,10 +52,10 @@ multiMountComponents.forEach(({ selector, component }) => {
     mountMultiComponents(selector, component);
 });
 
-if (document.querySelector('#search-genie')) {
+if (document.querySelector('#searchGenie')) {
     const searchGenieApp = createApp(SearchGenie);
     searchGenieApp.use(pinia);
-    searchGenieApp.mount('#search-genie');
+    searchGenieApp.mount('#searchGenie');
 }
 
 if (document.querySelector('#recordWizard')) {

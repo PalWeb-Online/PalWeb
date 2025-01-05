@@ -32,7 +32,7 @@ class SearchService
         ];
 
         if ($withSentences) {
-            $results['sentences'] = $this->sentenceRepository->searchSentences($terms, $glosses);
+            $results['sentences'] = $this->sentenceRepository->searchSentences($terms, $glosses, $searchTerm);
         }
 
         if ($withDecks) {

@@ -471,26 +471,24 @@
     }
 }
 
-.flashcard-portal-box {
+.cv-box {
     align-self: start;
+    display: grid;
+    grid-template-rows: min-content;
+    align-items: start;
+    gap: 0.8rem;
     background: white;
     border-radius: 0.8rem;
     border: 2px solid $purple-primary-dark;
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     padding: 1.6rem 1.6rem 6.4rem;
-
-    display: grid;
-    grid-template-rows: min-content;
-    align-items: start;
-    gap: 0.8rem;
-
     position: relative;
 
     .app-dialog-trigger {
         position: absolute;
-        top: -2.4rem;
+        top: -1.6rem;
         right: 0;
-        width: 4.8rem;
+        width: 3.2rem;
     }
 
     & > div:nth-child(1) {
@@ -710,11 +708,13 @@
     align-items: center;
     margin-block: 0 !important;
     gap: 0.4rem;
+    flex-wrap: wrap;
 }
 
 .carousel__pagination-item {
     padding: 0;
     flex-grow: 1;
+    min-width: 0.8rem;
 }
 
 .carousel__pagination-button {

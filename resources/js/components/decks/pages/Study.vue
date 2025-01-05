@@ -80,7 +80,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flashcard-portal-box">
+    <div class="cv-box">
         <div>Options</div>
         <div>
             <button @click="resetCards">Reset</button>
@@ -99,16 +99,32 @@ onUnmounted(() => {
             </label>
         </div>
 
-        <AppDialog title="Controls" size="large">
+        <AppDialog title="Options" size="large">
             <template #trigger>
                 <img alt="Info" src="/img/idea.svg"/>
             </template>
             <template #content>
-                <div><b>Left</b> / <b>A</b> Previous Card</div>
-                <div><b>Right</b> / <b>D</b> Next Card</div>
-                <div><b>Down</b> / <b>S</b> Flip Card</div>
-                <div><b>Up</b> / <b>W</b> Play Audio</div>
-                <div><b>Space</b> Toggle Default Side</div>
+                <div>Settings</div>
+                <ul>
+                    <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
+                    <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>
+                    <li><b>Default Side Toggle</b> — Toggles the default face of Cards in the Deck. Cards that have
+                        already been flipped will be unaffected.
+                    </li>
+                    <li><b>Show Inflections Toggle</b> — Toggles whether Inflections are shown on the Term side or on
+                        the Gloss side of the Card.
+                    </li>
+                    <li><b>Show Transcription</b> — Show the default transcription of the Term & its Inflections.</li>
+                    <li><b>Show Term</b> — Show the Term on the Gloss side of the Card.</li>
+                </ul>
+
+                <div>Keyboard Controls</div>
+                <ul>
+                    <li><b>Left</b> / <b>A</b> — Previous Card</li>
+                    <li><b>Right</b> / <b>D</b> — Next Card</li>
+                    <li><b>Down</b> / <b>S</b> — Flip Card</li>
+                    <li><b>Space</b> — Toggle Default Side</li>
+                </ul>
             </template>
         </AppDialog>
     </div>

@@ -52,18 +52,7 @@
 
     <div class="user-portrait-array">
         @foreach($users as $user)
-            <x-user-portrait :user="$user"/>
+            <x-user-portrait :user="$user" creations/>
         @endforeach
     </div>
-
-    {{--    <div class="portal-button-wrapper" style="margin-block-start: 0">--}}
-    {{--        <div class="portal-button-head">--}}
-    {{--            Or create your own!--}}
-    {{--        </div>--}}
-    {{--        <div class="portal-button-body">--}}
-    {{--            <a href="{{ route('decks.create') }}" class="portal-button">Deck Builder</a>--}}
-    {{--            <a href="{{ route('audios.record') }}" class="portal-button">Record Wizard</a>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
-
 @endsection

@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {computed, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import {useStateStore} from "./StateStore.js";
 
 export const useDeckStore = defineStore('DeckStore', () => {
@@ -44,7 +44,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 data.decks = response.data.createdDecks;
             }
 
-        // todo: if data.stagedDeck.id is not an id in data.decks, then the deck was deleted outside the Deck Builder while it was open; the stagedDeck should be unstaged.
+            // todo: if data.stagedDeck.id is not an id in data.decks, then the deck was deleted outside the Deck Builder while it was open; the stagedDeck should be unstaged.
 
         } catch (error) {
             console.error('Error fetching Created Decks:', error);
@@ -69,6 +69,18 @@ export const useDeckStore = defineStore('DeckStore', () => {
             const response = await axios.get('/dashboard/workbench/card-viewer/decks');
             if (response.data && response.data.pinnedDecks) {
                 data.decks = response.data.pinnedDecks;
+
+                const stagedDeckIsPinned = data.decks.some(deck => deck.id === data.stagedDeck.id);
+                if (!stagedDeckIsPinned) {
+                    data.stagedDeck = {
+                        id: '',
+                        name: '',
+                        description: '',
+                        terms: [],
+                        count: false,
+                        private: false,
+                    };
+                }
             }
 
         } catch (error) {
@@ -100,7 +112,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
                     count: false,
                     private: false,
                 }
-                data.originalDeck = { ...data.stagedDeck };
+                data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
 
             } else {
                 data.stagedDeck = JSON.parse(JSON.stringify(data.decks[index]));
@@ -117,7 +129,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 count: false,
                 private: false,
             }
-            data.originalDeck = { ...data.stagedDeck };
+            data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
         }
     }
 

@@ -37,18 +37,11 @@ export const useStateStore = defineStore('StateStore', () => {
     });
 
     const hasUnsavedChanges = computed(() => {
-        return JSON.stringify(DeckStore.data.stagedDeck) !== JSON.stringify(DeckStore.data.originalDeck);
+        return data.context === 'builder' && JSON.stringify(DeckStore.data.stagedDeck) !== JSON.stringify(DeckStore.data.originalDeck);
     });
 
     const backDisabled = computed(() => !steps.value[data.step]?.canMoveBack());
     const nextDisabled = computed(() => !steps.value[data.step]?.canMoveNext());
-
-    const initialize = (action = 'create') => {
-        data.action = action;
-        if (action === 'edit') {
-            data.step = 'build';
-        }
-    };
 
     const back = async () => {
         const currentStep = steps.value[data.step];
@@ -76,7 +69,6 @@ export const useStateStore = defineStore('StateStore', () => {
         hasUnsavedChanges,
         backDisabled,
         nextDisabled,
-        initialize,
         back,
         next,
         exit,

@@ -1,4 +1,4 @@
-<x-page-head title="{{ __('user manual') }}" blurb="Understand how to use the Dictionary to get the best results!">
+<x-page-head title="{{ __('dictionary') }}" blurb="Understand how to use the Dictionary to get the best results!">
     <x-link :href="route('wiki.index')">{{ __('wiki') }}</x-link>
     <x-link :href="route('wiki.show', 'dictionary')">{{ __('dictionary') }}</x-link>
 </x-page-head>
@@ -73,7 +73,7 @@
         using the site's markup language.</p>
 </div>
 
-<div class="doc-section">
+<div class="doc-section" id="conventions">
     <h1>Conventions</h1>
     <p>Because of the lack of standardization in Palestinian Arabic, a variety of conventions had to be developed to
         maintain consistency across entries in the Dictionary.</p>
@@ -219,49 +219,6 @@
     <p>In addition to representing sound, this transcription scheme shows word boundaries by linking clitics to other
         lemmas with a hyphen (e.g. <b>l-bēt</b>, <b>w-l-bēt</b>, <b>b-l-bēt</b>, <b>ha-l-bēt</b>, <b>b-ha-l-bēt</b>, <b>la-ha-l-bēt</b>).
     </p>
-</div>
-<div class="doc-section">
-    <h1>Features</h1>
-
-    <h2 id="search">Term Search & Filtering</h2>
-    <p><b>Searching for Terms</b> works by finding matches between the search query & a handful of database attributes.
-        Let's assume we
-        are trying to find the word <b>كثير (ktīr "many")</b>. We can find it by searching for the following:</p>
-    <ul>
-        <li>its Arabic spelling, including alternative spellings (i.e. كثير or كتير)</li>
-        <li>its transcribed pronunciation in any dialect (i.e. ktīr or kŧīr)</li>
-        <li>its inflections, whether in Arabic or transliterated (e.g. كثار or ktār)</li>
-        <li>its meanings in English (e.g. "many", "very", etc.)</li>
-    </ul>
-    <p>However, there are some limitations to the search function that are inherent to how the database is structured &
-        the
-        conventions that have been established:</p>
-    <ul>
-        <li>inflections are stored with only one canonical spelling & transcription, so a search for <b>كتار</b> or
-            <b>kŧār</b> will fail
-        </li>
-    </ul>
-
-    <p><b>Searching for Sentences</b> works similarly:</p>
-    <ul>
-        <li>Search for any Arabic term either in Arabic (e.g. يوكل) or transliterated (e.g. yōkil). Doing this will
-            return all sentences — if there are any — where this term is used in this exact form. You have to be
-            precise in your transliteration. Check the <b>User Manual</b> for the site's transliteration standard.
-        </li>
-        <li>Search for any Arabic word in its dictionary form transliterated (e.g. ʔakal). Doing this will return
-            all sentences — if there are any — where this term is used in any of its forms. Although you must use
-            the term's transliterated form, this is the only way to retrieve all forms of the term.
-        </li>
-    </ul>
-
-    <p><b>Filtering Terms</b> may be done according to five attributes:</p>
-    <ul>
-        <li>Category: the part of speech a term belongs to (e.g. Noun).</li>
-        <li>Subtype: a secondary category a term may optionally belong to (e.g. Masculine).</li>
-        <li>Form: the verbal form of a term or from which it is derived (e.g. Form 2).</li>
-        <li>Singular Pattern: the word pattern of a term in its default or singular form (e.g. CvCC).</li>
-        <li>Plural Pattern: the word pattern of a term in its plural form (e.g. CCūC).</li>
-    </ul>
 </div>
 <div class="doc-section">
     <h1>Entry Content</h1>
