@@ -5,12 +5,11 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4.2",
         "doctrine/dbal": "^3.6",
         "dompdf/dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/contracts": "^9.0|^10.0",
-        "inertiajs/inertia-laravel": "^0.5.1|^0.6.4",
         "itsgoingd/clockwork": "^5.1",
         "laravel/cashier": "^14.8",
         "laravel/framework": "^9.19",

@@ -93,6 +93,7 @@ export default class Record {
     }
 
     async uploadRecord() {
+        // todo: Error: [Record] Upload failed with status 429 (too many requests)
         if (!this.stashKey) {
             throw new Error('[Record] cannot upload; no stashKey.');
         }
