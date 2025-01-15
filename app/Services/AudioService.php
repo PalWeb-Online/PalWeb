@@ -21,12 +21,12 @@ class AudioService
     {
     }
 
-    public function uploadAudio(string $stashPath, string $filename): void
+    public function uploadAudio(string $wavPath, string $filename): void
     {
-        $mp3Path = str_replace('.wav', '.mp3', $stashPath);
+        $mp3Path = str_replace('.wav', '.mp3', $wavPath);
 
         try {
-            $this->convertToMp3($stashPath, $mp3Path);
+            $this->convertToMp3($wavPath, $mp3Path);
 
             Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
 
@@ -45,7 +45,7 @@ class AudioService
             throw new \Exception("Source file not found: {$wavPath}");
         }
 
-        $command = "ffmpeg -i " . escapeshellarg($wavPath) . " -b:a 128k " . escapeshellarg($mp3Path);
+        $command = "ffmpeg -loglevel panic -i " . escapeshellarg($wavPath) . " -b:a 128k " . escapeshellarg($mp3Path);
         $output = [];
         $returnVar = null;
 
