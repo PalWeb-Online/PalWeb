@@ -18,8 +18,6 @@ class SparkServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Cashier::ignoreMigrations();
-
         if (! $this->app->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__.'/../config/spark.php', 'spark');
         }

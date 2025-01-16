@@ -9,10 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.4.2",
-        "doctrine/dbal": "^3.6",
         "dompdf/dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.8",
-        "illuminate/contracts": "^9.0|^10.0",
         "itsgoingd/clockwork": "^5.1",
         "laravel/cashier": "^15.2",
         "laravel/framework": "^11.38",
