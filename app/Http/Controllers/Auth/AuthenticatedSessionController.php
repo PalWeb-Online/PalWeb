@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(AppServiceProvider::HOME);
         }
 
-        return back()->withErrors([
+        return redirect()->back()->withErrors([
             'email' => __('auth.failed'),
         ]);
     }

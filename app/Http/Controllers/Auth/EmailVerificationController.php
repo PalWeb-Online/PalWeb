@@ -55,6 +55,6 @@ class EmailVerificationController extends Controller
 
         $this->flasher->addInfo(__('verification.sent'));
 
-        return back();
+        return redirect()->back();
     }
 }

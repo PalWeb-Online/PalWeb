@@ -59,7 +59,7 @@ class NewPasswordController extends Controller
 
             return to_route('signin');
         } else {
-            return back()->withInput($request->only('email'))
+            return redirect()->back()->withInput($request->only('email'))
                 ->withErrors(['email' => __($status)]);
         }
     }

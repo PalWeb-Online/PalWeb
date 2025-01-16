@@ -23,6 +23,6 @@ class LanguageController
             $request->session()->put('language', $language);
         }
 
-        return back();
+        return redirect()->back();
     }
 }

@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
         $this->flasher->addFlash('info', __('signup.message', ['user' => $user->name]),
             __('signup.message.head'));
 
-        return redirect(AppServiceProvider::HOME);
+        return redirect()->to(AppServiceProvider::HOME);
     }
 
     /**

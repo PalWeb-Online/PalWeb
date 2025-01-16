@@ -41,9 +41,9 @@ class PasswordResetLinkController extends Controller
         if ($status == Password::RESET_LINK_SENT) {
             $this->flasher->addInfo($status);
 
-            return back();
+            return redirect()->back();
         } else {
-            return back()->withInput($request->only('email'))
+            return redirect()->back()->withInput($request->only('email'))
                 ->withErrors(['email' => __($status)]);
         }
     }

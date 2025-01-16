@@ -34,7 +34,7 @@ class VerifyBillableIsSubscribed
             return response('Subscription Required.', 402);
         }
 
-        return redirect($redirect);
+        return redirect()->to($redirect);
     }
 
     /**

@@ -38,6 +38,6 @@ class EmailAnnouncementController extends Controller
         }
 
         // Redirect back with a success message
-        return redirect('/')->with('success', 'Announcement email has been queued.');
+        return redirect()->to('/')->with('success', 'Announcement email has been queued.');
     }
 }

@@ -30,7 +30,7 @@ class OAuthController extends Controller
             Log::error("Discord OAuth error: $error - $errorDescription");
             $this->flasher->addError('You canceled the Discord authentication process.');
 
-            return redirect('/');
+            return redirect()->to('/');
         }
 
         try {
@@ -63,7 +63,7 @@ class OAuthController extends Controller
                     } else {
                         $this->flasher->addWarning('We couldn\'t sign you in, because there is no PalWeb account that is connected to or has the same email as the provided Discord account. Please sign in normally first & connect your Discord account through the Dashboard before trying to log in this way.');
 
-                        return redirect('/');
+                        return redirect()->to('/');
 
                         //                        $user = $this->createUser($discordUser);
 
@@ -80,7 +80,7 @@ class OAuthController extends Controller
             $this->flasher->addError('Failed to authenticate with Discord.');
         }
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 
     protected function updateUser($user, $discordUser)
@@ -118,7 +118,7 @@ class OAuthController extends Controller
         if (! $request->user()->password) {
             $this->flasher->addWarning('You have not set a password for this account. You cannot disconnect from Discord until you have set a password on PalWeb. Please set a password first, then try again.');
 
-            return redirect('/');
+            return redirect()->to('/');
         }
 
         $token = $request->input('token');
@@ -145,12 +145,12 @@ class OAuthController extends Controller
             // Token revocation was successful
             $this->flasher->addSuccess('Disconnected your Discord account.');
 
-            return redirect('/');
+            return redirect()->to('/');
         } else {
             // Handle errors or unsuccessful revocation
             $this->flasher->addError('Failed to disconnect Discord account.');
 
-            return redirect('/');
+            return redirect()->to('/');
         }
     }
 
@@ -164,7 +164,7 @@ class OAuthController extends Controller
 
             $this->flasher->addWarning('Your Discord account is already connected.');
 
-            return redirect('/');
+            return redirect()->to('/');
         } else {
             return Socialite::driver('discord')->scopes(['identify', 'email', 'guilds'])->redirect();
         }

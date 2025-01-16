@@ -18,7 +18,7 @@ class UserController extends Controller
         if (Gate::denies('interact', $user)) {
             $this->flasher->addFlash('error', __('unauthorized.private.user'), __('unauthorized'));
 
-            return back();
+            return redirect()->back();
         }
 
         $decks = $user->decks()->with('author')
