@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RootFactory extends Factory
 {
-    protected $model = Root::class;
-
     /**
      * Define the model's default state.
      *
