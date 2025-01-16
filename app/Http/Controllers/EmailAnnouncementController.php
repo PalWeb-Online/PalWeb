@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendEmailAnnouncementRequest;
 use App\Mail\AnnouncementEmail;
 use App\Models\User;
 use Exception;
@@ -20,12 +21,8 @@ class EmailAnnouncementController extends Controller
         return view('users.dashboard.email-compose');
     }
 
-    public function send(Request $request): RedirectResponse
+    public function send(SendEmailAnnouncementRequest $request): RedirectResponse
     {
-        $request->validate([
-            'subject' => 'required',
-            'body' => 'required',
-        ]);
 
         $subject = $request->input('subject');
         $body = $request->input('body');

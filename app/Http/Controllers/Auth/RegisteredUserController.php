@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\AppServiceProvider;
@@ -26,19 +27,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRegisteredUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
-            'username' => [
-                'required', 'string', 'max:50',
-                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                'unique:users',
-            ],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
         $user = User::create([
             'name' => $request->name,

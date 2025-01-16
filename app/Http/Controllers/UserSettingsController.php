@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePasswordUserSettingRequest;
+use App\Http\Requests\UpdateUserSettingRequest;
 use App\Events\PasswordChanged;
 use App\Events\ProfileChanged;
 use App\Rules\ArabicScript;
@@ -33,21 +35,10 @@ class UserSettingsController
     /**
      * Stores changed information
      */
-    public function update(Request $request, FlasherInterface $flasher)
+    public function update(UpdateUserSettingRequest $request, FlasherInterface $flasher)
     {
         $user = auth()->user();
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
-            'username' => [
-                'required', 'string', 'max:50',
-                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                Rule::unique('users')->ignore($user->id),
-            ],
-            'home' => ['nullable', 'string', 'max:100'],
-            'bio' => ['nullable', 'string', 'max:500'],
-        ]);
 
         $user->update([
             'name' => $request->name,
@@ -94,13 +85,11 @@ class UserSettingsController
     /**
      * Updates the changed password
      */
-    public function updatePassword(Request $request, FlasherInterface $flasher)
+    public function updatePassword(UpdatePasswordUserSettingRequest $request, FlasherInterface $flasher)
     {
         $user = auth()->user();
 
-        $form = $request->validate([
-            'password_new' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $form = $request->validated();
 
         $user->password = Hash::make($form['password_new']);
         $user->save();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StashRecordRecordWizardRequest;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialect;
@@ -107,11 +108,8 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function stashRecord(Request $request): JsonResponse
+    public function stashRecord(StashRecordRecordWizardRequest $request): JsonResponse
     {
-        $request->validate([
-            'file' => 'required|file|mimes:wav|max:5120',
-        ]);
 
         try {
             $file = $request->file('file');
