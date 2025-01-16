@@ -17,7 +17,7 @@ class GlossFactory extends Factory
     public function definition()
     {
         return [
-            'gloss' => $this->faker->sentence,
+            'gloss' => $this->faker->sentence(),
         ];
     }
 }

@@ -18,16 +18,16 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'name' => $this->faker->name(),
             'ar_name' => 'مثال',
-            'username' => $this->faker->unique()->userName,
-            'email' => $this->faker->unique()->safeEmail,
+            'username' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'avatar' => 'battix01.jpg',
-            'home' => $this->faker->word,
-            'bio' => $this->faker->text,
+            'home' => $this->faker->word(),
+            'bio' => $this->faker->text(),
             'dialect_id' => Dialect::all()->random()->id,
-            'private' => $this->faker->boolean,
+            'private' => $this->faker->boolean(),
             'language' => 'en',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
         ];
