@@ -2,11 +2,11 @@
 
 namespace Spark\Mail;
 
-use Laravel\Cashier\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\HtmlString;
+use Laravel\Cashier\Invoice;
 
 class NewReceipt extends Mailable
 {

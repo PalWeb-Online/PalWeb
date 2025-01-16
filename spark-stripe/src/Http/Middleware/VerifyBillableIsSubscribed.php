@@ -2,9 +2,9 @@
 
 namespace Spark\Http\Middleware;
 
-use Illuminate\Http\Response;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Spark\GuessesBillableTypes;
 use Spark\Spark;
@@ -16,7 +16,7 @@ class VerifyBillableIsSubscribed
     /**
      * Verify the incoming request's user has a subscription.
      */
-    public function handle(Request $request, Closure $next, string $billableType = null, string $plan = null): Response
+    public function handle(Request $request, Closure $next, ?string $billableType = null, ?string $plan = null): Response
     {
         $billableType = $billableType ?: $this->guessBillableType($billableType);
 

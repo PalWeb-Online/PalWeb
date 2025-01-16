@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Events\ModelPinned;
 use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Models\Term;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;

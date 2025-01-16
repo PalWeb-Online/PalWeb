@@ -3,8 +3,8 @@
 namespace Spark\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Spark\Billable;
 use Illuminate\Http\Request;
+use Spark\Billable;
 use Spark\Contracts\Actions\CreatesSubscriptions;
 use Spark\Features;
 use Spark\Spark;

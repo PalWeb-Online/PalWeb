@@ -2,8 +2,8 @@
 
 namespace Spark\Actions;
 
-use Laravel\Cashier\Subscription;
 use Illuminate\Validation\ValidationException;
+use Laravel\Cashier\Subscription;
 use Spark\Concerns\HandlesPaymentFailures;
 use Spark\Contracts\Actions\UpdatesSubscriptions;
 use Spark\Spark;

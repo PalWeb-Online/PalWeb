@@ -2,13 +2,13 @@
 
 namespace Spark\Http\Controllers;
 
-use Inertia\Response;
-use Spark\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
+use Inertia\Response;
 use Spark\FrontendState;
 use Spark\GuessesBillableTypes;
+use Spark\Plan;
 use Spark\Spark;
 
 class BillingPortalController

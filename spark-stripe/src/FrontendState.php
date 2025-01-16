@@ -2,17 +2,16 @@
 
 namespace Spark;
 
-use Illuminate\Support\Collection;
-use Laravel\Cashier\Subscription;
-use Spark\Billable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Invoice;
 use Laravel\Cashier\PaymentMethod;
+use Laravel\Cashier\Subscription;
 use Stripe\Subscription as StripeSubscription;
 
 class FrontendState

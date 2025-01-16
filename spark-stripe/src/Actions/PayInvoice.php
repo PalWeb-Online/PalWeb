@@ -2,9 +2,9 @@
 
 namespace Spark\Actions;
 
-use Spark\Billable;
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Invoice;
+use Spark\Billable;
 use Spark\Concerns\HandlesPaymentFailures;
 use Spark\Contracts\Actions\PaysInvoices;
 use Spark\Events\AttemptingPayment;

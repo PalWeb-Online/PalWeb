@@ -3,14 +3,13 @@
 namespace Spark\Http\Controllers;
 
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response;
-use Spark\Billable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierController;
 use Laravel\Cashier\Invoice;
 use Laravel\Cashier\Payment;
+use Spark\Billable;
 use Spark\Events\PaymentSucceeded;
 use Spark\Events\SubscriptionCancelled;
 use Spark\Events\SubscriptionCreated;
@@ -19,6 +18,7 @@ use Spark\Features;
 use Spark\Mail\ConfirmPayment;
 use Spark\Mail\NewReceipt;
 use Stripe\Subscription;
+use Symfony\Component\HttpFoundation\Response;
 
 class WebhookController extends CashierController
 {
@@ -120,8 +120,6 @@ class WebhookController extends CashierController
 
     /**
      * Handle payment action required for invoice.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function handleInvoicePaymentActionRequired(array $payload): Response
     {
@@ -140,10 +138,6 @@ class WebhookController extends CashierController
 
     /**
      * Send the receipt notification email.
-     *
-     * @param  \Spark\Billable  $billable
-     * @param  \Laravel\Cashier\Invoice|null  $invoice
-     * @return void
      */
     protected function sendReceiptNotification(Billable $billable, ?Invoice $invoice): void
     {
@@ -165,10 +159,6 @@ class WebhookController extends CashierController
 
     /**
      * Send the payment confirmation notification email.
-     *
-     * @param  \Spark\Billable  $billable
-     * @param  \Laravel\Cashier\Payment  $payment
-     * @return void
      */
     protected function sendPaymentConfirmationNotification(Billable $billable, Payment $payment): void
     {

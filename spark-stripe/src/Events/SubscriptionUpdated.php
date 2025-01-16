@@ -2,8 +2,8 @@
 
 namespace Spark\Events;
 
-use Spark\Billable;
 use Laravel\Cashier\Subscription;
+use Spark\Billable;
 
 class SubscriptionUpdated
 {

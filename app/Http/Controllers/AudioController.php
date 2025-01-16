@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
@@ -10,6 +9,7 @@ use App\Models\Speaker;
 use App\Services\AudioService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AudioController extends Controller
 {

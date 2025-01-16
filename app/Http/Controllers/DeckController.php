@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Models\Deck;
@@ -10,6 +9,7 @@ use App\Models\Term;
 use App\Services\SearchService;
 use Exception;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;

@@ -2,10 +2,10 @@
 
 namespace Spark\Http\Controllers;
 
-use Spark\Billable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Subscription;
+use Spark\Billable;
 use Spark\HandlesCouponExceptions;
 use Stripe\Exception\InvalidRequestException;
 

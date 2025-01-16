@@ -2,8 +2,8 @@
 
 namespace Spark\Events;
 
-use Spark\Billable;
 use Laravel\Cashier\Invoice;
+use Spark\Billable;
 
 class PaymentAttempted
 {

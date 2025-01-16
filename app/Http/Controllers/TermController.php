@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Events\ModelPinned;
 use App\Models\Attribute;
 use App\Models\Dialect;
@@ -19,6 +18,7 @@ use App\Rules\ArabicScript;
 use App\Rules\LatinScript;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;

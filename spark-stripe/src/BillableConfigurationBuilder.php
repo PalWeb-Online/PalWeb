@@ -2,8 +2,6 @@
 
 namespace Spark;
 
-use Spark\Plan;
-
 class BillableConfigurationBuilder
 {
     /**

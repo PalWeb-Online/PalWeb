@@ -2,7 +2,6 @@
 
 namespace Spark;
 
-use Spark\Plan;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable as CashierBillable;

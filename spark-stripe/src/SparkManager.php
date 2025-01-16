@@ -2,12 +2,9 @@
 
 namespace Spark;
 
-use Spark\BillableConfigurationBuilder;
-use Spark\Billable;
-use Spark\Plan;
-use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class SparkManager

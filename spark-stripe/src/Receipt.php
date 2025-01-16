@@ -2,10 +2,10 @@
 
 namespace Spark;
 
-use Laravel\Cashier\Invoice;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Cashier\Cashier;
+use Laravel\Cashier\Invoice;
 
 /**
  * @deprecated This class will be removed in a future Spark release.

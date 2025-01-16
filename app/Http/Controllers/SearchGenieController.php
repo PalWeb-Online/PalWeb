@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\Attribute;
 use App\Models\Pattern;
 use App\Models\Term;
 use App\Services\SearchService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SearchGenieController extends Controller

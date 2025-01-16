@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Models\Speaker;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SpeakerController extends Controller

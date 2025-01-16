@@ -2,8 +2,8 @@
 
 namespace Spark\Http\Controllers;
 
-use Spark\Billable;
 use Illuminate\Http\Request;
+use Spark\Billable;
 use Spark\Features;
 use Spark\ValidCountry;
 use Spark\ValidVatNumber;
