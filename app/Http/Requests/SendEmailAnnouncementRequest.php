@@ -14,8 +14,12 @@ class SendEmailAnnouncementRequest extends FormRequest
     public function rules()
     {
         return [
-'subject' => 'required',
-'body'    => 'required',
+'subject' => [
+                'required',
+            ],
+'body'    => [
+                'required',
+            ],
 ];
     }
 }

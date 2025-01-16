@@ -13,6 +13,10 @@ class RequestTermRequest extends FormRequest
      */
     public function rules()
     {
-        return ['translit' => 'required|string|max:255'];
+        return ['translit' => [
+                'required',
+                'string',
+                'max:255',
+            ],];
     }
 }
