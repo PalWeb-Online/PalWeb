@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Providers\AppServiceProvider;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Flasher\Prime\FlasherInterface;
@@ -22,7 +23,7 @@ class EmailVerificationController extends Controller
     public function prompt(Request $request)
     {
         return $request->user()->hasVerifiedEmail()
-            ? redirect()->intended(RouteServiceProvider::HOME)
+            ? redirect()->intended(AppServiceProvider::HOME)
             : view('auth.verify-email');
     }
 
@@ -32,14 +33,14 @@ class EmailVerificationController extends Controller
     public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+            return redirect()->intended(AppServiceProvider::HOME.'?verified=1');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+        return redirect()->intended(AppServiceProvider::HOME.'?verified=1');
     }
 
     /**
@@ -48,7 +49,7 @@ class EmailVerificationController extends Controller
     public function link(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(AppServiceProvider::HOME);
         }
 
         $request->user()->sendEmailVerificationNotification();

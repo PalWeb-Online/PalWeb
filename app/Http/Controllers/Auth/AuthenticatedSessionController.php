@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Providers\AppServiceProvider;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -35,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
             $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]), __('signin.message.head'));
 
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(AppServiceProvider::HOME);
         }
 
         return back()->withErrors([

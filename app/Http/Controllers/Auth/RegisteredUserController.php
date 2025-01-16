@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Providers\AppServiceProvider;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -56,7 +57,7 @@ class RegisteredUserController extends Controller
         $this->flasher->addFlash('info', __('signup.message', ['user' => $user->name]),
             __('signup.message.head'));
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect(AppServiceProvider::HOME);
     }
 
     /**
