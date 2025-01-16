@@ -37,7 +37,7 @@ class TermRepository
             ->select('terms.*')
             ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
             ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
-            ->orderBy('terms.term', 'ASC')
+            ->orderBy('terms.term')
             ->filter($filter)
             ->paginate($perPage)
             ->onEachSide(1);

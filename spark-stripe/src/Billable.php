@@ -84,7 +84,7 @@ trait Billable
      */
     public function localReceipts(): HasMany
     {
-        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderBy('id', 'desc');
+        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderByDesc('id');
     }
 
     /**

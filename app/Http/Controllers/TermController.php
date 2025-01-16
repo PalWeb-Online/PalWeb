@@ -135,7 +135,7 @@ class TermController extends Controller
         }
 
         if (! request()->query()) {
-            $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
+            $latestTerms = Term::with('glosses')->orderByDesc('id')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
 
             if (! $wordOfTheDay) {
