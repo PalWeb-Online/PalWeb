@@ -38,7 +38,7 @@ trait Billable
     public function shouldSyncCustomerDetailsToStripe(): bool
     {
         return config('cashier.secret') &&
-            ! env('CI') &&
+            ! config('settings.ci') &&
             ! app()->runningUnitTests() &&
             $this->wasChanged($this->stripeAttributes());
     }

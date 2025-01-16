@@ -127,8 +127,8 @@ class OAuthController extends Controller
         $response = $client->post('https://discord.com/api/oauth2/token/revoke', [
             'form_params' => [
                 'token' => $token,
-                'client_id' => env('DISCORD_CLIENT_ID'),
-                'client_secret' => env('DISCORD_CLIENT_SECRET'),
+                'client_id' => config('settings.discord_client_id'),
+                'client_secret' => config('settings.discord_client_secret'),
             ],
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
