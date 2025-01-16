@@ -39,7 +39,7 @@ class ProcessAudio extends Command
         if (! $this->confirm('You must only run this command on the production server. Are you sure you would like to continue?')) {
             $this->warn('Aborted.');
 
-            return;
+            return 1;
         }
 
         $speakerName = $this->argument('speaker_name');
@@ -48,7 +48,7 @@ class ProcessAudio extends Command
         if (! Storage::disk('s3')->exists($audioFolder)) {
             $this->error('Directory with audio files does not exist.');
 
-            return;
+            return 1;
         }
 
         $files = Storage::disk('s3')->files($audioFolder);
@@ -56,7 +56,7 @@ class ProcessAudio extends Command
         if (empty($files)) {
             $this->info('No audio files found in the directory.');
 
-            return;
+            return 0;
         }
 
         $this->info('Processing audio files...');

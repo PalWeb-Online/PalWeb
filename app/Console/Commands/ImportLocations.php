@@ -32,7 +32,7 @@ class ImportLocations extends Command
         if (! File::exists($filePath)) {
             $this->error("File not found: $filePath");
 
-            return;
+            return 1;
         }
 
         $jsonData = File::get($filePath);
@@ -41,7 +41,7 @@ class ImportLocations extends Command
         if ($locations === null) {
             $this->error("Invalid JSON format in $filePath");
 
-            return;
+            return 1;
         }
 
         $this->info('Starting import of '.count($locations).' locations...');

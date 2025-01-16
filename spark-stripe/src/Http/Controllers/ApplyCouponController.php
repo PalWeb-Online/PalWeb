@@ -21,7 +21,7 @@ class ApplyCouponController
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function __invoke(Request $request): void
+    public function __invoke(Request $request): null
     {
         $billable = $this->billable();
 

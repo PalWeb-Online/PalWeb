@@ -2,6 +2,7 @@
 
 namespace Spark\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Exceptions\IncompletePayment;
@@ -16,7 +17,7 @@ class UpdateSubscriptionController
     /**
      * Update the plan that the billable is currently subscribed to.
      */
-    public function __invoke(Request $request): void
+    public function __invoke(Request $request): JsonResponse
     {
         $billable = $this->billable();
 
@@ -47,8 +48,8 @@ class UpdateSubscriptionController
 
         try {
             app(UpdatesSubscriptions::class)->update($subscription, $request->plan);
-
             session(['spark.flash.success' => __('Your subscription was successfully updated.')]);
+
         } catch (IncompletePayment $e) {
             return response()->json([
                 'paymentId' => $e->payment->id,

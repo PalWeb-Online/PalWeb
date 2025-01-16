@@ -2,19 +2,22 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class ArabicScript implements Rule
+class ArabicScript implements ValidationRule
 {
-    public function __construct() {}
-
-    public function passes($attribute, $value)
+    /**
+     * Validate the attribute value.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  \Closure $fail
+     * @return void
+     */
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        return preg_match('/^[\p{Arabic}\s]+$/u', $value);
-    }
-
-    public function message()
-    {
-        return 'This field may only contain Arabic-script characters.';
+        if (! preg_match('/^[\p{Arabic}\s]+$/u', $value)) {
+            $fail('This field may only contain Arabic-script characters.');
+        }
     }
 }

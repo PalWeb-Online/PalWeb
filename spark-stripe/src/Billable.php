@@ -220,7 +220,7 @@ trait Billable
     public function onGenericTrial(): bool
     {
         if (! $this->trial_ends_at) {
-            return;
+            return false;
         }
 
         if ($this->hasCast('trial_ends_at')) {
@@ -236,7 +236,7 @@ trait Billable
     public function genericTrialEndsAt(): ?\Carbon\Carbon
     {
         if (! $this->trial_ends_at) {
-            return;
+            return null;
         }
 
         if ($this->hasCast('trial_ends_at')) {

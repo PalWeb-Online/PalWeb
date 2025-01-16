@@ -2,9 +2,9 @@
 
 namespace Spark;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class ValidPlan implements Rule
+class ValidPlan implements ValidationRule
 {
     /**
      * The plan type.
@@ -22,25 +22,22 @@ class ValidPlan implements Rule
     }
 
     /**
-     * Determine if the validation rule passes.
+     * Validate the attribute value.
      *
-     * @param  mixed  $value
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  \Closure $fail
+     * @return void
      */
-    public function passes(string $attribute, $value): bool
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $plan = Spark::plans($this->type)
             ->first(function ($plan) use ($value) {
                 return $plan->id == $value;
             });
 
-        return ! is_null($plan) && $plan->active;
-    }
-
-    /**
-     * Get the validation error message.
-     */
-    public function message(): string
-    {
-        return __('The selected plan is invalid.');
+        if (is_null($plan) || ! $plan->active) {
+            $fail(__('The selected plan is invalid.'));
+        }
     }
 }
