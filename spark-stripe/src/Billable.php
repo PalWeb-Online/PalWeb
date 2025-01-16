@@ -227,7 +227,7 @@ trait Billable
             $this->pm_expiration = sprintf('%02d', $paymentMethod->card->exp_month).'/'.$paymentMethod->card->exp_year;
         } else {
             $this->pm_type = $type = $paymentMethod->type;
-            $this->pm_last_four = optional($paymentMethod)->$type->last4;
+            $this->pm_last_four = $paymentMethod?->$type->last4;
             $this->pm_expiration = null;
         }
 
