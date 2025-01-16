@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use App\Exceptions\AudioFileException;
 use App\Models\Inflection;
 use App\Models\Pronunciation;
@@ -29,7 +30,7 @@ class AudioService
             Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
 
         } catch (\Exception $e) {
-            \Log::error('Failed to upload audio file: '.$e->getMessage());
+            Log::error('Failed to upload audio file: '.$e->getMessage());
             throw $e;
         } finally {
             File::delete($mp3Path);
