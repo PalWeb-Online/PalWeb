@@ -14,7 +14,21 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->redirectGuestsTo(fn () => route('unauth'));
+        $middleware->redirectUsersTo(RouteServiceProvider::HOME);
+
+        $middleware->web([
+            \App\Http\Middleware\SetSiteLocale::class,
+            \App\Http\Middleware\TrackPageViews::class,
+        ]);
+
+        $middleware->throttleApi();
+
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\MustBeAdministrator::class,
+            'pageDescription' => \App\Http\Middleware\PageDescription::class,
+            'pageTitle' => \App\Http\Middleware\PageTitle::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
