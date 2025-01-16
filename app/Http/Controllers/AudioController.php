@@ -74,10 +74,10 @@ class AudioController extends Controller
         ]);
     }
 
-    public function destroy(Audio $audio)
+    public function destroy(Request $request, Audio $audio)
     {
-        if (! auth()->check() || $audio->speaker->user_id !== auth()->id()) {
-            return request()->expectsJson()
+        if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
+            return $request->expectsJson()
                 ? response()->json(['error' => 'Unauthorized.'], 403)
                 : abort(403, 'Unauthorized');
         }
@@ -88,7 +88,7 @@ class AudioController extends Controller
 
             $message = __('deleted', ['thing' => $audio->filename]);
 
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['message' => $message]);
             } else {
                 $this->flasher->addSuccess($message);
@@ -99,7 +99,7 @@ class AudioController extends Controller
         } catch (\Exception $e) {
             $error = 'Unable to delete file from cloud storage.';
 
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['error' => $error, 'details' => $e->getMessage()], 500);
             } else {
                 $this->flasher->addError($error);

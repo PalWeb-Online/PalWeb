@@ -18,11 +18,11 @@ class DeckController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Deck $deck): JsonResponse
+    public function pin(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($deck, $user);
 
@@ -81,7 +81,7 @@ class DeckController extends Controller
     {
         $this->validateRequest($request);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         $deck = $request->deck;
         $deck = array_merge($deck, [
@@ -162,13 +162,13 @@ class DeckController extends Controller
         ]);
     }
 
-    public function destroy(Deck $deck)
+    public function destroy(Request $request, Deck $deck)
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'status' => 'success',
             ]);
@@ -215,11 +215,11 @@ class DeckController extends Controller
         ]);
     }
 
-    public function copy(Deck $deck)
+    public function copy(Request $request, Deck $deck)
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         $newDeck = $deck->replicate(['id', 'private']);
         $newDeck->private = 0;

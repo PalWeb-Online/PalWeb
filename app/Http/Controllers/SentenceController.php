@@ -18,9 +18,9 @@ class SentenceController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Sentence $sentence): JsonResponse
+    public function pin(Request $request, Sentence $sentence): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($sentence, $user);
 

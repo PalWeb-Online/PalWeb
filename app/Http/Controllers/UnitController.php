@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Pages\Units\Unit01\Unit01;
 use App\Pages\Units\Unit02\Unit02;
@@ -28,9 +29,9 @@ class UnitController extends Controller
     /**
      * Renders a list of lessons a student can take. Redirects to subscription portal if not subscribed.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Online Course for Palestinian Arabic with Lessons, Activities & Dialogues');
         View::share('pageDescription',
@@ -43,9 +44,9 @@ class UnitController extends Controller
         });
     }
 
-    public function unit($unit)
+    public function unit(Request $request, $unit)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', "Academy: Unit $unit");
         View::share('pageDescription',
@@ -61,9 +62,9 @@ class UnitController extends Controller
         });
     }
 
-    public function lesson($unit, $lesson)
+    public function lesson(Request $request, $unit, $lesson)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', "Academy: Unit $unit - Lesson $lesson");
         View::share('pageDescription',
@@ -81,9 +82,9 @@ class UnitController extends Controller
         });
     }
 
-    public function showUnit($unit)
+    public function showUnit(Request $request, $unit)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Unit '.substr($unit, 1).': Home');
         View::share('pageDescription',
@@ -98,9 +99,9 @@ class UnitController extends Controller
         });
     }
 
-    public function showLesson($unit, $lesson)
+    public function showLesson(Request $request, $unit, $lesson)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Unit '.substr($unit, 1).': Lesson '.substr($lesson, 1));
         View::share('pageDescription',

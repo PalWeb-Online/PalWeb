@@ -22,7 +22,7 @@ class SetSiteLocale
     public function handle(Request $request, Closure $next): Response
     {
         $lang = 'en';
-        $auth = auth()->user();
+        $auth = $request->user();
         if ($auth) {
             // Log::info("set site locale setting to user " . $auth->name . " " . $auth->language);
             App::setLocale($auth->language);

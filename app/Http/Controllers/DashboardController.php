@@ -13,18 +13,18 @@ class DashboardController
     public function workbench(Request $request): \Illuminate\View\View
     {
         // TODO: Somehow terms are sorted by when they were pinned, but decks & sentences are sorted by the model's id.
-        $decks = Deck::whereHasBookmark(auth()->user())->get();
-        $terms = Term::whereHasBookmark(auth()->user())->get();
-        $sentences = Sentence::whereHasBookmark(auth()->user())->get();
+        $decks = Deck::whereHasBookmark($request->user())->get();
+        $terms = Term::whereHasBookmark($request->user())->get();
+        $sentences = Sentence::whereHasBookmark($request->user())->get();
 
         $decks = Deck::with('author')
             ->select('decks.*')
             ->where(fn ($query) => $query->where('decks.private', false)
-                ->orWhere('decks.user_id', auth()->user()->id)
+                ->orWhere('decks.user_id', $request->user()->id)
             )
             ->join('markable_bookmarks', fn ($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Deck::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();
@@ -32,7 +32,7 @@ class DashboardController
         $terms = Term::select('terms.*')
             ->join('markable_bookmarks', fn ($join) => $join->on('terms.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Term::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();
@@ -40,7 +40,7 @@ class DashboardController
         $sentences = Sentence::select('sentences.*')
             ->join('markable_bookmarks', fn ($join) => $join->on('sentences.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Sentence::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();
@@ -61,12 +61,12 @@ class DashboardController
         ]);
     }
 
-    public function subscription(): \Illuminate\View\View
+    public function subscription(Request $request): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Subscription');
 
         return view('users.dashboard.subscription', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
             'bodyBackground' => 'hero-yellow',
         ]);
     }

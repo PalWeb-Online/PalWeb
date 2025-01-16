@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Badge;
 use App\Models\User;
 use Flasher\Prime\FlasherInterface;
@@ -12,7 +13,7 @@ class UserController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
         if (Gate::denies('interact', $user)) {
             $this->flasher->addFlash('error', __('unauthorized.private.user'), __('unauthorized'));
@@ -22,7 +23,7 @@ class UserController extends Controller
 
         $decks = $user->decks()->with('author')
             ->where(fn ($query) => $query->where('decks.private', false)
-                ->orWhere('decks.user_id', auth()->user()->id)
+                ->orWhere('decks.user_id', $request->user()->id)
             )
             ->get();
 

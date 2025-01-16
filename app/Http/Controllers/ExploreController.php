@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Policies\ExplorePolicy;
 use App\Traits\RedirectsToSubscribe;
@@ -13,9 +14,9 @@ class ExploreController extends Controller
 
     public function __construct(protected ExplorePolicy $can) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Explore Topics in Palestinian Arabic');
         View::share('pageDescription',
@@ -28,9 +29,9 @@ class ExploreController extends Controller
         });
     }
 
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Explore: '.ucwords($slug));
         View::share('pageDescription',

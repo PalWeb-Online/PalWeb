@@ -34,9 +34,9 @@ class TermController extends Controller
         protected TermRepository $termRepository
     ) {}
 
-    public function pin(Term $term): JsonResponse
+    public function pin(Request $request, Term $term): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($term, $user);
 
@@ -87,8 +87,8 @@ class TermController extends Controller
                 }
             });
 
-            if (auth()->check()) {
-                $dialect = auth()->user()->dialect_id;
+            if ($request->user()) {
+                $dialect = $request->user()->dialect_id;
                 $dialects = Dialect::find($dialect)->ancestors->pluck('id')
                     ->merge(Dialect::find($dialect)->descendants->pluck('id'))
                     ->push($dialect);
@@ -135,7 +135,7 @@ class TermController extends Controller
             );
         }
 
-        if (! request()->query()) {
+        if (! $request->query()) {
             $latestTerms = Term::with('glosses')->orderByDesc('id')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
 

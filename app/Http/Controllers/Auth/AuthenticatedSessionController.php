@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            $user = auth()->user();
+            $user = $request->user();
 
             $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]), __('signin.message.head'));
 
@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Auth::guard('web')->logout();
 

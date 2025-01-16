@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
@@ -19,9 +20,9 @@ class TextController extends Controller
     /**
      * Renders index page
      */
-    public function index()
+    public function index(Request $request)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Annotated Transcripts of Videos in Spoken Arabic');
         View::share('pageDescription',
@@ -37,9 +38,9 @@ class TextController extends Controller
     /**
      * Renders a text
      */
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Spoken Arabic Transcripts: '.$slug);
         View::share('pageDescription',

@@ -23,12 +23,12 @@ class UserSettingsController
     /**
      * Renders the dashboard settings page
      */
-    public function edit(): \Illuminate\View\View
+    public function edit(Request $request): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Edit Profile');
 
         return view('users.dashboard.change-profile', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
         ]);
     }
 
@@ -37,7 +37,7 @@ class UserSettingsController
      */
     public function update(UpdateUserSettingRequest $request, FlasherInterface $flasher)
     {
-        $user = auth()->user();
+        $user = $request->user();
 
 
         $user->update([
@@ -53,12 +53,12 @@ class UserSettingsController
 
         $this->flasher->addSuccess(__('settings.updated'));
 
-        return to_route('users.show', auth()->user());
+        return to_route('users.show', $request->user());
     }
 
-    public function togglePrivacy()
+    public function togglePrivacy(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $user->private = ! $user->private;
         $user->private ? $status = 'Private' : $status = 'Public';
@@ -73,12 +73,12 @@ class UserSettingsController
     /**
      * Renders the change password page
      */
-    public function editPassword(): \Illuminate\View\View
+    public function editPassword(Request $request): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Edit Password');
 
         return view('users.dashboard.change-password', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
         ]);
     }
 
@@ -87,7 +87,7 @@ class UserSettingsController
      */
     public function updatePassword(UpdatePasswordUserSettingRequest $request, FlasherInterface $flasher)
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $form = $request->validated();
 
@@ -98,13 +98,13 @@ class UserSettingsController
 
         $this->flasher->addSuccess(__('passwords.updated'));
 
-        return to_route('users.show', auth()->user());
+        return to_route('users.show', $request->user());
     }
 
     /**
      * Renders the change picture page
      */
-    public function editAvatar()
+    public function editAvatar(Request $request)
     {
         $avatars = File::files(public_path('img/avatars'));
         $avatars = array_map(function ($file) {
@@ -114,7 +114,7 @@ class UserSettingsController
         View::share('pageTitle', 'Dashboard: Edit Profile Picture');
 
         return view('users.dashboard.change-avatar', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
             'avatars' => $avatars,
         ]);
     }
@@ -124,13 +124,13 @@ class UserSettingsController
      */
     public function updateAvatar(Request $request, FlasherInterface $flasher)
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $user->avatar = $request['avatar'];
         $user->save();
 
         $flasher->addSuccess(__('settings.updated'));
 
-        return to_route('users.show', auth()->user());
+        return to_route('users.show', $request->user());
     }
 }
