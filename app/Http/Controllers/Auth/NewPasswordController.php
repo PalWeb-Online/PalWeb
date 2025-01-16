@@ -13,9 +13,7 @@ use Illuminate\Validation\Rules;
 
 class NewPasswordController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Display the password reset view.
@@ -63,6 +61,7 @@ class NewPasswordController extends Controller
 
         if ($status == Password::PASSWORD_RESET) {
             $this->flasher->addSuccess($status);
+
             return to_route('signin');
         } else {
             return back()->withInput($request->only('email'))

@@ -6,9 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class LatinScript implements Rule
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function passes($attribute, $value)
     {

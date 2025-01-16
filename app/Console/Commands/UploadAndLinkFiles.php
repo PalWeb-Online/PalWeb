@@ -22,17 +22,16 @@ class UploadAndLinkFiles extends Command
 
     /**
      * Execute the console command.
-     *
      */
     public function handle()
     {
         $forced = $this->option('force');
-        if ($forced){
+        if ($forced) {
             $this->call('file:upload --force');
         } else {
             $this->call('file:upload');
         }
         $this->call('file:link');
-        $this->info("Files uploaded and database entries created");
+        $this->info('Files uploaded and database entries created');
     }
 }

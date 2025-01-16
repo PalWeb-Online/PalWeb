@@ -26,7 +26,7 @@ class SentenceSeeder extends Seeder
                     'gloss_id' => $term->glosses[0]->id,
                     'sent_term' => $term->term,
                     'sent_translit' => $term->translit,
-                    'position' => $index + 1
+                    'position' => $index + 1,
                 ];
             }
 

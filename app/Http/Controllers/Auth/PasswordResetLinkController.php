@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Password;
 
 class PasswordResetLinkController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Display the password reset link request view.
@@ -45,6 +43,7 @@ class PasswordResetLinkController extends Controller
 
         if ($status == Password::RESET_LINK_SENT) {
             $this->flasher->addInfo($status);
+
             return back();
         } else {
             return back()->withInput($request->only('email'))

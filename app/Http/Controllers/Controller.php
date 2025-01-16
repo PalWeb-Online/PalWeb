@@ -29,7 +29,7 @@ class Controller extends BaseController
      * exactly the same end result as the laravel auth system except this way we can see exactly how and why it
      * works.
      *
-     * @param  bool  $action if false we throw an exception
+     * @param  bool  $action  if false we throw an exception
      *
      * @throws UnauthorizedAccessException
      */
@@ -37,7 +37,7 @@ class Controller extends BaseController
     {
         if (! $action) {
             // Fire off a UserDeniedAccess event. The details will be filled in by the implementation
-            event(new UserDeniedAccess());
+            event(new UserDeniedAccess);
 
             throw UnauthorizedAccessException::forClass(static::class);
         }

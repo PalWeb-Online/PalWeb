@@ -18,14 +18,12 @@ class UnitController extends Controller
     use RedirectsToSubscribe;
 
     protected array $units = [
-        "u1" => Unit01::class,
-        "u2" => Unit02::class,
-        "u3" => Unit03::class,
+        'u1' => Unit01::class,
+        'u2' => Unit02::class,
+        'u3' => Unit03::class,
     ];
 
-    public function __construct(protected LessonPolicy $can)
-    {
-    }
+    public function __construct(protected LessonPolicy $can) {}
 
     /**
      * Renders a list of lessons a student can take. Redirects to subscription portal if not subscribed.
@@ -40,6 +38,7 @@ class UnitController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth) {
             $this->failIfFalse($this->can->viewLessonIndex($auth));
+
             return view('lessons.index');
         });
     }
@@ -54,7 +53,8 @@ class UnitController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $unit) {
             $this->failIfFalse($this->can->viewLesson($auth));
-            return view("lessons.unit", [
+
+            return view('lessons.unit', [
                 'unit' => $unit,
                 'terms' => Term::all(),
             ]);
@@ -71,11 +71,12 @@ class UnitController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $unit, $lesson) {
             $this->failIfFalse($this->can->viewLesson($auth));
-            return view("lessons.lesson", [
+
+            return view('lessons.lesson', [
                 'unit' => $unit,
                 'lesson' => $lesson,
                 'terms' => Term::all(),
-                'bodyBackground' => 'lesson-layout'
+                'bodyBackground' => 'lesson-layout',
             ]);
         });
     }
@@ -91,7 +92,7 @@ class UnitController extends Controller
         return $this->redirectToSubscribeOnFail(function () use ($auth, $unit) {
             $this->failIfFalse($this->can->viewLesson($auth));
 
-            $unit = new $this->units[$unit]();
+            $unit = new $this->units[$unit];
 
             return $unit->render();
         });
@@ -108,7 +109,7 @@ class UnitController extends Controller
         return $this->redirectToSubscribeOnFail(function () use ($auth, $unit, $lesson) {
             $this->failIfFalse($this->can->viewLesson($auth));
 
-            $unit = new $this->units[$unit]();
+            $unit = new $this->units[$unit];
 
             return $unit->getLesson($lesson);
         });

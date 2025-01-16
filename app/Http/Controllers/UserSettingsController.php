@@ -16,9 +16,7 @@ use Illuminate\Validation\Rules;
 
 class UserSettingsController
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Renders the dashboard settings page
@@ -40,12 +38,12 @@ class UserSettingsController
         $user = auth()->user();
 
         $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript()],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript()],
+            'name' => ['required', 'string', 'max:50', new LatinScript],
+            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
             'username' => [
                 'required', 'string', 'max:50',
                 'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                Rule::unique('users')->ignore($user->id)
+                Rule::unique('users')->ignore($user->id),
             ],
             'home' => ['nullable', 'string', 'max:100'],
             'bio' => ['nullable', 'string', 'max:500'],
@@ -63,6 +61,7 @@ class UserSettingsController
         event(new ProfileChanged($user));
 
         $this->flasher->addSuccess(__('settings.updated'));
+
         return to_route('users.show', auth()->user());
     }
 
@@ -70,13 +69,13 @@ class UserSettingsController
     {
         $user = auth()->user();
 
-        $user->private = !$user->private;
+        $user->private = ! $user->private;
         $user->private ? $status = 'Private' : $status = 'Public';
         $user->save();
 
         return [
             'isPrivate' => $user->private,
-            'message' => __('privacy.updated', ['status' => $status])
+            'message' => __('privacy.updated', ['status' => $status]),
         ];
     }
 
@@ -109,6 +108,7 @@ class UserSettingsController
         event(new PasswordChanged($user));
 
         $this->flasher->addSuccess(__('passwords.updated'));
+
         return to_route('users.show', auth()->user());
     }
 
@@ -126,7 +126,7 @@ class UserSettingsController
 
         return view('users.dashboard.change-avatar', [
             'user' => auth()->user(),
-            'avatars' => $avatars
+            'avatars' => $avatars,
         ]);
     }
 
@@ -141,6 +141,7 @@ class UserSettingsController
         $user->save();
 
         $flasher->addSuccess(__('settings.updated'));
+
         return to_route('users.show', auth()->user());
     }
 }

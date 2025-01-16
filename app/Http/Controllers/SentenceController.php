@@ -15,9 +15,7 @@ use Maize\Markable\Models\Bookmark;
 
 class SentenceController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function pin(Sentence $sentence)
     {
@@ -31,7 +29,7 @@ class SentenceController extends Controller
             'isPinned' => $sentence->isPinned(),
             'message' => $sentence->isPinned()
                 ? __('pin.added', ['thing' => $sentence->sentence])
-                : __('pin.removed', ['thing' => $sentence->sentence])
+                : __('pin.removed', ['thing' => $sentence->sentence]),
         ]);
     }
 
@@ -83,7 +81,7 @@ class SentenceController extends Controller
             'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
         return view('sentences.show', [
-            'sentence' => $sentence
+            'sentence' => $sentence,
         ]);
     }
 
@@ -98,7 +96,7 @@ class SentenceController extends Controller
         return [
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
-            'flash' => __('created', ['thing' => $sentence->sentence])
+            'flash' => __('created', ['thing' => $sentence->sentence]),
         ];
     }
 
@@ -113,6 +111,7 @@ class SentenceController extends Controller
     public function create()
     {
         View::share('pageTitle', 'Create Sentence');
+
         return view('sentences.create');
     }
 
@@ -152,16 +151,15 @@ class SentenceController extends Controller
         }
     }
 
-    public
-    function edit(
+    public function edit(
         Sentence $sentence
     ) {
         View::share('pageTitle', 'Edit Sentence');
+
         return view('sentences.edit', compact('sentence'));
     }
 
-    public
-    function update(
+    public function update(
         Sentence $sentence,
         Request $request
     ) {
@@ -174,22 +172,21 @@ class SentenceController extends Controller
         return [
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
-            'flash' => __('updated', ['thing' => $sentence->sentence])
+            'flash' => __('updated', ['thing' => $sentence->sentence]),
         ];
     }
 
-    public
-    function destroy(
+    public function destroy(
         Sentence $sentence
     ) {
         $sentence->delete();
 
         $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
+
         return to_route('sentences.index');
     }
 
-    public
-    function todo()
+    public function todo()
     {
         $terms = [];
 
@@ -207,6 +204,7 @@ class SentenceController extends Controller
         });
 
         View::share('pageTitle', 'Phrasebook: to-Do');
+
         return view('sentences.todo', [
             'terms' => $terms,
         ]);
@@ -242,7 +240,7 @@ class SentenceController extends Controller
             } else {
                 $terms[] = [
                     'term' => [
-                        'glosses' => []
+                        'glosses' => [],
                     ],
                     'term_id' => null,
                     'gloss_id' => null,
@@ -255,7 +253,7 @@ class SentenceController extends Controller
 
         return response()->json([
             'sentence' => $sentence,
-            'terms' => $terms
+            'terms' => $terms,
         ]);
     }
 }

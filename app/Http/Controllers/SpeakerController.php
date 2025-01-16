@@ -25,7 +25,7 @@ class SpeakerController extends Controller
             'speaker' => $speaker,
             'name' => $user->name,
             'avatar' => $user->avatar,
-            'exists' => Speaker::where('user_id', $user->id)->exists()
+            'exists' => Speaker::where('user_id', $user->id)->exists(),
         ]);
     }
 
@@ -47,7 +47,7 @@ class SpeakerController extends Controller
                 'dialect_id' => $request->input('dialect_id'),
                 'location_id' => $request->input('location_id'),
                 'fluency' => $request->input('fluency'),
-                'gender' => $request->input('gender')
+                'gender' => $request->input('gender'),
             ]
         );
 

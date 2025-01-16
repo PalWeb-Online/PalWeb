@@ -13,7 +13,7 @@ class DeckBuilderController extends Controller
         View::share('pageTitle', 'Deck Builder');
 
         return view('decks.builder', [
-            'layout' => 'app'
+            'layout' => 'app',
         ]);
     }
 
@@ -54,7 +54,7 @@ class DeckBuilderController extends Controller
                     'private' => $deck->private,
                     'authorName' => $user->name,
                     'authorAvatar' => asset('img/avatars/'.$user->avatar),
-                    'isPinned' => $deck->isPinned()
+                    'isPinned' => $deck->isPinned(),
                 ];
             }
 
@@ -95,7 +95,7 @@ class DeckBuilderController extends Controller
         }
 
         return response()->json([
-            'terms' => $terms
+            'terms' => $terms,
         ]);
     }
 }

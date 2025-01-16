@@ -17,8 +17,7 @@ class AfterEmailVerified
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.

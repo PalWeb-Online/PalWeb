@@ -23,7 +23,7 @@ class TermRepositoryTest extends TestCase
 
     protected function getItem()
     {
-        return new TermRepository();
+        return new TermRepository;
     }
 
     public function test_getTermForCategoryAndSlug_with_all_possible_categories()

@@ -15,8 +15,7 @@ class AwardProfileChangedBadge
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
@@ -28,7 +27,7 @@ class AwardProfileChangedBadge
     {
         $badge = Badge::where('name', 'We\'re Happy to Have You')->first();
 
-        if (!$event->user->badges->contains($badge->id)) {
+        if (! $event->user->badges->contains($badge->id)) {
             $event->user->badges()->attach($badge);
             $this->flasher->addInfo(__('badges.get', ['badge' => $badge->name]));
         }

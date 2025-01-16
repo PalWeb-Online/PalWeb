@@ -15,9 +15,7 @@ use Maize\Markable\Models\Bookmark;
 
 class DeckController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function pin(Deck $deck)
     {
@@ -34,7 +32,7 @@ class DeckController extends Controller
             'isPinned' => $deck->isPinned(),
             'message' => $deck->isPinned()
                 ? __('pin.added', ['thing' => $deck->name])
-                : __('pin.removed', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
@@ -118,13 +116,13 @@ class DeckController extends Controller
                     $term->id => [
                         'gloss_id' => $termData['gloss_id'],
                         'position' => $termData['position'],
-                    ]
+                    ],
                 ]);
             }
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->id, array_column($terms, 'id'))) {
+            if (! in_array($term->id, array_column($terms, 'id'))) {
                 $deck->terms()->detach($term->id);
             }
         }
@@ -133,7 +131,6 @@ class DeckController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Deck  $deck
      * @return \Illuminate\Http\Response
      */
     public function show(Deck $deck)
@@ -144,10 +141,11 @@ class DeckController extends Controller
             'author',
             'terms' => function ($query) {
                 $query->orderBy('deck_term.id');
-            }
+            },
         ]);
 
         View::share('pageTitle', 'Deck: '.$deck->name);
+
         return view('decks.show', ['deck' => $deck]);
     }
 
@@ -173,11 +171,12 @@ class DeckController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
         } else {
             $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
+
             return to_route('decks.index');
         }
 
@@ -187,13 +186,13 @@ class DeckController extends Controller
     {
         $this->authorize('modify', $deck);
 
-        $deck->private = !$deck->private;
+        $deck->private = ! $deck->private;
         $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
         return [
             'isPrivate' => $deck->private,
-            'message' => __('privacy.updated', ['status' => $status])
+            'message' => __('privacy.updated', ['status' => $status]),
         ];
     }
 
@@ -201,7 +200,7 @@ class DeckController extends Controller
     {
         $this->authorize('modify', $deck);
 
-        if (!$deck->terms->contains($term->id)) {
+        if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
 
@@ -210,10 +209,10 @@ class DeckController extends Controller
         }
 
         return response()->json([
-            'isPresent' => !$deck->terms->contains($term->id),
-            'message' => !$deck->terms->contains($term->id)
+            'isPresent' => ! $deck->terms->contains($term->id),
+            'message' => ! $deck->terms->contains($term->id)
                 ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
-                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name])
+                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]),
         ]);
     }
 
@@ -228,7 +227,7 @@ class DeckController extends Controller
         $newDeck->user_id = $user->id;
         $newDeck->description = "My copy of {$deck->author->name} ({$deck->author->username})'s {$deck->name} Deck.";
 
-        $newDeck->name .= " (Copy)";
+        $newDeck->name .= ' (Copy)';
         $newDeck->save();
 
         Bookmark::add($deck, $user);
@@ -240,6 +239,7 @@ class DeckController extends Controller
         }
 
         $this->flasher->addSuccess(__('deck.copied', ['deck' => $deck->name]));
+
         return to_route('decks.show', $newDeck->id);
     }
 
@@ -254,7 +254,7 @@ class DeckController extends Controller
 
             $data[] = [
                 $term->term.' ('.$term->translit.')',
-                $glosses
+                $glosses,
             ];
         }
 

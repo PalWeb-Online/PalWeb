@@ -18,7 +18,7 @@ class AfterSubscriptionCancelledTest extends TestCase
 
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($user->hasRole('student'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCancelled($user, $subscription));
 
         $user->refresh();
@@ -31,7 +31,7 @@ class AfterSubscriptionCancelledTest extends TestCase
 
         $user = User::factory()->create();
         $this->assertFalse($user->hasRole('student'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCancelled($user, $subscription));
 
         $user->refresh();
@@ -44,7 +44,7 @@ class AfterSubscriptionCancelledTest extends TestCase
 
         $user = User::factory()->create();
         $this->assertFalse($user->hasRole('student'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCancelled($user, $subscription));
 
         $user->refresh();

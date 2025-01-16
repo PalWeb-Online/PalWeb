@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Displays a view that prompts the user to verify their email.
@@ -59,6 +57,7 @@ class EmailVerificationController extends Controller
         $request->user()->sendEmailVerificationNotification();
 
         $this->flasher->addInfo(__('verification.sent'));
+
         return back();
     }
 }

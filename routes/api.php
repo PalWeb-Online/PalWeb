@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AudioController;
 use App\Http\Controllers\DiscordController;
 use App\Http\Controllers\RecordWizardController;
 use Illuminate\Http\Request;

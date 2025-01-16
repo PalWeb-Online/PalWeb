@@ -9,7 +9,9 @@ use App\Repositories\TermRepository;
 class SearchService
 {
     protected $termRepository;
+
     protected $sentenceRepository;
+
     protected $deckRepository;
 
     public function __construct(

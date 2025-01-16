@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('/', function () {
     return view('index', [
-        'bodyBackground' => 'front-page'
+        'bodyBackground' => 'front-page',
     ]);
 })->middleware('pageTitle:Home')->name('homepage');
 
@@ -48,14 +48,14 @@ Route::get('/', function () {
  */
 Route::get('/unauth', function () {
     return view('unauth', [
-        'bodyBackground' => 'hero-yellow'
+        'bodyBackground' => 'hero-yellow',
     ]);
 })->middleware('pageTitle:Access Denied')->name('unauth');
 
 /**
  * Sets the application language for this user.
  */
-Route::post("/lang/{lang}", [LanguageController::class, 'change'])->name("language.change");
+Route::post('/lang/{lang}', [LanguageController::class, 'change'])->name('language.change');
 
 Route::prefix('/search')->controller(SearchGenieController::class)->group(function () {
     Route::post('/', 'search');
@@ -69,7 +69,7 @@ Route::prefix('/email')->middleware('auth')->group(function () {
     Route::controller(EmailVerificationController::class)->group(function () {
         Route::get('/verification', 'prompt')->name('verification.notice');
         Route::get('/verification/{id}/{hash}', 'verify')->middleware([
-            'signed', 'throttle:6,1'
+            'signed', 'throttle:6,1',
         ])->name('verification.verify');
         Route::post('/verification/link', 'link')->middleware('throttle:6,1')->name('verification.send');
     });

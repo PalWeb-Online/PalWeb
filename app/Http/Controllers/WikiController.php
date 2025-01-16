@@ -16,7 +16,7 @@ class WikiController
         return view('wiki.show', [
             'page' => 'about',
             'terms' => Term::all(),
-            'bodyBackground' => 'purple-pastel'
+            'bodyBackground' => 'purple-pastel',
         ]);
     }
 
@@ -29,7 +29,7 @@ class WikiController
         return view('wiki.show', [
             'page' => $slug,
             'terms' => Term::all(),
-            'bodyBackground' => 'purple-pastel'
+            'bodyBackground' => 'purple-pastel',
         ]);
     }
 }

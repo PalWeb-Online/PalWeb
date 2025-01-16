@@ -18,7 +18,7 @@ class AfterSubscriptionCreatedTest extends TestCase
 
         $user = User::factory()->create();
         $this->assertFalse($user->hasRole('student'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCreated($user, $subscription));
 
         $user->refresh();
@@ -32,7 +32,7 @@ class AfterSubscriptionCreatedTest extends TestCase
         // Should just do nothing basically
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($user->hasRole('student'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCreated($user, $subscription));
 
         $user->refresh();
@@ -45,7 +45,7 @@ class AfterSubscriptionCreatedTest extends TestCase
 
         $user = User::factory()->create()->grantAdminRole();
         $this->assertTrue($user->hasRole('admin'));
-        $subscription = new Subscription();
+        $subscription = new Subscription;
         event(new SubscriptionCreated($user, $subscription));
 
         $user->refresh();

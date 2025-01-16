@@ -30,8 +30,7 @@ class TermController extends Controller
     public function __construct(
         protected FlasherInterface $flasher,
         protected TermRepository $termRepository
-    ) {
-    }
+    ) {}
 
     public function pin(Term $term)
     {
@@ -45,7 +44,7 @@ class TermController extends Controller
             'isPinned' => $term->isPinned(),
             'message' => $term->isPinned()
                 ? __('pin.added', ['thing' => $term->term])
-                : __('pin.removed', ['thing' => $term->term])
+                : __('pin.removed', ['thing' => $term->term]),
         ]);
     }
 
@@ -55,7 +54,7 @@ class TermController extends Controller
         $terms[] = $term;
 
         return view('terms.show', [
-            'terms' => $terms
+            'terms' => $terms,
         ]);
     }
 
@@ -81,7 +80,7 @@ class TermController extends Controller
             $term->pronunciations->each(function ($pronunciation) use ($allAudios) {
                 $pronunciation->audio_count = $pronunciation->audios->count();
 
-                if (!$allAudios) {
+                if (! $allAudios) {
                     $pronunciation->audios = $pronunciation->audios->take(1);
                 }
             });
@@ -134,11 +133,11 @@ class TermController extends Controller
             );
         }
 
-        if (!request()->query()) {
+        if (! request()->query()) {
             $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
 
-            if (!$wordOfTheDay) {
+            if (! $wordOfTheDay) {
                 $wordOfTheDay = Term::whereNotNull('image')->inRandomOrder()->first();
             }
         }
@@ -169,9 +168,9 @@ class TermController extends Controller
             'glosses' => function ($query) {
                 $query->with([
                     'attributes',
-                    'relatives'
+                    'relatives',
                 ]);
-            }
+            },
         ])->findOrFail($id);
 
         return [
@@ -247,9 +246,10 @@ class TermController extends Controller
     public function random()
     {
         $term = Term::inRandomOrder()->first();
-        if (!$term) {
+        if (! $term) {
             return to_route('terms.index');
         }
+
         return to_route('terms.show', $term);
     }
 
@@ -278,7 +278,7 @@ class TermController extends Controller
 
             $term = Term::create($termData);
 
-            $attributes = array_map(fn($item) => $item['attribute'], $request->term['attributes']);
+            $attributes = array_map(fn ($item) => $item['attribute'], $request->term['attributes']);
             foreach ($attributes as $attribute) {
                 Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
             }
@@ -303,7 +303,7 @@ class TermController extends Controller
                 $requestGloss = array_merge($requestGloss, ['term_id' => $term->id]);
                 $gloss = Gloss::create($requestGloss);
 
-                $glossAttributes = array_map(fn($item) => $item['attribute'], $requestGloss['attributes']);
+                $glossAttributes = array_map(fn ($item) => $item['attribute'], $requestGloss['attributes']);
                 foreach ($glossAttributes as $attribute) {
                     Attribute::firstWhere('attribute', $attribute)->glosses()->attach($gloss);
                 }
@@ -318,27 +318,27 @@ class TermController extends Controller
             'status' => 'success',
             'term' => $term,
             'redirect' => route('terms.show', $term),
-            'flash' => __('created', ['thing' => $term->term])
+            'flash' => __('created', ['thing' => $term->term]),
         ];
     }
 
     private function validateRequest($request): void
     {
         $request->validate([
-            'term.term' => ['required', new ArabicScript()],
-            'root' => ['nullable', 'min:3', 'max:4', new ArabicScript()],
-            'inflections.*.inflection' => ['required', new ArabicScript()],
-            'inflections.*.translit' => ['required', new LatinScript()],
-            'spellings.*.spelling' => ['required', new ArabicScript()],
-            'variants.*.slug' => ['required', new LatinScript()],
-            'references.*.slug' => ['required', new LatinScript()],
-            'components.*.slug' => ['required', new LatinScript()],
-            'descendants.*.slug' => ['required', new LatinScript()],
-            'glosses.*.relatives.*.slug' => ['required', new LatinScript()],
+            'term.term' => ['required', new ArabicScript],
+            'root' => ['nullable', 'min:3', 'max:4', new ArabicScript],
+            'inflections.*.inflection' => ['required', new ArabicScript],
+            'inflections.*.translit' => ['required', new LatinScript],
+            'spellings.*.spelling' => ['required', new ArabicScript],
+            'variants.*.slug' => ['required', new LatinScript],
+            'references.*.slug' => ['required', new LatinScript],
+            'components.*.slug' => ['required', new LatinScript],
+            'descendants.*.slug' => ['required', new LatinScript],
+            'glosses.*.relatives.*.slug' => ['required', new LatinScript],
         ]);
     }
 
-    public function handleSlug($category, $translit, Term $term = null)
+    public function handleSlug($category, $translit, ?Term $term = null)
     {
         $slug = $category.'-'.$translit;
 
@@ -387,7 +387,7 @@ class TermController extends Controller
             $term->update($termData);
             $term->refresh();
 
-            $requestAttributes = array_map(fn($item) => $item['attribute'], $request->term['attributes']);
+            $requestAttributes = array_map(fn ($item) => $item['attribute'], $request->term['attributes']);
             foreach ($requestAttributes as $attribute) {
                 Attribute::firstWhere('attribute', $attribute)->terms()->syncWithoutDetaching($term->id);
             }
@@ -433,7 +433,7 @@ class TermController extends Controller
                     $gloss = Gloss::create($requestGloss);
                 }
 
-                $requestGlossAttributes = array_map(fn($item) => $item['attribute'], $requestGloss['attributes']);
+                $requestGlossAttributes = array_map(fn ($item) => $item['attribute'], $requestGloss['attributes']);
                 foreach ($requestGlossAttributes as $attribute) {
                     Attribute::firstWhere('attribute', $attribute)->glosses()->syncWithoutDetaching($gloss->id);
                 }
@@ -448,7 +448,7 @@ class TermController extends Controller
             }
 
             foreach ($term->glosses as $gloss) {
-                !in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
+                ! in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
             }
 
             Root::doesntHave('terms')->delete();
@@ -460,7 +460,7 @@ class TermController extends Controller
             'status' => 'success',
             'term' => $term,
             'redirect' => route('terms.show', $term),
-            'flash' => __('updated', ['thing' => $term->term])
+            'flash' => __('updated', ['thing' => $term->term]),
         ];
     }
 
@@ -485,8 +485,7 @@ class TermController extends Controller
         }
     }
 
-    private
-    function handleRelatives(
+    private function handleRelatives(
         object $origin,
         array $requestItems
     ) {
@@ -499,7 +498,7 @@ class TermController extends Controller
             if ($term) {
                 $requestTerms[] = $term->slug;
 
-                if (!in_array($term->slug, $attachedTerms)) {
+                if (! in_array($term->slug, $attachedTerms)) {
                     $origin->relatives()->attach($term, ['type' => $item['relation']]);
 
                     switch ($item['relation']) {
@@ -537,25 +536,24 @@ class TermController extends Controller
     /**
      * Loads the Term Creator
      */
-    public
-    function create()
+    public function create()
     {
         View::share('pageTitle', 'Create Term');
+
         return view('terms.create');
     }
 
-    private
-    function handleDependents(
+    private function handleDependents(
         object $term,
         array $requestDependents,
         string $dependentType,
-        Collection $existingDependents = null,
+        ?Collection $existingDependents = null,
         string $keyName = ''
     ) {
         $requestItems = [];
         foreach ($requestDependents as $index => $dependent) {
 
-            if ($existingDependents && !$existingDependents->isEmpty()) {
+            if ($existingDependents && ! $existingDependents->isEmpty()) {
                 unset($dependent['id']);
                 $requestItems[] = $dependent[$keyName];
 
@@ -573,7 +571,7 @@ class TermController extends Controller
 
         $existingDependents = $existingDependents ?? collect([]);
         foreach ($existingDependents as $dependent) {
-            if (!in_array($dependent->$keyName, $requestItems) && $keyName != '') {
+            if (! in_array($dependent->$keyName, $requestItems) && $keyName != '') {
                 $dependent->delete();
             }
         }
@@ -585,16 +583,16 @@ class TermController extends Controller
     public function edit(Term $term)
     {
         View::share('pageTitle', 'Edit Term');
+
         return view('terms.edit', [
-            'term' => $term
+            'term' => $term,
         ]);
     }
 
     /**
      * Deletes a Term
      */
-    public
-    function destroy(
+    public function destroy(
         Term $term
     ) {
         $category = $term->category;
@@ -617,11 +615,11 @@ class TermController extends Controller
         }
 
         $this->flasher->addSuccess(__('deleted', ['thing' => $term->term]));
+
         return to_route('terms.index');
     }
 
-    public
-    function request(
+    public function request(
         Request $request
     ) {
         $request->validate([
@@ -630,10 +628,11 @@ class TermController extends Controller
 
         MissingTerm::create([
             'translit' => $request['translit'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ]);
 
         $this->flasher->addSuccess(__('terms.requested'));
+
         return to_route('terms.index');
     }
 
@@ -648,6 +647,7 @@ class TermController extends Controller
         $missingInflections = collect($missingInflections);
 
         View::share('pageTitle', 'Dictionary: to-Do');
+
         return view('terms.todo', [
             'fromSentences' => DB::table('sentence_term')->whereNull('term_id')->get(),
             'missingTerms' => MissingTerm::all(),

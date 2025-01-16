@@ -15,11 +15,9 @@ use Illuminate\Support\Facades\Storage;
 class AudioService
 {
     public function __construct(
-        protected AudioDirectoryRepository  $audioDirectory,
+        protected AudioDirectoryRepository $audioDirectory,
         protected UploadAudioFileRepository $audioUploader,
-    )
-    {
-    }
+    ) {}
 
     public function uploadAudio(string $wavPath, string $filename): void
     {
@@ -31,9 +29,8 @@ class AudioService
             Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
 
         } catch (\Exception $e) {
-            \Log::error("Failed to upload audio file: " . $e->getMessage());
+            \Log::error('Failed to upload audio file: '.$e->getMessage());
             throw $e;
-
         } finally {
             File::delete($mp3Path);
         }
@@ -41,28 +38,28 @@ class AudioService
 
     protected function convertToMp3(string $wavPath, string $mp3Path): void
     {
-        if (!file_exists($wavPath)) {
+        if (! file_exists($wavPath)) {
             throw new \Exception("Source file not found: {$wavPath}");
         }
 
-        $command = "ffmpeg -loglevel panic -i " . escapeshellarg($wavPath) . " -b:a 128k " . escapeshellarg($mp3Path);
+        $command = 'ffmpeg -loglevel panic -i '.escapeshellarg($wavPath).' -b:a 128k '.escapeshellarg($mp3Path);
         $output = [];
         $returnVar = null;
 
         exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: " . implode("\n", $output));
+            throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: ".implode("\n", $output));
         }
     }
 
     public function renameAudio(string $currentFilename, string $newFilename): void
     {
-        $currentPath = 'audios/' . $currentFilename;
-        $newPath = 'audios/' . $newFilename;
+        $currentPath = 'audios/'.$currentFilename;
+        $newPath = 'audios/'.$newFilename;
 
         try {
-            if (!Storage::disk('s3')->exists($currentPath)) {
+            if (! Storage::disk('s3')->exists($currentPath)) {
                 throw new \Exception("File not found: {$currentPath}");
             }
 
@@ -70,23 +67,23 @@ class AudioService
             Storage::disk('s3')->delete($currentPath);
 
         } catch (\Exception $e) {
-            throw new \Exception("Failed to rename file from {$currentFilename} to {$newFilename}: " . $e->getMessage(), 0, $e);
+            throw new \Exception("Failed to rename file from {$currentFilename} to {$newFilename}: ".$e->getMessage(), 0, $e);
         }
     }
 
     public function deleteAudio(string $filename): void
     {
-        $filePath = 'audios/' . $filename;
+        $filePath = 'audios/'.$filename;
 
         try {
-            if (!Storage::disk('s3')->exists($filePath)) {
+            if (! Storage::disk('s3')->exists($filePath)) {
                 throw new \Exception("File not found: {$filePath}");
             }
 
             Storage::disk('s3')->delete($filePath);
 
         } catch (\Exception $e) {
-            throw new \Exception("Failed to delete file: {$filePath}. Error: " . $e->getMessage(), 0, $e);
+            throw new \Exception("Failed to delete file: {$filePath}. Error: ".$e->getMessage(), 0, $e);
         }
     }
 
@@ -104,11 +101,11 @@ class AudioService
         return [$sentences, $inflections, $pronunciations];
     }
 
-
     /**
      * Creates file model database entries for all fileable models.
      *
      * @return array the files added to the database and linked to models
+     *
      * @throws AudioFileException
      */
     public function addAudioFilesDatabase(): array
@@ -119,11 +116,11 @@ class AudioService
         foreach ($fileables as $fileable) {
             foreach ($fileable as $model) {
                 // fileable models go by audified translit
-                $mp3Name = $model->audify() . '.mp3';
+                $mp3Name = $model->audify().'.mp3';
 
                 $existsInDatabase = $this->audioDirectory->fileExistsInDatabase($mp3Name);
 
-                if (!$existsInDatabase) {
+                if (! $existsInDatabase) {
                     $this->audioDirectory->addAudioFile($model, $mp3Name);
                     $filesAddedToDatabase[] = $mp3Name;
                 }
@@ -133,13 +130,11 @@ class AudioService
         return $filesAddedToDatabase;
     }
 
-
     /**
      * Uploads all given audio files to s3 bucket.
      *
-     * @param array $files the array of files to be uploaded
-     * @param bool $forced forced mode will replace old files if a new file of the same name is found
-     * @return void
+     * @param  array  $files  the array of files to be uploaded
+     * @param  bool  $forced  forced mode will replace old files if a new file of the same name is found
      */
     public function uploadAudioFilesS3(array $files, bool $forced, Command $command): void
     {
@@ -156,9 +151,8 @@ class AudioService
     /**
      * Uploads a given file to the s3 bucket.
      *
-     * @param string $file the path to the file to upload
-     * @param bool $forced if true replaces file if duplicate is found
-     * @return void
+     * @param  string  $file  the path to the file to upload
+     * @param  bool  $forced  if true replaces file if duplicate is found
      */
     public function uploadAudioFileS3(string $file, bool $forced, Command $command): void
     {
@@ -169,14 +163,14 @@ class AudioService
 
         // get the raw file name without its extension and create a mp3 format name
         $fileTranslit = $originalName[0];
-        $mp3Name = $fileTranslit . '.mp3';
+        $mp3Name = $fileTranslit.'.mp3';
 
         $originalName = implode('.', $originalName);
 
         // upload the file to the s3 database if it's not already been uploaded
         $isUploaded = $this->audioUploader->audioFileIsUploaded($mp3Name);
 
-        if (!$isUploaded || $forced) {
+        if (! $isUploaded || $forced) {
             $this->audioUploader->uploadAudioFile($originalName, $mp3Name);
             $command->info("NEW $fileTranslit");
         } else {

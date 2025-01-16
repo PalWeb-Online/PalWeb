@@ -55,6 +55,6 @@ class TextPolicyTest extends TestCase
 
     protected function getItem()
     {
-        return new TextPolicy();
+        return new TextPolicy;
     }
 }

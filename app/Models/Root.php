@@ -39,6 +39,7 @@ class Root extends Model
         'ي',
         'ء',
     ];
+
     const translit = [
         'b',
         't',
@@ -69,6 +70,7 @@ class Root extends Model
         'y',
         'ʔ',
     ];
+
     const translitOverrides = [
         '1' => [],
         '4' => [],
@@ -120,7 +122,7 @@ class Root extends Model
         return $this->hasMany(Term::class);
     }
 
-    public function generateRoot(Term $term = null): array
+    public function generateRoot(?Term $term = null): array
     {
         $arabic = mb_str_split($this->root);
         $translit = str_replace(self::arabic, self::translit, $arabic);
@@ -135,7 +137,7 @@ class Root extends Model
 
                 $translits[] = [
                     'dialect' => $dialect->name,
-                    'translit' => $dialectTranslit
+                    'translit' => $dialectTranslit,
                 ];
             }
 

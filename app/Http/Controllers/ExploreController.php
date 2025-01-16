@@ -11,9 +11,7 @@ class ExploreController extends Controller
 {
     use RedirectsToSubscribe;
 
-    public function __construct(protected ExplorePolicy $can)
-    {
-    }
+    public function __construct(protected ExplorePolicy $can) {}
 
     public function index()
     {
@@ -25,6 +23,7 @@ class ExploreController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth) {
             $this->failIfFalse($this->can->viewIndex($auth));
+
             return view('explore.index');
         });
     }
@@ -39,7 +38,8 @@ class ExploreController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $slug) {
             $this->failIfFalse($this->can->viewExplore($auth));
-            return view("explore.show", [
+
+            return view('explore.show', [
                 'page' => $slug,
                 'terms' => Term::all(),
             ]);

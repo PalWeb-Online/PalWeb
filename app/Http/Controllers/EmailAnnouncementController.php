@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\View;
 
 class EmailAnnouncementController extends Controller
 {
-
     public function compose()
     {
         View::share('pageTitle', 'Compose Email');
+
         return view('users.dashboard.email-compose');
     }
 

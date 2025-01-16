@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
         DB::table('model_has_roles')->insert([
             'role_id' => '1',
             'model_type' => 'App\Models\User',
-            'model_id' => '1'
+            'model_id' => '1',
         ]);
 
         // Create the various permissions the system needs

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     public static function getDefaultStoragePath(): string
     {

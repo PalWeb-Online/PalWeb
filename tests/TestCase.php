@@ -25,7 +25,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Assets that the number of items in the collection is equal to the provided number
      *
-     * @param $amount collection should have this many items
+     * @param  $amount  collection should have this many items
      * @return void
      */
     public function assertCollectionCount(int $amount, $collection)
@@ -66,8 +66,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * Assertion to check if the given item is of class $class
      *
-     * @param  string  $class the class item should be
-     * @param  object  $item the item to check
+     * @param  string  $class  the class item should be
+     * @param  object  $item  the item to check
      */
     protected function assertIsClass($class, $item)
     {
@@ -85,8 +85,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * Assertion to ensure model has all provided items in it's provided list of attributes
      *
-     * @param  Model  $object the object to check
-     * @param  array  $list A list of attributes we expect to exist
+     * @param  Model  $object  the object to check
+     * @param  array  $list  A list of attributes we expect to exist
      */
     protected function assertModelHasAttributes($model, array $list)
     {
@@ -98,8 +98,8 @@ abstract class TestCase extends BaseTestCase
     /**
      * Assertion to ensure model has attribute
      *
-     * @param  Model  $object the object to check
-     * @param  string  $name The name of the attribute we expect to exist
+     * @param  Model  $object  the object to check
+     * @param  string  $name  The name of the attribute we expect to exist
      */
     protected function assertModelHasAttribute($model, $name)
     {

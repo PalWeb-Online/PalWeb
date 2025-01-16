@@ -34,7 +34,7 @@ class CommunityController extends Controller
             ->get();
 
         $featuredDeck = Cache::get('featured-deck');
-        if (!$featuredDeck) {
+        if (! $featuredDeck) {
             $featuredDeck = Deck::inRandomOrder()->first();
         }
 

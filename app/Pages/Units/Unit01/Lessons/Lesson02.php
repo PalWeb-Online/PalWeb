@@ -7,6 +7,8 @@ use App\Pages\Units\Lesson;
 class Lesson02 extends Lesson
 {
     protected string $view = '';
+
     protected array $terms = [];
+
     protected array $sentences = [];
 }

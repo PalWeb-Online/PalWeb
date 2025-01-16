@@ -13,7 +13,7 @@ class DiscordController extends Controller
         $badge = Badge::where('name', 'No FOMO')->first();
         $user = User::where('discord_id', $request->input('discordId'))->first();
 
-        if ($user && !$user->badges->contains($badge->id)) {
+        if ($user && ! $user->badges->contains($badge->id)) {
             $user->badges()->attach($badge);
         }
     }

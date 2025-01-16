@@ -3,8 +3,6 @@
 namespace Tests\Feature\Term;
 
 use App\Models\Term;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DictionaryPageTest extends TestCase
@@ -16,20 +14,20 @@ class DictionaryPageTest extends TestCase
 
         foreach ($terms as $term) {
             try {
-                $response = $this->get('/dictionary/terms/' . $term->slug);
+                $response = $this->get('/dictionary/terms/'.$term->slug);
                 $response->assertStatus(200);
             } catch (\Exception $e) {
                 $failedTerms[] = $term->slug;
             }
         }
 
-        if (!empty($failedTerms)) {
+        if (! empty($failedTerms)) {
             echo "The following terms returned errors:\n";
             foreach ($failedTerms as $failedTerm) {
                 echo "'$failedTerm'\n";
             }
 
-            $this->fail("Some terms returned errors. Check the list above.");
+            $this->fail('Some terms returned errors. Check the list above.');
         }
     }
 }

@@ -19,10 +19,10 @@ class DashboardController
 
         $decks = Deck::with('author')
             ->select('decks.*')
-            ->where(fn($query) => $query->where('decks.private', false)
+            ->where(fn ($query) => $query->where('decks.private', false)
                 ->orWhere('decks.user_id', auth()->user()->id)
             )
-            ->join('markable_bookmarks', fn($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
+            ->join('markable_bookmarks', fn ($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Deck::class)
                 ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
             )
@@ -30,7 +30,7 @@ class DashboardController
             ->get();
 
         $terms = Term::select('terms.*')
-            ->join('markable_bookmarks', fn($join) => $join->on('terms.id', '=', 'markable_bookmarks.markable_id')
+            ->join('markable_bookmarks', fn ($join) => $join->on('terms.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Term::class)
                 ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
             )
@@ -38,7 +38,7 @@ class DashboardController
             ->get();
 
         $sentences = Sentence::select('sentences.*')
-            ->join('markable_bookmarks', fn($join) => $join->on('sentences.id', '=', 'markable_bookmarks.markable_id')
+            ->join('markable_bookmarks', fn ($join) => $join->on('sentences.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Sentence::class)
                 ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
             )
@@ -57,7 +57,7 @@ class DashboardController
             'decks' => $decks,
             'terms' => $terms,
             'sentences' => $sentences,
-            'bodyBackground' => 'hero-yellow'
+            'bodyBackground' => 'hero-yellow',
         ]);
     }
 
@@ -67,7 +67,7 @@ class DashboardController
 
         return view('users.dashboard.subscription', [
             'user' => auth()->user(),
-            'bodyBackground' => 'hero-yellow'
+            'bodyBackground' => 'hero-yellow',
         ]);
     }
 }

@@ -13,16 +13,14 @@ use Illuminate\Support\Facades\View;
 
 class RecordWizardController extends Controller
 {
-    public function __construct(protected AudioService $audioService)
-    {
-    }
+    public function __construct(protected AudioService $audioService) {}
 
     public function index()
     {
         View::share('pageTitle', 'Record Wizard');
 
         return view('users.record.index', [
-            'layout' => 'app'
+            'layout' => 'app',
         ]);
     }
 
@@ -79,13 +77,13 @@ class RecordWizardController extends Controller
                 foreach ($term->pronunciations as $pronunciation) {
                     if (
                         in_array($pronunciation->dialect_id, $dialectIds) &&
-                        !$queuedIds->contains($pronunciation->id)
+                        ! $queuedIds->contains($pronunciation->id)
                     ) {
                         $alreadyRecorded = $pronunciation->audios()
                             ->where('speaker_id', $speakerId)
                             ->exists();
 
-                        if (!$alreadyRecorded) {
+                        if (! $alreadyRecorded) {
                             $item = $pronunciation->toArray();
                             $item['term'] = $pronunciation->term->term;
                             $pronunciations[] = $item;
@@ -100,7 +98,7 @@ class RecordWizardController extends Controller
 
             return response()->json([
                 'deck' => $deck,
-                'items' => $pronunciations
+                'items' => $pronunciations,
             ]);
 
         } catch (\Exception $e) {
@@ -111,7 +109,7 @@ class RecordWizardController extends Controller
     public function stashRecord(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:wav|max:5120'
+            'file' => 'required|file|mimes:wav|max:5120',
         ]);
 
         try {
@@ -142,6 +140,7 @@ class RecordWizardController extends Controller
 
         if (File::exists($filePath)) {
             File::delete($filePath);
+
             return response()->json(['message' => "Recording with stashKey {$stashKey} discarded successfully."], 200);
 
         } else {
@@ -174,7 +173,7 @@ class RecordWizardController extends Controller
         $filename = $request->input('filename').'.mp3';
         $stashPath = public_path("stash/{$request->input('stashKey')}");
 
-        if (!File::exists($stashPath)) {
+        if (! File::exists($stashPath)) {
             return response()->json(['message' => 'File not found in stash.'], 404);
         }
 

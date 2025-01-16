@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Billable;
+    use Billable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'email',
@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'speaker_id',
         'discord_id',
         'discord_token',
-        'discord_refresh_token'
+        'discord_refresh_token',
     ];
 
     protected $hidden = [

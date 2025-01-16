@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Dialect;
 use App\Models\Location;
-use App\Models\Speaker;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SpeakerFactory extends Factory

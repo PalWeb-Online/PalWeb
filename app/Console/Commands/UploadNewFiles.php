@@ -24,7 +24,6 @@ class UploadNewFiles extends Command
 
     /**
      * Execute the console command.
-     *
      */
     public function handle(AudioService $audioService)
     {
@@ -32,6 +31,6 @@ class UploadNewFiles extends Command
 
         $files = Storage::disk('local')->allFiles('audio');
         $audioService->uploadAudioFilesS3($files, $forced, $this);
-        $this->info("All files have been uploaded to the S3 bucket");
+        $this->info('All files have been uploaded to the S3 bucket');
     }
 }

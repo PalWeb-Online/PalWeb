@@ -71,7 +71,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         DeckBuilt::class => [
-            AwardDeckBuiltBadge::class
+            AwardDeckBuiltBadge::class,
         ],
 
         ProfileChanged::class => [

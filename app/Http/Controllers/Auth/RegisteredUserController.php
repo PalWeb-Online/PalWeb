@@ -16,9 +16,7 @@ use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Handle an incoming registration request.
@@ -30,12 +28,12 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript()],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript()],
+            'name' => ['required', 'string', 'max:50', new LatinScript],
+            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
             'username' => [
                 'required', 'string', 'max:50',
                 'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                'unique:users'
+                'unique:users',
             ],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -47,7 +45,7 @@ class RegisteredUserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'dialect_id' => '1'
+            'dialect_id' => '1',
         ]);
 
         event(new Registered($user));
@@ -56,6 +54,7 @@ class RegisteredUserController extends Controller
 
         $this->flasher->addFlash('info', __('signup.message', ['user' => $user->name]),
             __('signup.message.head'));
+
         return redirect(RouteServiceProvider::HOME);
     }
 

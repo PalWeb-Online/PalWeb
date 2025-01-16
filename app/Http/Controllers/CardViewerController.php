@@ -9,16 +9,14 @@ use Illuminate\Support\Facades\View;
 
 class CardViewerController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function index()
     {
         View::share('pageTitle', 'Card Viewer');
 
         return view('decks.viewer', [
-            'layout' => 'app'
+            'layout' => 'app',
         ]);
     }
 
@@ -30,10 +28,10 @@ class CardViewerController extends Controller
 
             $decks = Deck::with('author')
                 ->select('decks.*')
-                ->where(fn($query) => $query->where('decks.private', false)
+                ->where(fn ($query) => $query->where('decks.private', false)
                     ->orWhere('decks.user_id', $user->id)
                 )
-                ->join('markable_bookmarks', fn($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
+                ->join('markable_bookmarks', fn ($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                     ->where('markable_bookmarks.markable_type', '=', Deck::class)
                     ->where('markable_bookmarks.user_id', '=', $user->id)
                 )

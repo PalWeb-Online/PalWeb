@@ -22,13 +22,13 @@ class RootFactory extends Factory
 
         $arabicLetters = [
             'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك',
-            'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
+            'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء',
         ];
 
         $unique = false;
         $root = '';
 
-        while (!$unique) {
+        while (! $unique) {
             $randomLetters = $this->faker->randomElements($arabicLetters, 3);
             $root = collect($randomLetters)->implode('');
 

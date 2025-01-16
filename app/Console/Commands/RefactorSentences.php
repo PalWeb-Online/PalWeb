@@ -34,13 +34,13 @@ class RefactorSentences extends Command
 
         foreach ($sentences as $sentence) {
 
-            $terms = explode(",", $sentence->sentence);
+            $terms = explode(',', $sentence->sentence);
 
             $refactoredSentence = [];
 
             foreach ($terms as $i => $term) {
-                $term = trim($term, "/");
-                $term = explode("/", $term);
+                $term = trim($term, '/');
+                $term = explode('/', $term);
 
                 $refactoredSentence[] = $term[2];
 
@@ -70,7 +70,7 @@ class RefactorSentences extends Command
                 }
             }
 
-            $sentence->sentence = implode(" ", $refactoredSentence);
+            $sentence->sentence = implode(' ', $refactoredSentence);
             $sentence->save();
         }
 

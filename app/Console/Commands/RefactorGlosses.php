@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Gloss;
 use App\Models\Attribute;
+use App\Models\Gloss;
 use Illuminate\Console\Command;
 
 class RefactorGlosses extends Command

@@ -42,6 +42,6 @@ class AudioDirectoryRepositoryTest extends TestCase
 
     protected function getRepository(): AudioDirectoryRepository
     {
-        return new AudioDirectoryRepository();
+        return new AudioDirectoryRepository;
     }
 }

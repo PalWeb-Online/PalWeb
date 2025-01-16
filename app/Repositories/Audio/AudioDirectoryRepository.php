@@ -12,7 +12,7 @@ class AudioDirectoryRepository
     /**
      * Determines if a given filename already exist in the files table.
      *
-     * @param string $name the file name to search for
+     * @param  string  $name  the file name to search for
      * @return bool true if the file name already has an entry in the files table, false otherwise
      */
     public function fileExistsInDatabase(string $name): bool
@@ -22,14 +22,13 @@ class AudioDirectoryRepository
             ->exists();
     }
 
-
     /**
      * Add a given audio file to the database and relate it to its correct model.
      *
-     * @param Model $model the fileable model
-     * @param string $name the filename
-     * @param string $path the path to the file in the s3 bucket
-     * @return void
+     * @param  Model  $model  the fileable model
+     * @param  string  $name  the filename
+     * @param  string  $path  the path to the file in the s3 bucket
+     *
      * @throws AudioFileException
      */
     public function addAudioFile(Model $model, string $name, string $path = 'audio'): void

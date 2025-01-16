@@ -16,8 +16,7 @@ class AwardTermPinnedBadge
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
@@ -29,7 +28,7 @@ class AwardTermPinnedBadge
     {
         $badge = Badge::where('name', 'Baby\'s First Words')->first();
 
-        if (!$event->user->badges->contains($badge->id)) {
+        if (! $event->user->badges->contains($badge->id)) {
 
             if (Term::whereHasBookmark($event->user)->count() >= 10) {
                 $event->user->badges()->attach($badge);

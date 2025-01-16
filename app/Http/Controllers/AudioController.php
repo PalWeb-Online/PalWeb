@@ -15,8 +15,7 @@ class AudioController extends Controller
     public function __construct(
         protected FlasherInterface $flasher,
         protected AudioService $audioService
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {
@@ -76,7 +75,7 @@ class AudioController extends Controller
 
     public function destroy(Audio $audio)
     {
-        if (!auth()->check() || $audio->speaker->user_id !== auth()->id()) {
+        if (! auth()->check() || $audio->speaker->user_id !== auth()->id()) {
             return request()->expectsJson()
                 ? response()->json(['error' => 'Unauthorized.'], 403)
                 : abort(403, 'Unauthorized');
@@ -92,6 +91,7 @@ class AudioController extends Controller
                 return response()->json(['message' => $message]);
             } else {
                 $this->flasher->addSuccess($message);
+
                 return redirect()->route('audios.speaker', $audio->speaker);
             }
 
@@ -102,6 +102,7 @@ class AudioController extends Controller
                 return response()->json(['error' => $error, 'details' => $e->getMessage()], 500);
             } else {
                 $this->flasher->addError($error);
+
                 return redirect()->route('audios.speaker', $audio->speaker);
             }
         }

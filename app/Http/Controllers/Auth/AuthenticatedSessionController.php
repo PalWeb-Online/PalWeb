@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Display the login view.
@@ -38,6 +36,7 @@ class AuthenticatedSessionController extends Controller
             $user = auth()->user();
 
             $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]), __('signin.message.head'));
+
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 
@@ -62,6 +61,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         $this->flasher->addFlash('info', __('signout.message', ['user' => $user->name]), __('signout.message.head'));
+
         return to_route('homepage');
     }
 }

@@ -6,7 +6,6 @@ use App\Models\Term;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
-
 class SelectWordOfTheDay extends Command
 {
     /**

@@ -48,7 +48,7 @@ class Receipt extends Model
     {
         $model = Cashier::$customerModel;
 
-        return $this->belongsTo($model, (new $model())->getForeignKey());
+        return $this->belongsTo($model, (new $model)->getForeignKey());
     }
 
     /**

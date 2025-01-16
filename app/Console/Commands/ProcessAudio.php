@@ -38,16 +38,18 @@ class ProcessAudio extends Command
      */
     public function handle()
     {
-        if (!$this->confirm('You must only run this command on the production server. Are you sure you would like to continue?')) {
+        if (! $this->confirm('You must only run this command on the production server. Are you sure you would like to continue?')) {
             $this->warn('Aborted.');
+
             return;
         }
 
         $speakerName = $this->argument('speaker_name');
         $audioFolder = 'audios_backup/'.$speakerName;
 
-        if (!Storage::disk('s3')->exists($audioFolder)) {
+        if (! Storage::disk('s3')->exists($audioFolder)) {
             $this->error('Directory with audio files does not exist.');
+
             return;
         }
 
@@ -55,6 +57,7 @@ class ProcessAudio extends Command
 
         if (empty($files)) {
             $this->info('No audio files found in the directory.');
+
             return;
         }
 
@@ -69,6 +72,7 @@ class ProcessAudio extends Command
         foreach ($files as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) !== 'wav') {
                 $this->warn("Skipping non-audio file: {$file}");
+
                 continue;
             }
 
@@ -95,9 +99,9 @@ class ProcessAudio extends Command
                 ]);
 
                 $fileContent = Storage::disk('s3')->get($file);
-                $tempWavPath = storage_path('app/temp/' . $wavFilename);
+                $tempWavPath = storage_path('app/temp/'.$wavFilename);
 
-                if (!File::exists(storage_path('app/temp'))) {
+                if (! File::exists(storage_path('app/temp'))) {
                     File::makeDirectory(storage_path('app/temp'), 0755, true);
                 }
 
@@ -112,6 +116,6 @@ class ProcessAudio extends Command
             }
         }
 
-        $this->info("Finished processing files.");
+        $this->info('Finished processing files.');
     }
 }

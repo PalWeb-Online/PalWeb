@@ -10,19 +10,18 @@ use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function show(User $user)
     {
         if (Gate::denies('interact', $user)) {
             $this->flasher->addFlash('error', __('unauthorized.private.user'), __('unauthorized'));
+
             return back();
         }
 
         $decks = $user->decks()->with('author')
-            ->where(fn($query) => $query->where('decks.private', false)
+            ->where(fn ($query) => $query->where('decks.private', false)
                 ->orWhere('decks.user_id', auth()->user()->id)
             )
             ->get();
@@ -33,7 +32,7 @@ class UserController extends Controller
             'user' => $user,
             'badges' => Badge::all(),
             'decks' => $decks,
-            'bodyBackground' => 'hero-yellow'
+            'bodyBackground' => 'hero-yellow',
         ]);
     }
 }

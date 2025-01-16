@@ -16,8 +16,7 @@ class AwardSentencePinnedBadge
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
@@ -29,7 +28,7 @@ class AwardSentencePinnedBadge
     {
         $badge = Badge::where('name', 'Loquacious')->first();
 
-        if (!$event->user->badges->contains($badge->id)) {
+        if (! $event->user->badges->contains($badge->id)) {
 
             if (Sentence::whereHasBookmark($event->user)->count() >= 5) {
                 $event->user->badges()->attach($badge);

@@ -14,9 +14,7 @@ class TextController extends Controller
 {
     use RedirectsToSubscribe;
 
-    public function __construct(protected TextPolicy $can)
-    {
-    }
+    public function __construct(protected TextPolicy $can) {}
 
     /**
      * Renders index page
@@ -31,6 +29,7 @@ class TextController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth) {
             $this->failIfFalse($this->can->viewIndex($auth));
+
             return view('texts.index');
         });
     }
@@ -48,10 +47,11 @@ class TextController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $slug) {
             $this->failIfFalse($this->can->viewText($auth));
-            return view("texts.show", [
+
+            return view('texts.show', [
                 'text' => $slug,
                 'terms' => Term::all(),
-                'bodyBackground' => 'yellow-pastel'
+                'bodyBackground' => 'yellow-pastel',
             ]);
         });
     }
