@@ -27,7 +27,7 @@ class ImportLocations extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $filePath = storage_path('app/locations.json');
 

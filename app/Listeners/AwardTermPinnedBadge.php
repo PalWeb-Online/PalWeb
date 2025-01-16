@@ -24,7 +24,7 @@ class AwardTermPinnedBadge
      * @param  object  $event
      * @return void
      */
-    public function handle(ModelPinned $event)
+    public function handle(ModelPinned $event): void
     {
         $badge = Badge::where('name', 'Baby\'s First Words')->first();
 

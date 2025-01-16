@@ -23,7 +23,7 @@ class AwardProfileChangedBadge
      * @param  object  $event
      * @return void
      */
-    public function handle(ProfileChanged $event)
+    public function handle(ProfileChanged $event): void
     {
         $badge = Badge::where('name', 'We\'re Happy to Have You')->first();
 

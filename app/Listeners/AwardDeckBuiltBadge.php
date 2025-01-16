@@ -23,7 +23,7 @@ class AwardDeckBuiltBadge
      * @param  object  $event
      * @return void
      */
-    public function handle(DeckBuilt $event)
+    public function handle(DeckBuilt $event): void
     {
         $badge = Badge::where('name', 'Word Collector')->first();
 

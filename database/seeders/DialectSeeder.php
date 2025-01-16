@@ -12,7 +12,7 @@ class DialectSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         DB::table('dialects')->insert(['name' => 'General Palestinian']);
         DB::table('dialects')->insert(['name' => 'Urban Palestinian']);

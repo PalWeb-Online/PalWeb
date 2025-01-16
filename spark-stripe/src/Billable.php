@@ -2,6 +2,7 @@
 
 namespace Spark;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable as CashierBillable;
 use Laravel\Cashier\Jobs\SyncCustomerDetails;
@@ -90,7 +91,7 @@ trait Billable
      *
      * @deprecated This method will be removed in a future Spark release.
      */
-    public function localReceipts()
+    public function localReceipts(): HasMany
     {
         return $this->hasMany(Receipt::class, $this->getForeignKey())->orderBy('id', 'desc');
     }

@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class DictionaryPageTest extends TestCase
 {
-    public function test_each_term_page_loads_correctly()
+    public function test_each_term_page_loads_correctly(): void
     {
         $terms = Term::all();
         $failedTerms = [];

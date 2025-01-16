@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -117,7 +118,7 @@ class Root extends Model
 
     protected $guarded = [];
 
-    public function terms()
+    public function terms(): HasMany
     {
         return $this->hasMany(Term::class);
     }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TermFactory extends Factory
 {
-    public function definition()
+    public function definition(): array
     {
         // Create root first
         $root = Root::factory()->create();

@@ -27,7 +27,7 @@ class SelectWordOfTheDay extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $wordOfTheDay = Term::whereNotNull('image')->inRandomOrder()->first();
         Cache::put('word-of-the-day', $wordOfTheDay, now()->addDay());

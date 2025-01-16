@@ -27,7 +27,7 @@ class RefactorGlosses extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $glosses = Gloss::whereNotNull('attribute')->get();
 

@@ -37,7 +37,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         //
     }
@@ -47,7 +47,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Deck $deck)
+    public function view(User $user, Deck $deck): bool
     {
         //
     }
@@ -57,7 +57,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         //
     }
@@ -67,7 +67,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Deck $deck)
+    public function update(User $user, Deck $deck): bool
     {
         //
     }
@@ -77,7 +77,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Deck $deck)
+    public function delete(User $user, Deck $deck): bool
     {
         //
     }
@@ -87,7 +87,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Deck $deck)
+    public function restore(User $user, Deck $deck): bool
     {
         //
     }
@@ -97,7 +97,7 @@ class DeckPolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Deck $deck)
+    public function forceDelete(User $user, Deck $deck): bool
     {
         //
     }

@@ -21,7 +21,7 @@ class AfterUserRegistered
      * @param  object  $event
      * @return void
      */
-    public function handle(Registered $event)
+    public function handle(Registered $event): void
     {
         // Send a welcome email to the new user
         Mail::to($event->user)->send(new UserRegistered($event->user));

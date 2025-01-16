@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class ChangeLanguageTest extends TestCase
 {
-    public function test_change_language_sets_language_in_the_session()
+    public function test_change_language_sets_language_in_the_session(): void
     {
         // Should not have a language set to start
         $this->assertFalse(session()->has('language'));

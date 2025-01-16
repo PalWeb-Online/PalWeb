@@ -25,7 +25,7 @@ class UploadNewFiles extends Command
     /**
      * Execute the console command.
      */
-    public function handle(AudioService $audioService)
+    public function handle(AudioService $audioService): void
     {
         $forced = $this->option('force');
 

@@ -12,7 +12,7 @@ class AfterSubscriptionCancelledTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_afterSubscriptionCreated_removes_user_from_student_role()
+    public function test_afterSubscriptionCreated_removes_user_from_student_role(): void
     {
         $this->roles();
 
@@ -25,7 +25,7 @@ class AfterSubscriptionCancelledTest extends TestCase
         $this->assertFalse($user->hasRole('student'));
     }
 
-    public function test_afterSubscriptionCreated_if_user_not_a_student()
+    public function test_afterSubscriptionCreated_if_user_not_a_student(): void
     {
         $this->roles();
 
@@ -38,7 +38,7 @@ class AfterSubscriptionCancelledTest extends TestCase
         $this->assertFalse($user->hasRole('student'));
     }
 
-    public function test_afterSubscriptionCreated_if_user_is_an_admin()
+    public function test_afterSubscriptionCreated_if_user_is_an_admin(): void
     {
         $this->roles();
 

@@ -15,7 +15,7 @@ class TermRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_getTermForCategoryAndSlug_throws_exception_if_not_a_valid_category()
+    public function test_getTermForCategoryAndSlug_throws_exception_if_not_a_valid_category(): void
     {
         $this->expectException(InvalidCategoryException::class);
         $this->getItem()->getTermForCategoryAndSlug('not-a-category', 'slug');
@@ -26,7 +26,7 @@ class TermRepositoryTest extends TestCase
         return new TermRepository;
     }
 
-    public function test_getTermForCategoryAndSlug_with_all_possible_categories()
+    public function test_getTermForCategoryAndSlug_with_all_possible_categories(): void
     {
         $data = $this->seedTermsAndRelations();
 

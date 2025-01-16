@@ -11,7 +11,7 @@ class LessonsShowFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_must_be_logged_in()
+    public function test_must_be_logged_in(): void
     {
         $lesson = $this->createLesson();
         $result = $this->get(route('ls.ls', ['lesson' => $lesson->lesson]));
@@ -19,7 +19,7 @@ class LessonsShowFeatureTest extends TestCase
         $result->assertRedirectToRoute('unauth');
     }
 
-    public function test_admin_can_access_lessons()
+    public function test_admin_can_access_lessons(): void
     {
         $this->roles();
 
@@ -31,7 +31,7 @@ class LessonsShowFeatureTest extends TestCase
         $result->assertStatus(200);
     }
 
-    public function test_student_can_access_lessons()
+    public function test_student_can_access_lessons(): void
     {
         $this->roles();
 
@@ -43,7 +43,7 @@ class LessonsShowFeatureTest extends TestCase
         $result->assertStatus(200);
     }
 
-    public function test_non_subscriber_can_not_access_lessons()
+    public function test_non_subscriber_can_not_access_lessons(): void
     {
         $this->roles();
 

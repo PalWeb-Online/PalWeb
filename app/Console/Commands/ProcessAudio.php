@@ -36,7 +36,7 @@ class ProcessAudio extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         if (! $this->confirm('You must only run this command on the production server. Are you sure you would like to continue?')) {
             $this->warn('Aborted.');

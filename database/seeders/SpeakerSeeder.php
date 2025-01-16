@@ -13,7 +13,7 @@ class SpeakerSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $users = User::doesntHave('speaker')->get();
         $users->take(25)->each(function ($user) {

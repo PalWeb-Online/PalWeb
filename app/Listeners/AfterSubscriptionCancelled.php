@@ -23,7 +23,7 @@ class AfterSubscriptionCancelled
      * @param  object  $event
      * @return void
      */
-    public function handle(SubscriptionCancelled $event)
+    public function handle(SubscriptionCancelled $event): void
     {
         /** @var User $user */
         $user = $event->billable;

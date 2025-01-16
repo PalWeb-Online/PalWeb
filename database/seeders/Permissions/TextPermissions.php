@@ -14,7 +14,7 @@ class TextPermissions extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Possible actions one might take
         $actions = (object) TextPolicy::$actions;

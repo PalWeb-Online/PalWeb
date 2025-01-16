@@ -2,6 +2,7 @@
 
 namespace Spark;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Cashier\Cashier;
 
@@ -44,7 +45,7 @@ class Receipt extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function owner()
+    public function owner(): BelongsTo
     {
         $model = Cashier::$customerModel;
 

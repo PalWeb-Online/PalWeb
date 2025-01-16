@@ -27,7 +27,7 @@ class LinkFilesToModels extends Command
      *
      * @throws AudioFileException
      */
-    public function handle(AudioService $audioService)
+    public function handle(AudioService $audioService): void
     {
         $filesAdded = $audioService->addAudioFilesDatabase();
         $this->info('All file database entries have been created');

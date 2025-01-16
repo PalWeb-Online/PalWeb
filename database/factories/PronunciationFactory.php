@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PronunciationFactory extends Factory
 {
-    public function definition()
+    public function definition(): array
     {
         $translit = $this->faker->word();
 

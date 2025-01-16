@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class AudioFactory extends Factory
 {
-    public function definition()
+    public function definition(): array
     {
         return [
             'filename' => Str::uuid(),

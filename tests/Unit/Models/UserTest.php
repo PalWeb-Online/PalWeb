@@ -10,40 +10,40 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_isAdmin_returns_true_if_user_is_admin()
+    public function test_isAdmin_returns_true_if_user_is_admin(): void
     {
         $this->roles();
         $this->assertTrue(User::factory()->create()->grantAdminRole()->isAdmin());
     }
 
-    public function test_isAdmin_returns_false_if_user_is_not_admin()
+    public function test_isAdmin_returns_false_if_user_is_not_admin(): void
     {
         $this->roles();
         $this->assertFalse(User::factory()->create()->isAdmin());
     }
 
-    public function test_getRolesAsString_returns_admin_in_list_of_roles()
+    public function test_getRolesAsString_returns_admin_in_list_of_roles(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole();
         $this->assertEquals('Admin', $user->getRolesAsString());
     }
 
-    public function test_getRolesAsString_returns_student_in_list_of_roles()
+    public function test_getRolesAsString_returns_student_in_list_of_roles(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantStudentRole();
         $this->assertEquals('Student', $user->getRolesAsString());
     }
 
-    public function test_getRolesAsString_returns_a_comma_separated_list_of_roles()
+    public function test_getRolesAsString_returns_a_comma_separated_list_of_roles(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole()->grantStudentRole();
         $this->assertEquals('Admin,Student', $user->getRolesAsString());
     }
 
-    public function test_grantAdminRole_turns_user_into_an_administrator()
+    public function test_grantAdminRole_turns_user_into_an_administrator(): void
     {
         $this->roles();
 
@@ -59,7 +59,7 @@ class UserTest extends TestCase
         $this->assertTrue($user->hasRole('admin'));
     }
 
-    public function test_revokeAdminRole_removes_user_from_admin()
+    public function test_revokeAdminRole_removes_user_from_admin(): void
     {
         $this->roles();
         /** @var User $user */
@@ -74,7 +74,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->hasRole('admin'));
     }
 
-    public function test_grantStudentRole_turns_user_into_a_student()
+    public function test_grantStudentRole_turns_user_into_a_student(): void
     {
         $this->roles();
 
@@ -90,7 +90,7 @@ class UserTest extends TestCase
         $this->assertTrue($user->hasRole('student'));
     }
 
-    public function test_revokeStudentRole_removes_user_from_students()
+    public function test_revokeStudentRole_removes_user_from_students(): void
     {
         $this->roles();
         $user = User::factory()->create();

@@ -13,7 +13,7 @@ class AfterEmailVerifiedTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_sends_an_email_with_link_to_join_discord()
+    public function test_sends_an_email_with_link_to_join_discord(): void
     {
         Mail::fake();
         $user = User::factory()->create();

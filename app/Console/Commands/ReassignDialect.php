@@ -34,7 +34,7 @@ class ReassignDialect extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $dialectId = $this->argument('dialect_id');
         $speakerId = $this->argument('speaker_id');

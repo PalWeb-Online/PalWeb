@@ -10,7 +10,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (Schema::hasTable('glosses') && Schema::hasColumn('glosses', 'gloss')) {
             DB::statement('ALTER TABLE glosses ADD FULLTEXT fulltext_index(gloss)');
@@ -22,7 +22,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::statement('ALTER TABLE glosses DROP INDEX fulltext_index');
     }
