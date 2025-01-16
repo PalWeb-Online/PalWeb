@@ -31,14 +31,17 @@ class File extends Model
         'metadata',
     ];
 
-    protected $casts = [
-        'metadata' => 'array',
-        'is_public' => 'boolean',
-    ];
-
     protected $appends = [
         'public_url',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'metadata' => 'array',
+            'is_public' => 'boolean',
+        ];
+    }
 
     public function getPublicUrlAttribute()
     {

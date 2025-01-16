@@ -24,10 +24,6 @@ class Term extends Model
         'root',
     ];
 
-    protected $casts = [
-        'etymology' => 'array',
-    ];
-
     protected static function boot(): void
     {
         parent::boot();
@@ -35,6 +31,13 @@ class Term extends Model
         static::deleting(function ($term) {
             $term->bookmarks()->delete();
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'etymology' => 'array',
+        ];
     }
 
     public function bookmarks(): MorphMany
