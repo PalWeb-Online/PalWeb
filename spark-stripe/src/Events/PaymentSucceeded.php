@@ -24,7 +24,6 @@ class PaymentSucceeded
     /**
      * Create a new event instance.
      *
-     * @param  \Spark\Billable  $billable
      * @return void
      */
     public function __construct(Billable $billable, Invoice $invoice)

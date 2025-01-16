@@ -12,8 +12,6 @@ class PaymentMethodsController
 
     /**
      * Setup a billing method for the billable entity.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function setup(): JsonResponse
     {
@@ -32,8 +30,6 @@ class PaymentMethodsController
 
     /**
      * Set the default billing method for the billable entity.
-     *
-     * @return void
      */
     public function default(Request $request): void
     {
@@ -46,8 +42,6 @@ class PaymentMethodsController
 
     /**
      * Delete a billing method of the billable entity.
-     *
-     * @return void
      */
     public function delete(Request $request): void
     {

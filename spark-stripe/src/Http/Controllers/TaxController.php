@@ -13,8 +13,6 @@ class TaxController
 
     /**
      * Calculate the appropriate taxes for display.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
     {
@@ -64,10 +62,6 @@ class TaxController
 
     /**
      * Format the given amount.
-     *
-     * @param  float  $amount
-     * @param  string  $currency
-     * @return string
      */
     public function formatAmount(float $amount, string $currency): string
     {

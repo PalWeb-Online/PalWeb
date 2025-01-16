@@ -15,8 +15,6 @@ class SparkServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -39,8 +37,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -58,8 +54,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure the routes offered by the application.
-     *
-     * @return void
      */
     protected function configureRoutes(): void
     {
@@ -70,8 +64,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure Spark migrations.
-     *
-     * @return void
      */
     protected function configureMigrations(): void
     {
@@ -82,8 +74,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure Spark translations.
-     *
-     * @return void
      */
     protected function configureTranslations(): void
     {
@@ -92,8 +82,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure publishing for the package.
-     *
-     * @return void
      */
     protected function configurePublishing(): void
     {
@@ -124,8 +112,6 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Register the Spark Artisan commands.
-     *
-     * @return void
      */
     protected function registerCommands(): void
     {

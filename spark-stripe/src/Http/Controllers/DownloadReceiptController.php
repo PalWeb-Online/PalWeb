@@ -12,11 +12,6 @@ class DownloadReceiptController
 
     /**
      * Download the given receipt.
-     *
-     * @param  string  $type
-     * @param  string  $id
-     * @param  string  $receiptId
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function __invoke(Request $request, string $type, string $id, string $receiptId): Response
     {

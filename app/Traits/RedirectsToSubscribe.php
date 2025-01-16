@@ -9,8 +9,6 @@ trait RedirectsToSubscribe
 {
     /**
      * Redirects to subscription page when an UnauthorizedAccessException is thrown
-     *
-     * @return void
      */
     protected function redirectToSubscribeOnFail(Closure $callback): mixed
     {

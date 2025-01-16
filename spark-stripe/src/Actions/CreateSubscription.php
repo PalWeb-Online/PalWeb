@@ -54,9 +54,6 @@ class CreateSubscription implements CreatesSubscriptions
 
     /**
      * Cancel and delete any old subscriptions except ones that were already cancelled.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return void
      */
     protected function purgeOldSubscriptions(Billable $billable): void
     {
@@ -81,11 +78,6 @@ class CreateSubscription implements CreatesSubscriptions
 
     /**
      * Configure the trial period.
-     *
-     * @param  \Spark\Billable  $billable
-     * @param  \Spark\Plan  $plan
-     * @param  \Laravel\Cashier\SubscriptionBuilder  $builder
-     * @return void
      */
     protected function configureTrial(Billable $billable, Plan $plan, SubscriptionBuilder $builder): void
     {
@@ -113,8 +105,6 @@ class CreateSubscription implements CreatesSubscriptions
     /**
      * Apply the coupon or promocode.
      *
-     * @param  string  $coupon
-     * @param  \Spark\Billable  $billable
      *
      * @throws \Stripe\Exception\ApiErrorException
      */

@@ -10,8 +10,6 @@ trait HandlesCouponExceptions
 {
     /**
      * Get the default billable type for the application.
-     *
-     * @return void
      */
     protected function handleCouponException(InvalidRequestException $e): void
     {

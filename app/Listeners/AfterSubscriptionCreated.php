@@ -21,9 +21,6 @@ class AfterSubscriptionCreated
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(SubscriptionCreated $event): void
     {

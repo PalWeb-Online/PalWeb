@@ -10,7 +10,6 @@ trait RetrievesBillableModels
     /**
      * Get the billable model for the request.
      *
-     * @param  string  $type
      * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|\Spark\Billable
      */

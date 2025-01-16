@@ -6,8 +6,6 @@ class Countries
 {
     /**
      * Get all of the countries in the world.
-     *
-     * @return array
      */
     public static function all(): array
     {

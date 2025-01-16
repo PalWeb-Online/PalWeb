@@ -18,7 +18,6 @@ class ApplyCouponController
      * Update the receipt emails for the given billable.
      *
      * @param  \Illuminate\Http\Request
-     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -49,10 +48,6 @@ class ApplyCouponController
         }
     }
 
-    /**
-     * @param  string  $coupon
-     * @param  \Spark\Billable  $billable
-     */
     protected function applyCoupon(string $coupon, Billable $billable, ?Subscription $subscription): void
     {
         $codes = $billable->stripe()->promotionCodes->all(['code' => $coupon]);

@@ -21,9 +21,6 @@ class AfterEmailVerified
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(Verified $event): void
     {

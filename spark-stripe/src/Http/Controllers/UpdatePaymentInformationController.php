@@ -14,8 +14,6 @@ class UpdatePaymentInformationController
 
     /**
      * Update the billing information for the billable entity.
-     *
-     * @return void
      */
     public function __invoke(Request $request): void
     {
@@ -32,9 +30,6 @@ class UpdatePaymentInformationController
 
     /**
      * Update the billable from the request.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return void
      */
     private function updateBillable(Request $request, Billable $billable): void
     {
@@ -52,8 +47,6 @@ class UpdatePaymentInformationController
 
     /**
      * Validate the incoming request.
-     *
-     * @return void
      */
     protected function validate(Request $request): void
     {

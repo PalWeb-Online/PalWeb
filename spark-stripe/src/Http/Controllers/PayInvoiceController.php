@@ -12,8 +12,6 @@ class PayInvoiceController
 
     /**
      * Pay the open invoice.
-     *
-     * @return \Illuminate\Http\JsonResponse|null
      */
     public function __invoke($invoiceId): ?JsonResponse
     {

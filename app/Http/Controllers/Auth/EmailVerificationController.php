@@ -28,8 +28,6 @@ class EmailVerificationController extends Controller
 
     /**
      * Mark the user's email address as verified.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function verify(EmailVerificationRequest $request): RedirectResponse
     {
@@ -46,8 +44,6 @@ class EmailVerificationController extends Controller
 
     /**
      * Sends a new verification link to the user's email.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function link(Request $request): RedirectResponse
     {

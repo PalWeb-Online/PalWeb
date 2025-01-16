@@ -19,9 +19,6 @@ class AfterSubscriptionCancelled
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(SubscriptionCancelled $event): void
     {

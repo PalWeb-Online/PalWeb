@@ -15,8 +15,6 @@ class UpdateSubscriptionController
 
     /**
      * Update the plan that the billable is currently subscribed to.
-     *
-     * @return void
      */
     public function __invoke(Request $request): void
     {

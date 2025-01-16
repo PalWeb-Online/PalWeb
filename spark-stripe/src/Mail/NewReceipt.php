@@ -31,7 +31,6 @@ class NewReceipt extends Mailable
      * Create a new message instance.
      *
      * @param  mixed  $billable
-     * @param  \Laravel\Cashier\Invoice  $invoice
      * @return void
      */
     public function __construct($billable, Invoice $invoice)
@@ -42,8 +41,6 @@ class NewReceipt extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
     public function build(): static
     {

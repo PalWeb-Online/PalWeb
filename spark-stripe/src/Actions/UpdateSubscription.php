@@ -30,8 +30,6 @@ class UpdateSubscription implements UpdatesSubscriptions
     /**
      * Attempt to pay failed payments if any.
      *
-     * @param  \Laravel\Cashier\Subscription  $subscription
-     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */

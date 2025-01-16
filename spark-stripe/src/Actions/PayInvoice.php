@@ -17,8 +17,6 @@ class PayInvoice implements PaysInvoices
     /**
      * Pay the invoice related to the given receipt.
      *
-     * @param  \Spark\Billable  $billable
-     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment

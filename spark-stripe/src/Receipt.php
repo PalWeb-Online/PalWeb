@@ -43,8 +43,6 @@ class Receipt extends Model
 
     /**
      * Get the model related to the receipt.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function owner(): BelongsTo
     {
@@ -55,8 +53,6 @@ class Receipt extends Model
 
     /**
      * The invoice the receipt belongs to.
-     *
-     * @return \Laravel\Cashier\Invoice|null
      */
     public function invoice(): ?Invoice
     {

@@ -19,9 +19,7 @@ class BillingPortalController
     /**
      * Show the billing portal.
      *
-     * @param  string|null  $type
      * @param  mixed  $id
-     * @return \Inertia\Response
      */
     public function __invoke(Request $request, ?string $type = null, $id = null): Response
     {
@@ -52,8 +50,6 @@ class BillingPortalController
 
     /**
      * Get the Spark translations from the appropriate language file.
-     *
-     * @return string
      */
     private static function getTranslations(): string
     {
@@ -67,7 +63,6 @@ class BillingPortalController
     /**
      * Get the plan the user is subscribing to.
      *
-     * @param  string  $type
      * @return \Spark\Plan $Plan
      */
     private function planToSubscribeTo(string $type): Plan

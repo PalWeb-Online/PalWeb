@@ -15,8 +15,6 @@ trait Billable
 
     /**
      * Boot the billable model.
-     *
-     * @return void
      */
     public static function bootBillable(): void
     {
@@ -37,8 +35,6 @@ trait Billable
 
     /**
      * Determine if any Stripe synced customer data has changed.
-     *
-     * @return bool
      */
     public function shouldSyncCustomerDetailsToStripe(): bool
     {
@@ -50,8 +46,6 @@ trait Billable
 
     /**
      * The model attributes that will trigger a Stripe customer update.
-     *
-     * @return array
      */
     protected function stripeAttributes(): array
     {
@@ -70,8 +64,6 @@ trait Billable
 
     /**
      * Get the address that should be synced to Stripe.
-     *
-     * @return array|null
      */
     public function stripeAddress(): ?array
     {
@@ -88,7 +80,6 @@ trait Billable
     /**
      * Get all of the local receipts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @deprecated This method will be removed in a future Spark release.
      */
@@ -99,8 +90,6 @@ trait Billable
 
     /**
      * Get the Spark plan that corresponds with the billable's current subscription.
-     *
-     * @return \Spark\Plan|null
      */
     public function sparkPlan(): ?Plan
     {
@@ -118,7 +107,6 @@ trait Billable
     /**
      * Get the Spark configuration or a configuration item for the billable model.
      *
-     * @param  string|null  $key
      * @return mixed
      */
     public function sparkConfiguration(?string $key = null)
@@ -141,8 +129,6 @@ trait Billable
     /**
      * Add seats to the current subscription.
      *
-     * @param  int  $count
-     * @return void
      *
      * @throws \Stripe\Exception\CardException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
@@ -162,9 +148,6 @@ trait Billable
 
     /**
      * Remove seats from the current subscription.
-     *
-     * @param  int  $count
-     * @return void
      */
     public function removeSeat(int $count = 1): void
     {
@@ -181,8 +164,6 @@ trait Billable
     /**
      * Update the number of seats in the current subscription.
      *
-     * @param  int  $count
-     * @return void
      *
      * @throws \Stripe\Exception\CardException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
@@ -204,7 +185,6 @@ trait Billable
      * Get the receipt emails.
      *
      * @param  mixed  $value
-     * @return array
      */
     public function getReceiptEmailsAttribute($value): array
     {
@@ -219,7 +199,6 @@ trait Billable
      * Fills the model's properties with the payment method from Stripe.
      *
      * @param  \Laravel\Cashier\PaymentMethod|\Stripe\PaymentMethod|null  $paymentMethod
-     * @return $this
      */
     protected function fillPaymentMethodDetails($paymentMethod): static
     {
@@ -238,8 +217,6 @@ trait Billable
 
     /**
      * Determine if the Stripe model is on a "generic" trial at the model level.
-     *
-     * @return bool
      */
     public function onGenericTrial(): bool
     {
@@ -256,8 +233,6 @@ trait Billable
 
     /**
      * Get the time when the generic trial ends.
-     *
-     * @return \Carbon\Carbon|null
      */
     public function genericTrialEndsAt(): ?\Carbon\Carbon
     {
@@ -274,8 +249,6 @@ trait Billable
 
     /**
      * Get the tax rates to apply to the subscription.
-     *
-     * @return array
      */
     public function taxRates(): array
     {

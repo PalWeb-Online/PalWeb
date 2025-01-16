@@ -19,9 +19,6 @@ class FrontendState
 {
     /**
      * Get the data should be shared with the frontend.
-     *
-     * @param  string  $type
-     * @return array
      */
     public function current(string $type, Model $billable): array
     {
@@ -108,8 +105,6 @@ class FrontendState
 
     /**
      * Get the logo that is configured for the billing portal.
-     *
-     * @return string|null
      */
     protected function logo(): ?string
     {
@@ -124,8 +119,6 @@ class FrontendState
 
     /**
      * Get the brand color for the application.
-     *
-     * @return string
      */
     protected function brandColor(): string
     {
@@ -136,10 +129,6 @@ class FrontendState
 
     /**
      * Get the subscription plans.
-     *
-     * @param  string  $type
-     * @param  \Illuminate\Database\Eloquent\Model  $billable
-     * @return \Illuminate\Support\Collection
      */
     protected function getPlans(string $type, Model $billable): Collection
     {
@@ -176,9 +165,6 @@ class FrontendState
 
     /**
      * Get the current subscription state.
-     *
-     * @param  \Laravel\Cashier\Subscription|null  $subscription
-     * @return string
      */
     protected function state(Model $billable, ?Subscription $subscription): string
     {
@@ -195,9 +181,6 @@ class FrontendState
 
     /**
      * Get all of the payment methods for the given billable.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return array
      */
     protected function paymentMethods(Billable $billable): array
     {
@@ -215,9 +198,6 @@ class FrontendState
 
     /**
      * List all open invoices of the given billable.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return array
      */
     protected function openInvoices(Billable $billable): array
     {
@@ -244,9 +224,6 @@ class FrontendState
 
     /**
      * Paginate all paid invoices of the given billable.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return array
      */
     protected function paidInvoices(Billable $billable): array
     {
@@ -268,7 +245,6 @@ class FrontendState
     /**
      * List all receipts of the given billable.
      *
-     * @return array
      *
      * @deprecated Will be removed in a future Spark release.
      */
@@ -290,8 +266,6 @@ class FrontendState
 
     /**
      * Get the URL of the billing dashboard.
-     *
-     * @return string
      */
     protected function dashboardUrl(): string
     {
@@ -304,8 +278,6 @@ class FrontendState
 
     /**
      * Get the URL of the "terms of service" page.
-     *
-     * @return string
      */
     protected function termsUrl(): string
     {

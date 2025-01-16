@@ -6,8 +6,6 @@ trait GuessesBillableTypes
 {
     /**
      * Get the default billable type for the application.
-     *
-     * @return string
      */
     protected function guessBillableType(): string
     {

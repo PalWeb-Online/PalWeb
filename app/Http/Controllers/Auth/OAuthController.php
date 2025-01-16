@@ -20,8 +20,6 @@ class OAuthController extends Controller
 
     /**
      * Discord redirect back to application.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function callback(): RedirectResponse
     {
@@ -158,8 +156,6 @@ class OAuthController extends Controller
 
     /**
      * Redirect to Discord.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function redirect(): RedirectResponse
     {

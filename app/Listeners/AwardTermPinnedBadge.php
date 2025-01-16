@@ -20,9 +20,6 @@ class AwardTermPinnedBadge
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(ModelPinned $event): void
     {

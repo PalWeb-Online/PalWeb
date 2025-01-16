@@ -6,8 +6,6 @@ class Features
 {
     /**
      * Determine if the given feature is enabled.
-     *
-     * @return bool
      */
     public static function enabled(string $feature): bool
     {
@@ -16,8 +14,6 @@ class Features
 
     /**
      * Determine if the feature is enabled and has a given option enabled.
-     *
-     * @return bool
      */
     public static function optionEnabled(string $feature, string $option): bool
     {
@@ -37,8 +33,6 @@ class Features
 
     /**
      * Determine if the application requires users to accept the terms of service before subscribing.
-     *
-     * @return bool
      */
     public static function enforcesAcceptingTerms(): bool
     {
@@ -47,8 +41,6 @@ class Features
 
     /**
      * Determine if the application is using the EU VAT collection feature.
-     *
-     * @return bool
      */
     public static function collectsEuVat(): bool
     {
@@ -61,8 +53,6 @@ class Features
 
     /**
      * Determine if the application is using the billing address collection feature.
-     *
-     * @return bool
      */
     public static function collectsBillingAddress(): bool
     {
@@ -71,8 +61,6 @@ class Features
 
     /**
      * Determine if the application is using the receipt emails sending feature.
-     *
-     * @return bool
      */
     public static function sendsReceiptEmails(): bool
     {
@@ -81,8 +69,6 @@ class Features
 
     /**
      * Determine if the application is using the payment notifications sending feature.
-     *
-     * @return bool
      */
     public static function sendsPaymentNotificationEmails(): bool
     {
@@ -91,8 +77,6 @@ class Features
 
     /**
      * Enable requiring accepting terms before subscribing.
-     *
-     * @return string
      */
     public static function mustAcceptTerms(): string
     {
@@ -101,8 +85,6 @@ class Features
 
     /**
      * Enable the VAT collection feature.
-     *
-     * @return string
      */
     public static function euVatCollection(array $options = []): string
     {
@@ -113,8 +95,6 @@ class Features
 
     /**
      * Enable the billing address collection feature.
-     *
-     * @return string
      */
     public static function billingAddressCollection(array $options = []): string
     {
@@ -125,8 +105,6 @@ class Features
 
     /**
      * Enable the receipt emails sending feature.
-     *
-     * @return string
      */
     public static function receiptEmails(array $options = []): string
     {
@@ -137,8 +115,6 @@ class Features
 
     /**
      * Enable the receipt emails sending feature.
-     *
-     * @return string
      */
     public static function paymentNotificationEmails(): string
     {

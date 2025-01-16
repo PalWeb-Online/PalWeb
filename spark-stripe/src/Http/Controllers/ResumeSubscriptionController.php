@@ -11,8 +11,6 @@ class ResumeSubscriptionController
 
     /**
      * Resume the billable's cancelled subscription.
-     *
-     * @return void
      */
     public function __invoke(): void
     {

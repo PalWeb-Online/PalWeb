@@ -19,9 +19,6 @@ class AwardDeckBuiltBadge
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(DeckBuilt $event): void
     {

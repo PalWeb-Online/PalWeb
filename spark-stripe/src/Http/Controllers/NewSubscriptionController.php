@@ -18,8 +18,6 @@ class NewSubscriptionController
 
     /**
      * Create a new subscription.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
     {
@@ -49,9 +47,6 @@ class NewSubscriptionController
 
     /**
      * Update the billable from the request.
-     *
-     * @param  \Spark\Billable  $billable
-     * @return void
      */
     private function updateBillable(Request $request, Billable $billable): void
     {

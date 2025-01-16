@@ -19,9 +19,6 @@ class AwardProfileChangedBadge
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
     public function handle(ProfileChanged $event): void
     {

@@ -52,8 +52,6 @@ class ActionLog extends EloquentStoredEvent
 
     /**
      * Returns IP address for the current user
-     *
-     * @return string|null
      */
     public function getIp(): ?string
     {
@@ -62,8 +60,6 @@ class ActionLog extends EloquentStoredEvent
 
     /**
      * Returns the ID of the current user, or 1 (aka SSR BOT) if a user ID cant be located
-     *
-     * @return int
      */
     public function getCurrentUserID(): int
     {
@@ -89,8 +85,6 @@ class ActionLog extends EloquentStoredEvent
 
     /**
      * Returns information about the current page/route
-     *
-     * @return array
      */
     public function getCurrentRoute(): array
     {

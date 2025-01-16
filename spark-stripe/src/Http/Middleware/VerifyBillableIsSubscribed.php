@@ -15,12 +15,6 @@ class VerifyBillableIsSubscribed
 
     /**
      * Verify the incoming request's user has a subscription.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string  $billableType
-     * @param  string  $plan
-     * @return \Illuminate\Http\Response
      */
     public function handle(Request $request, Closure $next, string $billableType = null, string $plan = null): Response
     {
@@ -46,11 +40,7 @@ class VerifyBillableIsSubscribed
     /**
      * Determine if the given user is subscribed to the given plan.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $type
-     * @param  string  $plan
      * @param  bool  $defaultSubscription
-     * @return bool
      */
     protected function subscribed(Request $request, string $type, string $plan): bool
     {
@@ -70,8 +60,6 @@ class VerifyBillableIsSubscribed
 
     /**
      * Get the redirect location.
-     *
-     * @return string
      */
     protected function redirect(string $billableType): string
     {
