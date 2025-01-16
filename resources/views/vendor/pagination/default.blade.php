@@ -16,7 +16,7 @@
             {{-- Previous Page Link --}}
             {{--            <a class="arrow {{ $paginator->onFirstPage() ? 'disabled' : '' }}"--}}
             {{--               href="{{ $paginator->previousPageUrl() }}" rel="prev"--}}
-            {{--               aria-label="@lang('pagination.previous')">{{ __('back') }}</a>--}}
+            {{--               aria-label="{{ __('pagination.previous') }}">{{ __('back') }}</a>--}}
 
             {{-- Pagination Elements --}}
             @foreach ($elements as $element)
@@ -40,7 +40,7 @@
             {{-- Next Page Link --}}
             {{--            <a class="arrow {{ $paginator->hasMorePages() ? '' : 'disabled' }}"--}}
             {{--               href="{{ $paginator->nextPageUrl() }}" rel="next"--}}
-            {{--               aria-label="@lang('pagination.next')">{{ __('next') }}</a>--}}
+            {{--               aria-label="{{ __('pagination.next') }}">{{ __('next') }}</a>--}}
         </div>
     </div>
 @endif
