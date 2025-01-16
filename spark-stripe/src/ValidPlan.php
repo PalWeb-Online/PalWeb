@@ -23,11 +23,6 @@ class ValidPlan implements ValidationRule
 
     /**
      * Validate the attribute value.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  \Closure $fail
-     * @return void
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
