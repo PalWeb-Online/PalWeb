@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
  */
 class LanguageController
 {
-    public function change(Request $request, $language)
+    public function change(Request $request, $language): RedirectResponse
     {
         $allowedLanguages = collect(['en', 'es', 'ar']);
 
