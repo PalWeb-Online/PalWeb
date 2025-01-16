@@ -9,7 +9,7 @@
         <a href="https://twitter.com/palweb_app" target="_blank">
             <img src="{{ asset('/img/twitter.svg') }}" alt="Twitter"/>
         </a>
-        <a href="https://www.instagram.com/abdulbaha.xyz" target="_blank">
+        <a href="https://www.instagram.com/palweb.app" target="_blank">
             <img src="{{ asset('/img/instagram.svg') }}" alt="Instagram"/>
         </a>
         <a href="https://discord.gg/3Wf7Q6RCjV" target="_blank">

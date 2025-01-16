@@ -32,7 +32,11 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:50', new LatinScript()],
             'ar_name' => ['required', 'string', 'max:50', new ArabicScript()],
-            'username' => ['required', 'string', 'alpha_dash', 'max:50', 'unique:users'],
+            'username' => [
+                'required', 'string', 'max:50',
+                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
+                'unique:users'
+            ],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);

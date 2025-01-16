@@ -43,7 +43,8 @@ class UserSettingsController
             'name' => ['required', 'string', 'max:50', new LatinScript()],
             'ar_name' => ['required', 'string', 'max:50', new ArabicScript()],
             'username' => [
-                'required', 'string', 'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/', 'max:50',
+                'required', 'string', 'max:50',
+                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
                 Rule::unique('users')->ignore($user->id)
             ],
             'home' => ['nullable', 'string', 'max:100'],

@@ -22,7 +22,7 @@
                     <p>Displaying {{ number_format($totalCount) }} Audios by
                         <span style="text-transform: capitalize">{{ request('gender') }}</span> Speakers
                         {{ request('dialect') ? 'of '.\App\Models\Dialect::find(request('dialect'))->name : '' }}
-                        {{ request('location') ? 'from '.\App\Models\Location::find(request('location'))->name : '' }}
+                        {{ request('location') ? 'from '.\App\Models\Location::find(request('location'))->name_en : '' }}
                         in the Audio Library.
                     </p>
                 </x-tip>
