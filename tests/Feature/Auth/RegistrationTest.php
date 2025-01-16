@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Providers\AppServiceProvider;
 use App\Mail\UserRegistered;
-use App\Providers\RouteServiceProvider;
+use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;

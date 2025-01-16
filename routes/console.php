@@ -8,6 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-
 Schedule::command('select:wordoftheday')->daily();
 Schedule::command('select:featureddeck')->weekly();

@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 
 abstract class TestCase extends BaseTestCase
 {
-
     /**
      * Returns true if $item is a Collection
      *
