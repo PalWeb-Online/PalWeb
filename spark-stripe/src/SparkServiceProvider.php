@@ -61,7 +61,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configureRoutes()
+    protected function configureRoutes(): void
     {
         Route::group([], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
@@ -73,7 +73,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configureMigrations()
+    protected function configureMigrations(): void
     {
         if (Spark::runsMigrations() && $this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -85,7 +85,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configureTranslations()
+    protected function configureTranslations(): void
     {
         $this->loadJsonTranslationsFrom(lang_path('spark'));
     }
@@ -95,7 +95,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configurePublishing()
+    protected function configurePublishing(): void
     {
         if (! $this->app->runningInConsole()) {
             return;
@@ -127,7 +127,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerCommands()
+    protected function registerCommands(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands([

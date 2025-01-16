@@ -15,7 +15,7 @@ class UpdateReceiptEmailsController
      * @param  \Illuminate\Http\Request
      * @return void
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): void
     {
         $emails = array_map(function ($email) {
             return trim($email);

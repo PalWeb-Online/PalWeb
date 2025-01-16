@@ -21,7 +21,7 @@ class UserSettingsController
     /**
      * Renders the dashboard settings page
      */
-    public function edit()
+    public function edit(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Edit Profile');
 
@@ -82,7 +82,7 @@ class UserSettingsController
     /**
      * Renders the change password page
      */
-    public function editPassword()
+    public function editPassword(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Edit Password');
 

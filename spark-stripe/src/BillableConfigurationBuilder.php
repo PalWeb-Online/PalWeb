@@ -2,6 +2,8 @@
 
 namespace Spark;
 
+use Spark\Plan;
+
 class BillableConfigurationBuilder
 {
     /**
@@ -26,7 +28,7 @@ class BillableConfigurationBuilder
      *
      * @return $this
      */
-    public function resolve(callable $callback)
+    public function resolve(callable $callback): static
     {
         Spark::resolveBillableUsing($this->type, $callback);
 
@@ -38,7 +40,7 @@ class BillableConfigurationBuilder
      *
      * @return $this
      */
-    public function authorize(callable $callback)
+    public function authorize(callable $callback): static
     {
         Spark::authorizeUsing($this->type, $callback);
 
@@ -50,7 +52,7 @@ class BillableConfigurationBuilder
      *
      * @return $this
      */
-    public function checkPlanEligibility(callable $callback)
+    public function checkPlanEligibility(callable $callback): static
     {
         Spark::checkPlanEligibilityUsing($this->type, $callback);
 
@@ -62,7 +64,7 @@ class BillableConfigurationBuilder
      *
      * @return $this
      */
-    public function chargePerSeat(string $seatName, callable $callback)
+    public function chargePerSeat(string $seatName, callable $callback): static
     {
         Spark::chargePerSeat($this->type, $seatName, $callback);
 
@@ -76,7 +78,7 @@ class BillableConfigurationBuilder
      * @param  int  $id
      * @return \Spark\Plan
      */
-    public function plan($name, $id)
+    public function plan(string $name, int $id): Plan
     {
         return Spark::plan($this->type, $name, $id);
     }

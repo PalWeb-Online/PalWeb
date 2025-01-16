@@ -23,7 +23,7 @@ class AfterPasswordReset
      * @param  object  $event
      * @return void
      */
-    public function handle($event): void
+    public function handle(object $event): void
     {
         // Send a password changed email to the user
         Mail::to($event->user)->send(new PasswordChanged($event->user));

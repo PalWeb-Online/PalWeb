@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Deck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class DeckBuilderController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Deck Builder');
 
@@ -17,7 +18,7 @@ class DeckBuilderController extends Controller
         ]);
     }
 
-    public function edit(Request $request, $deckId)
+    public function edit(Request $request, $deckId): \Illuminate\View\View
     {
         $user = $request->user();
         $user = [
@@ -38,7 +39,7 @@ class DeckBuilderController extends Controller
         ]);
     }
 
-    public function getCreatedDecks(Request $request)
+    public function getCreatedDecks(Request $request): JsonResponse
     {
         try {
             $user = $request->user();

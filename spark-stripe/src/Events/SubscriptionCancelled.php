@@ -2,6 +2,7 @@
 
 namespace Spark\Events;
 
+use Spark\Billable;
 use Laravel\Cashier\Subscription;
 
 class SubscriptionCancelled
@@ -26,7 +27,7 @@ class SubscriptionCancelled
      * @param  \Spark\Billable  $billable
      * @return void
      */
-    public function __construct($billable, Subscription $subscription)
+    public function __construct(Billable $billable, Subscription $subscription)
     {
         $this->billable = $billable;
         $this->subscription = $subscription;

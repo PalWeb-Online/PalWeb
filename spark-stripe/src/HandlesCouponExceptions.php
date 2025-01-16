@@ -13,7 +13,7 @@ trait HandlesCouponExceptions
      *
      * @return void
      */
-    protected function handleCouponException(InvalidRequestException $e)
+    protected function handleCouponException(InvalidRequestException $e): void
     {
         if (Str::of($e->getMessage())->contains('customer has prior transactions')) {
             throw ValidationException::withMessages([

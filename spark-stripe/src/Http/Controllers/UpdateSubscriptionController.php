@@ -18,7 +18,7 @@ class UpdateSubscriptionController
      *
      * @return void
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): void
     {
         $billable = $this->billable();
 

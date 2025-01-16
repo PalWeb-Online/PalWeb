@@ -2,6 +2,7 @@
 
 namespace Spark\Http\Controllers;
 
+use Spark\Billable;
 use Illuminate\Http\Request;
 use Spark\Features;
 use Spark\ValidCountry;
@@ -16,7 +17,7 @@ class UpdatePaymentInformationController
      *
      * @return void
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): void
     {
         $billable = $this->billable();
 
@@ -35,7 +36,7 @@ class UpdatePaymentInformationController
      * @param  \Spark\Billable  $billable
      * @return void
      */
-    private function updateBillable(Request $request, $billable)
+    private function updateBillable(Request $request, Billable $billable): void
     {
         $billable->forceFill($request->only([
             'extra_billing_information',
@@ -54,7 +55,7 @@ class UpdatePaymentInformationController
      *
      * @return void
      */
-    protected function validate(Request $request)
+    protected function validate(Request $request): void
     {
         $countryRule = Features::collectsBillingAddress() ? 'required' : 'nullable';
 

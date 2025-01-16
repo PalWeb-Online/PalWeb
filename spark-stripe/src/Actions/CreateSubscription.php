@@ -2,6 +2,8 @@
 
 namespace Spark\Actions;
 
+use Spark\Plan;
+use Spark\Billable;
 use Illuminate\Support\Carbon;
 use Laravel\Cashier\SubscriptionBuilder;
 use Spark\Contracts\Actions\CreatesSubscriptions;
@@ -56,7 +58,7 @@ class CreateSubscription implements CreatesSubscriptions
      * @param  \Spark\Billable  $billable
      * @return void
      */
-    protected function purgeOldSubscriptions($billable)
+    protected function purgeOldSubscriptions(Billable $billable): void
     {
         $billable->subscriptions()->where('stripe_status', '!=', Subscription::STATUS_CANCELED)
             ->each(function ($subscription) {
@@ -85,7 +87,7 @@ class CreateSubscription implements CreatesSubscriptions
      * @param  \Laravel\Cashier\SubscriptionBuilder  $builder
      * @return void
      */
-    protected function configureTrial($billable, $plan, $builder)
+    protected function configureTrial(Billable $billable, Plan $plan, SubscriptionBuilder $builder): void
     {
         $skipTrialIfSubscribedBefore = config('spark.skip_trial_if_subscribed_before');
 
@@ -116,7 +118,7 @@ class CreateSubscription implements CreatesSubscriptions
      *
      * @throws \Stripe\Exception\ApiErrorException
      */
-    protected function applyCoupon($coupon, $billable, SubscriptionBuilder $builder): void
+    protected function applyCoupon(string $coupon, Billable $billable, SubscriptionBuilder $builder): void
     {
         $codes = $billable->stripe()->promotionCodes->all(['code' => $coupon]);
 

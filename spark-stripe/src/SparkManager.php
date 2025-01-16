@@ -2,6 +2,10 @@
 
 namespace Spark;
 
+use Spark\BillableConfigurationBuilder;
+use Spark\Billable;
+use Spark\Plan;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -69,7 +73,7 @@ class SparkManager
      *
      * @return \Spark\BillableConfigurationBuilder
      */
-    public static function billable(string $class)
+    public static function billable(string $class): BillableConfigurationBuilder
     {
         foreach (config('spark.billables') as $type => $config) {
             if (Arr::get($config, 'model') == $class) {
@@ -87,7 +91,7 @@ class SparkManager
      * @param  callable  $callback
      * @return void
      */
-    public function resolveBillableUsing($type, $callback)
+    public function resolveBillableUsing(string $type, callable $callback): void
     {
         $this->billableResolvingCallbacks[$type] = $callback;
     }
@@ -98,7 +102,7 @@ class SparkManager
      * @param  string  $type
      * @return \Spark\Billable|null
      */
-    public function resolveBillable($type, Request $request)
+    public function resolveBillable(string $type, Request $request): ?Billable
     {
         if (isset($this->billableResolvingCallbacks[$type])) {
             return call_user_func($this->billableResolvingCallbacks[$type], $request);
@@ -112,7 +116,7 @@ class SparkManager
      * @param  callable  $callback
      * @return void
      */
-    public function authorizeUsing($type, $callback)
+    public function authorizeUsing(string $type, callable $callback): void
     {
         $this->authorizationCallbacks[$type] = $callback;
     }
@@ -123,7 +127,7 @@ class SparkManager
      * @param  mixed  $billable
      * @return bool
      */
-    public function isAuthorizedToViewBillingPortal($billable, Request $request)
+    public function isAuthorizedToViewBillingPortal($billable, Request $request): bool
     {
         $type = $billable->sparkConfiguration('type');
 
@@ -143,7 +147,7 @@ class SparkManager
      * @param  callable  $callback
      * @return void
      */
-    public function checkPlanEligibilityUsing($type, $callback)
+    public function checkPlanEligibilityUsing(string $type, callable $callback): void
     {
         $this->planEligibilityCallbacks[$type][] = $callback;
     }
@@ -155,7 +159,7 @@ class SparkManager
      * @param  \Spark\Plan  $plan
      * @return void
      */
-    public function ensurePlanEligibility($billable, $plan)
+    public function ensurePlanEligibility($billable, Plan $plan): void
     {
         $checks = $this->planEligibilityCallbacks[$billable->sparkConfiguration('type')] ?? [];
 
@@ -172,7 +176,7 @@ class SparkManager
      * @param  callable  $callback
      * @return void
      */
-    public function chargePerSeat($billableType, $seatName, $callback)
+    public function chargePerSeat(string $billableType, string $seatName, callable $callback): void
     {
         $this->seatNames[$billableType] = $seatName;
         $this->seatCountCallbacks[$billableType] = $callback;
@@ -185,7 +189,7 @@ class SparkManager
      * @param  mixed  $billable
      * @return int
      */
-    public function seatCount($billableType, $billable)
+    public function seatCount(string $billableType, $billable): int
     {
         return call_user_func($this->seatCountCallbacks[$billableType], $billable);
     }
@@ -196,7 +200,7 @@ class SparkManager
      * @param  string  $billableType
      * @return string|null
      */
-    public function seatName($billableType)
+    public function seatName(string $billableType): ?string
     {
         return $this->seatNames[$billableType] ?? null;
     }
@@ -207,7 +211,7 @@ class SparkManager
      * @param  string  $billableType
      * @return bool
      */
-    public function chargesPerSeat($billableType)
+    public function chargesPerSeat(string $billableType): bool
     {
         return isset($this->seatCountCallbacks[$billableType]);
     }
@@ -220,7 +224,7 @@ class SparkManager
      * @param  int  $id
      * @return \Spark\Plan
      */
-    public function plan($billableType, $name, $id)
+    public function plan(string $billableType, string $name, int $id): Plan
     {
         $this->plans[$billableType][] = $plan = new Plan($name, $id);
 
@@ -233,7 +237,7 @@ class SparkManager
      * @param  string  $billableType
      * @return \Illuminate\Support\Collection
      */
-    public function plans($billableType)
+    public function plans(string $billableType): Collection
     {
         if (isset($this->plans[$billableType])) {
             return collect($this->plans[$billableType]);
@@ -249,7 +253,7 @@ class SparkManager
      *
      * @return \Illuminate\Support\Collection
      */
-    protected function toPlans(array $config)
+    protected function toPlans(array $config): Collection
     {
         $plans = collect();
 
@@ -280,7 +284,7 @@ class SparkManager
      *
      * @return string
      */
-    public function prorationBehavior()
+    public function prorationBehavior(): string
     {
         if (! is_null(config('spark.proration_behavior'))) {
             return config('spark.proration_behavior');
@@ -298,7 +302,7 @@ class SparkManager
      * @param  callable  $callback
      * @return void
      */
-    public function checkoutSessionOptions($billableType, $callback)
+    public function checkoutSessionOptions(string $billableType, callable $callback): void
     {
         $this->checkoutOptionsCallback[$billableType] = $callback;
     }
@@ -309,7 +313,7 @@ class SparkManager
      * @param  string  $billableType
      * @return callable|null
      */
-    public function getCheckoutSessionOptions($billableType)
+    public function getCheckoutSessionOptions(string $billableType): ?callable
     {
         return $this->checkoutOptionsCallback[$billableType] ?? null;
     }
@@ -320,7 +324,7 @@ class SparkManager
      * @param  string  $billableType
      * @return string
      */
-    public function billableModel($billableType)
+    public function billableModel(string $billableType): string
     {
         return config("spark.billables.$billableType.model");
     }
@@ -330,7 +334,7 @@ class SparkManager
      *
      * @return void
      */
-    public function ignoreMigrations()
+    public function ignoreMigrations(): void
     {
         $this->runsMigrations = false;
     }
@@ -340,7 +344,7 @@ class SparkManager
      *
      * @return bool
      */
-    public function runsMigrations()
+    public function runsMigrations(): bool
     {
         return $this->runsMigrations;
     }

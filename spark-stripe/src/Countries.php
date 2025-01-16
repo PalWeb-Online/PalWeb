@@ -9,7 +9,7 @@ class Countries
      *
      * @return array
      */
-    public static function all()
+    public static function all(): array
     {
         return [
             'AF' => __('Afghanistan'),

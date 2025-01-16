@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Events\ModelPinned;
 use App\Models\Attribute;
 use App\Models\Dialect;
@@ -32,7 +33,7 @@ class TermController extends Controller
         protected TermRepository $termRepository
     ) {}
 
-    public function pin(Term $term)
+    public function pin(Term $term): JsonResponse
     {
         $user = auth()->user();
 
@@ -48,7 +49,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function usages(Term $term)
+    public function usages(Term $term): \Illuminate\View\View
     {
         $terms = [];
         $terms[] = $term;
@@ -58,7 +59,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function audios(Term $term, Request $request)
+    public function audios(Term $term, Request $request): \Illuminate\View\View
     {
         $terms = collect([$term]);
         $terms = $this->loadPronunciations($terms, $request);
@@ -101,7 +102,7 @@ class TermController extends Controller
     /**
      * Loads the Dictionary Index
      */
-    public function index(Request $request, SearchService $searchService)
+    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
         View::share('pageTitle', 'the Dictionary');
         View::share('pageDescription',
@@ -536,7 +537,7 @@ class TermController extends Controller
     /**
      * Loads the Term Creator
      */
-    public function create()
+    public function create(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Create Term');
 
@@ -580,7 +581,7 @@ class TermController extends Controller
     /**
      * Loads the Term Editor
      */
-    public function edit(Term $term)
+    public function edit(Term $term): \Illuminate\View\View
     {
         View::share('pageTitle', 'Edit Term');
 
@@ -636,7 +637,7 @@ class TermController extends Controller
         return to_route('terms.index');
     }
 
-    public function todo()
+    public function todo(): \Illuminate\View\View
     {
         $missingInflections = [];
         foreach (Inflection::whereIn('form', ['ap', 'pp', 'nv'])->get() as $inflection) {

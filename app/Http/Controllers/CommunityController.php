@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\View;
 
 class CommunityController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\View\View
     {
         $latestDecks = Deck::with('author')
             ->where('private', false)

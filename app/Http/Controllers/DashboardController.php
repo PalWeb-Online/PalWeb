@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\View;
 
 class DashboardController
 {
-    public function workbench(Request $request)
+    public function workbench(Request $request): \Illuminate\View\View
     {
         // TODO: Somehow terms are sorted by when they were pinned, but decks & sentences are sorted by the model's id.
         $decks = Deck::whereHasBookmark(auth()->user())->get();
@@ -61,7 +61,7 @@ class DashboardController
         ]);
     }
 
-    public function subscription()
+    public function subscription(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Dashboard: Subscription');
 

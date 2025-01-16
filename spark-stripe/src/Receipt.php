@@ -2,6 +2,7 @@
 
 namespace Spark;
 
+use Laravel\Cashier\Invoice;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Cashier\Cashier;
@@ -57,7 +58,7 @@ class Receipt extends Model
      *
      * @return \Laravel\Cashier\Invoice|null
      */
-    public function invoice()
+    public function invoice(): ?Invoice
     {
         return $this->owner->findInvoice($this->provider_id);
     }

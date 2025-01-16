@@ -18,7 +18,7 @@ class ValidPlan implements Rule
      *
      * @param  string  $type
      */
-    public function __construct($type)
+    public function __construct(string $type)
     {
         $this->type = $type;
     }
@@ -30,7 +30,7 @@ class ValidPlan implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes(string $attribute, $value): bool
     {
         $plan = Spark::plans($this->type)
             ->first(function ($plan) use ($value) {
@@ -45,7 +45,7 @@ class ValidPlan implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return __('The selected plan is invalid.');
     }

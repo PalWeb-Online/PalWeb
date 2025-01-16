@@ -31,7 +31,7 @@ class Controller extends BaseController
      *
      * @throws UnauthorizedAccessException
      */
-    public function failIfFalse($action)
+    public function failIfFalse(bool $action)
     {
         if (! $action) {
             // Fire off a UserDeniedAccess event. The details will be filled in by the implementation

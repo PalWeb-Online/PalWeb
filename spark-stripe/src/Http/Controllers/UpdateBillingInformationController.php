@@ -14,7 +14,7 @@ class UpdateBillingInformationController
      * @param  \Illuminate\Http\Request
      * @return void
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): void
     {
         $billable = $this->billable();
 

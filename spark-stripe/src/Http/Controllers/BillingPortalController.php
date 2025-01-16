@@ -2,6 +2,8 @@
 
 namespace Spark\Http\Controllers;
 
+use Inertia\Response;
+use Spark\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
@@ -21,7 +23,7 @@ class BillingPortalController
      * @param  mixed  $id
      * @return \Inertia\Response
      */
-    public function __invoke(Request $request, $type = null, $id = null)
+    public function __invoke(Request $request, ?string $type = null, $id = null): Response
     {
         $type = $type ?: $this->guessBillableType();
 
@@ -53,7 +55,7 @@ class BillingPortalController
      *
      * @return string
      */
-    private static function getTranslations()
+    private static function getTranslations(): string
     {
         if (! is_readable($file = lang_path('spark/'.app()->getLocale().'.json'))) {
             $file = lang_path('spark/'.app('translator')->getFallback().'.json');
@@ -68,7 +70,7 @@ class BillingPortalController
      * @param  string  $type
      * @return \Spark\Plan $Plan
      */
-    private function planToSubscribeTo($type)
+    private function planToSubscribeTo(string $type): Plan
     {
         return Spark::plans($type)->first(function ($plan) {
             return $plan->id == request('subscribe');

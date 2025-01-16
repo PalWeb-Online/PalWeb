@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Deck;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class CardViewerController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Card Viewer');
 
@@ -20,7 +21,7 @@ class CardViewerController extends Controller
         ]);
     }
 
-    public function getPinnedDecks(Request $request)
+    public function getPinnedDecks(Request $request): JsonResponse
     {
         try {
             $user = $request->user();

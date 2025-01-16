@@ -2,6 +2,7 @@
 
 namespace Spark\Events;
 
+use Spark\Billable;
 use Laravel\Cashier\Invoice;
 
 class PaymentAttempted
@@ -26,7 +27,7 @@ class PaymentAttempted
      * @param  \Spark\Billable  $billable
      * @return void
      */
-    public function __construct($billable, Invoice $invoice)
+    public function __construct(Billable $billable, Invoice $invoice)
     {
         $this->billable = $billable;
         $this->invoice = $invoice;

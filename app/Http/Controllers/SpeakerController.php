@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Models\Speaker;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 
 class SpeakerController extends Controller
 {
-    public function getSpeaker()
+    public function getSpeaker(): JsonResponse
     {
         $user = auth()->user();
 
@@ -29,7 +30,7 @@ class SpeakerController extends Controller
         ]);
     }
 
-    public function getSpeakerOptions()
+    public function getSpeakerOptions(): JsonResponse
     {
         return response()->json([
             'dialects' => Dialect::find([6, 7, 8, 9, 10, 11, 12])->toArray(),
@@ -37,7 +38,7 @@ class SpeakerController extends Controller
         ]);
     }
 
-    public function saveSpeaker(Request $request)
+    public function saveSpeaker(Request $request): JsonResponse
     {
         $user = auth()->user();
 

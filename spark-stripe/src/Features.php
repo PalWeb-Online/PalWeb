@@ -9,7 +9,7 @@ class Features
      *
      * @return bool
      */
-    public static function enabled(string $feature)
+    public static function enabled(string $feature): bool
     {
         return in_array($feature, config('spark.features', []));
     }
@@ -19,7 +19,7 @@ class Features
      *
      * @return bool
      */
-    public static function optionEnabled(string $feature, string $option)
+    public static function optionEnabled(string $feature, string $option): bool
     {
         return static::enabled($feature) &&
                config("spark-options.{$feature}.{$option}") === true;
@@ -40,7 +40,7 @@ class Features
      *
      * @return bool
      */
-    public static function enforcesAcceptingTerms()
+    public static function enforcesAcceptingTerms(): bool
     {
         return static::enabled('must-accept-terms');
     }
@@ -50,7 +50,7 @@ class Features
      *
      * @return bool
      */
-    public static function collectsEuVat()
+    public static function collectsEuVat(): bool
     {
         if (config('spark.collects_eu_vat')) {
             return config('spark.collects_eu_vat');
@@ -64,7 +64,7 @@ class Features
      *
      * @return bool
      */
-    public static function collectsBillingAddress()
+    public static function collectsBillingAddress(): bool
     {
         return static::enabled('billing-address-collection');
     }
@@ -74,7 +74,7 @@ class Features
      *
      * @return bool
      */
-    public static function sendsReceiptEmails()
+    public static function sendsReceiptEmails(): bool
     {
         return static::enabled('receipt-emails-sending');
     }
@@ -84,7 +84,7 @@ class Features
      *
      * @return bool
      */
-    public static function sendsPaymentNotificationEmails()
+    public static function sendsPaymentNotificationEmails(): bool
     {
         return static::enabled('sends-payment-notification-emails');
     }
@@ -94,7 +94,7 @@ class Features
      *
      * @return string
      */
-    public static function mustAcceptTerms()
+    public static function mustAcceptTerms(): string
     {
         return 'must-accept-terms';
     }
@@ -104,7 +104,7 @@ class Features
      *
      * @return string
      */
-    public static function euVatCollection(array $options = [])
+    public static function euVatCollection(array $options = []): string
     {
         config(['spark-options.eu-vat-collection' => $options]);
 
@@ -116,7 +116,7 @@ class Features
      *
      * @return string
      */
-    public static function billingAddressCollection(array $options = [])
+    public static function billingAddressCollection(array $options = []): string
     {
         config(['spark-options.billing-address-collection' => $options]);
 
@@ -128,7 +128,7 @@ class Features
      *
      * @return string
      */
-    public static function receiptEmails(array $options = [])
+    public static function receiptEmails(array $options = []): string
     {
         config(['spark-options.receipt-emails-sending' => $options]);
 
@@ -140,7 +140,7 @@ class Features
      *
      * @return string
      */
-    public static function paymentNotificationEmails()
+    public static function paymentNotificationEmails(): string
     {
         return 'sends-payment-notification-emails';
     }

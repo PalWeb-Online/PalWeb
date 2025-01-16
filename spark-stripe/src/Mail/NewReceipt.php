@@ -2,6 +2,7 @@
 
 namespace Spark\Mail;
 
+use Laravel\Cashier\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -33,7 +34,7 @@ class NewReceipt extends Mailable
      * @param  \Laravel\Cashier\Invoice  $invoice
      * @return void
      */
-    public function __construct($billable, $invoice)
+    public function __construct($billable, Invoice $invoice)
     {
         $this->invoice = $invoice;
         $this->billable = $billable;
@@ -44,7 +45,7 @@ class NewReceipt extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         $receiptData = array_merge([
             'vendor' => 'Laravel',

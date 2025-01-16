@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Flasher\Prime\FlasherInterface;
@@ -30,7 +31,7 @@ class EmailVerificationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function verify(EmailVerificationRequest $request)
+    public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
@@ -48,7 +49,7 @@ class EmailVerificationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function link(Request $request)
+    public function link(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME);

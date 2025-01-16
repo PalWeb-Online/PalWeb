@@ -43,7 +43,7 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function registerSparkServiceProvider()
+    protected function registerSparkServiceProvider(): void
     {
         $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\View;
 
 class WikiController
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Site Documentation & Descriptive Grammar of Palestinian Arabic');
         View::share('pageDescription',
@@ -20,7 +20,7 @@ class WikiController
         ]);
     }
 
-    public function show($slug)
+    public function show($slug): \Illuminate\View\View
     {
         View::share('pageTitle', 'Wiki: '.ucwords($slug));
         View::share('pageDescription',

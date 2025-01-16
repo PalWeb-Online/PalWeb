@@ -2,6 +2,7 @@
 
 namespace Spark;
 
+use Spark\Plan;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable as CashierBillable;
@@ -17,7 +18,7 @@ trait Billable
      *
      * @return void
      */
-    public static function bootBillable()
+    public static function bootBillable(): void
     {
         static::created(function ($model) {
             $trialDays = $model->sparkConfiguration('trial_days');
@@ -39,7 +40,7 @@ trait Billable
      *
      * @return bool
      */
-    public function shouldSyncCustomerDetailsToStripe()
+    public function shouldSyncCustomerDetailsToStripe(): bool
     {
         return config('cashier.secret') &&
             ! env('CI') &&
@@ -52,7 +53,7 @@ trait Billable
      *
      * @return array
      */
-    protected function stripeAttributes()
+    protected function stripeAttributes(): array
     {
         return [
             'name',
@@ -72,7 +73,7 @@ trait Billable
      *
      * @return array|null
      */
-    public function stripeAddress()
+    public function stripeAddress(): ?array
     {
         return [
             'line1' => $this->billing_address,
@@ -101,7 +102,7 @@ trait Billable
      *
      * @return \Spark\Plan|null
      */
-    public function sparkPlan()
+    public function sparkPlan(): ?Plan
     {
         $subscription = $this->subscription();
 
@@ -120,7 +121,7 @@ trait Billable
      * @param  string|null  $key
      * @return mixed
      */
-    public function sparkConfiguration($key = null)
+    public function sparkConfiguration(?string $key = null)
     {
         $config = collect(config('spark.billables'))->map(function ($config, $type) {
             $config['type'] = $type;
@@ -147,7 +148,7 @@ trait Billable
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
      * @throws \Laravel\Cashier\Exceptions\SubscriptionUpdateFailure
      */
-    public function addSeat($count = 1)
+    public function addSeat(int $count = 1): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -165,7 +166,7 @@ trait Billable
      * @param  int  $count
      * @return void
      */
-    public function removeSeat($count = 1)
+    public function removeSeat(int $count = 1): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -187,7 +188,7 @@ trait Billable
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
      * @throws \Laravel\Cashier\Exceptions\SubscriptionUpdateFailure
      */
-    public function updateSeats($count)
+    public function updateSeats(int $count): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -205,7 +206,7 @@ trait Billable
      * @param  mixed  $value
      * @return array
      */
-    public function getReceiptEmailsAttribute($value)
+    public function getReceiptEmailsAttribute($value): array
     {
         if (is_null($value)) {
             return [];
@@ -220,7 +221,7 @@ trait Billable
      * @param  \Laravel\Cashier\PaymentMethod|\Stripe\PaymentMethod|null  $paymentMethod
      * @return $this
      */
-    protected function fillPaymentMethodDetails($paymentMethod)
+    protected function fillPaymentMethodDetails($paymentMethod): static
     {
         if ($paymentMethod->type === 'card') {
             $this->pm_type = $paymentMethod->card->brand;
@@ -240,7 +241,7 @@ trait Billable
      *
      * @return bool
      */
-    public function onGenericTrial()
+    public function onGenericTrial(): bool
     {
         if (! $this->trial_ends_at) {
             return;
@@ -258,7 +259,7 @@ trait Billable
      *
      * @return \Carbon\Carbon|null
      */
-    public function genericTrialEndsAt()
+    public function genericTrialEndsAt(): ?\Carbon\Carbon
     {
         if (! $this->trial_ends_at) {
             return;
@@ -276,7 +277,7 @@ trait Billable
      *
      * @return array
      */
-    public function taxRates()
+    public function taxRates(): array
     {
         if (! Features::collectsEuVat()) {
             return null;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Badge;
 use App\Models\User;
@@ -22,7 +23,7 @@ class OAuthController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function callback()
+    public function callback(): RedirectResponse
     {
         $error = request('error') ?? null;
         $errorDescription = request('error_description') ?? null;
@@ -114,7 +115,7 @@ class OAuthController extends Controller
         }
     }
 
-    public function revoke(Request $request)
+    public function revoke(Request $request): RedirectResponse
     {
         if (! auth()->user()->password) {
             $this->flasher->addWarning('You have not set a password for this account. You cannot disconnect from Discord until you have set a password on PalWeb. Please set a password first, then try again.');
@@ -160,7 +161,7 @@ class OAuthController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function redirect()
+    public function redirect(): RedirectResponse
     {
         if (auth()->user() && auth()->user()->discord_id) {
             // if User exists, is logged in & is connected

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
@@ -17,7 +18,7 @@ class AudioController extends Controller
         protected AudioService $audioService
     ) {}
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $sort = $request->input('sort', 'latest');
         $query = Audio::with(['speaker', 'pronunciation.term']);
@@ -58,7 +59,7 @@ class AudioController extends Controller
         ]);
     }
 
-    public function speaker(Speaker $speaker)
+    public function speaker(Speaker $speaker): View
     {
         $audios = $speaker->audios()
             ->with('speaker')

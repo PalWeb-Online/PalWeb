@@ -2,6 +2,9 @@
 
 namespace Spark\Http\Controllers;
 
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Spark\Billable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
@@ -93,7 +96,7 @@ class WebhookController extends CashierController
      *
      * @return \Illuminate\Http\Response
      */
-    protected function handleInvoicePaymentSucceeded(array $payload)
+    protected function handleInvoicePaymentSucceeded(array $payload): Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             if ($invoice = $billable->findInvoice($payload['data']['object']['id'])) {
@@ -120,7 +123,7 @@ class WebhookController extends CashierController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function handleInvoicePaymentActionRequired(array $payload)
+    protected function handleInvoicePaymentActionRequired(array $payload): Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             if (in_array(Notifiable::class, class_uses_recursive($billable))) {
@@ -142,7 +145,7 @@ class WebhookController extends CashierController
      * @param  \Laravel\Cashier\Invoice|null  $invoice
      * @return void
      */
-    protected function sendReceiptNotification($billable, $invoice)
+    protected function sendReceiptNotification(Billable $billable, ?Invoice $invoice): void
     {
         if (! config('spark.sends_receipt_emails') && ! Features::sendsReceiptEmails()) {
             return;
@@ -167,7 +170,7 @@ class WebhookController extends CashierController
      * @param  \Laravel\Cashier\Payment  $payment
      * @return void
      */
-    protected function sendPaymentConfirmationNotification($billable, $payment)
+    protected function sendPaymentConfirmationNotification(Billable $billable, Payment $payment): void
     {
         if (! config('spark.sends_payment_notification_emails') &&
             ! Features::sendsPaymentNotificationEmails()) {

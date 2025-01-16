@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialect;
@@ -15,7 +16,7 @@ class RecordWizardController extends Controller
 {
     public function __construct(protected AudioService $audioService) {}
 
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Record Wizard');
 
@@ -60,7 +61,7 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function getDeckItems(Request $request, $deckId)
+    public function getDeckItems(Request $request, $deckId): JsonResponse
     {
         try {
             $speakerId = $request->input('speaker_id');
@@ -106,7 +107,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function stashRecord(Request $request)
+    public function stashRecord(Request $request): JsonResponse
     {
         $request->validate([
             'file' => 'required|file|mimes:wav|max:5120',
@@ -134,7 +135,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function discardRecord($stashKey)
+    public function discardRecord($stashKey): JsonResponse
     {
         $filePath = public_path("stash/{$stashKey}");
 
@@ -148,7 +149,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function clearStash($speakerId)
+    public function clearStash($speakerId): JsonResponse
     {
         $path = public_path('stash');
 
@@ -168,7 +169,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function uploadRecords(Request $request)
+    public function uploadRecords(Request $request): JsonResponse
     {
         $filename = $request->input('filename').'.mp3';
         $stashPath = public_path("stash/{$request->input('stashKey')}");

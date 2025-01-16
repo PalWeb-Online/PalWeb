@@ -2,6 +2,9 @@
 
 namespace Spark\Http\Middleware;
 
+use Illuminate\Http\Response;
+use Closure;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spark\GuessesBillableTypes;
 use Spark\Spark;
@@ -19,7 +22,7 @@ class VerifyBillableIsSubscribed
      * @param  string  $plan
      * @return \Illuminate\Http\Response
      */
-    public function handle($request, $next, $billableType = null, $plan = null)
+    public function handle(Request $request, Closure $next, string $billableType = null, string $plan = null): Response
     {
         $billableType = $billableType ?: $this->guessBillableType($billableType);
 
@@ -49,7 +52,7 @@ class VerifyBillableIsSubscribed
      * @param  bool  $defaultSubscription
      * @return bool
      */
-    protected function subscribed($request, $type, $plan)
+    protected function subscribed(Request $request, string $type, string $plan): bool
     {
         if (! $billable = Spark::resolveBillable($type, $request)) {
             return false;
@@ -70,7 +73,7 @@ class VerifyBillableIsSubscribed
      *
      * @return string
      */
-    protected function redirect(string $billableType)
+    protected function redirect(string $billableType): string
     {
         $redirect = '/'.config('spark.path');
 

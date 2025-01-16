@@ -28,7 +28,7 @@ class UserVerified extends Mailable
      *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope()
+    public function envelope(): Envelope
     {
         return new Envelope(
             subject: __('mail.subject.verified'),
@@ -40,7 +40,7 @@ class UserVerified extends Mailable
      *
      * @return \Illuminate\Mail\Mailables\Content
      */
-    public function content()
+    public function content(): Content
     {
         return new Content(
             view: 'mail.verified',
@@ -53,7 +53,7 @@ class UserVerified extends Mailable
      *
      * @return array
      */
-    public function attachments()
+    public function attachments(): array
     {
         return [];
     }

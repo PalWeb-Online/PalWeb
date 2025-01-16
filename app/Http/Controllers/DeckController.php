@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Models\Deck;
@@ -17,7 +18,7 @@ class DeckController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Deck $deck)
+    public function pin(Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
 
@@ -36,7 +37,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService)
+    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
         View::share('pageTitle', 'Deck Library');
 
@@ -76,7 +77,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->validateRequest($request);
 
@@ -133,7 +134,7 @@ class DeckController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Deck $deck)
+    public function show(Deck $deck): \Illuminate\View\View
     {
         $this->authorize('interact', $deck);
 
@@ -149,7 +150,7 @@ class DeckController extends Controller
         return view('decks.show', ['deck' => $deck]);
     }
 
-    public function update(Request $request, Deck $deck)
+    public function update(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('modify', $deck);
 
@@ -196,7 +197,7 @@ class DeckController extends Controller
         ];
     }
 
-    public function toggleTerm(Deck $deck, Term $term)
+    public function toggleTerm(Deck $deck, Term $term): JsonResponse
     {
         $this->authorize('modify', $deck);
 

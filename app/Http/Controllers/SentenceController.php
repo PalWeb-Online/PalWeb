@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Events\ModelPinned;
 use App\Models\Gloss;
 use App\Models\Sentence;
@@ -17,7 +18,7 @@ class SentenceController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Sentence $sentence)
+    public function pin(Sentence $sentence): JsonResponse
     {
         $user = auth()->user();
 
@@ -33,7 +34,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService)
+    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
         View::share('pageTitle', 'the Phrasebook');
         View::share('pageDescription',
@@ -74,7 +75,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function show(Sentence $sentence)
+    public function show(Sentence $sentence): \Illuminate\View\View
     {
         View::share('pageTitle', 'Sentence: '.$sentence->translit);
         View::share('pageDescription',
@@ -108,7 +109,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Create Sentence');
 
@@ -153,7 +154,7 @@ class SentenceController extends Controller
 
     public function edit(
         Sentence $sentence
-    ) {
+    ): \Illuminate\View\View {
         View::share('pageTitle', 'Edit Sentence');
 
         return view('sentences.edit', compact('sentence'));

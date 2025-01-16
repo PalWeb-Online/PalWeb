@@ -2,6 +2,9 @@
 
 namespace Spark;
 
+use Illuminate\Support\Collection;
+use Laravel\Cashier\Subscription;
+use Spark\Billable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +23,7 @@ class FrontendState
      * @param  string  $type
      * @return array
      */
-    public function current($type, Model $billable)
+    public function current(string $type, Model $billable): array
     {
         /** @var \Laravel\Cashier\Subscription|null */
         $subscription = $billable->subscription();
@@ -108,7 +111,7 @@ class FrontendState
      *
      * @return string|null
      */
-    protected function logo()
+    protected function logo(): ?string
     {
         $logo = config('spark.brand.logo');
 
@@ -124,7 +127,7 @@ class FrontendState
      *
      * @return string
      */
-    protected function brandColor()
+    protected function brandColor(): string
     {
         $color = config('spark.brand.color', 'bg-gray-800');
 
@@ -138,7 +141,7 @@ class FrontendState
      * @param  \Illuminate\Database\Eloquent\Model  $billable
      * @return \Illuminate\Support\Collection
      */
-    protected function getPlans($type, $billable)
+    protected function getPlans(string $type, Model $billable): Collection
     {
         $plans = Spark::plans($type);
 
@@ -177,7 +180,7 @@ class FrontendState
      * @param  \Laravel\Cashier\Subscription|null  $subscription
      * @return string
      */
-    protected function state(Model $billable, $subscription)
+    protected function state(Model $billable, ?Subscription $subscription): string
     {
         if ($subscription && $subscription->onGracePeriod()) {
             return 'onGracePeriod';
@@ -196,7 +199,7 @@ class FrontendState
      * @param  \Spark\Billable  $billable
      * @return array
      */
-    protected function paymentMethods($billable)
+    protected function paymentMethods(Billable $billable): array
     {
         $defaultPaymentMethod = $billable->defaultPaymentMethod();
 
@@ -216,7 +219,7 @@ class FrontendState
      * @param  \Spark\Billable  $billable
      * @return array
      */
-    protected function openInvoices($billable)
+    protected function openInvoices(Billable $billable): array
     {
         return $billable->invoicesIncludingPending(['limit' => 100, 'status' => 'open', 'expand' => ['data.subscription']])
             ->filter(function (Invoice $invoice) {
@@ -245,7 +248,7 @@ class FrontendState
      * @param  \Spark\Billable  $billable
      * @return array
      */
-    protected function paidInvoices($billable)
+    protected function paidInvoices(Billable $billable): array
     {
         return $billable->cursorPaginateInvoices(10, ['status' => 'paid'])
             ->withQueryString()
@@ -269,7 +272,7 @@ class FrontendState
      *
      * @deprecated Will be removed in a future Spark release.
      */
-    protected function receipts(Model $billable)
+    protected function receipts(Model $billable): array
     {
         return $billable->localReceipts
             ->map(function ($receipt) use ($billable) {
@@ -290,7 +293,7 @@ class FrontendState
      *
      * @return string
      */
-    protected function dashboardUrl()
+    protected function dashboardUrl(): string
     {
         if ($dashboardUrl = config('spark.dashboard_url')) {
             return $dashboardUrl;
@@ -304,7 +307,7 @@ class FrontendState
      *
      * @return string
      */
-    protected function termsUrl()
+    protected function termsUrl(): string
     {
         if ($termsUrl = config('spark.terms_url')) {
             return $termsUrl;

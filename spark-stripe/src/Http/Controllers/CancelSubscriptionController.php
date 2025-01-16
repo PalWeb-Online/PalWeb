@@ -13,7 +13,7 @@ class CancelSubscriptionController
      *
      * @return void
      */
-    public function __invoke()
+    public function __invoke(): void
     {
         $billable = $this->billable();
 

@@ -108,7 +108,7 @@ class Plan implements Arrayable, JsonSerializable
      * @param  string  $id
      * @return void
      */
-    public function __construct($name, $id)
+    public function __construct(string $name, string $id)
     {
         $this->id = $id;
         $this->name = $name;
@@ -119,7 +119,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function interval(string $interval)
+    public function interval(string $interval): static
     {
         $this->interval = $interval;
 
@@ -131,7 +131,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function monthly()
+    public function monthly(): static
     {
         $this->interval = 'monthly';
 
@@ -143,7 +143,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function yearly()
+    public function yearly(): static
     {
         $this->interval = 'yearly';
 
@@ -156,7 +156,7 @@ class Plan implements Arrayable, JsonSerializable
      * @param  int  $trialDays
      * @return $this
      */
-    public function trialDays($trialDays)
+    public function trialDays(int $trialDays): static
     {
         $this->trialDays = $trialDays;
 
@@ -168,7 +168,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function incentive(string $monthlyIncentive, string $yearlyIncentive)
+    public function incentive(string $monthlyIncentive, string $yearlyIncentive): static
     {
         $this->monthlyIncentive = $monthlyIncentive;
         $this->yearlyIncentive = $yearlyIncentive;
@@ -181,7 +181,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function shortDescription(string $description)
+    public function shortDescription(string $description): static
     {
         $this->shortDescription = $description;
 
@@ -193,7 +193,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function features(array $features)
+    public function features(array $features): static
     {
         $this->features = $features;
 
@@ -205,7 +205,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function options(array $options)
+    public function options(array $options): static
     {
         $this->options = $options;
 
@@ -217,7 +217,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function status(bool $active = true)
+    public function status(bool $active = true): static
     {
         $this->active = $active;
 
@@ -229,7 +229,7 @@ class Plan implements Arrayable, JsonSerializable
      *
      * @return $this
      */
-    public function archive()
+    public function archive(): static
     {
         $this->active = false;
 

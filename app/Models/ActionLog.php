@@ -55,7 +55,7 @@ class ActionLog extends EloquentStoredEvent
      *
      * @return string|null
      */
-    public function getIp()
+    public function getIp(): ?string
     {
         return Request::ip();
     }
@@ -65,7 +65,7 @@ class ActionLog extends EloquentStoredEvent
      *
      * @return int
      */
-    public function getCurrentUserID()
+    public function getCurrentUserID(): int
     {
         $userID = 1;
         $user = Auth::user();
@@ -92,7 +92,7 @@ class ActionLog extends EloquentStoredEvent
      *
      * @return array
      */
-    public function getCurrentRoute()
+    public function getCurrentRoute(): array
     {
         $controller = null;
         $name = null;

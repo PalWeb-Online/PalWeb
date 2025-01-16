@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Mail\AnnouncementEmail;
 use App\Models\User;
 use Exception;
@@ -12,14 +13,14 @@ use Illuminate\Support\Facades\View;
 
 class EmailAnnouncementController extends Controller
 {
-    public function compose()
+    public function compose(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Compose Email');
 
         return view('users.dashboard.email-compose');
     }
 
-    public function send(Request $request)
+    public function send(Request $request): RedirectResponse
     {
         $request->validate([
             'subject' => 'required',

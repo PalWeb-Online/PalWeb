@@ -2,6 +2,8 @@
 
 namespace Spark\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Spark\Billable;
 use Illuminate\Http\Request;
 use Spark\Contracts\Actions\CreatesSubscriptions;
 use Spark\Features;
@@ -19,7 +21,7 @@ class NewSubscriptionController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         $billable = $this->billable();
 
@@ -51,7 +53,7 @@ class NewSubscriptionController
      * @param  \Spark\Billable  $billable
      * @return void
      */
-    private function updateBillable(Request $request, $billable)
+    private function updateBillable(Request $request, Billable $billable): void
     {
         $billable->forceFill($request->only([
             'extra_billing_information',

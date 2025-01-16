@@ -2,6 +2,7 @@
 
 namespace Spark\Http\Controllers;
 
+use Spark\Billable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Subscription;
@@ -21,7 +22,7 @@ class ApplyCouponController
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): void
     {
         $billable = $this->billable();
 
@@ -52,7 +53,7 @@ class ApplyCouponController
      * @param  string  $coupon
      * @param  \Spark\Billable  $billable
      */
-    protected function applyCoupon($coupon, $billable, ?Subscription $subscription): void
+    protected function applyCoupon(string $coupon, Billable $billable, ?Subscription $subscription): void
     {
         $codes = $billable->stripe()->promotionCodes->all(['code' => $coupon]);
 
