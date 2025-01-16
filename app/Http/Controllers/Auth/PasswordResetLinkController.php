@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Auth\StorePasswordResetLinkRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StorePasswordResetLinkRequest;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

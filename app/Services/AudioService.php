@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use App\Exceptions\AudioFileException;
 use App\Models\Inflection;
 use App\Models\Pronunciation;
@@ -11,6 +10,7 @@ use App\Repositories\Audio\AudioDirectoryRepository;
 use App\Repositories\Audio\UploadAudioFileRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AudioService

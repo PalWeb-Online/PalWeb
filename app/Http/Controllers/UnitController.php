@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Pages\Units\Unit01\Unit01;
 use App\Pages\Units\Unit02\Unit02;
 use App\Pages\Units\Unit03\Unit03;
 use App\Policies\LessonPolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 /**

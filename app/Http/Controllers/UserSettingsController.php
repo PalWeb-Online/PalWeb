@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdatePasswordUserSettingRequest;
-use App\Http\Requests\UpdateUserSettingRequest;
 use App\Events\PasswordChanged;
 use App\Events\ProfileChanged;
-use App\Rules\ArabicScript;
-use App\Rules\LatinScript;
+use App\Http\Requests\UpdatePasswordUserSettingRequest;
+use App\Http\Requests\UpdateUserSettingRequest;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 
 class UserSettingsController
 {
@@ -38,7 +34,6 @@ class UserSettingsController
     public function update(UpdateUserSettingRequest $request, FlasherInterface $flasher)
     {
         $user = $request->user();
-
 
         $user->update([
             'name' => $request->name,

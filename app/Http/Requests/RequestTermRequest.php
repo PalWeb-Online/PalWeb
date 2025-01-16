@@ -12,9 +12,9 @@ class RequestTermRequest extends FormRequest
     public function rules(): array
     {
         return ['translit' => [
-                'required',
-                'string',
-                'max:255',
-            ],];
+            'required',
+            'string',
+            'max:255',
+        ], ];
     }
 }

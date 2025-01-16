@@ -12,10 +12,10 @@ class StashRecordRecordWizardRequest extends FormRequest
     public function rules(): array
     {
         return ['file' => [
-                'required',
-                'file',
-                'mimes:wav',
-                'max:5120',
-            ],];
+            'required',
+            'file',
+            'mimes:wav',
+            'max:5120',
+        ], ];
     }
 }

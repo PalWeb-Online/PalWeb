@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RequestTermRequest;
 use App\Events\ModelPinned;
+use App\Http\Requests\RequestTermRequest;
 use App\Models\Attribute;
 use App\Models\Dialect;
 use App\Models\Gloss;

@@ -12,16 +12,16 @@ class StoreNewPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-'token'        => ['required'],
-'email'        => [
-'required',
-'email',
-],
-'password_new' => [
-'required',
-'confirmed',
-Rules\Password::defaults(),
-],
-];
+            'token' => ['required'],
+            'email' => [
+                'required',
+                'email',
+            ],
+            'password_new' => [
+                'required',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
+        ];
     }
 }

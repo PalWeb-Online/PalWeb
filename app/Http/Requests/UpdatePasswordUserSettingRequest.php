@@ -12,11 +12,11 @@ class UpdatePasswordUserSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-'password_new' => [
-'required',
-'confirmed',
-Rules\Password::defaults(),
-],
-];
+            'password_new' => [
+                'required',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
+        ];
     }
 }

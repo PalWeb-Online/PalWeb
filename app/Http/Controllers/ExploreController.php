@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Policies\ExplorePolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ExploreController extends Controller

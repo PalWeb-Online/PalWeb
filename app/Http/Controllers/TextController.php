@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 /**

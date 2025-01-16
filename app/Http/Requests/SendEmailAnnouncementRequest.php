@@ -12,12 +12,12 @@ class SendEmailAnnouncementRequest extends FormRequest
     public function rules(): array
     {
         return [
-'subject' => [
+            'subject' => [
                 'required',
             ],
-'body'    => [
+            'body' => [
                 'required',
             ],
-];
+        ];
     }
 }
