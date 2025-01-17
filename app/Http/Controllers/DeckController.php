@@ -10,13 +10,16 @@ use App\Services\SearchService;
 use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
 
 class DeckController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
+    public function __construct(protected FlasherInterface $flasher)
+    {
+    }
 
     public function pin(Deck $deck): JsonResponse
     {
@@ -99,15 +102,15 @@ class DeckController extends Controller
         ]);
     }
 
-    private function validateRequest($request)
+    private function validateRequest($request): void
     {
-        return $request->validate([
+        $request->validate([
             'deck.name' => ['required', 'max:50'],
             'deck.description' => ['nullable', 'max:500'],
         ]);
     }
 
-    private function linkTerms($deck, $terms)
+    private function linkTerms($deck, $terms): void
     {
         foreach ($terms as $termData) {
             $term = Term::find($termData['id']);
@@ -123,7 +126,7 @@ class DeckController extends Controller
         }
 
         foreach ($deck->terms as $term) {
-            if (! in_array($term->id, array_column($terms, 'id'))) {
+            if (!in_array($term->id, array_column($terms, 'id'))) {
                 $deck->terms()->detach($term->id);
             }
         }
@@ -162,7 +165,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function destroy(Deck $deck)
+    public function destroy(Deck $deck): RedirectResponse|JsonResponse
     {
         $this->authorize('modify', $deck);
 
@@ -181,25 +184,25 @@ class DeckController extends Controller
 
     }
 
-    public function togglePrivacy(Deck $deck)
+    public function togglePrivacy(Deck $deck): JsonResponse
     {
         $this->authorize('modify', $deck);
 
-        $deck->private = ! $deck->private;
+        $deck->private = !$deck->private;
         $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
-        return [
+        return response()->json([
             'isPrivate' => $deck->private,
             'message' => __('privacy.updated', ['status' => $status]),
-        ];
+        ]);
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse
     {
         $this->authorize('modify', $deck);
 
-        if (! $deck->terms->contains($term->id)) {
+        if (!$deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
 
@@ -208,14 +211,14 @@ class DeckController extends Controller
         }
 
         return response()->json([
-            'isPresent' => ! $deck->terms->contains($term->id),
-            'message' => ! $deck->terms->contains($term->id)
+            'isPresent' => !$deck->terms->contains($term->id),
+            'message' => !$deck->terms->contains($term->id)
                 ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
                 : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]),
         ]);
     }
 
-    public function copy(Deck $deck)
+    public function copy(Deck $deck): RedirectResponse
     {
         $this->authorize('interact', $deck);
 
@@ -242,7 +245,7 @@ class DeckController extends Controller
         return to_route('decks.show', $newDeck->id);
     }
 
-    public function export(Deck $deck)
+    public function export(Deck $deck): never
     {
         $this->authorize('interact', $deck);
 
@@ -257,18 +260,13 @@ class DeckController extends Controller
             ];
         }
 
-        return $this->convertToCsv($deck->name, $data);
-    }
-
-    protected function convertToCsv($filename, $data)
-    {
         $output = fopen('php://output', 'w');
-        if ($output === false) {
+        if (!$output) {
             throw new Exception('Failed to open php://output');
         }
 
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Disposition: attachment; filename="'.$deck->name.'"');
 
         fputcsv($output, array_shift($data));
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View;
 
 /**
@@ -16,10 +17,7 @@ class TextController extends Controller
 
     public function __construct(protected TextPolicy $can) {}
 
-    /**
-     * Renders index page
-     */
-    public function index()
+    public function index(): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 
@@ -34,10 +32,7 @@ class TextController extends Controller
         });
     }
 
-    /**
-     * Renders a text
-     */
-    public function show($slug)
+    public function show($slug): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 

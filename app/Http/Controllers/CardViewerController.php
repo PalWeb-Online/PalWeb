@@ -59,7 +59,7 @@ class CardViewerController extends Controller
         }
     }
 
-    public function getCards($id)
+    public function getCards($id): JsonResponse
     {
         $terms = [];
 

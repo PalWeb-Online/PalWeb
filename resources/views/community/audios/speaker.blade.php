@@ -3,7 +3,7 @@
 @section('content')
     <x-page-head>
         <x-link :href="route('audios.index')">{{ __('audios') }}</x-link>
-        <x-link :href="route('audios.speaker', $speaker)">{{ __('speaker') }}</x-link>
+        <x-link :href="route('speaker.show', $speaker)">{{ __('speaker') }}</x-link>
     </x-page-head>
 
     @include('users._speaker')

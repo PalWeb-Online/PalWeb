@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\View;
 
 class EmailAnnouncementController extends Controller
 {
-    public function compose(): \Illuminate\View\View
+    public function create(): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Compose Email');
+        View::share('pageTitle', 'Create Email');
 
         return view('users.dashboard.email-compose');
     }
 
-    public function send(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'subject' => 'required',
@@ -40,7 +40,6 @@ class EmailAnnouncementController extends Controller
             }
         }
 
-        // Redirect back with a success message
-        return redirect('/')->with('success', 'Announcement email has been queued.');
+        return to_route('homepage')->with('success', 'Announcement email has been queued.');
     }
 }

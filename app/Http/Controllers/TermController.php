@@ -19,6 +19,7 @@ use App\Rules\LatinScript;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -49,27 +50,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function usages(Term $term): \Illuminate\View\View
-    {
-        $terms = [];
-        $terms[] = $term;
-
-        return view('terms.show', [
-            'terms' => $terms,
-        ]);
-    }
-
-    public function audios(Term $term, Request $request): \Illuminate\View\View
-    {
-        $terms = collect([$term]);
-        $terms = $this->loadPronunciations($terms, $request);
-
-        return view('terms.show', [
-            'terms' => $terms,
-        ]);
-    }
-
-    public function loadPronunciations(Collection $terms, Request $request)
+    public function loadPronunciations(Collection $terms, Request $request): Collection
     {
         $terms->each(function ($term) {
             $term->load(['pronunciations.audios.speaker']);
@@ -156,7 +137,7 @@ class TermController extends Controller
     /**
      * Retrieves a Term for updating
      */
-    public function get($id)
+    public function get($id): JsonResponse
     {
         $term = Term::with([
             'root',
@@ -174,7 +155,7 @@ class TermController extends Controller
             },
         ])->findOrFail($id);
 
-        return [
+        return response()->json([
             'term' => $term,
             'root' => $term->root->root ?? '',
             'singPatterns' => $term->patterns->where('type', 'singular')->values(),
@@ -220,17 +201,23 @@ class TermController extends Controller
                     }),
                 ];
             }),
-        ];
+        ]);
     }
 
-    public function show(Term $term, Request $request)
+    public function show(Term $term, Request $request): \Illuminate\View\View
     {
         View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
         View::share('pageDescription',
             'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 
-        $likeTerms = $this->termRepository->getLikeTerms($term);
-        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
+        if ($request->routeIs('terms.show')) {
+            $likeTerms = $this->termRepository->getLikeTerms($term);
+            $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
+
+        } else {
+            $terms = collect([$term]);
+        }
+
         $terms = $this->loadPronunciations($terms, $request);
 
         $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
@@ -244,20 +231,14 @@ class TermController extends Controller
         ]);
     }
 
-    public function random()
+    public function create(): \Illuminate\View\View
     {
-        $term = Term::inRandomOrder()->first();
-        if (! $term) {
-            return to_route('terms.index');
-        }
+        View::share('pageTitle', 'Create Term');
 
-        return to_route('terms.show', $term);
+        return view('terms.create');
     }
 
-    /**
-     * Creates a Term
-     */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->validateRequest($request);
 
@@ -315,12 +296,12 @@ class TermController extends Controller
             return $term;
         });
 
-        return [
+        return response()->json([
             'status' => 'success',
             'term' => $term,
             'redirect' => route('terms.show', $term),
             'flash' => __('created', ['thing' => $term->term]),
-        ];
+        ]);
     }
 
     private function validateRequest($request): void
@@ -339,33 +320,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function handleSlug($category, $translit, ?Term $term = null)
-    {
-        $slug = $category.'-'.$translit;
-
-        $duplicatesQuery = Term::where([
-            'category' => $category,
-            'translit' => $translit,
-        ]);
-
-        $term && $duplicatesQuery = $duplicatesQuery->where('id', '!=', $term->id);
-
-        $count = $duplicatesQuery->count();
-
-        if ($count > 0) {
-            foreach ($duplicatesQuery->get() as $i => $duplicate) {
-                $duplicate->update(['slug' => $duplicate->category.'-'.$duplicate->translit.'-'.($i + 1)]);
-            }
-            $slug .= '-'.$count + 1;
-        }
-
-        return $slug;
-    }
-
-    /**
-     * Updates a Term
-     */
-    public function update(Term $term, Request $request)
+    public function update(Term $term, Request $request): JsonResponse
     {
         $this->validateRequest($request);
 
@@ -457,15 +412,38 @@ class TermController extends Controller
             return $term;
         });
 
-        return [
+        return response()->json([
             'status' => 'success',
             'term' => $term,
             'redirect' => route('terms.show', $term),
             'flash' => __('updated', ['thing' => $term->term]),
-        ];
+        ]);
     }
 
-    private function handlePatterns($term, $requestPatterns, $type)
+    public function handleSlug($category, $translit, ?Term $term = null): string
+    {
+        $slug = $category.'-'.$translit;
+
+        $duplicatesQuery = Term::where([
+            'category' => $category,
+            'translit' => $translit,
+        ]);
+
+        $term && $duplicatesQuery = $duplicatesQuery->where('id', '!=', $term->id);
+
+        $count = $duplicatesQuery->count();
+
+        if ($count > 0) {
+            foreach ($duplicatesQuery->get() as $i => $duplicate) {
+                $duplicate->update(['slug' => $duplicate->category.'-'.$duplicate->translit.'-'.($i + 1)]);
+            }
+            $slug .= '-'.$count + 1;
+        }
+
+        return $slug;
+    }
+
+    private function handlePatterns($term, $requestPatterns, $type): void
     {
         $attachedPatternIds = $term->patterns->where('type', '=', $type)->pluck('id')->toArray();
         $requestPatternIds = [];
@@ -486,10 +464,8 @@ class TermController extends Controller
         }
     }
 
-    private function handleRelatives(
-        object $origin,
-        array $requestItems
-    ) {
+    private function handleRelatives(object $origin, array $requestItems)
+    {
         $attachedTerms = $origin->relatives->pluck('slug')->toArray();
 
         $requestTerms = [];
@@ -534,16 +510,6 @@ class TermController extends Controller
         }
     }
 
-    /**
-     * Loads the Term Creator
-     */
-    public function create(): \Illuminate\View\View
-    {
-        View::share('pageTitle', 'Create Term');
-
-        return view('terms.create');
-    }
-
     private function handleDependents(
         object $term,
         array $requestDependents,
@@ -578,9 +544,6 @@ class TermController extends Controller
         }
     }
 
-    /**
-     * Loads the Term Editor
-     */
     public function edit(Term $term): \Illuminate\View\View
     {
         View::share('pageTitle', 'Edit Term');
@@ -590,12 +553,8 @@ class TermController extends Controller
         ]);
     }
 
-    /**
-     * Deletes a Term
-     */
-    public function destroy(
-        Term $term
-    ) {
+    public function destroy(Term $term): RedirectResponse
+    {
         $category = $term->category;
         $translit = $term->translit;
 
@@ -620,9 +579,8 @@ class TermController extends Controller
         return to_route('terms.index');
     }
 
-    public function request(
-        Request $request
-    ) {
+    public function request(Request $request): RedirectResponse
+    {
         $request->validate([
             'translit' => 'required|string|max:255',
         ]);

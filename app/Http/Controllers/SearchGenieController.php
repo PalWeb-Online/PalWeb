@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class SearchGenieController extends Controller
 {
-    public function search(Request $request, SearchService $searchService): JsonResponse
+    public function getResults(Request $request, SearchService $searchService): JsonResponse
     {
         $searchTerm = $request->input('search', '') ?? '';
         $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);

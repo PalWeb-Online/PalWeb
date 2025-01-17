@@ -13,17 +13,17 @@
 {{--                <a class="material-symbols-rounded" @click="open = ! open">language</a>--}}
 {{--            </x-slot>--}}
 {{--            <x-slot name="content">--}}
-{{--                <form id="frm-en" method="post" action="{{ route("language.change", "en") }}">--}}
+{{--                <form id="frm-en" method="post" action="{{ route("language.store", "en") }}">--}}
 {{--                    @csrf--}}
 {{--                    <button onclick="this.closest('form').submit();return false;">EN</button>--}}
 {{--                </form>--}}
 
-{{--                <form id="frm-es" method="post" action="{{ route("language.change", "es") }}">--}}
+{{--                <form id="frm-es" method="post" action="{{ route("language.store", "es") }}">--}}
 {{--                    @csrf--}}
 {{--                    <button onclick="this.closest('form').submit();return false;">ES</button>--}}
 {{--                </form>--}}
 
-{{--                <form id="frm-ar" method="post" action="{{ route("language.change", "ar") }}">--}}
+{{--                <form id="frm-ar" method="post" action="{{ route("language.store", "ar") }}">--}}
 {{--                    @csrf--}}
 {{--                    <button onclick="this.closest('form').submit();return false;">AR</button>--}}
 {{--                </form>--}}

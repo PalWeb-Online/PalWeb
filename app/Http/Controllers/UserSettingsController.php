@@ -7,6 +7,8 @@ use App\Events\ProfileChanged;
 use App\Rules\ArabicScript;
 use App\Rules\LatinScript;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -18,22 +20,16 @@ class UserSettingsController
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    /**
-     * Renders the dashboard settings page
-     */
     public function edit(): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Dashboard: Edit Profile');
+        View::share('pageTitle', 'Settings: Change Profile');
 
         return view('users.dashboard.change-profile', [
             'user' => auth()->user(),
         ]);
     }
 
-    /**
-     * Stores changed information
-     */
-    public function update(Request $request, FlasherInterface $flasher)
+    public function update(Request $request, FlasherInterface $flasher): RedirectResponse
     {
         $user = auth()->user();
 
@@ -65,7 +61,7 @@ class UserSettingsController
         return to_route('users.show', auth()->user());
     }
 
-    public function togglePrivacy()
+    public function togglePrivacy(): JsonResponse
     {
         $user = auth()->user();
 
@@ -73,75 +69,9 @@ class UserSettingsController
         $user->private ? $status = 'Private' : $status = 'Public';
         $user->save();
 
-        return [
+        return response()->json([
             'isPrivate' => $user->private,
             'message' => __('privacy.updated', ['status' => $status]),
-        ];
-    }
-
-    /**
-     * Renders the change password page
-     */
-    public function editPassword(): \Illuminate\View\View
-    {
-        View::share('pageTitle', 'Dashboard: Edit Password');
-
-        return view('users.dashboard.change-password', [
-            'user' => auth()->user(),
         ]);
-    }
-
-    /**
-     * Updates the changed password
-     */
-    public function updatePassword(Request $request, FlasherInterface $flasher)
-    {
-        $user = auth()->user();
-
-        $form = $request->validate([
-            'password_new' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user->password = Hash::make($form['password_new']);
-        $user->save();
-
-        event(new PasswordChanged($user));
-
-        $this->flasher->addSuccess(__('passwords.updated'));
-
-        return to_route('users.show', auth()->user());
-    }
-
-    /**
-     * Renders the change picture page
-     */
-    public function editAvatar()
-    {
-        $avatars = File::files(public_path('img/avatars'));
-        $avatars = array_map(function ($file) {
-            return basename($file);
-        }, $avatars);
-
-        View::share('pageTitle', 'Dashboard: Edit Profile Picture');
-
-        return view('users.dashboard.change-avatar', [
-            'user' => auth()->user(),
-            'avatars' => $avatars,
-        ]);
-    }
-
-    /**
-     * Updates the changed picture
-     */
-    public function updateAvatar(Request $request, FlasherInterface $flasher)
-    {
-        $user = auth()->user();
-
-        $user->avatar = $request['avatar'];
-        $user->save();
-
-        $flasher->addSuccess(__('settings.updated'));
-
-        return to_route('users.show', auth()->user());
     }
 }

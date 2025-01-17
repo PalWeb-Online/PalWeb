@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DiscordController extends Controller
 {
-    public function joined(Request $request)
+    public function joined(Request $request): void
     {
         $badge = Badge::where('name', 'No FOMO')->first();
         $user = User::where('discord_id', $request->input('discordId'))->first();

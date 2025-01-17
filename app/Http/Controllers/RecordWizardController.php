@@ -25,7 +25,7 @@ class RecordWizardController extends Controller
         ]);
     }
 
-    public function getAutoItems(Request $request)
+    public function getAutoItems(Request $request): JsonResponse
     {
         $speakerId = $request->input('speaker_id');
         $speakerDialect = $request->input('dialect_id');
@@ -107,7 +107,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function stashRecord(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'file' => 'required|file|mimes:wav|max:5120',
@@ -135,7 +135,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function discardRecord($stashKey): JsonResponse
+    public function destroy($stashKey): JsonResponse
     {
         $filePath = public_path("stash/{$stashKey}");
 
@@ -169,7 +169,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function uploadRecords(Request $request): JsonResponse
+    public function upload(Request $request): JsonResponse
     {
         $filename = $request->input('filename').'.mp3';
         $stashPath = public_path("stash/{$request->input('stashKey')}");

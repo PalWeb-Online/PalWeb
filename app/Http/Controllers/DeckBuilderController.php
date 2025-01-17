@@ -75,7 +75,7 @@ class DeckBuilderController extends Controller
         }
     }
 
-    public function getTerms($id)
+    public function getTerms($id): JsonResponse
     {
         $terms = [];
         foreach (Deck::findOrFail($id)->terms as $term) {

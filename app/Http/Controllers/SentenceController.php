@@ -9,6 +9,7 @@ use App\Models\Term;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -86,7 +87,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->validateRequest($request);
 
@@ -94,16 +95,16 @@ class SentenceController extends Controller
 
         $this->linkTerms($sentence, $request->terms);
 
-        return [
+        return response()->json([
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
             'flash' => __('created', ['thing' => $sentence->sentence]),
-        ];
+        ]);
     }
 
-    private function validateRequest($request)
+    private function validateRequest($request): void
     {
-        return $request->validate([
+        $request->validate([
             'sentence.trans' => ['required'],
             'terms' => ['required', 'array'],
         ]);
@@ -116,7 +117,7 @@ class SentenceController extends Controller
         return view('sentences.create');
     }
 
-    private function buildSentence($request)
+    private function buildSentence($request): array
     {
         $terms = [];
         $translits = [];
@@ -134,7 +135,7 @@ class SentenceController extends Controller
         return $sentence;
     }
 
-    private function linkTerms($sentence, $terms)
+    private function linkTerms($sentence, $terms): void
     {
         DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
 
@@ -152,34 +153,30 @@ class SentenceController extends Controller
         }
     }
 
-    public function edit(
-        Sentence $sentence
-    ): \Illuminate\View\View {
+    public function edit(Sentence $sentence): \Illuminate\View\View
+    {
         View::share('pageTitle', 'Edit Sentence');
 
         return view('sentences.edit', compact('sentence'));
     }
 
-    public function update(
-        Sentence $sentence,
-        Request $request
-    ) {
+    public function update(Sentence $sentence, Request $request): JsonResponse
+    {
         $this->validateRequest($request);
 
         $sentence->update($this->buildSentence($request));
 
         $this->linkTerms($sentence, $request->terms);
 
-        return [
+        return response()->json([
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
             'flash' => __('updated', ['thing' => $sentence->sentence]),
-        ];
+        ]);
     }
 
-    public function destroy(
-        Sentence $sentence
-    ) {
+    public function destroy(Sentence $sentence): RedirectResponse
+    {
         $sentence->delete();
 
         $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
@@ -187,7 +184,7 @@ class SentenceController extends Controller
         return to_route('sentences.index');
     }
 
-    public function todo()
+    public function todo(): \Illuminate\View\View
     {
         $terms = [];
 
@@ -211,7 +208,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($id): JsonResponse
     {
         $sentence = Sentence::findOrFail($id);
 

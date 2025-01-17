@@ -8,11 +8,9 @@ use App\Pages\Units\Unit02\Unit02;
 use App\Pages\Units\Unit03\Unit03;
 use App\Policies\LessonPolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View;
 
-/**
- * This class allows you to access the user dashboard section
- */
 class UnitController extends Controller
 {
     use RedirectsToSubscribe;
@@ -25,10 +23,7 @@ class UnitController extends Controller
 
     public function __construct(protected LessonPolicy $can) {}
 
-    /**
-     * Renders a list of lessons a student can take. Redirects to subscription portal if not subscribed.
-     */
-    public function index()
+    public function index(): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 
@@ -43,7 +38,7 @@ class UnitController extends Controller
         });
     }
 
-    public function unit($unit)
+    public function unit($unit): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 
@@ -61,7 +56,7 @@ class UnitController extends Controller
         });
     }
 
-    public function lesson($unit, $lesson)
+    public function lesson($unit, $lesson): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 

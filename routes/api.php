@@ -21,10 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/record-wizard')->controller(RecordWizardController::class)->group(function () {
-    Route::post('/stash', 'stashRecord');
-    Route::delete('/discard/{stashKey}', 'discardRecord');
+    Route::post('/store', 'store');
+    Route::delete('/{stashKey}', 'destroy');
     Route::delete('/clear/{speakerId}', 'clearStash');
-    Route::post('/upload', 'uploadRecords');
+    Route::post('/upload', 'upload');
 });
 
 Route::post('/api/discord/joined', [DiscordController::class, 'joined']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Policies\ExplorePolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View;
 
 class ExploreController extends Controller
@@ -13,7 +14,7 @@ class ExploreController extends Controller
 
     public function __construct(protected ExplorePolicy $can) {}
 
-    public function index()
+    public function index(): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 
@@ -28,19 +29,19 @@ class ExploreController extends Controller
         });
     }
 
-    public function show($slug)
+    public function show($page): \Illuminate\View\View | RedirectResponse
     {
         $auth = auth()->user();
 
-        View::share('pageTitle', 'Explore: '.ucwords($slug));
+        View::share('pageTitle', 'Explore: '.ucwords($page));
         View::share('pageDescription',
             'Explore Palestinian culture and language through themed pages on food, health, nature, and more. Dive into vocabulary decks and dialogues that will greatly enrich your learning journey.');
 
-        return $this->redirectToSubscribeOnFail(function () use ($auth, $slug) {
+        return $this->redirectToSubscribeOnFail(function () use ($auth, $page) {
             $this->failIfFalse($this->can->viewExplore($auth));
 
             return view('explore.show', [
-                'page' => $slug,
+                'page' => $page,
                 'terms' => Term::all(),
             ]);
         });
