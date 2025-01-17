@@ -47,7 +47,7 @@
         <div data-vue-component="PrivacyToggleButton"
              data-props="{{ json_encode([
                 'isPrivate' => $user->private,
-                'route' => route('settings.privacy.toggle', $user->id),
+                'route' => route('settings.privacy.update', $user->id),
                 'imageURL' => asset('/img')
              ]) }}"
         >
