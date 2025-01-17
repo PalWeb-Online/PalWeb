@@ -252,7 +252,7 @@ trait Billable
     public function taxRates(): array
     {
         if (! Features::collectsEuVat()) {
-            return null;
+            return [];
         }
 
         $homeCountry = is_string(config('spark.collects_eu_vat'))
@@ -267,7 +267,7 @@ trait Billable
         );
 
         if ($rate == 0) {
-            return null;
+            return [];
         }
 
         if ($existing = TaxRate::where('percentage', $rate)->first()) {
