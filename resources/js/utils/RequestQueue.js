@@ -3,9 +3,8 @@ export default class RequestQueue {
         this.max = 3;
         this.queue = [];
         this.working = 0;
+        this.delay = 500;
 
-        // Replace mw.Api() with a general API request logic if needed
-        // Otherwise, adjust according to your existing API logic
         this.api = {
             get: (params) => {
                 return fetch(`/api/${params.action}`); // Example API request
@@ -47,13 +46,21 @@ export default class RequestQueue {
         if (this.queue.length > 0) {
             const { callback, resolve, reject } = this.queue.shift();
 
-            callback()
-                .then(resolve)
-                .catch(reject)
-                .finally(() => {
+            setTimeout(async () => {
+                try {
+                    const result = await callback();
+                    resolve(result);
+
+                } catch (error) {
+                    reject(error);
+
+                } finally {
                     this.working--;
-                    this.next();
-                });
+                    if (this.queue.length > 0) {
+                        this.next();
+                    }
+                }
+            }, this.delay);
 
         } else {
             this.working--;
