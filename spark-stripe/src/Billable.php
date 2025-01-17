@@ -100,6 +100,9 @@ trait Billable
             return $plans->first(function ($plan) use ($subscription) {
                 return $plan->id == $subscription->stripe_price;
             });
+
+        } else {
+            return null;
         }
     }
 
