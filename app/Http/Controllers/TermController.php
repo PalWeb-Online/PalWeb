@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
+use App\Http\Requests\StoreTermRequest;
+use App\Http\Requests\UpdateTermRequest;
 use App\Models\Attribute;
 use App\Models\Dialect;
 use App\Models\Gloss;
@@ -238,10 +240,8 @@ class TermController extends Controller
         return view('terms.create');
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreTermRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
         $term = DB::transaction(function () use ($request) {
 
             $termData = $request->term;
@@ -304,26 +304,8 @@ class TermController extends Controller
         ]);
     }
 
-    private function validateRequest($request): void
+    public function update(Term $term, UpdateTermRequest $request): JsonResponse
     {
-        $request->validate([
-            'term.term' => ['required', new ArabicScript],
-            'root' => ['nullable', 'min:3', 'max:4', new ArabicScript],
-            'inflections.*.inflection' => ['required', new ArabicScript],
-            'inflections.*.translit' => ['required', new LatinScript],
-            'spellings.*.spelling' => ['required', new ArabicScript],
-            'variants.*.slug' => ['required', new LatinScript],
-            'references.*.slug' => ['required', new LatinScript],
-            'components.*.slug' => ['required', new LatinScript],
-            'descendants.*.slug' => ['required', new LatinScript],
-            'glosses.*.relatives.*.slug' => ['required', new LatinScript],
-        ]);
-    }
-
-    public function update(Term $term, Request $request): JsonResponse
-    {
-        $this->validateRequest($request);
-
         $term = DB::transaction(function () use ($term, $request) {
 
             $termData = $request->term;

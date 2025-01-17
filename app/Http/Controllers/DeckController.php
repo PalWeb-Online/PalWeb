@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
+use App\Http\Requests\StoreDeckRequest;
+use App\Http\Requests\UpdateDeckRequest;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
@@ -80,10 +82,8 @@ class DeckController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreDeckRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
         $user = auth()->user();
 
         $deck = $request->deck;
@@ -99,14 +99,6 @@ class DeckController extends Controller
 
         return response()->json([
             'deck' => $deck,
-        ]);
-    }
-
-    private function validateRequest($request): void
-    {
-        $request->validate([
-            'deck.name' => ['required', 'max:50'],
-            'deck.description' => ['nullable', 'max:500'],
         ]);
     }
 
@@ -132,9 +124,6 @@ class DeckController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Deck $deck): \Illuminate\View\View
     {
         $this->authorize('interact', $deck);
@@ -151,11 +140,9 @@ class DeckController extends Controller
         return view('decks.show', ['deck' => $deck]);
     }
 
-    public function update(Request $request, Deck $deck): JsonResponse
+    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
     {
         $this->authorize('modify', $deck);
-
-        $this->validateRequest($request);
 
         $deck->update($request->deck);
         $this->linkTerms($deck, $request->terms);

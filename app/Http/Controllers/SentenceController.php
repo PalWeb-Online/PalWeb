@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
+use App\Http\Requests\StoreSentenceRequest;
+use App\Http\Requests\UpdateSentenceRequest;
 use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Models\Term;
@@ -19,9 +21,9 @@ class SentenceController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Sentence $sentence): JsonResponse
+    public function pin(Request $request, Sentence $sentence): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($sentence, $user);
 
@@ -87,10 +89,8 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreSentenceRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
         $sentence = Sentence::create($this->buildSentence($request));
 
         $this->linkTerms($sentence, $request->terms);
@@ -99,14 +99,6 @@ class SentenceController extends Controller
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
             'flash' => __('created', ['thing' => $sentence->sentence]),
-        ]);
-    }
-
-    private function validateRequest($request): void
-    {
-        $request->validate([
-            'sentence.trans' => ['required'],
-            'terms' => ['required', 'array'],
         ]);
     }
 
@@ -160,10 +152,8 @@ class SentenceController extends Controller
         return view('sentences.edit', compact('sentence'));
     }
 
-    public function update(Sentence $sentence, Request $request): JsonResponse
+    public function update(Sentence $sentence, UpdateSentenceRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
         $sentence->update($this->buildSentence($request));
 
         $this->linkTerms($sentence, $request->terms);

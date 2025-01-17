@@ -38,7 +38,7 @@ trait Billable
     public function shouldSyncCustomerDetailsToStripe(): bool
     {
         return config('cashier.secret') &&
-            ! env('CI') &&
+            ! config('settings.ci') &&
             ! app()->runningUnitTests() &&
             $this->wasChanged($this->stripeAttributes());
     }
@@ -84,7 +84,7 @@ trait Billable
      */
     public function localReceipts(): HasMany
     {
-        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderBy('id', 'desc');
+        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderByDesc('id');
     }
 
     /**

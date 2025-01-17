@@ -10,6 +10,7 @@ use App\Repositories\Audio\AudioDirectoryRepository;
 use App\Repositories\Audio\UploadAudioFileRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AudioService
@@ -29,7 +30,7 @@ class AudioService
             Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
 
         } catch (\Exception $e) {
-            \Log::error('Failed to upload audio file: '.$e->getMessage());
+            Log::error('Failed to upload audio file: '.$e->getMessage());
             throw $e;
         } finally {
             File::delete($mp3Path);

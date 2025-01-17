@@ -31,14 +31,14 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            $user = auth()->user();
+            $user = $request->user();
 
             $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]), __('signin.message.head'));
 
             return redirect()->intended(AppServiceProvider::HOME);
         }
 
-        return back()->withErrors([
+        return redirect()->back()->withErrors([
             'email' => __('auth.failed'),
         ]);
     }
@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Auth::guard('web')->logout();
 

@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\User;
 use App\Providers\AppServiceProvider;
-use App\Rules\ArabicScript;
-use App\Rules\LatinScript;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -26,19 +24,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRegisteredUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
-            'username' => [
-                'required', 'string', 'max:50',
-                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                'unique:users',
-            ],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -56,7 +43,7 @@ class RegisteredUserController extends Controller
         $this->flasher->addFlash('info', __('signup.message', ['user' => $user->name]),
             __('signup.message.head'));
 
-        return redirect(AppServiceProvider::HOME);
+        return redirect()->to(AppServiceProvider::HOME);
     }
 
     /**
