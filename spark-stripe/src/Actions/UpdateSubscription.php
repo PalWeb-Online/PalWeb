@@ -3,6 +3,7 @@
 namespace Spark\Actions;
 
 use Illuminate\Validation\ValidationException;
+use Laravel\Cashier\Subscription;
 use Spark\Concerns\HandlesPaymentFailures;
 use Spark\Contracts\Actions\UpdatesSubscriptions;
 use Spark\Spark;
@@ -29,12 +30,10 @@ class UpdateSubscription implements UpdatesSubscriptions
     /**
      * Attempt to pay failed payments if any.
      *
-     * @param  \Laravel\Cashier\Subscription  $subscription
-     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function payPendingPayments($subscription)
+    protected function payPendingPayments(Subscription $subscription): void
     {
         if (! $payment = $subscription->latestPayment()) {
             return;

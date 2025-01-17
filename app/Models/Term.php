@@ -21,11 +21,7 @@ class Term extends Model
     ];
 
     protected $guarded = [
-        'root'
-    ];
-
-    protected $casts = [
-        'etymology' => 'array'
+        'root',
     ];
 
     protected static function boot(): void
@@ -35,6 +31,13 @@ class Term extends Model
         static::deleting(function ($term) {
             $term->bookmarks()->delete();
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'etymology' => 'array',
+        ];
     }
 
     public function bookmarks(): MorphMany
@@ -52,7 +55,7 @@ class Term extends Model
         }
     }
 
-    public function sentences(int $gloss_id = null): BelongsToMany
+    public function sentences(?int $gloss_id = null): BelongsToMany
     {
         $relationship = $this->belongsToMany(Sentence::class)
             ->withPivot('gloss_id', 'sent_term', 'sent_translit', 'position');
@@ -133,40 +136,40 @@ class Term extends Model
 
     public function scopeFilter($query, array $filters): void
     {
-        $query->when($filters['search'] ?? false, function ($query, $search) use ($filters) {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('term', 'like', $search.'%')
-                    ->orWhereHas('spellings', fn($query) => $query->where('spelling', 'like', $search.'%'))
-                    ->orWhereHas('pronunciations', fn($query) => $query->where('translit', 'like', $search.'%'))
-                    ->orWhereHas('inflections', fn($query) => $query->where('inflection', 'like', $search.'%')
+                    ->orWhereHas('spellings', fn ($query) => $query->where('spelling', 'like', $search.'%'))
+                    ->orWhereHas('pronunciations', fn ($query) => $query->where('translit', 'like', $search.'%'))
+                    ->orWhereHas('inflections', fn ($query) => $query->where('inflection', 'like', $search.'%')
                         ->orWhere('translit', 'like', $search.'%'));
             });
         });
 
-        $query->when($filters['category'] ?? false, fn($query, $category) => $query
+        $query->when($filters['category'] ?? false, fn ($query, $category) => $query
             ->where('category', $category)
         );
 
-        $query->when($filters['attribute'] ?? false, fn($query, $attribute) => $query
-            ->whereHas('attributes', fn($query) => $query
+        $query->when($filters['attribute'] ?? false, fn ($query, $attribute) => $query
+            ->whereHas('attributes', fn ($query) => $query
                 ->where('attribute', $attribute)
             )
         );
 
-        $query->when($filters['form'] ?? false, fn($query, $form) => $query
-            ->whereHas('patterns', fn($query) => $query
+        $query->when($filters['form'] ?? false, fn ($query, $form) => $query
+            ->whereHas('patterns', fn ($query) => $query
                 ->where('form', $form)
             )
         );
 
-        $query->when($filters['singular'] ?? false, fn($query, $singular) => $query
-            ->whereHas('patterns', fn($query) => $query
+        $query->when($filters['singular'] ?? false, fn ($query, $singular) => $query
+            ->whereHas('patterns', fn ($query) => $query
                 ->where('pattern', $singular)->where('type', 'singular')
             )
         );
 
-        $query->when($filters['plural'] ?? false, fn($query, $plural) => $query
-            ->whereHas('patterns', fn($query) => $query
+        $query->when($filters['plural'] ?? false, fn ($query, $plural) => $query
+            ->whereHas('patterns', fn ($query) => $query
                 ->where('pattern', $plural)->where('type', 'plural')
             )
         );

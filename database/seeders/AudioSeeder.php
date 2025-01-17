@@ -10,10 +10,8 @@ class AudioSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         Speaker::all()->each(function ($speaker) {
             Audio::factory(10)->create(['speaker_id' => $speaker->id]);

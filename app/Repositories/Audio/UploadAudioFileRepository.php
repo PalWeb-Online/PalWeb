@@ -9,19 +9,18 @@ class UploadAudioFileRepository
     /**
      * Determines if a given audio file is already in the s3 bucket already or not.
      *
-     * @param string $mp3_name the filename to search for in the s3 bucket
-     * @return bool
+     * @param  string  $mp3_name  the filename to search for in the s3 bucket
      */
     public function audioFileIsUploaded(string $mp3_name): bool
     {
-        return Storage::disk('s3')->exists('audio/' . $mp3_name);
+        return Storage::disk('s3')->exists('audio/'.$mp3_name);
     }
 
     /**
      * Upload given audio file to the s3 bucket.
      *
-     * @param string $original_name the original filename
-     * @param string $mp3_name the mp3 formatted name, used for conversion
+     * @param  string  $original_name  the original filename
+     * @param  string  $mp3_name  the mp3 formatted name, used for conversion
      * @return string the resultant storage upload entry
      */
     public function uploadAudioFile(string $original_name, string $mp3_name): string
@@ -31,7 +30,7 @@ class UploadAudioFileRepository
 
         $result = Storage::disk('s3')->putFileAs(
             'audio/',
-            storage_path('app/converted_audio/') . $mp3_name,
+            storage_path('app/converted_audio/').$mp3_name,
             $mp3_name,
             'public'
         );
@@ -45,28 +44,25 @@ class UploadAudioFileRepository
     /**
      * Converts a given audio file to mp3 format.
      *
-     * @param string $original_name the original name of the file to be converted
-     * @param string $mp3_name the mp3 formatted name to save the converted file as
-     * @return void
+     * @param  string  $original_name  the original name of the file to be converted
+     * @param  string  $mp3_name  the mp3 formatted name to save the converted file as
      */
     protected function convertFile(string $original_name, string $mp3_name): void
     {
-        $exitCode = shell_exec('ffmpeg -loglevel quiet -i ' . storage_path('app/audio/') . escapeshellcmd($original_name) . ' ' . storage_path('app/converted_audio/') . escapeshellcmd($mp3_name) . '; echo $?');
+        $exitCode = shell_exec('ffmpeg -loglevel quiet -i '.storage_path('app/audio/').escapeshellcmd($original_name).' '.storage_path('app/converted_audio/').escapeshellcmd($mp3_name).'; echo $?');
 
         if ($exitCode != 0) {
             $this->info("Conversion for $original_name failed with exit code $exitCode");
         }
     }
 
-
     /**
      * Removes mp3 formatted file from temporary converted audio directory.
      *
-     * @param string $mp3_name the mp3 formatted name to remove from the temporary directory
-     * @return void
+     * @param  string  $mp3_name  the mp3 formatted name to remove from the temporary directory
      */
     protected function removeTempFile(string $mp3_name): void
     {
-        shell_exec('rm ' . storage_path('app/converted_audio/' . escapeshellcmd($mp3_name)));
+        shell_exec('rm '.storage_path('app/converted_audio/'.escapeshellcmd($mp3_name)));
     }
 }

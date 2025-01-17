@@ -4,7 +4,9 @@ use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CardViewerController;
 use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserAvatarController;
+use App\Http\Controllers\UserPasswordController;
+use App\Http\Controllers\WorkbenchController;
 use App\Http\Controllers\DeckBuilderController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
@@ -19,9 +21,10 @@ use App\Http\Controllers\TermController;
 use App\Http\Controllers\TextController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserSettingsController;
+use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,28 +40,17 @@ use Illuminate\Support\Facades\Route;
 /**
  * Displays the homepage.
  */
-Route::get('/', function () {
-    return view('index', [
-        'bodyBackground' => 'front-page'
-    ]);
-})->middleware('pageTitle:Home')->name('homepage');
+Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageTitle:Home')->name('homepage');
 
 /**
  * Prompts an unauthenticated user to log in.
  */
-Route::get('/unauth', function () {
-    return view('unauth', [
-        'bodyBackground' => 'hero-yellow'
-    ]);
-})->middleware('pageTitle:Access Denied')->name('unauth');
+Route::view('/unauth', 'unauth', ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('unauth');
 
-/**
- * Sets the application language for this user.
- */
-Route::post("/lang/{lang}", [LanguageController::class, 'change'])->name("language.change");
+Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
 Route::prefix('/search')->controller(SearchGenieController::class)->group(function () {
-    Route::post('/', 'search');
+    Route::post('/', 'getResults');
     Route::get('/filter-options', 'getFilterOptions');
 });
 
@@ -69,14 +61,14 @@ Route::prefix('/email')->middleware('auth')->group(function () {
     Route::controller(EmailVerificationController::class)->group(function () {
         Route::get('/verification', 'prompt')->name('verification.notice');
         Route::get('/verification/{id}/{hash}', 'verify')->middleware([
-            'signed', 'throttle:6,1'
+            'signed', 'throttle:6,1',
         ])->name('verification.verify');
         Route::post('/verification/link', 'link')->middleware('throttle:6,1')->name('verification.send');
     });
 
     Route::controller(EmailAnnouncementController::class)->middleware('admin')->group(function () {
-        Route::get('/compose', 'compose')->name('email.compose');
-        Route::post('/send', 'send')->name('email.send');
+        Route::get('/create', 'create')->name('email.create');
+        Route::post('/store', 'store')->name('email.store');
     });
 });
 
@@ -84,8 +76,8 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
-        Route::get('/{term:slug}/usages', 'usages')->name('terms.usages');
-        Route::get('/{term:slug}/audios', 'audios')->name('terms.audios');
+        Route::get('/{term:slug}/usages', 'show')->name('terms.usages');
+        Route::get('/{term:slug}/audios', 'show')->name('terms.audios');
 
         // Auth
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
@@ -102,7 +94,9 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
         });
     });
 
-    Route::get('/random', 'random')->name('terms.random');
+    Route::get('/random', function () {
+        return to_route('terms.show', \App\Models\Term::inRandomOrder()->first());
+    })->name('terms.random');
 });
 
 /*
@@ -127,10 +121,10 @@ Route::prefix('/community')->middleware(['auth', 'verified'])->group(function ()
     });
 
     // Audio Routes
-    Route::prefix('/audios')->controller(AudioController::class)->group(function () {
-        Route::get('/', 'index')->name('audios.index');
-        Route::get('/{speaker}', 'speaker')->name('audios.speaker');
-        Route::delete('/{audio}', 'destroy')->name('audios.destroy');
+    Route::prefix('/audios')->group(function () {
+        Route::get('/', [AudioController::class, 'index'])->name('audios.index');
+        Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
+        Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
     });
 });
 
@@ -169,9 +163,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 [SentenceController::class, 'todo'])->name('sentences.todo');
         });
 
-        Route::get('/request', function () {
-            return view('terms.request');
-        })->middleware('pageTitle:Request Term')->name('terms.request');
+        Route::view('/request', 'terms.request')->middleware('pageTitle:Request Term')->name('terms.request');
         Route::post('/request', [TermController::class, 'request'])->name('request.store');
 
         Route::resource('/sentences', SentenceController::class)->except(['index', 'show'])->middleware('admin');
@@ -190,12 +182,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/dashboard')->group(function () {
-        Route::controller(DashboardController::class)->group(function () {
-            Route::get('/workbench', 'workbench')->name('dashboard.workbench');
-            Route::get('/subscription', 'subscription')->name('dashboard.subscription');
-        });
+        Route::get('/subscription', function () {
+            View::share('pageTitle', 'Subscription');
+            return view('users.dashboard.subscription', [
+                'user' => auth()->user(),
+                'bodyBackground' => 'hero-yellow',
+            ]);
+        })->name('dashboard.subscription');
 
         Route::prefix('/workbench')->group(function () {
+            Route::get('/', [WorkbenchController::class, 'index'])->name('dashboard.workbench');
+
             Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
                 Route::get('/', 'index')->name('decks.create');
                 Route::get('/edit/{deck}', 'edit')->name('decks.edit');
@@ -216,21 +213,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::post('/decks/{deck}', 'getDeckItems');
                 });
                 Route::controller(SpeakerController::class)->group(function () {
+                    Route::post('/speaker', 'store');
                     Route::get('/speaker', 'getSpeaker');
                     Route::get('/options', 'getSpeakerOptions');
-                    Route::post('/speaker', 'saveSpeaker');
                 });
             });
         });
 
-        Route::prefix('/settings')->controller(UserSettingsController::class)->group(function () {
-            Route::get('/change-profile', 'edit')->name('settings.profile.edit');
-            Route::patch('/change-profile', 'update')->name('settings.profile.update');
-            Route::get('/change-password', 'editPassword')->name('settings.password.edit');
-            Route::patch('/change-password', 'updatePassword')->name('settings.password.update');
-            Route::get('/change-avatar', 'editAvatar')->name('settings.avatar.edit');
-            Route::patch('/change-avatar', 'updateAvatar')->name('settings.avatar.update');
-            Route::patch('/toggle-privacy', 'togglePrivacy')->name('settings.privacy.toggle');
+        Route::prefix('/settings')->group(function () {
+            Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
+            Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
+            Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
+            Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
+            Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
+            Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
+            Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
         });
 
     });

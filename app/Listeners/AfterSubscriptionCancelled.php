@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use Spark\Events\SubscriptionCancelled;
 
 class AfterSubscriptionCancelled
@@ -20,11 +19,8 @@ class AfterSubscriptionCancelled
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
-    public function handle(SubscriptionCancelled $event)
+    public function handle(SubscriptionCancelled $event): void
     {
         /** @var User $user */
         $user = $event->billable;

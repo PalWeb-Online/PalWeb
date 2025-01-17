@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Gloss;
 use App\Models\Attribute;
+use App\Models\Gloss;
 use Illuminate\Console\Command;
 
 class RefactorGlosses extends Command
@@ -24,10 +24,8 @@ class RefactorGlosses extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $glosses = Gloss::whereNotNull('attribute')->get();
 

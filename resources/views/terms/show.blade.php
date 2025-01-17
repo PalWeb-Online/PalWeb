@@ -74,7 +74,7 @@
 
             @if(request()->routeIs(['terms.show', 'terms.audios']))
                 <div class="term-pronunciation">
-                    @if(auth()->check())
+                    @auth
                         @unless($term->userPronunciations->isEmpty())
                             @foreach ($term->userPronunciations as $pronunciation)
                                 <x-pronunciation-item :pronunciation="$pronunciation"/>
@@ -96,7 +96,7 @@
                         @foreach ($term->pronunciations as $pronunciation)
                             <x-pronunciation-item :pronunciation="$pronunciation"/>
                         @endforeach
-                    @endif
+                    @endauth
                 </div>
 
                 @if(request()->routeIs('terms.show'))

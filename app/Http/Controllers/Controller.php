@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Events\UserDeniedAccess;
 use App\Exceptions\UnauthorizedAccessException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests;
-    use DispatchesJobs;
     use ValidatesRequests;
 
     /**
@@ -29,15 +27,15 @@ class Controller extends BaseController
      * exactly the same end result as the laravel auth system except this way we can see exactly how and why it
      * works.
      *
-     * @param  bool  $action if false we throw an exception
+     * @param  bool  $action  if false we throw an exception
      *
      * @throws UnauthorizedAccessException
      */
-    public function failIfFalse($action)
+    public function failIfFalse(bool $action)
     {
         if (! $action) {
             // Fire off a UserDeniedAccess event. The details will be filled in by the implementation
-            event(new UserDeniedAccess());
+            event(new UserDeniedAccess);
 
             throw UnauthorizedAccessException::forClass(static::class);
         }

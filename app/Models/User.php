@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Billable;
+    use Billable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'email',
@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'speaker_id',
         'discord_id',
         'discord_token',
-        'discord_refresh_token'
+        'discord_refresh_token',
     ];
 
     protected $hidden = [
@@ -40,10 +40,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'trial_ends_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'trial_ends_at' => 'datetime',
+        ];
+    }
 
     /**
      * Returns true if the current user is an admin

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     public static function getDefaultStoragePath(): string
     {
@@ -31,14 +31,17 @@ class File extends Model
         'metadata',
     ];
 
-    protected $casts = [
-        'metadata' => 'array',
-        'is_public' => 'boolean',
-    ];
-
     protected $appends = [
         'public_url',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'metadata' => 'array',
+            'is_public' => 'boolean',
+        ];
+    }
 
     public function getPublicUrlAttribute()
     {

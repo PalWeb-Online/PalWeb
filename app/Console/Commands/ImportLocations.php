@@ -24,16 +24,15 @@ class ImportLocations extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $filePath = storage_path('app/locations.json');
 
-        if (!File::exists($filePath)) {
+        if (! File::exists($filePath)) {
             $this->error("File not found: $filePath");
-            return;
+
+            return 1;
         }
 
         $jsonData = File::get($filePath);
@@ -41,10 +40,11 @@ class ImportLocations extends Command
 
         if ($locations === null) {
             $this->error("Invalid JSON format in $filePath");
-            return;
+
+            return 1;
         }
 
-        $this->info("Starting import of ".count($locations)." locations...");
+        $this->info('Starting import of '.count($locations).' locations...');
 
         foreach ($locations as $location) {
             try {
@@ -61,17 +61,17 @@ class ImportLocations extends Command
                         'name_en' => $location['name_en'],
                         'coordinates' => DB::raw("ST_GeomFromText('$wkt')"),
                         'created_at' => now(),
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ]
                 );
 
-                $this->info("Imported: ".$location['name_ar']);
+                $this->info('Imported: '.$location['name_ar']);
             } catch (\Exception $e) {
-                $this->error("Failed to import: ".$location['name_ar']." (QID: ".$location['qid'].")");
+                $this->error('Failed to import: '.$location['name_ar'].' (QID: '.$location['qid'].')');
                 $this->error($e->getMessage());
             }
         }
 
-        $this->info("Import completed!");
+        $this->info('Import completed!');
     }
 }

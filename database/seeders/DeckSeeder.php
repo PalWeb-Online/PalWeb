@@ -12,10 +12,8 @@ class DeckSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $users = User::all();
         $terms = Term::pluck('id');

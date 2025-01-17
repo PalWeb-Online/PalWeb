@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Pattern extends Model
 {
@@ -17,7 +18,7 @@ class Pattern extends Model
 
     protected $guarded = [];
 
-    public function terms()
+    public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class);
     }

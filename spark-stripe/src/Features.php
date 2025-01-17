@@ -6,20 +6,16 @@ class Features
 {
     /**
      * Determine if the given feature is enabled.
-     *
-     * @return bool
      */
-    public static function enabled(string $feature)
+    public static function enabled(string $feature): bool
     {
         return in_array($feature, config('spark.features', []));
     }
 
     /**
      * Determine if the feature is enabled and has a given option enabled.
-     *
-     * @return bool
      */
-    public static function optionEnabled(string $feature, string $option)
+    public static function optionEnabled(string $feature, string $option): bool
     {
         return static::enabled($feature) &&
                config("spark-options.{$feature}.{$option}") === true;
@@ -37,20 +33,16 @@ class Features
 
     /**
      * Determine if the application requires users to accept the terms of service before subscribing.
-     *
-     * @return bool
      */
-    public static function enforcesAcceptingTerms()
+    public static function enforcesAcceptingTerms(): bool
     {
         return static::enabled('must-accept-terms');
     }
 
     /**
      * Determine if the application is using the EU VAT collection feature.
-     *
-     * @return bool
      */
-    public static function collectsEuVat()
+    public static function collectsEuVat(): bool
     {
         if (config('spark.collects_eu_vat')) {
             return config('spark.collects_eu_vat');
@@ -61,50 +53,40 @@ class Features
 
     /**
      * Determine if the application is using the billing address collection feature.
-     *
-     * @return bool
      */
-    public static function collectsBillingAddress()
+    public static function collectsBillingAddress(): bool
     {
         return static::enabled('billing-address-collection');
     }
 
     /**
      * Determine if the application is using the receipt emails sending feature.
-     *
-     * @return bool
      */
-    public static function sendsReceiptEmails()
+    public static function sendsReceiptEmails(): bool
     {
         return static::enabled('receipt-emails-sending');
     }
 
     /**
      * Determine if the application is using the payment notifications sending feature.
-     *
-     * @return bool
      */
-    public static function sendsPaymentNotificationEmails()
+    public static function sendsPaymentNotificationEmails(): bool
     {
         return static::enabled('sends-payment-notification-emails');
     }
 
     /**
      * Enable requiring accepting terms before subscribing.
-     *
-     * @return string
      */
-    public static function mustAcceptTerms()
+    public static function mustAcceptTerms(): string
     {
         return 'must-accept-terms';
     }
 
     /**
      * Enable the VAT collection feature.
-     *
-     * @return string
      */
-    public static function euVatCollection(array $options = [])
+    public static function euVatCollection(array $options = []): string
     {
         config(['spark-options.eu-vat-collection' => $options]);
 
@@ -113,10 +95,8 @@ class Features
 
     /**
      * Enable the billing address collection feature.
-     *
-     * @return string
      */
-    public static function billingAddressCollection(array $options = [])
+    public static function billingAddressCollection(array $options = []): string
     {
         config(['spark-options.billing-address-collection' => $options]);
 
@@ -125,10 +105,8 @@ class Features
 
     /**
      * Enable the receipt emails sending feature.
-     *
-     * @return string
      */
-    public static function receiptEmails(array $options = [])
+    public static function receiptEmails(array $options = []): string
     {
         config(['spark-options.receipt-emails-sending' => $options]);
 
@@ -137,10 +115,8 @@ class Features
 
     /**
      * Enable the receipt emails sending feature.
-     *
-     * @return string
      */
-    public static function paymentNotificationEmails()
+    public static function paymentNotificationEmails(): string
     {
         return 'sends-payment-notification-emails';
     }

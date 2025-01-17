@@ -5,7 +5,7 @@
  * (c) Younes KHOUBZA <younes.khoubza@gmail.com>
  */
 
-return array(
+return [
     /*
     |---------------------------------------------------------------------------
     | Default PHPFlasher library
@@ -49,10 +49,10 @@ return array(
     | You can then specify the local path to the javascript file in the 'local'
     | field of this option.
     */
-    'root_script' => array(
+    'root_script' => [
         'cdn' => 'https://cdn.jsdelivr.net/npm/@flasher/flasher@1.3.2/dist/flasher.min.js',
         'local' => '/vendor/flasher/flasher.min.js',
-    ),
+    ],
 
     /*
     |---------------------------------------------------------------------------
@@ -69,10 +69,10 @@ return array(
     | assets in your application's public folder. Then specify the local path to
     | the stylesheet file in the 'local' field of this option.
     */
-    'styles' => array(
+    'styles' => [
         'cdn' => null,
         'local' => null,
-    ),
+    ],
 
     /*
     |---------------------------------------------------------------------------
@@ -124,7 +124,7 @@ return array(
     */
     'auto_render' => true,
 
-    'flash_bag' => array(
+    'flash_bag' => [
         /*
         |-----------------------------------------------------------------------
         | Enable flash bag
@@ -155,13 +155,13 @@ return array(
         | the following entry to the mapping:
         |     'error' => ['danger'],
         */
-        'mapping' => array(
-            'success' => array('success'),
-            'error' => array('error', 'danger'),
-            'warning' => array('warning', 'alarm'),
-            'info' => array('info', 'notice', 'alert'),
-        ),
-    ),
+        'mapping' => [
+            'success' => ['success'],
+            'error' => ['error', 'danger'],
+            'warning' => ['warning', 'alarm'],
+            'info' => ['info', 'notice', 'alert'],
+        ],
+    ],
 
     /*
     |---------------------------------------------------------------------------
@@ -187,7 +187,7 @@ return array(
     |     'limit' => 5,
     |     'types' => ['error'],
     */
-    'filter_criteria' => array(
+    'filter_criteria' => [
         'limit' => 5, // Limit the number of notifications to display
-    ),
-);
+    ],
+];

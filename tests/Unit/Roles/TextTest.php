@@ -15,7 +15,7 @@ class TextTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_admin_can_perform_all_actions_on_a_text()
+    public function test_admin_can_perform_all_actions_on_a_text(): void
     {
         $this->roles();
         $user = User::factory()->create();
@@ -27,7 +27,7 @@ class TextTest extends TestCase
         }
     }
 
-    public function test_student_can_only_view_texts()
+    public function test_student_can_only_view_texts(): void
     {
         (new RoleSeeder)->run();
         $user = User::factory()->create();

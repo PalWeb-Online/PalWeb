@@ -10,9 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TermFactory extends Factory
 {
-    protected $model = Term::class;
-
-    public function definition()
+    public function definition(): array
     {
         // Create root first
         $root = Root::factory()->create();
@@ -25,12 +23,12 @@ class TermFactory extends Factory
             'اقتصاد', 'شعر', 'تكنولوجيا', 'علوم', 'رياضيات', 'فيزياء', 'كيمياء', 'بيولوجيا', 'طب', 'رسم', 'تصوير',
             'فيلم', 'مسرح', 'رواية', 'فنون', 'دين', 'فلسفة', 'سياسة', 'مجتمع', 'ثقافة', 'هندسة', 'حاسب', 'انترنت',
             'تصميم', 'فوتوغرافيا', 'رقص', 'تمثيل', 'موسيقى', 'تاريخ', 'جغرافيا', 'رياضيات', 'فيزياء', 'فلك', 'طب',
-            'عمارة', 'نبات', 'حيوان', 'ذرة', 'برمجة', 'إحصاء', 'دين', 'فكر', 'حقوق', 'اقتصاد', 'فلسفة', 'سياسة'
+            'عمارة', 'نبات', 'حيوان', 'ذرة', 'برمجة', 'إحصاء', 'دين', 'فكر', 'حقوق', 'اقتصاد', 'فلسفة', 'سياسة',
         ];
 
         $categories = [
             'verb', 'noun', 'adjective', 'adverb', 'numeral', 'preposition',
-            'conjunction', 'determiner', 'particle', 'phrase', 'affix'
+            'conjunction', 'determiner', 'particle', 'phrase', 'affix',
         ];
 
         return [
@@ -39,8 +37,8 @@ class TermFactory extends Factory
             'category' => $this->faker->randomElement($categories),
             'slug' => $this->faker->unique()->randomNumber(),
             'root_id' => $root->id,
-            'etymology' => ["type" => "inherited", "source" => null],
-            'image' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Citrullus_lanatus_1904.jpg/1024px-Citrullus_lanatus_1904.jpg'
+            'etymology' => ['type' => 'inherited', 'source' => null],
+            'image' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Citrullus_lanatus_1904.jpg/1024px-Citrullus_lanatus_1904.jpg',
         ];
     }
 

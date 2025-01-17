@@ -9,10 +9,8 @@ class DialectSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         DB::table('dialects')->insert(['name' => 'General Palestinian']);
         DB::table('dialects')->insert(['name' => 'Urban Palestinian']);

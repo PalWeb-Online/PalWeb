@@ -8,27 +8,23 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('qid')->unique();
             $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->point('coordinates');
+            $table->geography('coordinates');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('locations');
     }

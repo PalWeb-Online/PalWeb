@@ -14,7 +14,7 @@ class Unit
 
     public function getLesson($lesson)
     {
-        $lesson = new $this->lessons[$lesson]();
+        $lesson = new $this->lessons[$lesson];
 
         return $lesson->render();
     }
@@ -37,7 +37,7 @@ class Unit
         $terms = $query->get()->keyBy('slug');
 
         $keys = array_fill_keys($this->terms, null);
-        
+
         return collect($keys)->merge($terms);
     }
 }

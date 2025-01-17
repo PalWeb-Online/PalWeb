@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Root extends Model
 {
@@ -39,6 +40,7 @@ class Root extends Model
         'ي',
         'ء',
     ];
+
     const translit = [
         'b',
         't',
@@ -69,6 +71,7 @@ class Root extends Model
         'y',
         'ʔ',
     ];
+
     const translitOverrides = [
         '1' => [],
         '4' => [],
@@ -115,12 +118,12 @@ class Root extends Model
 
     protected $guarded = [];
 
-    public function terms()
+    public function terms(): HasMany
     {
         return $this->hasMany(Term::class);
     }
 
-    public function generateRoot(Term $term = null): array
+    public function generateRoot(?Term $term = null): array
     {
         $arabic = mb_str_split($this->root);
         $translit = str_replace(self::arabic, self::translit, $arabic);
@@ -135,7 +138,7 @@ class Root extends Model
 
                 $translits[] = [
                     'dialect' => $dialect->name,
-                    'translit' => $dialectTranslit
+                    'translit' => $dialectTranslit,
                 ];
             }
 

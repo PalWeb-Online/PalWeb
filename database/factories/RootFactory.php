@@ -10,25 +10,23 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RootFactory extends Factory
 {
-    protected $model = Root::class;
-
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
 
         $arabicLetters = [
             'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك',
-            'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
+            'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء',
         ];
 
         $unique = false;
         $root = '';
 
-        while (!$unique) {
+        while (! $unique) {
             $randomLetters = $this->faker->randomElements($arabicLetters, 3);
             $root = collect($randomLetters)->implode('');
 

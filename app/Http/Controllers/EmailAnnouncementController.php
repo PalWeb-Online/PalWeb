@@ -2,30 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEmailAnnouncementRequest;
 use App\Mail\AnnouncementEmail;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 
 class EmailAnnouncementController extends Controller
 {
-
-    public function compose()
+    public function create(): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Compose Email');
+        View::share('pageTitle', 'Create Email');
+
         return view('users.dashboard.email-compose');
     }
 
-    public function send(Request $request)
+    public function store(StoreEmailAnnouncementRequest $request): RedirectResponse
     {
-        $request->validate([
-            'subject' => 'required',
-            'body' => 'required',
-        ]);
-
         $subject = $request->input('subject');
         $body = $request->input('body');
 
@@ -39,7 +35,6 @@ class EmailAnnouncementController extends Controller
             }
         }
 
-        // Redirect back with a success message
-        return redirect('/')->with('success', 'Announcement email has been queued.');
+        return to_route('homepage')->with('success', 'Announcement email has been queued.');
     }
 }

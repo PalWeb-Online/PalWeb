@@ -3,28 +3,23 @@
 namespace Spark;
 
 use Exception;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Mpociot\VatCalculator\VatCalculator;
 
-class ValidVatNumber implements Rule
+class ValidVatNumber implements ValidationRule
 {
     /**
-     * {@inheritDoc}
+     * Validate the attribute value.
      */
-    public function passes($attribute, $value)
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         try {
-            return app(VatCalculator::class)->isValidVATNumber($value);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
+            if (! app(VatCalculator::class)->isValidVATNumber($value)) {
+                $fail(__('The provided VAT number is invalid.'));
+            }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function message()
-    {
-        return __('The provided VAT number is invalid.');
+        } catch (Exception $e) {
+            $fail(__('The provided VAT number is invalid.'));
+        }
     }
 }

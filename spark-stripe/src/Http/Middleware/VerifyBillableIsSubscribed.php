@@ -2,6 +2,9 @@
 
 namespace Spark\Http\Middleware;
 
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Spark\GuessesBillableTypes;
 use Spark\Spark;
@@ -12,14 +15,8 @@ class VerifyBillableIsSubscribed
 
     /**
      * Verify the incoming request's user has a subscription.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string  $billableType
-     * @param  string  $plan
-     * @return \Illuminate\Http\Response
      */
-    public function handle($request, $next, $billableType = null, $plan = null)
+    public function handle(Request $request, Closure $next, ?string $billableType = null, ?string $plan = null): Response
     {
         $billableType = $billableType ?: $this->guessBillableType($billableType);
 
@@ -37,19 +34,15 @@ class VerifyBillableIsSubscribed
             return response('Subscription Required.', 402);
         }
 
-        return redirect($redirect);
+        return redirect()->to($redirect);
     }
 
     /**
      * Determine if the given user is subscribed to the given plan.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $type
-     * @param  string  $plan
      * @param  bool  $defaultSubscription
-     * @return bool
      */
-    protected function subscribed($request, $type, $plan)
+    protected function subscribed(Request $request, string $type, string $plan): bool
     {
         if (! $billable = Spark::resolveBillable($type, $request)) {
             return false;
@@ -67,10 +60,8 @@ class VerifyBillableIsSubscribed
 
     /**
      * Get the redirect location.
-     *
-     * @return string
      */
-    protected function redirect(string $billableType)
+    protected function redirect(string $billableType): string
     {
         $redirect = '/'.config('spark.path');
 

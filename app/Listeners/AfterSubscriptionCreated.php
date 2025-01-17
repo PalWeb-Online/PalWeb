@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Mail\UserSubscribed;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Spark\Events\SubscriptionCreated;
 
@@ -22,11 +21,8 @@ class AfterSubscriptionCreated
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
-    public function handle(SubscriptionCreated $event)
+    public function handle(SubscriptionCreated $event): void
     {
         /** @var User $user */
         $user = $event->billable;

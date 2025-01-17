@@ -6,11 +6,12 @@ use App\Models\Attribute;
 use App\Models\Pattern;
 use App\Models\Term;
 use App\Services\SearchService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SearchGenieController extends Controller
 {
-    public function search(Request $request, SearchService $searchService)
+    public function getResults(Request $request, SearchService $searchService): JsonResponse
     {
         $searchTerm = $request->input('search', '') ?? '';
         $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
@@ -24,7 +25,7 @@ class SearchGenieController extends Controller
         ]);
     }
 
-    public function getFilterOptions()
+    public function getFilterOptions(): JsonResponse
     {
         $categories = Term::select('category')->distinct()->pluck('category');
         $attributes = Attribute::select('attribute')->distinct()->pluck('attribute');

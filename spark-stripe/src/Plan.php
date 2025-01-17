@@ -104,11 +104,9 @@ class Plan implements Arrayable, JsonSerializable
     /**
      * Create a new plan instance.
      *
-     * @param  string  $name
-     * @param  string  $id
      * @return void
      */
-    public function __construct($name, $id)
+    public function __construct(string $name, string $id)
     {
         $this->id = $id;
         $this->name = $name;
@@ -116,10 +114,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the plan's interval (monthly or yearly).
-     *
-     * @return $this
      */
-    public function interval(string $interval)
+    public function interval(string $interval): static
     {
         $this->interval = $interval;
 
@@ -128,10 +124,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the plan's interval is monthly.
-     *
-     * @return $this
      */
-    public function monthly()
+    public function monthly(): static
     {
         $this->interval = 'monthly';
 
@@ -140,10 +134,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the plan's interval is yearly.
-     *
-     * @return $this
      */
-    public function yearly()
+    public function yearly(): static
     {
         $this->interval = 'yearly';
 
@@ -152,11 +144,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the number of trial days that come with the plan.
-     *
-     * @param  int  $trialDays
-     * @return $this
      */
-    public function trialDays($trialDays)
+    public function trialDays(int $trialDays): static
     {
         $this->trialDays = $trialDays;
 
@@ -165,10 +154,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Set the incentive text for the plan.
-     *
-     * @return $this
      */
-    public function incentive(string $monthlyIncentive, string $yearlyIncentive)
+    public function incentive(string $monthlyIncentive, string $yearlyIncentive): static
     {
         $this->monthlyIncentive = $monthlyIncentive;
         $this->yearlyIncentive = $yearlyIncentive;
@@ -178,10 +165,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Set the short description of the plan.
-     *
-     * @return $this
      */
-    public function shortDescription(string $description)
+    public function shortDescription(string $description): static
     {
         $this->shortDescription = $description;
 
@@ -190,10 +175,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the plan's features.
-     *
-     * @return $this
      */
-    public function features(array $features)
+    public function features(array $features): static
     {
         $this->features = $features;
 
@@ -202,10 +185,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Specify the plan's options.
-     *
-     * @return $this
      */
-    public function options(array $options)
+    public function options(array $options): static
     {
         $this->options = $options;
 
@@ -214,10 +195,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Set the active "status" of the plan.
-     *
-     * @return $this
      */
-    public function status(bool $active = true)
+    public function status(bool $active = true): static
     {
         $this->active = $active;
 
@@ -226,10 +205,8 @@ class Plan implements Arrayable, JsonSerializable
 
     /**
      * Set the active "status" of the plan to archived.
-     *
-     * @return $this
      */
-    public function archive()
+    public function archive(): static
     {
         $this->active = false;
 

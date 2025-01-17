@@ -8,6 +8,7 @@ use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierController;
 use Laravel\Cashier\Invoice;
 use Laravel\Cashier\Payment;
+use Spark\Billable;
 use Spark\Events\PaymentSucceeded;
 use Spark\Events\SubscriptionCancelled;
 use Spark\Events\SubscriptionCreated;
@@ -19,10 +20,7 @@ use Stripe\Subscription;
 
 class WebhookController extends CashierController
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected function handleCustomerSubscriptionUpdated(array $payload)
+    protected function handleCustomerSubscriptionUpdated(array $payload): \Symfony\Component\HttpFoundation\Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             $subscription = $billable->subscriptions()->where('stripe_id', $payload['data']['object']['id'])->first();
@@ -35,7 +33,7 @@ class WebhookController extends CashierController
 
             if ($newStatus &&
                 $newStatus == Subscription::STATUS_ACTIVE &&
-                ! in_array($oldStatus, [Subscription::STATUS_ACTIVE, Subscription::STATUS_TRIALING])) {
+                !in_array($oldStatus, [Subscription::STATUS_ACTIVE, Subscription::STATUS_TRIALING])) {
                 event(new SubscriptionCreated($billable, $subscription->refresh()));
 
                 $billable->update(['trial_ends_at' => null]);
@@ -47,10 +45,7 @@ class WebhookController extends CashierController
         return $this->successMethod();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function handleCustomerSubscriptionDeleted(array $payload)
+    protected function handleCustomerSubscriptionDeleted(array $payload): \Symfony\Component\HttpFoundation\Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             parent::handleCustomerSubscriptionDeleted($payload);
@@ -62,7 +57,7 @@ class WebhookController extends CashierController
 
                 if (config('spark.void_cancelled_subscription_invoices', false)) {
                     $subscription->invoicesIncludingPending()
-                        ->where(fn (Invoice $invoice) => $invoice->isOpen())
+                        ->where(fn(Invoice $invoice) => $invoice->isOpen())
                         ->each
                         ->void();
                 }
@@ -72,10 +67,7 @@ class WebhookController extends CashierController
         return $this->successMethod();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function handleCustomerDeleted(array $payload)
+    protected function handleCustomerDeleted(array $payload): \Symfony\Component\HttpFoundation\Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['id'])) {
             parent::handleCustomerDeleted($payload);
@@ -88,16 +80,11 @@ class WebhookController extends CashierController
         return $this->successMethod();
     }
 
-    /**
-     * Handle a successful invoice payment event.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function handleInvoicePaymentSucceeded(array $payload)
+    protected function handleInvoicePaymentSucceeded(array $payload): \Symfony\Component\HttpFoundation\Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             if ($invoice = $billable->findInvoice($payload['data']['object']['id'])) {
-                if (! $billable->localReceipts()->where('provider_id', $invoice->id)->first()) {
+                if (!$billable->localReceipts()->where('provider_id', $invoice->id)->first()) {
                     $billable->localReceipts()->create([
                         'provider_id' => $invoice->id,
                         'amount' => Cashier::formatAmount($invoice->amount_due, $invoice->currency),
@@ -115,12 +102,7 @@ class WebhookController extends CashierController
         return $this->successMethod();
     }
 
-    /**
-     * Handle payment action required for invoice.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function handleInvoicePaymentActionRequired(array $payload)
+    protected function handleInvoicePaymentActionRequired(array $payload): \Symfony\Component\HttpFoundation\Response
     {
         if ($billable = $this->getUserByStripeId($payload['data']['object']['customer'])) {
             if (in_array(Notifiable::class, class_uses_recursive($billable))) {
@@ -135,16 +117,9 @@ class WebhookController extends CashierController
         return $this->successMethod();
     }
 
-    /**
-     * Send the receipt notification email.
-     *
-     * @param  \Spark\Billable  $billable
-     * @param  \Laravel\Cashier\Invoice|null  $invoice
-     * @return void
-     */
-    protected function sendReceiptNotification($billable, $invoice)
+    protected function sendReceiptNotification(Billable $billable, ?Invoice $invoice): void
     {
-        if (! config('spark.sends_receipt_emails') && ! Features::sendsReceiptEmails()) {
+        if (!config('spark.sends_receipt_emails') && !Features::sendsReceiptEmails()) {
             return;
         }
 
@@ -162,15 +137,11 @@ class WebhookController extends CashierController
 
     /**
      * Send the payment confirmation notification email.
-     *
-     * @param  \Spark\Billable  $billable
-     * @param  \Laravel\Cashier\Payment  $payment
-     * @return void
      */
-    protected function sendPaymentConfirmationNotification($billable, $payment)
+    protected function sendPaymentConfirmationNotification(Billable $billable, Payment $payment): void
     {
-        if (! config('spark.sends_payment_notification_emails') &&
-            ! Features::sendsPaymentNotificationEmails()) {
+        if (!config('spark.sends_payment_notification_emails') &&
+            !Features::sendsPaymentNotificationEmails()) {
             return;
         }
 

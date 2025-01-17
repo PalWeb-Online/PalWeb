@@ -10,10 +10,8 @@ class SpeakerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $users = User::doesntHave('speaker')->get();
         $users->take(25)->each(function ($user) {

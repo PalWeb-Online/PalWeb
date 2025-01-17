@@ -15,10 +15,8 @@ class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
@@ -33,8 +31,8 @@ class RoleSeeder extends Seeder
 
         DB::table('model_has_roles')->insert([
             'role_id' => '1',
-            'model_type' => 'App\Models\User',
-            'model_id' => '1'
+            'model_type' => \App\Models\User::class,
+            'model_id' => '1',
         ]);
 
         // Create the various permissions the system needs

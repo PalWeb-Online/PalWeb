@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
+use App\Http\Requests\StoreDeckRequest;
+use App\Http\Requests\UpdateDeckRequest;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
 use Exception;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Maize\Markable\Models\Bookmark;
@@ -19,11 +23,11 @@ class DeckController extends Controller
     {
     }
 
-    public function pin(Deck $deck)
+    public function pin(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($deck, $user);
 
@@ -34,11 +38,11 @@ class DeckController extends Controller
             'isPinned' => $deck->isPinned(),
             'message' => $deck->isPinned()
                 ? __('pin.added', ['thing' => $deck->name])
-                : __('pin.removed', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService)
+    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
         View::share('pageTitle', 'Deck Library');
 
@@ -78,12 +82,9 @@ class DeckController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreDeckRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
-        $user = auth()->user();
-
+        $user = $request->user();
         $deck = $request->deck;
         $deck = array_merge($deck, [
             'user_id' => $user->id,
@@ -100,15 +101,7 @@ class DeckController extends Controller
         ]);
     }
 
-    private function validateRequest($request)
-    {
-        return $request->validate([
-            'deck.name' => ['required', 'max:50'],
-            'deck.description' => ['nullable', 'max:500'],
-        ]);
-    }
-
-    private function linkTerms($deck, $terms)
+    private function linkTerms($deck, $terms): void
     {
         foreach ($terms as $termData) {
             $term = Term::find($termData['id']);
@@ -118,25 +111,19 @@ class DeckController extends Controller
                     $term->id => [
                         'gloss_id' => $termData['gloss_id'],
                         'position' => $termData['position'],
-                    ]
+                    ],
                 ]);
             }
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->id, array_column($terms, 'id'))) {
+            if (! in_array($term->id, array_column($terms, 'id'))) {
                 $deck->terms()->detach($term->id);
             }
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Deck  $deck
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Deck $deck)
+    public function show(Deck $deck): \Illuminate\View\View
     {
         $this->authorize('interact', $deck);
 
@@ -144,18 +131,17 @@ class DeckController extends Controller
             'author',
             'terms' => function ($query) {
                 $query->orderBy('deck_term.id');
-            }
+            },
         ]);
 
         View::share('pageTitle', 'Deck: '.$deck->name);
+
         return view('decks.show', ['deck' => $deck]);
     }
 
-    public function update(Request $request, Deck $deck)
+    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
     {
         $this->authorize('modify', $deck);
-
-        $this->validateRequest($request);
 
         $deck->update($request->deck);
         $this->linkTerms($deck, $request->terms);
@@ -165,43 +151,44 @@ class DeckController extends Controller
         ]);
     }
 
-    public function destroy(Deck $deck)
+    public function destroy(Request $request, Deck $deck): RedirectResponse|JsonResponse
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
         } else {
             $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
+
             return to_route('decks.index');
         }
 
     }
 
-    public function togglePrivacy(Deck $deck)
+    public function togglePrivacy(Deck $deck): JsonResponse
     {
         $this->authorize('modify', $deck);
 
-        $deck->private = !$deck->private;
+        $deck->private = ! $deck->private;
         $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
-        return [
+        return response()->json([
             'isPrivate' => $deck->private,
-            'message' => __('privacy.updated', ['status' => $status])
-        ];
+            'message' => __('privacy.updated', ['status' => $status]),
+        ]);
     }
 
-    public function toggleTerm(Deck $deck, Term $term)
+    public function toggleTerm(Deck $deck, Term $term): JsonResponse
     {
         $this->authorize('modify', $deck);
 
-        if (!$deck->terms->contains($term->id)) {
+        if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
 
@@ -210,25 +197,25 @@ class DeckController extends Controller
         }
 
         return response()->json([
-            'isPresent' => !$deck->terms->contains($term->id),
-            'message' => !$deck->terms->contains($term->id)
+            'isPresent' => ! $deck->terms->contains($term->id),
+            'message' => ! $deck->terms->contains($term->id)
                 ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
-                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name])
+                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]),
         ]);
     }
 
-    public function copy(Deck $deck)
+    public function copy(Request $request, Deck $deck): RedirectResponse
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         $newDeck = $deck->replicate(['id', 'private']);
         $newDeck->private = 0;
         $newDeck->user_id = $user->id;
         $newDeck->description = "My copy of {$deck->author->name} ({$deck->author->username})'s {$deck->name} Deck.";
 
-        $newDeck->name .= " (Copy)";
+        $newDeck->name .= ' (Copy)';
         $newDeck->save();
 
         Bookmark::add($deck, $user);
@@ -240,10 +227,11 @@ class DeckController extends Controller
         }
 
         $this->flasher->addSuccess(__('deck.copied', ['deck' => $deck->name]));
+
         return to_route('decks.show', $newDeck->id);
     }
 
-    public function export(Deck $deck)
+    public function export(Deck $deck): never
     {
         $this->authorize('interact', $deck);
 
@@ -254,22 +242,17 @@ class DeckController extends Controller
 
             $data[] = [
                 $term->term.' ('.$term->translit.')',
-                $glosses
+                $glosses,
             ];
         }
 
-        return $this->convertToCsv($deck->name, $data);
-    }
-
-    protected function convertToCsv($filename, $data)
-    {
         $output = fopen('php://output', 'w');
-        if ($output === false) {
+        if (!$output) {
             throw new Exception('Failed to open php://output');
         }
 
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Disposition: attachment; filename="'.$deck->name.'"');
 
         fputcsv($output, array_shift($data));
 

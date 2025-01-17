@@ -4,25 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Deck;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class CardViewerController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Card Viewer');
 
         return view('decks.viewer', [
-            'layout' => 'app'
+            'layout' => 'app',
         ]);
     }
 
-    public function getPinnedDecks(Request $request)
+    public function getPinnedDecks(Request $request): JsonResponse
     {
         try {
             $user = $request->user();
@@ -30,10 +29,10 @@ class CardViewerController extends Controller
 
             $decks = Deck::with('author')
                 ->select('decks.*')
-                ->where(fn($query) => $query->where('decks.private', false)
+                ->where(fn ($query) => $query->where('decks.private', false)
                     ->orWhere('decks.user_id', $user->id)
                 )
-                ->join('markable_bookmarks', fn($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
+                ->join('markable_bookmarks', fn ($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                     ->where('markable_bookmarks.markable_type', '=', Deck::class)
                     ->where('markable_bookmarks.user_id', '=', $user->id)
                 )
@@ -60,13 +59,13 @@ class CardViewerController extends Controller
         }
     }
 
-    public function getCards($id)
+    public function getCards(Request $request, $id): JsonResponse
     {
         $terms = [];
 
         foreach (Deck::findOrFail($id)->terms as $term) {
             $term->pronunciation = $term->pronunciations->first();
-            $pronunciation = $term->pronunciations->firstWhere('dialect_id', auth()->user()->dialect_id);
+            $pronunciation = $term->pronunciations->firstWhere('dialect_id', $request->user()->dialect_id);
             $pronunciation && $term->pronunciation = $pronunciation;
 
             $terms[] = [

@@ -2,6 +2,7 @@
 
 namespace Spark;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable as CashierBillable;
 use Laravel\Cashier\Jobs\SyncCustomerDetails;
@@ -13,10 +14,8 @@ trait Billable
 
     /**
      * Boot the billable model.
-     *
-     * @return void
      */
-    public static function bootBillable()
+    public static function bootBillable(): void
     {
         static::created(function ($model) {
             $trialDays = $model->sparkConfiguration('trial_days');
@@ -35,23 +34,19 @@ trait Billable
 
     /**
      * Determine if any Stripe synced customer data has changed.
-     *
-     * @return bool
      */
-    public function shouldSyncCustomerDetailsToStripe()
+    public function shouldSyncCustomerDetailsToStripe(): bool
     {
         return config('cashier.secret') &&
-            ! env('CI') &&
+            ! config('settings.ci') &&
             ! app()->runningUnitTests() &&
             $this->wasChanged($this->stripeAttributes());
     }
 
     /**
      * The model attributes that will trigger a Stripe customer update.
-     *
-     * @return array
      */
-    protected function stripeAttributes()
+    protected function stripeAttributes(): array
     {
         return [
             'name',
@@ -68,10 +63,8 @@ trait Billable
 
     /**
      * Get the address that should be synced to Stripe.
-     *
-     * @return array|null
      */
-    public function stripeAddress()
+    public function stripeAddress(): ?array
     {
         return [
             'line1' => $this->billing_address,
@@ -86,21 +79,18 @@ trait Billable
     /**
      * Get all of the local receipts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @deprecated This method will be removed in a future Spark release.
      */
-    public function localReceipts()
+    public function localReceipts(): HasMany
     {
-        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderBy('id', 'desc');
+        return $this->hasMany(Receipt::class, $this->getForeignKey())->orderByDesc('id');
     }
 
     /**
      * Get the Spark plan that corresponds with the billable's current subscription.
-     *
-     * @return \Spark\Plan|null
      */
-    public function sparkPlan()
+    public function sparkPlan(): ?Plan
     {
         $subscription = $this->subscription();
 
@@ -110,16 +100,18 @@ trait Billable
             return $plans->first(function ($plan) use ($subscription) {
                 return $plan->id == $subscription->stripe_price;
             });
+
+        } else {
+            return null;
         }
     }
 
     /**
      * Get the Spark configuration or a configuration item for the billable model.
      *
-     * @param  string|null  $key
      * @return mixed
      */
-    public function sparkConfiguration($key = null)
+    public function sparkConfiguration(?string $key = null)
     {
         $config = collect(config('spark.billables'))->map(function ($config, $type) {
             $config['type'] = $type;
@@ -139,14 +131,12 @@ trait Billable
     /**
      * Add seats to the current subscription.
      *
-     * @param  int  $count
-     * @return void
      *
      * @throws \Stripe\Exception\CardException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
      * @throws \Laravel\Cashier\Exceptions\SubscriptionUpdateFailure
      */
-    public function addSeat($count = 1)
+    public function addSeat(int $count = 1): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -160,11 +150,8 @@ trait Billable
 
     /**
      * Remove seats from the current subscription.
-     *
-     * @param  int  $count
-     * @return void
      */
-    public function removeSeat($count = 1)
+    public function removeSeat(int $count = 1): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -179,14 +166,12 @@ trait Billable
     /**
      * Update the number of seats in the current subscription.
      *
-     * @param  int  $count
-     * @return void
      *
      * @throws \Stripe\Exception\CardException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
      * @throws \Laravel\Cashier\Exceptions\SubscriptionUpdateFailure
      */
-    public function updateSeats($count)
+    public function updateSeats(int $count): void
     {
         if (! $subscription = $this->subscription()) {
             return;
@@ -202,9 +187,8 @@ trait Billable
      * Get the receipt emails.
      *
      * @param  mixed  $value
-     * @return array
      */
-    public function getReceiptEmailsAttribute($value)
+    public function getReceiptEmailsAttribute($value): array
     {
         if (is_null($value)) {
             return [];
@@ -217,9 +201,8 @@ trait Billable
      * Fills the model's properties with the payment method from Stripe.
      *
      * @param  \Laravel\Cashier\PaymentMethod|\Stripe\PaymentMethod|null  $paymentMethod
-     * @return $this
      */
-    protected function fillPaymentMethodDetails($paymentMethod)
+    protected function fillPaymentMethodDetails($paymentMethod): static
     {
         if ($paymentMethod->type === 'card') {
             $this->pm_type = $paymentMethod->card->brand;
@@ -227,7 +210,7 @@ trait Billable
             $this->pm_expiration = sprintf('%02d', $paymentMethod->card->exp_month).'/'.$paymentMethod->card->exp_year;
         } else {
             $this->pm_type = $type = $paymentMethod->type;
-            $this->pm_last_four = optional($paymentMethod)->$type->last4;
+            $this->pm_last_four = $paymentMethod?->$type->last4;
             $this->pm_expiration = null;
         }
 
@@ -236,13 +219,11 @@ trait Billable
 
     /**
      * Determine if the Stripe model is on a "generic" trial at the model level.
-     *
-     * @return bool
      */
-    public function onGenericTrial()
+    public function onGenericTrial(): bool
     {
         if (! $this->trial_ends_at) {
-            return;
+            return false;
         }
 
         if ($this->hasCast('trial_ends_at')) {
@@ -254,13 +235,11 @@ trait Billable
 
     /**
      * Get the time when the generic trial ends.
-     *
-     * @return \Carbon\Carbon|null
      */
-    public function genericTrialEndsAt()
+    public function genericTrialEndsAt(): ?\Carbon\Carbon
     {
         if (! $this->trial_ends_at) {
-            return;
+            return null;
         }
 
         if ($this->hasCast('trial_ends_at')) {
@@ -272,13 +251,11 @@ trait Billable
 
     /**
      * Get the tax rates to apply to the subscription.
-     *
-     * @return array
      */
-    public function taxRates()
+    public function taxRates(): array
     {
         if (! Features::collectsEuVat()) {
-            return null;
+            return [];
         }
 
         $homeCountry = is_string(config('spark.collects_eu_vat'))
@@ -293,7 +270,7 @@ trait Billable
         );
 
         if ($rate == 0) {
-            return null;
+            return [];
         }
 
         if ($existing = TaxRate::where('percentage', $rate)->first()) {

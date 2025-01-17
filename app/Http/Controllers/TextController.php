@@ -5,25 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-/**
- * This class allows you to access Texts
- */
 class TextController extends Controller
 {
     use RedirectsToSubscribe;
 
-    public function __construct(protected TextPolicy $can)
-    {
-    }
+    public function __construct(protected TextPolicy $can) {}
 
-    /**
-     * Renders index page
-     */
-    public function index()
+    public function index(Request $request): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Annotated Transcripts of Videos in Spoken Arabic');
         View::share('pageDescription',
@@ -31,16 +25,14 @@ class TextController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth) {
             $this->failIfFalse($this->can->viewIndex($auth));
+
             return view('texts.index');
         });
     }
 
-    /**
-     * Renders a text
-     */
-    public function show($slug)
+    public function show(Request $request, $slug): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Spoken Arabic Transcripts: '.$slug);
         View::share('pageDescription',
@@ -48,10 +40,11 @@ class TextController extends Controller
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $slug) {
             $this->failIfFalse($this->can->viewText($auth));
-            return view("texts.show", [
+
+            return view('texts.show', [
                 'text' => $slug,
                 'terms' => Term::all(),
-                'bodyBackground' => 'yellow-pastel'
+                'bodyBackground' => 'yellow-pastel',
             ]);
         });
     }

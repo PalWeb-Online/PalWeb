@@ -2,21 +2,17 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class LatinScript implements Rule
+class LatinScript implements ValidationRule
 {
-    public function __construct()
+    /**
+     * Validate the attribute value.
+     */
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-    }
-
-    public function passes($attribute, $value)
-    {
-        return preg_match('/^[\p{Latin}\s\-]+$/u', $value);
-    }
-
-    public function message()
-    {
-        return 'This field may only contain Latin-script letters & hyphens.';
+        if (! preg_match('/^[\p{Latin}\s\-]+$/u', $value)) {
+            $fail('This field may only contain Latin-script letters & hyphens.');
+        }
     }
 }

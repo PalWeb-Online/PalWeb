@@ -15,7 +15,7 @@ class BookmarkTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_must_be_logged_in_to_bookmark()
+    public function test_must_be_logged_in_to_bookmark(): void
     {
         $this->assertEquals(0, DB::table('markable_bookmarks')->count());
         $term = Term::factory()->for(Category::factory())->create();
@@ -26,7 +26,7 @@ class BookmarkTest extends TestCase
         $this->assertEquals(0, DB::table('markable_bookmarks')->count());
     }
 
-    public function test_creates_bookmark_if_does_not_already_exist()
+    public function test_creates_bookmark_if_does_not_already_exist(): void
     {
         $this->assertEquals(0, DB::table('markable_bookmarks')->count());
         $term = Term::factory()->for(Category::factory())->create();
@@ -39,7 +39,7 @@ class BookmarkTest extends TestCase
         $this->assertEquals(1, DB::table('markable_bookmarks')->count());
     }
 
-    public function test_removes_bookmark_if_exists()
+    public function test_removes_bookmark_if_exists(): void
     {
         $this->assertEquals(0, DB::table('markable_bookmarks')->count());
         $term = Term::factory()->for(Category::factory())->create();

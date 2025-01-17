@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class CommunityController extends Controller
 {
-    public function index(Request $request)
+    public function index(): \Illuminate\View\View
     {
         $latestDecks = Deck::with('author')
             ->where('private', false)
@@ -34,7 +33,7 @@ class CommunityController extends Controller
             ->get();
 
         $featuredDeck = Cache::get('featured-deck');
-        if (!$featuredDeck) {
+        if (! $featuredDeck) {
             $featuredDeck = Deck::inRandomOrder()->first();
         }
 

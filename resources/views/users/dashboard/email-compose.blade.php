@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <form class="splash-panel" action="{{ route('email.send') }}" method="post">
+    <form class="splash-panel" action="{{ route('email.store') }}" method="post">
         @csrf
 
         <div class="sp-head">

@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use App\Providers\AppServiceProvider;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Displays a view that prompts the user to verify their email.
@@ -23,42 +22,39 @@ class EmailVerificationController extends Controller
     public function prompt(Request $request)
     {
         return $request->user()->hasVerifiedEmail()
-            ? redirect()->intended(RouteServiceProvider::HOME)
+            ? redirect()->intended(AppServiceProvider::HOME)
             : view('auth.verify-email');
     }
 
     /**
      * Mark the user's email address as verified.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function verify(EmailVerificationRequest $request)
+    public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+            return redirect()->intended(AppServiceProvider::HOME.'?verified=1');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+        return redirect()->intended(AppServiceProvider::HOME.'?verified=1');
     }
 
     /**
      * Sends a new verification link to the user's email.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function link(Request $request)
+    public function link(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(AppServiceProvider::HOME);
         }
 
         $request->user()->sendEmailVerificationNotification();
 
         $this->flasher->addInfo(__('verification.sent'));
-        return back();
+
+        return redirect()->back();
     }
 }

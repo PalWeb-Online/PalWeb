@@ -16,16 +16,13 @@
             {{-- Previous Page Link --}}
             {{--            <a class="arrow {{ $paginator->onFirstPage() ? 'disabled' : '' }}"--}}
             {{--               href="{{ $paginator->previousPageUrl() }}" rel="prev"--}}
-            {{--               aria-label="@lang('pagination.previous')">{{ __('back') }}</a>--}}
+            {{--               aria-label="{{ __('pagination.previous') }}">{{ __('back') }}</a>--}}
 
-            {{-- Pagination Elements --}}
             @foreach ($elements as $element)
-                {{-- Separator --}}
                 @if (is_string($element))
                     <span class="disabled" aria-disabled="true">...</span>
                 @endif
 
-                {{-- Array Of Links --}}
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
@@ -37,10 +34,9 @@
                 @endif
             @endforeach
 
-            {{-- Next Page Link --}}
             {{--            <a class="arrow {{ $paginator->hasMorePages() ? '' : 'disabled' }}"--}}
             {{--               href="{{ $paginator->nextPageUrl() }}" rel="next"--}}
-            {{--               aria-label="@lang('pagination.next')">{{ __('next') }}</a>--}}
+            {{--               aria-label="{{ __('pagination.next') }}">{{ __('next') }}</a>--}}
         </div>
     </div>
 @endif

@@ -4,10 +4,7 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class AnnouncementEmail extends Mailable
@@ -15,7 +12,9 @@ class AnnouncementEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $subject;
+
     public $body;
+
     public $user;
 
     /**
@@ -32,16 +31,14 @@ class AnnouncementEmail extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->view('mail.announcement')
             ->with([
                 'subject' => $this->subject,
                 'body' => $this->body,
-                'user' => $this->user
+                'user' => $this->user,
             ]);
     }
 }

@@ -11,42 +11,42 @@ class LessonPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_student_can_view_lesson()
+    public function test_student_can_view_lesson(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($this->getItem()->viewLesson($user));
     }
 
-    public function test_admin_can_view_lesson()
+    public function test_admin_can_view_lesson(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole();
         $this->assertTrue($this->getItem()->viewLesson($user));
     }
 
-    public function test_normal_user_can_not_view_lesson()
+    public function test_normal_user_can_not_view_lesson(): void
     {
         $this->roles();
         $user = User::factory()->create();
         $this->assertFalse($this->getItem()->viewLesson($user));
     }
 
-    public function test_student_can_view_lesson_index()
+    public function test_student_can_view_lesson_index(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($this->getItem()->viewLessonIndex($user));
     }
 
-    public function test_admin_can_view_lesson_index()
+    public function test_admin_can_view_lesson_index(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole();
         $this->assertTrue($this->getItem()->viewLessonIndex($user));
     }
 
-    public function test_normal_user_can_not_view_lesson_index()
+    public function test_normal_user_can_not_view_lesson_index(): void
     {
         $this->roles();
         $user = User::factory()->create();

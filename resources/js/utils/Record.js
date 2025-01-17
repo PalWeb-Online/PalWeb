@@ -76,7 +76,7 @@ export default class Record {
         formData.append('speakerId', this.speaker.id);
 
         try {
-            const response = await fetch('/api/record-wizard/stash', {
+            const response = await fetch('/api/record-wizard/store', {
                 method: 'POST',
                 body: formData,
             });

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
+use App\Http\Requests\StoreSentenceRequest;
+use App\Http\Requests\UpdateSentenceRequest;
 use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Models\Term;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -15,13 +19,11 @@ use Maize\Markable\Models\Bookmark;
 
 class SentenceController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
-    public function pin(Sentence $sentence)
+    public function pin(Request $request, Sentence $sentence): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($sentence, $user);
 
@@ -31,11 +33,11 @@ class SentenceController extends Controller
             'isPinned' => $sentence->isPinned(),
             'message' => $sentence->isPinned()
                 ? __('pin.added', ['thing' => $sentence->sentence])
-                : __('pin.removed', ['thing' => $sentence->sentence])
+                : __('pin.removed', ['thing' => $sentence->sentence]),
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService)
+    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
         View::share('pageTitle', 'the Phrasebook');
         View::share('pageDescription',
@@ -76,47 +78,38 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function show(Sentence $sentence)
+    public function show(Sentence $sentence): \Illuminate\View\View
     {
         View::share('pageTitle', 'Sentence: '.$sentence->translit);
         View::share('pageDescription',
             'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
         return view('sentences.show', [
-            'sentence' => $sentence
+            'sentence' => $sentence,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreSentenceRequest $request): JsonResponse
     {
-        $this->validateRequest($request);
-
         $sentence = Sentence::create($this->buildSentence($request));
 
         $this->linkTerms($sentence, $request->terms);
 
-        return [
+        return response()->json([
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
-            'flash' => __('created', ['thing' => $sentence->sentence])
-        ];
-    }
-
-    private function validateRequest($request)
-    {
-        return $request->validate([
-            'sentence.trans' => ['required'],
-            'terms' => ['required', 'array'],
+            'flash' => __('created', ['thing' => $sentence->sentence]),
         ]);
     }
 
-    public function create()
+    public function create(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Create Sentence');
+
         return view('sentences.create');
     }
 
-    private function buildSentence($request)
+    private function buildSentence($request): array
     {
         $terms = [];
         $translits = [];
@@ -134,7 +127,7 @@ class SentenceController extends Controller
         return $sentence;
     }
 
-    private function linkTerms($sentence, $terms)
+    private function linkTerms($sentence, $terms): void
     {
         DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
 
@@ -152,44 +145,36 @@ class SentenceController extends Controller
         }
     }
 
-    public
-    function edit(
-        Sentence $sentence
-    ) {
+    public function edit(Sentence $sentence): \Illuminate\View\View
+    {
         View::share('pageTitle', 'Edit Sentence');
+
         return view('sentences.edit', compact('sentence'));
     }
 
-    public
-    function update(
-        Sentence $sentence,
-        Request $request
-    ) {
-        $this->validateRequest($request);
-
+    public function update(Sentence $sentence, UpdateSentenceRequest $request): JsonResponse
+    {
         $sentence->update($this->buildSentence($request));
 
         $this->linkTerms($sentence, $request->terms);
 
-        return [
+        return response()->json([
             'status' => 'success',
             'redirect' => route('sentences.show', $sentence),
-            'flash' => __('updated', ['thing' => $sentence->sentence])
-        ];
+            'flash' => __('updated', ['thing' => $sentence->sentence]),
+        ]);
     }
 
-    public
-    function destroy(
-        Sentence $sentence
-    ) {
+    public function destroy(Sentence $sentence): RedirectResponse
+    {
         $sentence->delete();
 
         $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
+
         return to_route('sentences.index');
     }
 
-    public
-    function todo()
+    public function todo(): \Illuminate\View\View
     {
         $terms = [];
 
@@ -207,12 +192,13 @@ class SentenceController extends Controller
         });
 
         View::share('pageTitle', 'Phrasebook: to-Do');
+
         return view('sentences.todo', [
             'terms' => $terms,
         ]);
     }
 
-    public function get($id)
+    public function get($id): JsonResponse
     {
         $sentence = Sentence::findOrFail($id);
 
@@ -242,7 +228,7 @@ class SentenceController extends Controller
             } else {
                 $terms[] = [
                     'term' => [
-                        'glosses' => []
+                        'glosses' => [],
                     ],
                     'term_id' => null,
                     'gloss_id' => null,
@@ -255,7 +241,7 @@ class SentenceController extends Controller
 
         return response()->json([
             'sentence' => $sentence,
-            'terms' => $terms
+            'terms' => $terms,
         ]);
     }
 }

@@ -27,11 +27,11 @@ class LinkFilesToModels extends Command
      *
      * @throws AudioFileException
      */
-    public function handle(AudioService $audioService)
+    public function handle(AudioService $audioService): void
     {
         $filesAdded = $audioService->addAudioFilesDatabase();
-        $this->info("All file database entries have been created");
-        $this->info("Files linked to models:");
+        $this->info('All file database entries have been created');
+        $this->info('Files linked to models:');
         foreach ($filesAdded as $file) {
             $this->info($file);
         }

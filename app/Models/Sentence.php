@@ -73,6 +73,7 @@ class Sentence extends Model
         if ($this->file) {
             return $this->file->getPublicUrlAttribute();
         }
+
         return null;
     }
 }

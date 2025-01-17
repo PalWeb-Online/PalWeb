@@ -39,10 +39,8 @@ class ConfirmPayment extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
         $url = route('cashier.payment', ['id' => $this->paymentId]);
 

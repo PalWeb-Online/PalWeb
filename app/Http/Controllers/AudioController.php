@@ -5,20 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
-use App\Models\Speaker;
 use App\Services\AudioService;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class AudioController extends Controller
 {
     public function __construct(
         protected FlasherInterface $flasher,
         protected AudioService $audioService
-    ) {
-    }
+    ) {}
 
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\View\View
     {
         $sort = $request->input('sort', 'latest');
         $query = Audio::with(['speaker', 'pronunciation.term']);
@@ -50,6 +51,8 @@ class AudioController extends Controller
         $audios = $query->paginate(50)->onEachSide(1);
         $totalCount = $audios->total();
 
+        View::share('pageTitle', 'Audio Library');
+
         return view('community.audios.index', [
             'audios' => $audios,
             'totalCount' => $totalCount,
@@ -59,25 +62,10 @@ class AudioController extends Controller
         ]);
     }
 
-    public function speaker(Speaker $speaker)
+    public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
     {
-        $audios = $speaker->audios()
-            ->with('speaker')
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-
-        return view('community.audios.speaker', [
-            'user' => $speaker->user,
-            'speaker' => $speaker,
-            'audios' => $audios,
-        ]);
-    }
-
-    public function destroy(Audio $audio)
-    {
-        if (!auth()->check() || $audio->speaker->user_id !== auth()->id()) {
-            return request()->expectsJson()
+        if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
+            return $request->expectsJson()
                 ? response()->json(['error' => 'Unauthorized.'], 403)
                 : abort(403, 'Unauthorized');
         }
@@ -88,21 +76,23 @@ class AudioController extends Controller
 
             $message = __('deleted', ['thing' => $audio->filename]);
 
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['message' => $message]);
             } else {
                 $this->flasher->addSuccess($message);
-                return redirect()->route('audios.speaker', $audio->speaker);
+
+                return to_route('speaker.show', $audio->speaker);
             }
 
         } catch (\Exception $e) {
             $error = 'Unable to delete file from cloud storage.';
 
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['error' => $error, 'details' => $e->getMessage()], 500);
             } else {
                 $this->flasher->addError($error);
-                return redirect()->route('audios.speaker', $audio->speaker);
+
+                return to_route('speaker.show', $audio->speaker);
             }
         }
     }

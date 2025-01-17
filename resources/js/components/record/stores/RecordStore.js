@@ -234,7 +234,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
 
         try {
-            const response = await axios.delete(`/api/record-wizard/discard/${stashKey}`);
+            const response = await axios.delete(`/api/record-wizard/${stashKey}`);
 
             delete data.records[id];
             delete data.status[id];

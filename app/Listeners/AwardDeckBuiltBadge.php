@@ -15,20 +15,16 @@ class AwardDeckBuiltBadge
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
-    public function handle(DeckBuilt $event)
+    public function handle(DeckBuilt $event): void
     {
         $badge = Badge::where('name', 'Word Collector')->first();
 
-        if (!$event->user->badges->contains($badge->id)) {
+        if (! $event->user->badges->contains($badge->id)) {
 
             if ($event->user->decks->count() >= 1) {
                 $event->user->badges()->attach($badge);

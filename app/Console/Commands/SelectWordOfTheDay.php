@@ -6,7 +6,6 @@ use App\Models\Term;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
-
 class SelectWordOfTheDay extends Command
 {
     /**
@@ -25,10 +24,8 @@ class SelectWordOfTheDay extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $wordOfTheDay = Term::whereNotNull('image')->inRandomOrder()->first();
         Cache::put('word-of-the-day', $wordOfTheDay, now()->addDay());

@@ -3,43 +3,29 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use App\Rules\ArabicScript;
-use App\Rules\LatinScript;
+use App\Providers\AppServiceProvider;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Handle an incoming registration request.
      *
-     * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRegisteredUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript()],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript()],
-            'username' => [
-                'required', 'string', 'max:50',
-                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                'unique:users'
-            ],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -47,7 +33,7 @@ class RegisteredUserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'dialect_id' => '1'
+            'dialect_id' => '1',
         ]);
 
         event(new Registered($user));
@@ -56,15 +42,14 @@ class RegisteredUserController extends Controller
 
         $this->flasher->addFlash('info', __('signup.message', ['user' => $user->name]),
             __('signup.message.head'));
-        return redirect(RouteServiceProvider::HOME);
+
+        return redirect()->to(AppServiceProvider::HOME);
     }
 
     /**
      * Display the registration view.
-     *
-     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         return view('auth.signup');
     }

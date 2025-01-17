@@ -3,21 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deck;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class DeckBuilderController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Deck Builder');
 
         return view('decks.builder', [
-            'layout' => 'app'
+            'layout' => 'app',
         ]);
     }
 
-    public function edit(Request $request, $deckId)
+    public function edit(Request $request, $deckId): \Illuminate\View\View
     {
         $user = $request->user();
         $user = [
@@ -38,7 +39,7 @@ class DeckBuilderController extends Controller
         ]);
     }
 
-    public function getCreatedDecks(Request $request)
+    public function getCreatedDecks(Request $request): JsonResponse
     {
         try {
             $user = $request->user();
@@ -54,7 +55,7 @@ class DeckBuilderController extends Controller
                     'private' => $deck->private,
                     'authorName' => $user->name,
                     'authorAvatar' => asset('img/avatars/'.$user->avatar),
-                    'isPinned' => $deck->isPinned()
+                    'isPinned' => $deck->isPinned(),
                 ];
             }
 
@@ -74,7 +75,7 @@ class DeckBuilderController extends Controller
         }
     }
 
-    public function getTerms($id)
+    public function getTerms($id): JsonResponse
     {
         $terms = [];
         foreach (Deck::findOrFail($id)->terms as $term) {
@@ -95,7 +96,7 @@ class DeckBuilderController extends Controller
         }
 
         return response()->json([
-            'terms' => $terms
+            'terms' => $terms,
         ]);
     }
 }

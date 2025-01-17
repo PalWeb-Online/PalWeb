@@ -15,13 +15,13 @@
         <div class="mini-user-profile">
             @unless($audio->speaker->user->private)
                 <div>by
-                    <a href="{{ route('audios.speaker', $audio->speaker) }}">{{ $audio->speaker->user->name }}</a>
+                    <a href="{{ route('speaker.show', $audio->speaker) }}">{{ $audio->speaker->user->name }}</a>
                 </div>
                 <img class="avatar" alt="User Avatar"
                      src="{{ asset('img/avatars/'.$audio->speaker->user->avatar) }}"/>
             @else
                 <div>by
-                    <a href="{{ route('audios.speaker', $audio->speaker) }}">Speaker #{{$audio->speaker->id}}</a>
+                    <a href="{{ route('speaker.show', $audio->speaker) }}">Speaker #{{$audio->speaker->id}}</a>
                 </div>
             @endif
         </div>

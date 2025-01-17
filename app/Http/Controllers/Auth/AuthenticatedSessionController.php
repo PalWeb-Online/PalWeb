@@ -4,56 +4,51 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
+use App\Providers\AppServiceProvider;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     /**
      * Display the login view.
-     *
-     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         return view('auth.signin');
     }
 
     /**
      * Handle an incoming authentication request.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(LoginRequest $request): RedirectResponse
     {
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            $user = auth()->user();
+            $user = $request->user();
 
             $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]), __('signin.message.head'));
-            return redirect()->intended(RouteServiceProvider::HOME);
+
+            return redirect()->intended(AppServiceProvider::HOME);
         }
 
-        return back()->withErrors([
+        return redirect()->back()->withErrors([
             'email' => __('auth.failed'),
         ]);
     }
 
     /**
      * Destroy an authenticated session.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Auth::guard('web')->logout();
 
@@ -62,6 +57,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         $this->flasher->addFlash('info', __('signout.message', ['user' => $user->name]), __('signout.message.head'));
+
         return to_route('homepage');
     }
 }

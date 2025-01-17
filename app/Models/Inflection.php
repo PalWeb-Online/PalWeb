@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inflection extends Model
 {
@@ -11,7 +12,7 @@ class Inflection extends Model
 
     protected $guarded = [];
 
-    public function terms()
+    public function terms(): BelongsTo
     {
         return $this->belongsTo(Term::class);
     }

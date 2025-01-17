@@ -16,20 +16,16 @@ class AwardDeckPinnedBadge
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
-    public function handle(ModelPinned $event)
+    public function handle(ModelPinned $event): void
     {
         $badge = Badge::where('name', 'Mine!')->first();
 
-        if (!$event->user->badges->contains($badge->id)) {
+        if (! $event->user->badges->contains($badge->id)) {
 
             if (Deck::whereHasBookmark($event->user)->count() >= 5) {
                 $event->user->badges()->attach($badge);

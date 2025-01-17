@@ -11,42 +11,42 @@ class TextPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_student_can_view_show()
+    public function test_student_can_view_show(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($this->getItem()->viewText($user));
     }
 
-    public function test_admin_can_view_show()
+    public function test_admin_can_view_show(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole();
         $this->assertTrue($this->getItem()->viewText($user));
     }
 
-    public function test_normal_user_can_not_view_show()
+    public function test_normal_user_can_not_view_show(): void
     {
         $this->roles();
         $user = User::factory()->create();
         $this->assertFalse($this->getItem()->viewText($user));
     }
 
-    public function test_student_can_view_index()
+    public function test_student_can_view_index(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantStudentRole();
         $this->assertTrue($this->getItem()->viewIndex($user));
     }
 
-    public function test_admin_can_view_index()
+    public function test_admin_can_view_index(): void
     {
         $this->roles();
         $user = User::factory()->create()->grantAdminRole();
         $this->assertTrue($this->getItem()->viewIndex($user));
     }
 
-    public function test_normal_user_can_not_view_lesson_index()
+    public function test_normal_user_can_not_view_lesson_index(): void
     {
         $this->roles();
         $user = User::factory()->create();
@@ -55,6 +55,6 @@ class TextPolicyTest extends TestCase
 
     protected function getItem()
     {
-        return new TextPolicy();
+        return new TextPolicy;
     }
 }

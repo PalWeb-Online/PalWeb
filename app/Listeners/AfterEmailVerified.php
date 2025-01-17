@@ -17,16 +17,12 @@ class AfterEmailVerified
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
      */
-    public function handle(Verified $event)
+    public function handle(Verified $event): void
     {
         $badge = Badge::where('name', 'I\'m Just Happy to Be Here')->first();
 

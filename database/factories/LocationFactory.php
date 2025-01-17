@@ -16,13 +16,13 @@ class LocationFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'qid' => Str::uuid(),
-            'name_ar' => $this->faker->city,
-            'name_en' => $this->faker->city,
-            'coordinates' => DB::raw("POINT({$this->faker->latitude}, {$this->faker->longitude})"),
+            'name_ar' => $this->faker->city(),
+            'name_en' => $this->faker->city(),
+            'coordinates' => DB::raw("POINT({$this->faker->latitude()}, {$this->faker->longitude()})"),
         ];
     }
 }

@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-/**
- * This class allows you to change the current language
- */
 class LanguageController
 {
-    public function change(Request $request, $language)
+    public function store(Request $request, $language): RedirectResponse
     {
         $allowedLanguages = collect(['en', 'es', 'ar']);
 
         if ($allowedLanguages->contains($language)) {
-            $user = auth()->user();
+            $user = $request->user();
             if ($user) {
                 $user->language = $language;
                 $user->save();
