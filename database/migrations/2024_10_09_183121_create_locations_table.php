@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('qid')->unique();
             $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->point('coordinates');
+            $table->geography('coordinates');
             $table->timestamps();
         });
     }
