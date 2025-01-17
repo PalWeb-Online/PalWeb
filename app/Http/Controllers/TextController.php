@@ -6,6 +6,7 @@ use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 /**
@@ -17,9 +18,9 @@ class TextController extends Controller
 
     public function __construct(protected TextPolicy $can) {}
 
-    public function index(): \Illuminate\View\View | RedirectResponse
+    public function index(Request $request): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Annotated Transcripts of Videos in Spoken Arabic');
         View::share('pageDescription',
@@ -32,9 +33,9 @@ class TextController extends Controller
         });
     }
 
-    public function show($slug): \Illuminate\View\View | RedirectResponse
+    public function show(Request $request, $slug): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Spoken Arabic Transcripts: '.$slug);
         View::share('pageDescription',

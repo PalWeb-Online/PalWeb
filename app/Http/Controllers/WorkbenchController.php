@@ -5,25 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Deck;
 use App\Models\Sentence;
 use App\Models\Term;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class WorkbenchController
 {
-    public function index(): \Illuminate\View\View
+    public function index(Request $request): \Illuminate\View\View
     {
         // TODO: Somehow terms are sorted by when they were pinned, but decks & sentences are sorted by the model's id.
-        $decks = Deck::whereHasBookmark(auth()->user())->get();
-        $terms = Term::whereHasBookmark(auth()->user())->get();
-        $sentences = Sentence::whereHasBookmark(auth()->user())->get();
+        $decks = Deck::whereHasBookmark($request->user())->get();
+        $terms = Term::whereHasBookmark($request->user())->get();
+        $sentences = Sentence::whereHasBookmark($request->user())->get();
 
         $decks = Deck::with('author')
             ->select('decks.*')
             ->where(fn ($query) => $query->where('decks.private', false)
-                ->orWhere('decks.user_id', auth()->user()->id)
+                ->orWhere('decks.user_id', $request->user()->id)
             )
             ->join('markable_bookmarks', fn ($join) => $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Deck::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();
@@ -31,7 +32,7 @@ class WorkbenchController
         $terms = Term::select('terms.*')
             ->join('markable_bookmarks', fn ($join) => $join->on('terms.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Term::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();
@@ -39,7 +40,7 @@ class WorkbenchController
         $sentences = Sentence::select('sentences.*')
             ->join('markable_bookmarks', fn ($join) => $join->on('sentences.id', '=', 'markable_bookmarks.markable_id')
                 ->where('markable_bookmarks.markable_type', '=', Sentence::class)
-                ->where('markable_bookmarks.user_id', '=', auth()->user()->id)
+                ->where('markable_bookmarks.user_id', '=', $request->user()->id)
             )
             ->orderBy('markable_bookmarks.id')
             ->get();

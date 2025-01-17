@@ -40,18 +40,12 @@ use Illuminate\Support\Facades\View;
 /**
  * Displays the homepage.
  */
-Route::get('/', function () {
-    return view('index', [
-        'bodyBackground' => 'front-page',
-    ]);
-})->middleware('pageTitle:Home')->name('homepage');
+Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageTitle:Home')->name('homepage');
 
-
-Route::get('/unauth', function () {
-    return view('unauth', [
-        'bodyBackground' => 'hero-yellow',
-    ]);
-})->middleware('pageTitle:Access Denied')->name('unauth');
+/**
+ * Prompts an unauthenticated user to log in.
+ */
+Route::view('/unauth', 'unauth', ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('unauth');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -169,9 +163,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 [SentenceController::class, 'todo'])->name('sentences.todo');
         });
 
-        Route::get('/request', function () {
-            return view('terms.request');
-        })->middleware('pageTitle:Request Term')->name('terms.request');
+        Route::view('/request', 'terms.request')->middleware('pageTitle:Request Term')->name('terms.request');
         Route::post('/request', [TermController::class, 'request'])->name('request.store');
 
         Route::resource('/sentences', SentenceController::class)->except(['index', 'show'])->middleware('admin');

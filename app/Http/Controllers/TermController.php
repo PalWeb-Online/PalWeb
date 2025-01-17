@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreTermRequest;
 use App\Http\Requests\UpdateTermRequest;
+use App\Http\Requests\RequestTermRequest;
 use App\Models\Attribute;
 use App\Models\Dialect;
 use App\Models\Gloss;
@@ -36,9 +37,9 @@ class TermController extends Controller
         protected TermRepository $termRepository
     ) {}
 
-    public function pin(Term $term): JsonResponse
+    public function pin(Request $request, Term $term): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($term, $user);
 
@@ -69,8 +70,8 @@ class TermController extends Controller
                 }
             });
 
-            if (auth()->check()) {
-                $dialect = auth()->user()->dialect_id;
+            if ($request->user()) {
+                $dialect = $request->user()->dialect_id;
                 $dialects = Dialect::find($dialect)->ancestors->pluck('id')
                     ->merge(Dialect::find($dialect)->descendants->pluck('id'))
                     ->push($dialect);
@@ -117,8 +118,8 @@ class TermController extends Controller
             );
         }
 
-        if (! request()->query()) {
-            $latestTerms = Term::with('glosses')->orderBy('id', 'desc')->take(7)->get();
+        if (! $request->query()) {
+            $latestTerms = Term::with('glosses')->orderByDesc('id')->take(7)->get();
             $wordOfTheDay = Cache::get('word-of-the-day');
 
             if (! $wordOfTheDay) {
@@ -561,12 +562,8 @@ class TermController extends Controller
         return to_route('terms.index');
     }
 
-    public function request(Request $request): RedirectResponse
+    public function request(RequestTermRequest $request): RedirectResponse
     {
-        $request->validate([
-            'translit' => 'required|string|max:255',
-        ]);
-
         MissingTerm::create([
             'translit' => $request['translit'],
             'category' => $request['category'],

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\PasswordChanged;
 use App\Events\ProfileChanged;
-use App\Rules\ArabicScript;
-use App\Rules\LatinScript;
+use App\Http\Requests\UpdatePasswordUserSettingRequest;
+use App\Http\Requests\UpdateUserSettingRequest;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -13,37 +13,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 
 class UserSettingsController
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function edit(): \Illuminate\View\View
+    public function edit(Request $request): \Illuminate\View\View
     {
         View::share('pageTitle', 'Settings: Change Profile');
 
         return view('users.dashboard.change-profile', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
         ]);
     }
 
-    public function update(Request $request, FlasherInterface $flasher): RedirectResponse
+    public function update(UpdateUserSettingRequest $request, FlasherInterface $flasher): RedirectResponse
     {
-        $user = auth()->user();
-
-        $request->validate([
-            'name' => ['required', 'string', 'max:50', new LatinScript],
-            'ar_name' => ['required', 'string', 'max:50', new ArabicScript],
-            'username' => [
-                'required', 'string', 'max:50',
-                'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                Rule::unique('users')->ignore($user->id),
-            ],
-            'home' => ['nullable', 'string', 'max:100'],
-            'bio' => ['nullable', 'string', 'max:500'],
-        ]);
+        $user = $request->user();
 
         $user->update([
             'name' => $request->name,
@@ -58,12 +44,12 @@ class UserSettingsController
 
         $this->flasher->addSuccess(__('settings.updated'));
 
-        return to_route('users.show', auth()->user());
+        return to_route('users.show', $request->user());
     }
 
-    public function togglePrivacy(): JsonResponse
+    public function togglePrivacy(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $user->private = ! $user->private;
         $user->private ? $status = 'Private' : $status = 'Public';
@@ -72,6 +58,70 @@ class UserSettingsController
         return response()->json([
             'isPrivate' => $user->private,
             'message' => __('privacy.updated', ['status' => $status]),
+        ];
+    }
+
+    /**
+     * Renders the change password page
+     */
+    public function editPassword(Request $request): \Illuminate\View\View
+    {
+        View::share('pageTitle', 'Dashboard: Edit Password');
+
+        return view('users.dashboard.change-password', [
+            'user' => $request->user(),
         ]);
+    }
+
+    /**
+     * Updates the changed password
+     */
+    public function updatePassword(UpdatePasswordUserSettingRequest $request, FlasherInterface $flasher)
+    {
+        $user = $request->user();
+
+        $form = $request->validated();
+
+        $user->password = Hash::make($form['password_new']);
+        $user->save();
+
+        event(new PasswordChanged($user));
+
+        $this->flasher->addSuccess(__('passwords.updated'));
+
+        return to_route('users.show', $request->user());
+    }
+
+    /**
+     * Renders the change picture page
+     */
+    public function editAvatar(Request $request)
+    {
+        $avatars = File::files(public_path('img/avatars'));
+        $avatars = array_map(function ($file) {
+            return basename($file);
+        }, $avatars);
+
+        View::share('pageTitle', 'Dashboard: Edit Profile Picture');
+
+        return view('users.dashboard.change-avatar', [
+            'user' => $request->user(),
+            'avatars' => $avatars,
+        ]);
+    }
+
+    /**
+     * Updates the changed picture
+     */
+    public function updateAvatar(Request $request, FlasherInterface $flasher)
+    {
+        $user = $request->user();
+
+        $user->avatar = $request['avatar'];
+        $user->save();
+
+        $flasher->addSuccess(__('settings.updated'));
+
+        return to_route('users.show', $request->user());
     }
 }

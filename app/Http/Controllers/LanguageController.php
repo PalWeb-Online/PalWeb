@@ -12,7 +12,7 @@ class LanguageController
         $allowedLanguages = collect(['en', 'es', 'ar']);
 
         if ($allowedLanguages->contains($language)) {
-            $user = auth()->user();
+            $user = $request->user();
             if ($user) {
                 $user->language = $language;
                 $user->save();

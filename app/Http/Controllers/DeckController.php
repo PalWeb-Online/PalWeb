@@ -23,11 +23,11 @@ class DeckController extends Controller
     {
     }
 
-    public function pin(Deck $deck): JsonResponse
+    public function pin(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         Bookmark::toggle($deck, $user);
 
@@ -84,8 +84,7 @@ class DeckController extends Controller
 
     public function store(StoreDeckRequest $request): JsonResponse
     {
-        $user = auth()->user();
-
+        $user = $request->user();
         $deck = $request->deck;
         $deck = array_merge($deck, [
             'user_id' => $user->id,
@@ -118,7 +117,7 @@ class DeckController extends Controller
         }
 
         foreach ($deck->terms as $term) {
-            if (!in_array($term->id, array_column($terms, 'id'))) {
+            if (! in_array($term->id, array_column($terms, 'id'))) {
                 $deck->terms()->detach($term->id);
             }
         }
@@ -152,13 +151,13 @@ class DeckController extends Controller
         ]);
     }
 
-    public function destroy(Deck $deck): RedirectResponse|JsonResponse
+    public function destroy(Request $request, Deck $deck): RedirectResponse|JsonResponse
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'status' => 'success',
             ]);
@@ -175,7 +174,7 @@ class DeckController extends Controller
     {
         $this->authorize('modify', $deck);
 
-        $deck->private = !$deck->private;
+        $deck->private = ! $deck->private;
         $deck->private ? $status = 'Private' : $status = 'Public';
         $deck->save();
 
@@ -189,7 +188,7 @@ class DeckController extends Controller
     {
         $this->authorize('modify', $deck);
 
-        if (!$deck->terms->contains($term->id)) {
+        if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
             $deck->terms()->attach($term->id, ['position' => $position]);
 
@@ -198,18 +197,18 @@ class DeckController extends Controller
         }
 
         return response()->json([
-            'isPresent' => !$deck->terms->contains($term->id),
-            'message' => !$deck->terms->contains($term->id)
+            'isPresent' => ! $deck->terms->contains($term->id),
+            'message' => ! $deck->terms->contains($term->id)
                 ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
                 : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]),
         ]);
     }
 
-    public function copy(Deck $deck): RedirectResponse
+    public function copy(Request $request, Deck $deck): RedirectResponse
     {
         $this->authorize('interact', $deck);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         $newDeck = $deck->replicate(['id', 'private']);
         $newDeck->private = 0;

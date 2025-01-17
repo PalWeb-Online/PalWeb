@@ -9,6 +9,7 @@ use App\Pages\Units\Unit03\Unit03;
 use App\Policies\LessonPolicy;
 use App\Traits\RedirectsToSubscribe;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class UnitController extends Controller
@@ -23,9 +24,9 @@ class UnitController extends Controller
 
     public function __construct(protected LessonPolicy $can) {}
 
-    public function index(): \Illuminate\View\View | RedirectResponse
+    public function index(Request $request): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Online Course for Palestinian Arabic with Lessons, Activities & Dialogues');
         View::share('pageDescription',
@@ -38,9 +39,9 @@ class UnitController extends Controller
         });
     }
 
-    public function unit($unit): \Illuminate\View\View | RedirectResponse
+    public function unit(Request $request, $unit): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', "Academy: Unit $unit");
         View::share('pageDescription',
@@ -56,9 +57,9 @@ class UnitController extends Controller
         });
     }
 
-    public function lesson($unit, $lesson): \Illuminate\View\View | RedirectResponse
+    public function lesson(Request $request, $unit, $lesson): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', "Academy: Unit $unit - Lesson $lesson");
         View::share('pageDescription',
@@ -76,9 +77,9 @@ class UnitController extends Controller
         });
     }
 
-    public function showUnit($unit)
+    public function showUnit(Request $request, $unit)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Unit '.substr($unit, 1).': Home');
         View::share('pageDescription',
@@ -93,9 +94,9 @@ class UnitController extends Controller
         });
     }
 
-    public function showLesson($unit, $lesson)
+    public function showLesson(Request $request, $unit, $lesson)
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Unit '.substr($unit, 1).': Lesson '.substr($lesson, 1));
         View::share('pageDescription',

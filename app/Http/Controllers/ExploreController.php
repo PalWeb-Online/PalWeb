@@ -6,6 +6,7 @@ use App\Models\Term;
 use App\Policies\ExplorePolicy;
 use App\Traits\RedirectsToSubscribe;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ExploreController extends Controller
@@ -14,9 +15,9 @@ class ExploreController extends Controller
 
     public function __construct(protected ExplorePolicy $can) {}
 
-    public function index(): \Illuminate\View\View | RedirectResponse
+    public function index(Request $request): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Explore Topics in Palestinian Arabic');
         View::share('pageDescription',
@@ -29,9 +30,9 @@ class ExploreController extends Controller
         });
     }
 
-    public function show($page): \Illuminate\View\View | RedirectResponse
+    public function show(Request $request, $page): \Illuminate\View\View | RedirectResponse
     {
-        $auth = auth()->user();
+        $auth = $request->user();
 
         View::share('pageTitle', 'Explore: '.ucwords($page));
         View::share('pageDescription',

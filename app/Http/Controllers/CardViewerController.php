@@ -59,13 +59,13 @@ class CardViewerController extends Controller
         }
     }
 
-    public function getCards($id): JsonResponse
+    public function getCards(Request $request, $id): JsonResponse
     {
         $terms = [];
 
         foreach (Deck::findOrFail($id)->terms as $term) {
             $term->pronunciation = $term->pronunciations->first();
-            $pronunciation = $term->pronunciations->firstWhere('dialect_id', auth()->user()->dialect_id);
+            $pronunciation = $term->pronunciations->firstWhere('dialect_id', $request->user()->dialect_id);
             $pronunciation && $term->pronunciation = $pronunciation;
 
             $terms[] = [

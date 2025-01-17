@@ -30,7 +30,7 @@ class SpeakerController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $speaker = Speaker::updateOrCreate(
             ['user_id' => $user->id],
@@ -53,9 +53,9 @@ class SpeakerController extends Controller
         ]);
     }
 
-    public function getSpeaker(): JsonResponse
+    public function getSpeaker(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $speaker = Speaker::firstWhere('user_id', $user->id) ?? [
             'user_id' => $user->id,
