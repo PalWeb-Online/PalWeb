@@ -9,9 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-/**
- * This class allows you to access Texts
- */
 class TextController extends Controller
 {
     use RedirectsToSubscribe;

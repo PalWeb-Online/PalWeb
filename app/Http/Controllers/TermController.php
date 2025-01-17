@@ -17,8 +17,6 @@ use App\Models\Root;
 use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
-use App\Rules\ArabicScript;
-use App\Rules\LatinScript;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
@@ -83,15 +81,8 @@ class TermController extends Controller
         return $terms;
     }
 
-    /**
-     * Loads the Dictionary Index
-     */
     public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
-        View::share('pageTitle', 'the Dictionary');
-        View::share('pageDescription',
-            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
-
         $searchTerm = $request->input('search', '') ?? '';
         $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
 
@@ -127,6 +118,10 @@ class TermController extends Controller
             }
         }
 
+        View::share('pageTitle', 'the Dictionary');
+        View::share('pageDescription',
+            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+
         return view('terms.index', [
             'terms' => $terms,
             'searchTerm' => $searchTerm,
@@ -137,9 +132,6 @@ class TermController extends Controller
         ]);
     }
 
-    /**
-     * Retrieves a Term for updating
-     */
     public function get($id): JsonResponse
     {
         $term = Term::with([
@@ -209,10 +201,6 @@ class TermController extends Controller
 
     public function show(Term $term, Request $request): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
-        View::share('pageDescription',
-            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
-
         if ($request->routeIs('terms.show')) {
             $likeTerms = $this->termRepository->getLikeTerms($term);
             $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
@@ -228,6 +216,10 @@ class TermController extends Controller
             return array_search($attr->attribute, $attributeOrder);
         });
         $term->attributes = $sortedAttributes->values();
+
+        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
+        View::share('pageDescription',
+            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 
         return view('terms.show', [
             'terms' => $terms,
@@ -447,7 +439,7 @@ class TermController extends Controller
         }
     }
 
-    private function handleRelatives(object $origin, array $requestItems)
+    private function handleRelatives(object $origin, array $requestItems): void
     {
         $attachedTerms = $origin->relatives->pluck('slug')->toArray();
 
@@ -499,7 +491,8 @@ class TermController extends Controller
         string $dependentType,
         ?Collection $existingDependents = null,
         string $keyName = ''
-    ) {
+    ): void
+    {
         $requestItems = [];
         foreach ($requestDependents as $index => $dependent) {
 
@@ -509,6 +502,7 @@ class TermController extends Controller
 
                 if ($index + 1 <= count($existingDependents)) {
                     $existingDependents[$index]->update($dependent);
+
                 } else {
                     $newDependent = array_merge($dependent, ['term_id' => $term->id]);
                     $dependentType::create($newDependent);
