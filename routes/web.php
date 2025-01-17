@@ -21,7 +21,7 @@ use App\Http\Controllers\TermController;
 use App\Http\Controllers\TextController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserSettingsController;
+use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -221,13 +221,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('/settings')->group(function () {
-            Route::get('/profile', [UserSettingsController::class, 'edit'])->name('settings.profile.edit');
-            Route::patch('/profile', [UserSettingsController::class, 'update'])->name('settings.profile.update');
+            Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
+            Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
             Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
             Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
             Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
             Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
-            Route::patch('/toggle-privacy', [UserSettingsController::class, 'togglePrivacy'])->name('settings.privacy.toggle');
+            Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
         });
 
     });

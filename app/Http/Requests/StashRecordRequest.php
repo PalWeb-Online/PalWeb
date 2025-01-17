@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StashRecordRecordWizardRequest extends FormRequest
+class StashRecordRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

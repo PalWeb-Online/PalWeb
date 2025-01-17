@@ -12,30 +12,30 @@ class UserAvatarController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function edit(): \Illuminate\View\View
+    public function edit(Request $request): \Illuminate\View\View
     {
         $avatars = File::files(public_path('img/avatars'));
         $avatars = array_map(function ($file) {
             return basename($file);
         }, $avatars);
 
-        View::share('pageTitle', 'Settings: Change Avatar');
+        View::share('pageTitle', 'Dashboard: Edit Profile Picture');
 
         return view('users.dashboard.change-avatar', [
-            'user' => auth()->user(),
+            'user' => $request->user(),
             'avatars' => $avatars,
         ]);
     }
 
     public function update(Request $request, FlasherInterface $flasher): RedirectResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
 
         $user->avatar = $request['avatar'];
         $user->save();
 
         $flasher->addSuccess(__('settings.updated'));
 
-        return to_route('users.show', auth()->user());
+        return to_route('users.show', $request->user());
     }
 }

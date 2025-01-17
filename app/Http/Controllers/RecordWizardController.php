@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StashRecordRecordWizardRequest;
+use App\Http\Requests\StashRecordRequest;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialect;
@@ -108,7 +108,7 @@ class RecordWizardController extends Controller
         }
     }
 
-    public function store(StashRecordRecordWizardRequest $request): JsonResponse
+    public function store(StashRecordRequest $request): JsonResponse
     {
         try {
             $file = $request->file('file');

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
-class SendEmailAnnouncementRequest extends FormRequest
+class UpdateUserPasswordRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,11 +13,10 @@ class SendEmailAnnouncementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => [
+            'password_new' => [
                 'required',
-            ],
-            'body' => [
-                'required',
+                'confirmed',
+                Password::defaults(),
             ],
         ];
     }

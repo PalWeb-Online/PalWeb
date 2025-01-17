@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ArabicScript;
+use App\Rules\LatinScript;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateUserSettingRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -30,7 +32,7 @@ class UpdateUserSettingRequest extends FormRequest
                 'string',
                 'max:50',
                 'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
-                Rule::unique('users')->ignore($user->id),
+                Rule::unique('users')->ignore($this->user()->id),
             ],
             'home' => [
                 'nullable',

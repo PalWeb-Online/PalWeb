@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SendEmailAnnouncementRequest;
+use App\Http\Requests\StoreEmailAnnouncementRequest;
 use App\Mail\AnnouncementEmail;
 use App\Models\User;
 use Exception;
@@ -20,7 +20,7 @@ class EmailAnnouncementController extends Controller
         return view('users.dashboard.email-compose');
     }
 
-    public function store(SendEmailAnnouncementRequest $request): RedirectResponse
+    public function store(StoreEmailAnnouncementRequest $request): RedirectResponse
     {
         $subject = $request->input('subject');
         $body = $request->input('body');

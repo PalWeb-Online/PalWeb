@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProfileChanged;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Badge;
 use App\Models\User;
 use Flasher\Prime\FlasherInterface;
@@ -36,5 +38,34 @@ class UserController extends Controller
             'decks' => $decks,
             'bodyBackground' => 'hero-yellow',
         ]);
+    }
+
+    public function edit(Request $request): \Illuminate\View\View
+    {
+        View::share('pageTitle', 'Settings: Change Profile');
+
+        return view('users.dashboard.change-profile', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function update(UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
+    {
+        $user = $request->user();
+
+        $user->update([
+            'name' => $request->name,
+            'ar_name' => $request->ar_name,
+            'username' => $request->username,
+            'home' => $request->home,
+            'bio' => $request->bio,
+            'dialect_id' => $request->dialect,
+        ]);
+
+        event(new ProfileChanged($user));
+
+        $this->flasher->addSuccess(__('settings.updated'));
+
+        return to_route('users.show', $request->user());
     }
 }
