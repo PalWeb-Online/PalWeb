@@ -25,16 +25,20 @@ class SentenceRepository
             ])
             ->get();
 
-        $sentencesFromPivotMatch = Sentence::query()
-            ->whereHas('terms',
-                fn ($query) => $query
-                    ->where(fn ($pivotQuery) => $pivotQuery
-                        ->where('sentence_term.sent_term', 'like', '%'.$searchTerm.'%')
-                        ->orWhere('sentence_term.sent_translit', 'like', '%'.$searchTerm.'%')
-                    )
-            )
-            ->with('terms')
-            ->get();
+        if (!empty($searchTerm)) {
+            $sentencesFromPivotMatch = Sentence::query()
+                ->whereHas('terms',
+                    fn($query) => $query
+                        ->where(fn($pivotQuery) => $pivotQuery
+                            ->where('sentence_term.sent_term', 'like', '%'.$searchTerm.'%')
+                            ->orWhere('sentence_term.sent_translit', 'like', '%'.$searchTerm.'%')
+                        )
+                )
+                ->with('terms')
+                ->get();
+        } else {
+            $sentencesFromPivotMatch = collect();
+        }
 
         return $sentencesFromDirectTerms
             ->merge($sentencesFromGlossTerms)

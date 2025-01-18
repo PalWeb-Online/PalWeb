@@ -10,22 +10,7 @@
 
 @section('content')
 
-{{--    <div id="dictionaryFilters">--}}
-{{--        <dictionary-filters></dictionary-filters>--}}
-{{--    </div>--}}
-
     @if (!request()->query())
-{{--        <div class="portal-button-wrapper">--}}
-{{--            <div class="portal-button-head">--}}
-{{--                Power up your Arabic vocabulary!--}}
-{{--            </div>--}}
-{{--            <div class="portal-button-body">--}}
-{{--                <a href="{{ route('explore.index') }}" class="portal-button">Explore Portal</a>--}}
-{{--                <a href="{{ route('sentences.index') }}" class="portal-button">Phrasebook</a>--}}
-{{--                <a href="{{ route('wiki.show', 'dictionary') }}" class="portal-button">User Manual</a>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
         @include("terms._featured")
     @endif
 
@@ -33,12 +18,13 @@
         {{--        using decks-list here just because the usual terms-list is for term-li's --}}
         <div class="decks-list">
             <div class="featured-title l">{{ __('all') }}</div>
-            @if(request()->query())
+            @if($hasFilters)
                 <x-tip>
                     <p>Displaying {{ number_format($totalCount) }}
-                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$searchTerm.'</b>' : '' !!}.
+                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$filters['search'].'</b>' : '' !!}.
                     </p>
                 </x-tip>
+
             @else
                 <x-tip>
                     <p>Displaying all {{ number_format($totalCount) }} terms in the Dictionary.</p>

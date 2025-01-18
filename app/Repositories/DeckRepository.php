@@ -13,7 +13,7 @@ class DeckRepository
                 ->orWhere('decks.user_id', auth()->user()->id ?? null)
             )
             ->where(function ($query) use ($terms, $searchTerm) {
-                if (! empty($searchTerm)) {
+                if (!empty($searchTerm)) {
                     $query->where('name', 'like', '%'.$searchTerm.'%');
                 }
                 $query->orWhereHas('terms', fn ($query) => $query->whereIn('terms.id', $terms));

@@ -44,12 +44,19 @@ class DeckController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Deck Library');
+        $filters = array_merge([
+            'search' => '',
+            'category' => '',
+            'attribute' => '',
+            'form' => '',
+            'singular' => '',
+            'plural' => '',
+        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
+        $filters = array_map(fn($value) => $value ?? '', $filters);
 
-        $searchTerm = $request->input('search', '') ?? '';
-        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
+        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
 
-        if (empty($searchTerm) && empty(array_filter($filters))) {
+        if (!$hasFilters) {
             $decks = Deck::with('author')
                 ->where('private', false)
                 ->orderByDesc('id')
@@ -58,7 +65,7 @@ class DeckController extends Controller
             $totalCount = $decks->total();
 
         } else {
-            $allResults = $searchService->search($searchTerm, $filters, false, true)['decks'];
+            $allResults = $searchService->search($filters, false, true)['decks'];
             $totalCount = $allResults->count();
 
             $perPage = 25;
@@ -74,10 +81,12 @@ class DeckController extends Controller
             );
         }
 
+        View::share('pageTitle', 'Deck Library');
+
         return view('decks.index', [
             'decks' => $decks,
-            'searchTerm' => $searchTerm,
             'filters' => $filters,
+            'hasFilters' => $hasFilters,
             'totalCount' => $totalCount,
         ]);
     }
