@@ -39,21 +39,26 @@ class SentenceController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
-        View::share('pageTitle', 'the Phrasebook');
-        View::share('pageDescription',
-            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+        $filters = array_merge([
+            'search' => '',
+            'category' => '',
+            'attribute' => '',
+            'form' => '',
+            'singular' => '',
+            'plural' => '',
+        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
+        $filters = array_map(fn($value) => $value ?? '', $filters);
 
-        $searchTerm = $request->input('search', '') ?? '';
-        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
+        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
 
-        if (empty($searchTerm) && empty(array_filter($filters))) {
+        if (!$hasFilters) {
             $sentences = Sentence::orderByDesc('id')
                 ->paginate(25)
                 ->onEachSide(1);
             $totalCount = $sentences->total();
 
         } else {
-            $allResults = $searchService->search($searchTerm, $filters, true, false)['sentences'];
+            $allResults = $searchService->search($filters, true, false)['sentences'];
             $totalCount = $allResults->count();
 
             $perPage = 25;
@@ -67,13 +72,16 @@ class SentenceController extends Controller
                 $currentPage,
                 ['path' => $request->url(), 'query' => $request->query()]
             );
-
         }
+
+        View::share('pageTitle', 'the Phrasebook');
+        View::share('pageDescription',
+            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
         return view('sentences.index', [
             'sentences' => $sentences,
-            'searchTerm' => $searchTerm,
             'filters' => $filters,
+            'hasFilters' => $hasFilters,
             'totalCount' => $totalCount,
         ]);
     }

@@ -12,11 +12,10 @@
     @if($totalCount > 0)
         <div class="decks-list">
             <div class="featured-title l">{{ __('all') }}</div>
-
-            @if(request()->query())
+            @if($hasFilters)
                 <x-tip>
                     <p>Displaying {{ number_format($totalCount) }} Decks containing
-                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$searchTerm.'</b>' : '' !!}.
+                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' or having a title matching <b>'.$filters['search'].'</b>' : '' !!}.
                     </p>
                 </x-tip>
 

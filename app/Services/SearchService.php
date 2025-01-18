@@ -24,21 +24,21 @@ class SearchService
         $this->deckRepository = $deckRepository;
     }
 
-    public function search(string $searchTerm = '', array $filters = [], bool $withSentences = false, bool $withDecks = false): array
+    public function search(array $filters = [], bool $withSentences = false, bool $withDecks = false): array
     {
-        $terms = $this->termRepository->findMatchingTerms($searchTerm, $filters);
-        $glosses = $this->termRepository->findMatchingGlosses($searchTerm, $filters);
+        $terms = $this->termRepository->findMatchingTerms($filters);
+        $glosses = $this->termRepository->findMatchingGlosses($filters);
 
         $results = [
             'terms' => $this->termRepository->searchTerms($terms->merge($glosses->pluck('term_id'))->unique()),
         ];
 
         if ($withSentences) {
-            $results['sentences'] = $this->sentenceRepository->searchSentences($terms, $glosses, $searchTerm);
+            $results['sentences'] = $this->sentenceRepository->searchSentences($terms, $glosses, $filters['search']);
         }
 
         if ($withDecks) {
-            $results['decks'] = $this->deckRepository->searchDecks($terms, $searchTerm);
+            $results['decks'] = $this->deckRepository->searchDecks($terms, $filters['search']);
         }
 
         return $results;

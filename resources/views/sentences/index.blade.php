@@ -11,17 +11,19 @@
     @if($totalCount > 0)
         <div class="sentence-list">
             <div class="featured-title l">{{ __('all') }}</div>
-            @if(request()->query())
+            @if($hasFilters)
                 <x-tip>
                     <p>Displaying {{ number_format($totalCount) }} Sentences containing
-                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$searchTerm.'</b>' : '' !!}.
+                        {!! $filters['attribute'] ? '<b>'.ucwords($filters['attribute']).'</b>' : '' !!} {!! $filters['form'] ? '<b>Form '.ucwords($filters['form']).'</b>' : '' !!} {!! $filters['category'] ? '<b>'.ucwords($filters['category']).'s</b>' : 'Terms' !!}{!! $filters['singular'] ? ' in the <b>'.$filters['singular'].'</b> pattern' : '' !!}{!! $filters['plural'] ? ' with a <b>'.$filters['plural'].'</b> plural' : '' !!}{!! request()->query('search') ? ' matching <b>'.$filters['search'].'</b>' : '' !!}.
                     </p>
                 </x-tip>
+
             @else
                 <x-tip>
                     <p>Displaying all {{ number_format($totalCount) }} Sentences in the Phrasebook.</p>
                 </x-tip>
             @endif
+
             @foreach($sentences as $sentence)
                 <x-vue.sentence component="SentenceItem" size="s" :sentence="$sentence"/>
             @endforeach

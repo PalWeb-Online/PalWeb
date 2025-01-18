@@ -83,17 +83,26 @@ class TermController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Illuminate\View\View
     {
-        $searchTerm = $request->input('search', '') ?? '';
-        $filters = $request->only(['category', 'attribute', 'form', 'singular', 'plural']);
+        $filters = array_merge([
+            'search' => '',
+            'category' => '',
+            'attribute' => '',
+            'form' => '',
+            'singular' => '',
+            'plural' => '',
+        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
+        $filters = array_map(fn($value) => $value ?? '', $filters);
 
-        if (empty($searchTerm) && empty(array_filter($filters))) {
+        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
+
+        if (!$hasFilters) {
             $terms = Term::orderByDesc('id')
                 ->paginate(100)
                 ->onEachSide(1);
             $totalCount = $terms->total();
 
         } else {
-            $allResults = $searchService->search($searchTerm, $filters)['terms'];
+            $allResults = $searchService->search($filters)['terms'];
             $totalCount = $allResults->count();
 
             $perPage = 100;
@@ -124,8 +133,8 @@ class TermController extends Controller
 
         return view('terms.index', [
             'terms' => $terms,
-            'searchTerm' => $searchTerm,
             'filters' => $filters,
+            'hasFilters' => $hasFilters,
             'totalCount' => $totalCount,
             'wordOfTheDay' => $wordOfTheDay ?? null,
             'latestTerms' => $latestTerms ?? null,

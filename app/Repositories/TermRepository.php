@@ -4,26 +4,27 @@ namespace App\Repositories;
 
 use App\Models\Gloss;
 use App\Models\Term;
+use Illuminate\Support\Collection;
 
 class TermRepository
 {
-    public function findMatchingTerms(string $searchTerm = '', array $filters = [])
+    public function findMatchingTerms(array $filters = []): Collection
     {
         return Term::query()
             ->select('id')
-            ->filter(array_merge(['search' => $searchTerm], $filters))
+            ->filter($filters)
             ->pluck('id');
     }
 
-    public function findMatchingGlosses(string $searchTerm = '', array $filters = [])
+    public function findMatchingGlosses(array $filters = []): Collection
     {
         return Gloss::query()
             ->select('id', 'term_id')
-            ->filter(array_merge(['search' => $searchTerm], $filters))
+            ->filter($filters)
             ->get();
     }
 
-    public function searchTerms($terms)
+    public function searchTerms($terms): Collection
     {
         return Term::query()
             ->whereIn('id', $terms)
