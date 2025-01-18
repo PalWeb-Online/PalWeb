@@ -1,5 +1,4 @@
 <script setup>
-import {onBeforeUnmount, onMounted} from 'vue';
 import {useStateStore} from './stores/StateStore';
 import {useRecordStore} from "./stores/RecordStore.js";
 import Speaker from './pages/Speaker.vue';
@@ -13,31 +12,12 @@ const RecordStore = useRecordStore();
 const exit = async () => {
     if (RecordStore.data.statusCount.stashed > 0) {
         if (confirm(`Are you sure you want to leave the wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`)) {
-            await RecordStore.clearStash();
             window.location.href = '/dashboard/workbench';
         }
     } else {
         window.location.href = '/dashboard/workbench';
     }
 };
-
-const preventWindowClose = (event) => {
-    if (StateStore.hasPendingRequests) {
-        event.preventDefault();
-        event.returnValue = '';
-    } else {
-        RecordStore.clearStash();
-    }
-};
-
-onMounted(() => {
-    window.addEventListener('beforeunload', preventWindowClose);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener('beforeunload', preventWindowClose);
-});
-
 </script>
 
 <template>

@@ -76,53 +76,34 @@ export default class Record {
         formData.append('speakerId', this.speaker.id);
 
         try {
-            const response = await fetch('/api/record-wizard/store', {
-                method: 'POST',
-                body: formData,
-            });
+            const response = await axios.post('/api/record-wizard/store', formData);
 
-            if (!response.ok) throw new Error(`[Record] stash upload failed: ${response.statusText}`);
-
-            const result = await response.json();
-            this.stashKey = result.stashKey;
-            this.url = result.url;
+            this.stashKey = response.data.stashKey;
+            this.url = response.data.url;
 
         } catch (error) {
-            throw new Error(`[Record] stash upload failed: ${error.message}`);
+            throw new Error(`[Record] stash upload failed: ${error.response?.statusText || error.message}`);
         }
     }
 
     async uploadRecord() {
-        // todo: Error: [Record] Upload failed with status 429 (too many requests)
         if (!this.stashKey) {
             throw new Error('[Record] cannot upload; no stashKey.');
         }
 
         try {
-            const response = await fetch('/api/record-wizard/upload', {
-                method: 'POST',
-                body: JSON.stringify({
-                    stashKey: this.stashKey,
-                    filename: this.getFilename(),
-                    speaker: this.speaker,
-                    pronunciation: this.pronunciation,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            const response = await axios.post('/api/record-wizard/upload', {
+                stashKey: this.stashKey,
+                filename: this.getFilename(),
+                speaker: this.speaker,
+                pronunciation: this.pronunciation,
             });
 
-            if (!response.ok) throw new Error(`[Record] Upload failed with status ${response.status}`);
-
-            const result = await response.json();
-            this.id = result.id;
-            this.url = result.url;
-
-            if (!result.success) throw new Error(result.message || '[Record] Upload failed.');
+            this.id = response.data.id;
+            this.url = response.data.url;
 
         } catch (error) {
-            console.error(error);
-            throw new Error(`[Record] Upload failed: ${error.message}`);
+            throw new Error(`[Record] Upload failed: ${error.response?.data?.message || error.message}`);
         }
     }
 }

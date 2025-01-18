@@ -191,12 +191,10 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
         setStatus(item.id, 'stashing');
         try {
-            await requestQueue.push(async () => {
-                await record.stashRecord();
-                data.records[item.id].url = record.url;
+            await record.stashRecord();
+            data.records[item.id].url = record.url;
 
-                setStatus(item.id, 'stashed');
-            });
+            setStatus(item.id, 'stashed');
 
         } catch (error) {
             setError(item.id, error.message, 'Record could not be stashed. Please try to record the item again.');
@@ -234,7 +232,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
 
         try {
-            const response = await axios.delete(`/api/record-wizard/${stashKey}`);
+            await axios.delete(`/api/record-wizard/${stashKey}`);
 
             delete data.records[id];
             delete data.status[id];
@@ -263,26 +261,24 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const clearStash = () => {
-        fetch(`/api/record-wizard/clear/${SpeakerStore.data.speaker.id}`, {method: 'DELETE'})
-            .then(response => {
-                if (response.ok) {
-                    Object.keys(data.status).forEach(key => {
-                        if (data.status[key] === 'stashed') {
-                            delete data.records[key];
-                            delete data.status[key];
-                            delete data.errors[key];
-                            data.statusCount.stashed--;
-                        }
-                    });
-                    console.log('Stash directory cleaned up successfully.');
+    const clearStash = async () => {
+        try {
+            await axios.delete(`/api/record-wizard/clear/${SpeakerStore.data.speaker.id}`);
 
-                } else {
-                    console.error('Failed to clean up stash directory.');
+            Object.keys(data.status).forEach(key => {
+                if (data.status[key] === 'stashed') {
+                    delete data.records[key];
+                    delete data.status[key];
+                    delete data.errors[key];
+                    data.statusCount.stashed--;
                 }
+            });
 
-            })
-            .catch(error => console.error('Error during stash cleanup:', error));
+            console.log('Stash directory cleaned up successfully.');
+
+        } catch (error) {
+            console.error('Error during stash cleanup:', error.response?.data?.message || error.message);
+        }
     };
 
     const uploadRecords = async () => {
@@ -294,37 +290,38 @@ export const useRecordStore = defineStore('RecordStore', () => {
             );
 
             for (const id of stashedIds) {
-                try {
-                    const itemIndex = QueueStore.data.items.findIndex(
-                        (p) => p.id === Number(id)
-                    );
+                await requestQueue.push(async () => {
+                    try {
+                        const itemIndex = QueueStore.data.items.findIndex(
+                            (p) => p.id === Number(id)
+                        );
 
-                    if (itemIndex !== -1) {
-                        QueueStore.selectItem(itemIndex);
+                        if (itemIndex !== -1) {
+                            QueueStore.selectItem(itemIndex);
+                        }
+
+                        setError(id, false, false);
+                        setStatus(id, 'uploading');
+
+                        const record = data.records[id];
+                        if (!record) {
+                            throw new Error(`Record with ID ${id} not found.`);
+                        }
+
+                        await record.uploadRecord();
+
+                        setStatus(id, 'uploaded');
+
+                        if (itemIndex !== -1) {
+                            QueueStore.data.items.splice(itemIndex, 1);
+                            QueueStore.selectedArray.splice(itemIndex, 1);
+                        }
+
+                        setStatus(id, 'done');
+                    } catch (error) {
+                        setError(id, error.message, 'Record could not be uploaded. Please try again.');
                     }
-
-                    setError(id, false, false);
-                    setStatus(id, 'uploading');
-
-                    const record = data.records[id];
-                    if (!record) {
-                        throw new Error(`Record with ID ${id} not found.`);
-                    }
-
-                    await record.uploadRecord();
-
-                    setStatus(id, 'uploaded');
-
-                    if (itemIndex !== -1) {
-                        QueueStore.data.items.splice(itemIndex, 1);
-                        QueueStore.selectedArray.splice(itemIndex, 1);
-                    }
-
-                    setStatus(id, 'done');
-
-                } catch (error) {
-                    setError(id, error.message, 'Record could not be uploaded. Please try again.');
-                }
+                });
             }
 
             StateStore.data.isUploading = false;

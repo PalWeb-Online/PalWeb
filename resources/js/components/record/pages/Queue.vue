@@ -73,7 +73,8 @@ const remove = (index) => {
         <div class="rw-queue-body"
              v-if="QueueStore.data.items.length > 0">
             <draggable v-if="QueueStore.data.items.length > 0"
-                       :list="QueueStore.data.items" id="rw-item-queue">
+                       :list="QueueStore.data.items" itemKey="id"
+                       id="rw-item-queue">
                 <template #item="{ element, index }">
                     <li>
                         <div>
