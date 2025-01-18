@@ -8,6 +8,7 @@ use App\Services\AudioService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class StashRecordController extends Controller
 {
@@ -26,7 +27,7 @@ class StashRecordController extends Controller
             return response()->json([
                 'message' => 'File stashed successfully.',
                 'stashKey' => $stashKey,
-                'url' => asset("stash/{$stashKey}"),
+                'url' => Storage::disk('public')->url("stash/{$stashKey}"),
             ], 201);
 
         } catch (\Exception $e) {
@@ -39,10 +40,10 @@ class StashRecordController extends Controller
 
     public function destroy($stashKey): JsonResponse
     {
-        $filePath = public_path("stash/{$stashKey}");
+        $stashPath = Storage::disk('public')->path("stash/{$stashKey}");
 
-        if (File::exists($filePath)) {
-            File::delete($filePath);
+        if (File::exists($stashPath)) {
+            File::delete($stashPath);
 
             return response()->json(['message' => "Recording with stashKey {$stashKey} discarded successfully."], 200);
 
@@ -54,7 +55,7 @@ class StashRecordController extends Controller
     public function upload(Request $request): JsonResponse
     {
         $filename = $request->input('filename').'.mp3';
-        $stashPath = public_path("stash/{$request->input('stashKey')}");
+        $stashPath = Storage::disk('public')->path("stash/{$request->input('stashKey')}");
 
         if (! File::exists($stashPath)) {
             return response()->json(['message' => 'File not found in stash.'], 404);
@@ -71,20 +72,22 @@ class StashRecordController extends Controller
             ]);
 
             return response()->json([
-                'success' => true,
+                'message' => 'File uploaded successfully',
                 'id' => $audio->id,
                 'url' => $audio->url(),
-                'message' => 'File uploaded successfully',
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to upload file.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Failed to upload file.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
     public function clearStash($speakerId): JsonResponse
     {
-        $path = public_path('stash');
+        $path = Storage::disk('public')->path('stash');
 
         if (File::isDirectory($path)) {
             $files = File::files($path);
@@ -95,7 +98,7 @@ class StashRecordController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Stash directory cleaned up successfully.'], 200);
+            return response()->json(['message' => 'Stash directory cleaned up successfully.']);
 
         } else {
             return response()->json(['message' => 'Stash directory not found.'], 404);

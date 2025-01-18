@@ -2,6 +2,7 @@
 import {computed, onMounted, reactive, ref} from 'vue';
 import {useStateStore} from "../stores/StateStore.js";
 import {useSpeakerStore} from "../stores/SpeakerStore.js";
+import {useRecordStore} from "../stores/RecordStore.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardButton from "../ui/WizardButton.vue";
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
@@ -9,6 +10,7 @@ import AppDialog from "../../AppDialog.vue";
 
 const StateStore = useStateStore();
 const SpeakerStore = useSpeakerStore();
+const RecordStore = useRecordStore();
 
 const dialects = ref([]);
 const locations = ref([]);
@@ -118,8 +120,11 @@ const testPlay = (record) => {
 
 onMounted(async () => {
     getAudioStream();
+
     await SpeakerStore.fetchSpeaker();
     await fetchSpeakerOptions();
+
+    await RecordStore.clearStash();
 });
 </script>
 

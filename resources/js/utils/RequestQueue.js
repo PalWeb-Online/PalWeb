@@ -3,13 +3,7 @@ export default class RequestQueue {
         this.max = 3;
         this.queue = [];
         this.working = 0;
-        this.delay = 500;
-
-        this.api = {
-            get: (params) => {
-                return fetch(`/api/${params.action}`); // Example API request
-            },
-        };
+        this.delay = 0;
     }
 
     push(callback) {
