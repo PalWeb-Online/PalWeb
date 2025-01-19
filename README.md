@@ -42,12 +42,6 @@ Clone the project
   git clone git@github.com:PalWeb-Online/PalWeb.git
 ```
 
-Go to the project directory
-
-```bash
-  cd learnarabic
-```
-
 Compose Up docker container
 
 ```bash
