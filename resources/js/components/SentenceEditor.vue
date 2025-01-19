@@ -10,17 +10,9 @@ export default {
 
     props: [
         'mode',
-        'id'
+        'sentenceId'
     ],
 
-    computed: {
-        updateRoute() {
-            return `/dictionary/sentences/${this.id}`;
-        },
-        createRoute() {
-            return `/dictionary/sentences`;
-        },
-    },
     data() {
         return {
             sentence: {
@@ -34,8 +26,8 @@ export default {
         }
     },
     created() {
-        if (this.mode === "edit") {
-            this.getSentence(this.id);
+        if (this.mode === 'edit') {
+            this.getSentence(this.sentenceId);
         }
     },
     methods: {
@@ -83,33 +75,19 @@ export default {
             this.updatePosition();
         },
         submit() {
-            if (this.mode === "add") {
-                axios.post(this.createRoute, {
-                    sentence: this.sentence,
-                    terms: this.terms
+            const requestMethod = this.mode === 'create' ? axios.post : axios.patch;
+            const requestRoute = this.mode === 'create' ? `/dictionary/sentences` : `/dictionary/sentences/${this.sentenceId}`;
+
+            requestMethod(requestRoute, {
+                sentence: this.sentence,
+                terms: this.terms
+            })
+                .then(response => {
+                    window.location = response.data.redirect;
                 })
-                    .then(response => {
-                        if (response.data.status === 'success') {
-                            window.location = response.data.redirect;
-                        }
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data['message']
-                    });
-            } else {
-                axios.patch(this.updateRoute, {
-                    sentence: this.sentence,
-                    terms: this.terms
-                })
-                    .then(response => {
-                        if (response.data.status === 'success') {
-                            window.location = response.data.redirect;
-                        }
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data['message']
-                    });
-            }
+                .catch(error => {
+                    this.errors = error.response?.data?.message || "An error occurred during the request.";
+                });
         }
     }
 };
@@ -188,7 +166,7 @@ export default {
         </div>
 
         <button type="submit" class="sp-button">
-            <template v-if="mode === 'add'">Create</template>
+            <template v-if="mode === 'create'">Create</template>
             <template v-if="mode === 'edit'">Update</template>
         </button>
     </form>

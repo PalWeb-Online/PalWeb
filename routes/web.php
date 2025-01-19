@@ -132,12 +132,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{page}', 'show')->name('explore.show');
         });
 
-        Route::prefix('/admin')->middleware('admin')->group(function () {
+        Route::middleware('admin')->group(function () {
             Route::resource('/terms', TermController::class)->except(['index', 'show']);
-            Route::get('/{term}/get', [TermController::class, 'get'])->name('terms.get');
+            Route::get('/terms/{term}/get', [TermController::class, 'get'])->name('terms.get');
 
             Route::resource('/sentences', SentenceController::class)->except(['index', 'show']);
-            Route::get('/{sentence}/get', [SentenceController::class, 'get'])->name('sentences.get');
+            Route::get('/sentences/{sentence}/get', [SentenceController::class, 'get'])->name('sentences.get');
 
             Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
             Route::delete('/missing/terms/{missingTerm}', [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');

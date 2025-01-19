@@ -298,10 +298,9 @@ class TermController extends Controller
         });
 
         return response()->json([
-            'status' => 'success',
             'term' => $term,
-            'redirect' => route('terms.show', $term),
             'flash' => __('created', ['thing' => $term->term]),
+            'redirect' => route('terms.show', $term),
         ]);
     }
 
@@ -396,10 +395,9 @@ class TermController extends Controller
         });
 
         return response()->json([
-            'status' => 'success',
             'term' => $term,
-            'redirect' => route('terms.show', $term),
             'flash' => __('updated', ['thing' => $term->term]),
+            'redirect' => route('terms.show', $term),
         ]);
     }
 

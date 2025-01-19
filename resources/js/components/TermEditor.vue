@@ -5,15 +5,6 @@ export default {
         'termId'
     ],
 
-    computed: {
-        updateRoute() {
-            return `/dictionary/terms/admin/${this.termId}/update`;
-        },
-        createRoute() {
-            return `/dictionary/terms/admin/store`;
-        }
-    },
-
     data() {
         return {
             term: {
@@ -46,13 +37,13 @@ export default {
     created() {
         this.addPronunciation();
         this.addGloss();
-        if (this.mode == "edit") {
+        if (this.mode == 'edit') {
             this.getTerm(this.termId);
         }
     },
     methods: {
-        getTerm(termId) {
-            axios.get("/dictionary/terms/admin/" + termId + "/get")
+        getTerm(id) {
+            axios.get("/dictionary/terms/" + id + "/get")
                 .then(response => {
                     this.term = response.data.term;
                     this.root = (response.data.root) ? response.data.root : this.root;
@@ -199,55 +190,30 @@ export default {
         },
 
         submit() {
-            if (this.mode === "add") {
-                axios.post(this.createRoute, {
-                    term: this.term,
-                    root: this.root,
-                    singPatterns: this.singPatterns,
-                    plurPatterns: this.plurPatterns,
-                    verbPatterns: this.verbPatterns,
-                    pronunciations: this.pronunciations,
-                    variants: this.variants,
-                    references: this.references,
-                    components: this.components,
-                    descendants: this.descendants,
-                    spellings: this.spellings,
-                    inflections: this.inflections,
-                    glosses: this.glosses
+            const requestMethod = this.mode === 'create' ? axios.post : axios.patch;
+            const requestRoute = this.mode === 'create' ? `/dictionary/terms` : `/dictionary/terms/${this.termId}`;
+
+            requestMethod(requestRoute, {
+                term: this.term,
+                root: this.root,
+                singPatterns: this.singPatterns,
+                plurPatterns: this.plurPatterns,
+                verbPatterns: this.verbPatterns,
+                pronunciations: this.pronunciations,
+                variants: this.variants,
+                references: this.references,
+                components: this.components,
+                descendants: this.descendants,
+                spellings: this.spellings,
+                inflections: this.inflections,
+                glosses: this.glosses
+            })
+                .then(response => {
+                    window.location = response.data.redirect;
                 })
-                    .then(response => {
-                        if (response.data.status == 'success') {
-                            window.location = response.data.redirect;
-                        }
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data['message']
-                    });
-            } else {
-                axios.patch(this.updateRoute, {
-                    term: this.term,
-                    root: this.root,
-                    singPatterns: this.singPatterns,
-                    plurPatterns: this.plurPatterns,
-                    verbPatterns: this.verbPatterns,
-                    pronunciations: this.pronunciations,
-                    variants: this.variants,
-                    references: this.references,
-                    components: this.components,
-                    descendants: this.descendants,
-                    spellings: this.spellings,
-                    inflections: this.inflections,
-                    glosses: this.glosses
-                })
-                    .then(response => {
-                        if (response.data.status == 'success') {
-                            window.location = response.data.redirect;
-                        }
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data['message']
-                    });
-            }
+                .catch(error => {
+                    this.errors = error.response?.data?.message || "An error occurred during the request.";
+                });
         }
     }
 };
@@ -816,7 +782,7 @@ export default {
         </div>
 
         <button type="submit" class="sp-button">
-            <template v-if="mode === 'add'">Create</template>
+            <template v-if="mode === 'create'">Create</template>
             <template v-if="mode === 'edit'">Update</template>
         </button>
     </form>

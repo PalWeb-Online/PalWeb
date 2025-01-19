@@ -12,7 +12,7 @@
             <div>{{ __('terms.new') }}</div>
         </div>
         <div id="termEditor">
-            <term-editor mode="add"></term-editor>
+            <term-editor mode="create"></term-editor>
         </div>
     </div>
 @endsection
