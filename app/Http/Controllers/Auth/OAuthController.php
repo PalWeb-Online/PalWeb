@@ -18,9 +18,17 @@ class OAuthController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    /**
-     * Discord redirect back to application.
-     */
+    public function redirect(Request $request): RedirectResponse
+    {
+        if ($request->user() && $request->user()->discord_id) {
+            $this->flasher->addWarning('Your Discord account is already connected.');
+            return to_route('homepage');
+
+        } else {
+            return Socialite::driver('discord')->scopes(['identify', 'email', 'guilds'])->redirect();
+        }
+    }
+
     public function callback(Request $request): RedirectResponse
     {
         $error = request('error') ?? null;
@@ -30,7 +38,7 @@ class OAuthController extends Controller
             Log::error("Discord OAuth error: $error - $errorDescription");
             $this->flasher->addError('You canceled the Discord authentication process.');
 
-            return redirect()->to('/');
+            return to_route('homepage');
         }
 
         try {
@@ -62,15 +70,6 @@ class OAuthController extends Controller
 
                     } else {
                         $this->flasher->addWarning('We couldn\'t sign you in, because there is no PalWeb account that is connected to or has the same email as the provided Discord account. Please sign in normally first & connect your Discord account through the Dashboard before trying to log in this way.');
-
-                        return redirect()->to('/');
-
-                        //                        $user = $this->createUser($discordUser);
-
-                        //                        Auth::login($user);
-                        //                        $this->flasher->addFlash('info', __('registered.message', ['user' => $user->name]), __('registered.message.head'));
-
-                        //                        $this->checkMembership($user, $discordUser->token);
                     }
                 }
             }
@@ -80,7 +79,7 @@ class OAuthController extends Controller
             $this->flasher->addError('Failed to authenticate with Discord.');
         }
 
-        return redirect()->to('/');
+        return to_route('homepage');
     }
 
     protected function updateUser($user, $discordUser)
@@ -118,7 +117,7 @@ class OAuthController extends Controller
         if (! $request->user()->password) {
             $this->flasher->addWarning('You have not set a password for this account. You cannot disconnect from Discord until you have set a password on PalWeb. Please set a password first, then try again.');
 
-            return redirect()->to('/');
+            return to_route('homepage');
         }
 
         $token = $request->input('token');
@@ -142,32 +141,13 @@ class OAuthController extends Controller
                 'discord_refresh_token' => null,
             ]);
 
-            // Token revocation was successful
             $this->flasher->addSuccess('Disconnected your Discord account.');
 
-            return redirect()->to('/');
         } else {
-            // Handle errors or unsuccessful revocation
             $this->flasher->addError('Failed to disconnect Discord account.');
-
-            return redirect()->to('/');
         }
-    }
 
-    /**
-     * Redirect to Discord.
-     */
-    public function redirect(Request $request): RedirectResponse
-    {
-        if ($request->user() && $request->user()->discord_id) {
-            // if User exists, is logged in & is connected
-
-            $this->flasher->addWarning('Your Discord account is already connected.');
-
-            return redirect()->to('/');
-        } else {
-            return Socialite::driver('discord')->scopes(['identify', 'email', 'guilds'])->redirect();
-        }
+        return to_route('homepage');
     }
 
     protected function createUser($discordUser)
