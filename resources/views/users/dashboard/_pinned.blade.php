@@ -1,4 +1,4 @@
-<form method="GET" action="{{ route('dashboard.workbench') }}" class="workbench-options">
+<form method="GET" action="{{ route('workbench.index') }}" class="workbench-options">
     <button name="sort" value="oldest" class="{{ request()->input('sort') == 'newest' ? '' : 'active' }}">Oldest First</button>
     <button name="sort" value="newest" class="{{ request()->input('sort') == 'newest' ? 'active' : '' }}">Newest First</button>
 </form>

@@ -9,7 +9,7 @@
 
 <x-faq question="Do I need to pay to access the content on the site?">
     <p>Some areas of the site are locked to users with a free account or to subscribed users. Refer to the <a
-            href="{{ route('dashboard.subscription') }}">Subscription</a> Portal for more details on the perks of
+            href="{{ route('subscription.index') }}">Subscription</a> Portal for more details on the perks of
         each
         tier.</p>
 </x-faq>

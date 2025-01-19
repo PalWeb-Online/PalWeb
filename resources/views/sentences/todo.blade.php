@@ -4,7 +4,7 @@
 
     <x-page-head>
         <x-link :href="route('sentences.index')">{{ __('phrasebook') }}</x-link>
-        <x-link :href="route('sentences.todo')">{{ __('todo') }}</x-link>
+        <x-link :href="route('missing.sentences.index')">{{ __('todo') }}</x-link>
     </x-page-head>
 
     <x-tip>

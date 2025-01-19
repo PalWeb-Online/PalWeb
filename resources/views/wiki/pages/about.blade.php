@@ -50,7 +50,7 @@
             href="{{ route('wiki.show', 'contributing') }}">Contributing</a> page, or consider making a one-time
         donation on <a
             href="https://www.ko-fi.com/palweb" target="_blank" style="font-weight: 700">Ko-fi</a>
-        or taking out a <a href="{{ route('dashboard.subscription') }}" style="font-weight: 700">Subscription</a>
+        or taking out a <a href="{{ route('subscription.index') }}" style="font-weight: 700">Subscription</a>
         to the site.</p>
     <p>Still, the coming period is looking toward <b>PalWeb 2.0</b> in July 2025. Just as <b>PalWeb 1.0</b> introduced &
         finalized the site’s design, <b>PalWeb 2.0</b> should finalize the coding side of the project. In other words,
@@ -61,7 +61,7 @@
 <div class="doc-section">
     <h1>have We Met?</h1>
     <img src="{{ asset('img/adrian.jpeg') }}"
-         style="max-width: 30%; float: right; margin-inline-start: 2.4rem; border-radius: 1.6rem"/>
+         style="max-width: 30%; float: right; margin-inline-start: 2.4rem; border-radius: 1.6rem" alt="R. Adrian"/>
     <p>My name is <b>R. Adrian</b>: project manager, website developer, curriculum designer, dictionary writer & creator
         of PalWeb. I'm Colombian, not Palestinian; I began learning Arabic from scratch in university & developed those
         skills while working on & off in Palestine over the years. I have a BA in Anthropology & an MA in Middle Eastern

@@ -54,7 +54,7 @@
                 <div class="nav-user-options-row">
                     <div class="nav-user-options-row-title">{{ __('help') }}</div>
                     <div class="nav-user-options-row-content">
-                        <a href="{{ route('terms.request') }}">Request Term</a>
+                        <a href="{{ route('missing.terms.create') }}">Request Term</a>
                     </div>
                 </div>
             </div>
@@ -66,14 +66,14 @@
                         <div class="nav-user-options-row-title">{{ __('terms') }}</div>
                         <div class="nav-user-options-row-content">
                             <a href="{{ route('terms.create') }}">Create New</a>
-                            <a href="{{ route('terms.todo') }}">to-Do List</a>
+                            <a href="{{ route('missing.terms.index') }}">to-Do List</a>
                         </div>
                     </div>
                     <div class="nav-user-options-row">
                         <div class="nav-user-options-row-title">{{ __('sentences') }}</div>
                         <div class="nav-user-options-row-content">
                             <a href="{{ route('sentences.create') }}">Create New</a>
-                            <a href="{{ route('sentences.todo') }}">to-Do List</a>
+                            <a href="{{ route('missing.sentences.index') }}">to-Do List</a>
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@
                 </div>
                 <div class="nav-user-options-row" style="grid-column: span 2">
                     <a class="nav-user-options-row-title" style="font-size: 2.4rem; text-transform: none"
-                       href="{{ route('dashboard.subscription') }}">Subscribe to PalWeb</a>
+                       href="{{ route('subscription.index') }}">Subscribe to PalWeb</a>
                 </div>
                 <div style="grid-column: span 2">
                     <p>
@@ -106,7 +106,7 @@
                     <p>If you want to see PalWeb keep going — & expand to new horizons — consider making a one-time
                         donation on <a
                             href="https://www.ko-fi.com/palweb" target="_blank" style="font-weight: 700">Ko-fi</a>
-                        or taking out a <a href="{{ route('dashboard.subscription') }}" style="font-weight: 700">Subscription</a>
+                        or taking out a <a href="{{ route('subscription.index') }}" style="font-weight: 700">Subscription</a>
                         to the site,
                         which
                         gives you access to the Academy & other perks, while also guaranteeing the project's longevity.
@@ -142,11 +142,11 @@
                     <div>{{ __('profile') }}</div>
                     <div>view & adjust your profile</div>
                 </a>
-                <a href="{{ route('dashboard.workbench') }}" class="nav-user-dashboard-option">
+                <a href="{{ route('workbench.index') }}" class="nav-user-dashboard-option">
                     <div>{{ __('workbench') }}</div>
                     <div>study your flashcards & pins</div>
                 </a>
-                <a href="{{ route('dashboard.subscription') }}" class="nav-user-dashboard-option">
+                <a href="{{ route('subscription.index') }}" class="nav-user-dashboard-option">
                     <div>{{ __('subscription') }}</div>
                     <div>manage your subscription</div>
                 </a>

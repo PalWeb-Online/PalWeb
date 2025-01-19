@@ -15,7 +15,7 @@ class TextsIndexFeatureTest extends TestCase
     {
         $result = $this->get(route('tx'));
         $result->assertStatus(302);
-        $result->assertRedirectToRoute('unauth');
+        $result->assertRedirectToRoute('denied');
     }
 
     public function test_admin_can_access(): void
@@ -50,6 +50,6 @@ class TextsIndexFeatureTest extends TestCase
         // Should be redirected to subscribe page
         $result = $this->get(route('tx'));
         $result->assertStatus(302);
-        $result->assertRedirectToRoute('dashboard.subscription');
+        $result->assertRedirectToRoute('subscription.index');
     }
 }

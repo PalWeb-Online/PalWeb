@@ -7,14 +7,12 @@
 @endsection
 
 @section('content')
-
     <div class="splash-panel">
         <div class="sp-head">
             <div>{{ __('sentences.new') }}</div>
         </div>
         <div id="sentenceEditor">
-            <sentence-editor mode="add"></sentence-editor>
+            <sentence-editor mode="create"></sentence-editor>
         </div>
     </div>
-
 @endsection

@@ -33,7 +33,7 @@
     </div>
     <div class="footer-links">
         <div class="footer-links-title">Donate</div>
-        <a href="{{ route('dashboard.subscription') }}">{{ __('footer.subscribe') }}</a>
+        <a href="{{ route('subscription.index') }}">{{ __('footer.subscribe') }}</a>
         <a href="https://www.patreon.com/palweb" target="_blank">Patreon</a>
         <a href="https://www.ko-fi.com/palweb" target="_blank">Ko-fi</a>
     </div>

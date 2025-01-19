@@ -9,7 +9,6 @@ use App\Models\User;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
@@ -18,11 +17,7 @@ class UserController extends Controller
 
     public function show(Request $request, User $user): \Illuminate\View\View | RedirectResponse
     {
-        if (Gate::denies('interact', $user)) {
-            $this->flasher->addFlash('error', __('unauthorized.private.user'), __('unauthorized'));
-
-            return back();
-        }
+        $this->authorize('interact', $user);
 
         $decks = $user->decks()->with('author')
             ->where(fn ($query) => $query->where('decks.private', false)

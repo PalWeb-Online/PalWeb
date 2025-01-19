@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreTermRequest;
 use App\Http\Requests\UpdateTermRequest;
-use App\Http\Requests\RequestTermRequest;
 use App\Models\Attribute;
 use App\Models\Dialect;
 use App\Models\Gloss;
@@ -299,10 +298,9 @@ class TermController extends Controller
         });
 
         return response()->json([
-            'status' => 'success',
             'term' => $term,
-            'redirect' => route('terms.show', $term),
             'flash' => __('created', ['thing' => $term->term]),
+            'redirect' => route('terms.show', $term),
         ]);
     }
 
@@ -397,10 +395,9 @@ class TermController extends Controller
         });
 
         return response()->json([
-            'status' => 'success',
             'term' => $term,
-            'redirect' => route('terms.show', $term),
             'flash' => __('updated', ['thing' => $term->term]),
+            'redirect' => route('terms.show', $term),
         ]);
     }
 
@@ -563,36 +560,5 @@ class TermController extends Controller
         $this->flasher->addSuccess(__('deleted', ['thing' => $term->term]));
 
         return to_route('terms.index');
-    }
-
-    public function request(RequestTermRequest $request): RedirectResponse
-    {
-        MissingTerm::create([
-            'translit' => $request['translit'],
-            'category' => $request['category'],
-        ]);
-
-        $this->flasher->addSuccess(__('terms.requested'));
-
-        return to_route('terms.index');
-    }
-
-    public function todo(): \Illuminate\View\View
-    {
-        $missingInflections = [];
-        foreach (Inflection::whereIn('form', ['ap', 'pp', 'nv'])->get() as $inflection) {
-            if (Term::where('translit', $inflection->translit)->doesntExist()) {
-                $missingInflections[] = $inflection;
-            }
-        }
-        $missingInflections = collect($missingInflections);
-
-        View::share('pageTitle', 'Dictionary: to-Do');
-
-        return view('terms.todo', [
-            'fromSentences' => DB::table('sentence_term')->whereNull('term_id')->get(),
-            'missingTerms' => MissingTerm::all(),
-            'missingInflections' => $missingInflections,
-        ]);
     }
 }

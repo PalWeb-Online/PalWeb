@@ -50,7 +50,7 @@
 
         <x-tip>
             <p>No results matching this query.</p>
-            <p>Is a term missing from the Dictionary? <a href="{{ route('terms.request') }}" target="_blank">Request</a>
+            <p>Is a term missing from the Dictionary? <a href="{{ route('missing.terms.create') }}" target="_blank">Request</a>
                 it here!</p>
         </x-tip>
     @endif
