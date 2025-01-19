@@ -45,7 +45,8 @@ Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageT
 /**
  * Prompts an unauthenticated user to log in.
  */
-Route::view('/unauth', 'unauth', ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('unauth');
+Route::view('/denied', 'denied',
+    ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('denied');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -65,8 +66,10 @@ Route::prefix('/email')->middleware('auth')->group(function () {
         ])->name('verification.verify');
         Route::post('/verification/link', 'link')->middleware('throttle:6,1')->name('verification.send');
     });
+});
 
-    Route::controller(EmailAnnouncementController::class)->middleware('admin')->group(function () {
+Route::prefix('/email')->middleware('admin')->group(function () {
+    Route::controller(EmailAnnouncementController::class)->group(function () {
         Route::get('/create', 'create')->name('email.create');
         Route::post('/store', 'store')->name('email.store');
     });
@@ -81,51 +84,11 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
 
         // Auth
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
-
-        // Admin
-        Route::prefix('/admin')->middleware('admin')->group(function () {
-            Route::get('/create', 'create')->name('terms.create');
-            Route::post('/store', 'store')->name('terms.store');
-
-            Route::get('/{term}/get', 'get')->name('terms.get');
-            Route::get('/{term}/edit', 'edit')->name('terms.edit');
-            Route::patch('/{term}/update', 'update')->name('terms.update');
-            Route::delete('/{term}', 'destroy')->name('terms.destroy');
-        });
     });
 
     Route::get('/random', function () {
         return to_route('terms.show', \App\Models\Term::inRandomOrder()->first());
     })->name('terms.random');
-});
-
-/*
- * Community Routes
- */
-Route::prefix('/community')->middleware(['auth', 'verified'])->group(function () {
-    // Community Routes
-    Route::get('/', [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
-
-    // User Routes
-    Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
-
-    // Deck Routes
-    Route::resource('/decks', DeckController::class);
-    Route::prefix('/decks')->controller(DeckController::class)->group(function () {
-        Route::post('/{deck}/pin', 'pin')->name('decks.pin');
-        Route::post('/{deck}/copy', 'copy')->name('decks.copy');
-        Route::post('/{deck}/export', 'export')->name('decks.export');
-        Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
-        Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
-
-    });
-
-    // Audio Routes
-    Route::prefix('/audios')->group(function () {
-        Route::get('/', [AudioController::class, 'index'])->name('audios.index');
-        Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
-        Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
-    });
 });
 
 /**
@@ -137,10 +100,9 @@ Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
 });
 
 /**
- * Routes that require a logged-in user
+ * Routes that require a verified user
  */
 Route::middleware(['auth', 'verified'])->group(function () {
-
     Route::prefix('/academy')->group(function () {
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('academy.index');
@@ -154,83 +116,109 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/dictionary')->group(function () {
-        Route::middleware('admin')->group(function () {
-            Route::get('/todo/terms',
-                [TermController::class, 'todo'])->name('terms.todo');
-            Route::delete('/todo/terms/{missingTerm}',
-                [MissingTermController::class, 'destroy'])->name('missing.destroy');
-            Route::get('/todo/sentences',
-                [SentenceController::class, 'todo'])->name('sentences.todo');
+        Route::controller(MissingTermController::class)->group(function () {
+            Route::get('/missing/terms/create', 'create')->name('missing.terms.create');
+            Route::post('/missing/terms', 'store')->name('missing.terms.store');
         });
 
-        Route::view('/request', 'terms.request')->middleware('pageTitle:Request Term')->name('terms.request');
-        Route::post('/request', [TermController::class, 'request'])->name('request.store');
-
-        Route::resource('/sentences', SentenceController::class)->except(['index', 'show'])->middleware('admin');
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'index')->name('sentences.index');
             Route::get('/{sentence}', 'show')->name('sentences.show');
             Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
-            Route::get('/{sentence}/get', 'get')->name('sentences.get')->middleware('admin');
-
         });
 
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
             Route::get('/', 'index')->name('explore.index');
             Route::get('/{page}', 'show')->name('explore.show');
         });
+
+        Route::prefix('/admin')->middleware('admin')->group(function () {
+            Route::resource('/terms', TermController::class)->except(['index', 'show']);
+            Route::get('/{term}/get', [TermController::class, 'get'])->name('terms.get');
+
+            Route::resource('/sentences', SentenceController::class)->except(['index', 'show']);
+            Route::get('/{sentence}/get', [SentenceController::class, 'get'])->name('sentences.get');
+
+            Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
+            Route::delete('/missing/terms/{missingTerm}', [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
+            Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
+        });
     });
 
-    Route::prefix('/dashboard')->group(function () {
-        Route::get('/subscription', function () {
-            View::share('pageTitle', 'Subscription');
-            return view('users.dashboard.subscription', [
-                'user' => auth()->user(),
-                'bodyBackground' => 'hero-yellow',
-            ]);
-        })->name('dashboard.subscription');
+    Route::prefix('/community')->group(function () {
+        // Community Routes
+        Route::get('/',
+            [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
 
-        Route::prefix('/workbench')->group(function () {
-            Route::get('/', [WorkbenchController::class, 'index'])->name('dashboard.workbench');
+        // User Routes
+        Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
 
-            Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
-                Route::get('/', 'index')->name('decks.create');
-                Route::get('/edit/{deck}', 'edit')->name('decks.edit');
-                Route::get('/decks', 'getCreatedDecks');
-                Route::get('/decks/{deck}', 'getTerms');
-            });
+        // Deck Routes
+        Route::resource('/decks', DeckController::class);
+        Route::prefix('/decks')->controller(DeckController::class)->group(function () {
+            Route::post('/{deck}/pin', 'pin')->name('decks.pin');
+            Route::post('/{deck}/copy', 'copy')->name('decks.copy');
+            Route::post('/{deck}/export', 'export')->name('decks.export');
+            Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
+            Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
 
-            Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
-                Route::get('/', 'index')->name('decks.study');
-                Route::get('/decks', 'getPinnedDecks');
-                Route::get('/decks/{deck}', 'getCards');
-            });
-
-            Route::prefix('/record-wizard')->group(function () {
-                Route::controller(RecordWizardController::class)->group(function () {
-                    Route::get('/', 'index')->name('audios.record');
-                    Route::post('/pronunciations', 'getAutoItems');
-                    Route::post('/decks/{deck}', 'getDeckItems');
-                });
-                Route::controller(SpeakerController::class)->group(function () {
-                    Route::post('/speaker', 'store');
-                    Route::get('/speaker', 'getSpeaker');
-                    Route::get('/options', 'getSpeakerOptions');
-                });
-            });
         });
 
-        Route::prefix('/settings')->group(function () {
-            Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
-            Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
-            Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
-            Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
-            Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
-            Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
-            Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
+        // Audio Routes
+        Route::prefix('/audios')->group(function () {
+            Route::get('/', [AudioController::class, 'index'])->name('audios.index');
+            Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
+            Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
         });
-
     });
+
+    Route::prefix('/workbench')->group(function () {
+        Route::get('/', [WorkbenchController::class, 'index'])->name('workbench.index');
+
+        Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
+            Route::get('/', 'index')->name('decks.create');
+            Route::get('/edit/{deck}', 'edit')->name('decks.edit');
+            Route::get('/decks', 'getCreatedDecks');
+            Route::get('/decks/{deck}', 'getTerms');
+        });
+
+        Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
+            Route::get('/', 'index')->name('decks.study');
+            Route::get('/decks', 'getPinnedDecks');
+            Route::get('/decks/{deck}', 'getCards');
+        });
+
+        Route::prefix('/record-wizard')->group(function () {
+            Route::controller(RecordWizardController::class)->group(function () {
+                Route::get('/', 'index')->name('audios.record');
+                Route::post('/pronunciations', 'getAutoItems');
+                Route::post('/decks/{deck}', 'getDeckItems');
+            });
+            Route::controller(SpeakerController::class)->group(function () {
+                Route::post('/speaker', 'store');
+                Route::get('/speaker', 'getSpeaker');
+                Route::get('/options', 'getSpeakerOptions');
+            });
+        });
+    });
+
+    Route::get('/subscription', function () {
+        View::share('pageTitle', 'Subscription');
+        return view('users.dashboard.subscription', [
+            'user' => auth()->user(),
+            'bodyBackground' => 'hero-yellow',
+        ]);
+    })->name('subscription.index');
+});
+
+Route::prefix('/settings')->middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
+    Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
+    Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
+    Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
+    Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
+    Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
+    Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
 });
 
 require __DIR__.'/auth.php';

@@ -18,7 +18,7 @@ class DashboardTest extends TestCase
     {
         $result = $this->get(route('dashboard.subscription'));
         $result->assertStatus(302);
-        $result->assertRedirectToRoute('unauth');
+        $result->assertRedirectToRoute('denied');
     }
 
     public function test_loads_subscribe_page_if_logged_in(): void

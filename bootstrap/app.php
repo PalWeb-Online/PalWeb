@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(fn () => route('unauth'));
+        $middleware->redirectGuestsTo(fn () => route('denied'));
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
         $middleware->web([

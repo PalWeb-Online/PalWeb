@@ -4,7 +4,7 @@
 
     <x-page-head>
         <x-link :href="route('terms.index')">{{ __('dictionary') }}</x-link>
-        <x-link :href="route('terms.todo')">{{ __('todo') }}</x-link>
+        <x-link :href="route('missing.terms.index')">{{ __('todo') }}</x-link>
     </x-page-head>
 
     <div class="doc-section">
@@ -27,7 +27,7 @@
                     {{ $missingTerm->translit }}
                     ({{ $missingTerm->category }})
 
-                    <form method="POST" action="{{ route('missing.destroy', $missingTerm) }}">
+                    <form method="POST" action="{{ route('missing.terms.destroy', $missingTerm) }}">
                         @csrf
                         @method('DELETE')
                         <button onclick="return confirm('Are you sure you want to delete this item from the list?')">
@@ -46,7 +46,7 @@
                     {{ $missingInflection->translit }}
                     ({{ $missingInflection->form }})
 
-                    <form method="POST" action="{{ route('missing.destroy', $missingInflection) }}">
+                    <form method="POST" action="{{ route('missing.terms.destroy', $missingInflection) }}">
                         @csrf
                         @method('DELETE')
                         <button onclick="return confirm('Are you sure you want to delete this sentence?')">

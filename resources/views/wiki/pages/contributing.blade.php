@@ -36,7 +36,7 @@
     <p>Even if you're not a developer or an Arabic speaker, there's plenty you can do to contribute to the project.
         Just by using the site, you help to build it! <a href="{{ route('decks.create') }}" target="_blank">Building
             Decks</a> for
-        yourself & others to use & <a href="{{ route('terms.request') }}" target="_blank">Requesting
+        yourself & others to use & <a href="{{ route('missing.terms.create') }}" target="_blank">Requesting
             Terms</a> that you notice are missing from the Dictionary are two practical ways to contribute. Most
         importantly, though, don't forget to spread the word!</p>
 </div>

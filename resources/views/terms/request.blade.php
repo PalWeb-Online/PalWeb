@@ -7,11 +7,11 @@
 @endsection
 
 @section('content')
-    <form class="splash-panel" method="POST" action="{{ route("request.store") }}">
+    <form class="splash-panel" method="POST" action="{{ route("missing.terms.store") }}">
         @csrf
 
         <div class="sp-head">
-            <div>{{ __('terms.request') }}</div>
+            <div>{{ __('missing.terms.create') }}</div>
             <p>Use this form to request the addition of a term to the Dictionary. You may write the term any way you
                 please: in Arabic, in English, etc. Don't worry about spelling, as long as the editor can identify
                 the intended term. Indicate the term's category, if you know it.</p>

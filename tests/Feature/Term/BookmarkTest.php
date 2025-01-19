@@ -21,7 +21,7 @@ class BookmarkTest extends TestCase
         $term = Term::factory()->for(Category::factory())->create();
 
         $result = $this->post(route('bookmark', ['term' => $term->slug]));
-        $result->assertRedirectToRoute('unauth');
+        $result->assertRedirectToRoute('denied');
 
         $this->assertEquals(0, DB::table('markable_bookmarks')->count());
     }

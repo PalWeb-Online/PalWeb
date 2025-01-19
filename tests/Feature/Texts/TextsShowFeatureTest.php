@@ -16,7 +16,7 @@ class TextsShowFeatureTest extends TestCase
         $text = $this->createText();
         $result = $this->get(route('tx.tx', ['text' => $text->text]));
         $result->assertStatus(302);
-        $result->assertRedirectToRoute('unauth');
+        $result->assertRedirectToRoute('denied');
     }
 
     public function test_admin_can_access(): void

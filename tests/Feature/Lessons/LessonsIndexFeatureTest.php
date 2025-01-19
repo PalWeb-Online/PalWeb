@@ -15,7 +15,7 @@ class LessonsIndexFeatureTest extends TestCase
     {
         $result = $this->get(route('ls'));
         $result->assertStatus(302);
-        $result->assertRedirectToRoute('unauth');
+        $result->assertRedirectToRoute('denied');
     }
 
     public function test_admin_can_access_lessons(): void

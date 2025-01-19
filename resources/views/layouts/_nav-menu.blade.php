@@ -25,7 +25,7 @@
 
             <div class="dropdown-section-title">Tools</div>
             <a href="{{ route('terms.random') }}">{{ __('terms.random') }}</a>
-            <a href="{{ route('terms.request') }}">{{ __('terms.request') }}</a>
+            <a href="{{ route('missing.terms.create') }}">{{ __('missing.terms.create') }}</a>
         </x-slot>
     </x-dropdown>
     <x-dropdown>
@@ -55,7 +55,7 @@
             <a href="{{ route('wiki.show', 'user-guide') }}">User Guide</a>
 
             <div class="dropdown-section-title">Support</div>
-            <a href="{{ route('dashboard.subscription') }}">Subscribe</a>
+            <a href="{{ route('subscription.index') }}">Subscribe</a>
             <a href="https://www.ko-fi.com/palweb" target="_blank">Ko-fi</a>
         </x-slot>
     </x-dropdown>

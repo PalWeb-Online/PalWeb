@@ -17,7 +17,7 @@ trait RedirectsToSubscribe
         try {
             $result = $callback();
         } catch (UnauthorizedAccessException $e) {
-            $result = to_route('dashboard.subscription');
+            $result = to_route('subscription.index');
         }
 
         return $result;
