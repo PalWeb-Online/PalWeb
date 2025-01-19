@@ -39,7 +39,7 @@ access remote files in the s3 bucket.
 Clone the project
 
 ```bash
-  git clone git@bitbucket.org:andrewfreddin/learnarabic.git
+  git clone git@github.com:PalWeb-Online/PalWeb.git
 ```
 
 Go to the project directory
