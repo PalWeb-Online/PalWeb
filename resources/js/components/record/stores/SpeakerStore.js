@@ -20,7 +20,7 @@ export const useSpeakerStore = defineStore('SpeakerStore', () => {
     const fetchSpeaker = async () => {
         if (!data.speaker.user_id) {
             try {
-                const response = await axios.get('/dashboard/workbench/record-wizard/speaker');
+                const response = await axios.get('/workbench/record-wizard/speaker');
                 if (response.data) {
                     Object.assign(data.speaker, response.data.speaker, {
                         name: response.data.name,
@@ -36,7 +36,7 @@ export const useSpeakerStore = defineStore('SpeakerStore', () => {
 
     const saveSpeaker = async () => {
         try {
-            const response = await axios.post('/dashboard/workbench/record-wizard/speaker', {
+            const response = await axios.post('/workbench/record-wizard/speaker', {
                 user_id: data.speaker.user_id,
                 dialect_id: data.speaker.dialect_id,
                 location_id: data.speaker.location_id,

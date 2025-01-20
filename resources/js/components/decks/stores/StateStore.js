@@ -61,7 +61,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const exit = async () => {
         if (hasUnsavedChanges.value && !confirm('Are you sure you would like to exit? All your unsaved changes will be lost.')) return;
-        window.location.href = '/dashboard/workbench';
+        window.location.href = '/workbench';
     };
 
     return {
