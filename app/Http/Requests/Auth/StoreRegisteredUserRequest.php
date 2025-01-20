@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\ArabicScript;
+use App\Rules\LatinScript;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class StoreRegisteredUserRequest extends FormRequest
 {
@@ -41,7 +44,7 @@ class StoreRegisteredUserRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                Rules\Password::defaults(),
+                Password::defaults(),
             ],
         ];
     }
