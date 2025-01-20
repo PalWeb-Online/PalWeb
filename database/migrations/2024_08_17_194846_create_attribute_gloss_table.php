@@ -18,8 +18,6 @@ return new class extends Migration
             $table->unique(['attribute_id', 'gloss_id']);
             $table->timestamps();
         });
-
-        Artisan::call('refactor:glosses');
     }
 
     /**
@@ -27,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Artisan::call('rollback:migrate:attributes');
-
         Schema::dropIfExists('attribute_gloss');
     }
 };

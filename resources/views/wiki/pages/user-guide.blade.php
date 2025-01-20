@@ -5,8 +5,20 @@
 
 <div class="doc-section">
     <h1>Introduction</h1>
+    <p><b>PalWeb</b> is divided into a few primary areas:</p>
+    <ul>
+        <li>the <b>Academy</b>, which provides a course for learning Palestinian Arabic & other pedagogical material
+            oriented toward learners;
+        </li>
+        <li>the <b>Dictionary</b>, a detailed reference for Palestinian Arabic;</li>
+        <li>the <b>Community</b>, the hub for user-generated learning material created using PalWeb's tools;</li>
+        <li>the <b>Wiki</b>, which provides information about PalWeb & Palestinian Arabic;</li>
+        <li>the <b>Workbench</b>, a suite of database-powered Palestinian Arabic learning tools.</li>
+    </ul>
+
     <p>The <b>User Guide</b> is a section of the <b>Wiki</b> that contains information regarding the various features
         available on <b>PalWeb</b>.</p>
+
     <h2>Contents</h2>
     <ul>
         <li>Features</li>

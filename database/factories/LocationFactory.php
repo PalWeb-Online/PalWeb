@@ -22,7 +22,7 @@ class LocationFactory extends Factory
             'qid' => Str::uuid(),
             'name_ar' => $this->faker->city(),
             'name_en' => $this->faker->city(),
-            'coordinates' => DB::raw("POINT({$this->faker->latitude()}, {$this->faker->longitude()})"),
+            'coordinates' => DB::raw("ST_GeomFromText('POINT({$this->faker->latitude()} {$this->faker->longitude()})', 4326)"),
         ];
     }
 }
