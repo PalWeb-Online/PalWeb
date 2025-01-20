@@ -38,7 +38,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const fetchCreatedDecks = async () => {
         try {
-            const response = await axios.get('/dashboard/workbench/deck-builder/decks');
+            const response = await axios.get('/workbench/deck-builder/decks');
             if (response.data && response.data.createdDecks) {
                 data.user = response.data.user;
                 data.decks = response.data.createdDecks;
@@ -54,7 +54,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const fetchTerms = async (deckId) => {
         try {
-            const response = await axios.get('/dashboard/workbench/deck-builder/decks/' + deckId);
+            const response = await axios.get('/workbench/deck-builder/decks/' + deckId);
             data.stagedDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
             data.originalDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
 
@@ -66,7 +66,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const fetchPinnedDecks = async () => {
         try {
-            const response = await axios.get('/dashboard/workbench/card-viewer/decks');
+            const response = await axios.get('/workbench/card-viewer/decks');
             if (response.data && response.data.pinnedDecks) {
                 data.decks = response.data.pinnedDecks;
 
@@ -90,7 +90,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const fetchCards = async (deckId) => {
         try {
-            const response = await axios.get("/dashboard/workbench/card-viewer/decks/" + deckId);
+            const response = await axios.get("/workbench/card-viewer/decks/" + deckId);
             data.cards = response.data.terms;
             defaultOrder.value = [...response.data.terms];
             return true;

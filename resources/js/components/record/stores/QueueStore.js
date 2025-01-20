@@ -88,7 +88,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchAutoItems = async () => {
         try {
-            const response = await axios.post('/dashboard/workbench/record-wizard/pronunciations', {
+            const response = await axios.post('/workbench/record-wizard/pronunciations', {
                 speaker_id: SpeakerStore.data.speaker.id,
                 dialect_id: SpeakerStore.data.speaker.dialect_id,
                 queuedItems: data.items,
@@ -104,7 +104,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchDeckItems = async (id) => {
         try {
-            const response = await axios.post(`/dashboard/workbench/record-wizard/decks/${id}`, {
+            const response = await axios.post(`/workbench/record-wizard/decks/${id}`, {
                 speaker_id: SpeakerStore.data.speaker.id,
                 dialect_id: SpeakerStore.data.speaker.dialect_id,
                 queuedItems: data.items,

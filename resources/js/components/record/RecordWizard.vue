@@ -12,10 +12,10 @@ const RecordStore = useRecordStore();
 const exit = async () => {
     if (RecordStore.data.statusCount.stashed > 0) {
         if (confirm(`Are you sure you want to leave the wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`)) {
-            window.location.href = '/dashboard/workbench';
+            window.location.href = '/workbench';
         }
     } else {
-        window.location.href = '/dashboard/workbench';
+        window.location.href = '/workbench';
     }
 };
 </script>

@@ -29,7 +29,7 @@ const levels = ref([
 
 const fetchSpeakerOptions = async () => {
     try {
-        const response = await axios.get('/dashboard/workbench/record-wizard/options');
+        const response = await axios.get('/workbench/record-wizard/options');
 
         if (response.data) {
             dialects.value = response.data.dialects;
