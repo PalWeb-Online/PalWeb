@@ -13,8 +13,9 @@ class UpdateReceiptEmailsController
      * Update the receipt emails for the given billable.
      *
      * @param  \Illuminate\Http\Request
+     * @return void
      */
-    public function __invoke(Request $request): void
+    public function __invoke(Request $request)
     {
         $emails = array_map(function ($email) {
             return trim($email);

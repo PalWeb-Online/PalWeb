@@ -3,9 +3,7 @@
 namespace Spark;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Cashier\Cashier;
-use Laravel\Cashier\Invoice;
 
 /**
  * @deprecated This class will be removed in a future Spark release.
@@ -43,18 +41,22 @@ class Receipt extends Model
 
     /**
      * Get the model related to the receipt.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function owner(): BelongsTo
+    public function owner()
     {
         $model = Cashier::$customerModel;
 
-        return $this->belongsTo($model, (new $model)->getForeignKey());
+        return $this->belongsTo($model, (new $model())->getForeignKey());
     }
 
     /**
      * The invoice the receipt belongs to.
+     *
+     * @return \Laravel\Cashier\Invoice|null
      */
-    public function invoice(): ?Invoice
+    public function invoice()
     {
         return $this->owner->findInvoice($this->provider_id);
     }

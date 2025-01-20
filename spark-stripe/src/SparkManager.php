@@ -4,7 +4,6 @@ namespace Spark;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class SparkManager
@@ -67,8 +66,10 @@ class SparkManager
 
     /**
      * Get a billable configuration builder for the given class.
+     *
+     * @return \Spark\BillableConfigurationBuilder
      */
-    public static function billable(string $class): BillableConfigurationBuilder
+    public static function billable(string $class)
     {
         foreach (config('spark.billables') as $type => $config) {
             if (Arr::get($config, 'model') == $class) {
@@ -81,16 +82,23 @@ class SparkManager
 
     /**
      * Set a callback to be used for resolving the billable.
+     *
+     * @param  string  $type
+     * @param  callable  $callback
+     * @return void
      */
-    public function resolveBillableUsing(string $type, callable $callback): void
+    public function resolveBillableUsing($type, $callback)
     {
         $this->billableResolvingCallbacks[$type] = $callback;
     }
 
     /**
      * Resolve the current billable.
+     *
+     * @param  string  $type
+     * @return \Spark\Billable|null
      */
-    public function resolveBillable(string $type, Request $request): ?Billable
+    public function resolveBillable($type, Request $request)
     {
         if (isset($this->billableResolvingCallbacks[$type])) {
             return call_user_func($this->billableResolvingCallbacks[$type], $request);
@@ -99,8 +107,12 @@ class SparkManager
 
     /**
      * Set a callback to be used for authorization.
+     *
+     * @param  string  $type
+     * @param  callable  $callback
+     * @return void
      */
-    public function authorizeUsing(string $type, callable $callback): void
+    public function authorizeUsing($type, $callback)
     {
         $this->authorizationCallbacks[$type] = $callback;
     }
@@ -109,8 +121,9 @@ class SparkManager
      * Determine if the billable is authroized to manage billing.
      *
      * @param  mixed  $billable
+     * @return bool
      */
-    public function isAuthorizedToViewBillingPortal($billable, Request $request): bool
+    public function isAuthorizedToViewBillingPortal($billable, Request $request)
     {
         $type = $billable->sparkConfiguration('type');
 
@@ -125,8 +138,12 @@ class SparkManager
 
     /**
      * Set a callback to be used to check plan eligibility.
+     *
+     * @param  string  $type
+     * @param  callable  $callback
+     * @return void
      */
-    public function checkPlanEligibilityUsing(string $type, callable $callback): void
+    public function checkPlanEligibilityUsing($type, $callback)
     {
         $this->planEligibilityCallbacks[$type][] = $callback;
     }
@@ -135,8 +152,10 @@ class SparkManager
      * Determine if the billable is eligible for the given plan.
      *
      * @param  mixed  $billable
+     * @param  \Spark\Plan  $plan
+     * @return void
      */
-    public function ensurePlanEligibility($billable, Plan $plan): void
+    public function ensurePlanEligibility($billable, $plan)
     {
         $checks = $this->planEligibilityCallbacks[$billable->sparkConfiguration('type')] ?? [];
 
@@ -147,8 +166,13 @@ class SparkManager
 
     /**
      * Indicate that the application should charge billables per seat.
+     *
+     * @param  string  $billableType
+     * @param  string  $seatName
+     * @param  callable  $callback
+     * @return void
      */
-    public function chargePerSeat(string $billableType, string $seatName, callable $callback): void
+    public function chargePerSeat($billableType, $seatName, $callback)
     {
         $this->seatNames[$billableType] = $seatName;
         $this->seatCountCallbacks[$billableType] = $callback;
@@ -157,33 +181,46 @@ class SparkManager
     /**
      * The number of seats the billable occupies.
      *
+     * @param  string  $billableType
      * @param  mixed  $billable
+     * @return int
      */
-    public function seatCount(string $billableType, $billable): int
+    public function seatCount($billableType, $billable)
     {
         return call_user_func($this->seatCountCallbacks[$billableType], $billable);
     }
 
     /**
      * The word that describes what a "seat" is.
+     *
+     * @param  string  $billableType
+     * @return string|null
      */
-    public function seatName(string $billableType): ?string
+    public function seatName($billableType)
     {
         return $this->seatNames[$billableType] ?? null;
     }
 
     /**
      * Determine if the application should charge billables per seat.
+     *
+     * @param  string  $billableType
+     * @return bool
      */
-    public function chargesPerSeat(string $billableType): bool
+    public function chargesPerSeat($billableType)
     {
         return isset($this->seatCountCallbacks[$billableType]);
     }
 
     /**
      * Define a subscription plan.
+     *
+     * @param  string  $billableType
+     * @param  string  $name
+     * @param  int  $id
+     * @return \Spark\Plan
      */
-    public function plan(string $billableType, string $name, int $id): Plan
+    public function plan($billableType, $name, $id)
     {
         $this->plans[$billableType][] = $plan = new Plan($name, $id);
 
@@ -192,8 +229,11 @@ class SparkManager
 
     /**
      * Get all of the user defined plans.
+     *
+     * @param  string  $billableType
+     * @return \Illuminate\Support\Collection
      */
-    public function plans(string $billableType): Collection
+    public function plans($billableType)
     {
         if (isset($this->plans[$billableType])) {
             return collect($this->plans[$billableType]);
@@ -206,8 +246,10 @@ class SparkManager
 
     /**
      * Convert the given plans configuration to a Collection instance.
+     *
+     * @return \Illuminate\Support\Collection
      */
-    protected function toPlans(array $config): Collection
+    protected function toPlans(array $config)
     {
         $plans = collect();
 
@@ -235,8 +277,10 @@ class SparkManager
 
     /**
      * Get the application's subscription proration behaviour.
+     *
+     * @return string
      */
-    public function prorationBehavior(): string
+    public function prorationBehavior()
     {
         if (! is_null(config('spark.proration_behavior'))) {
             return config('spark.proration_behavior');
@@ -249,40 +293,54 @@ class SparkManager
 
     /**
      * Set the callback that should be used to determine the Stripe checkout session options.
+     *
+     * @param  string  $billableType
+     * @param  callable  $callback
+     * @return void
      */
-    public function checkoutSessionOptions(string $billableType, callable $callback): void
+    public function checkoutSessionOptions($billableType, $callback)
     {
         $this->checkoutOptionsCallback[$billableType] = $callback;
     }
 
     /**
      * Get the callback that should be used to determine the Stripe checkout session options.
+     *
+     * @param  string  $billableType
+     * @return callable|null
      */
-    public function getCheckoutSessionOptions(string $billableType): ?callable
+    public function getCheckoutSessionOptions($billableType)
     {
         return $this->checkoutOptionsCallback[$billableType] ?? null;
     }
 
     /**
      * Get the billable model class name for a given billable type.
+     *
+     * @param  string  $billableType
+     * @return string
      */
-    public function billableModel(string $billableType): string
+    public function billableModel($billableType)
     {
         return config("spark.billables.$billableType.model");
     }
 
     /**
      * Configure Spark to not register its migrations.
+     *
+     * @return void
      */
-    public function ignoreMigrations(): void
+    public function ignoreMigrations()
     {
         $this->runsMigrations = false;
     }
 
     /**
      * Determine if Spark should run its migrations.
+     *
+     * @return bool
      */
-    public function runsMigrations(): bool
+    public function runsMigrations()
     {
         return $this->runsMigrations;
     }

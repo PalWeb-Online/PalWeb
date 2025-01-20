@@ -10,10 +10,11 @@ trait RetrievesBillableModels
     /**
      * Get the billable model for the request.
      *
+     * @param  string  $type
      * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|\Spark\Billable
      */
-    public function billable(?string $type = null, $id = null)
+    public function billable($type = null, $id = null)
     {
         $type = $type ?: request('billableType');
 

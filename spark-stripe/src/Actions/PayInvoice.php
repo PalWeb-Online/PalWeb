@@ -4,7 +4,6 @@ namespace Spark\Actions;
 
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Invoice;
-use Spark\Billable;
 use Spark\Concerns\HandlesPaymentFailures;
 use Spark\Contracts\Actions\PaysInvoices;
 use Spark\Events\AttemptingPayment;
@@ -17,11 +16,13 @@ class PayInvoice implements PaysInvoices
     /**
      * Pay the invoice related to the given receipt.
      *
+     * @param  \Spark\Billable  $billable
+     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Laravel\Cashier\Exceptions\IncompletePayment
      */
-    public function pay(Billable $billable, Invoice $invoice): void
+    public function pay($billable, Invoice $invoice)
     {
         if (! $invoice->isOpen()) {
             throw ValidationException::withMessages([

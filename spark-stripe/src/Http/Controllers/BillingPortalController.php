@@ -5,10 +5,8 @@ namespace Spark\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
-use Inertia\Response;
 use Spark\FrontendState;
 use Spark\GuessesBillableTypes;
-use Spark\Plan;
 use Spark\Spark;
 
 class BillingPortalController
@@ -19,9 +17,11 @@ class BillingPortalController
     /**
      * Show the billing portal.
      *
+     * @param  string|null  $type
      * @param  mixed  $id
+     * @return \Inertia\Response
      */
-    public function __invoke(Request $request, ?string $type = null, $id = null): Response
+    public function __invoke(Request $request, $type = null, $id = null)
     {
         $type = $type ?: $this->guessBillableType();
 
@@ -50,8 +50,10 @@ class BillingPortalController
 
     /**
      * Get the Spark translations from the appropriate language file.
+     *
+     * @return string
      */
-    private static function getTranslations(): string
+    private static function getTranslations()
     {
         if (! is_readable($file = lang_path('spark/'.app()->getLocale().'.json'))) {
             $file = lang_path('spark/'.app('translator')->getFallback().'.json');
@@ -63,9 +65,10 @@ class BillingPortalController
     /**
      * Get the plan the user is subscribing to.
      *
+     * @param  string  $type
      * @return \Spark\Plan $Plan
      */
-    private function planToSubscribeTo(string $type): Plan
+    private function planToSubscribeTo($type)
     {
         return Spark::plans($type)->first(function ($plan) {
             return $plan->id == request('subscribe');

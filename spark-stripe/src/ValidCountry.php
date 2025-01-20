@@ -2,17 +2,26 @@
 
 namespace Spark;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Rule;
 
-class ValidCountry implements ValidationRule
+class ValidCountry implements Rule
 {
     /**
-     * Validate the attribute value.
+     * {@inheritDoc}
      */
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function passes($attribute, $value)
     {
-        if (! in_array($value, array_keys(Countries::all()))) {
-            $fail(__('The selected country is invalid.'));
-        }
+        return in_array(
+            $value,
+            array_keys(Countries::all())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function message()
+    {
+        return __('The selected country is invalid.');
     }
 }

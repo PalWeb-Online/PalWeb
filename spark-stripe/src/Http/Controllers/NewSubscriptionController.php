@@ -2,9 +2,7 @@
 
 namespace Spark\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Spark\Billable;
 use Spark\Contracts\Actions\CreatesSubscriptions;
 use Spark\Features;
 use Spark\Spark;
@@ -18,8 +16,10 @@ class NewSubscriptionController
 
     /**
      * Create a new subscription.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request)
     {
         $billable = $this->billable();
 
@@ -47,8 +47,11 @@ class NewSubscriptionController
 
     /**
      * Update the billable from the request.
+     *
+     * @param  \Spark\Billable  $billable
+     * @return void
      */
-    private function updateBillable(Request $request, Billable $billable): void
+    private function updateBillable(Request $request, $billable)
     {
         $billable->forceFill($request->only([
             'extra_billing_information',
@@ -80,8 +83,8 @@ class NewSubscriptionController
             'billing_city' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
             'billing_state' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
             'billing_postal_code' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
-            'billing_country' => [$countryRule, 'max:2', new ValidCountry],
-            'vat_id' => ['nullable', 'max:225', new ValidVatNumber],
+            'billing_country' => [$countryRule, 'max:2', new ValidCountry()],
+            'vat_id' => ['nullable', 'max:225', new ValidVatNumber()],
         ]);
     }
 }
