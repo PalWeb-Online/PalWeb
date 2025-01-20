@@ -5,23 +5,23 @@ namespace Spark\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Cashier\Subscription;
-use Spark\Billable;
 use Spark\HandlesCouponExceptions;
 use Stripe\Exception\InvalidRequestException;
 
 class ApplyCouponController
 {
-    use HandlesCouponExceptions;
     use RetrievesBillableModels;
+    use HandlesCouponExceptions;
 
     /**
      * Update the receipt emails for the given billable.
      *
      * @param  \Illuminate\Http\Request
+     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function __invoke(Request $request): null
+    public function __invoke(Request $request)
     {
         $billable = $this->billable();
 
@@ -48,7 +48,11 @@ class ApplyCouponController
         }
     }
 
-    protected function applyCoupon(string $coupon, Billable $billable, ?Subscription $subscription): void
+    /**
+     * @param  string  $coupon
+     * @param  \Spark\Billable  $billable
+     */
+    protected function applyCoupon($coupon, $billable, ?Subscription $subscription): void
     {
         $codes = $billable->stripe()->promotionCodes->all(['code' => $coupon]);
 

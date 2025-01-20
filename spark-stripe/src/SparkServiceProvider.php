@@ -4,6 +4,7 @@ namespace Spark;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 use RuntimeException;
 use Spark\Contracts\Actions\CalculatesVatRate;
 use Spark\Contracts\Actions\CreatesSubscriptions;
@@ -14,8 +15,10 @@ class SparkServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         if (! $this->app->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__.'/../config/spark.php', 'spark');
@@ -34,8 +37,10 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         if (is_array(config('spark.billables')) && count(config('spark.billables')) > 1) {
             throw new RuntimeException('The Stripe edition of Spark only supports a single billable type.');
@@ -51,8 +56,10 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure the routes offered by the application.
+     *
+     * @return void
      */
-    protected function configureRoutes(): void
+    protected function configureRoutes()
     {
         Route::group([], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
@@ -61,8 +68,10 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure Spark migrations.
+     *
+     * @return void
      */
-    protected function configureMigrations(): void
+    protected function configureMigrations()
     {
         if (Spark::runsMigrations() && $this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -71,16 +80,20 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Configure Spark translations.
+     *
+     * @return void
      */
-    protected function configureTranslations(): void
+    protected function configureTranslations()
     {
         $this->loadJsonTranslationsFrom(lang_path('spark'));
     }
 
     /**
      * Configure publishing for the package.
+     *
+     * @return void
      */
-    protected function configurePublishing(): void
+    protected function configurePublishing()
     {
         if (! $this->app->runningInConsole()) {
             return;
@@ -109,8 +122,10 @@ class SparkServiceProvider extends ServiceProvider
 
     /**
      * Register the Spark Artisan commands.
+     *
+     * @return void
      */
-    protected function registerCommands(): void
+    protected function registerCommands()
     {
         if ($this->app->runningInConsole()) {
             $this->commands([

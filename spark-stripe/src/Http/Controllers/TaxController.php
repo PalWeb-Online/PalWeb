@@ -2,7 +2,6 @@
 
 namespace Spark\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Cashier;
 use Spark\Spark;
@@ -13,8 +12,10 @@ class TaxController
 
     /**
      * Calculate the appropriate taxes for display.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request)
     {
         $billable = $this->billable();
 
@@ -62,8 +63,12 @@ class TaxController
 
     /**
      * Format the given amount.
+     *
+     * @param  float  $amount
+     * @param  string  $currency
+     * @return string
      */
-    public function formatAmount(float $amount, string $currency): string
+    public function formatAmount($amount, $currency)
     {
         return Cashier::formatAmount($amount, $currency);
     }

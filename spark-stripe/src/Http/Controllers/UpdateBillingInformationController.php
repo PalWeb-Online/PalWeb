@@ -12,8 +12,9 @@ class UpdateBillingInformationController
      * Update the additional billing information for the given billable.
      *
      * @param  \Illuminate\Http\Request
+     * @return void
      */
-    public function __invoke(Request $request): void
+    public function __invoke(Request $request)
     {
         $billable = $this->billable();
 

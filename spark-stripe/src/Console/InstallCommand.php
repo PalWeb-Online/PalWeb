@@ -23,8 +23,10 @@ class InstallCommand extends Command
 
     /**
      * Execute the console command.
+     *
+     * @return void
      */
-    public function handle(): void
+    public function handle()
     {
         $this->callSilent('vendor:publish', ['--tag' => 'spark-provider']);
         $this->callSilent('vendor:publish', ['--tag' => 'spark-config']);
@@ -38,8 +40,10 @@ class InstallCommand extends Command
 
     /**
      * Register the Spark service provider in the application configuration file.
+     *
+     * @return void
      */
-    protected function registerSparkServiceProvider(): void
+    protected function registerSparkServiceProvider()
     {
         $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
 

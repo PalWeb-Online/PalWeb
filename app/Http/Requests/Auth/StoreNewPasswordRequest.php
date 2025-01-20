@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class StoreNewPasswordRequest extends FormRequest
 {
@@ -20,7 +21,7 @@ class StoreNewPasswordRequest extends FormRequest
             'password_new' => [
                 'required',
                 'confirmed',
-                Rules\Password::defaults(),
+                Password::defaults(),
             ],
         ];
     }

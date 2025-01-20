@@ -2,7 +2,6 @@
 
 namespace Spark\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Spark\Contracts\Actions\PaysInvoices;
 
@@ -12,8 +11,10 @@ class PayInvoiceController
 
     /**
      * Pay the open invoice.
+     *
+     * @return \Illuminate\Http\JsonResponse|null
      */
-    public function __invoke($invoiceId): ?JsonResponse
+    public function __invoke($invoiceId)
     {
         $invoice = ($billable = $this->billable())->findInvoiceOrFail($invoiceId);
 
