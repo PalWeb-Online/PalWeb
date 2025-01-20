@@ -23,8 +23,10 @@ class BillableConfigurationBuilder
 
     /**
      * Register the callback that should be used to resolve the billable type.
+     *
+     * @return $this
      */
-    public function resolve(callable $callback): static
+    public function resolve(callable $callback)
     {
         Spark::resolveBillableUsing($this->type, $callback);
 
@@ -33,8 +35,10 @@ class BillableConfigurationBuilder
 
     /**
      * Register the callback that should be used to authorize viewing the billing portal for the billable type.
+     *
+     * @return $this
      */
-    public function authorize(callable $callback): static
+    public function authorize(callable $callback)
     {
         Spark::authorizeUsing($this->type, $callback);
 
@@ -43,8 +47,10 @@ class BillableConfigurationBuilder
 
     /**
      * Register the callback that should be used to determine plan eligibility.
+     *
+     * @return $this
      */
-    public function checkPlanEligibility(callable $callback): static
+    public function checkPlanEligibility(callable $callback)
     {
         Spark::checkPlanEligibilityUsing($this->type, $callback);
 
@@ -53,8 +59,10 @@ class BillableConfigurationBuilder
 
     /**
      * Indicate that the application should charge the billable per seat.
+     *
+     * @return $this
      */
-    public function chargePerSeat(string $seatName, callable $callback): static
+    public function chargePerSeat(string $seatName, callable $callback)
     {
         Spark::chargePerSeat($this->type, $seatName, $callback);
 
@@ -63,8 +71,12 @@ class BillableConfigurationBuilder
 
     /**
      * Define a subscription plan.
+     *
+     * @param  string  $name
+     * @param  int  $id
+     * @return \Spark\Plan
      */
-    public function plan(string $name, int $id): Plan
+    public function plan($name, $id)
     {
         return Spark::plan($this->type, $name, $id);
     }

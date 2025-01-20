@@ -4,7 +4,6 @@ namespace Spark\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\HtmlString;
-use Symfony\Component\HttpFoundation\Response;
 
 class DownloadReceiptController
 {
@@ -12,8 +11,13 @@ class DownloadReceiptController
 
     /**
      * Download the given receipt.
+     *
+     * @param  string  $type
+     * @param  string  $id
+     * @param  string  $receiptId
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function __invoke(Request $request, string $type, string $id, string $receiptId): Response
+    public function __invoke(Request $request, $type, $id, $receiptId)
     {
         $billable = $this->billable($type, $id);
 

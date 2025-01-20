@@ -2,7 +2,6 @@
 
 namespace Spark\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spark\Features;
 
@@ -12,8 +11,10 @@ class PaymentMethodsController
 
     /**
      * Setup a billing method for the billable entity.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function setup(): JsonResponse
+    public function setup()
     {
         $checkout = $this->billable()->checkout([], array_filter([
             'mode' => 'setup',
@@ -30,8 +31,10 @@ class PaymentMethodsController
 
     /**
      * Set the default billing method for the billable entity.
+     *
+     * @return void
      */
-    public function default(Request $request): void
+    public function default(Request $request)
     {
         $request->validate([
             'payment_method' => ['required', 'string'],
@@ -42,8 +45,10 @@ class PaymentMethodsController
 
     /**
      * Delete a billing method of the billable entity.
+     *
+     * @return void
      */
-    public function delete(Request $request): void
+    public function delete(Request $request)
     {
         $request->validate([
             'payment_method' => ['required', 'string'],

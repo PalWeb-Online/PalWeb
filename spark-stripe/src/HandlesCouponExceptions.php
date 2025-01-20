@@ -10,8 +10,10 @@ trait HandlesCouponExceptions
 {
     /**
      * Get the default billable type for the application.
+     *
+     * @return void
      */
-    protected function handleCouponException(InvalidRequestException $e): void
+    protected function handleCouponException(InvalidRequestException $e)
     {
         if (Str::of($e->getMessage())->contains('customer has prior transactions')) {
             throw ValidationException::withMessages([

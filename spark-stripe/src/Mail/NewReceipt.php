@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\HtmlString;
-use Laravel\Cashier\Invoice;
 
 class NewReceipt extends Mailable
 {
@@ -31,9 +30,10 @@ class NewReceipt extends Mailable
      * Create a new message instance.
      *
      * @param  mixed  $billable
+     * @param  \Laravel\Cashier\Invoice  $invoice
      * @return void
      */
-    public function __construct($billable, Invoice $invoice)
+    public function __construct($billable, $invoice)
     {
         $this->invoice = $invoice;
         $this->billable = $billable;
@@ -41,8 +41,10 @@ class NewReceipt extends Mailable
 
     /**
      * Build the message.
+     *
+     * @return $this
      */
-    public function build(): static
+    public function build()
     {
         $receiptData = array_merge([
             'vendor' => 'Laravel',
