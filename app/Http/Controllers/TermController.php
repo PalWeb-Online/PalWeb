@@ -126,7 +126,7 @@ class TermController extends Controller
             }
         }
 
-        View::share('pageTitle', 'the Dictionary');
+        View::share('pageTitle', 'Dictionary');
         View::share('pageDescription',
             'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
 

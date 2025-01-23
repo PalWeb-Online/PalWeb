@@ -1,7 +1,7 @@
 <x-page-head title="Not Like Us"
              blurb="Some of the parents in the neighborhood aren't too pleased that their children are playing with the new kids from a different part of town.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '04')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '04')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/QOjSOycpd6c" allowfullscreen></iframe>

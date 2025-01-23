@@ -28,7 +28,7 @@ class UnitController extends Controller
     {
         $auth = $request->user();
 
-        View::share('pageTitle', 'Online Course for Palestinian Arabic with Lessons, Activities & Dialogues');
+        View::share('pageTitle', 'Academy');
         View::share('pageDescription',
             'It\'s time to Learn Palestinian Arabic with the most comprehensive online course ever, featuring a curriculum of expertly-paced lessons designed to teach real-life skills & never overwhelm. Boost your vocabulary with activities & practical word decks. Develop your fluency with immersive & realistic dialogues. Your journey to mastering Palestinian Arabic starts here!');
 

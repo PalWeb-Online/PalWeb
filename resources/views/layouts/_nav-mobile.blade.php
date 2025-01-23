@@ -11,8 +11,8 @@
         <div class="nav-mobile-section">
             <x-link :href="route('academy.index')"
                     :active="request()->routeIs('academy.index', 'academy.unit', 'academy.lesson')">{{ __('academy') }}</x-link>
-            <x-link :href="route('texts.index')"
-                    :active="request()->routeIs('texts.index', 'texts.show')">{{ __('texts') }}</x-link>
+            <x-link :href="route('dialogs.index')"
+                    :active="request()->routeIs('dialogs.index', 'dialogs.show')">{{ __('dialogs') }}</x-link>
         </div>
 
         <div class="nav-mobile-section">

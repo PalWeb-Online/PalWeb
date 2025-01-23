@@ -1,7 +1,7 @@
 <x-page-head title="Coronavirus!"
              blurb="The Abu Sanad family offers some advice & talk about how they're going to stay safe & healthy during the COVID-19 pandemic.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '01')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '01')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/U-Hcuclljkw" allowfullscreen></iframe>

@@ -1,7 +1,7 @@
 <x-page-head title="the Big Game"
              blurb="Everyone is late to the game — literally! But not everyone in town is a responsible driver, especially not when they're in a rush!">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '06')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '06')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/qu4jnh5MHlc" allowfullscreen></iframe>

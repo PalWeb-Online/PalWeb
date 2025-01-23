@@ -76,7 +76,7 @@ class SentenceController extends Controller
             );
         }
 
-        View::share('pageTitle', 'the Phrasebook');
+        View::share('pageTitle', 'Phrasebook');
         View::share('pageDescription',
             'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 

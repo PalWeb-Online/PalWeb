@@ -1,7 +1,7 @@
 <x-page-head title="Stranger Danger"
              blurb="Sanad learns about stranger danger the hard way after Sally saves him from getting kidnapped.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '03')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '03')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/jg9CHjnI1GM" allowfullscreen></iframe>

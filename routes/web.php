@@ -18,7 +18,7 @@ use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
-use App\Http\Controllers\TextController;
+use App\Http\Controllers\DialogController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPrivacyController;
@@ -109,9 +109,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{unit}', 'unit')->name('academy.unit');
             Route::get('/{unit}/{lesson}', 'lesson')->name('academy.lesson');
         });
-        Route::prefix('/texts')->controller(TextController::class)->group(function () {
-            Route::get('/', 'index')->name('texts.index');
-            Route::get('/{page}', 'show')->name('texts.show');
+        Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
+            Route::get('/', 'index')->name('dialogs.index');
+            Route::get('/{dialog}', 'show')->name('dialogs.show');
         });
     });
 

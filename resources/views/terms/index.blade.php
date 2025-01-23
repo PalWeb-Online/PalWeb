@@ -55,6 +55,6 @@
         </x-tip>
     @endif
 
-    {{ $terms->links() }}
+    {{ $terms->appends(request()->query())->links() }}
 
 @endsection

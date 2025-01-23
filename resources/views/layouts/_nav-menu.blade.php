@@ -8,7 +8,7 @@
         <x-slot name="content">
             <div class="dropdown-section-title">Portals</div>
             <x-link :href="route('academy.index')">{{ __('academy') }}</x-link>
-            <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
+            <x-link :href="route('dialogs.index')">{{ __('dialogs') }}</x-link>
         </x-slot>
     </x-dropdown>
     <x-dropdown>

@@ -11,6 +11,7 @@ class DialogFactory extends Factory
     {
         return [
             'title' => $this->faker->words(5, true),
+            'description' => $this->faker->text(),
         ];
     }
 }

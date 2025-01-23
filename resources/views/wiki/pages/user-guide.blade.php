@@ -28,7 +28,7 @@
 
         <li><a href="{{ route('wiki.show', 'academy') }}">Academy</a></li>
         <ul>
-            <li><a href="{{ route('wiki.show', 'academy') }}">Texts</a></li>
+            <li><a href="{{ route('wiki.show', 'academy') }}">Dialogs</a></li>
         </ul>
 
         <li><a href="{{ route('wiki.show', 'dictionary') }}">Dictionary</a></li>

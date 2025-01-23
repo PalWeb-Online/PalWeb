@@ -1,7 +1,7 @@
 <x-page-head title="Thief!"
              blurb="Is someone stealing from the Abu Sanad family? Abu Sanad sets out to investigate what's really going on.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '08')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '08')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/ZEpASYe3s0k" allowfullscreen></iframe>

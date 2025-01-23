@@ -1,7 +1,7 @@
 <x-page-head title="Who’s the Boy?"
              blurb="When Rana mentions someone named Jimmy & is delivered a bouquet of flowers, her mother jumps to conclusions.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '02')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '02')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/O-B85gxPBus" allowfullscreen></iframe>

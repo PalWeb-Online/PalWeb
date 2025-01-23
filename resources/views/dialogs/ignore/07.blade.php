@@ -1,7 +1,7 @@
 <x-page-head title="True Friends"
              blurb="Not just anyone should be your friend. Sally & Sanad learn to stay true to themselves despite the bad influences around them.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '07')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '07')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/OldaBo1rqBI" allowfullscreen></iframe>

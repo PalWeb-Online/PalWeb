@@ -1,7 +1,7 @@
 <x-page-head title="Lazy Sanad"
              blurb="Sanad's parents get involved when his grades start to slip, but his father trusts that he can catch up.">
-    <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
-    <x-link :href="route('texts.show', '05')">{{ __('view') }}</x-link>
+    <x-link :href="route('dialogs.index')">{{ __('texts') }}</x-link>
+    <x-link :href="route('dialogs.show', '05')">{{ __('view') }}</x-link>
 </x-page-head>
 
 <iframe src="https://www.youtube.com/embed/qLA_9NjlBcQ" allowfullscreen></iframe>
