@@ -33,7 +33,7 @@ onMounted(() => {
 
 
 const hasUnsavedChanges = computed(() => {
-    return JSON.stringify(data.originalSentence) !== JSON.stringify(data.stagedSentence);
+    return JSON.stringify(data.stagedSentence) !== JSON.stringify(data.originalSentence);
 });
 
 const isValidRequest = computed(() => {
@@ -113,8 +113,9 @@ const saveSentence = async () => {
             });
         }
 
-        data.errorMessage = null;
         data.originalSentence = cloneDeep(data.stagedSentence);
+
+        data.errorMessage = null;
         notification.value.showNotification('The Sentence has been saved!');
 
     } catch (error) {

@@ -200,14 +200,14 @@ class SentenceController extends Controller
     {
         DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
 
-        foreach ($terms as $term) {
+        foreach ($terms as $termData) {
             DB::table('sentence_term')->insert([
                 'sentence_id' => $sentence->id,
-                'term_id' => $term['id'] ?? null,
-                'gloss_id' => $term['pivot']['gloss_id'] ?? null,
-                'sent_term' => $term['pivot']['sent_term'],
-                'sent_translit' => $term['pivot']['sent_translit'],
-                'position' => $term['pivot']['position'],
+                'term_id' => $termData['id'] ?? null,
+                'gloss_id' => $termData['pivot']['gloss_id'] ?? null,
+                'sent_term' => $termData['pivot']['sent_term'],
+                'sent_translit' => $termData['pivot']['sent_translit'],
+                'position' => $termData['pivot']['position'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

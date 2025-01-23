@@ -27,7 +27,7 @@ onMounted(async () => {
         count: false,
         private: false,
     }
-    DeckStore.data.originalDeck = JSON.parse(JSON.stringify(DeckStore.data.stagedDeck));
+    DeckStore.data.originalDeck = null;
 
     activeId.value = DeckStore.data.stagedDeck.id ?? null;
 

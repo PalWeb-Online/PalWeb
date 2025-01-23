@@ -1,21 +1,24 @@
 <script setup>
+import {onMounted} from "vue";
+import {cloneDeep} from 'lodash';
 import {useStateStore} from "./stores/StateStore.js";
 import {useDeckStore} from "./stores/DeckStore.js";
 import Select from "./pages/Select.vue";
 import Build from "./pages/Build.vue";
-import AppDialog from "../AppDialog.vue";
 
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 StateStore.data.context = 'builder';
 StateStore.data.action = window.action || 'create';
 
-if (StateStore.data.action === 'edit') {
-    StateStore.data.step = 'build';
-    DeckStore.data.user = window.user;
-    DeckStore.data.stagedDeck = JSON.parse(JSON.stringify(window.stagedDeck));
-    DeckStore.data.originalDeck = JSON.parse(JSON.stringify(window.stagedDeck));
-}
+onMounted(() => {
+    if (StateStore.data.action === 'edit') {
+        StateStore.data.step = 'build';
+        DeckStore.data.user = window.user;
+        DeckStore.data.stagedDeck = window.stagedDeck;
+        DeckStore.data.originalDeck = cloneDeep(DeckStore.data.stagedDeck);
+    }
+});
 </script>
 
 <template>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 
 class DeckBuilderController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function create(): \Illuminate\View\View
     {
         View::share('pageTitle', 'Deck Builder');
 

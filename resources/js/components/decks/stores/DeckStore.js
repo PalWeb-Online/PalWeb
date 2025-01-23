@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {reactive, ref} from "vue";
+import {cloneDeep} from "lodash";
 import {useStateStore} from "./StateStore.js";
 
 export const useDeckStore = defineStore('DeckStore', () => {
@@ -12,6 +13,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             avatar: '',
         },
         decks: [],
+        cards: [],
         stagedDeck: {
             id: '',
             name: '',
@@ -20,15 +22,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             count: false,
             private: false,
         },
-        originalDeck: {
-            id: '',
-            name: '',
-            description: '',
-            terms: [],
-            count: false,
-            private: false,
-        },
-        cards: []
+        originalDeck: null
     });
 
     // todo: move this to Cards page?
@@ -55,8 +49,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const fetchTerms = async (deckId) => {
         try {
             const response = await axios.get('/workbench/deck-builder/decks/' + deckId);
-            data.stagedDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
-            data.originalDeck.terms = JSON.parse(JSON.stringify(response.data.terms));
+            data.stagedDeck.terms = cloneDeep(response.data.terms);
+            data.originalDeck.terms = cloneDeep(response.data.terms);
 
         } catch (error) {
             console.error('Error fetching Deck data:', error);
@@ -112,11 +106,11 @@ export const useDeckStore = defineStore('DeckStore', () => {
                     count: false,
                     private: false,
                 }
-                data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
+                data.originalDeck = null;
 
             } else {
-                data.stagedDeck = JSON.parse(JSON.stringify(data.decks[index]));
-                data.originalDeck = JSON.parse(JSON.stringify(data.decks[index]));
+                data.stagedDeck = data.decks[index];
+                data.originalDeck = cloneDeep(data.stagedDeck);
 
             }
 
@@ -129,7 +123,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 count: false,
                 private: false,
             }
-            data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
+            data.originalDeck = null;
         }
     }
 
@@ -138,7 +132,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
             if (data.stagedDeck.id === '') {
                 const response = await axios.post('/community/decks', {
                     deck: data.stagedDeck,
-                    terms: data.stagedDeck.terms
                 });
 
                 data.stagedDeck.id = response.data.deck.id;
@@ -146,11 +139,10 @@ export const useDeckStore = defineStore('DeckStore', () => {
             } else {
                 await axios.patch('/community/decks/' + data.stagedDeck.id, {
                     deck: data.stagedDeck,
-                    terms: data.stagedDeck.terms
                 });
             }
 
-            data.originalDeck = JSON.parse(JSON.stringify(data.stagedDeck));
+            data.originalDeck = cloneDeep(data.stagedDeck);
 
             StateStore.data.errorMessage = null;
             return true;
@@ -162,7 +154,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
     };
 
     const resetDeck = async () => {
-        data.stagedDeck = JSON.parse(JSON.stringify(data.originalDeck));
+        data.stagedDeck = cloneDeep(data.originalDeck);
     };
 
     const viewDeck = async () => {

@@ -91,19 +91,52 @@ class DeckController extends Controller
         ]);
     }
 
+    public function show(Deck $deck): \Illuminate\View\View
+    {
+        $this->authorize('interact', $deck);
+
+        $deck->load([
+            'author',
+            'terms' => function ($query) {
+                $query->orderBy('deck_term.id');
+            },
+        ]);
+
+        View::share('pageTitle', 'Deck: '.$deck->name);
+
+        return view('decks.show', ['deck' => $deck]);
+    }
+
     public function store(StoreDeckRequest $request): JsonResponse
     {
         $user = $request->user();
-        $deck = $request->deck;
-        $deck = array_merge($deck, [
-            'user_id' => $user->id,
-        ]);
-        $deck = Deck::create($deck);
-        $this->linkTerms($deck, $request->terms);
+
+        $deckData = $request->deck;
+        unset($deckData['terms']);
+
+        $deck = Deck::create(array_merge($deckData, ['user_id' => $user->id]));
+
+        $this->linkTerms($deck, $request->deck['terms']);
 
         Bookmark::add($deck, $user);
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
+
+        return response()->json([
+            'deck' => $deck,
+        ]);
+    }
+
+    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
+    {
+        $this->authorize('modify', $deck);
+
+        $deckData = $request->deck;
+        unset($deckData['terms']);
+
+        $deck->update($deckData);
+
+        $this->linkTerms($deck, $request->deck['terms']);
 
         return response()->json([
             'deck' => $deck,
@@ -130,34 +163,6 @@ class DeckController extends Controller
                 $deck->terms()->detach($term->id);
             }
         }
-    }
-
-    public function show(Deck $deck): \Illuminate\View\View
-    {
-        $this->authorize('interact', $deck);
-
-        $deck->load([
-            'author',
-            'terms' => function ($query) {
-                $query->orderBy('deck_term.id');
-            },
-        ]);
-
-        View::share('pageTitle', 'Deck: '.$deck->name);
-
-        return view('decks.show', ['deck' => $deck]);
-    }
-
-    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
-    {
-        $this->authorize('modify', $deck);
-
-        $deck->update($request->deck);
-        $this->linkTerms($deck, $request->terms);
-
-        return response()->json([
-            'deck' => $deck,
-        ]);
     }
 
     public function destroy(Request $request, Deck $deck): RedirectResponse|JsonResponse

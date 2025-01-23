@@ -126,7 +126,8 @@ onMounted(async () => {
             </div>
         </div>
 
-        <draggable :list="DeckStore.data.stagedDeck.terms" @end="updatePosition()"
+        <draggable :list="DeckStore.data.stagedDeck.terms" itemKey="id"
+                   @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
                 <div class="db-item">

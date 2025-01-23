@@ -155,7 +155,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
 
         // Deck Routes
-        Route::resource('/decks', DeckController::class);
+        Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
@@ -177,8 +177,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [WorkbenchController::class, 'index'])->name('workbench.index');
 
         Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
-            Route::get('/', 'index')->name('decks.create');
-            Route::get('/edit/{deck}', 'edit')->name('decks.edit');
+            Route::get('/build', 'create')->name('decks.create');
+            Route::get('/build/{deck}', 'edit')->name('decks.edit');
             Route::get('/decks', 'getCreatedDecks');
             Route::get('/decks/{deck}', 'getTerms');
         });
