@@ -13,7 +13,9 @@ class UpdateSentenceRequest extends FormRequest
     {
         return [
             'sentence.trans' => ['required'],
-            'terms' => ['required', 'array'],
+            'sentence.terms' => ['required', 'array'],
+            'sentence.terms.*.pivot.sent_term' => ['required'],
+            'sentence.terms.*.pivot.sent_translit' => ['required'],
         ];
     }
 }

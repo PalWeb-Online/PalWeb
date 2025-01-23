@@ -1,6 +1,5 @@
 import { createApp, h } from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
-import SentenceEditor from "./components/SentenceEditor.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckHead from "./components/DeckHead.vue";
@@ -13,6 +12,7 @@ import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
 import DeckBuilder from "./components/decks/DeckBuilder.vue";
 import CardViewer from "./components/decks/CardViewer.vue";
+import SentenceBuilder from "./components/sentences/SentenceBuilder.vue";
 import RecordWizard from './components/record/RecordWizard.vue';
 
 import axios from 'axios';
@@ -76,16 +76,16 @@ if (document.querySelector('#deckBuilder')) {
     deckBuilderApp.mount('#deckBuilder');
 }
 
+if (document.querySelector('#sentenceBuilder')) {
+    const sentenceBuilderApp = createApp(SentenceBuilder);
+    sentenceBuilderApp.use(pinia);
+    sentenceBuilderApp.mount('#sentenceBuilder');
+}
+
 // TODO: Simplify the following initializations as well.
 
 if (document.querySelector('#termEditor')) {
     const termEditorApp = createApp({});
     termEditorApp.component('TermEditor', TermEditor);
     termEditorApp.mount('#termEditor');
-}
-
-if (document.querySelector('#sentenceEditor')) {
-    const sentenceEditorApp = createApp({});
-    sentenceEditorApp.component('SentenceEditor', SentenceEditor);
-    sentenceEditorApp.mount('#sentenceEditor');
 }
