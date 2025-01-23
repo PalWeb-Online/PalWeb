@@ -19,7 +19,9 @@ use Maize\Markable\Models\Bookmark;
 
 class SentenceController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
+    public function __construct(protected FlasherInterface $flasher)
+    {
+    }
 
     public function pin(Request $request, Sentence $sentence): JsonResponse
     {
@@ -97,40 +99,99 @@ class SentenceController extends Controller
         ]);
     }
 
+    public function create(): \Illuminate\View\View
+    {
+        View::share('pageTitle', 'Sentence Builder');
+
+        return view('sentences.builder', [
+            'layout' => 'app',
+        ]);
+    }
+
+    public function edit($sentenceId): \Illuminate\View\View
+    {
+        $sentence = Sentence::findOrFail($sentenceId);
+
+        $terms = [];
+        foreach ($sentence->allTerms() as $sentenceTerm) {
+            $term = Term::find($sentenceTerm->id);
+
+            if ($term) {
+                $terms[] = [
+                    'id' => $term->id,
+                    'term' => $term->term,
+                    'category' => $term->category,
+                    'translit' => $term->translit,
+                    'glosses' => $term->glosses->map(function ($gloss) {
+                        return [
+                            'id' => $gloss->id,
+                            'gloss' => $gloss->gloss,
+                        ];
+                    })->toArray(),
+                    'pivot' => [
+                        'gloss_id' => $sentenceTerm->gloss_id,
+                        'sent_term' => $sentenceTerm->sent_term,
+                        'sent_translit' => $sentenceTerm->sent_translit,
+                        'position' => $sentenceTerm->position,
+                    ]
+                ];
+            } else {
+                $terms[] = [
+                    'pivot' => [
+                        'sent_term' => $sentenceTerm->sent_term,
+                        'sent_translit' => $sentenceTerm->sent_translit,
+                        'position' => $sentenceTerm->position,
+                    ]
+                ];
+            }
+        }
+
+        $sentence->terms = $terms;
+
+        View::share('pageTitle', 'Sentence Builder');
+
+        return view('sentences.builder', [
+            'layout' => 'app',
+            'sentence' => $sentence,
+            'action' => 'edit',
+        ]);
+    }
+
     public function store(StoreSentenceRequest $request): JsonResponse
     {
         $sentence = Sentence::create($this->buildSentence($request));
 
-        $this->linkTerms($sentence, $request->terms);
+        $this->linkTerms($sentence, $request->sentence['terms']);
 
         return response()->json([
-            'status' => 'success',
-            'redirect' => route('sentences.show', $sentence),
-            'flash' => __('created', ['thing' => $sentence->sentence]),
+            'sentence' => $sentence,
         ]);
     }
 
-    public function create(): \Illuminate\View\View
+    public function update(Sentence $sentence, UpdateSentenceRequest $request): JsonResponse
     {
-        View::share('pageTitle', 'Create Sentence');
+        $sentence->update($this->buildSentence($request));
 
-        return view('sentences.create');
+        $this->linkTerms($sentence, $request->sentence['terms']);
+
+        return response()->json([
+            'sentence' => $sentence,
+        ]);
     }
 
     private function buildSentence($request): array
     {
-        $terms = [];
-        $translits = [];
-
-        foreach ($request->terms as $term) {
-            $terms[] = $term['sent_term'];
-            $translits[] = $term['sent_translit'];
+        foreach ($request->sentence['terms'] as $term) {
+            $terms[] = $term['pivot']['sent_term'];
+            $translits[] = $term['pivot']['sent_translit'];
         }
 
         $sentence = $request->sentence;
 
         $sentence['sentence'] = implode(' ', $terms);
         $sentence['translit'] = implode(' ', $translits);
+
+        unset($sentence['terms']);
 
         return $sentence;
     }
@@ -139,47 +200,34 @@ class SentenceController extends Controller
     {
         DB::table('sentence_term')->where('sentence_id', $sentence->id)->delete();
 
-        foreach ($terms as $termData) {
+        foreach ($terms as $term) {
             DB::table('sentence_term')->insert([
                 'sentence_id' => $sentence->id,
-                'term_id' => $termData['term_id'] ?? null,
-                'gloss_id' => $termData['gloss_id'] ?? null,
-                'sent_term' => $termData['sent_term'],
-                'sent_translit' => $termData['sent_translit'],
-                'position' => $termData['position'],
+                'term_id' => $term['id'] ?? null,
+                'gloss_id' => $term['pivot']['gloss_id'] ?? null,
+                'sent_term' => $term['pivot']['sent_term'],
+                'sent_translit' => $term['pivot']['sent_translit'],
+                'position' => $term['pivot']['position'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
     }
 
-    public function edit(Sentence $sentence): \Illuminate\View\View
-    {
-        View::share('pageTitle', 'Edit Sentence');
-
-        return view('sentences.edit', compact('sentence'));
-    }
-
-    public function update(Sentence $sentence, UpdateSentenceRequest $request): JsonResponse
-    {
-        $sentence->update($this->buildSentence($request));
-
-        $this->linkTerms($sentence, $request->terms);
-
-        return response()->json([
-            'status' => 'success',
-            'redirect' => route('sentences.show', $sentence),
-            'flash' => __('updated', ['thing' => $sentence->sentence]),
-        ]);
-    }
-
-    public function destroy(Sentence $sentence): RedirectResponse
+    public function destroy(Request $request, Sentence $sentence): RedirectResponse|JsonResponse
     {
         $sentence->delete();
 
-        $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'success',
+            ]);
 
-        return to_route('sentences.index');
+        } else {
+            $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
+
+            return to_route('sentences.index');
+        }
     }
 
     public function todo(): \Illuminate\View\View
@@ -202,53 +250,6 @@ class SentenceController extends Controller
         View::share('pageTitle', 'Phrasebook: to-Do');
 
         return view('sentences.todo', [
-            'terms' => $terms,
-        ]);
-    }
-
-    public function get($id): JsonResponse
-    {
-        $sentence = Sentence::findOrFail($id);
-
-        $terms = [];
-        foreach ($sentence->allTerms() as $sentenceTerm) {
-            $term = Term::find($sentenceTerm->id);
-
-            if ($term) {
-                $terms[] = [
-                    'term' => [
-                        'term' => $term->term,
-                        'category' => $term->category,
-                        'translit' => $term->translit,
-                        'glosses' => $term->glosses->map(function ($gloss) {
-                            return [
-                                'id' => $gloss->id,
-                                'gloss' => $gloss->gloss,
-                            ];
-                        })->toArray(),
-                    ],
-                    'term_id' => $term->id,
-                    'gloss_id' => $sentenceTerm->gloss_id,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ];
-            } else {
-                $terms[] = [
-                    'term' => [
-                        'glosses' => [],
-                    ],
-                    'term_id' => null,
-                    'gloss_id' => null,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ];
-            }
-        }
-
-        return response()->json([
-            'sentence' => $sentence,
             'terms' => $terms,
         ]);
     }
