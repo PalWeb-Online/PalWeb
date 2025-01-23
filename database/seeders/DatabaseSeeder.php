@@ -20,9 +20,13 @@ class DatabaseSeeder extends Seeder
         (new UserSeeder)->run();
         (new SpeakerSeeder)->run();
         (new RoleSeeder)->run();
+
         (new TermSeeder)->run();
         (new DeckSeeder)->run();
+
         (new AudioSeeder)->run();
+
         (new SentenceSeeder)->run();
+        (new DialogSeeder)->run();
     }
 }

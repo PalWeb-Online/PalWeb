@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('speaker_id')->nullable()->constrained('speakers')->nullOnDelete();
+        Schema::create('dialogs', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->timestamps();
         });
     }
 
@@ -21,9 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('speaker_id');
-            $table->dropColumn('speaker_id');
-        });
+        Schema::dropIfExists('dialogs');
     }
 };

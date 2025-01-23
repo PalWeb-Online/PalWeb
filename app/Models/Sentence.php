@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -61,6 +62,11 @@ class Sentence extends Model
             ->select('sentence_term.*', 'terms.*')
             ->orderBy('sentence_term.position')
             ->get();
+    }
+
+    public function dialog(): BelongsTo
+    {
+        return $this->belongsTo(Dialog::class);
     }
 
     public function file(): MorphOne
