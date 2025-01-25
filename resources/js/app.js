@@ -12,7 +12,7 @@ import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
 import DeckBuilder from "./components/decks/DeckBuilder.vue";
 import CardViewer from "./components/decks/CardViewer.vue";
-import SentenceBuilder from "./components/sentences/SentenceBuilder.vue";
+import Dialogger from "./components/dialogs/Dialogger.vue";
 import RecordWizard from './components/record/RecordWizard.vue';
 
 import axios from 'axios';
@@ -76,10 +76,10 @@ if (document.querySelector('#deckBuilder')) {
     deckBuilderApp.mount('#deckBuilder');
 }
 
-if (document.querySelector('#sentenceBuilder')) {
-    const sentenceBuilderApp = createApp(SentenceBuilder);
-    sentenceBuilderApp.use(pinia);
-    sentenceBuilderApp.mount('#sentenceBuilder');
+if (document.querySelector('#dialogger')) {
+    const dialoggerApp = createApp(Dialogger);
+    dialoggerApp.use(pinia);
+    dialoggerApp.mount('#dialogger');
 }
 
 // TODO: Simplify the following initializations as well.

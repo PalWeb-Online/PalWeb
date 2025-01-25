@@ -10,6 +10,8 @@ class Dialog extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function sentences(): HasMany
     {
         return $this->hasMany(Sentence::class)->orderBy('position');

@@ -78,7 +78,8 @@
                     </div>
 
                     <div class="nav-user-options-row">
-                        <a class="nav-user-options-row-title" href="{{ route("email.create") }}">Compose Mail</a>
+                        <a class="nav-user-options-row-title" href="{{ route('email.create') }}">Compose Mail</a>
+                        <a class="nav-user-options-row-title" href="{{ route('dialogs.create') }}">New Dialog</a>
                     </div>
                 </div>
             @endif

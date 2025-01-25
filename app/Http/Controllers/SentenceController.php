@@ -101,10 +101,11 @@ class SentenceController extends Controller
 
     public function create(): \Illuminate\View\View
     {
-        View::share('pageTitle', 'Sentence Builder');
+        View::share('pageTitle', 'Dialogger: Create Sentence');
 
         return view('sentences.builder', [
             'layout' => 'app',
+            'modelType' => 'sentence',
         ]);
     }
 
@@ -148,12 +149,12 @@ class SentenceController extends Controller
 
         $sentence->terms = $terms;
 
-        View::share('pageTitle', 'Sentence Builder');
+        View::share('pageTitle', 'Dialogger: Edit Sentence');
 
         return view('sentences.builder', [
             'layout' => 'app',
+            'modelType' => 'sentence',
             'sentence' => $sentence,
-            'action' => 'edit',
         ]);
     }
 
@@ -168,7 +169,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function update(Sentence $sentence, UpdateSentenceRequest $request): JsonResponse
+    public function update(UpdateSentenceRequest $request, Sentence $sentence): JsonResponse
     {
         $sentence->update($this->buildSentence($request));
 

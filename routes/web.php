@@ -113,6 +113,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('dialogs.index');
             Route::get('/{dialog}', 'show')->name('dialogs.show');
         });
+
+        Route::middleware('admin')->group(function () {
+            Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create']);
+            Route::get('/create/dialogs', [DialogController::class, 'create'])->name('dialogs.create');
+        });
     });
 
     Route::prefix('/dictionary')->group(function () {
@@ -135,7 +140,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('admin')->group(function () {
             Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
             Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
-            Route::get('/terms/{term}/get', [TermController::class, 'get'])->name('terms.get');
+            Route::get('/terms/{term}/get', [TermController::class, 'get']);
 
             Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create']);
             Route::get('/create/sentences', [SentenceController::class, 'create'])->name('sentences.create');
