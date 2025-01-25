@@ -1,10 +1,11 @@
 <script setup>
+import {onMounted, ref} from "vue";
+import {cloneDeep} from "lodash";
+import draggable from 'vuedraggable';
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import SearchGenie from '../../search/SearchGenie.vue';
 import TermItem from "../ui/TermItem.vue";
-import draggable from 'vuedraggable';
-import {onMounted, ref} from "vue";
 import AppButton from "../../AppButton.vue";
 import AppNotification from "../../AppNotification.vue";
 
@@ -61,7 +62,7 @@ const deleteDeck = async () => {
     const success = await DeckStore.deleteDeck();
 
     if (success) {
-        DeckStore.data.stagedDeck.id = '';
+        DeckStore.data.stagedDeck.id = null;
         notification.value.showNotification('Your Deck has been deleted!');
 
         setTimeout(() => {
@@ -77,6 +78,8 @@ onMounted(async () => {
     if (DeckStore.data.stagedDeck.id) {
         await DeckStore.fetchTerms(DeckStore.data.stagedDeck.id);
     }
+
+    DeckStore.data.originalDeck = cloneDeep(DeckStore.data.stagedDeck);
 });
 </script>
 

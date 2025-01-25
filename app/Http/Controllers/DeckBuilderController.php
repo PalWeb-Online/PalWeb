@@ -35,7 +35,6 @@ class DeckBuilderController extends Controller
             'layout' => 'app',
             'user' => $user,
             'deck' => $deck,
-            'action' => 'edit',
         ]);
     }
 

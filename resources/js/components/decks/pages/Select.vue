@@ -20,7 +20,7 @@ const toggleActive = (id, index = null) => {
 
 onMounted(async () => {
     DeckStore.data.stagedDeck = {
-        id: '',
+        id: null,
         name: '',
         description: '',
         terms: [],

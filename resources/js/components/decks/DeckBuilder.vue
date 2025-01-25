@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted} from "vue";
-import {cloneDeep} from 'lodash';
 import {useStateStore} from "./stores/StateStore.js";
 import {useDeckStore} from "./stores/DeckStore.js";
 import Select from "./pages/Select.vue";
@@ -9,14 +8,12 @@ import Build from "./pages/Build.vue";
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 StateStore.data.context = 'builder';
-StateStore.data.action = window.action || 'create';
 
 onMounted(() => {
-    if (StateStore.data.action === 'edit') {
+    if (window.stagedDeck) {
         StateStore.data.step = 'build';
         DeckStore.data.user = window.user;
         DeckStore.data.stagedDeck = window.stagedDeck;
-        DeckStore.data.originalDeck = cloneDeep(DeckStore.data.stagedDeck);
     }
 });
 </script>

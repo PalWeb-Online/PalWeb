@@ -7,7 +7,6 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const data = reactive({
         context: null,
-        action: 'create',
         step: 'select',
         errorMessage: '',
     });
@@ -45,6 +44,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const back = async () => {
         const currentStep = steps.value[data.step];
+
         if (currentStep?.canMoveBack()) {
             if (hasUnsavedChanges.value && !confirm('Are you sure you would like to return to the Select page? All your unsaved changes will be lost.')) return;
             data.step = currentStep.backStep;

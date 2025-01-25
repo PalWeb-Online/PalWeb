@@ -15,7 +15,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
         decks: [],
         cards: [],
         stagedDeck: {
-            id: '',
+            id: null,
             name: '',
             description: '',
             terms: [],
@@ -41,7 +41,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             // todo: if data.stagedDeck.id is not an id in data.decks, then the deck was deleted outside the Deck Builder while it was open; the stagedDeck should be unstaged.
 
         } catch (error) {
-            console.error('Error fetching Created Decks:', error);
+            console.error('Error fetching Terms:', error);
             StateStore.data.errorMessage = error;
         }
     };
@@ -49,8 +49,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const fetchTerms = async (deckId) => {
         try {
             const response = await axios.get('/workbench/deck-builder/decks/' + deckId);
-            data.stagedDeck.terms = cloneDeep(response.data.terms);
-            data.originalDeck.terms = cloneDeep(response.data.terms);
+            data.stagedDeck.terms = response.data.terms;
+            data.originalDeck = cloneDeep(data.stagedDeck);
 
         } catch (error) {
             console.error('Error fetching Deck data:', error);
@@ -67,7 +67,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
                 const stagedDeckIsPinned = data.decks.some(deck => deck.id === data.stagedDeck.id);
                 if (!stagedDeckIsPinned) {
                     data.stagedDeck = {
-                        id: '',
+                        id: null,
                         name: '',
                         description: '',
                         terms: [],
@@ -90,7 +90,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             return true;
 
         } catch (error) {
-            console.error('Error fetching Deck data:', error);
+            console.error('Error fetching Terms:', error);
             return false;
         }
     };
@@ -99,7 +99,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
         if (index !== null) {
             if (data.stagedDeck.id === data.decks[index].id) {
                 data.stagedDeck = {
-                    id: '',
+                    id: null,
                     name: '',
                     description: '',
                     terms: [],
@@ -116,7 +116,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
         } else {
             data.stagedDeck = {
-                id: '',
+                id: null,
                 name: '',
                 description: '',
                 terms: [],
@@ -129,7 +129,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const saveDeck = async () => {
         try {
-            if (data.stagedDeck.id === '') {
+            if (!data.stagedDeck.id) {
                 const response = await axios.post('/community/decks', {
                     deck: data.stagedDeck,
                 });
@@ -148,7 +148,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             return true;
 
         } catch (error) {
-            StateStore.data.errorMessage = 'Oh no! Your Deck could not be saved.';
+            StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! Your Deck could not be saved.';
             return false;
         }
     };
@@ -169,7 +169,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             return true;
 
         } catch (error) {
-            StateStore.data.errorMessage = 'Oh no! Your Deck could not be deleted.';
+            StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! Your Deck could not be deleted.';
             return false;
         }
     };
