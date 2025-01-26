@@ -25,6 +25,7 @@ export const useDialogStore = defineStore('DialogStore', () => {
                 });
 
                 data.stagedDialog.id = response.data.dialog.id;
+                data.stagedDialog.sentences.forEach(sentence => sentence.dialog_id = response.data.dialog.id);
 
             } else {
                 await axios.patch('/academy/dialogs/' + data.stagedDialog.id, {

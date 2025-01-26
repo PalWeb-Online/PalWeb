@@ -20,27 +20,44 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
     });
 
     const toggleSelectSentence = (index) => {
-        data.stagedSentence = DialogStore.data.stagedDialog.sentences[index];
+        data.stagedSentence = reactive(DialogStore.data.stagedDialog.sentences[index]);
     }
 
     const saveSentence = async () => {
         try {
+            let response;
+
             if (!data.stagedSentence.id) {
-                const response = await axios.post('/dictionary/sentences', {
+                response = await axios.post('/dictionary/sentences', {
                     sentence: data.stagedSentence,
                 });
 
                 data.stagedSentence.id = response.data.sentence.id;
-                data.stagedSentence.sentence = response.data.sentence.sentence;
-                data.stagedSentence.translit = response.data.sentence.translit;
+                data.stagedSentence.dialog_id = response.data.sentence.dialog_id;
 
             } else {
-                await axios.patch('/dictionary/sentences/' + data.stagedSentence.id, {
+                response = await axios.patch('/dictionary/sentences/' + data.stagedSentence.id, {
                     sentence: data.stagedSentence,
                 });
             }
 
+            data.stagedSentence.sentence = response.data.sentence.sentence;
+            data.stagedSentence.translit = response.data.sentence.translit;
+
             data.originalSentence = cloneDeep(data.stagedSentence);
+
+            if (StateStore.data.modelType === 'dialog') {
+                const index = DialogStore.data.originalDialog.sentences.findIndex(
+                    sentence => sentence.id === data.stagedSentence.id
+                );
+
+                Object.assign(DialogStore.data.originalDialog.sentences[index], {
+                    sentence: data.stagedSentence.sentence,
+                    translit: data.stagedSentence.translit,
+                    trans: data.stagedSentence.trans,
+                    terms: data.stagedSentence.terms,
+                });
+            }
 
             StateStore.data.errorMessage = null;
             return true;

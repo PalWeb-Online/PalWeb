@@ -9,7 +9,6 @@ export const useStateStore = defineStore('StateStore', () => {
 
     const data = reactive({
         modelType: 'dialog',
-        modelAction: 'create',
         step: 'dialog',
         errorMessage: null,
     });
@@ -75,6 +74,7 @@ export const useStateStore = defineStore('StateStore', () => {
 
         if (currentStep?.canMoveBack()) {
             if ((hasUnsavedChanges.value || !SentenceStore.data.stagedSentence.id) && !confirm('Are you sure you would like to return to the Select page? All your unsaved changes will be lost.')) return;
+            Object.assign(SentenceStore.data.stagedSentence, SentenceStore.data.originalSentence);
             data.step = currentStep.backStep;
         }
     };
