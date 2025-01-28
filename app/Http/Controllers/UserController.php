@@ -7,15 +7,18 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Badge;
 use App\Models\User;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
+    public function __construct(protected FlasherInterface $flasher)
+    {
+    }
 
-    public function show(Request $request, User $user): \Illuminate\View\View | RedirectResponse
+    public function show(Request $request, User $user): \Illuminate\View\View|RedirectResponse
     {
         $this->authorize('interact', $user);
 
@@ -62,5 +65,18 @@ class UserController extends Controller
         $this->flasher->addSuccess(__('settings.updated'));
 
         return to_route('users.show', $request->user());
+    }
+
+    public function getDecks($termId): JsonResponse
+    {
+        foreach (auth()->user()->decks as $deck) {
+            if ($deck->terms->contains($termId)) {
+                $deck->isPresent = true;
+            }
+        }
+
+        return response()->json([
+            'decks' => auth()->user()->decks,
+        ]);
     }
 }

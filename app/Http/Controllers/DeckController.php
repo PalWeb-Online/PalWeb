@@ -277,4 +277,18 @@ class DeckController extends Controller
         fclose($output);
         exit;
     }
+
+    public function get($id): JsonResponse
+    {
+        $deck = Deck::with('author')->findOrFail($id);
+
+        $deck->terms = $deck->terms->pluck('term');
+        $deck->count = count($deck->terms);
+        $deck->isPinned = $deck->isPinned();
+        $deck->pinCount = \Maize\Markable\Models\Bookmark::count($deck);
+
+        return response()->json([
+            'deck' => $deck,
+        ]);
+    }
 }

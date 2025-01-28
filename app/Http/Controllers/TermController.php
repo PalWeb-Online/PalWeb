@@ -32,7 +32,8 @@ class TermController extends Controller
     public function __construct(
         protected FlasherInterface $flasher,
         protected TermRepository $termRepository
-    ) {}
+    ) {
+    }
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -90,11 +91,11 @@ class TermController extends Controller
             'singular' => '',
             'plural' => '',
         ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn($value) => $value ?? '', $filters);
+        $filters = array_map(fn ($value) => $value ?? '', $filters);
 
-        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
+        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
 
-        if (!$hasFilters) {
+        if (! $hasFilters) {
             $terms = Term::orderByDesc('id')
                 ->paginate(100)
                 ->onEachSide(1);
@@ -157,6 +158,15 @@ class TermController extends Controller
                 ]);
             },
         ])->findOrFail($id);
+
+        $term->isPinned = $term->isPinned();
+
+        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
+        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
+
+        $term->audio =
+            $term->pronunciations->whereIn('dialect_id', $dialectIds)->first()?->audios?->first()?->filename
+            ?? $term->pronunciations->first()->audios?->first()?->filename;
 
         return response()->json([
             'term' => $term,
@@ -497,8 +507,7 @@ class TermController extends Controller
         string $dependentType,
         ?Collection $existingDependents = null,
         string $keyName = ''
-    ): void
-    {
+    ): void {
         $requestItems = [];
         foreach ($requestDependents as $index => $dependent) {
 

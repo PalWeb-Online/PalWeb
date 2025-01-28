@@ -49,11 +49,11 @@ class SentenceController extends Controller
             'singular' => '',
             'plural' => '',
         ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn($value) => $value ?? '', $filters);
+        $filters = array_map(fn ($value) => $value ?? '', $filters);
 
-        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
+        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
 
-        if (!$hasFilters) {
+        if (! $hasFilters) {
             $sentences = Sentence::orderByDesc('id')
                 ->paginate(25)
                 ->onEachSide(1);
@@ -109,52 +109,14 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function edit($sentenceId): \Illuminate\View\View
+    public function edit(Sentence $sentence): \Illuminate\View\View
     {
-        $sentence = Sentence::findOrFail($sentenceId);
-
-        $terms = [];
-        foreach ($sentence->allTerms() as $sentenceTerm) {
-            $term = Term::find($sentenceTerm->id);
-
-            if ($term) {
-                $terms[] = [
-                    'id' => $term->id,
-                    'term' => $term->term,
-                    'category' => $term->category,
-                    'translit' => $term->translit,
-                    'glosses' => $term->glosses->map(function ($gloss) {
-                        return [
-                            'id' => $gloss->id,
-                            'gloss' => $gloss->gloss,
-                        ];
-                    })->toArray(),
-                    'pivot' => [
-                        'gloss_id' => $sentenceTerm->gloss_id,
-                        'sent_term' => $sentenceTerm->sent_term,
-                        'sent_translit' => $sentenceTerm->sent_translit,
-                        'position' => $sentenceTerm->position,
-                    ]
-                ];
-            } else {
-                $terms[] = [
-                    'pivot' => [
-                        'sent_term' => $sentenceTerm->sent_term,
-                        'sent_translit' => $sentenceTerm->sent_translit,
-                        'position' => $sentenceTerm->position,
-                    ]
-                ];
-            }
-        }
-
-        $sentence->terms = $terms;
-
         View::share('pageTitle', 'Dialogger: Edit Sentence');
 
         return view('sentences.builder', [
             'layout' => 'app',
             'modelType' => 'sentence',
-            'sentence' => $sentence,
+            'modelId' => $sentence->id,
         ]);
     }
 
@@ -252,6 +214,54 @@ class SentenceController extends Controller
 
         return view('sentences.todo', [
             'terms' => $terms,
+        ]);
+    }
+
+    public function get($id): JsonResponse
+    {
+        $sentence = Sentence::findOrFail($id);
+
+        $terms = [];
+        foreach ($sentence->allTerms() as $sentenceTerm) {
+            $term = Term::find($sentenceTerm->id);
+
+            if ($term) {
+                $terms[] = [
+                    'id' => $term->id,
+                    'slug' => $term->slug,
+                    'term' => $term->term,
+                    'category' => $term->category,
+                    'translit' => $term->translit,
+                    'glosses' => $term->glosses->map(function ($gloss) {
+                        return [
+                            'id' => $gloss->id,
+                            'gloss' => $gloss->gloss,
+                        ];
+                    })->toArray(),
+                    'pivot' => [
+                        'gloss_id' => $sentenceTerm->gloss_id,
+                        'sent_term' => $sentenceTerm->sent_term,
+                        'sent_translit' => $sentenceTerm->sent_translit,
+                        'position' => $sentenceTerm->position,
+                    ]
+                ];
+            } else {
+                $terms[] = [
+                    'pivot' => [
+                        'sent_term' => $sentenceTerm->sent_term,
+                        'sent_translit' => $sentenceTerm->sent_translit,
+                        'position' => $sentenceTerm->position,
+                    ]
+                ];
+            }
+        }
+
+        $sentence->terms = $terms;
+        $sentence->audio = null;
+        $sentence->isPinned = $sentence->isPinned();
+
+        return response()->json([
+            'sentence' => $sentence,
         ]);
     }
 }

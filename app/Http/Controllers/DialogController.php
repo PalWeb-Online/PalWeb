@@ -47,8 +47,6 @@ class DialogController extends Controller
     {
         $auth = $request->user();
 
-        $dialog->load('sentences.terms');
-
         View::share('pageTitle', 'Dialog: '.$dialog->title);
         View::share('pageDescription',
             'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
@@ -73,60 +71,14 @@ class DialogController extends Controller
         ]);
     }
 
-    public function edit($dialogId): \Illuminate\View\View
+    public function edit(Dialog $dialog): \Illuminate\View\View
     {
-        $dialog = Dialog::findOrFail($dialogId);
-
-        $sentences = [];
-
-        foreach ($dialog->sentences as $sentence) {
-            $terms = [];
-
-            foreach ($sentence->allTerms() as $sentenceTerm) {
-                $term = Term::find($sentenceTerm->id);
-
-                if ($term) {
-                    $terms[] = [
-                        'id' => $term->id,
-                        'term' => $term->term,
-                        'category' => $term->category,
-                        'translit' => $term->translit,
-                        'glosses' => $term->glosses->map(function ($gloss) {
-                            return [
-                                'id' => $gloss->id,
-                                'gloss' => $gloss->gloss,
-                            ];
-                        })->toArray(),
-                        'pivot' => [
-                            'gloss_id' => $sentenceTerm->gloss_id,
-                            'sent_term' => $sentenceTerm->sent_term,
-                            'sent_translit' => $sentenceTerm->sent_translit,
-                            'position' => $sentenceTerm->position,
-                        ]
-                    ];
-                } else {
-                    $terms[] = [
-                        'pivot' => [
-                            'sent_term' => $sentenceTerm->sent_term,
-                            'sent_translit' => $sentenceTerm->sent_translit,
-                            'position' => $sentenceTerm->position,
-                        ]
-                    ];
-                }
-            }
-
-            $sentence->terms = $terms;
-            $sentences[] = $sentence;
-        }
-
-        $dialog->sentences = $sentences;
-
         View::share('pageTitle', 'Dialogger: Edit Dialog');
 
         return view('dialogs.builder', [
             'layout' => 'app',
             'modelType' => 'dialog',
-            'dialog' => $dialog,
+            'modelId' => $dialog->id,
         ]);
     }
 
@@ -193,5 +145,12 @@ class DialogController extends Controller
 
             return to_route('dialogs.index');
         }
+    }
+
+    public function get($id): JsonResponse
+    {
+        return response()->json([
+            'dialog' => Dialog::with('sentences')->findOrFail($id),
+        ]);
     }
 }

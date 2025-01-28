@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DiscordController;
-use App\Http\Controllers\RecordWizardController;
 use App\Http\Controllers\StashRecordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

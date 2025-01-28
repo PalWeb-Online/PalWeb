@@ -37,14 +37,8 @@ use Illuminate\Support\Facades\View;
 |
 */
 
-/**
- * Displays the homepage.
- */
 Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageTitle:Home')->name('homepage');
 
-/**
- * Prompts an unauthenticated user to log in.
- */
 Route::view('/denied', 'denied',
     ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('denied');
 
@@ -55,9 +49,6 @@ Route::prefix('/search')->controller(SearchGenieController::class)->group(functi
     Route::get('/filter-options', 'getFilterOptions');
 });
 
-/**
- * Email Routes
- */
 Route::prefix('/email')->middleware('auth')->group(function () {
     Route::controller(EmailVerificationController::class)->group(function () {
         Route::get('/verification', 'prompt')->name('verification.notice');
@@ -81,8 +72,7 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
         Route::get('/{term:slug}', 'show')->name('terms.show');
         Route::get('/{term:slug}/usages', 'show')->name('terms.usages');
         Route::get('/{term:slug}/audios', 'show')->name('terms.audios');
-
-        // Auth
+        Route::get('/{term}/get', 'get')->name('terms.get');
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
     });
 
@@ -91,17 +81,11 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
     })->name('terms.random');
 });
 
-/**
- * Documentation Routes
- */
 Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
     Route::get('/', 'index')->name('wiki.index');
     Route::get('/{page}', 'show')->name('wiki.show');
 });
 
-/**
- * Routes that require a verified user
- */
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->group(function () {
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
@@ -112,6 +96,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
             Route::get('/', 'index')->name('dialogs.index');
             Route::get('/{dialog}', 'show')->name('dialogs.show');
+            Route::get('/{dialog}/get', 'get')->name('dialogs.get');
         });
 
         Route::middleware('admin')->group(function () {
@@ -129,6 +114,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'index')->name('sentences.index');
             Route::get('/{sentence}', 'show')->name('sentences.show');
+            Route::get('/{sentence}/get', 'get')->name('sentences.get');
             Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
         });
 
@@ -140,37 +126,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('admin')->group(function () {
             Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
             Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
-            Route::get('/terms/{term}/get', [TermController::class, 'get']);
 
             Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create']);
             Route::get('/create/sentences', [SentenceController::class, 'create'])->name('sentences.create');
 
             Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
-            Route::delete('/missing/terms/{missingTerm}', [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
+            Route::delete('/missing/terms/{missingTerm}',
+                [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
             Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
         });
     });
 
     Route::prefix('/community')->group(function () {
-        // Community Routes
         Route::get('/',
             [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
 
-        // User Routes
-        Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/users/{user:username}', 'show')->name('users.show');
+            Route::get('/get/users/decks/{termId}', 'getDecks')->name('users.get.decks');
+        });
 
-        // Deck Routes
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
+            Route::get('/{deck}/get', 'get')->name('decks.get');
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
             Route::post('/{deck}/export', 'export')->name('decks.export');
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
             Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
-
         });
 
-        // Audio Routes
         Route::prefix('/audios')->group(function () {
             Route::get('/', [AudioController::class, 'index'])->name('audios.index');
             Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
@@ -224,7 +209,7 @@ Route::prefix('/settings')->middleware('auth')->group(function () {
     Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
     Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
     Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
-    Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
+    Route::patch('/privacy', [UserPrivacyController::class, 'update'])->name('users.privacy.toggle');
 });
 
 require __DIR__.'/auth.php';
