@@ -1,27 +1,14 @@
 <script setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue';
+import {onMounted, ref} from 'vue';
+import VanillaTilt from "vanilla-tilt";
+import {useDeck} from "../composables/Deck.js";
 import PinButton from "./PinButton.vue";
 import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";
-import VanillaTilt from "vanilla-tilt";
-import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
-    deck: Object,
-    isPinned: Boolean,
-
-    // ModelActions
-    routes: Object,
-    isUser: Boolean,
-
-    // DeckActions
-    isAuthor: Boolean,
-});
-
-const description = computed(() => {
-    return props.deck.description.length > 320
-        ? props.deck.description.substring(0, 317) + '...'
-        : props.deck.description;
+    id: Number,
+    size: {type: String, default: 'm'},
 });
 
 const flipCard = (event) => {
@@ -41,48 +28,38 @@ onMounted(() => {
     });
 });
 
+const { data, description } = useDeck(props);
 </script>
 
 <template>
-    <div class="deck-flashcard-wrapper">
-        <div class="deck-flashcard" ref="trigger" @click="flipCard">
-            <div class="deck-flashcard-front">
-                <div class="deck-flashcard-front-head">
-                    <div class="deck-title">{{ deck.name }}</div>
-                    <div class="deck-author" style="align-self: flex-end">
-                        <div class="deck-author-name">by {{ deck.authorName }}</div>
-                        <img class="deck-author-avatar" alt="Profile Picture" :src="deck.authorAvatar"/>
-                        <!--                        <div class="deck-author-name">by Deleted User</div>-->
+    <template v-if="! data.isLoading">
+        <div class="deck-flashcard-wrapper">
+            <div class="deck-flashcard" ref="trigger" @click="flipCard">
+                <div class="deck-flashcard-front">
+                    <div class="deck-flashcard-front-head">
+                        <div class="deck-title">{{ data.deck.name }}</div>
+                        <div class="deck-author" style="align-self: flex-end">
+                            <div class="deck-author-name">by {{ data.deck.author.name }}</div>
+                            <img class="deck-author-avatar" alt="Profile Picture" :src="`/img/avatars/${data.deck.author.avatar}`"/>
+                            <!--                        <div class="deck-author-name">by Deleted User</div>-->
+                        </div>
+                    </div>
+                    <div class="deck-flashcard-front-body">
+                        <div v-if="data.deck.description" class="deck-description">{{ description }}</div>
                     </div>
                 </div>
-                <div class="deck-flashcard-front-body">
-                    <div v-if="deck.description" class="deck-description">{{ description }}</div>
+                <div class="deck-flashcard-back">
+                    <div class="deck-flashcard-back-head">{{ data.deck.count }} terms</div>
+                    <div class="deck-flashcard-back-body">
+                        <div v-for="term in data.deck.terms.slice(0, 16)">{{ term.term }}</div>
+                        <div v-if="data.deck.terms.length > 16" style="grid-column: span 2">...</div>
+                    </div>
                 </div>
             </div>
-            <div class="deck-flashcard-back">
-                <div class="deck-flashcard-back-head">{{ deck.count }} terms</div>
-                <div class="deck-flashcard-back-body">
-                    <div v-for="term in deck.terms.slice(0, 16)">{{ term }}</div>
-                    <div v-if="deck.terms.length > 16" style="grid-column: span 2">...</div>
-                </div>
-            </div>
+
+            <PinButton modelType="deck" :model="data.deck"/>
+            <PrivacyToggleButton modelType="deck" :model="data.deck"/>
+            <DeckActions :model="data.deck"/>
         </div>
-
-        <PinButton v-if="isUser"
-                   :route="routes.pin"
-                   :isPinned="isPinned"
-                   :pinCount="deck.pinCount"
-        />
-        <PrivacyToggleButton v-if="isAuthor"
-                             :route="routes.privacyToggle"
-                             :isPrivate="deck.isPrivate"
-        />
-
-        <ContextActions
-            modelType="deck"
-            :routes="routes"
-            :isUser="isUser"
-            :isAuthor="isAuthor"
-        />
-    </div>
+    </template>
 </template>

@@ -6,6 +6,7 @@ import DeckHead from "./components/DeckHead.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
 import SentenceItem from "./components/SentenceItem.vue";
+import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
@@ -33,6 +34,7 @@ const multiMountComponents = [
     { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
     { selector: '[data-vue-component="SentenceItem"]', component: SentenceItem },
+    { selector: '[data-vue-component="DialogContainer"]', component: DialogContainer },
     { selector: '[data-vue-component="BadgeItem"]', component: BadgeItem },
     { selector: '[data-vue-component="PrivacyToggleButton"]', component: PrivacyToggleButton },
 ];

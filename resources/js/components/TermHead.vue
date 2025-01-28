@@ -1,57 +1,26 @@
 <script setup>
-import {Howl} from 'howler';
-import {onMounted, ref} from 'vue';
-import ContextActions from "./ContextActions.vue";
+import {useTerm} from "../composables/Term.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
+import TermActions from "./TermActions.vue";
 
 const props = defineProps({
-    term: Object,
-    isPinned: Boolean,
-
-    // ModelActions
-    routes: Object,
-    isUser: Boolean,
-    isAdmin: Boolean,
-
-    // ActionButtons
-    userDecks: Object,
+    id: Number,
+    size: {type: String, default: 'm'},
+    glossId: {type: Number, default: null},
 });
 
-const audio = ref(null);
-
-onMounted(() => {
-    if (props.term.audio) {
-        audio.value = new Howl({
-            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${props.term.audio}`],
-        });
-    }
-});
-
-function playAudio() {
-    if (audio.value) {
-        audio.value.play();
-    }
-}
+const {data, playAudio} = useTerm(props);
 </script>
 
 <template>
-    <PinButton v-if="isUser"
-               :isPinned="isPinned"
-               :route="routes.pin"
-    />
-    <div class="term-headword-arb">{{ term.term }}</div>
-    <div class="term-headword-eng">({{ term.translit }})</div>
+    <template v-if="! data.isLoading">
+        <PinButton modelType="term" :model="data.term"/>
+        <div class="term-headword-arb">{{ data.term.term }}</div>
+        <div class="term-headword-eng">({{ data.term.translit }})</div>
 
-    <img v-if="term.audio" class="play" src="/img/audio.svg" @click="playAudio" alt="play"/>
-    <ContextActions
-        modelType="term"
-        :routes="routes"
-        :isUser="isUser"
-        :isAdmin="isAdmin"
-    />
-    <TermDeckToggleButton v-if="isUser"
-                          :userDecks="userDecks"
-                          :route="routes.deckToggle"
-    />
+        <img v-if="data.term.audio" class="play" src="/img/audio.svg" @click="playAudio" alt="play"/>
+        <TermActions :model="data.term"/>
+        <TermDeckToggleButton :model="data.term"/>
+    </template>
 </template>

@@ -1,15 +1,18 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
+import {route} from 'ziggy-js';
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
-    isPinned: Boolean,
-    pinCount: Number,
-    route: String,
+    model: Object,
+    modelType: String,
 });
 
-let isPinned = ref(props.isPinned);
-let pinCount = ref(props.pinCount);
+let isPinned = ref(props.model.isPinned);
+let pinCount = ref(props.model.pinCount);
 
 const notifVisible = ref(false);
 const notifContent = ref('');
@@ -23,10 +26,10 @@ const {floatingStyles} = useFloating(reference, floating, {
 
 const pin = async () => {
     try {
-        const response = await axios.post(props.route);
+        const response = await axios.post(route(`${props.modelType}s.pin`, props.model.id));
         isPinned.value = response.data.isPinned;
 
-        if (response.data.pinCount) {
+        if (props.modelType === 'deck') {
             pinCount.value = response.data.pinCount;
         }
 
@@ -42,20 +45,26 @@ const pin = async () => {
         setTimeout(() => notifVisible.value = false, 1000);
     }
 };
+
+watch(() => props.isPinned, (newValue) => {
+    isPinned.value = newValue;
+});
 </script>
 
 <template>
-    <img ref="reference" :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
-    <div v-if="pinCount > 1" class="pin-counter">
-        <img src="/img/heart.svg" alt="heart"/>
-        <div>{{ pinCount }}</div>
-    </div>
-
-    <Transition name="notification">
-        <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
-            {{ notifContent }}
+    <template v-if="UserStore.isUser">
+        <img ref="reference" :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
+        <div v-if="pinCount > 1" class="pin-counter">
+            <img src="/img/heart.svg" alt="heart"/>
+            <div>{{ pinCount }}</div>
         </div>
-    </Transition>
+
+        <Transition name="notification">
+            <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
+                {{ notifContent }}
+            </div>
+        </Transition>
+    </template>
 </template>
 
 

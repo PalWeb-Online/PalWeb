@@ -46,9 +46,8 @@
     @if(auth()->user() && $user->id === auth()->user()->id)
         <div data-vue-component="PrivacyToggleButton"
              data-props="{{ json_encode([
-                'isPrivate' => $user->private,
-                'route' => route('settings.privacy.update', $user->id),
-                'imageURL' => asset('/img')
+                'model' => $user,
+                'modelType' => 'user',
              ]) }}"
         >
         </div>
