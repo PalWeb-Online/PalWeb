@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {reactive} from "vue";
+import {route} from "ziggy-js";
 import {cloneDeep} from "lodash";
 import {useStateStore} from "./StateStore.js";
 import {useDialogStore} from "./DialogStore.js";
@@ -21,6 +22,16 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
 
     const toggleSelectSentence = (index) => {
         data.stagedSentence = reactive(DialogStore.data.stagedDialog.sentences[index]);
+    }
+
+    const fetchSentence = async (id) => {
+        try {
+            const response = await axios.get(route('sentences.get', id));
+            data.stagedSentence = response.data.sentence;
+
+        } catch (error) {
+            console.error("Error fetching Sentence:", error);
+        }
     }
 
     const saveSentence = async () => {
@@ -99,10 +110,11 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
 
     return {
         data,
+        toggleSelectSentence,
+        fetchSentence,
         saveSentence,
         resetSentence,
         viewSentence,
         deleteSentence,
-        toggleSelectSentence,
     }
 });

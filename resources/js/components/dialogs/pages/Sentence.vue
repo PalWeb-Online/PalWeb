@@ -84,7 +84,7 @@ const deleteSentence = async () => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
     SentenceStore.data.originalSentence = cloneDeep(SentenceStore.data.stagedSentence);
 });
 </script>

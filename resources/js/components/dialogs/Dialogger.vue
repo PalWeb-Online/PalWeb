@@ -5,7 +5,6 @@ import {useDialogStore} from "./stores/DialogStore.js";
 import {useSentenceStore} from "./stores/SentenceStore.js";
 import Dialog from "./pages/Dialog.vue";
 import Sentence from "./pages/Sentence.vue";
-import {cloneDeep} from "lodash";
 
 const StateStore = useStateStore();
 const DialogStore = useDialogStore();
@@ -14,19 +13,12 @@ StateStore.data.modelType = window.modelType;
 
 onMounted(async () => {
     if (StateStore.data.modelType === 'dialog') {
-        if (window.stagedDialog) {
-            DialogStore.data.stagedDialog = window.stagedDialog;
-        }
+        await DialogStore.fetchDialog(window.modelId);
 
-        DialogStore.data.originalDialog = cloneDeep(DialogStore.data.stagedDialog);
-    }
+    } else if (StateStore.data.modelType === 'sentence') {
+        await SentenceStore.fetchSentence(window.modelId);
 
-    if (StateStore.data.modelType === 'sentence') {
         StateStore.data.step = 'sentence';
-
-        if (window.stagedSentence) {
-            SentenceStore.data.stagedSentence = window.stagedSentence;
-        }
     }
 });
 </script>
