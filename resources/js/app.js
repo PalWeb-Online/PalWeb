@@ -7,7 +7,6 @@ import DeckItem from "./components/DeckItem.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
 import SentenceItem from "./components/SentenceItem.vue";
 import BadgeItem from "./components/BadgeItem.vue";
-import ContextActions from "./components/ContextActions.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
 import DeckBuilder from "./components/decks/DeckBuilder.vue";
@@ -28,7 +27,6 @@ window.Alpine = Alpine;
 Alpine.start();
 
 const multiMountComponents = [
-    { selector: '[data-vue-component="ContextActions"]', component: ContextActions },
     { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
     { selector: '[data-vue-component="DeckHead"]', component: DeckHead },
@@ -42,9 +40,13 @@ const multiMountComponents = [
 function mountMultiComponents(selector, component) {
     document.querySelectorAll(selector).forEach(element => {
         const propsData = JSON.parse(element.dataset.props || '{}');
-        createApp({
-            render: () => h(component, propsData)
-        }).mount(element);
+
+        const app = createApp({
+            render: () => h(component, propsData),
+        });
+
+        app.use(pinia);
+        app.mount(element);
     });
 }
 

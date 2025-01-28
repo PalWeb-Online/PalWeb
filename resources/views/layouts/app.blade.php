@@ -45,6 +45,13 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
+    <script>
+        window.Laravel = @json([
+            'user' => auth()->user()->load('roles'),
+        ]);
+    </script>
+
+    @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 
 </head>

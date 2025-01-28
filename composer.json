@@ -28,6 +28,7 @@
         "spatie/laravel-sitemap": "^7.2",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
+        "tightenco/ziggy": "^2.5",
         "wildbit/postmark-php": "^4.0"
     },
     "require-dev": {
