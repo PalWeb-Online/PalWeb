@@ -1,5 +1,4 @@
 <script setup>
-import {nextTick, onBeforeUnmount, ref} from 'vue';
 import PinButton from "./PinButton.vue";
 import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";

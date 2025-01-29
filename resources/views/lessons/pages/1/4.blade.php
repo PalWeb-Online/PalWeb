@@ -152,7 +152,7 @@
     </div>
 
     <p>{{ __('activity.true-false') }} If false, make the statement true.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="صحّ ولّا غلط — جريس صبيّة" eng="true or false — Jeries is a young lady"/>
         <x-dialog-line speaker="جواب" arb="غلط، جريس شبّ" eng="false, Jeries is a young man"/>
     </div>
@@ -185,7 +185,7 @@
     </div>
 
     <p>{{ __('activity.multiple-choice') }} State your response as a full sentence.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="محمّد ويوسف شباب ولّا صبايا؟" eng="Mhammad & Yousef are guys or girls?"/>
         <x-dialog-line speaker="جواب" arb="همّه شباب" eng="they are guys"/>
     </div>
@@ -210,7 +210,7 @@
     </div>
 
     <p>{{ __('activity.multiple-choice') }} State your response as a full sentence.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="مين هاذي؟" eng="who is this?"/>
         <x-dialog-line speaker="جواب" arb="هاذي سما" eng="this is Sama"/>
     </div>
@@ -284,7 +284,7 @@
     <p>Shadow the following conversation. Yara & Mera were introducing themselves to each other when a friend of
         Mera's passes by:</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="يارا" arb="مرحبا، أنا يارا"/>
         <x-dialog-line speaker="ميرا" arb="مرحبتين، أنا ميرا — تشرّفنا"/>
         <x-dialog-line speaker="يارا" arb="إلي الشرف يا ميرا"/>
@@ -372,7 +372,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="يارا" arb="يا غسّان، مين الـ________ بالصفّ؟"/>
         <x-dialog-line speaker="غسّان" arb="الـ________؟ همّه ________، ________ و________"/>
         <x-dialog-line speaker="يارا" arb="________؟ مين ________؟"/>

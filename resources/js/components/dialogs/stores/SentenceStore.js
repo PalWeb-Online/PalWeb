@@ -57,23 +57,28 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
 
             data.originalSentence = cloneDeep(data.stagedSentence);
 
+
             if (StateStore.data.modelType === 'dialog') {
                 const index = DialogStore.data.originalDialog.sentences.findIndex(
                     sentence => sentence.id === data.stagedSentence.id
                 );
 
-                Object.assign(DialogStore.data.originalDialog.sentences[index], {
-                    sentence: data.stagedSentence.sentence,
-                    translit: data.stagedSentence.translit,
-                    trans: data.stagedSentence.trans,
-                    terms: data.stagedSentence.terms,
-                });
+                if (index !== -1) {
+                    Object.assign(DialogStore.data.originalDialog.sentences[index], {
+                        sentence: data.stagedSentence.sentence,
+                        translit: data.stagedSentence.translit,
+                        trans: data.stagedSentence.trans,
+                        terms: data.stagedSentence.terms,
+                    });
+                }
             }
+
 
             StateStore.data.errorMessage = null;
             return true;
 
         } catch (error) {
+            console.log('error');
             StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! The Sentence could not be saved.';
             return false;
         }

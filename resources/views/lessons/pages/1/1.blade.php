@@ -124,7 +124,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="من وين محمّد؟" eng="where is Mhammad from?"/>
         <x-dialog-line speaker="جواب" arb="محمّد من الأردن" eng="Mhammad is from Jordan"/>
     </div>
@@ -195,7 +195,7 @@
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation between Jeries & Lama. It's the start of the new semester at Birzeit
         University, so students are getting to know each other.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="مرحبا، أنا جريس"/>
         <x-dialog-line speaker="لمى" arb="مرحبتين، أنا لمى، تشرّفنا"/>
         <x-dialog-line speaker="جريس" arb="إلي الشرف — إنتي من فلسطين؟"/>
@@ -217,7 +217,7 @@
     />
 
     <p>Use the template to introduce yourself to someone:</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="مرحبا، أنا ________"/>
         <x-dialog-line speaker="لمى" arb="مرحبتين ________، أنا ________"/>
         <x-dialog-line speaker="جريس" arb="تشرّفنا — من وين إنتي؟"/>

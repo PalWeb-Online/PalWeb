@@ -36,7 +36,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="رنا" arb="بابا، ملاحظ إشي متغيّر فيّي؟"
                        eng="Dad, have you noticed anything that has changed about me?"/>
         <x-dialog-line speaker="أبو يزن" arb="نصحانة؟ لابسة أواعي أخوكي؟"
@@ -49,7 +49,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="رنا" arb="ماما، شو رأيك؟"
                        eng="Mom, what do you think"/>
         <x-dialog-line speaker="إمّ يزن" arb="زبطت"
@@ -62,7 +62,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ يزن" arb="يا خسارة تربياتي فيها"
                        eng="what a waste, my parenting on her"/>
         <x-dialog-line arb="معقول رنا تعمل هيك؟ ما عمّ بصدّق"
@@ -93,7 +93,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="كثير صعب الإمتحان — كثير كثير"
                        eng="the test is so hard — so, so much"/>
         <x-dialog-line speaker="إمّ سند" arb="شو رأيك تخلّي رنا تساعدك"
@@ -104,7 +104,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 5">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ يزن" arb="شو سرحانة، آه؟"
                        eng="daydreaming much, huh?"/>
         <x-dialog-line speaker="رنا" arb="ماما أيش مالك؟ ولا إشي، عمّ بدرس"
@@ -125,7 +125,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 6">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ إنصاف" arb="جلال، جاد، جرير، طبّ جورج؟"
                        eng="Jalal, Jad, Jareer, OK George?"/>
         <x-dialog-line arb="يي، ما حدا بردّ"
@@ -146,7 +146,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 7">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ إنصاف" arb="ورد أحمر، وقدّام البيت كمان؟"
                        eng="red flowers, & in front of the house too?"/>
         <x-dialog-line arb="شو هالرومانسيّة هاي؟"
@@ -175,7 +175,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 8">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ يزن" arb="إنتي ليش ما بتخبّريني عنّك"
                        eng="why don't you tell me about yourself?"/>
         <x-dialog-line arb="شو بتحبّي أغاني ومغنّيين"
@@ -202,7 +202,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 9">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="ولادنا صارو بعمر المراهقة وهاي المرحلة صعبة"
                        eng="our children are now in the teenage years & this is a difficult stage"/>
         <x-dialog-line arb="ولازم نرافقهم فيها"

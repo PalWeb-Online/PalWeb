@@ -34,7 +34,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="بابا شو بتعمل؟ نقّزتني"
                        eng="Dad, what are you doing? you startled me"/>
         <x-dialog-line speaker="أبو سند" arb="حابب أشوف شو اللي مفرّحك"
@@ -52,7 +52,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="معليش ماما حبيبي" eng="it's OK, my dear"/>
         <x-dialog-line arb="بسّ المرّة الجاية أوّل مبدّك تروح على الحمّام بتقلّي بسرعة، أوك؟"
                        eng="but next time, as soon as you want to go to the bathroom you tell me quickly, OK?"/>
@@ -61,7 +61,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="هاي ما دخّلتها" eng="I didn't put this one in"/>
         <x-dialog-line arb="ألو؟ أهلًا مسّ كوثر — خير،  فيه إشي؟"
                        eng="hello? hi Miss Kawthar — everything OK? is there something (going on)?"/>
@@ -72,7 +72,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سامر" arb="ماما"
                        eng="Mom"/>
         <x-dialog-line speaker="سالي" arb="فيه نونو — ودّيه بسرعة"
@@ -82,7 +82,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 5">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="إحكيلي، لشو مسّ كوثر بدّها ايّانا بكرا، آه؟"
                        eng="tell me what Miss Kawthar needs us for tomorrow, huh?"/>
         <x-dialog-line speaker="سند" arb="مسّ كوثر؟ مش عارف"
@@ -90,7 +90,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 6">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="يا الله، شو رح يصير بكرا؟"
                        eng="my God, what's going to happen tomorrow?"/>
         <x-dialog-line arb="شو رح يعملو بسّ يعرفو؟"
@@ -98,7 +98,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 7">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="مسّ كوثر" arb="أهلا وسهلا بأولياء أمور سند"
                        eng="welcome to the protectors of Sanad's affairs"/>
         <x-dialog-line speaker="أبو سند" arb="اهلًا فيكي مسّ — إنشالله خير"
@@ -129,7 +129,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 8">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="من وين جايب إنتا هالروقان"
                        eng="where'd you get this serenity from?"/>
         <x-dialog-line arb="يعني قاعد بغرفته كلّ الوقت بلعب وبسرح وبتخوّت علينا؟"
@@ -148,7 +148,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 9">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="يعني شو حكتلك بالزبط؟ بدّي أعرف"
                        eng="I mean, what did she tell you exactly? I want to know"/>
         <x-dialog-line arb="وليش هالمرّة حكو معك إنتا؟ مدايمًا بحكو معي أنا"
@@ -165,7 +165,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 10">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="مسّ كوثر" arb="وهلّأ بعد مخلّصنا شهادات الشرف للطلبة المتفوّقين"
                        eng="& now, after we finished the honor diplomas for the outstanding students"/>
         <x-dialog-line speaker="إمّ سند" arb="إجى دورنا — حضّر حالك للبهدلة"
@@ -180,7 +180,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 11">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="كيف بسّ؟"
                        eng="but how?"/>
         <x-dialog-line speaker="أبو سند" arb="كنت عارف إنّك إذا بدّك رح تقدر"
@@ -202,7 +202,7 @@
     </div>
 </x-activity-area>
 <x-activity-area title="{{ __('scene') }} 12">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند"
                        arb="أولادنا محتاجين منّنا إنّه نطوّل بالنا عليهم وندعمهم ونثق بقدراتهم"
                        eng="our children need from us that we be patient with them & support them & trust in their capabilities"/>

@@ -122,7 +122,8 @@ class SentenceController extends Controller
 
     public function store(StoreSentenceRequest $request): JsonResponse
     {
-        $sentence = Sentence::create($this->buildSentence($request));
+        $sentenceData = $request->sentence;
+        $sentence = Sentence::create($this->buildSentence($sentenceData));
 
         $this->linkTerms($sentence, $request->sentence['terms']);
 
@@ -133,7 +134,12 @@ class SentenceController extends Controller
 
     public function update(UpdateSentenceRequest $request, Sentence $sentence): JsonResponse
     {
-        $sentence->update($this->buildSentence($request));
+        $sentenceData = $request->sentence;
+        unset($sentenceData['dialog']);
+        unset($sentenceData['audio']);
+        unset($sentenceData['isPinned']);
+
+        $sentence->update($this->buildSentence($sentenceData));
 
         $this->linkTerms($sentence, $request->sentence['terms']);
 
@@ -142,14 +148,14 @@ class SentenceController extends Controller
         ]);
     }
 
-    private function buildSentence($request): array
+    private function buildSentence($sentenceData): array
     {
-        foreach ($request->sentence['terms'] as $term) {
+        foreach ($sentenceData['terms'] as $term) {
             $terms[] = $term['pivot']['sent_term'];
             $translits[] = $term['pivot']['sent_translit'];
         }
 
-        $sentence = $request->sentence;
+        $sentence = $sentenceData;
 
         $sentence['sentence'] = implode(' ', $terms);
         $sentence['translit'] = implode(' ', $translits);
@@ -219,7 +225,7 @@ class SentenceController extends Controller
 
     public function get($id): JsonResponse
     {
-        $sentence = Sentence::findOrFail($id);
+        $sentence = Sentence::with('dialog')->findOrFail($id);
 
         $terms = [];
         foreach ($sentence->allTerms() as $sentenceTerm) {

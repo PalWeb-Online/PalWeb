@@ -34,7 +34,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="مرحبا يا جماعة"
                        eng="hello everyone"/>
         <x-dialog-line arb="عمّ نسمع عن أمراض وفيروسات أشكال وألوان"
@@ -64,7 +64,34 @@
         <x-dialog-line arb="وننظّف منيح بين أصابعنا وتحت اظافرنا وإيدينا من قدّام ومن ورا"
                        eng="& clean well between our fingers & under our nails & our hands front & back"/>
         <x-dialog-line speaker="أبو سند" arb="ثانيًا، قرّرنا إنّه ما نروح على تجمّعات كبيرة"
+                       eng="secondly, we decided that we not go to large gather swine flu"/>
+        <x-dialog-line arb="وهلّا الكلّ بحكي عن فيروس كورونا"
+                       eng="& now everyone is talking about the coronavirus"/>
+        <x-dialog-line speaker="أبو سند" arb="بالنسبة إلنا عيلة أبو سند عملنا إجتماع طارئ"
+                       eng="as for us, the Abu Sanad family, we had an emergency meeting"/>
+        <x-dialog-line arb="وقرّرنا نعمل اللي علينا ونتّكل على ربّنا"
+                       eng="& we decided to do what we must & trust in God"/>
+        <x-dialog-line speaker="إمّ سند" arb="مثلًا، سند دايمًا دايمًا بنسى يغسّل إيديه"
+                       eng="for example, Sanad always forgets to wash his hands"/>
+        <x-dialog-line arb="فقرّرنا إنّه يكون عندنا قاعدة"
+                       eng="so we decided that we would have a rule"/>
+        <x-dialog-line arb="ممنوع حد يوكل أيّ إشي إلّا بعد ما يغسّل إيديه منيح"
+                       eng="nobody may eat anything except after washing their hands well"/>
+        <x-dialog-line speaker="أبو سند" arb="ممنوع حدا يمسك وجهه أو أنفه أو ثمّه أو عينيه"
+                       eng="nobody may touch their face, nose, mouth, or eyes"/>
+        <x-dialog-line arb="من دون ميكون مغسّل إيديه"
+                       eng="without having washed their hands"/>
+        <x-dialog-line speaker="إمّ سند" arb="هلّا منيجي لطريقة صحيحة لغسل إيدين"
+                       eng="now we come to a correct way of washing hands"/>
+        <x-dialog-line arb="لازم نغسّل إيدينا كثير منيح عالقليلة عشرين ثانية"
+                       eng="we must wash our hands very well for at least twenty seconds"/>
+        <x-dialog-line arb="وننظّف منيح بين أصابعنا وتحت اظافرنا وإيدينا من قدّام ومن ورا"
+                       eng="& clean well between our fingers & under our nails & our hands front & back"/>
+        <x-dialog-line speaker="أبو سند" arb="ثانيًا، قرّرنا إنّه ما نروح على تجمّعات كبيرة"
                        eng="secondly, we decided that we not go to large gatherings"/>
+        <x-dialog-line arb="وإذا اضطرّينا نطلع، بلاها عادة التبويس لمّا نسلّم على بعض"
+                       eng="& if we had to go out, that we do without the custom of kissing when we greet each other"/>
+        <x-dialog-line arb="ونتذّكر نغسل إيدينا منيح بعد المشوار"ings"/>
         <x-dialog-line arb="وإذا اضطرّينا نطلع، بلاها عادة التبويس لمّا نسلّم على بعض"
                        eng="& if we had to go out, that we do without the custom of kissing when we greet each other"/>
         <x-dialog-line arb="ونتذّكر نغسل إيدينا منيح بعد المشوار"

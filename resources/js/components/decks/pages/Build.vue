@@ -103,8 +103,8 @@ onMounted(async () => {
 
     <div class="deck-container">
         <div class="deck-container-head">
-            <input class="deck-container-head-title" id="deck[name]" v-model="DeckStore.data.stagedDeck.name"
-                   name="deck[name]" type="text" placeholder="Required: Deck Name"
+            <input class="deck-container-head-title" v-model="DeckStore.data.stagedDeck.name"
+                   placeholder="Required: Deck Name"
             />
 
             <img :class="['lock', { public: !DeckStore.data.stagedDeck.private }]"

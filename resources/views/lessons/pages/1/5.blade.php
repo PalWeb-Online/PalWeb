@@ -189,7 +189,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }} Indicate the surface the object is on.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="وين الميّ؟" eng="where is the water?"/>
         <x-dialog-line speaker="جواب" arb="الميّ عالأرض" eng="the water is on the floor"/>
     </div>
@@ -203,7 +203,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }} Indicate the room the object is in.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="وين الميّ؟" eng="where is the water?"/>
         <x-dialog-line speaker="جواب" arb="الميّ بالحمّام" eng="the water is in the bathroom"/>
     </div>
@@ -261,7 +261,7 @@
 
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation, paying attention to the gender of each speaker.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="نور" arb="أهلا وسهلا بمطعم (بلدنا) — تفضّل"/>
         <x-dialog-line speaker="شمس" arb="أهلين — هون تمام؟"/>
         <x-dialog-line speaker="نور" arb="آه، تفضّل — هاذا المنيو"/>
@@ -293,7 +293,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="نور" arb="أهلا وسهلا — تفضّل"/>
         <x-dialog-line speaker="شمس" arb="ممكن ________، لو سمحتي؟"/>
         <x-dialog-line speaker="نور" arb="آه، تمام"/>

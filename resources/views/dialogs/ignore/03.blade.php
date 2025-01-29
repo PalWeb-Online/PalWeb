@@ -41,7 +41,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="سالي، إحزري شو صار معي اليوم"
                        eng="Sally, guess what happened to me today"/>
         <x-dialog-line speaker="سالي" arb="شو؟"
@@ -103,7 +103,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أبو سند" arb="مرحبا يا حلوين"
                        eng="hello my darlings"/>
         <x-dialog-line speaker="سالي" arb="أهلين بابا"
@@ -178,7 +178,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="شرطيّ" arb="وشو كان لون السيّارة؟"
                        eng="& what was the color of the car?"/>
         <x-dialog-line speaker="سند" arb="السيّارة كان لونها أخضر على ذهبيّ"
@@ -219,7 +219,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="وإنتو كمان يا أصحاب، إذا بتحبّو تنزّلو تعليمات السلامة"
                        eng="& you too friends, if you'd like to download the safety information"/>
         <x-dialog-line arb="عشان تستفيدو منّها أو توزّعوها ع صحابكم، إكبسو هون"

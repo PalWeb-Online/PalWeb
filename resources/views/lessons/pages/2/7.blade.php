@@ -113,7 +113,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="الكتاب بقدّيش؟" eng="(for) how much is the book?"/>
         <x-dialog-line speaker="جواب" arb="الكتاب بستّعش" eng="the book is (for) sixteen"/>
     </div>

@@ -19,7 +19,7 @@ const {data, playAudio} = useTerm(props);
             <div class="term-item">
                 <div class="term-item-head">
                     <div class="arb">{{ data.term.term }}</div>
-                    <img class="play" v-if="data.term.audio" :src="`/img/audio.svg`" alt="play" @click="playAudio"/>
+                    <img class="play" v-if="data.term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>
                     <div class="translit">{{ data.term.translit }}</div>
                 </div>
                 <div class="term-item-body">

@@ -127,13 +127,13 @@ figure {
 iframe {
     display: block;
     aspect-ratio: 16 / 9;
-    border-radius: 2.4rem;
+    border-radius: 1.6rem;
     width: 100%;
 
-    padding: 0.3rem;
+    padding: 0.2rem;
     background: $purple-pastel-light;
-    border: 0.6rem solid $purple-deep;
-    box-shadow: -0.6rem 0.6rem 0 0 rgba(black, 0.25);
+    border: 0.3rem solid $purple-deep;
+    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
 }
 
 h1, h2, h3 {

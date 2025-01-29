@@ -24,7 +24,7 @@
 
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation between ? & ? in ?:</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="غسّان" arb="يعطيك العافية"/>
         <x-dialog-line speaker="جريس" arb="الله يعافيك"/>
         <x-dialog-line speaker="غسّان" arb="بدّي أغلّبك"/>

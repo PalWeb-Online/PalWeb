@@ -1,9 +1,9 @@
 @props([
-    'term' => false,
-    'gloss' => false,
-    'arb' => false,
-    'eng' => false,
-    'subterm' => false,
+    'term' => null,
+    'gloss' => null,
+    'arb' => null,
+    'eng' => null,
+    'subterm' => null,
 ])
 
 @if($term)

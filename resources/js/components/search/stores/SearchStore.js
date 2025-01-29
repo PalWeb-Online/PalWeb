@@ -66,11 +66,11 @@ export const useSearchStore = defineStore('SearchStore', {
             });
 
             this.tabs = this.tabs.map(tab => {
-                if (context === 'builder') {
-                    this.activeModel = 'terms';
+                if (context === 'record') {
+                    this.activeModel = 'decks';
                     return {
                         ...tab,
-                        disabled: tab.value !== 'terms',
+                        disabled: tab.value !== 'decks',
                     };
                 } else if (context === 'viewer') {
                     this.activeModel = 'decks';
@@ -78,11 +78,17 @@ export const useSearchStore = defineStore('SearchStore', {
                         ...tab,
                         disabled: tab.value !== 'decks',
                     };
-                } else if (context === 'record') {
-                    this.activeModel = 'decks';
+                } else if (context === 'builder') {
+                    this.activeModel = 'terms';
                     return {
                         ...tab,
-                        disabled: tab.value !== 'decks',
+                        disabled: tab.value !== 'terms',
+                    };
+                } else if (context === 'dialogger') {
+                    this.activeModel = 'sentences';
+                    return {
+                        ...tab,
+                        disabled: tab.value !== 'sentences',
                     };
                 }
 

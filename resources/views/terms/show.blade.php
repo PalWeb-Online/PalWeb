@@ -167,21 +167,23 @@
                             </div>
 
                             @if(count($term->sentences($gloss->id)->get()) > 0)
-                                @if(request()->routeIs('terms.usages'))
-                                    @foreach ($term->sentences($gloss->id)->get() as $sentence)
-                                        <x-vue.sentence component="SentenceItem" :sentence="$sentence"
-                                                        :currentTerm="$term->id"/>
-                                    @endforeach
-                                @else
-                                    @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
-                                        <x-vue.sentence component="SentenceItem" :sentence="$sentence"
-                                                        :currentTerm="$term->id"/>
-                                    @endforeach
-                                    @if(count($term->sentences($gloss->id)->get()) > 2)
-                                        <a href="{{ route('terms.usages', $term) }}">See All Usages
-                                            ({{ count($term->sentences($gloss->id)->get()) }})</a>
+                                <div class="sentence-list">
+                                    @if(request()->routeIs('terms.usages'))
+                                        @foreach ($term->sentences($gloss->id)->get() as $sentence)
+                                            <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                            :currentTerm="$term->id" dialog/>
+                                        @endforeach
+                                    @else
+                                        @foreach ($term->sentences($gloss->id)->take(2)->get() as $sentence)
+                                            <x-vue.sentence component="SentenceItem" :sentence="$sentence"
+                                                            :currentTerm="$term->id"/>
+                                        @endforeach
+                                        @if(count($term->sentences($gloss->id)->get()) > 2)
+                                            <a href="{{ route('terms.usages', $term) }}">See All Usages
+                                                ({{ count($term->sentences($gloss->id)->get()) }})</a>
+                                        @endif
                                     @endif
-                                @endif
+                                </div>
                             @endif
                         </div>
                     @endforeach

@@ -34,7 +34,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="شو سالي — كيف ماشية ماما؟"
                        eng="hey Sally — how are you doing, darling?"/>
         <x-dialog-line speaker="سالي" arb="مش منيح — الرواية كثير طويلة وما عمّ بتخلص"
@@ -67,7 +67,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أبو سند" arb="مرحبا يا جماعة"
                        eng="hello everyone"/>
         <x-dialog-line speaker="سند" arb="أهلين بابا — جبت تفّاح؟"
@@ -84,7 +84,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="ستّ" arb="وهيك بتكبكب الكبّة، عشان تطلع كلّ وحدة مثل إختا بالضبط"
                        eng="& that's how you roll the kubbeh, so each one comes out exactly like the other (lit. its sister)"/>
         <x-dialog-line speaker="إمّ يزن" arb="مثل أختها أكيد — خالق الناطق"
@@ -109,7 +109,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="كثير طويل الواجب"
                        eng="the assignment is so long"/>
         <x-dialog-line arb="هاي رنا — بتصدّقي إنّه لهلّأ ما خلّصت التلخيص؟"
@@ -124,7 +124,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 5">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أبو سند" arb="حبيبي سند، مش صعبة كلمة (شطآن)"
                        eng="my dear Sanad, the word 'shores' isn't hard"/>
         <x-dialog-line arb="[...]"
@@ -162,7 +162,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 6">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="أهلا وسهلا إمّ يزن، تفضّلي — شو معاكي، أشوف؟"
                        eng="welcome Imm Yazan, come in — what do you have with you, can I see?"/>
         <x-dialog-line speaker="إمّ يزن" arb="لا، بسّ جاية أعطيكي هالأكمّ حبّة كبّة تدوقيهم"
@@ -194,7 +194,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 7">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أبو سند" arb="[...]"
                        eng="[...]"/>
         <x-dialog-line speaker="إمّ سند" arb="صفر؟ سالي؟"
@@ -245,7 +245,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 8">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ يزن" arb="مش هيك يا أبو يزن — قطّع البقدونس ناعم"
                        eng="not like that Abu Yazan — dice the parsley finely"/>
         <x-dialog-line arb="التبّولة بدّها تقطيع ناعم"

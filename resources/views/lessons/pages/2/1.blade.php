@@ -189,7 +189,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="أكرم أيمتى معطّل هالأسبوع؟" eng="when is Akram off this week?"/>
         <x-dialog-line speaker="جواب" arb="هو معطّل يوم الـ ... ويوم الـ ..." eng="he's off on ... & ..."/>
     </div>
@@ -258,7 +258,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="لحظة — مش فاهم"/>
         <x-dialog-line speaker="أكرم" arb="آه؟ شو؟"/>
         <x-dialog-line speaker="جريس" arb="شو معنى كلمة ________؟"/>

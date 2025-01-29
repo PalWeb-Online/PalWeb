@@ -257,7 +257,7 @@
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation. Shadi was studying the university cafeteria when Mera & Sama — & then
         Akram — pass by.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="شادي" arb="صباح الخير يا صبايا، كيف الحال؟"/>
         <x-dialog-line speaker="سما" arb="أهلين، صباح النور"/>
         <x-dialog-line speaker="ميرا" arb="إحنا تمام، وإنتا؟ مشغول كثير؟"/>
@@ -316,7 +316,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أ" arb="صباح الخير يا ________، كيف الحال؟"/>
         <x-dialog-line speaker="ب" arb="________، وإنتا؟ مشغول كتير؟"/>
         <x-dialog-line speaker="أ" arb="آه، الإمتحان بكرا وأنا مش جاهز"/>

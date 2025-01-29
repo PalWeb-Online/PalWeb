@@ -68,7 +68,7 @@
 {{--                <div class="arbtr"><span class="char blu">فلان</span> ما بعرف — أنا مش شايفه هيك.</div>--}}
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="أهلين بالحلوين — شو، كيف أوّل يوم مدرسة؟"
                        eng="hello sweeties — so, how's the first day of school?"/>
         <x-dialog-line speaker="سالي"
@@ -104,7 +104,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="أنا بقول لبكرا خلّينا نقدّم هدول الثلاث شخصيّات"
                        eng="I say for tomorrow let's present these three characters"/>
         <x-dialog-line arb="ونستنّى نشوف شو بتحكي المسّ"
@@ -126,7 +126,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="دير بالك فراس، هيّ فيه واحد طالع من ورا الشجرة"
                        eng="be careful Firas, there's one coming out now from behind the tree"/>
         <x-dialog-line speaker="إمّ سند" arb="سند، مين هاذا فراس؟"
@@ -150,7 +150,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="صاحبة" arb="باي آنتي"
                        eng="bye auntie"/>
         <x-dialog-line speaker="لبنى"
@@ -183,7 +183,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 5">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="ماما، بابا، بصير حدا يوصّلني عند لبنى بسرعة؟"
                        eng="Mom, Dad, could someone take me to Lubna's really quick?"/>
         <x-dialog-line speaker="أبو سند" arb="مين لبنى"
@@ -212,7 +212,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 6">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="أيوى، برافو فراس"
                        eng="yeah, good job Firas"/>
         <x-dialog-line arb="إسمع استنّوني شويّ، بدّي أروح عالحمّام وهلّأ برجع"
@@ -242,7 +242,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 7">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="لبنى، من أوّل مإجيت وإنتي بتحطّي ميكاب"
                        eng="Lubna, from the moment I arrived you've been putting on makeup"/>
         <x-dialog-line arb="فيه حدا جاية غيري؟"
@@ -269,7 +269,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 8">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ سند" arb="مش معقول، شو هاذ؟ ساكنة بآخر الدنيا؟"
                        eng="unbelievable, what is this? do I live at the end of the world?"/>
         <x-dialog-line arb="ألو ماما سالي؟ أنا لازم آجي آخدك هلّأ — حضّري حالك"
@@ -292,7 +292,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 9">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="فكرة الماما إنّه يكون بيناتنا رسالة سرّيّة"
                        eng="Mom's idea that there be a secret message between us"/>
         <x-dialog-line arb="لمّا أكون مش مرتاحة، فكرة عبقريّة"

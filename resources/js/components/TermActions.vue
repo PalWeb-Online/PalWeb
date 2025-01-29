@@ -37,8 +37,8 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
                 </form>
             </template>
 
-            <a :href="route('terms.usages', model.id)">See Usages</a>
-            <a :href="route('terms.audios', model.id)">See Audios</a>
+            <a :href="route('terms.usages', model.slug)">See Usages</a>
+            <a :href="route('terms.audios', model.slug)">See Audios</a>
         </div>
     </div>
 </template>

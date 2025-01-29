@@ -7,7 +7,7 @@
         <x-link :href="route('sentences.show', $sentence)">{{ __('view') }}</x-link>
     </x-page-head>
 
-    <x-vue.sentence component="SentenceItem" size="l" :sentence="$sentence"/>
+    <x-vue.sentence component="SentenceItem" size="l" :sentence="$sentence" dialog/>
 
     <x-vocabulary>
         @foreach($sentence->terms as $term)

@@ -13,10 +13,10 @@ StateStore.data.modelType = window.modelType;
 
 onMounted(async () => {
     if (StateStore.data.modelType === 'dialog') {
-        await DialogStore.fetchDialog(window.modelId);
+        window.modelId && await DialogStore.fetchDialog(window.modelId);
 
     } else if (StateStore.data.modelType === 'sentence') {
-        await SentenceStore.fetchSentence(window.modelId);
+        window.modelId && await SentenceStore.fetchSentence(window.modelId);
 
         StateStore.data.step = 'sentence';
     }
@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
     <div id="app-head">
-        <button @click="StateStore.exit">Exit to Workbench</button>
+        <button @click="StateStore.exit">Exit to Dialog Library</button>
         <h1>Dialogger</h1>
         <div id="app-nav">
             <img :class="StateStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"

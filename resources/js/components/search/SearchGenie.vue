@@ -14,7 +14,8 @@ const props = defineProps({
 
 const emit = defineEmits([
     'emitTerm',
-    'emitDeck'
+    'emitDeck',
+    'emitSentence'
 ]);
 
 const activeIndex = ref(-1);
@@ -37,6 +38,9 @@ function handleMouseMove(event) {
             break;
         case "builder":
             message = "Add this Term.";
+            break;
+        case "dialogger":
+            message = "Add this Sentence.";
             break;
     }
 
@@ -86,7 +90,11 @@ const selectTerm = (term) => {
 };
 
 const selectSentence = (sentence) => {
-    window.location.href = `/dictionary/sentences/${sentence.id}`;
+    if (props.context === 'dialogger') {
+        emit('emitSentence', sentence);
+    } else {
+        window.location.href = `/dictionary/sentences/${sentence.id}`;
+    }
 };
 
 const selectDeck = async (deck) => {

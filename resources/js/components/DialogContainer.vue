@@ -31,14 +31,18 @@ onMounted(async () => {
 
 <template>
     <template v-if="! data.isLoading">
-        <div>{{ data.dialog.title }}</div>
-        <div v-if="data.dialog.description">{{ data.dialog.description }}</div>
-        <iframe v-if="data.dialog.media" src="{{ data.dialog.media }}" allowfullscreen></iframe>
+        <div class="dialog-container">
+            <div class="dialog-container-head">
+                <div class="dialog-container-head-title">{{ data.dialog.title }}</div>
+            </div>
+            <iframe v-if="data.dialog.media" :src="data.dialog.media" allowfullscreen></iframe>
+            <div class="dialog-description" v-if="data.dialog.description">{{ data.dialog.description }}</div>
 
-        <div class="activity-dialog">
-            <template v-for="sentence in data.dialog.sentences">
-                <SentenceItem :id="sentence.id" size="m"/>
-            </template>
+            <div class="dialog-body">
+                <template v-for="sentence in data.dialog.sentences">
+                    <SentenceItem :id="sentence.id" speaker/>
+                </template>
+            </div>
         </div>
     </template>
 </template>

@@ -47,7 +47,7 @@
 </x-vocabulary>
 
 <x-activity-area title="{{ __('scene') }} 1">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="جول"
                        eng="goal"/>
         <x-dialog-line speaker="ولد" arb="شو؟ هاذا جول؟ هاذا مش جول"
@@ -66,7 +66,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 2">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أبو سند" arb="مرحبا دينا، يعطيكي العافية"
                        eng="hello Dina, God bless your work"/>
         <x-dialog-line arb="شو، شكله كان يومك متعب"
@@ -135,7 +135,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 3">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="أنا بقول الحلّ إنّه نعمل مبادرة"
                        eng="I say the solution is that we do an initiative"/>
         <x-dialog-line arb="ونزبّط الملعب ونشتري مرمى جديد"
@@ -166,7 +166,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 4">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="إمّ يزن"
                        arb="مأحلاهم الولاد، كيف بسلّو حالهم — بسّ مين هذول الولاد اللي معهم؟"
                        eng="how cute the kids are, how they entertain themselves — but who are those kids that are with them?"/>
@@ -231,7 +231,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 5">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سند" arb="أيوى يزن — روح"
                        eng="yeah Yazan, go"/>
         <x-dialog-line speaker="يزن" arb="جول"
@@ -244,7 +244,7 @@
 </x-activity-area>
 
 <x-activity-area title="{{ __('scene') }} 6">
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سالي" arb="يعني إحنا حتّى لو مختلفين بأشياء"
                        eng="I mean, even if we're different in some things"/>
         <x-dialog-line arb="بسّ فيه كثير أشياء بتجمعنا وهاذ الأهمّ"

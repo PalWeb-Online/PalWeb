@@ -121,7 +121,7 @@
     </div>
 
     <p>{{ __('activity.yes-no') }} If you need more, state how many.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="بدّنا كمان بردقان؟" eng="do we need more oranges?"/>
         <x-dialog-line speaker="جواب" arb="آه، بدّنا كمان ٤" eng="yes, we need another 4"/>
     </div>
@@ -152,12 +152,12 @@
     <p>One of the most common interjections in many dialects of Arabic is <b>خلص (xalaṣ)</b>. It has many translations,
         but is basically used to put an end to something, similar to <b>"stop it"</b> or <b>"that's enough"</b>.</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="بدّك كمان قهوة؟" eng="would you like some more coffee?"/>
         <x-dialog-line speaker="سما" arb="لأ خلص، شكرا" eng="no, that's enough, thank you"/>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="بس أنا كثير جوعان" eng="but I'm really hungry"/>
         <x-dialog-line speaker="سما" arb="خلص، فش كمان أكل" eng="enough, there's no more food"/>
     </div>
@@ -166,7 +166,7 @@
         eating. If you are offered food in this scenario, it's customary to say <b>صحّة (ṣaħħa)</b> instead of saying
         <b>"no"</b> outright.</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="أنا بدّي قهوة ... إنتي بدّك؟"
                        eng="I want coffee ... would you like some?"/>
         <x-dialog-line speaker="سما" arb="صحّة، صحّة" eng="(no, thank you) enjoy yours"/>

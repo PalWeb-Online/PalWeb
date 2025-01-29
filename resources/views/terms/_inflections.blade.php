@@ -183,7 +183,7 @@
         </div>
     @endif
     @if (count($term->inflections->where('form', 'resp')) > 0)
-        <div class="activity-dialog" style="margin-block: 0;">
+        <div class="dialog-body" style="margin-block: 0;">
             <x-dialog-line speaker="دعاء" :arb="$term->term" :eng="$term->translit" audio/>
             @foreach($term->inflections->where('form', 'resp')->all() as $response)
                 <x-dialog-line ltr speaker="جواب" :arb="$response->inflection" :eng="$response->translit" audio/>

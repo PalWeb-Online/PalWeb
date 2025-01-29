@@ -186,6 +186,7 @@
 
 .gloss-li-container {
     display: grid;
+    gap: 0.8rem;
     padding-block-end: 3.2rem;
 
     &:not(:last-child) {
@@ -198,6 +199,10 @@
         justify-self: end;
         color: $purple-deep;
         font-weight: 700;
+    }
+
+    .sentence-list {
+        justify-items: end;
     }
 }
 
