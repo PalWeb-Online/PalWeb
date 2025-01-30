@@ -50,7 +50,7 @@ onMounted(() => {
             <div class="deck-flashcard-front">
                 <slot name="front">
                     <div class="deck-flashcard-front-head">
-                        <div class="deck-title">{{ deck.name }}</div>
+                        <div class="item-title">{{ deck.name }}</div>
                         <div class="deck-author" style="align-self: flex-end">
                             <div class="deck-author-name">by {{ deck.authorName }}</div>
                             <img class="deck-author-avatar" alt="Profile Picture" :src="deck.authorAvatar"/>
@@ -58,7 +58,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body">
-                        <div v-if="deck.description" class="deck-description">{{ description }}</div>
+                        <div v-if="deck.description" class="item-description">{{ description }}</div>
                     </div>
                 </slot>
             </div>

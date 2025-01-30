@@ -22,16 +22,16 @@ const {data, description} = useDeck(props);
         <div :class="['deck-item-wrapper', size]">
             <DeckActions :model="data.deck"/>
             <div class="deck-item">
-                <div class="deck-metadata">
+                <div class="item-data">
                     <div style="display: flex; gap: 0.8rem; align-items: center">
-                        <div class="deck-title">
+                        <div class="item-title">
                             {{ data.deck.name }}
                         </div>
                         <div class="deck-term-count">
                             ({{ data.deck.terms.length }})
                         </div>
                     </div>
-                    <div v-if="size === 'l' && data.deck.description" class="deck-description">
+                    <div v-if="size === 'l' && data.deck.description" class="item-description">
                         {{ description }}
                     </div>
                 </div>

@@ -2,10 +2,11 @@ import { createApp, h } from "vue/dist/vue.esm-bundler";
 import TermEditor from "./components/TermEditor.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
-import DeckHead from "./components/DeckHead.vue";
 import DeckItem from "./components/DeckItem.vue";
+import DeckContainer from "./components/DeckContainer.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
 import SentenceItem from "./components/SentenceItem.vue";
+import DialogItem from "./components/DialogItem.vue";
 import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
@@ -28,12 +29,13 @@ window.Alpine = Alpine;
 Alpine.start();
 
 const multiMountComponents = [
-    { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
-    { selector: '[data-vue-component="DeckHead"]', component: DeckHead },
+    { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
+    { selector: '[data-vue-component="DeckContainer"]', component: DeckContainer },
     { selector: '[data-vue-component="SentenceItem"]', component: SentenceItem },
+    { selector: '[data-vue-component="DialogItem"]', component: DialogItem },
     { selector: '[data-vue-component="DialogContainer"]', component: DialogContainer },
     { selector: '[data-vue-component="BadgeItem"]', component: BadgeItem },
     { selector: '[data-vue-component="PrivacyToggleButton"]', component: PrivacyToggleButton },

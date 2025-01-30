@@ -1,13 +1,4 @@
-.sentence-list {
-    display: grid;
-    gap: 1.6rem;
-}
-
-.sentence-wrapper {
-    display: grid;
-    grid-template-columns: 2.4rem auto;
-    gap: 0.4rem 0.8rem;
-    direction: rtl;
+.sentence-item-wrapper {
     position: relative;
 
     &.l {
@@ -18,6 +9,11 @@
 
             .sentence-eng {
                 padding: 0.8rem 2.4rem;
+            }
+
+            .sentence-speaker {
+                font-size: 2.0rem;
+                padding-block: 0.4rem;
             }
         }
 
@@ -84,6 +80,7 @@
         font-size: 1.6rem;
         font-weight: 700;
         font-family: $ar_bodyFont;
+        border-radius: 0;
         text-align: start;
 
         .play {
@@ -210,26 +207,36 @@
     }
 }
 
-.dialog-container {
-    display: grid;
-    gap: 2.4rem;
-    width: 100%;
-    max-width: 96rem;
-    padding: 2.4rem;
-    background: white;
-    border-radius: 1.6rem;
-    border: 0.2rem solid $purple-primary-dark;
-    box-shadow: none;
+.dialog-item {
+    padding: 0.8rem 1.6rem;
+    border-radius: 1.2rem;
+    font-family: $bodyFont !important;
 
-    @media (min-width: 960px) {
-        box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
+    .item-data {
+        gap: 0.8rem;
+
+        .item-title {
+            font-size: 1.8rem;
+        }
+
+        .item-description {
+            font-size: 1.4rem;
+        }
     }
 }
 
+.dialog-container {
+    direction: rtl;
+
+}
+
 .dialog-container-head {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    justify-content: space-between;
     padding-block-end: 0.8rem;
     border-block-end: 0.2rem dotted $purple-primary-dark;
-    direction: rtl;
 
     .dialog-container-head-title {
         font-family: $headFont;
@@ -247,12 +254,13 @@
 .dialog-description {
     color: $purple-deep;
     font-family: $bodyFont;
-    font-size: 1.6rem;
+    font-size: 2.0rem;
     font-weight: 700;
 }
 
 textarea.dialog-description {
-    padding: 1.2rem 1.6rem;
+    font-size: 1.8rem;
+    padding: 1.2rem;
 }
 
 .dialog-body {
@@ -263,7 +271,7 @@ textarea.dialog-description {
     //background: $accent-yellow-pastel;
     //border-radius: 1.2rem;
     //padding: 1.6rem;
-    margin-block: 1.6rem 3.2rem;
+    margin-block: 3.2rem;
     direction: rtl;
 }
 

@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
+import {cloneDeep} from "lodash";
 import {useStateStore} from "../stores/StateStore.js";
 import {useSentenceStore} from "../stores/SentenceStore.js";
 import draggable from 'vuedraggable';
@@ -8,7 +9,6 @@ import SentenceItem from "../ui/SentenceItem.vue";
 import TermItem from "../ui/TermItem.vue";
 import AppButton from "../../AppButton.vue";
 import AppNotification from "../../AppNotification.vue";
-import {cloneDeep} from "lodash";
 
 const StateStore = useStateStore();
 const SentenceStore = useSentenceStore();
@@ -23,7 +23,7 @@ const insertTerm = (term) => {
         glosses: term.glosses.map((gloss) => ({
             id: gloss.id, gloss: gloss.gloss,
         })),
-        pivot: {
+        sentencePivot: {
             gloss_id: term.glosses[0].id,
             sent_term: term.term,
             sent_translit: term.translit,
@@ -36,7 +36,7 @@ const insertTerm = (term) => {
 
 const addTerm = () => {
     SentenceStore.data.stagedSentence.terms.push({
-        pivot: {
+        sentencePivot: {
             sent_term: '',
             sent_translit: '',
             position: '',
@@ -52,7 +52,7 @@ const removeTerm = (index) => {
 
 const updatePosition = () => {
     SentenceStore.data.stagedSentence.terms.forEach((term, index) => {
-        term.pivot.position = index + 1;
+        term.sentencePivot.position = index + 1;
     });
 }
 

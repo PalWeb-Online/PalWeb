@@ -1,12 +1,4 @@
 .term-container {
-    position: relative;
-    display: grid;
-    gap: 3.2rem;
-    padding: 2.4rem 3.2rem;
-    background: white;
-    border-radius: 1.6rem;
-    border: 0.2rem solid $purple-primary-dark;
-
     .term-container-head {
         .term-references, .term-inflections {
             display: flex;
@@ -45,19 +37,6 @@
             color: white;
             border-block-end: 0.3rem dotted $accent-yellow;
             padding-block-end: 1.2rem;
-        }
-    }
-
-    .user-wrapper {
-        // Mobile
-        margin-inline-start: calc(-1.2rem - 3.2rem);
-    }
-
-    @media (min-width: 960px) {
-        box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
-
-        .user-wrapper {
-            margin-inline-start: calc(-3.2rem - 3.2rem);
         }
     }
 }

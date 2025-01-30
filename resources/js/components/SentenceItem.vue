@@ -22,7 +22,7 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
 
 <template>
     <template v-if="! data.isLoading">
-        <div :class="['sentence-wrapper', size]">
+        <div :class="['sentence-item-wrapper', size]">
             <SentenceActions :model="data.sentence"/>
             <div class="sentence-item">
                 <div v-if="speaker" class="sentence-speaker">

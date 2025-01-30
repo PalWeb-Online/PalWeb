@@ -157,32 +157,24 @@
         }
     }
 
-    .deck-title {
+    .item-title {
         font-weight: 700;
     }
-}
 
-.decks-list {
-    display: grid;
-    gap: 1.6rem;
-
-    .deck-item-wrapper {
-        margin: 0 0 0.3rem 0.3rem;
+    .item-description {
+        font-size: 1.2rem;
     }
 }
 
 .deck-item-wrapper {
-    display: flex;
-    gap: 0.8rem;
-    align-items: center;
     margin: 1.6rem 0 calc(1.6rem + 0.3rem) 0.3rem;
 
     &.l {
-        .deck-item .deck-metadata {
+        .deck-item .item-data {
             padding-block: 0.8rem
         }
 
-        .deck-item .deck-title {
+        .deck-item .item-title {
             font-size: 1.6rem
         }
     }
@@ -226,39 +218,29 @@
 .deck-item {
     display: flex;
     flex-flow: row wrap;
-    flex-grow: 1;
     gap: 0.4rem 1.6rem;
     align-items: center;
     justify-content: space-between;
-    font-family: $headFont;
     padding: 0.8rem 0.8rem 0.8rem 1.6rem;
     border-radius: 1.2rem 3.6rem 3.6rem 1.2rem;
-    color: $purple-deep;
-    background: white;
-    border: 0.2rem solid $purple-primary-dark;
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.2);
-    position: relative;
+    direction: ltr;
 
-    .deck-metadata {
-        display: grid;
+    .item-data {
         gap: 0.4rem;
-        padding-block: 0.4rem;
-    }
 
-    .deck-title {
-        font-weight: 700;
-        font-size: 1.4rem;
+        .item-title {
+            font-size: 1.4rem;
+        }
+
+        .item-description {
+            font-size: 1.2rem;
+        }
     }
 
     .deck-term-count {
         color: $yel;
         font-weight: 700;
-
     }
-}
-
-.deck-description {
-    font-size: 1.2rem;
 }
 
 .deck-author {
@@ -308,24 +290,6 @@
 }
 
 .deck-container {
-    position: relative;
-    display: grid;
-    gap: 2.4rem;
-    width: 100%;
-    max-width: 96rem;
-    padding: 2.4rem;
-    background: white;
-    border-radius: 1.6rem;
-    border: 0.2rem solid $purple-primary-dark;
-
-    // Mobile
-    box-shadow: none;
-
-    .user-wrapper {
-        // Mobile
-        margin-inline-start: calc(-1.2rem - 2.4rem);
-    }
-
     .deck-term-count {
         font-family: $headFont;
         font-weight: 700;
@@ -336,14 +300,6 @@
 
     .tip {
         border: 0.1rem solid $purple-primary;
-    }
-
-    @media (min-width: 960px) {
-        box-shadow: -0.3rem 0.3rem 0 0 $purple-primary-dark;
-
-        .user-wrapper {
-            margin-inline-start: calc(-3.2rem - 2.4rem);
-        }
     }
 }
 
@@ -360,7 +316,6 @@
         text-transform: none;
         font-weight: 700;
         font-size: 2.8rem;
-
     }
 
     input.deck-container-head-title {

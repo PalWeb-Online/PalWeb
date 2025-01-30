@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="sentence-wrapper l" style="grid-template-columns: 1fr">
+    <div :class="['sentence-item-wrapper', size]" style="grid-template-columns: 1fr">
         <div class="sentence-item">
             <div v-if="sentence.terms.length > 0" class="sentence-arb">
                 <template v-for="term in sentence.terms">
