@@ -5,6 +5,11 @@ import PinButton from "./PinButton.vue";
 import SentenceActions from "./SentenceActions.vue";
 
 const props = defineProps({
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
     id: Number,
     size: {type: String, default: 'm'},
     currentTerm: Number,

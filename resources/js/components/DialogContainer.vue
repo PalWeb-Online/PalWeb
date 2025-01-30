@@ -4,6 +4,11 @@ import {route} from "ziggy-js";
 import SentenceItem from "./SentenceItem.vue";
 
 const props = defineProps({
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
     id: Number,
 });
 

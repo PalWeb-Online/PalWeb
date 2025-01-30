@@ -5,6 +5,11 @@ import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./TermActions.vue";
 
 const props = defineProps({
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
     id: Number,
     size: {type: String, default: 'm'},
     glossId: {type: Number, default: null},
