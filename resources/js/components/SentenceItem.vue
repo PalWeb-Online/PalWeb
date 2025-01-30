@@ -35,14 +35,14 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                             <a :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                                :target="isCurrentTerm(term) ? '' : '_blank'"
                                :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
-                                <div>{{ term.pivot.sent_term }}</div>
-                                <div>{{ term.pivot.sent_translit }}</div>
+                                <div>{{ term.sentencePivot.sent_term }}</div>
+                                <div>{{ term.sentencePivot.sent_translit }}</div>
                             </a>
                         </template>
                         <template v-else>
                             <div class="sentence-term">
-                                <div>{{ term.pivot.sent_term }}</div>
-                                <div>{{ term.pivot.sent_translit }}</div>
+                                <div>{{ term.sentencePivot.sent_term }}</div>
+                                <div>{{ term.sentencePivot.sent_translit }}</div>
                             </div>
                         </template>
                     </template>

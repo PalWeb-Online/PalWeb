@@ -159,15 +159,6 @@ class TermController extends Controller
             },
         ])->findOrFail($id);
 
-        $term->isPinned = $term->isPinned();
-
-        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
-        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
-
-        $term->audio =
-            $term->pronunciations->whereIn('dialect_id', $dialectIds)->first()?->audios?->first()?->filename
-            ?? $term->pronunciations->first()->audios?->first()?->filename;
-
         return response()->json([
             'term' => $term,
             'root' => $term->root->root ?? '',

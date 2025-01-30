@@ -12,8 +12,8 @@ const props = defineProps({
             <div v-if="sentence.terms.length > 0" class="sentence-arb">
                 <template v-for="term in sentence.terms">
                     <div class="sentence-term">
-                        <div>{{ term.pivot.sent_term }}</div>
-                        <div>{{ term.pivot.sent_translit }}</div>
+                        <div>{{ term.sentencePivot.sent_term }}</div>
+                        <div>{{ term.sentencePivot.sent_translit }}</div>
                     </div>
                 </template>
             </div>

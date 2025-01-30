@@ -47,7 +47,9 @@
 
     <script>
         window.Laravel = @json([
-            'user' => auth()->user()->load('roles'),
+            'user' => auth()->check()
+                ? new \App\Http\Resources\UserResource(auth()->user()->load(['decks.terms', 'roles']))
+                : null,
         ]);
     </script>
 

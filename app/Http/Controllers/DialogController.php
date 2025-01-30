@@ -146,11 +146,4 @@ class DialogController extends Controller
             return to_route('dialogs.index');
         }
     }
-
-    public function get($id): JsonResponse
-    {
-        return response()->json([
-            'dialog' => Dialog::with('sentences')->findOrFail($id),
-        ]);
-    }
 }

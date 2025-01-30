@@ -57,7 +57,7 @@ export const useStateStore = defineStore('StateStore', () => {
             if (SentenceStore.data.stagedSentence.terms.length === 0) return false;
 
             for (const term of SentenceStore.data.stagedSentence.terms) {
-                if (!term.pivot.sent_term || !term.pivot.sent_translit) {
+                if (!term.sentencePivot.sent_term || !term.sentencePivot.sent_translit) {
                     return false;
                 }
             }

@@ -23,6 +23,14 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\DialogResource;
+use App\Http\Resources\SentenceResource;
+use App\Http\Resources\TermResource;
+use App\Models\Deck;
+use App\Models\Dialog;
+use App\Models\Sentence;
+use App\Models\Term;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
@@ -72,8 +80,12 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
         Route::get('/{term:slug}', 'show')->name('terms.show');
         Route::get('/{term:slug}/usages', 'show')->name('terms.usages');
         Route::get('/{term:slug}/audios', 'show')->name('terms.audios');
-        Route::get('/{term}/get', 'get')->name('terms.get');
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
+
+//        todo: overwrites getter for Term Editor
+        Route::get('/{term}/get', function (Term $term) {
+            return new TermResource(Term::findOrFail($term->id));
+        })->name('terms.get');
     });
 
     Route::get('/random', function () {
@@ -96,7 +108,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
             Route::get('/', 'index')->name('dialogs.index');
             Route::get('/{dialog}', 'show')->name('dialogs.show');
-            Route::get('/{dialog}/get', 'get')->name('dialogs.get');
+
+            Route::get('/{dialog}/get', function (Dialog $dialog) {
+                return new DialogResource(
+                    Dialog::with(['sentences'])->findOrFail($dialog->id)
+                );
+            })->name('dialogs.get');
         });
 
         Route::middleware('admin')->group(function () {
@@ -114,8 +131,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'index')->name('sentences.index');
             Route::get('/{sentence}', 'show')->name('sentences.show');
-            Route::get('/{sentence}/get', 'get')->name('sentences.get');
             Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
+
+            Route::get('/{sentence}/get', function (Sentence $sentence) {
+                return new SentenceResource(
+                    Sentence::with(['dialog'])->findOrFail($sentence->id)
+                );
+            })->name('sentences.get');
         });
 
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
@@ -141,10 +163,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/',
             [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
 
-        Route::controller(UserController::class)->group(function () {
-            Route::get('/users/{user:username}', 'show')->name('users.show');
-            Route::get('/get/users/decks/{termId}', 'getDecks')->name('users.get.decks');
-        });
+        Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
 
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
@@ -154,6 +173,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{deck}/export', 'export')->name('decks.export');
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
             Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
+
+            Route::get('/{deck}/get', function (Deck $deck) {
+                return new DeckResource(
+                    Deck::with(['author', 'terms'])->findOrFail($deck->id)
+                );
+            })->name('decks.get');
         });
 
         Route::prefix('/audios')->group(function () {

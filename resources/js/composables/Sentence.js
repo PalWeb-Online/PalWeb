@@ -3,13 +3,20 @@ import {route} from "ziggy-js";
 import {Howl} from "howler";
 
 export function useSentence(props) {
-
     const data = reactive({
         sentence: {},
         isLoading: true
     });
 
     const audio = ref(null);
+
+    function loadAudio() {
+        if (data.sentence.audio) {
+            audio.value = new Howl({
+                src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${data.sentence.audio}`],
+            });
+        }
+    }
 
     function playAudio() {
         if (audio.value) {
@@ -18,20 +25,21 @@ export function useSentence(props) {
     }
 
     async function fetchSentence() {
-        try {
-            const response = await axios.get(route('sentences.get', props.id));
-            data.sentence = response.data.sentence;
-
-            if (data.sentence.audio) {
-                audio.value = new Howl({
-                    src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${data.sentence.audio}`],
-                });
-            }
-
+        if (props.model) {
+            data.sentence = props.model;
+            loadAudio();
             data.isLoading = false;
 
-        } catch (error) {
-            console.error("Error fetching Sentence:", error);
+        } else {
+            try {
+                const response = await axios.get(route('sentences.get', props.id));
+                data.sentence = response.data.data;
+                loadAudio();
+                data.isLoading = false;
+
+            } catch (error) {
+                console.error("Error fetching Sentence:", error);
+            }
         }
     }
 

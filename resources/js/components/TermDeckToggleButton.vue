@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
@@ -10,8 +10,6 @@ const UserStore = useUserStore();
 const props = defineProps({
     model: Object,
 });
-
-const decks = ref([]);
 
 const notificationTrigger = ref(null);
 const notification = ref(null);
@@ -27,7 +25,13 @@ const {floatingStyles: notificationStyles} = useFloating(notificationTrigger, no
 const toggleTerm = async (deck) => {
     try {
         const response = await axios.post(route('decks.term.toggle', {deck: deck.id, term: props.model.id}));
-        deck.isPresent = response.data.isPresent;
+
+        if (response.data.isPresent) {
+            deck.terms.push(props.model);
+        } else {
+            deck.terms = deck.terms.filter(term => term.id !== props.model.id);
+        }
+
         notifContent.value = response.data.message;
         notifVisible.value = true;
         setTimeout(() => notifVisible.value = false, 1000);
@@ -39,18 +43,6 @@ const toggleTerm = async (deck) => {
     }
 };
 
-const fetchDecks = async () => {
-    try {
-        const response = await axios.get(route('users.get.decks', props.model.id));
-        decks.value = response.data.decks;
-
-    } catch (error) {
-        console.error('Deck Fetch Failed', error);
-    }
-}
-
-onMounted(fetchDecks);
-
 const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 </script>
 
@@ -61,10 +53,10 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
                  :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="toggleMenu" alt="pin"/>
 
             <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-                <form v-if="decks.length > 0" ref="notificationTrigger">
-                    <button v-for="deck in decks" @click.prevent="toggleTerm(deck)">
+                <form v-if="UserStore.user.decks.length > 0" ref="notificationTrigger">
+                    <button v-for="deck in UserStore.user.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
                     <span style="font-weight: 700; text-transform: uppercase">
-                        [{{ deck.isPresent ? '✓' : ' ' }}]
+                        [{{ deck.terms.some(term => term.id === model.id) ? '✓' : ' ' }}]
                     </span>
                         {{ deck.name }}
                     </button>

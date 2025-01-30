@@ -27,7 +27,7 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
     const fetchSentence = async (id) => {
         try {
             const response = await axios.get(route('sentences.get', id));
-            data.stagedSentence = response.data.sentence;
+            data.stagedSentence = response.data.data;
 
         } catch (error) {
             console.error("Error fetching Sentence:", error);

@@ -5,6 +5,11 @@ import DeckActions from "./DeckActions.vue";
 import {useDeck} from "../composables/Deck.js";
 
 const props = defineProps({
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
     id: Number,
     size: {type: String, default: 'm'},
 });
@@ -15,6 +20,7 @@ const {data, description} = useDeck(props);
 <template>
     <template v-if="! data.isLoading">
         <div :class="['deck-item-wrapper', size]">
+            <DeckActions :model="data.deck"/>
             <div class="deck-item">
                 <div class="deck-metadata">
                     <div style="display: flex; gap: 0.8rem; align-items: center">
@@ -39,7 +45,6 @@ const {data, description} = useDeck(props);
                 <PinButton modelType="deck" :model="data.deck"/>
                 <PrivacyToggleButton modelType="deck" :model="data.deck"/>
             </div>
-            <DeckActions :model="data.deck"/>
         </div>
     </template>
 </template>

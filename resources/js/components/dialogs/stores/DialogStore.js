@@ -21,18 +21,7 @@ export const useDialogStore = defineStore('DialogStore', () => {
     const fetchDialog = async (id) => {
         try {
             const dialogResponse = await axios.get(route('dialogs.get', id));
-            data.stagedDialog = dialogResponse.data.dialog;
-
-            for (const sentence of data.stagedDialog.sentences) {
-                try {
-                    const sentenceResponse = await axios.get(route('sentences.get', sentence.id));
-                    Object.assign(sentence, sentenceResponse.data.sentence);
-
-                } catch (error) {
-                    console.error("Error fetching Sentence:", error);
-                }
-            }
-
+            data.stagedDialog = dialogResponse.data.data;
             data.originalDialog = cloneDeep(data.stagedDialog);
 
         } catch (error) {

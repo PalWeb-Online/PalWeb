@@ -14,18 +14,23 @@ export function useDeck(props) {
     });
 
     async function fetchDeck() {
-        try {
-            const response = await axios.get(route('decks.get', props.id));
-            data.deck = response.data.deck;
-
+        if (props.model) {
+            data.deck = props.model;
             data.isLoading = false;
 
-        } catch (error) {
-            console.error("Error fetching Deck:", error);
+        } else {
+            try {
+                const response = await axios.get(route('decks.get', props.id));
+                data.deck = response.data.data;
+                data.isLoading = false;
+
+            } catch (error) {
+                console.error("Error fetching Deck:", error);
+            }
         }
     }
 
     onMounted(fetchDeck);
 
-    return { data, description };
+    return {data, description};
 }
