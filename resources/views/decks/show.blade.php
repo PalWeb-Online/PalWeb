@@ -6,5 +6,5 @@
         <x-link :href="route('decks.show', $deck)">{{ __('view') }}</x-link>
     </x-page-head>
 
-    <x-deck-container :deck="$deck"/>
+    <x-vue.deck component="DeckContainer" :deck="$deck"/>
 @endsection

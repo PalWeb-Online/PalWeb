@@ -31,4 +31,4 @@
     <x-sentence-term arb="كرسي" eng="kursy" :term="$terms->firstWhere('translit', 'kursi')"/>
 </x-sentence-item>
 
-<x-deck-container :deck="\App\Models\Deck::find(33)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(33)"/>

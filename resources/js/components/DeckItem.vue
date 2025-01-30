@@ -28,7 +28,7 @@ const {data, description} = useDeck(props);
                             {{ data.deck.name }}
                         </div>
                         <div class="deck-term-count">
-                            ({{ data.deck.count }})
+                            ({{ data.deck.terms.length }})
                         </div>
                     </div>
                     <div v-if="size === 'l' && data.deck.description" class="deck-description">

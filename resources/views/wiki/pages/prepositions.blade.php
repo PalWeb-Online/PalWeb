@@ -35,7 +35,7 @@
 <p><b>Prepositions</b> are a semi-closed category; different regions may have alternatives for these terms. <b>Prepositions</b>
     include the following terms & their variants:</p>
 
-<x-deck-container :deck="\App\Models\Deck::find(35)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(35)"/>
 
 <div class="doc-section">
     <h1>Prepositions & Verbs</h1>

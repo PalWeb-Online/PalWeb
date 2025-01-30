@@ -9,7 +9,7 @@
     </div>
 
     <div class="feature-panel-wrapper transparent">
-        <x-deck-container :deck="\App\Models\Deck::find(56)"/>
+        <x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(56)"/>
 
         <div class="feature-panel-content" style="text-align: center">
             <div class="feature-panel-title">language is a web</div>

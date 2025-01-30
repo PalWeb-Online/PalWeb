@@ -7,6 +7,11 @@ import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";
 
 const props = defineProps({
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
     id: Number,
     size: {type: String, default: 'm'},
 });
@@ -37,7 +42,7 @@ const { data, description } = useDeck(props);
             <div class="deck-flashcard" ref="trigger" @click="flipCard">
                 <div class="deck-flashcard-front">
                     <div class="deck-flashcard-front-head">
-                        <div class="deck-title">{{ data.deck.name }}</div>
+                        <div class="item-title">{{ data.deck.name }}</div>
                         <div class="deck-author" style="align-self: flex-end">
                             <div class="deck-author-name">by {{ data.deck.author.name }}</div>
                             <img class="deck-author-avatar" alt="Profile Picture" :src="`/img/avatars/${data.deck.author.avatar}`"/>
@@ -45,11 +50,11 @@ const { data, description } = useDeck(props);
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body">
-                        <div v-if="data.deck.description" class="deck-description">{{ description }}</div>
+                        <div v-if="data.deck.description" class="item-description">{{ description }}</div>
                     </div>
                 </div>
                 <div class="deck-flashcard-back">
-                    <div class="deck-flashcard-back-head">{{ data.deck.count }} terms</div>
+                    <div class="deck-flashcard-back-head">{{ data.deck.terms.length }} terms</div>
                     <div class="deck-flashcard-back-body">
                         <div v-for="term in data.deck.terms.slice(0, 16)">{{ term.term }}</div>
                         <div v-if="data.deck.terms.length > 16" style="grid-column: span 2">...</div>
