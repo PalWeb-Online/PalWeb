@@ -20,8 +20,15 @@ class Term extends Model
         Bookmark::class,
     ];
 
-    protected $guarded = [
-        'root',
+    protected $fillable = [
+        'term',
+        'translit',
+        'root_id',
+        'category',
+        'slug',
+        'etymology',
+        'image',
+        'usage',
     ];
 
     protected static function boot(): void

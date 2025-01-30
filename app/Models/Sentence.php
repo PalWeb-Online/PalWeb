@@ -21,7 +21,14 @@ class Sentence extends Model
         Bookmark::class,
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'sentence',
+        'translit',
+        'trans',
+        'dialog_id',
+        'speaker',
+        'position',
+    ];
 
     protected static function boot(): void
     {
@@ -45,6 +52,15 @@ class Sentence extends Model
         } else {
             return false;
         }
+    }
+
+    public function getAudio(): ?string
+    {
+        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
+
+        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
+
+        return null;
     }
 
     public function terms(): BelongsToMany
