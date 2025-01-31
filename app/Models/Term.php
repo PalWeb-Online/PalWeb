@@ -62,6 +62,20 @@ class Term extends Model
         }
     }
 
+    public function getUserPronunciationData(): array
+    {
+        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
+
+        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
+
+        $pronunciation = $this->pronunciations->whereIn('dialect_id', $dialectIds)->first() ?? $this->pronunciations->first();
+
+        return [
+            'audio' => $pronunciation?->audios?->first()?->filename,
+            'translit' => $pronunciation?->translit ?? $this->translit,
+        ];
+    }
+
     public function sentences(?int $gloss_id = null): BelongsToMany
     {
         $relationship = $this->belongsToMany(Sentence::class)

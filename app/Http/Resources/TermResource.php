@@ -14,19 +14,26 @@ class TermResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//        todo: translit will always be the default translit; it does not reflect the user's dialect
+        $pronunciationData = $this->getUserPronunciationData();
+
         return [
             'id' => $this->id,
             'slug' => $this->slug,
             'term' => $this->term,
             'category' => $this->category,
-            'translit' => $this->translit,
-            'audio' => $this->getAudio(),
+            'translit' => $pronunciationData['translit'],
+            'audio' => $pronunciationData['audio'],
             'isPinned' => $this->isPinned(),
             'glosses' => $this->glosses->map(function ($gloss) {
                 return [
                     'id' => $gloss->id,
                     'gloss' => $gloss->gloss,
+                ];
+            }),
+            'inflections' => $this->inflections->map(function ($inflection) {
+                return [
+                    'inflection' => $inflection->inflection,
+                    'translit' => $inflection->translit,
                 ];
             }),
             'deckPivot' => $this->whenPivotLoaded('deck_term', function () {
