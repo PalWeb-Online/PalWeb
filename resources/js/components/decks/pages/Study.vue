@@ -70,7 +70,8 @@ const handleGlobalKeydown = (event) => {
 };
 
 onMounted(async () => {
-    isContentVisible.value = await DeckStore.fetchCards(DeckStore.data.stagedDeck.id);
+    DeckStore.data.cards = DeckStore.data.stagedDeck.terms;
+    isContentVisible.value = true;
     window.addEventListener('keydown', handleGlobalKeydown);
 });
 

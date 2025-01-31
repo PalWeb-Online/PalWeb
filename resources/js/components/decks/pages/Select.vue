@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
+import {useUserStore} from "../../../stores/UserStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import {eventBus} from '../../../utils/eventBus.js';
@@ -7,8 +8,9 @@ import DeckItem from "../ui/DeckItem.vue";
 import SearchGenie from "../../search/SearchGenie.vue";
 import AppNotification from "../../AppNotification.vue";
 
-const DeckStore = useDeckStore();
+const UserStore = useUserStore();
 const StateStore = useStateStore();
+const DeckStore = useDeckStore();
 const notification = ref(null);
 
 const activeId = ref(null);
@@ -32,9 +34,10 @@ onMounted(async () => {
     activeId.value = DeckStore.data.stagedDeck.id ?? null;
 
     if (StateStore.data.context === 'builder') {
-        await DeckStore.fetchCreatedDecks();
+        DeckStore.data.decks = UserStore.user.decks;
+
     } else if (StateStore.data.context === 'viewer') {
-        await DeckStore.fetchPinnedDecks()
+        DeckStore.data.decks = window.pinnedDecks;
     }
 
     eventBus.on('pinnedModel', async (eventData) => {

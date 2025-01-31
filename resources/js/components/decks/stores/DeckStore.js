@@ -7,11 +7,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const StateStore = useStateStore();
 
     const data = reactive({
-        user: {
-            name: '',
-            username: '',
-            avatar: '',
-        },
         decks: [],
         cards: [],
         stagedDeck: {
@@ -29,34 +24,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
     const currentSlideIndex = ref(0);
 
     const defaultOrder = ref([]);
-
-    const fetchCreatedDecks = async () => {
-        try {
-            const response = await axios.get('/workbench/deck-builder/decks');
-            if (response.data && response.data.createdDecks) {
-                data.user = response.data.user;
-                data.decks = response.data.createdDecks;
-            }
-
-            // todo: if data.stagedDeck.id is not an id in data.decks, then the deck was deleted outside the Deck Builder while it was open; the stagedDeck should be unstaged.
-
-        } catch (error) {
-            console.error('Error fetching Terms:', error);
-            StateStore.data.errorMessage = error;
-        }
-    };
-
-    const fetchTerms = async (deckId) => {
-        try {
-            const response = await axios.get('/workbench/deck-builder/decks/' + deckId);
-            data.stagedDeck.terms = response.data.terms;
-            data.originalDeck = cloneDeep(data.stagedDeck);
-
-        } catch (error) {
-            console.error('Error fetching Deck data:', error);
-            StateStore.data.errorMessage = error;
-        }
-    };
 
     const fetchPinnedDecks = async () => {
         try {
@@ -79,19 +46,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
         } catch (error) {
             console.error('Error fetching Pinned Decks:', error);
-        }
-    };
-
-    const fetchCards = async (deckId) => {
-        try {
-            const response = await axios.get("/workbench/card-viewer/decks/" + deckId);
-            data.cards = response.data.terms;
-            defaultOrder.value = [...response.data.terms];
-            return true;
-
-        } catch (error) {
-            console.error('Error fetching Terms:', error);
-            return false;
         }
     };
 
@@ -188,9 +142,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
         data,
         currentSlideIndex,
         fetchPinnedDecks,
-        fetchCreatedDecks,
-        fetchCards,
-        fetchTerms,
         toggleSelectDeck,
         saveDeck,
         viewDeck,

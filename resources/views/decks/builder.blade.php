@@ -2,8 +2,7 @@
 
 @section('content')
     <script>
-        window.user = @json($user ?? null);
-        window.stagedDeck = @json($deck ?? null);
+        window.stagedDeck = @json($stagedDeck ?? null);
     </script>
 
     <div id="deckBuilder" class="app-container">

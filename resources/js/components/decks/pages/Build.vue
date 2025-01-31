@@ -75,10 +75,6 @@ const deleteDeck = async () => {
 };
 
 onMounted(async () => {
-    if (DeckStore.data.stagedDeck.id) {
-        await DeckStore.fetchTerms(DeckStore.data.stagedDeck.id);
-    }
-
     DeckStore.data.originalDeck = cloneDeep(DeckStore.data.stagedDeck);
 });
 </script>
@@ -113,12 +109,12 @@ onMounted(async () => {
         </div>
         <div class="user-wrapper">
             <div class="user-avatar">
-                <img :src="DeckStore.data.user.avatar" alt="Profile Picture"/>
+                <img :src="`/img/avatars/${DeckStore.data.stagedDeck.author.avatar}`" alt="Profile Picture"/>
             </div>
             <div class="user-comment">
                 <div class="user-comment-head">
-                    <div>{{ DeckStore.data.user.name }}</div>
-                    <div>({{ DeckStore.data.user.username }})</div>
+                    <div>{{ DeckStore.data.stagedDeck.author.name }}</div>
+                    <div>({{ DeckStore.data.stagedDeck.author.username }})</div>
                 </div>
                 <div class="user-comment-body">
                     <textarea class="user-comment-body-content" id="deck[description]"

@@ -52,8 +52,8 @@ onMounted(() => {
                     <div class="deck-flashcard-front-head">
                         <div class="item-title">{{ deck.name }}</div>
                         <div class="deck-author" style="align-self: flex-end">
-                            <div class="deck-author-name">by {{ deck.authorName }}</div>
-                            <img class="deck-author-avatar" alt="Profile Picture" :src="deck.authorAvatar"/>
+                            <div class="deck-author-name">by {{ deck.author.name }}</div>
+                            <img class="deck-author-avatar" alt="Profile Picture" :src="`/img/avatars/${deck.author.avatar}`"/>
                             <!--                        <div class="deck-author-name">by Deleted User</div>-->
                         </div>
                     </div>
@@ -64,9 +64,9 @@ onMounted(() => {
             </div>
             <div class="deck-flashcard-back">
                 <slot name="back">
-                    <div class="deck-flashcard-back-head">{{ deck.count }} terms</div>
+                    <div class="deck-flashcard-back-head">{{ deck.terms.length }} terms</div>
                     <div class="deck-flashcard-back-body">
-                        <div v-for="term in deck.terms.slice(0, 16)">{{ term }}</div>
+                        <div v-for="term in deck.terms.slice(0, 16)">{{ term.term }}</div>
                         <div v-if="deck.terms.length > 16" style="grid-column: span 2">...</div>
                     </div>
                 </slot>

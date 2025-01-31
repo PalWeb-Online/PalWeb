@@ -167,7 +167,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
-            Route::get('/{deck}/get', 'get')->name('decks.get');
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
             Route::post('/{deck}/export', 'export')->name('decks.export');
@@ -194,14 +193,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
             Route::get('/build', 'create')->name('decks.create');
             Route::get('/build/{deck}', 'edit')->name('decks.edit');
-            Route::get('/decks', 'getCreatedDecks');
-            Route::get('/decks/{deck}', 'getTerms');
         });
 
         Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
             Route::get('/', 'index')->name('decks.study');
             Route::get('/decks', 'getPinnedDecks');
-            Route::get('/decks/{deck}', 'getCards');
         });
 
         Route::prefix('/record-wizard')->group(function () {
