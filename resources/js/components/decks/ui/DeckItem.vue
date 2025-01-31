@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import PinButton from "./PinButton.vue";
+import PinButton from "../../PinButton.vue";
 import AppTooltip from "../../AppTooltip.vue";
 
 const props = defineProps({
@@ -73,9 +73,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <PinButton :id="deck.id" model="deck"
-                   :isPinned="deck.isPinned"
-        />
+        <PinButton :model="deck" modelType="deck"/>
     </div>
 
     <AppTooltip ref="tooltip"/>
