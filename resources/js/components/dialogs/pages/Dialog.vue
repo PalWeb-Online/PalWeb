@@ -6,8 +6,8 @@ import {useSentenceStore} from "../stores/SentenceStore.js";
 import draggable from 'vuedraggable';
 import AppNotification from "../../AppNotification.vue";
 import AppButton from "../../AppButton.vue";
-import DialogLine from "../ui/DialogLine.vue";
 import SearchGenie from "../../search/SearchGenie.vue";
+import SentenceItem from "../ui/SentenceItem.vue";
 
 const StateStore = useStateStore();
 const DialogStore = useDialogStore();
@@ -131,7 +131,8 @@ onMounted(async () => {
                        class="draggable">
                 <template #item="{ element, index }">
                     <div class="db-item">
-                        <DialogLine :sentence="element" @click="SentenceStore.toggleSelectSentence(index)"/>
+                        <SentenceItem :sentence="element" speaker
+                                      @click="SentenceStore.toggleSelectSentence(index)"/>
                         <img src="/img/trash.svg" alt="Delete"
                              v-show="DialogStore.data.stagedDialog.sentences.length > 0"
                              @click="removeSentence(index)"/>

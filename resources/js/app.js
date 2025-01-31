@@ -5,7 +5,7 @@ import TermItem from "./components/TermItem.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckContainer from "./components/DeckContainer.vue";
 import DeckFlashcard from "./components/DeckFlashcard.vue";
-import SentenceItem from "./components/SentenceItem.vue";
+import SentenceContainer from "./components/SentenceContainer.vue";
 import DialogItem from "./components/DialogItem.vue";
 import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
@@ -34,7 +34,7 @@ const multiMountComponents = [
     { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
     { selector: '[data-vue-component="DeckContainer"]', component: DeckContainer },
-    { selector: '[data-vue-component="SentenceItem"]', component: SentenceItem },
+    { selector: '[data-vue-component="SentenceContainer"]', component: SentenceContainer },
     { selector: '[data-vue-component="DialogItem"]', component: DialogItem },
     { selector: '[data-vue-component="DialogContainer"]', component: DialogContainer },
     { selector: '[data-vue-component="BadgeItem"]', component: BadgeItem },

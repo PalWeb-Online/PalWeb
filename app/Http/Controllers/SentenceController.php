@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreSentenceRequest;
 use App\Http\Requests\UpdateSentenceRequest;
+use App\Http\Resources\SentenceResource;
 use App\Models\Gloss;
 use App\Models\Sentence;
-use App\Models\Term;
 use App\Services\SearchService;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
@@ -113,10 +113,10 @@ class SentenceController extends Controller
     {
         View::share('pageTitle', 'Dialogger: Edit Sentence');
 
-        return view('sentences.builder', [
+        return view('dialogs.dialogger', [
             'layout' => 'app',
             'modelType' => 'sentence',
-            'modelId' => $sentence->id,
+            'modelData' => new SentenceResource($sentence),
         ]);
     }
 

@@ -64,6 +64,10 @@
     .popup-menu-wrapper {
         align-self: center;
     }
+
+    & + .terms-list {
+        margin-block: 3.2rem;
+    }
 }
 
 .sentence-item {

@@ -9,10 +9,4 @@
 
     <x-vue.sentence component="SentenceItem" size="l" :sentence="$sentence" dialog/>
 
-    <x-vocabulary>
-        @foreach($sentence->terms as $term)
-            <x-term-item :term="\App\Models\Term::find($term->id)" :gloss="\App\Models\Gloss::find($term->pivot->gloss_id)"/>
-        @endforeach
-    </x-vocabulary>
-
 @endsection

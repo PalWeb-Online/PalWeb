@@ -3,7 +3,7 @@
 @section('content')
     <script>
         window.modelType = "{{ $modelType }}";
-        window.modelId = @json($modelId ?? null);
+        window.modelData = @json($modelData ?? null);
     </script>
 
     <div id="dialogger" class="app-container">

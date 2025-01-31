@@ -3,6 +3,7 @@ import {route} from 'ziggy-js';
 import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./SentenceActions.vue";
+import TermItem from "./TermItem.vue";
 
 const props = defineProps({
     model: {
@@ -23,6 +24,7 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
 <template>
     <template v-if="! data.isLoading">
         <div :class="['sentence-item-wrapper', size]">
+            <PinButton modelType="sentence" :model="data.sentence"/>
             <SentenceActions :model="data.sentence"/>
             <div class="sentence-item">
                 <div v-if="speaker" class="sentence-speaker">
@@ -57,7 +59,9 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                     {{ data.sentence.dialog.title }}
                 </a>
             </div>
-            <PinButton modelType="sentence" :model="data.sentence"/>
+        </div>
+        <div v-if="size === 'l'" class="terms-list">
+            <TermItem v-for="term in data.sentence.terms" :key="term.id" :model="term"/>
         </div>
     </template>
 </template>

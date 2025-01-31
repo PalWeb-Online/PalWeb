@@ -5,6 +5,7 @@ import {useDialogStore} from "./stores/DialogStore.js";
 import {useSentenceStore} from "./stores/SentenceStore.js";
 import Dialog from "./pages/Dialog.vue";
 import Sentence from "./pages/Sentence.vue";
+import {cloneDeep} from "lodash";
 
 const StateStore = useStateStore();
 const DialogStore = useDialogStore();
@@ -13,10 +14,16 @@ StateStore.data.modelType = window.modelType;
 
 onMounted(async () => {
     if (StateStore.data.modelType === 'dialog') {
-        window.modelId && await DialogStore.fetchDialog(window.modelId);
+        if (window.modelData) {
+            DialogStore.data.stagedDialog = window.modelData;
+            DialogStore.data.originalDialog = cloneDeep(DialogStore.data.stagedDialog);
+        }
 
     } else if (StateStore.data.modelType === 'sentence') {
-        window.modelId && await SentenceStore.fetchSentence(window.modelId);
+        if (window.modelData) {
+            SentenceStore.data.stagedSentence = window.modelData;
+            SentenceStore.data.originalSentence = cloneDeep(SentenceStore.data.stagedSentence);
+        }
 
         StateStore.data.step = 'sentence';
     }
@@ -25,7 +32,7 @@ onMounted(async () => {
 
 <template>
     <div id="app-head">
-        <button @click="StateStore.exit">Exit to Dialog Library</button>
+        <a href="/academy/dialogs">Exit to Dialog Library</a>
         <h1>Dialogger</h1>
         <div id="app-nav">
             <img :class="StateStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"

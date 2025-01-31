@@ -2,6 +2,7 @@
 import {onMounted, ref} from "vue";
 import {cloneDeep} from "lodash";
 import {useStateStore} from "../stores/StateStore.js";
+import {useDialogStore} from "../stores/DialogStore.js";
 import {useSentenceStore} from "../stores/SentenceStore.js";
 import draggable from 'vuedraggable';
 import SearchGenie from "../../search/SearchGenie.vue";
@@ -11,6 +12,7 @@ import AppButton from "../../AppButton.vue";
 import AppNotification from "../../AppNotification.vue";
 
 const StateStore = useStateStore();
+const DialogStore = useDialogStore();
 const SentenceStore = useSentenceStore();
 const notification = ref(null);
 
@@ -107,7 +109,10 @@ onMounted(async () => {
         />
     </div>
 
-    <SentenceItem :sentence="SentenceStore.data.stagedSentence"/>
+    <SentenceItem :sentence="SentenceStore.data.stagedSentence" size="l"
+                  :speaker="DialogStore.data.stagedDialog.id"
+                  :dialog="!DialogStore.data.stagedDialog.id"
+    />
 
     <draggable :list="SentenceStore.data.stagedSentence.terms" itemKey="id"
                @end="updatePosition()"

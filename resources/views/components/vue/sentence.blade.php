@@ -7,7 +7,7 @@
 ])
 
 @if($sentence)
-    <div data-vue-component="SentenceItem"
+    <div data-vue-component="SentenceContainer"
          data-props="{{ json_encode([
             'id' => $sentence->id,
             'currentTerm' => $currentTerm,

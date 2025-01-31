@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {computed, reactive} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive} from "vue";
 import {useDialogStore} from "./DialogStore.js";
 import {useSentenceStore} from "./SentenceStore.js";
 
@@ -87,10 +87,20 @@ export const useStateStore = defineStore('StateStore', () => {
         }
     };
 
-    const exit = async () => {
-        if (hasUnsavedChanges.value && !confirm('Are you sure you would like to exit? All your unsaved changes will be lost.')) return;
-        window.location.href = '/academy/dialogs';
+    const handleUnsavedChanges = (event) => {
+        if (hasUnsavedChanges.value) {
+            event.preventDefault();
+            event.returnValue = '';
+        }
     };
+
+    onMounted(() => {
+        window.addEventListener('beforeunload', handleUnsavedChanges);
+    });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('beforeunload', handleUnsavedChanges);
+    });
 
     return {
         data,
@@ -100,6 +110,5 @@ export const useStateStore = defineStore('StateStore', () => {
         nextDisabled,
         back,
         next,
-        exit,
     };
 });

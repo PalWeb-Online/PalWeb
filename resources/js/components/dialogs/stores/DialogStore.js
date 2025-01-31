@@ -18,17 +18,6 @@ export const useDialogStore = defineStore('DialogStore', () => {
         originalDialog: null,
     });
 
-    const fetchDialog = async (id) => {
-        try {
-            const dialogResponse = await axios.get(route('dialogs.get', id));
-            data.stagedDialog = dialogResponse.data.data;
-            data.originalDialog = cloneDeep(data.stagedDialog);
-
-        } catch (error) {
-            console.error("Error fetching Dialog:", error);
-        }
-    }
-
     const saveDialog = async () => {
         try {
             if (!data.stagedDialog.id) {
@@ -79,7 +68,6 @@ export const useDialogStore = defineStore('DialogStore', () => {
 
     return {
         data,
-        fetchDialog,
         saveDialog,
         resetDialog,
         viewDialog,

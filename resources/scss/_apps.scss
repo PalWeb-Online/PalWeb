@@ -32,7 +32,7 @@ body.app {
     border-block-end: 0.8rem solid $purple-pastel-dark;
     position: relative;
 
-    button {
+    button, a {
         justify-self: start;
         @include link-purple-deep;
     }

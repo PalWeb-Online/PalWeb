@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDialogRequest;
 use App\Http\Requests\UpdateDialogRequest;
+use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use App\Models\Term;
@@ -73,12 +74,14 @@ class DialogController extends Controller
 
     public function edit(Dialog $dialog): \Illuminate\View\View
     {
+        $dialog->load('sentences');
+
         View::share('pageTitle', 'Dialogger: Edit Dialog');
 
-        return view('dialogs.builder', [
+        return view('dialogs.dialogger', [
             'layout' => 'app',
             'modelType' => 'dialog',
-            'modelId' => $dialog->id,
+            'modelData' => new DialogResource($dialog),
         ]);
     }
 

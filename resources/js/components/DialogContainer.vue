@@ -1,6 +1,6 @@
 <script setup>
 import {useDialog} from "../composables/Dialog.js";
-import SentenceItem from "./SentenceItem.vue";
+import SentenceContainer from "./SentenceContainer.vue";
 import DialogActions from "./DialogActions.vue";
 
 const props = defineProps({
@@ -27,7 +27,7 @@ const { data } = useDialog(props);
 
             <div class="dialog-body">
                 <template v-for="sentence in data.dialog.sentences">
-                    <SentenceItem :model="sentence" speaker/>
+                    <SentenceContainer :model="sentence" speaker/>
                 </template>
             </div>
         </div>

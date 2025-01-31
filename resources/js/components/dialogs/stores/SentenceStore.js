@@ -24,16 +24,6 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
         data.stagedSentence = reactive(DialogStore.data.stagedDialog.sentences[index]);
     }
 
-    const fetchSentence = async (id) => {
-        try {
-            const response = await axios.get(route('sentences.get', id));
-            data.stagedSentence = response.data.data;
-
-        } catch (error) {
-            console.error("Error fetching Sentence:", error);
-        }
-    }
-
     const saveSentence = async () => {
         try {
             let response;
@@ -116,7 +106,6 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
     return {
         data,
         toggleSelectSentence,
-        fetchSentence,
         saveSentence,
         resetSentence,
         viewSentence,

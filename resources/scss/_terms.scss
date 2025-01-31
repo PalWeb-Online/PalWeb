@@ -224,6 +224,7 @@
 .terms-list {
     display: grid;
     gap: 1.6rem;
+    direction: ltr;
 
     h1 {
         font-size: 2.4rem;
