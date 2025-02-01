@@ -31,7 +31,6 @@ const props = defineProps({
                 </template>
             </div>
 
-
             <template v-if="StateStore.data.step === 'dialog'">
                 <div class="sentence-eng">{{ sentence.trans }}</div>
             </template>

@@ -1,24 +1,24 @@
 import {defineStore} from 'pinia';
-import {computed, reactive} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive} from "vue";
 import {useDeckStore} from "./DeckStore.js";
 
 export const useStateStore = defineStore('StateStore', () => {
     const DeckStore = useDeckStore();
 
     const data = reactive({
-        context: null,
+        mode: 'build',
         step: 'select',
         errorMessage: '',
+        isLoading: false,
     });
 
     const steps = computed(() => {
-        const isBuilder = data.context === 'builder';
         return {
             select: {
                 backStep: null,
-                nextStep: isBuilder ? 'build' : 'study',
+                nextStep: data.mode === 'build' ? 'build' : 'study',
                 canMoveBack: () => false,
-                canMoveNext: () => isBuilder || DeckStore.data.stagedDeck.id,
+                canMoveNext: () => data.mode === 'build' || DeckStore.data.stagedDeck.id,
             },
             build: {
                 backStep: 'select',
@@ -36,7 +36,12 @@ export const useStateStore = defineStore('StateStore', () => {
     });
 
     const hasUnsavedChanges = computed(() => {
-        return data.context === 'builder' && JSON.stringify(DeckStore.data.stagedDeck) !== JSON.stringify(DeckStore.data.originalDeck);
+        if (data.step === 'build') {
+            return JSON.stringify(DeckStore.data.stagedDeck) !== JSON.stringify(DeckStore.data.originalDeck)
+
+        } else {
+            return false;
+        }
     });
 
     const backDisabled = computed(() => !steps.value[data.step]?.canMoveBack());
@@ -59,10 +64,20 @@ export const useStateStore = defineStore('StateStore', () => {
         }
     };
 
-    const exit = async () => {
-        if (hasUnsavedChanges.value && !confirm('Are you sure you would like to exit? All your unsaved changes will be lost.')) return;
-        window.location.href = '/workbench';
+    const handleUnsavedChanges = (event) => {
+        if (hasUnsavedChanges.value) {
+            event.preventDefault();
+            event.returnValue = '';
+        }
     };
+
+    onMounted(() => {
+        window.addEventListener('beforeunload', handleUnsavedChanges);
+    });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('beforeunload', handleUnsavedChanges);
+    });
 
     return {
         data,
@@ -71,6 +86,5 @@ export const useStateStore = defineStore('StateStore', () => {
         nextDisabled,
         back,
         next,
-        exit,
     };
 });

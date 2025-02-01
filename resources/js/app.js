@@ -11,8 +11,7 @@ import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
-import DeckBuilder from "./components/decks/DeckBuilder.vue";
-import CardViewer from "./components/decks/CardViewer.vue";
+import DeckMaster from "./components/decks/DeckMaster.vue";
 import Dialogger from "./components/dialogs/Dialogger.vue";
 import RecordWizard from './components/record/RecordWizard.vue';
 
@@ -76,10 +75,10 @@ if (document.querySelector('#cardViewer')) {
     cardViewerApp.mount('#cardViewer');
 }
 
-if (document.querySelector('#deckBuilder')) {
-    const deckBuilderApp = createApp(DeckBuilder);
-    deckBuilderApp.use(pinia);
-    deckBuilderApp.mount('#deckBuilder');
+if (document.querySelector('#deckMaster')) {
+    const deckMasterApp = createApp(DeckMaster);
+    deckMasterApp.use(pinia);
+    deckMasterApp.mount('#deckMaster');
 }
 
 if (document.querySelector('#dialogger')) {

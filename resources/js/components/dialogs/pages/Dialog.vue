@@ -101,7 +101,7 @@ onMounted(async () => {
 <template>
     <SearchGenie :context="'dialogger'" @emitSentence="insertSentence($event)"/>
 
-    <div class="db-build-buttons">
+    <div class="app-nav-interact">
         <AppButton :disabled="!StateStore.hasUnsavedChanges || !StateStore.isValidRequest" label="Save"
                    @click="saveDialog"
         />
@@ -142,7 +142,7 @@ onMounted(async () => {
         </div>
     </div>
 
-    <div class="db-build-buttons">
+    <div class="app-nav-interact">
         <AppButton label="Add Sentence" @click="addSentence"/>
     </div>
 

@@ -2,21 +2,16 @@ import {defineStore} from 'pinia';
 import {reactive, ref} from "vue";
 import {cloneDeep} from "lodash";
 import {useStateStore} from "./StateStore.js";
+import {useUserStore} from "../../../stores/UserStore.js";
 
 export const useDeckStore = defineStore('DeckStore', () => {
+    const UserStore = useUserStore();
     const StateStore = useStateStore();
 
     const data = reactive({
         decks: [],
         cards: [],
-        stagedDeck: {
-            id: null,
-            name: '',
-            description: '',
-            terms: [],
-            count: false,
-            private: false,
-        },
+        stagedDeck: {},
         originalDeck: null
     });
 
@@ -25,22 +20,47 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const defaultOrder = ref([]);
 
+    const setDecks = async () => {
+        StateStore.data.isLoading = true;
+
+        data.decks = [];
+
+        if (StateStore.data.mode === 'build') {
+            data.decks = UserStore.user.decks;
+
+        } else if (StateStore.data.mode === 'study') {
+            await fetchPinnedDecks();
+        }
+
+        StateStore.data.isLoading = false;
+    }
+
+    const initializeDeck = () => ({
+        id: null,
+        name: '',
+        description: '',
+        private: false,
+        isPinned: false,
+        pinCount: 0,
+        created_at: null,
+        author: {
+            id: UserStore.user.id,
+            name: UserStore.user.name,
+            username: UserStore.user.username,
+            avatar: UserStore.user.avatar,
+        },
+        terms: [],
+    });
+
     const fetchPinnedDecks = async () => {
         try {
-            const response = await axios.get('/workbench/card-viewer/decks');
+            const response = await axios.get('/workbench/deck-master/study/decks');
             if (response.data && response.data.pinnedDecks) {
                 data.decks = response.data.pinnedDecks;
 
                 const stagedDeckIsPinned = data.decks.some(deck => deck.id === data.stagedDeck.id);
                 if (!stagedDeckIsPinned) {
-                    data.stagedDeck = {
-                        id: null,
-                        name: '',
-                        description: '',
-                        terms: [],
-                        count: false,
-                        private: false,
-                    };
+                    data.stagedDeck = initializeDeck();
                 }
             }
 
@@ -50,16 +70,9 @@ export const useDeckStore = defineStore('DeckStore', () => {
     };
 
     const toggleSelectDeck = (index) => {
-        if (index !== null) {
+        if (index) {
             if (data.stagedDeck.id === data.decks[index].id) {
-                data.stagedDeck = {
-                    id: null,
-                    name: '',
-                    description: '',
-                    terms: [],
-                    count: false,
-                    private: false,
-                }
+                data.stagedDeck = initializeDeck();
                 data.originalDeck = null;
 
             } else {
@@ -69,14 +82,7 @@ export const useDeckStore = defineStore('DeckStore', () => {
             }
 
         } else {
-            data.stagedDeck = {
-                id: null,
-                name: '',
-                description: '',
-                terms: [],
-                count: false,
-                private: false,
-            }
+            data.stagedDeck = initializeDeck();
             data.originalDeck = null;
         }
     }
@@ -141,6 +147,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
     return {
         data,
         currentSlideIndex,
+        setDecks,
+        initializeDeck,
         fetchPinnedDecks,
         toggleSelectDeck,
         saveDeck,

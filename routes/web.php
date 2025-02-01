@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
-use App\Http\Controllers\CardViewerController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\WorkbenchController;
-use App\Http\Controllers\DeckBuilderController;
+use App\Http\Controllers\DeckMasterController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
@@ -190,14 +189,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/workbench')->group(function () {
         Route::get('/', [WorkbenchController::class, 'index'])->name('workbench.index');
 
-        Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
-            Route::get('/build', 'create')->name('decks.create');
+        Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
+            Route::get('/', 'index')->name('decks.create');
             Route::get('/build/{deck}', 'edit')->name('decks.edit');
-        });
-
-        Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
-            Route::get('/', 'index')->name('decks.study');
-            Route::get('/decks', 'getPinnedDecks');
+            Route::get('/study/decks', 'getPinnedDecks');
         });
 
         Route::prefix('/record-wizard')->group(function () {

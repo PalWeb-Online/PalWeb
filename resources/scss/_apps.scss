@@ -1,8 +1,4 @@
 body.app {
-    background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
-    background-attachment: fixed;
-    background-size: cover;
-
     #page-body {
         margin: 0;
     }
@@ -31,6 +27,7 @@ body.app {
     justify-items: center;
     border-block-end: 0.8rem solid $purple-pastel-dark;
     position: relative;
+    z-index: 1;
 
     button, a {
         justify-self: start;
@@ -60,11 +57,15 @@ body.app {
 #app-body {
     display: grid;
     justify-items: center;
-    margin: 3.2rem 1.6rem;
+    padding: 3.2rem 1.6rem;
     position: relative;
 
+    background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
+    background-attachment: fixed;
+    background-size: cover;
+
     @media (min-width: 960px) {
-        margin: 3.2rem;
+        padding: 3.2rem;
     }
 }
 
@@ -109,6 +110,27 @@ body.app {
         div.active ~ div {
             color: $purple-pastel;
         }
+    }
+}
+
+.app-nav-interact {
+    display: grid;
+    grid-template-columns: 3.6rem auto 3.6rem;
+    gap: 1.6rem;
+    height: 3.6rem;
+    width: 100%;
+    max-width: 96rem;
+
+    img {
+        width: 3.6rem;
+        cursor: pointer;
+    }
+
+    .app-nav-interact-buttons {
+        grid-column: 2;
+        display: flex;
+        justify-content: center;
+        gap: 1.6rem;
     }
 }
 

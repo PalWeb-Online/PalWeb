@@ -17,6 +17,8 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'username' => $this->username,
+            'avatar' => $this->avatar,
             'email' => $this->email,
             'roles' => $this->roles->map(function ($role) {
                 return [

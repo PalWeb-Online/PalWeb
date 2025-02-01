@@ -357,17 +357,47 @@
     }
 }
 
-#db-page-select {
+#app-body.dm-mode-study {
+    background: $purple-primary url(../../public/img/waves.svg) no-repeat center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
 
+#dm-mode-toggle {
+    height: 4.8rem;
+    width: 24rem;
+    border: 0.2rem solid $purple-deep;
+    border-radius: 1.6rem;
+    cursor: pointer;
+    padding: 0.2rem;
+
+    .dm-mode-toggle-slider {
+        height: 100%;
+        width: 50%;
+        border-radius: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-block-end: 0.2rem;
+
+        color: $purple-deep;
+        background: $accent-yellow;
+        font-family: $displayFont;
+        font-size: 2.4rem;
+        text-transform: uppercase;
+
+        transform: translateX(0%);
+        transition: 0.3s ease;
+    }
+
+    &.study .dm-mode-toggle-slider {
+        transform: translateX(100%);
+        color: white;
+        background: $purple-primary;
+    }
 }
 
 #db-page-build {
-    .db-build-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1.6rem;
-    }
-
     .db-item {
         display: flex;
         align-items: center;
@@ -406,7 +436,7 @@
 
 #db-page-build {
     display: grid;
-    gap: 1.6rem;
+    gap: 2.4rem;
     justify-items: center;
 }
 
@@ -414,7 +444,7 @@
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: min-content 1fr min-content;
-    gap: 3.2rem;
+    gap: 2.4rem;
 
     @media (min-width: 1080px) {
         grid-template-columns: max(12.5%, 16rem) 1fr max(12.5%, 16rem);

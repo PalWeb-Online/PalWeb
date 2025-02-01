@@ -94,7 +94,7 @@ onMounted(async () => {
 <template>
     <SearchGenie :context="'builder'" @emitTerm="insertTerm($event)"/>
 
-    <div class="db-build-buttons">
+    <div class="app-nav-interact">
         <AppButton :disabled="!StateStore.hasUnsavedChanges || !StateStore.isValidRequest" label="Save"
                    @click="saveSentence"
         />
@@ -127,7 +127,7 @@ onMounted(async () => {
         </template>
     </draggable>
 
-    <div class="db-build-buttons">
+    <div class="app-nav-interact">
         <AppButton label="Add Term" @click="addTerm"/>
     </div>
 

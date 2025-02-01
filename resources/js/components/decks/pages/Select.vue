@@ -1,14 +1,13 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
-import {useUserStore} from "../../../stores/UserStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import {eventBus} from '../../../utils/eventBus.js';
-import DeckItem from "../ui/DeckItem.vue";
 import SearchGenie from "../../search/SearchGenie.vue";
 import AppNotification from "../../AppNotification.vue";
+import DeckFlashcard from "../../DeckFlashcard.vue";
+import AppButton from "../../AppButton.vue";
 
-const UserStore = useUserStore();
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 const notification = ref(null);
@@ -21,27 +20,15 @@ const toggleActive = (id, index = null) => {
 };
 
 onMounted(async () => {
-    DeckStore.data.stagedDeck = {
-        id: null,
-        name: '',
-        description: '',
-        terms: [],
-        count: false,
-        private: false,
-    }
+    DeckStore.data.stagedDeck = DeckStore.initializeDeck();
     DeckStore.data.originalDeck = null;
 
     activeId.value = DeckStore.data.stagedDeck.id ?? null;
 
-    if (StateStore.data.context === 'builder') {
-        DeckStore.data.decks = UserStore.user.decks;
-
-    } else if (StateStore.data.context === 'viewer') {
-        DeckStore.data.decks = window.pinnedDecks;
-    }
+    await DeckStore.setDecks();
 
     eventBus.on('pinnedModel', async (eventData) => {
-        if (StateStore.data.context === 'viewer') {
+        if (StateStore.data.mode === 'study') {
             if (eventData.model === 'deck') {
                 await DeckStore.fetchPinnedDecks();
             }
@@ -59,17 +46,27 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <SearchGenie v-if="StateStore.data.context === 'viewer'" :context="'viewer'"/>
+    <SearchGenie v-if="StateStore.data.mode === 'study'" :context="'viewer'"/>
 
-    <div class="app-prompt-heading">
-        <template v-if="StateStore.data.context === 'builder'">
-            Select one of your created Decks, or proceed to create a new Deck.
-        </template>
-        <template v-else-if="StateStore.data.context === 'viewer'">
-            Select one of your pinned Decks.
-        </template>
+    <!--    <div class="app-prompt-heading">-->
+    <!--        <template v-if="StateStore.data.mode === 'build'">-->
+    <!--            Select one of your created Decks, or proceed to create a new Deck.-->
+    <!--        </template>-->
+    <!--        <template v-else-if="StateStore.data.mode === 'study'">-->
+    <!--            Select one of your pinned Decks.-->
+    <!--        </template>-->
+    <!--    </div>-->
+
+    <div class="app-nav-interact">
+        <div class="app-nav-interact-buttons">
+            <AppButton v-if="StateStore.data.mode === 'build'" @click="StateStore.data.step = 'build'"
+                       :label="DeckStore.data.stagedDeck.id ? 'Edit' : 'New'"/>
+            <AppButton v-if="StateStore.data.mode === 'study'" @click="StateStore.data.step = 'study'"
+                       label="Start" :disabled="!DeckStore.data.stagedDeck.id"/>
+        </div>
     </div>
-    <div class="deck-item-grid">
+
+    <div v-if="!StateStore.data.isLoading" class="deck-item-grid">
         <!--        <DeckItem v-if="StateStore.data.context === 'builder'" :id="'0'"-->
         <!--                  :isActive="activeId === '0'"-->
         <!--                  @flip="toggleActive"-->
@@ -82,11 +79,14 @@ onUnmounted(() => {
         <!--            </template>-->
         <!--        </DeckItem>-->
 
-        <DeckItem v-for="(deck, index) in DeckStore.data.decks" :key="deck.id" :deck="deck"
-                  :context="StateStore.data.context"
-                  :isActive="activeId === deck.id"
-                  @flip="toggleActive(deck.id, index)"
+        <DeckFlashcard v-for="(deck, index) in DeckStore.data.decks" :key="deck.id" :model="deck"
+                       :disabled="StateStore.data.mode === 'study' && deck.terms.length === 0"
+                       :active="activeId === deck.id"
+                       @flip="toggleActive(deck.id, index)"
         />
+    </div>
+    <div v-show="StateStore.data.isLoading" class="app-loading">
+        <img src="/img/wait.svg" alt="Loading"/>
     </div>
 
     <AppNotification ref="notification"/>

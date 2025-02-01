@@ -82,19 +82,22 @@ onMounted(async () => {
 <template>
     <SearchGenie :context="'builder'" @emitTerm="insertTerm($event)"/>
 
-    <div class="db-build-buttons">
-        <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Save"
-                   @click="saveDeck"
-        />
-        <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Reset"
-                   @click="DeckStore.resetDeck"
-        />
-        <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="View"
-                   @click="DeckStore.viewDeck"
-        />
-        <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="Delete"
-                   @click="deleteDeck"
-        />
+    <div class="app-nav-interact">
+        <img src="/img/reverse.svg" @click="StateStore.data.step = 'select'" alt="Back"/>
+        <div class="app-nav-interact-buttons">
+            <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Save"
+                       @click="saveDeck"
+            />
+            <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Reset"
+                       @click="DeckStore.resetDeck"
+            />
+            <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="View"
+                       @click="DeckStore.viewDeck"
+            />
+            <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="Delete"
+                       @click="deleteDeck"
+            />
+        </div>
     </div>
 
     <div class="deck-container">

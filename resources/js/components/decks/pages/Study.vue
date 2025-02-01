@@ -1,13 +1,11 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
-import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import 'vue3-carousel/dist/carousel.css';
-import CardItem from "../ui/CardItem.vue";
+import TermFlashcard from "../ui/TermFlashcard.vue";
 import AppDialog from "../../AppDialog.vue";
 
-const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 
 const isContentVisible = ref(false);
@@ -140,9 +138,9 @@ onUnmounted(() => {
     >
         <template #slides>
             <Slide v-for="(term, index) in DeckStore.data.cards" :key="term.id">
-                <CardItem
-                    :term="term"
-                    :isActive="index === DeckStore.currentSlideIndex && !isSliding"
+                <TermFlashcard
+                    :model="term"
+                    :active="index === DeckStore.currentSlideIndex && !isSliding"
                     :flipDefault="flipDefault"
                     :showTerm="showTerm"
                     :showTranslit="showTranslit"

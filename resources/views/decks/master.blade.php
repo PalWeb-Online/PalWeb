@@ -3,9 +3,10 @@
 @section('content')
     <script>
         window.stagedDeck = @json($stagedDeck ?? null);
+        window.pinnedDecks = @json($pinnedDecks ?? null);
     </script>
 
-    <div id="deckBuilder" class="app-container">
-        <deck-builder/>
+    <div id="deckMaster" class="app-container">
+        <deck-master/>
     </div>
 @endsection
