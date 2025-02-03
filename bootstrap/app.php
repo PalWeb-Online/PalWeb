@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web([
             \App\Http\Middleware\SetSiteLocale::class,
             \App\Http\Middleware\TrackPageViews::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
 
         $middleware->throttleApi();

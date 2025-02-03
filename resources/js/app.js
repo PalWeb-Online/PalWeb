@@ -1,4 +1,10 @@
 import { createApp, h } from "vue/dist/vue.esm-bundler";
+import { createInertiaApp } from "@inertiajs/inertia-vue3";
+import { InertiaProgress } from '@inertiajs/progress'
+import { createPinia } from 'pinia';
+import axios from 'axios';
+import Alpine from 'alpinejs';
+import {Head, Link} from '@inertiajs/inertia-vue3'
 import TermEditor from "./components/TermEditor.vue";
 import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
@@ -11,14 +17,8 @@ import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
 import SearchGenie from './components/search/SearchGenie.vue';
-import DeckMaster from "./components/decks/DeckMaster.vue";
 import Dialogger from "./components/dialogs/Dialogger.vue";
-import RecordWizard from './components/record/RecordWizard.vue';
 
-import axios from 'axios';
-import Alpine from 'alpinejs';
-
-import { createPinia } from 'pinia';
 const pinia = createPinia();
 
 window.axios = axios;
@@ -26,6 +26,29 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 window.Alpine = Alpine;
 Alpine.start();
+
+createInertiaApp({
+    resolve: name => {
+        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        return pages[`./Pages/${name}.vue`]
+    },
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .component("Link", Link)
+            .component("Head", Head)
+            .use(pinia)
+            .mount(el);
+    },
+    title: title => "Workbench | " + title
+});
+
+InertiaProgress.init({
+    delay: 250,
+    color: '#ffc32c',
+    includeCSS: true,
+    showSpinner: false,
+})
 
 const multiMountComponents = [
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
@@ -61,24 +84,6 @@ if (document.querySelector('#searchGenie')) {
     const searchGenieApp = createApp(SearchGenie);
     searchGenieApp.use(pinia);
     searchGenieApp.mount('#searchGenie');
-}
-
-if (document.querySelector('#recordWizard')) {
-    const recordWizardApp = createApp(RecordWizard);
-    recordWizardApp.use(pinia);
-    recordWizardApp.mount('#recordWizard');
-}
-
-if (document.querySelector('#cardViewer')) {
-    const cardViewerApp = createApp(CardViewer);
-    cardViewerApp.use(pinia);
-    cardViewerApp.mount('#cardViewer');
-}
-
-if (document.querySelector('#deckMaster')) {
-    const deckMasterApp = createApp(DeckMaster);
-    deckMasterApp.use(pinia);
-    deckMasterApp.mount('#deckMaster');
 }
 
 if (document.querySelector('#dialogger')) {
