@@ -246,7 +246,8 @@
 }
 
 .term-item-wrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 2.4rem;
     gap: 0.8rem;
     align-items: center;
     width: 100%;

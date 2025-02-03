@@ -163,6 +163,8 @@
             padding-inline-end: 3.2rem;
             margin-block-end: 1.6rem;
             border-radius: 0 1.6rem 1.6rem 0;
+            border-inline-end: 0.2rem solid $purple-deep;
+            border-block: 0.2rem solid $purple-deep;
             box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
             user-select: none;
 
@@ -200,19 +202,98 @@
             }
 
             *:first-child {
+                font-weight: 700;
                 font-size: 2.4rem;
                 color: $accent-yellow;
             }
 
             *:last-child {
-                font-size: 1.4rem;
-                font-family: $bodyFont;
+                font-size: 1.2rem;
+                font-family: $monoFont;
+                line-height: 1.25;
+            }
+
+            &.active {
+                background: $accent-yellow;
+                color: $purple-deep;
+
+                *:first-child {
+                    font-size: 2.4rem;
+                    color: $purple-deep;
+                }
             }
         }
     }
 
     @media (min-width: 960px) {
         padding-block: 2.4rem;
+    }
+}
+
+#workbench.nav-user .nav-user-dashboard {
+    background: white;
+    border-inline-start: 0.2rem solid $purple-deep;
+
+    .featured-title {
+        font-size: 4.2rem;
+        color: $purple-deep;
+    }
+
+    .nav-user-dashboard-option {
+        color: $purple-deep;
+        display: grid;
+        gap: 0.4rem;
+        padding-block-start: 2.4rem;
+
+        &:hover {
+            background: $accent-yellow-pastel;
+        }
+
+        *:first-child {
+            color: $purple-deep;
+        }
+
+        &.active {
+            background: $purple-deep;
+            color: white;
+
+            *:first-child {
+                font-size: 2.4rem;
+                color: $accent-yellow;
+            }
+        }
+    }
+
+    .nav-user-menu-head {
+        border-block-start: 0.8rem solid $accent-yellow;
+        padding-block-start: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-inline: 1.6rem;
+        margin-block: 3.2rem 1.6rem;
+
+        div {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        & > * {
+            color: $purple-deep;
+            font-family: $monoFont;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    }
+
+    li.carousel__slide {
+        align-items: flex-start;
+        padding-inline: 0 !important;
+
+        .nav-user-dashboard-options {
+            width: 100%;
+        }
     }
 }
 
