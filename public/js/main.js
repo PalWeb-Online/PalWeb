@@ -4,10 +4,12 @@ var fx_incorrect = new Howl({src: ['https://abdulbaha.fra1.cdn.digitaloceanspace
 window.addEventListener('scroll', function () {
     const navBar = document.querySelector('.nav-sticky');
 
-    if (window.scrollY >= 80) {
-        navBar.style.transform = 'none';
-    } else {
-        navBar.style.transform = 'translateY(-6.4rem)';
+    if (navBar) {
+        if (window.scrollY >= 80) {
+            navBar.style.transform = 'none';
+        } else {
+            navBar.style.transform = 'translateY(-6.4rem)';
+        }
     }
 });
 

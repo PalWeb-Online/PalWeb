@@ -2,7 +2,7 @@
 
 <html lang="{{ app()->getLocale() }}" @if (app()->getLocale() == 'ar') dir="rtl" @else dir="ltr" @endif>
 <head>
-    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
+{{--    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>--}}
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,24 +55,13 @@
 
     @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
+    @yield('inertia-head')
 </head>
 
-<body class="{{ $layout ?? '' }} {{ $bodyBackground ?? '' }}">
+<body class="{{ $bodyBackground ?? '' }}">
 
-@include("layouts._nav-mobile")
-@include("layouts._nav-sticky")
-@include("layouts._nav-user")
-@include('layouts._nav-header')
-
-@yield('page-hero')
-@yield('page-body')
-
-@include("layouts._footer")
-
-@if(!request()->routeIs('sentences.create', 'sentences.edit', 'dialogs.create', 'dialogs.edit', 'decks.create', 'decks.edit', 'decks.study', 'audios.record'))
-    <div id="searchGenie"></div>
-@endif
+@yield('inertia-body')
+@yield('main-body')
 
 </body>
 
