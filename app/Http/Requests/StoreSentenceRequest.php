@@ -14,8 +14,8 @@ class StoreSentenceRequest extends FormRequest
         return [
             'sentence.trans' => ['required'],
             'sentence.terms' => ['required', 'array'],
-            'sentence.terms.*.pivot.sent_term' => ['required'],
-            'sentence.terms.*.pivot.sent_translit' => ['required'],
+            'sentence.terms.*.sentencePivot.sent_term' => ['required'],
+            'sentence.terms.*.sentencePivot.sent_translit' => ['required'],
         ];
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
 class SentenceController extends Controller
@@ -99,24 +100,18 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function create(): \Illuminate\View\View
+    public function create(): \Inertia\Response
     {
-        View::share('pageTitle', 'Dialogger: Create Sentence');
-
-        return view('sentences.builder', [
-            'layout' => 'app',
-            'modelType' => 'sentence',
+        return Inertia::render('Admin/Dialogger', [
+            'mode' => 'sentence',
         ]);
     }
 
-    public function edit(Sentence $sentence): \Illuminate\View\View
+    public function edit(Sentence $sentence): \Inertia\Response
     {
-        View::share('pageTitle', 'Dialogger: Edit Sentence');
-
-        return view('dialogs.dialogger', [
-            'layout' => 'app',
-            'modelType' => 'sentence',
-            'modelData' => new SentenceResource($sentence),
+        return Inertia::render('Admin/Dialogger', [
+            'mode' => 'sentence',
+            'stagedModel' => new SentenceResource($sentence),
         ]);
     }
 
@@ -151,8 +146,8 @@ class SentenceController extends Controller
     private function buildSentence($sentenceData): array
     {
         foreach ($sentenceData['terms'] as $term) {
-            $terms[] = $term['pivot']['sent_term'];
-            $translits[] = $term['pivot']['sent_translit'];
+            $terms[] = $term['sentencePivot']['sent_term'];
+            $translits[] = $term['sentencePivot']['sent_translit'];
         }
 
         $sentence = $sentenceData;
@@ -173,10 +168,10 @@ class SentenceController extends Controller
             DB::table('sentence_term')->insert([
                 'sentence_id' => $sentence->id,
                 'term_id' => $termData['id'] ?? null,
-                'gloss_id' => $termData['pivot']['gloss_id'] ?? null,
-                'sent_term' => $termData['pivot']['sent_term'],
-                'sent_translit' => $termData['pivot']['sent_translit'],
-                'position' => $termData['pivot']['position'],
+                'gloss_id' => $termData['sentencePivot']['gloss_id'] ?? null,
+                'sent_term' => $termData['sentencePivot']['sent_term'],
+                'sent_translit' => $termData['sentencePivot']['sent_translit'],
+                'position' => $termData['sentencePivot']['position'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

@@ -1,6 +1,9 @@
 <script setup>
 import {route} from "ziggy-js";
+import {Link} from '@inertiajs/inertia-vue3'
 import {useStateStore} from "../stores/StateStore.js";
+import PinButton from "../../PinButton.vue";
+import SentenceActions from "../../SentenceActions.vue";
 
 const StateStore = useStateStore();
 
@@ -13,7 +16,9 @@ const props = defineProps({
 </script>
 
 <template>
-    <div :class="['sentence-item-wrapper', size]" style="grid-template-columns: 1fr">
+    <div :class="['sentence-item-wrapper', size]">
+        <PinButton v-if="sentence.id" modelType="sentence" :model="sentence"/>
+        <SentenceActions v-if="sentence.id" :model="sentence"/>
         <div class="sentence-item">
             <template v-if="StateStore.data.step === 'dialog'">
                 <input v-model="sentence.speaker" class="sentence-speaker"/>
@@ -39,10 +44,9 @@ const props = defineProps({
             </template>
         </div>
 
-        <!--        todo: what if clicking this loads the Dialog & changes the model type to Dialog? -->
-        <div v-if="dialog && sentence.dialog" class="sentence-dialog" style="grid-column: 1">
+        <div v-if="dialog && sentence.dialog" class="sentence-dialog">
             <div>Dialog</div>
-            <a :href="route('dialogs.edit', sentence.dialog.id)">{{ sentence.dialog.title }}</a>
+            <Link :href="route('dialogs.edit', sentence.dialog.id)">{{ sentence.dialog.title }}</Link>
         </div>
     </div>
 </template>

@@ -16,8 +16,6 @@ import DialogItem from "./components/DialogItem.vue";
 import DialogContainer from "./components/DialogContainer.vue";
 import BadgeItem from "./components/BadgeItem.vue";
 import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
-import SearchGenie from './components/search/SearchGenie.vue';
-import Dialogger from "./components/dialogs/Dialogger.vue";
 
 const pinia = createPinia();
 
@@ -40,7 +38,7 @@ createInertiaApp({
             .use(pinia)
             .mount(el);
     },
-    title: title => "Workbench | " + title
+    title: title => "PalWeb | " + title
 });
 
 InertiaProgress.init({
@@ -79,18 +77,6 @@ function mountMultiComponents(selector, component) {
 multiMountComponents.forEach(({ selector, component }) => {
     mountMultiComponents(selector, component);
 });
-
-if (document.querySelector('#searchGenie')) {
-    const searchGenieApp = createApp(SearchGenie);
-    searchGenieApp.use(pinia);
-    searchGenieApp.mount('#searchGenie');
-}
-
-if (document.querySelector('#dialogger')) {
-    const dialoggerApp = createApp(Dialogger);
-    dialoggerApp.use(pinia);
-    dialoggerApp.mount('#dialogger');
-}
 
 // TODO: Simplify the following initializations as well.
 

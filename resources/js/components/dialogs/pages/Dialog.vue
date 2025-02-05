@@ -1,18 +1,24 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
+import {useSearchStore} from "../../../stores/SearchStore.js";
+import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDialogStore} from "../stores/DialogStore.js";
 import {useSentenceStore} from "../stores/SentenceStore.js";
 import draggable from 'vuedraggable';
-import AppNotification from "../../AppNotification.vue";
 import AppButton from "../../AppButton.vue";
-import SearchGenie from "../../search/SearchGenie.vue";
 import SentenceItem from "../ui/SentenceItem.vue";
+import DialogActions from "../../DialogActions.vue";
+import AppAlert from "../../AppAlert.vue";
+import {useNavGuard} from "../../../composables/NavGuard.js";
 
+const SearchStore = useSearchStore();
+const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const DialogStore = useDialogStore();
 const SentenceStore = useSentenceStore();
-const notification = ref(null);
+
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(StateStore);
 
 const insertSentence = (sentence) => {
     DialogStore.data.stagedDialog.sentences.push({
@@ -23,7 +29,7 @@ const insertSentence = (sentence) => {
         terms: sentence.terms,
     });
     updatePosition();
-    notification.value.showNotification(`Added ${sentence.sentence} to the Dialog!`);
+    NotificationStore.addNotification(`Added ${sentence.sentence} to the Dialog!`);
 }
 
 const addSentence = () => {
@@ -41,8 +47,7 @@ const addSentence = () => {
     DialogStore.data.stagedDialog.sentences.push(newSentence);
     updatePosition();
 
-    SentenceStore.toggleSelectSentence(DialogStore.data.stagedDialog.sentences.length - 1);
-    StateStore.data.step = 'sentence';
+    SentenceStore.selectSentence(DialogStore.data.stagedDialog.sentences.length - 1);
 }
 
 const removeSentence = (index) => {
@@ -70,28 +75,14 @@ const saveDialog = async () => {
     const success = await DialogStore.saveDialog();
 
     if (success) {
-        notification.value.showNotification('The Dialog has been saved!');
+        NotificationStore.addNotification('The Dialog has been saved!');
     } else {
-        notification.value.showNotification(StateStore.data.errorMessage, 'error');
-    }
-};
-
-const deleteDialog = async () => {
-    const success = await DialogStore.deleteDialog();
-
-    if (success) {
-        notification.value.showNotification('The Dialog has been deleted!');
-
-        setTimeout(() => {
-            window.location.href = '/academy/dialogs';
-        }, 1000);
-
-    } else {
-        notification.value.showNotification(StateStore.data.errorMessage, 'error');
+        NotificationStore.addNotification(StateStore.data.errorMessage, 'error');
     }
 };
 
 onMounted(async () => {
+    SearchStore.context = 'dialogger';
     DialogStore.data.stagedDialog.sentences.forEach((sentence, index) => {
         !sentence.id && DialogStore.data.stagedDialog.sentences.splice(index, 1);
     });
@@ -99,21 +90,16 @@ onMounted(async () => {
 </script>
 
 <template>
-    <SearchGenie :context="'dialogger'" @emitSentence="insertSentence($event)"/>
-
     <div class="app-nav-interact">
-        <AppButton :disabled="!StateStore.hasUnsavedChanges || !StateStore.isValidRequest" label="Save"
-                   @click="saveDialog"
-        />
-        <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Reset"
-                   @click="DialogStore.resetDialog"
-        />
-        <AppButton :disabled="!DialogStore.data.stagedDialog.id" label="View"
-                   @click="DialogStore.viewDialog"
-        />
-        <AppButton :disabled="!DialogStore.data.stagedDialog.id" label="Delete"
-                   @click="deleteDialog"
-        />
+        <div class="app-nav-interact-buttons">
+            <AppButton :disabled="!StateStore.hasNavigationGuard || !StateStore.isValidRequest" label="Save"
+                       @click="saveDialog"
+            />
+            <AppButton :disabled="!StateStore.hasNavigationGuard" label="Reset"
+                       @click="DialogStore.resetDialog"
+            />
+            <AppButton label="Add Sentence" @click="addSentence"/>
+        </div>
     </div>
 
     <div class="dialog-container">
@@ -121,6 +107,7 @@ onMounted(async () => {
             <input class="dialog-container-head-title" v-model="DialogStore.data.stagedDialog.title"
                    placeholder="Required: Dialog Title"
             />
+            <DialogActions v-if="DialogStore.data.stagedDialog.id" :model="DialogStore.data.stagedDialog"/>
         </div>
         <input v-model="DialogStore.data.stagedDialog.media"/>
         <textarea class="dialog-description" v-model="DialogStore.data.stagedDialog.description"/>
@@ -131,9 +118,9 @@ onMounted(async () => {
                        class="draggable">
                 <template #item="{ element, index }">
                     <div class="db-item">
-                        <SentenceItem :sentence="element" speaker
-                                      @click="SentenceStore.toggleSelectSentence(index)"/>
-                        <img src="/img/trash.svg" alt="Delete"
+                        <img src="/img/play.svg" class="play" @click="SentenceStore.selectSentence(index)" alt="Next"/>
+                        <SentenceItem :sentence="element" speaker/>
+                        <img src="/img/trash.svg" class="trash" alt="Delete"
                              v-show="DialogStore.data.stagedDialog.sentences.length > 0"
                              @click="removeSentence(index)"/>
                     </div>
@@ -142,9 +129,10 @@ onMounted(async () => {
         </div>
     </div>
 
-    <div class="app-nav-interact">
-        <AppButton label="Add Sentence" @click="addSentence"/>
-    </div>
-
-    <AppNotification ref="notification"/>
+    <AppAlert
+        v-if="showAlert"
+        message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+    />
 </template>

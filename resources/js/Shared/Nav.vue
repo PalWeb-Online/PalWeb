@@ -157,7 +157,7 @@ const toSection = async (section, key) => {
                                     <div>pinBoard</div>
                                     <div>see your pinned Terms & Sentences</div>
                                 </Link>
-                                <Link :href="route('decks.create')"
+                                <Link :href="route('deck-master.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/DeckMaster' }"
                                 >
@@ -175,6 +175,17 @@ const toSection = async (section, key) => {
                         </div>
                     </Slide>
                 </Carousel>
+            </div>
+            <div class="nav-admin-menu">
+                <div class="nav-admin-menu-head">Admin</div>
+                <div class="nav-admin-menu-items">
+                    <div>New Term</div>
+                    <div>New Sentence</div>
+                    <Link :href="route('dialogs.create')">New Dialog</Link>
+                    <div>New Mail</div>
+                    <div>Terms to-Do</div>
+                    <div>Sentences to-Do</div>
+                </div>
             </div>
 
         </div>

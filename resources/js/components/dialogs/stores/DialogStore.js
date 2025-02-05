@@ -49,28 +49,9 @@ export const useDialogStore = defineStore('DialogStore', () => {
         data.stagedDialog = cloneDeep(data.originalDialog);
     };
 
-    const viewDialog = async () => {
-        window.open(`/academy/dialogs/${data.stagedDialog.id}`, '_blank');
-    };
-
-    const deleteDialog = async () => {
-        try {
-            await axios.delete(`/academy/dialogs/${data.stagedDialog.id}`);
-
-            StateStore.data.errorMessage = null;
-            return true;
-
-        } catch (error) {
-            StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! The Sentence could not be deleted.';
-            return false;
-        }
-    };
-
     return {
         data,
         saveDialog,
         resetDialog,
-        viewDialog,
-        deleteDialog,
     }
 });

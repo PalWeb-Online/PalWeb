@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
-use App\Models\Term;
 use App\Policies\TextPolicy;
 use App\Traits\RedirectsToSubscribe;
 use Flasher\Prime\FlasherInterface;
@@ -15,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class DialogController extends Controller
 {
@@ -62,26 +62,20 @@ class DialogController extends Controller
         });
     }
 
-    public function create(): \Illuminate\View\View
+    public function create(): \Inertia\Response
     {
-        View::share('pageTitle', 'Dialogger: Create Dialog');
-
-        return view('dialogs.builder', [
-            'layout' => 'app',
-            'modelType' => 'dialog',
+        return Inertia::render('Admin/Dialogger', [
+            'mode' => 'dialog',
         ]);
     }
 
-    public function edit(Dialog $dialog): \Illuminate\View\View
+    public function edit(Dialog $dialog): \Inertia\Response
     {
         $dialog->load('sentences');
 
-        View::share('pageTitle', 'Dialogger: Edit Dialog');
-
-        return view('dialogs.dialogger', [
-            'layout' => 'app',
-            'modelType' => 'dialog',
-            'modelData' => new DialogResource($dialog),
+        return Inertia::render('Admin/Dialogger', [
+            'mode' => 'dialog',
+            'stagedModel' => new DialogResource($dialog),
         ]);
     }
 

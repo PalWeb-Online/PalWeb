@@ -20,8 +20,9 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
         originalSentence: null,
     });
 
-    const toggleSelectSentence = (index) => {
+    const selectSentence = (index) => {
         data.stagedSentence = reactive(DialogStore.data.stagedDialog.sentences[index]);
+        StateStore.data.step = 'sentence';
     }
 
     const saveSentence = async () => {
@@ -78,37 +79,10 @@ export const useSentenceStore = defineStore('SentenceStore', () => {
         data.stagedSentence = cloneDeep(data.originalSentence);
     };
 
-    const viewSentence = async () => {
-        window.open(`/dictionary/sentences/${data.stagedSentence.id}`, '_blank');
-    };
-
-    const deleteSentence = async () => {
-        try {
-            await axios.delete(`/dictionary/sentences/${data.stagedSentence.id}`);
-
-            StateStore.data.errorMessage = null;
-
-            if (StateStore.data.modelType === 'sentence') {
-                setTimeout(() => {
-                    window.location.href = '/dictionary/sentences';
-                }, 1000);
-
-            } else {
-                return true;
-            }
-
-        } catch (error) {
-            StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! The Sentence could not be deleted.';
-            return false;
-        }
-    };
-
     return {
         data,
-        toggleSelectSentence,
+        selectSentence,
         saveSentence,
         resetSentence,
-        viewSentence,
-        deleteSentence,
     }
 });
