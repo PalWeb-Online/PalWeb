@@ -190,9 +190,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pin-board', [PinBoardController::class, 'index'])->name('workbench.index');
 
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
-            Route::get('/', 'index')->name('decks.create');
-            Route::get('/build/{deck}', 'edit')->name('decks.edit');
-            Route::get('/study/decks', 'getPinnedDecks');
+            Route::get('/', 'index')->name('deck-master.index');
+            Route::get('/build', 'create')->name('deck-master.create');
+            Route::get('/build/{deck}', 'edit')->name('deck-master.edit');
+            Route::get('/study/{deck}', 'study')->name('deck-master.study');
         });
 
         Route::prefix('/record-wizard')->group(function () {

@@ -216,8 +216,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const discardRecord = async (id) => {
-        const confirmed = confirm('Are you sure you want to discard this recording?');
-        if (!confirmed) return false;
+        if (!confirm('Are you sure you want to discard this recording?')) return;
 
         const record = data.records[id];
         if (!record) {

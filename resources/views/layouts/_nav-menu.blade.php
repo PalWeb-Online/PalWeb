@@ -40,7 +40,7 @@
             <a href="{{ route('audios.index') }}">Audios</a>
 
             <div class="dropdown-section-title">Tools</div>
-            <a href="{{ route('decks.create') }}">Deck Builder</a>
+            <a href="{{ route('deck-master.create') }}">Deck Builder</a>
             <a href="{{ route('audios.record') }}">Record Wizard</a>
         </x-slot>
     </x-dropdown>

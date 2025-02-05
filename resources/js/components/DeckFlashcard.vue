@@ -65,11 +65,10 @@ const {data, description} = useDeck(props);
                     </div>
                 </div>
                 <div class="deck-flashcard-back">
-                    <div class="deck-flashcard-back-head">{{ data.deck.terms.length }} terms</div>
-                    <div class="deck-flashcard-back-body">
+                    <div class="deck-flashcard-back-terms">
                         <div v-for="term in data.deck.terms.slice(0, 16)">{{ term.term }}</div>
-                        <div v-if="data.deck.terms.length > 16" style="grid-column: span 2">...</div>
                     </div>
+                    <div class="deck-flashcard-back-count">{{ data.deck.terms.length }} terms</div>
                 </div>
             </div>
 

@@ -1,36 +1,20 @@
 import {defineStore} from 'pinia';
-import {computed, onBeforeUnmount, onMounted, reactive} from "vue";
+import {computed, reactive} from "vue";
 import {useDialogStore} from "./DialogStore.js";
 import {useSentenceStore} from "./SentenceStore.js";
 
-export const useStateStore = defineStore('StateStore', () => {
+export const useStateStore = defineStore('DialoggerStateStore', () => {
     const SentenceStore = useSentenceStore();
     const DialogStore = useDialogStore();
 
     const data = reactive({
-        modelType: 'dialog',
+        mode: 'dialog',
         step: 'dialog',
         errorMessage: null,
+        isLoading: false,
     });
 
-    const steps = computed(() => {
-        return {
-            dialog: {
-                backStep: null,
-                nextStep: 'sentence',
-                canMoveBack: () => false,
-                canMoveNext: () => SentenceStore.data.stagedSentence.id,
-            },
-            sentence: {
-                backStep: 'dialog',
-                nextStep: null,
-                canMoveBack: () => data.modelType === 'dialog',
-                canMoveNext: () => false,
-            }
-        }
-    });
-
-    const hasUnsavedChanges = computed(() => {
+    const hasNavigationGuard = computed(() => {
         if (data.step === 'dialog') {
             return JSON.stringify(DialogStore.data.stagedDialog) !== JSON.stringify(DialogStore.data.originalDialog);
 
@@ -66,49 +50,9 @@ export const useStateStore = defineStore('StateStore', () => {
         }
     });
 
-    const backDisabled = computed(() => !steps.value[data.step]?.canMoveBack());
-    const nextDisabled = computed(() => !steps.value[data.step]?.canMoveNext());
-
-    const back = async () => {
-        const currentStep = steps.value[data.step];
-
-        if (currentStep?.canMoveBack()) {
-            if ((hasUnsavedChanges.value || !SentenceStore.data.stagedSentence.id) && !confirm('Are you sure you would like to return to the Select page? All your unsaved changes will be lost.')) return;
-            Object.assign(SentenceStore.data.stagedSentence, SentenceStore.data.originalSentence);
-            data.step = currentStep.backStep;
-        }
-    };
-
-    const next = async () => {
-        const currentStep = steps.value[data.step];
-
-        if (currentStep?.canMoveNext()) {
-            data.step = currentStep.nextStep;
-        }
-    };
-
-    const handleUnsavedChanges = (event) => {
-        if (hasUnsavedChanges.value) {
-            event.preventDefault();
-            event.returnValue = '';
-        }
-    };
-
-    onMounted(() => {
-        window.addEventListener('beforeunload', handleUnsavedChanges);
-    });
-
-    onBeforeUnmount(() => {
-        window.removeEventListener('beforeunload', handleUnsavedChanges);
-    });
-
     return {
         data,
-        hasUnsavedChanges,
+        hasNavigationGuard,
         isValidRequest,
-        backDisabled,
-        nextDisabled,
-        back,
-        next,
     };
 });

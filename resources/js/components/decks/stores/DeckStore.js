@@ -20,21 +20,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
 
     const defaultOrder = ref([]);
 
-    const setDecks = async () => {
-        StateStore.data.isLoading = true;
-
-        data.decks = [];
-
-        if (StateStore.data.mode === 'build') {
-            data.decks = UserStore.user.decks;
-
-        } else if (StateStore.data.mode === 'study') {
-            await fetchPinnedDecks();
-        }
-
-        StateStore.data.isLoading = false;
-    }
-
     const initializeDeck = () => ({
         id: null,
         name: '',
@@ -52,25 +37,8 @@ export const useDeckStore = defineStore('DeckStore', () => {
         terms: [],
     });
 
-    const fetchPinnedDecks = async () => {
-        try {
-            const response = await axios.get('/workbench/deck-master/study/decks');
-            if (response.data && response.data.pinnedDecks) {
-                data.decks = response.data.pinnedDecks;
-
-                const stagedDeckIsPinned = data.decks.some(deck => deck.id === data.stagedDeck.id);
-                if (!stagedDeckIsPinned) {
-                    data.stagedDeck = initializeDeck();
-                }
-            }
-
-        } catch (error) {
-            console.error('Error fetching Pinned Decks:', error);
-        }
-    };
-
     const toggleSelectDeck = (index) => {
-        if (index) {
+        if (index !== null) {
             if (data.stagedDeck.id === data.decks[index].id) {
                 data.stagedDeck = initializeDeck();
                 data.originalDeck = null;
@@ -78,7 +46,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
             } else {
                 data.stagedDeck = data.decks[index];
                 data.originalDeck = cloneDeep(data.stagedDeck);
-
             }
 
         } else {
@@ -117,22 +84,22 @@ export const useDeckStore = defineStore('DeckStore', () => {
         data.stagedDeck = cloneDeep(data.originalDeck);
     };
 
-    const viewDeck = async () => {
-        window.open(`/community/decks/${data.stagedDeck.id}`, '_blank');
-    };
-
-    const deleteDeck = async () => {
-        try {
-            await axios.delete('/community/decks/' + data.stagedDeck.id);
-
-            StateStore.data.errorMessage = null;
-            return true;
-
-        } catch (error) {
-            StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! Your Deck could not be deleted.';
-            return false;
-        }
-    };
+    // const viewDeck = async () => {
+    //     window.open(`/community/decks/${data.stagedDeck.id}`, '_blank');
+    // };
+    //
+    // const deleteDeck = async () => {
+    //     try {
+    //         await axios.delete('/community/decks/' + data.stagedDeck.id);
+    //
+    //         StateStore.data.errorMessage = null;
+    //         return true;
+    //
+    //     } catch (error) {
+    //         StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! Your Deck could not be deleted.';
+    //         return false;
+    //     }
+    // };
 
     const resetCards = () => {
         data.cards = [...defaultOrder.value];
@@ -147,14 +114,10 @@ export const useDeckStore = defineStore('DeckStore', () => {
     return {
         data,
         currentSlideIndex,
-        setDecks,
         initializeDeck,
-        fetchPinnedDecks,
         toggleSelectDeck,
         saveDeck,
-        viewDeck,
         resetDeck,
-        deleteDeck,
         resetCards,
         shuffleCards,
     };

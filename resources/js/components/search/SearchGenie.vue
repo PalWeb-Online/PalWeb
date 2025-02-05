@@ -1,11 +1,12 @@
 <script setup>
 import {useSearchStore} from './stores/SearchStore';
+import {useUserStore} from "../../stores/UserStore.js";
 import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import AppDialog from "../AppDialog.vue";
 import TermFilters from "./_TermFilters.vue";
 import AppTooltip from "../AppTooltip.vue";
-import {eventBus} from "../../utils/eventBus.js";
 
+const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 
 const props = defineProps({
@@ -101,7 +102,15 @@ const selectDeck = async (deck) => {
     if (props.context === 'viewer') {
         try {
             const response = await axios.post('/community/decks/' + deck.id + '/pin');
-            eventBus.emit('pinnedModel', {id: deck.id, model: 'deck', isPinned: response.data.isPinned});
+
+            if (response.data.isPinned) {
+                UserStore.user.pinned.decks.push(deck);
+
+            } else {
+                UserStore.user.pinned.decks.splice(
+                    UserStore.user.pinned.decks.findIndex(item => item.id === deck.id), 1
+                )
+            }
 
         } catch (error) {
             console.error('Failed to Pin Deck.', error);

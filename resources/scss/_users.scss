@@ -244,6 +244,7 @@
         display: grid;
         gap: 0.4rem;
         padding-block-start: 2.4rem;
+        cursor: pointer;
 
         &:hover {
             background: $accent-yellow-pastel;

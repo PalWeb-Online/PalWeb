@@ -30,7 +30,7 @@
     justify-content: center;
 }
 
-.deck-flashcard-wrapper {
+.deck-flashcard-wrapper, .term-flashcard-wrapper {
     display: grid;
     grid-template-rows: auto 2.4rem;
     justify-items: center;
@@ -310,25 +310,6 @@
 }
 
 .deck-container-head {
-    display: flex;
-    align-items: center;
-    gap: 1.6rem;
-    justify-content: space-between;
-    padding-block-end: 0.8rem;
-    border-block-end: 0.2rem dotted $purple-primary-dark;
-
-    .deck-container-head-title {
-        font-family: $headFont;
-        text-transform: none;
-        font-weight: 700;
-        font-size: 2.8rem;
-    }
-
-    input.deck-container-head-title {
-        width: 100%;
-        padding: 0.8rem 1.2rem 0.4rem;
-    }
-
     .pin {
         width: 4.8rem;
         top: -0.8rem;
@@ -396,28 +377,13 @@
     }
 }
 
-#db-page-build {
-    .db-item {
-        display: flex;
-        align-items: center;
-        gap: 1.6rem;
-
-        img {
-            width: 2.0rem;
-        }
-    }
-}
-
-.db-container, .cv-container {
-    width: 100%;
-}
-
-#db-page-select, #cv-page-select {
+#dm-select {
     display: grid;
     justify-items: center;
     grid-auto-rows: min-content;
     gap: 3.2rem;
     overflow: hidden;
+    width: 100%;
 
     .deck-item-grid {
         display: flex;
@@ -433,35 +399,46 @@
     }
 }
 
-#db-page-build {
+#dm-build {
     display: grid;
     gap: 2.4rem;
     justify-items: center;
-}
+    width: 100%;
 
-#cv-page-study {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: min-content 1fr min-content;
-    gap: 2.4rem;
+    .db-item {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
 
-    @media (min-width: 1080px) {
-        grid-template-columns: max(12.5%, 16rem) 1fr max(12.5%, 16rem);
-        grid-template-rows: auto;
+        .trash {
+            width: 2.0rem;
+        }
+
+        .play {
+            width: 3.2rem;
+        }
     }
 }
 
-.cv-box {
-    align-self: start;
+#dm-study {
+    display: grid;
+    width: 100%;
+    gap: 2.4rem;
+}
+
+.dm-study-options {
+    justify-self: center;
     display: grid;
     grid-template-rows: min-content;
     align-items: start;
     gap: 0.8rem;
+    width: 100%;
+    max-width: 96rem;
     background: white;
     border-radius: 0.8rem;
     border: 2px solid $purple-primary-dark;
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
-    padding: 1.6rem 1.6rem 6.4rem;
+    padding: 1.6rem;
     position: relative;
 
     .app-dialog-trigger {
@@ -484,7 +461,7 @@
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        gap: 0.8rem 1.6rem;
+        gap: 0.8rem;
 
         button {
             color: white;
@@ -493,18 +470,11 @@
             font-weight: 700;
             border-radius: 0.4rem;
         }
-
-        @media (min-width: 1080px) {
-            display: grid;
-        }
     }
 
 }
 
 .term-flashcard-wrapper {
-    display: grid;
-    justify-items: center;
-    gap: 0.8rem;
     width: 100%;
     padding-block: 1.6rem;
 

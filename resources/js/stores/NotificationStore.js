@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
 
-export const useNotificationStore = defineStore('notification', () => {
+export const useNotificationStore = defineStore('NotificationStore', () => {
     const notifications = reactive([]);
 
     const addNotification = (message, type = 'success', duration = 3000) => {

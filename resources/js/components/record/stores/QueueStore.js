@@ -122,8 +122,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
         const index = data.items.indexOf(pronunciation);
 
         if (RecordStore.data.records[pronunciation.id]) {
-            const confirmed = confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be lost.');
-            if (!confirmed) return false;
+            if (!confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be lost.')) return false;
 
             const discarded = await RecordStore.discardRecord(pronunciation.id);
             if (!discarded) return false;

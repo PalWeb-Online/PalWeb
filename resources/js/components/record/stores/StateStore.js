@@ -4,7 +4,7 @@ import {useRecordStore} from "./RecordStore";
 import {useSpeakerStore} from "./SpeakerStore.js";
 import {useQueueStore} from "./QueueStore.js";
 
-export const useStateStore = defineStore('StateStore', () => {
+export const useStateStore = defineStore('RecordWizardStateStore', () => {
     const SpeakerStore = useSpeakerStore();
     const QueueStore = useQueueStore();
     const RecordStore = useRecordStore();
@@ -46,6 +46,10 @@ export const useStateStore = defineStore('StateStore', () => {
             canMoveNext: () => false,
         }
     };
+
+    const hasNavigationGuard = computed(() => {
+        return RecordStore.data.statusCount.stashed > 0;
+    });
 
     const backDisabled = computed(() => {
         const canMoveBack = steps[data.step]?.canMoveBack();
@@ -121,6 +125,7 @@ export const useStateStore = defineStore('StateStore', () => {
     return {
         data,
         steps,
+        hasNavigationGuard,
         showRetry,
         hasPendingRequests,
         backDisabled,

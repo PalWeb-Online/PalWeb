@@ -1,12 +1,20 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useDeckStore} from "../stores/DeckStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import 'vue3-carousel/dist/carousel.css';
 import TermFlashcard from "../ui/TermFlashcard.vue";
 import AppDialog from "../../AppDialog.vue";
+import {route} from 'ziggy-js';
+import {useUserStore} from "../../../stores/UserStore.js";
+import {useStateStore} from "../stores/StateStore.js";
 
+const StateStore = useStateStore();
 const DeckStore = useDeckStore();
+const UserStore = useUserStore();
+const isAuthor = computed(() => {
+    return DeckStore.data.stagedDeck.author.id === UserStore.user.id;
+})
 
 const isContentVisible = ref(false);
 const carouselRef = ref(null);
@@ -79,7 +87,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="cv-box">
+    <div class="app-nav-interact">
+        <img src="/img/reverse.svg" @click="StateStore.toSelect" alt="Back"/>
+        <div class="app-nav-interact-buttons">
+            <Link v-if="isAuthor" :href="route('deck-master.edit', DeckStore.data.stagedDeck.id)">Open in Build Mode</Link>
+        </div>
+    </div>
+    <div class="dm-study-options">
         <div>Options</div>
         <div>
             <button @click="resetCards">Reset</button>

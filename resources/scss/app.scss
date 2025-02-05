@@ -10,7 +10,7 @@
 @import 'audios';
 @import 'utilities';
 
-.term-container, .deck-container, .dialog-container {
+.term-container, .deck-container, .dialog-container, .sentence-container {
     display: grid;
     gap: 2.4rem;
     width: 100%;
@@ -31,6 +31,28 @@
         .user-wrapper {
             margin-inline-start: calc(-3.2rem - 3.2rem);
         }
+    }
+}
+
+.deck-container-head, .dialog-container-head {
+    display: grid;
+    grid-template-columns: auto 2.4rem;
+    gap: 1.6rem;
+    padding-block-end: 0.8rem;
+    border-block-end: 0.2rem dotted $purple-primary-dark;
+
+    .deck-container-head-title,
+    .dialog-container-head-title {
+        font-family: $headFont;
+        font-weight: 700;
+        font-size: 2.8rem;
+        text-transform: none;
+    }
+
+    input.deck-container-head-title,
+    input.dialog-container-head-title {
+        width: 100%;
+        padding: 0.8rem 1.2rem 0.4rem;
     }
 }
 

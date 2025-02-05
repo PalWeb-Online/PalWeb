@@ -1,23 +1,29 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted} from "vue";
 import {cloneDeep} from "lodash";
 import draggable from 'vuedraggable';
+import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
 import SearchGenie from '../../search/SearchGenie.vue';
 import TermItem from "../ui/TermItem.vue";
 import AppButton from "../../AppButton.vue";
-import AppNotification from "../../AppNotification.vue";
+import AppAlert from "../../AppAlert.vue";
+import PinButton from "../../PinButton.vue";
+import DeckActions from "../../DeckActions.vue";
+import {useNavGuard} from "../../../composables/NavGuard.js";
 
+const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
-const notification = ref(null);
+
+const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore);
 
 const insertTerm = (term) => {
     const termExists = DeckStore.data.stagedDeck.terms.some(existingTerm => existingTerm.id === term.id);
 
     if (termExists) {
-        notification.value.showNotification('This Term is already in the Deck!', 'error');
+        NotificationStore.addNotification('This Term is already in the Deck!', 'error');
 
     } else {
         DeckStore.data.stagedDeck.terms.push({
@@ -33,7 +39,7 @@ const insertTerm = (term) => {
             position: '',
         });
         updatePosition();
-        notification.value.showNotification(`Added ${term.term} to the Deck!`);
+        NotificationStore.addNotification(`Added ${term.term} to the Deck!`);
     }
 }
 
@@ -52,25 +58,9 @@ const saveDeck = async () => {
     const success = await DeckStore.saveDeck();
 
     if (success) {
-        notification.value.showNotification('Your Deck has been saved!');
+        NotificationStore.addNotification('Your Deck has been saved!');
     } else {
-        notification.value.showNotification(StateStore.data.errorMessage, 'error');
-    }
-};
-
-const deleteDeck = async () => {
-    const success = await DeckStore.deleteDeck();
-
-    if (success) {
-        DeckStore.data.stagedDeck.id = null;
-        notification.value.showNotification('Your Deck has been deleted!');
-
-        setTimeout(() => {
-            StateStore.data.step = 'select';
-        }, 1000);
-
-    } else {
-        notification.value.showNotification(StateStore.data.errorMessage, 'error');
+        NotificationStore.addNotification(StateStore.data.errorMessage, 'error');
     }
 };
 
@@ -83,32 +73,27 @@ onMounted(async () => {
     <SearchGenie :context="'builder'" @emitTerm="insertTerm($event)"/>
 
     <div class="app-nav-interact">
-        <img src="/img/reverse.svg" @click="StateStore.data.step = 'select'" alt="Back"/>
+        <img src="/img/reverse.svg" @click="StateStore.toSelect" alt="Back"/>
         <div class="app-nav-interact-buttons">
-            <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Save"
+            <AppButton :disabled="!StateStore.hasNavigationGuard || !StateStore.isValidRequest" label="Save"
                        @click="saveDeck"
             />
-            <AppButton :disabled="!StateStore.hasUnsavedChanges" label="Reset"
+            <AppButton :disabled="!StateStore.hasNavigationGuard" label="Reset"
                        @click="DeckStore.resetDeck"
-            />
-            <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="View"
-                       @click="DeckStore.viewDeck"
-            />
-            <AppButton :disabled="!DeckStore.data.stagedDeck.id" label="Delete"
-                       @click="deleteDeck"
             />
         </div>
     </div>
 
     <div class="deck-container">
         <div class="deck-container-head">
+            <PinButton v-if="DeckStore.data.stagedDeck.id" modelType="deck" :model="DeckStore.data.stagedDeck"/>
             <input class="deck-container-head-title" v-model="DeckStore.data.stagedDeck.name"
                    placeholder="Required: Deck Name"
             />
-
             <img :class="['lock', { public: !DeckStore.data.stagedDeck.private }]"
                  :src="`/img/${DeckStore.data.stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
                  @click="DeckStore.data.stagedDeck.private = !DeckStore.data.stagedDeck.private" alt="lock"/>
+            <DeckActions v-if="DeckStore.data.stagedDeck.id" :model="DeckStore.data.stagedDeck"/>
         </div>
         <div class="user-wrapper">
             <div class="user-avatar">
@@ -134,7 +119,7 @@ onMounted(async () => {
             <template #item="{ element, index }">
                 <div class="db-item">
                     <TermItem :term="element"/>
-                    <img src="/img/trash.svg" alt="Delete" v-show="DeckStore.data.stagedDeck.terms.length > 0"
+                    <img src="/img/trash.svg" class="trash" alt="Delete" v-show="DeckStore.data.stagedDeck.terms.length > 0"
                          @click="removeTerm(index)"/>
                 </div>
             </template>
@@ -143,5 +128,10 @@ onMounted(async () => {
         <div class="deck-term-count">{{ DeckStore.data.stagedDeck.terms.length }} Terms</div>
     </div>
 
-    <AppNotification ref="notification"/>
+    <AppAlert
+        v-if="showAlert"
+        message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+    />
 </template>

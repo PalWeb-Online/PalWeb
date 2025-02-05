@@ -1,6 +1,6 @@
 .sentence-item-wrapper {
     position: relative;
-    margin: 0;
+    margin: 0 !important;
 
     &.l {
         .sentence-item {
@@ -72,6 +72,7 @@
 }
 
 .sentence-item {
+    grid-column: 2;
     display: grid;
     background: $accent-yellow-pastel;
     border: 0.1rem solid $accent-yellow;
@@ -232,27 +233,15 @@
 
 .dialog-container {
     direction: rtl;
-
 }
 
 .dialog-container-head {
-    display: flex;
-    align-items: center;
-    gap: 1.6rem;
-    justify-content: space-between;
-    padding-block-end: 0.8rem;
-    border-block-end: 0.2rem dotted $purple-primary-dark;
-
     .dialog-container-head-title {
-        font-family: $headFont;
-        font-weight: 700;
         font-size: 3.2rem;
     }
 
     input.dialog-container-head-title {
-        width: 100%;
         font-size: 2.8rem;
-        padding: 0.8rem 1.2rem 0.4rem;
     }
 }
 

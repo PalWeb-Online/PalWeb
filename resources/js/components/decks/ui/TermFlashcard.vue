@@ -2,6 +2,8 @@
 import {onMounted, onUnmounted, ref, watch} from 'vue';
 import {useTerm} from "../../../composables/Term.js";
 import VanillaTilt from "vanilla-tilt";
+import TermActions from "../../TermActions.vue";
+import PinButton from "../../PinButton.vue";
 
 const props = defineProps({
     model: {
@@ -76,11 +78,10 @@ const {data, playAudio} = useTerm(props);
 <template>
     <template v-if="! data.isLoading">
         <div class="term-flashcard-wrapper">
-            <img v-if="data.term.audio" class="play" src="/img/audio.svg" alt="play" @click="handleAudio"/>
-
             <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="data.term.id" ref="flashcard"
                  @click="flipCard">
                 <div class="term-flashcard-front">
+                    <img v-if="data.term.audio" class="play" src="/img/audio.svg" alt="play" @click="handleAudio"/>
                     <div class="term-flashcard-term">
                         <div>{{ data.term.term }}</div>
                         <div v-show="showTranslit">{{ data.term.translit }}</div>
@@ -118,6 +119,8 @@ const {data, playAudio} = useTerm(props);
                     </div>
                 </div>
             </div>
+            <PinButton modelType="term" :model="data.term"/>
+            <TermActions :model="data.term"/>
         </div>
     </template>
 </template>

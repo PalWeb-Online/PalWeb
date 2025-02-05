@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\SentenceResource;
+use App\Http\Resources\TermResource;
 use App\Models\Attribute;
 use App\Models\Pattern;
 use App\Models\Term;
@@ -26,9 +29,9 @@ class SearchGenieController extends Controller
         $results = $searchService->search($filters, true, true);
 
         return response()->json([
-            'terms' => $results['terms']->take(10),
-            'sentences' => $results['sentences']->take(10),
-            'decks' => $results['decks']->take(10),
+            'terms' => TermResource::collection($results['terms']->take(10)),
+            'sentences' => SentenceResource::collection($results['sentences']->take(10)),
+            'decks' => DeckResource::collection($results['decks']->load(['author', 'terms'])->take(10)),
         ]);
     }
 

@@ -8,16 +8,15 @@ use App\Models\Pronunciation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class RecordWizardController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index(): \Inertia\Response
     {
         View::share('pageTitle', 'Record Wizard');
 
-        return view('users.record.index', [
-            'layout' => 'app',
-        ]);
+        return Inertia::render('Workbench/RecordWizard');
     }
 
     public function getAutoItems(Request $request): JsonResponse

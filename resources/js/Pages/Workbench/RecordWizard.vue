@@ -1,28 +1,35 @@
 <script setup>
-import {useStateStore} from './stores/StateStore';
-import {useRecordStore} from "./stores/RecordStore.js";
-import Speaker from './pages/Speaker.vue';
-import Queue from './pages/Queue.vue';
-import Record from './pages/Record.vue';
-import Check from './pages/Check.vue';
+import {onBeforeUnmount} from "vue";
+import {useStateStore} from '../../components/record/stores/StateStore.js';
+import {useQueueStore} from "../../components/record/stores/QueueStore.js";
+import {useRecordStore} from "../../components/record/stores/RecordStore.js";
+import {useNavGuard} from "../../composables/NavGuard.js";
+import Speaker from '../../components/record/pages/Speaker.vue';
+import Queue from '../../components/record/pages/Queue.vue';
+import Record from '../../components/record/pages/Record.vue';
+import Check from '../../components/record/pages/Check.vue';
+import Layout from "../../Shared/Layout.vue";
+import AppAlert from "../../components/AppAlert.vue";
 
 const StateStore = useStateStore();
+const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
 
-const exit = async () => {
-    if (RecordStore.data.statusCount.stashed > 0) {
-        if (confirm(`Are you sure you want to leave the wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`)) {
-            window.location.href = '/workbench';
-        }
-    } else {
-        window.location.href = '/workbench';
-    }
-};
+const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore);
+
+onBeforeUnmount(() => {
+    StateStore.data.step = 'speaker';
+    QueueStore.data.items = [];
+});
+
+defineOptions({
+    layout: Layout
+});
 </script>
 
 <template>
+    <Head title="Record Wizard"/>
     <div id="app-head">
-        <button @click="exit">Exit to Workbench</button>
         <h1>Record Wizard</h1>
 
         <div id="app-nav">
@@ -56,4 +63,11 @@ const exit = async () => {
             <!--            </div>-->
         </div>
     </div>
+
+    <AppAlert
+        v-if="showAlert"
+        :message="`Are you sure you want to leave the Record Wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`"
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+    />
 </template>

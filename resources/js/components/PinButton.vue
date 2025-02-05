@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
@@ -11,8 +11,10 @@ const props = defineProps({
     modelType: String,
 });
 
-let isPinned = ref(props.model.isPinned);
 let pinCount = ref(props.model.pinCount);
+const isPinned = computed(() =>
+    UserStore.user.pinned[`${props.modelType}s`].some(item => item.id === props.model.id)
+);
 
 const notifVisible = ref(false);
 const notifContent = ref('');
@@ -27,10 +29,18 @@ const {floatingStyles} = useFloating(reference, floating, {
 const pin = async () => {
     try {
         const response = await axios.post(route(`${props.modelType}s.pin`, props.model.id));
-        isPinned.value = response.data.isPinned;
 
         if (props.modelType === 'deck') {
             pinCount.value = response.data.pinCount;
+        }
+
+        if (!isPinned.value) {
+            UserStore.user.pinned[`${props.modelType}s`].push(props.model);
+
+        } else {
+            UserStore.user.pinned[`${props.modelType}s`].splice(
+                UserStore.user.pinned[`${props.modelType}s`].findIndex(item => item.id === props.model.id), 1
+            )
         }
 
         notifContent.value = response.data.message;
@@ -45,10 +55,6 @@ const pin = async () => {
         setTimeout(() => notifVisible.value = false, 1000);
     }
 };
-
-watch(() => props.isPinned, (newValue) => {
-    isPinned.value = newValue;
-});
 </script>
 
 <template>
