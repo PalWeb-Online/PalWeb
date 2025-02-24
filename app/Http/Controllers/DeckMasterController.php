@@ -12,6 +12,7 @@ class DeckMasterController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         return Inertia::render('Workbench/DeckMaster', [
+            'section' => 'workbench',
             'mode' => $request->query('mode', 'build'),
             'step' => 'select'
         ]);
@@ -20,6 +21,7 @@ class DeckMasterController extends Controller
     public function create(Request $request): \Inertia\Response
     {
         return Inertia::render('Workbench/DeckMaster', [
+            'section' => 'workbench',
             'mode' => 'build',
             'step' => 'build'
         ]);
@@ -31,6 +33,7 @@ class DeckMasterController extends Controller
         $deck->load(['author', 'terms']);
 
         return Inertia::render('Workbench/DeckMaster', [
+            'section' => 'workbench',
             'mode' => 'build',
             'step' => 'build',
             'stagedDeck' => new DeckResource($deck),
@@ -43,6 +46,7 @@ class DeckMasterController extends Controller
         $deck->load(['author', 'terms']);
 
         return Inertia::render('Workbench/DeckMaster', [
+            'section' => 'academy',
             'mode' => 'study',
             'step' => 'study',
             'stagedDeck' => new DeckResource($deck),

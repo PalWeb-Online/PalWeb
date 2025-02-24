@@ -167,7 +167,7 @@
                             </div>
 
                             @if(count($term->sentences($gloss->id)->get()) > 0)
-                                <div class="sentence-list">
+                                <div class="sentences-list">
                                     @if(request()->routeIs('terms.usages'))
                                         @foreach ($term->sentences($gloss->id)->get() as $sentence)
                                             <x-vue.sentence component="SentenceItem" :sentence="$sentence"

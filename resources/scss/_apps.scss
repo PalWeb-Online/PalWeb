@@ -1,22 +1,37 @@
-#page-body.app {
+#page-body.inertia {
     margin: 0;
     grid-auto-columns: 100%;
+    height: 100vh;
+    align-content: start;
 
     #page-content {
         height: 100%;
         grid-auto-rows: auto;
+    }
+
+    &.academy, &:has(.dm-mode-study) {
+        background: none !important;
+    }
+
+    &.library {
+        background: $accent-yellow-pastel;
+    }
+
+    &.community {
+        background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    &.workbench {
         background: $purple-primary url(../../public/img/waves.svg) no-repeat center center;
         background-attachment: fixed;
         background-size: cover;
     }
 
-    #page-content:has(#app-body.dm-mode-study) {
-        background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
-        background-attachment: fixed;
-        background-size: cover;
+    &.admin {
     }
 }
-
 
 .app-container {
     height: 100%;

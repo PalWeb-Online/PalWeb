@@ -180,7 +180,7 @@
         font-weight: 700;
     }
 
-    .sentence-list {
+    .sentences-list {
         justify-items: end;
     }
 }
@@ -222,8 +222,6 @@
 }
 
 .terms-list {
-    display: grid;
-    gap: 1.6rem;
     direction: ltr;
 
     h1 {

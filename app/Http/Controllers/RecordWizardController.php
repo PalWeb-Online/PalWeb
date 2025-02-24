@@ -16,7 +16,9 @@ class RecordWizardController extends Controller
     {
         View::share('pageTitle', 'Record Wizard');
 
-        return Inertia::render('Workbench/RecordWizard');
+        return Inertia::render('Workbench/RecordWizard', [
+            'section' => 'workbench',
+        ]);
     }
 
     public function getAutoItems(Request $request): JsonResponse

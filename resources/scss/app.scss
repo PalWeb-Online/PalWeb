@@ -56,13 +56,12 @@
     }
 }
 
-.decks-list, .dialogs-list, .sentence-list {
+.decks-list, .dialogs-list, .sentences-list, .terms-list {
     display: grid;
     gap: 1.6rem;
-
-    .deck-item-wrapper, .dialog-item-wrapper {
-        margin: 0 0 0.3rem 0.3rem;
-    }
+    width: 100%;
+    max-width: 72rem;
+    justify-self: center;
 }
 
 .deck-item-wrapper, .dialog-item-wrapper, .sentence-item-wrapper {

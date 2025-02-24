@@ -65,6 +65,7 @@ class DialogController extends Controller
     public function create(): \Inertia\Response
     {
         return Inertia::render('Admin/Dialogger', [
+            'section' => 'admin',
             'mode' => 'dialog',
         ]);
     }
@@ -74,6 +75,7 @@ class DialogController extends Controller
         $dialog->load('sentences');
 
         return Inertia::render('Admin/Dialogger', [
+            'section' => 'admin',
             'mode' => 'dialog',
             'stagedModel' => new DialogResource($dialog),
         ]);

@@ -27,6 +27,7 @@ class PinBoardController
             ->appends(['mode' => $request->query('mode', 'sentences')]);
 
         return Inertia::render('Workbench/PinBoard', [
+            'section' => 'workbench',
             'mode' => $request->query('mode', 'terms'),
             'terms' => TermResource::collection($terms),
             'sentences' => SentenceResource::collection($sentences),

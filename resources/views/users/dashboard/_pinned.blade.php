@@ -38,7 +38,7 @@
 </div>
 
 
-<div class="sentence-list">
+<div class="sentences-list">
     <div class="featured-title l">Sentences: {{ count($sentences) }}</div>
     @if(count($sentences) > 0)
         @foreach($sentences as $sentence)

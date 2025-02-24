@@ -707,6 +707,7 @@ h3 {
         user-select: none;
 
         & > * {
+            flex-basis: 5%;
             display: flex;
             align-items: center;
             justify-content: center;

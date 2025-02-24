@@ -9,7 +9,7 @@
 
 @section('content')
     @if($totalCount > 0)
-        <div class="sentence-list">
+        <div class="sentences-list">
             <div class="featured-title l">{{ __('all') }}</div>
             @if($hasFilters)
                 <x-tip>

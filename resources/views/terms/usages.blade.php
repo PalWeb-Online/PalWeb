@@ -18,7 +18,7 @@
 
             <h1>{{ $gloss->gloss }}</h1>
 
-            <div class="sentence-list">
+            <div class="sentences-list">
                 @foreach ($gloss->term->sentences($gloss->id)->get() as $sentence)
                     <x-sentence-item size="s" :sentence="$sentence"/>
                 @endforeach
