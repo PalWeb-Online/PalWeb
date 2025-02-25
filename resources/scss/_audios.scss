@@ -1,6 +1,8 @@
 .speaker-profile-container {
     display: grid;
     gap: 0.8rem;
+    width: 100%;
+    max-width: 96rem;
     background: $accent-yellow-pastel;
     padding: 1.6rem;
     border-radius: 1.6rem;
@@ -67,11 +69,6 @@
         @include link-purple-deep;
         justify-self: end;
     }
-}
-
-.audios-list {
-    display: grid;
-    gap: 1.6rem;
 }
 
 .pronunciation-item-wrapper {

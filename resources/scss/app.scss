@@ -56,11 +56,11 @@
     }
 }
 
-.decks-list, .dialogs-list, .sentences-list, .terms-list {
+.decks-list, .dialogs-list, .sentences-list, .terms-list, .audios-list {
     display: grid;
     gap: 1.6rem;
     width: 100%;
-    max-width: 72rem;
+    max-width: 96rem;
     justify-self: center;
 }
 

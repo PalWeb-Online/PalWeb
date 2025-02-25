@@ -1,7 +1,7 @@
 #page-body.inertia {
     margin: 0;
     grid-auto-columns: 100%;
-    height: 100vh;
+    min-height: 100vh;
     align-content: start;
 
     #page-content {
@@ -74,14 +74,26 @@
     }
 }
 
+body:has(#app-body) {
+    background: $purple-pastel;
+}
+
 #app-body {
     display: grid;
     justify-items: center;
+    gap: 3.2rem;
     padding: 3.2rem 1.6rem;
     position: relative;
 
     @media (min-width: 960px) {
         padding: 3.2rem;
+    }
+
+    & > button, & > a {
+        width: 100%;
+        max-width: 96rem;
+        @include link-purple-deep;
+        font-family: $monoFont;
     }
 }
 

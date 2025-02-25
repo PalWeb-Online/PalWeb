@@ -674,11 +674,6 @@ h3 {
 }
 
 #paginator {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.6rem;
     margin-block: 3.2rem;
     color: $purple-deep;
     font-family: $headFont;
@@ -687,7 +682,6 @@ h3 {
     .item-count {
         font-size: 1.6rem;
     }
-
 
     .pagination {
         display: flex;

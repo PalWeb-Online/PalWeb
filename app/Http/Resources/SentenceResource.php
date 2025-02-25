@@ -27,7 +27,7 @@ class SentenceResource extends JsonResource
             'position' => $this->position,
             'audio' => $this->getAudio(),
             'isPinned' => $this->isPinned(),
-            'terms' => $terms->values()->toArray(),
+            'terms' => !$request->routeIs('sentences.index') ? $this->getAudio() : [],
         ];
     }
 }
