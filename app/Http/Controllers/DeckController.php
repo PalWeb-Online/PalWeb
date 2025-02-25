@@ -6,6 +6,7 @@ use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreDeckRequest;
 use App\Http\Requests\UpdateDeckRequest;
+use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
@@ -15,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
 class DeckController extends Controller
@@ -42,7 +44,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
+    public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge([
             'search' => '',
@@ -52,11 +54,11 @@ class DeckController extends Controller
             'singular' => '',
             'plural' => '',
         ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn($value) => $value ?? '', $filters);
+        $filters = array_map(fn ($value) => $value ?? '', $filters);
 
-        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
+        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
 
-        if (!$hasFilters) {
+        if (! $hasFilters) {
             $decks = Deck::with('author')
                 ->where('private', false)
                 ->orderByDesc('id')
@@ -81,17 +83,28 @@ class DeckController extends Controller
             );
         }
 
-        View::share('pageTitle', 'Deck Library');
-
-        return view('decks.index', [
-            'decks' => $decks,
-            'filters' => $filters,
-            'hasFilters' => $hasFilters,
-            'totalCount' => $totalCount,
+        return Inertia::render('Library/Decks/Index', [
+            'section' => 'library',
+            'decks' => DeckResource::collection(
+                Deck::query()
+                    ->with(['author'])
+                    ->withCount('terms')
+                    ->where('private', false)
+                    ->orderByDesc('id')
+                    ->paginate(25)
+                    ->onEachSide(1)
+            )
         ]);
+
+//        return view('decks.index', [
+//            'decks' => $decks,
+//            'filters' => $filters,
+//            'hasFilters' => $hasFilters,
+//            'totalCount' => $totalCount,
+//        ]);
     }
 
-    public function show(Deck $deck): \Illuminate\View\View
+    public function show(Deck $deck): \Inertia\Response
     {
         $this->authorize('interact', $deck);
 
@@ -102,9 +115,10 @@ class DeckController extends Controller
             },
         ]);
 
-        View::share('pageTitle', 'Deck: '.$deck->name);
-
-        return view('decks.show', ['deck' => $deck]);
+        return Inertia::render('Library/Decks/Show', [
+            'section' => 'library',
+            'deck' => new DeckResource($deck)
+        ]);
     }
 
     public function store(StoreDeckRequest $request): JsonResponse
@@ -261,7 +275,7 @@ class DeckController extends Controller
         }
 
         $output = fopen('php://output', 'w');
-        if (!$output) {
+        if (! $output) {
             throw new Exception('Failed to open php://output');
         }
 

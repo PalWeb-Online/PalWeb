@@ -1,9 +1,9 @@
 <script setup>
 import {Inertia} from "@inertiajs/inertia";
-import {Link} from '@inertiajs/inertia-vue3'
 import Layout from "../../Shared/Layout.vue";
 import TermItem from "../../components/TermItem.vue";
 import SentenceContainer from "../../components/SentenceContainer.vue";
+import Paginator from "../../Shared/Paginator.vue";
 
 defineOptions({
     layout: Layout
@@ -49,34 +49,13 @@ function switchMode(newMode) {
             <div class="terms-list">
                 <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
             </div>
-            <div id="paginator">
-                <div class="pagination">
-                    <Link v-for="link in terms.meta.links" :key="link.url" :href="link.url"
-                          :class="{ active: link.active, disabled: !link.url }"
-                          preserve-scroll
-                    >
-                        <span v-if="link.label.includes('Previous')" class="arrow">&laquo;</span>
-                        <span v-else-if="link.label.includes('Next')" class="arrow">&raquo;</span>
-                        <span v-else v-html="link.label"></span>
-                    </Link>
-                </div>
-            </div>
+            <Paginator :links="terms.meta.links"/>
         </div>
         <div class="deck-container" v-if="mode === 'sentences'">
             <div class="sentences-list">
                 <SentenceContainer v-for="sentence in sentences.data" :key="sentence.id" :model="sentence" size="s"/>
             </div>
-            <div id="paginator">
-                <div class="pagination">
-                    <Link v-for="link in sentences.meta.links" :key="link.id"
-                          :href="link.url"
-                    >
-                        <span v-if="link.label.includes('&laquo;')" class="arrow">&larr;</span>
-                        <span v-else-if="link.label.includes('&raquo;')" class="arrow">&rarr;</span>
-                        <span v-else v-html="link.label"></span>
-                    </Link>
-                </div>
-            </div>
+            <Paginator :links="sentences.meta.links"/>
         </div>
     </div>
 </template>

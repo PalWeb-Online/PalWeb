@@ -104,30 +104,30 @@ const toSection = async (section, key) => {
                                 </Link>
                             </template>
                             <template v-if="NavigationStore.data.section === 'library'">
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Library/Terms/Index', 'Library/Terms/Show'].includes($page.component) }"
                                 >
                                     <div>dictionary</div>
                                     <div>Term::all()</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('sentences.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
                                 >
                                     <div>sentences</div>
                                     <div>Sentence::with('terms')->all()</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('decks.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Library/Decks/Index', 'Library/Decks/Show'].includes($page.component) }"
                                 >
                                     <div>decks</div>
                                     <div>Deck::where('private', false)->all()</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('audios.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Library/Audios/Index', 'Library/Audios/Speaker'].includes($page.component) }"
                                 >
                                     <div>audios</div>
                                     <div>Audio::with('speaker')->all()</div>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,32 +14,6 @@ class SentenceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $allTerms = $this->resource->allTerms();
-
-        $terms = $allTerms->map(function ($sentenceTerm) {
-            if ($sentenceTerm->id) {
-                $term = Term::find($sentenceTerm->id);
-
-                $termResource = new TermResource($term)->toArray(request());
-                $termResource['sentencePivot'] = [
-                    'gloss_id' => $sentenceTerm->gloss_id,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ];
-
-                return $termResource;
-            }
-
-            return [
-                'sentencePivot' => [
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                ],
-            ];
-        });
-
         return [
             'id' => $this->id,
             'sentence' => $this->sentence,

@@ -32,7 +32,7 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                     <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>
                 </div>
                 <div class="sentence-arb">
-                    <template v-for="term in data.sentence.terms">
+                    <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
                         <template v-if="term.id">
                             <a :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                                :target="isCurrentTerm(term) ? '' : '_blank'"
@@ -48,7 +48,14 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                             </div>
                         </template>
                     </template>
+                    <template v-else>
+                        <div class="sentence-term">
+                            <div>{{ data.sentence.sentence }}</div>
+                        </div>
+                    </template>
                 </div>
+
+<!--                todo: make this not selectable when Sentence is small -->
                 <div class="sentence-eng">
                     {{ data.sentence.trans }}
                 </div>
@@ -60,6 +67,8 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                 </a>
             </div>
         </div>
+
+        <!--        todo: terms list is collapsible -->
         <div v-if="size === 'l'" class="terms-list">
             <TermItem v-for="term in data.sentence.terms" :key="term.id" :model="term"/>
         </div>

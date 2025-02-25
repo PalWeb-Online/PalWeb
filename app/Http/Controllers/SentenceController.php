@@ -40,7 +40,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
+    public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge([
             'search' => '',
@@ -77,26 +77,35 @@ class SentenceController extends Controller
             );
         }
 
-        View::share('pageTitle', 'Phrasebook');
-        View::share('pageDescription',
-            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+        $sentences = Sentence::query()
+            ->orderByDesc('id')
+            ->paginate(25)
+            ->onEachSide(1);
 
-        return view('sentences.index', [
-            'sentences' => $sentences,
-            'filters' => $filters,
-            'hasFilters' => $hasFilters,
-            'totalCount' => $totalCount,
+        return Inertia::render('Library/Sentences/Index', [
+            'section' => 'library',
+            'sentences' => SentenceResource::collection($sentences)
         ]);
+
+//        View::share('pageDescription',
+//            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+//
+//        return view('sentences.index', [
+//            'sentences' => $sentences,
+//            'filters' => $filters,
+//            'hasFilters' => $hasFilters,
+//            'totalCount' => $totalCount,
+//        ]);
     }
 
-    public function show(Sentence $sentence): \Illuminate\View\View
+    public function show(Sentence $sentence): \Inertia\Response
     {
-        View::share('pageTitle', 'Sentence: '.$sentence->translit);
-        View::share('pageDescription',
-            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+//        View::share('pageDescription',
+//            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
-        return view('sentences.show', [
-            'sentence' => $sentence,
+        return Inertia::render('Library/Sentences/Show', [
+            'section' => 'library',
+            'sentence' => new SentenceResource($sentence)
         ]);
     }
 

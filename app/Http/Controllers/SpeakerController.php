@@ -2,29 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AudioResource;
+use App\Http\Resources\SpeakerResource;
+use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class SpeakerController extends Controller
 {
-    public function show(Speaker $speaker): \Illuminate\View\View
+    public function show(Speaker $speaker): \Inertia\Response
     {
-        $audios = $speaker->audios()
-            ->with('speaker')
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-
-        View::share('pageTitle', 'Speaker: '.$speaker->user->username);
-
-        return view('community.audios.speaker', [
-            'user' => $speaker->user,
-            'speaker' => $speaker,
-            'audios' => $audios,
+        return Inertia::render('Library/Audios/Speaker', [
+            'section' => 'library',
+            'speaker' => new SpeakerResource($speaker->load(['user'])->loadCount('audios')),
+            'audios' => AudioResource::collection(
+                Audio::query()
+                    ->where('speaker_id', $speaker->id)
+                    ->with(['speaker.user', 'pronunciation'])
+                    ->orderByDesc('id')
+                    ->paginate(25)
+                    ->onEachSide(1)
+            ),
         ]);
     }
 

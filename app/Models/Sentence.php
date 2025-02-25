@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\TermResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -63,21 +64,45 @@ class Sentence extends Model
         return null;
     }
 
-    public function terms(): BelongsToMany
+    public function getTerms(): array
     {
-        return $this->belongsToMany(Term::class)
-            ->withPivot('gloss_id', 'sent_term', 'sent_translit', 'position')
-            ->orderBy('position');
-    }
-
-    public function allTerms()
-    {
-        return DB::table('sentence_term')
+        $allTerms = DB::table('sentence_term')
             ->leftJoin('terms', 'sentence_term.term_id', '=', 'terms.id')
             ->where('sentence_term.sentence_id', $this->id)
             ->select('sentence_term.*', 'terms.*')
             ->orderBy('sentence_term.position')
             ->get();
+
+        return $allTerms->map(function ($sentenceTerm) {
+            if ($sentenceTerm->id) {
+                $term = Term::find($sentenceTerm->id);
+
+                $termResource = new TermResource($term)->toArray(request());
+                $termResource['sentencePivot'] = [
+                    'gloss_id' => $sentenceTerm->gloss_id,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+
+                return $termResource;
+            }
+
+            return [
+                'sentencePivot' => [
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ],
+            ];
+        })->values()->toArray();
+    }
+
+    public function terms(): BelongsToMany
+    {
+        return $this->belongsToMany(Term::class)
+            ->withPivot('gloss_id', 'sent_term', 'sent_translit', 'position')
+            ->orderBy('position');
     }
 
     public function dialog(): BelongsTo

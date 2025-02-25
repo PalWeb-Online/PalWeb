@@ -1,5 +1,6 @@
 <script setup>
 import {route} from 'ziggy-js';
+import {Link} from '@inertiajs/inertia-vue3';
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
 
@@ -25,10 +26,10 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
         <img ref="reference" class="gear" src="/img/gear.svg" @click="toggleMenu" alt="options"/>
 
         <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-            <a :href="route('sentences.show', model.id)">View Sentence</a>
+            <Link :href="route('sentences.show', model.id)">View Sentence</Link>
 
             <template v-if="UserStore.isAdmin">
-                <a :href="route('sentences.edit', model.id)">Edit Sentence</a>
+                <Link :href="route('sentences.edit', model.id)">Edit Sentence</Link>
 
                 <form :action="route('sentences.destroy', model.id)" method="POST" @submit="confirmDelete">
                     <input type="hidden" name="_method" value="DELETE">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AudioResource;
 use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
@@ -11,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class AudioController extends Controller
 {
@@ -19,7 +21,7 @@ class AudioController extends Controller
         protected AudioService $audioService
     ) {}
 
-    public function index(Request $request): \Illuminate\View\View
+    public function index(Request $request): \Inertia\Response
     {
         $sort = $request->input('sort', 'latest');
         $query = Audio::with(['speaker', 'pronunciation.term']);
@@ -51,15 +53,21 @@ class AudioController extends Controller
         $audios = $query->paginate(50)->onEachSide(1);
         $totalCount = $audios->total();
 
-        View::share('pageTitle', 'Audio Library');
-
-        return view('community.audios.index', [
-            'audios' => $audios,
-            'totalCount' => $totalCount,
-            'locations' => Location::whereHas('speakers.audios')->get(),
-            'dialects' => Dialect::whereHas('speakers.audios')->get(),
-            'currentSort' => $sort,
+        return Inertia::render('Library/Audios/Index', [
+            'section' => 'library',
+            'audios' => AudioResource::collection(Audio::with(['speaker.user', 'pronunciation'])
+                ->orderByDesc('id')
+                ->paginate(25)
+                ->onEachSide(1))
         ]);
+
+//        return view('community.audios.index', [
+//            'audios' => $audios,
+//            'totalCount' => $totalCount,
+//            'locations' => Location::whereHas('speakers.audios')->get(),
+//            'dialects' => Dialect::whereHas('speakers.audios')->get(),
+//            'currentSort' => $sort,
+//        ]);
     }
 
     public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
