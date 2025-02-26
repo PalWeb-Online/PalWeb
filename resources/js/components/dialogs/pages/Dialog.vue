@@ -1,6 +1,5 @@
 <script setup>
-import {onMounted} from "vue";
-import {useSearchStore} from "../../../stores/SearchStore.js";
+import {onMounted, watch} from "vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDialogStore} from "../stores/DialogStore.js";
@@ -11,8 +10,12 @@ import SentenceItem from "../ui/SentenceItem.vue";
 import DialogActions from "../../DialogActions.vue";
 import AppAlert from "../../AppAlert.vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
+import {useSearchGenie} from "../../../composables/useSearchGenie.js";
+import {useSearchStore} from "../../../stores/SearchStore.js";
 
+useSearchGenie('insert');
 const SearchStore = useSearchStore();
+
 const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const DialogStore = useDialogStore();
@@ -82,10 +85,19 @@ const saveDialog = async () => {
 };
 
 onMounted(async () => {
-    SearchStore.context = 'dialogger';
     DialogStore.data.stagedDialog.sentences.forEach((sentence, index) => {
         !sentence.id && DialogStore.data.stagedDialog.sentences.splice(index, 1);
     });
+
+    watch(
+        () => SearchStore.selectedModel,
+        (newModel) => {
+            if (newModel) {
+                insertSentence(newModel);
+                SearchStore.deselectModel();
+            }
+        }
+    );
 });
 </script>
 

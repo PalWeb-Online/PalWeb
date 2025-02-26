@@ -43,19 +43,12 @@ class SentenceController extends Controller
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge([
-            'search' => '',
-            'category' => '',
-            'attribute' => '',
-            'form' => '',
-            'singular' => '',
-            'plural' => '',
+            'search' => ''
         ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn ($value) => $value ?? '', $filters);
 
-        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
-
-        if (! $hasFilters) {
-            $sentences = Sentence::orderByDesc('id')
+        if (! collect($filters)->some(fn ($value) => !empty($value))) {
+            $sentences = Sentence::query()
+                ->orderByDesc('id')
                 ->paginate(25)
                 ->onEachSide(1);
             $totalCount = $sentences->total();
@@ -77,25 +70,15 @@ class SentenceController extends Controller
             );
         }
 
-        $sentences = Sentence::query()
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-
         return Inertia::render('Library/Sentences/Index', [
             'section' => 'library',
-            'sentences' => SentenceResource::collection($sentences)
+            'sentences' => SentenceResource::collection($sentences),
+            'totalCount' => $totalCount,
+            'filters' => $filters,
         ]);
 
 //        View::share('pageDescription',
 //            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
-//
-//        return view('sentences.index', [
-//            'sentences' => $sentences,
-//            'filters' => $filters,
-//            'hasFilters' => $hasFilters,
-//            'totalCount' => $totalCount,
-//        ]);
     }
 
     public function show(Sentence $sentence): \Inertia\Response

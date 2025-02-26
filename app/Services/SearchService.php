@@ -30,7 +30,7 @@ class SearchService
         $glosses = $this->termRepository->findMatchingGlosses($filters);
 
         $results = [
-            'terms' => $this->termRepository->searchTerms($terms->merge($glosses->pluck('term_id'))->unique()),
+            'terms' => $this->termRepository->searchTerms($terms->merge($glosses)->unique()),
         ];
 
         if ($withSentences) {

@@ -48,18 +48,12 @@ class DeckController extends Controller
     {
         $filters = array_merge([
             'search' => '',
-            'category' => '',
-            'attribute' => '',
-            'form' => '',
-            'singular' => '',
-            'plural' => '',
         ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn ($value) => $value ?? '', $filters);
 
-        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
-
-        if (! $hasFilters) {
-            $decks = Deck::with('author')
+        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
+            $decks = Deck::query()
+                ->with(['author'])
+                ->withCount('terms')
                 ->where('private', false)
                 ->orderByDesc('id')
                 ->paginate(25)
@@ -85,23 +79,10 @@ class DeckController extends Controller
 
         return Inertia::render('Library/Decks/Index', [
             'section' => 'library',
-            'decks' => DeckResource::collection(
-                Deck::query()
-                    ->with(['author'])
-                    ->withCount('terms')
-                    ->where('private', false)
-                    ->orderByDesc('id')
-                    ->paginate(25)
-                    ->onEachSide(1)
-            )
+            'decks' => DeckResource::collection($decks),
+            'totalCount' => $totalCount,
+            'filters' => $filters,
         ]);
-
-//        return view('decks.index', [
-//            'decks' => $decks,
-//            'filters' => $filters,
-//            'hasFilters' => $hasFilters,
-//            'totalCount' => $totalCount,
-//        ]);
     }
 
     public function show(Deck $deck): \Inertia\Response

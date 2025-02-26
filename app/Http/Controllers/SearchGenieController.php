@@ -34,27 +34,4 @@ class SearchGenieController extends Controller
             'decks' => DeckResource::collection($results['decks']->load(['author', 'terms'])->take(10)),
         ]);
     }
-
-    public function getFilterOptions(): JsonResponse
-    {
-        $categories = Term::select('category')->distinct()->pluck('category');
-        $attributes = Attribute::select('attribute')->distinct()->pluck('attribute');
-        $forms = Pattern::select('form')->distinct()->pluck('form');
-        $singularPatterns = Pattern::select('pattern')
-            ->where('type', 'singular')
-            ->distinct()
-            ->pluck('pattern');
-        $pluralPatterns = Pattern::select('pattern')
-            ->where('type', 'plural')
-            ->distinct()
-            ->pluck('pattern');
-
-        return response()->json([
-            'categories' => $categories,
-            'attributes' => $attributes,
-            'forms' => $forms,
-            'singularPatterns' => $singularPatterns,
-            'pluralPatterns' => $pluralPatterns,
-        ]);
-    }
 }

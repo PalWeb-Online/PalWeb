@@ -19,16 +19,16 @@ class TermRepository
     public function findMatchingGlosses(array $filters = []): Collection
     {
         return Gloss::query()
-            ->select('id', 'term_id')
+            ->select('term_id')
             ->filter($filters)
-            ->get();
+            ->pluck('term_id');
     }
 
     public function searchTerms($terms): Collection
     {
         return Term::query()
             ->whereIn('id', $terms)
-            ->with('glosses')
+            ->with(['root', 'glosses'])
             ->get();
     }
 

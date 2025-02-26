@@ -3,9 +3,11 @@ import {onMounted, ref, watch} from "vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
-import SearchGenie from "../../search/SearchGenie.vue";
 import DeckFlashcard from "../../DeckFlashcard.vue";
 import AppButton from "../../AppButton.vue";
+import {useSearchGenie} from "../../../composables/useSearchGenie.js";
+
+useSearchGenie(() => (StateStore.data.mode === 'study' ? 'pin' : 'search'));
 
 const UserStore = useUserStore();
 const StateStore = useStateStore();
@@ -51,8 +53,6 @@ watch(() => StateStore.data.mode, (newValue) => {
 </script>
 
 <template>
-    <SearchGenie v-if="StateStore.data.mode === 'study'" :context="'viewer'"/>
-
     <div class="app-nav-interact">
         <div class="app-nav-interact-buttons">
             <AppButton v-if="StateStore.data.mode === 'build'" @click="StateStore.toBuild"

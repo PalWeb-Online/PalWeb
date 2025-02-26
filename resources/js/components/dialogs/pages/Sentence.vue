@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import {cloneDeep} from "lodash";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useStateStore} from "../stores/StateStore.js";
@@ -10,9 +10,12 @@ import TermItem from "../ui/TermItem.vue";
 import AppButton from "../../AppButton.vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import AppAlert from "../../AppAlert.vue";
+import {useSearchGenie} from "../../../composables/useSearchGenie.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 
+useSearchGenie('insert');
 const SearchStore = useSearchStore();
+
 const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const SentenceStore = useSentenceStore();
@@ -73,8 +76,17 @@ const saveSentence = async () => {
 };
 
 onMounted(async () => {
-    SearchStore.context = 'builder';
     SentenceStore.data.originalSentence = cloneDeep(SentenceStore.data.stagedSentence);
+
+    watch(
+        () => SearchStore.selectedModel,
+        (newModel) => {
+            if (newModel) {
+                insertTerm(newModel);
+                SearchStore.deselectModel();
+            }
+        }
+    );
 });
 </script>
 

@@ -85,103 +85,54 @@ class TermController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-//        $filters = array_merge([
-//            'search' => '',
-//            'category' => '',
-//            'attribute' => '',
-//            'form' => '',
-//            'singular' => '',
-//            'plural' => '',
-//        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-//        $filters = array_map(fn ($value) => $value ?? '', $filters);
-//
-//        $hasFilters = collect($filters)->some(fn ($value) => ! empty($value));
-//
-//        if (! $hasFilters) {
-//            $terms = Term::orderByDesc('id')
-//                ->paginate(100)
-//                ->onEachSide(1);
-//            $totalCount = $terms->total();
-//
-//        } else {
-//            $allResults = $searchService->search($filters)['terms'];
-//            $totalCount = $allResults->count();
-//
-//            $perPage = 100;
-//            $currentPage = $request->input('page', 1);
-//            $terms = $allResults->forPage($currentPage, $perPage);
-//
-//            $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-//                $terms,
-//                $totalCount,
-//                $perPage,
-//                $currentPage,
-//                ['path' => $request->url(), 'query' => $request->query()]
-//            );
-//        }
+        $filters = $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural', 'letter']);
 
-        if (! $request->query()) {
-            $latestTerms = Term::with(['glosses'])->orderByDesc('id')->take(10)->get();
-            $featuredTerm = Cache::get('word-of-the-day');
-
-            $featuredTerm
-                ? $featuredTerm = new TermResource($featuredTerm)
-                : $featuredTerm = new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
-        }
-
-        $filters = $request->only(['letter']);
-
-        $query = Term::query()
-            ->with(['root', 'glosses'])
-            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-            ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
-            ->select('terms.*');
-
-        if (! empty($filters['letter'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('roots.root', 'LIKE', "{$filters['letter']}%")
-                    ->orWhere(function ($sq) use ($filters) {
-                        $sq->whereNull('roots.root')
-                            ->where('terms.term', 'LIKE', "{$filters['letter']}%");
-                    });
-            });
-        }
-
-        $terms = TermResource::collection(
-            $query->paginate(25)
+        if (! collect($filters)->except(['letter'])->some(fn($value) => !empty($value))) {
+            $terms = Term::query()
+                ->with(['root', 'glosses'])
+                ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
+                ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
+                ->select('terms.*')
+                ->filter($filters)
+                ->paginate(25)
                 ->onEachSide(1)
-                ->appends($filters)
-        );
+                ->appends($filters);
+            $totalCount = $terms->total();
+
+        } else {
+            $allResults = $searchService->search($filters)['terms'];
+            $totalCount = $allResults->count();
+
+            $perPage = 25;
+            $currentPage = $request->input('page', 1);
+            $terms = $allResults->forPage($currentPage, $perPage);
+
+            $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+                $terms,
+                $totalCount,
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        }
+
+        $featuredTerm = Cache::get('word-of-the-day');
+
+        $featuredTerm
+            ? $featuredTerm = new TermResource($featuredTerm)
+            : $featuredTerm = new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
 
         return Inertia::render('Library/Terms/Index', [
             'section' => 'library',
-            'terms' => $terms,
-            'latestTerms' => $latestTerms ?? null,
+            'terms' => TermResource::collection($terms),
+            'totalCount' => $totalCount,
+            'latestTerms' => Term::with(['glosses'])->orderByDesc('id')->take(10)->get(),
             'featuredTerm' => $featuredTerm ?? null,
             'filters' => $filters,
-            'letters' => $this->getArabicAbjad(),
         ]);
 
-//        View::share('pageTitle', 'Dictionary');
 //        View::share('pageDescription',
 //            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
-//
-//        return view('terms.index', [
-//            'terms' => $terms,
-//            'filters' => $filters,
-//            'hasFilters' => $hasFilters,
-//            'totalCount' => $totalCount,
-//            'wordOfTheDay' => $wordOfTheDay ?? null,
-//            'latestTerms' => $latestTerms ?? null,
-//        ]);
-    }
-
-    private function getArabicAbjad(): array
-    {
-        return [
-            'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
-            'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
-        ];
     }
 
     public function get($id): JsonResponse

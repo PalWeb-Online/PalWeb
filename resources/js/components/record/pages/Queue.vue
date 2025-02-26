@@ -1,32 +1,44 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
+import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useQueueStore} from '../stores/QueueStore.js';
-import {useRecordStore} from '../stores/RecordStore';
-import SearchGenie from '../../search/SearchGenie.vue';
 import AppDialog from '../../AppDialog.vue';
 import AppTooltip from '../../AppTooltip.vue';
 import Draggable from 'vuedraggable';
-import AppNotification from '../../AppNotification.vue';
+import {useSearchGenie} from "../../../composables/useSearchGenie.js";
+import {useSearchStore} from "../../../stores/SearchStore.js";
 
+useSearchGenie('insert');
+const SearchStore = useSearchStore();
+
+const NotificationStore = useNotificationStore();
 const QueueStore = useQueueStore();
-const RecordStore = useRecordStore();
 
 const tooltip = ref(null);
-const notification = ref(null);
 
 const fetchDeckItems = async (deck) => {
     await QueueStore.fetchDeckItems(deck.id);
-    notification.value.showNotification(`Added Deck to the Queue!`);
+    NotificationStore.addNotification('Added Deck to the Queue!');
 }
 
 const remove = (index) => {
     QueueStore.removeItem(QueueStore.data.items[index]);
 };
+
+onMounted(() => {
+    watch(
+        () => SearchStore.selectedModel,
+        (newModel) => {
+            if (newModel) {
+                fetchDeckItems(newModel);
+                SearchStore.deselectModel();
+            }
+        }
+    );
+});
 </script>
 
 <template>
-    <SearchGenie :context="'record'" @emitDeck="fetchDeckItems($event)"/>
-
     <div class="rw-page-title">
         <h2>Queue</h2>
 
@@ -111,5 +123,4 @@ const remove = (index) => {
     </div>
 
     <AppTooltip ref="tooltip"/>
-    <AppNotification ref="notification"/>
 </template>

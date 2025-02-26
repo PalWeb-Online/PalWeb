@@ -17,7 +17,5 @@
         </div>
     </div>
 
-    <div id="searchGenie"></div>
-
     @include("layouts._footer")
 @endsection

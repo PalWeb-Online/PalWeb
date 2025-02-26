@@ -47,8 +47,10 @@ class Gloss extends Model
     public function scopeFilter($query, array $filters): void
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {
-            $query->whereRaw('MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)', [$search])
-                ->orWhere('gloss', 'like', $search.'%');
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)', [$search])
+                    ->orWhere('gloss', 'like', $search.'%');
+            });
         });
 
         $query->when($filters['category'] ?? false, fn ($query, $category) => $query
@@ -69,6 +71,18 @@ class Gloss extends Model
 
         $query->when($filters['plural'] ?? false, fn ($query, $plural) => $query
             ->whereHas('term.patterns', fn ($query) => $query->where('pattern', $plural)->where('type', 'plural'))
+        );
+
+        $query->when($filters['letter'] ?? false, fn ($query, $letter) => $query
+            ->whereHas('term', fn ($query) => $query
+                ->where(fn ($query) => $query
+                    ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter . '%'))
+                        ->orWhere(fn ($q) => $q
+                            ->whereDoesntHave('root')
+                            ->where('term', 'like', $letter . '%')
+                        )
+                )
+            )
         );
     }
 }

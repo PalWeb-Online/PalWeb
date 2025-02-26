@@ -623,6 +623,8 @@ h3 {
     gap: 1.2rem;
     text-align: start;
     padding-inline: 1.6rem;
+    width: 100%;
+    max-width: 96rem;
 
     a {
         font-weight: 700;
@@ -674,10 +676,11 @@ h3 {
 }
 
 #paginator {
-    margin-block: 3.2rem;
     color: $purple-deep;
     font-family: $headFont;
     font-weight: 700;
+    width: 100%;
+    max-width: 96rem;
 
     .item-count {
         font-size: 1.6rem;

@@ -1,17 +1,21 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, watch} from "vue";
 import {cloneDeep} from "lodash";
 import draggable from 'vuedraggable';
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useDeckStore} from "../stores/DeckStore.js";
-import SearchGenie from '../../search/SearchGenie.vue';
 import TermItem from "../ui/TermItem.vue";
 import AppButton from "../../AppButton.vue";
 import AppAlert from "../../AppAlert.vue";
 import PinButton from "../../PinButton.vue";
 import DeckActions from "../../DeckActions.vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
+import {useSearchGenie} from '../../../composables/useSearchGenie.js';
+import {useSearchStore} from "../../../stores/SearchStore.js";
+
+useSearchGenie('insert');
+const SearchStore = useSearchStore();
 
 const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
@@ -66,12 +70,20 @@ const saveDeck = async () => {
 
 onMounted(async () => {
     DeckStore.data.originalDeck = cloneDeep(DeckStore.data.stagedDeck);
+
+    watch(
+        () => SearchStore.selectedModel,
+        (newModel) => {
+            if (newModel) {
+                insertTerm(newModel);
+                SearchStore.deselectModel();
+            }
+        }
+    );
 });
 </script>
 
 <template>
-    <SearchGenie :context="'builder'" @emitTerm="insertTerm($event)"/>
-
     <div class="app-nav-interact">
         <img src="/img/reverse.svg" @click="StateStore.toSelect" alt="Back"/>
         <div class="app-nav-interact-buttons">

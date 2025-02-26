@@ -160,10 +160,18 @@ class Term extends Model
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('term', 'like', $search.'%')
-                    ->orWhereHas('spellings', fn ($query) => $query->where('spelling', 'like', $search.'%'))
-                    ->orWhereHas('pronunciations', fn ($query) => $query->where('translit', 'like', $search.'%'))
-                    ->orWhereHas('inflections', fn ($query) => $query->where('inflection', 'like', $search.'%')
-                        ->orWhere('translit', 'like', $search.'%'));
+                    ->orWhereHas('spellings', fn ($query) => $query
+                        ->where('spelling', 'like', $search.'%')
+                    )
+                    ->orWhereHas('pronunciations', fn ($query) => $query
+                        ->where('translit', 'like', $search.'%')
+                    )
+
+//                    todo: searching for م & "man" removes "munxār" ("manāxīr")
+                    ->orWhereHas('inflections', fn ($query) => $query
+                        ->where('inflection', 'like', $search.'%')
+                        ->orWhere('translit', 'like', $search.'%')
+                    );
             });
         });
 
@@ -192,6 +200,16 @@ class Term extends Model
         $query->when($filters['plural'] ?? false, fn ($query, $plural) => $query
             ->whereHas('patterns', fn ($query) => $query
                 ->where('pattern', $plural)->where('type', 'plural')
+            )
+        );
+
+        $query->when($filters['letter'] ?? false, fn ($query, $letter) => $query
+            ->where(fn ($query) => $query
+                ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter . '%'))
+                ->orWhere(fn ($q) => $q
+                    ->whereDoesntHave('root')
+                    ->where('term', 'like', $letter . '%')
+                )
             )
         );
     }
