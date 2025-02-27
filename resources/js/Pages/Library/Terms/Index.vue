@@ -76,7 +76,6 @@ function updateFilter({filter, value}) {
 
         <SearchFilters
             :activeModel="'terms'"
-            :searchTerm="filters.search"
             :filters="filters"
             @updateFilter="updateFilter"
         />
@@ -88,11 +87,13 @@ function updateFilter({filter, value}) {
             <p v-else>No Terms matching this query.</p>
         </AppTip>
 
-        <div v-if="totalCount > 0" class="deck-container">
-            <div class="terms-list">
-                <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
+        <template v-if="totalCount > 0">
+            <div class="deck-container">
+                <div class="terms-list">
+                    <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
+                </div>
             </div>
-        </div>
-        <Paginator :links="terms.meta.links"/>
+            <Paginator :links="terms.meta.links"/>
+        </template>
     </div>
 </template>

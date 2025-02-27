@@ -421,50 +421,6 @@ Search Tools
     }
 }
 
-.search-bar {
-    position: relative;
-    display: flex;
-
-    input {
-        flex-grow: 1;
-        height: 4.8rem;
-        padding: 0 2.4rem;
-        font-family: $monoFont;
-        font-size: 2.0rem;
-        font-weight: 700;
-        text-align: center;
-        color: $purple-deep;
-        background: white;
-        border-radius: 3.2rem;
-        border: 0.2rem solid $purple-deep;
-        box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.2);
-
-        &:focus {
-            outline: none;
-            border: 0.2rem solid $accent-yellow;
-        }
-    }
-
-    .search-results {
-        display: grid;
-        gap: 0.4rem;
-        z-index: 10;
-    }
-
-    button.search {
-        position: absolute;
-        right: -0.8rem;
-        top: -2.4rem;
-        width: 6.4rem;
-        transition: 0.1s;
-        transform: scale(1) rotate(10deg);
-
-        &:hover {
-            transform: scale(1.25) rotate(10deg);
-        }
-    }
-}
-
 .search-filters-container {
     display: grid;
     gap: 1.2rem;
@@ -475,12 +431,33 @@ Search Tools
     max-width: 96rem;
 
     input {
+        flex-grow: 1;
+        height: 4.8rem;
+        font-family: $monoFont;
+        font-weight: 700;
+        text-align: center;
+        color: $purple-deep;
+        background: white;
+
         min-height: 4.8rem;
         padding: 0.8rem 1.6rem;
         font-size: 1.6rem;
         border: 0.1rem solid $purple-deep;
         outline: 0;
         border-radius: 0.6rem;
+
+        &:focus {
+            outline: none;
+            border: 0.2rem solid $accent-yellow;
+        }
+    }
+
+    select {
+        flex-grow: 1;
+
+        &.persisting {
+            background: $accent-yellow-pastel;
+        }
     }
 
     .search-filters {
@@ -488,14 +465,6 @@ Search Tools
         flex-flow: row wrap;
         justify-content: center;
         gap: 0.8rem;
-
-        select {
-            flex-grow: 1;
-
-            &.persisting {
-                background: $accent-yellow-pastel;
-            }
-        }
     }
 }
 
@@ -853,29 +822,6 @@ ul.search-results {
 
         &.error {
             color: red;
-        }
-    }
-
-    .search-bar {
-        width: 100%;
-
-        input {
-            height: auto;
-            padding: 0.8rem 1.6rem;
-            margin: 0;
-            font-size: 1.6rem;
-            border: none;
-            box-shadow: none;
-            background: $purple-pastel-light;
-
-            &:focus {
-                border: none;
-                outline: 0.2rem solid $accent-yellow;
-            }
-        }
-
-        button {
-            display: none;
         }
     }
 }

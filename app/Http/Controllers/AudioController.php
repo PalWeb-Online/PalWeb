@@ -11,7 +11,6 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 
 class AudioController extends Controller
@@ -19,53 +18,42 @@ class AudioController extends Controller
     public function __construct(
         protected FlasherInterface $flasher,
         protected AudioService $audioService
-    ) {}
+    ) {
+    }
 
     public function index(Request $request): \Inertia\Response
     {
-        $sort = $request->input('sort', 'latest');
-        $query = Audio::with(['speaker', 'pronunciation.term']);
+        $filters = array_merge([
+            'sort' => 'latest'
+        ], $request->only(['location', 'dialect', 'gender', 'sort']));
 
-        if ($request->filled('location')) {
-            $query->whereHas('speaker', function ($q) use ($request) {
-                $q->where('location_id', $request->input('location'));
-            });
-        }
+        $query = Audio::query()
+            ->with(['speaker.user', 'pronunciation.term'])
+            ->filter($filters);
 
-        if ($request->filled('dialect')) {
-            $query->whereHas('speaker', function ($q) use ($request) {
-                $q->where('dialect_id', $request->input('dialect'));
-            });
-        }
-
-        if ($request->filled('gender')) {
-            $query->whereHas('speaker', function ($q) use ($request) {
-                $q->where('gender', $request->input('gender'));
-            });
-        }
-
-        if ($sort === 'fluency') {
+        if ($filters['sort'] === 'fluency') {
             $query->orderByFluency();
         } else {
             $query->orderByDesc('id');
         }
 
-        $audios = $query->paginate(50)->onEachSide(1);
+        $audios = $query
+            ->paginate(25)
+            ->onEachSide(1)
+            ->appends($filters);
         $totalCount = $audios->total();
 
         return Inertia::render('Library/Audios/Index', [
             'section' => 'library',
-            'audios' => AudioResource::collection(Audio::with(['speaker.user', 'pronunciation'])
-                ->orderByDesc('id')
-                ->paginate(25)
-                ->onEachSide(1))
+            'audios' => AudioResource::collection($audios),
+            'dialects' => Dialect::whereHas('speakers.audios')->get(),
+            'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
+            'totalCount' => $totalCount,
+            'filters' => $filters,
         ]);
 
 //        return view('community.audios.index', [
 //            'audios' => $audios,
-//            'totalCount' => $totalCount,
-//            'locations' => Location::whereHas('speakers.audios')->get(),
-//            'dialects' => Dialect::whereHas('speakers.audios')->get(),
 //            'currentSort' => $sort,
 //        ]);
     }

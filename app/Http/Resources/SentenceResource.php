@@ -7,6 +7,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SentenceResource extends JsonResource
 {
+    private function withTerms(): bool
+    {
+        return $this->additional['terms'] ?? true;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -27,7 +32,7 @@ class SentenceResource extends JsonResource
             'position' => $this->position,
             'audio' => $this->getAudio(),
             'isPinned' => $this->isPinned(),
-            'terms' => !$request->routeIs('sentences.index') ? $this->getAudio() : [],
+            'terms' => $this->withTerms() ? $this->getTerms() : [],
         ];
     }
 }

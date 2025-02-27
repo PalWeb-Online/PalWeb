@@ -46,27 +46,29 @@ class DeckController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = array_merge([
-            'search' => '',
-        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
+        $filters = $request->only(['search', 'match', 'pinned']);
 
         if (! collect($filters)->some(fn ($value) => ! empty($value))) {
             $decks = Deck::query()
                 ->with(['author'])
                 ->withCount('terms')
-                ->where('private', false)
+                ->where(fn ($query) => $query
+                    ->where('decks.private', false)
+                    ->orWhere('decks.user_id', auth()->user()?->id)
+                )
                 ->orderByDesc('id')
                 ->paginate(25)
-                ->onEachSide(1);
+                ->onEachSide(1)
+                ->appends($filters);
             $totalCount = $decks->total();
 
         } else {
-            $allResults = $searchService->search($filters, false, true)['decks'];
-            $totalCount = $allResults->count();
+            $results = $searchService->search($filters, false, true)['decks'];
+            $totalCount = $results->count();
 
             $perPage = 25;
             $currentPage = $request->input('page', 1);
-            $decks = $allResults->forPage($currentPage, $perPage);
+            $decks = $results->forPage($currentPage, $perPage);
 
             $decks = new \Illuminate\Pagination\LengthAwarePaginator(
                 $decks,

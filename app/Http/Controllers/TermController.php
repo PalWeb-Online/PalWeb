@@ -85,9 +85,9 @@ class TermController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural', 'letter']);
+        $filters = $request->only(['search', 'match', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural']);
 
-        if (! collect($filters)->except(['letter'])->some(fn($value) => !empty($value))) {
+        if (! collect($filters)->except(['match', 'pinned', 'letter'])->some(fn($value) => !empty($value))) {
             $terms = Term::query()
                 ->with(['root', 'glosses'])
                 ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
@@ -100,12 +100,12 @@ class TermController extends Controller
             $totalCount = $terms->total();
 
         } else {
-            $allResults = $searchService->search($filters)['terms'];
-            $totalCount = $allResults->count();
+            $results = $searchService->search($filters)['terms'];
+            $totalCount = $results->count();
 
             $perPage = 25;
             $currentPage = $request->input('page', 1);
-            $terms = $allResults->forPage($currentPage, $perPage);
+            $terms = $results->forPage($currentPage, $perPage);
 
             $terms = new \Illuminate\Pagination\LengthAwarePaginator(
                 $terms,

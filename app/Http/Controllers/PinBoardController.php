@@ -16,14 +16,17 @@ class PinBoardController
 {
     public function index(Request $request): \Inertia\Response
     {
+//        todo: what does appends mode do?
         $terms = Term::query()
             ->whereHasBookmark($request->user())
-            ->paginate(20)
+            ->paginate(25)
+            ->onEachSide(1)
             ->appends(['mode' => $request->query('mode', 'terms')]);
 
         $sentences = Sentence::query()
             ->whereHasBookmark($request->user())
-            ->paginate(20)
+            ->paginate(25)
+            ->onEachSide(1)
             ->appends(['mode' => $request->query('mode', 'sentences')]);
 
         return Inertia::render('Workbench/PinBoard', [

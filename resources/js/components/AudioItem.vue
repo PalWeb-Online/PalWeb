@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
 import {Link} from '@inertiajs/inertia-vue3';
 import {Howl} from "howler";
@@ -32,7 +32,7 @@ function playAudio() {
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-onMounted(loadAudio);
+watch(() => props.model, loadAudio, {immediate: true});
 </script>
 
 <template>

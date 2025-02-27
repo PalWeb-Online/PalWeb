@@ -43,4 +43,25 @@ class Audio extends Model
             ->orderBy('speakers.fluency', $direction)
             ->orderBy('audios.id', $direction);
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['location'] ?? false, fn ($query, $location) => $query
+            ->whereHas('speaker', fn ($query) => $query
+                ->where('location_id', $location)
+            )
+        );
+
+        $query->when($filters['dialect'] ?? false, fn ($query, $dialect) => $query
+            ->whereHas('speaker', fn ($query) => $query
+                ->where('dialect_id', $dialect)
+            )
+        );
+
+        $query->when($filters['gender'] ?? false, fn ($query, $gender) => $query
+            ->whereHas('speaker', fn ($query) => $query
+                ->where('gender', $gender)
+            )
+        );
+    }
 }

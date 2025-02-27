@@ -3,46 +3,35 @@
 namespace App\Repositories;
 
 use App\Models\Sentence;
+use Illuminate\Support\Collection;
 
 class SentenceRepository
 {
-    public function searchSentences($terms, $glosses, string $searchTerm = '')
+    public function searchSentences($matches, array $filters = []): Collection
     {
-        $termsFromGlosses = $glosses->pluck('term_id')->unique();
-        $glossIds = $glosses->pluck('id');
+        $terms = $matches->unique('term_id')->pluck('term_id');
+        $glosses = $matches->pluck('gloss_id')->filter();
 
-        $sentencesFromDirectTerms = Sentence::query()
-            ->whereHas('terms', fn ($query) => $query->whereIn('terms.id', $terms))
-            ->with('terms')
-            ->get();
-
-        $sentencesFromGlossTerms = Sentence::query()
-            ->whereHas('terms', fn ($query) => $query->whereIn('terms.id', $termsFromGlosses)
-                ->whereIn('sentence_term.gloss_id', $glossIds))
-            ->with([
-                'terms' => fn ($query) => $query->whereHas('glosses',
-                    fn ($query) => $query->whereIn('glosses.id', $glossIds)),
-            ])
-            ->get();
-
-        if (!empty($searchTerm)) {
-            $sentencesFromPivotMatch = Sentence::query()
-                ->whereHas('terms',
-                    fn($query) => $query
-                        ->where(fn($pivotQuery) => $pivotQuery
-                            ->where('sentence_term.sent_term', 'like', '%'.$searchTerm.'%')
-                            ->orWhere('sentence_term.sent_translit', 'like', '%'.$searchTerm.'%')
-                        )
+        return Sentence::query()
+            ->with(['terms'])
+            ->whereHas('terms', fn ($query) => $query
+                ->whereIn('terms.id', $terms)
+                ->when($glosses->isNotEmpty(), fn ($q) => $q
+                    ->whereIn('sentence_term.gloss_id', $glosses)
                 )
-                ->with('terms')
-                ->get();
-        } else {
-            $sentencesFromPivotMatch = collect();
-        }
-
-        return $sentencesFromDirectTerms
-            ->merge($sentencesFromGlossTerms)
-            ->merge($sentencesFromPivotMatch)
+            )
+            ->when(! empty($filters['search']), fn ($query) => $query
+                ->orWhereHas('terms', fn ($query) => $query
+                    ->where(fn ($pivotQuery) => $pivotQuery
+                        ->where('sentence_term.sent_term', 'like', $filters['search'].'%')
+                        ->orWhere('sentence_term.sent_translit', 'like', $filters['search'].'%')
+                    )
+                )
+            )
+            ->when($filters['pinned'] ?? false, fn ($query) => $query
+                ->whereHasBookmark(auth()->user())
+            )
+            ->get()
             ->unique('id');
     }
 }

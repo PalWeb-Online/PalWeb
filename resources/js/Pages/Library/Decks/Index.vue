@@ -34,7 +34,6 @@ function updateFilter({filter, value}) {
     <div id="app-body">
         <SearchFilters
             :activeModel="'decks'"
-            :searchTerm="filters.search"
             :filters="filters"
             @updateFilter="updateFilter"
         />
@@ -46,9 +45,11 @@ function updateFilter({filter, value}) {
             <p v-else>No Decks matching this query.</p>
         </AppTip>
 
-        <div v-if="totalCount > 0" class="decks-list">
-            <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-        </div>
-        <Paginator :links="decks.meta.links"/>
+        <template v-if="totalCount > 0">
+            <div class="decks-list">
+                <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
+            </div>
+            <Paginator :links="decks.meta.links"/>
+        </template>
     </div>
 </template>

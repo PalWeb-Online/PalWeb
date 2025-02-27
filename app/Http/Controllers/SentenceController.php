@@ -42,24 +42,23 @@ class SentenceController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = array_merge([
-            'search' => ''
-        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
+        $filters = $request->only(['search', 'match', 'pinned']);
 
-        if (! collect($filters)->some(fn ($value) => !empty($value))) {
+        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
             $sentences = Sentence::query()
                 ->orderByDesc('id')
                 ->paginate(25)
-                ->onEachSide(1);
+                ->onEachSide(1)
+                ->appends($filters);
             $totalCount = $sentences->total();
 
         } else {
-            $allResults = $searchService->search($filters, true, false)['sentences'];
-            $totalCount = $allResults->count();
+            $results = $searchService->search($filters, true, false)['sentences'];
+            $totalCount = $results->count();
 
             $perPage = 25;
             $currentPage = $request->input('page', 1);
-            $sentences = $allResults->forPage($currentPage, $perPage);
+            $sentences = $results->forPage($currentPage, $perPage);
 
             $sentences = new \Illuminate\Pagination\LengthAwarePaginator(
                 $sentences,
@@ -72,7 +71,11 @@ class SentenceController extends Controller
 
         return Inertia::render('Library/Sentences/Index', [
             'section' => 'library',
-            'sentences' => SentenceResource::collection($sentences),
+            'sentences' => SentenceResource::collection(
+                $sentences->getCollection()->map(function ($sentence) {
+                    return new SentenceResource($sentence)->additional(['terms' => false]);
+                })
+            )->additional(['meta' => $sentences->toArray()]),
             'totalCount' => $totalCount,
             'filters' => $filters,
         ]);

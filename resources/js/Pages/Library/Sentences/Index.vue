@@ -35,7 +35,6 @@ function updateFilter({filter, value}) {
     <div id="app-body">
         <SearchFilters
             :activeModel="'sentences'"
-            :searchTerm="filters.search"
             :filters="filters"
             @updateFilter="updateFilter"
         />
@@ -48,11 +47,13 @@ function updateFilter({filter, value}) {
             <p v-else>No Sentences matching this query.</p>
         </AppTip>
 
-        <div v-if="totalCount > 0" class="deck-container">
-            <div class="sentences-list">
-                <SentenceContainer v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
+        <template v-if="totalCount > 0">
+            <div class="deck-container">
+                <div class="sentences-list">
+                    <SentenceContainer v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
+                </div>
             </div>
-        </div>
-        <Paginator :links="sentences.meta.links"/>
+            <Paginator :links="sentences.meta.links"/>
+        </template>
     </div>
 </template>

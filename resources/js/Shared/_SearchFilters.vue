@@ -12,6 +12,8 @@ const props = defineProps({
 
 const filters = ref({
     search: props.filters.search || '',
+    match: props.filters.match || 'term',
+    pinned: props.filters.pinned || 0,
     category: props.filters.category || '',
     attribute: props.filters.attribute || '',
     form: props.filters.form || '',
@@ -85,6 +87,12 @@ const isCCC = computed(() => {
 
 <template>
     <div class="search-filters-container">
+        <select v-model="filters.match">
+            <option value="root">Match Root</option>
+            <option value="term">Match Term</option>
+            <option value="gloss">Match Gloss</option>
+        </select>
+
         <input
             v-if="activeModel !== 'audios'"
             ref="searchInput"
@@ -93,7 +101,12 @@ const isCCC = computed(() => {
             placeholder="دوّر"
         />
 
-        <div class="search-filters" v-if="activeModel === 'terms' || !Object.values(filters).every(value => !value)">
+        <select v-model="filters.pinned" :class="filters.pinned === '1' ? 'persisting' : ''">
+            <option value="0">All</option>
+            <option value="1">Pinned</option>
+        </select>
+
+        <div class="search-filters" v-if="activeModel === 'terms'">
             <select v-model="filters.category" :class="filters.category ? 'persisting' : ''">
                 <option value="">Category</option>
                 <option value="verb">Verbs</option>

@@ -68,7 +68,8 @@ class Term extends Model
 
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
-        $pronunciation = $this->pronunciations->whereIn('dialect_id', $dialectIds)->first() ?? $this->pronunciations->first();
+        $pronunciation = $this->pronunciations->whereIn('dialect_id',
+            $dialectIds)->first() ?? $this->pronunciations->first();
 
         return [
             'audio' => $pronunciation?->audios?->first()?->filename,
@@ -155,7 +156,7 @@ class Term extends Model
         return $this->relatives()->wherePivot('type', 'descendant');
     }
 
-    public function scopeFilter($query, array $filters): void
+    public function scopeMatch($query, array $filters): void
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -166,49 +167,46 @@ class Term extends Model
                     ->orWhereHas('pronunciations', fn ($query) => $query
                         ->where('translit', 'like', $search.'%')
                     )
-
-//                    todo: searching for م & "man" removes "munxār" ("manāxīr")
                     ->orWhereHas('inflections', fn ($query) => $query
                         ->where('inflection', 'like', $search.'%')
                         ->orWhere('translit', 'like', $search.'%')
                     );
             });
         });
+    }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['pinned'] ?? false, fn ($query) => $query
+            ->whereHasBookmark(auth()->user())
+        );
 
         $query->when($filters['category'] ?? false, fn ($query, $category) => $query
             ->where('category', $category)
         );
 
         $query->when($filters['attribute'] ?? false, fn ($query, $attribute) => $query
-            ->whereHas('attributes', fn ($query) => $query
-                ->where('attribute', $attribute)
-            )
+            ->whereHas('attributes', fn ($query) => $query->where('attribute', $attribute))
         );
 
         $query->when($filters['form'] ?? false, fn ($query, $form) => $query
-            ->whereHas('patterns', fn ($query) => $query
-                ->where('form', $form)
-            )
+            ->whereHas('patterns', fn ($query) => $query->where('form', $form))
         );
 
         $query->when($filters['singular'] ?? false, fn ($query, $singular) => $query
-            ->whereHas('patterns', fn ($query) => $query
-                ->where('pattern', $singular)->where('type', 'singular')
-            )
+            ->whereHas('patterns', fn ($query) => $query->where('pattern', $singular)->where('type', 'singular'))
         );
 
         $query->when($filters['plural'] ?? false, fn ($query, $plural) => $query
-            ->whereHas('patterns', fn ($query) => $query
-                ->where('pattern', $plural)->where('type', 'plural')
-            )
+            ->whereHas('patterns', fn ($query) => $query->where('pattern', $plural)->where('type', 'plural'))
         );
 
         $query->when($filters['letter'] ?? false, fn ($query, $letter) => $query
             ->where(fn ($query) => $query
-                ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter . '%'))
+                ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter.'%'))
                 ->orWhere(fn ($q) => $q
                     ->whereDoesntHave('root')
-                    ->where('term', 'like', $letter . '%')
+                    ->where('term', 'like', $letter.'%')
                 )
             )
         );
