@@ -10,7 +10,7 @@ export function useSentence(props) {
 
     const audio = ref(null);
 
-    function loadAudio() {
+    const loadAudio = () => {
         if (data.sentence.audio) {
             audio.value = new Howl({
                 src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${data.sentence.audio}`],
@@ -18,29 +18,28 @@ export function useSentence(props) {
         }
     }
 
-    function playAudio() {
+    const playAudio = () => {
         if (audio.value) {
             audio.value.play();
         }
     }
 
-    async function fetchSentence() {
+    const fetchSentence = async () => {
         if (props.model) {
             data.sentence = props.model;
-            loadAudio();
-            data.isLoading = false;
 
         } else {
             try {
                 const response = await axios.get(route('sentences.get', props.id));
                 data.sentence = response.data.data;
-                loadAudio();
-                data.isLoading = false;
 
             } catch (error) {
                 console.error("Error fetching Sentence:", error);
             }
         }
+
+        loadAudio();
+        data.isLoading = false;
     }
 
     const isCurrentTerm = (term) => {
@@ -49,5 +48,5 @@ export function useSentence(props) {
 
     onMounted(fetchSentence);
 
-    return { data, isCurrentTerm, playAudio };
+    return {data, isCurrentTerm, playAudio};
 }

@@ -18,6 +18,20 @@ class Pattern extends Model
 
     protected $guarded = [];
 
+    protected static $namedPatterns = [
+        'ap' => 'Active Participle',
+        'ia' => 'Intensive Adjective',
+        'pp' => 'Passive Participle',
+        'nv' => 'Verbal Noun',
+        'na' => 'Nominalized Adjective',
+        'relative' => 'Relative Adjective',
+    ];
+
+    public function getPatternAliasAttribute(): string
+    {
+        return self::$namedPatterns[$this->pattern] ?? $this->pattern;
+    }
+
     public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class);

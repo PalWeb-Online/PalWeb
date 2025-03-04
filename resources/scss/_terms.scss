@@ -1,14 +1,5 @@
 .term-container {
-    .term-container-head {
-        .term-references, .term-inflections {
-            display: flex;
-            flex-flow: row wrap;
-            align-items: center;
-            gap: 0.8rem 1.6rem;
-        }
-    }
-
-    .term-pronunciation, .term-etymology {
+    .term-etymology {
         display: grid;
         gap: 0.8rem;
 
@@ -47,7 +38,7 @@
     gap: 3.2rem;
 }
 
-.term-container-head, .term-etymology, .gloss-li-container, .term-root {
+.term-container-head, .term-etymology, .gloss-li-container, .root-container {
     a {
         color: $purple-primary;
         font-weight: 700;
@@ -58,17 +49,23 @@
     }
 }
 
+.term-container-head {
+    display: grid;
+    justify-items: end;
+}
+
 .term-headword {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row-reverse wrap;
     align-items: center;
     gap: 0 1.6rem;
     font-weight: 700;
 
-    .term-head {
-        display: flex;
-        flex-flow: row wrap;
+    .term-headword-term {
+        display: grid;
         align-items: center;
+        grid-template-columns: auto auto 2.4rem;
+        direction: rtl;
         gap: 0 1.2rem;
 
         .term-headword-arb {
@@ -87,52 +84,59 @@
             left: -2.6rem
         }
 
-        .play {
-            width: 2.8rem;
-        }
-
         .term-deck-toggle {
             position: absolute;
             width: 4.8rem;
             top: -2.4rem;
-            right: 1.6rem;
+            left: 1.6rem;
         }
     }
 }
 
-.term-root {
-    justify-self: end;
+.term-references {
+    display: flex;
+    flex-flow: row-reverse wrap;
+    align-items: center;
+    gap: 0.8rem 1.6rem;
 
+    & > * {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+}
+
+.root-container {
     display: grid;
     justify-items: center;
     color: white;
     background: $purple-deep;
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.2);
     border-radius: 1.2rem;
-    padding: 0.8rem 0.4rem;
+    gap: 1.2rem;
+    padding: 0.8rem 0.4rem 0.4rem;
 
-    .term-root-head {
+    .root-root {
         display: flex;
         gap: 1.2rem;
         align-items: center;
         font-weight: 700;
         padding-inline: 2.0rem;
 
-        .term-root-head-arb {
+        .root-ar {
             font-size: 2.4rem;
             font-family: 'Vazirmatn', monospace;
         }
 
-        .term-root-head-eng {
+        .root-en {
             font-family: $monoFont;
         }
     }
 
-    .term-root-body {
+    .root-terms {
         width: 100%;
         display: grid;
         gap: 1.2rem;
-        margin-block: 0.8rem;
         background: white;
         padding: 1.6rem 1.2rem;
         border-radius: 0.8rem;
@@ -551,10 +555,6 @@
     justify-content: center;
     gap: 3.2rem;
     padding-block: 3.2rem;
-
-    &.derived-terms {
-        border-block-start: 2px dotted $purple-pastel-dark
-    }
 
     .inflection-chart {
         display: grid;

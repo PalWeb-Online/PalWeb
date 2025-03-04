@@ -28,7 +28,10 @@ class AudioController extends Controller
         ], $request->only(['location', 'dialect', 'gender', 'sort']));
 
         $query = Audio::query()
-            ->with(['speaker.user', 'pronunciation.term'])
+            ->with([
+                'speaker',
+                'pronunciation.term',
+            ])
             ->filter($filters);
 
         if ($filters['sort'] === 'fluency') {

@@ -1,4 +1,4 @@
-import {computed, onMounted, reactive} from "vue";
+import {onMounted, reactive} from "vue";
 import {route} from "ziggy-js";
 
 export function useDialog(props) {
@@ -7,7 +7,7 @@ export function useDialog(props) {
         isLoading: true
     });
 
-    async function fetchDialog() {
+    const fetchDialog = async () => {
         if (props.model) {
             data.dialog = props.model;
             data.isLoading = false;
@@ -26,5 +26,5 @@ export function useDialog(props) {
 
     onMounted(fetchDialog);
 
-    return { data };
+    return {data};
 }

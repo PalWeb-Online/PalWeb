@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
@@ -65,16 +67,55 @@ class Term extends Model
     public function getUserPronunciationData(): array
     {
         $dialect = auth()->user()?->dialect ?? Dialect::find(8);
-
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
-        $pronunciation = $this->pronunciations->whereIn('dialect_id',
-            $dialectIds)->first() ?? $this->pronunciations->first();
+        $userPronunciation = $this->pronunciations()
+            ->whereIn('dialect_id', $dialectIds)
+            ->with([
+                'audios' => fn ($query) => $query
+                    ->limit(1)
+                    ->with(['speaker.user'])
+            ])
+            ->limit(1)
+            ->first();
+
+        if ($userPronunciation) {
+            $pronunciations = collect([$userPronunciation]);
+
+        } else {
+            $pronunciations = collect([
+                $this->pronunciations()
+                    ->with([
+                        'audios' => fn ($query) => $query
+                            ->limit(1)
+                            ->with(['speaker.user'])
+                    ])
+                    ->limit(1)
+                    ->first()
+            ]);
+        }
 
         return [
-            'audio' => $pronunciation?->audios?->first()?->filename,
-            'translit' => $pronunciation?->translit ?? $this->translit,
+            'audio' => $pronunciations->first()->audios?->first()?->filename,
+            'translit' => $pronunciations->first()->translit,
+            'pronunciations' => $pronunciations,
         ];
+    }
+
+    public function getSingleGlossSentence(): Collection
+    {
+        $sentenceIds = DB::table('sentence_term')
+            ->where('sentence_term.term_id', $this->id)
+            ->groupBy('sentence_term.gloss_id')
+            ->selectRaw('MIN(sentence_term.sentence_id) AS sentence_id, gloss_id')
+            ->pluck('sentence_id', 'gloss_id');
+
+
+        $sentences = Sentence::whereIn('id', $sentenceIds->values())->get();
+
+        return $sentences->groupBy(function ($sentence) use ($sentenceIds) {
+            return $sentenceIds->flip()[$sentence->id];
+        });
     }
 
     public function sentences(?int $gloss_id = null): BelongsToMany
@@ -130,15 +171,15 @@ class Term extends Model
         return $this->hasMany(Pronunciation::class);
     }
 
-    public function variants(): BelongsToMany
-    {
-        return $this->relatives()->wherePivot('type', 'variant');
-    }
-
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
             ->withPivot('type');
+    }
+
+    public function variants(): BelongsToMany
+    {
+        return $this->relatives()->wherePivot('type', 'variant');
     }
 
     public function references(): BelongsToMany

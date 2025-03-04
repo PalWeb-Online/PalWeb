@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreTermRequest;
 use App\Http\Requests\UpdateTermRequest;
+use App\Http\Resources\PronunciationResource;
+use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
 use App\Models\Attribute;
-use App\Models\Dialect;
 use App\Models\Gloss;
 use App\Models\Inflection;
 use App\Models\MissingTerm;
@@ -22,6 +23,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -53,41 +55,13 @@ class TermController extends Controller
         ]);
     }
 
-    public function loadPronunciations(Collection $terms, Request $request): Collection
-    {
-        $terms->each(function ($term) {
-            $term->load(['pronunciations.audios.speaker']);
-        });
-
-        $allAudios = $request->routeIs('terms.audios');
-
-        foreach ($terms as $term) {
-            $term->pronunciations->each(function ($pronunciation) use ($allAudios) {
-                $pronunciation->audio_count = $pronunciation->audios->count();
-
-                if (! $allAudios) {
-                    $pronunciation->audios = $pronunciation->audios->take(1);
-                }
-            });
-
-            if ($request->user()) {
-                $dialect = $request->user()->dialect_id;
-                $dialects = Dialect::find($dialect)->ancestors->pluck('id')
-                    ->merge(Dialect::find($dialect)->descendants->pluck('id'))
-                    ->push($dialect);
-                $term->userPronunciations = $term->pronunciations->whereIn('dialect_id', $dialects);
-                $term->otherPronunciations = $term->pronunciations->whereNotIn('dialect_id', $dialects);
-            }
-        }
-
-        return $terms;
-    }
-
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only(['search', 'match', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural']);
+        $filters = $request->only([
+            'search', 'match', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
+        ]);
 
-        if (! collect($filters)->except(['match', 'pinned', 'letter'])->some(fn($value) => !empty($value))) {
+        if (! collect($filters)->except(['match', 'pinned', 'letter'])->some(fn ($value) => ! empty($value))) {
             $terms = Term::query()
                 ->with(['root', 'glosses'])
                 ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
@@ -135,98 +109,159 @@ class TermController extends Controller
 //            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
 
-    public function get($id): JsonResponse
+//    public function get($id): JsonResponse
+//    {
+//        $term = Term::with([
+//            'root',
+//            'patterns',
+//            'attributes',
+//            'pronunciations',
+//            'relatives',
+//            'spellings',
+//            'inflections',
+//            'glosses' => function ($query) {
+//                $query->with([
+//                    'attributes',
+//                    'relatives',
+//                ]);
+//            },
+//        ])->findOrFail($id);
+//
+//        return response()->json([
+//            'term' => $term,
+//            'root' => $term->root->root ?? '',
+//            'singPatterns' => $term->patterns->where('type', 'singular')->values(),
+//            'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
+//            'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
+//            'pronunciations' => $term->pronunciations,
+//            'variants' => $term->variants->map(function ($relative) {
+//                return [
+//                    'slug' => $relative->slug,
+//                    'relation' => $relative->pivot->type,
+//                ];
+//            }),
+//            'references' => $term->references->map(function ($relative) {
+//                return [
+//                    'slug' => $relative->slug,
+//                    'relation' => $relative->pivot->type,
+//                ];
+//            }),
+//            'components' => $term->components->map(function ($relative) {
+//                return [
+//                    'slug' => $relative->slug,
+//                    'relation' => $relative->pivot->type,
+//                ];
+//            }),
+//            'descendants' => $term->descendants->map(function ($relative) {
+//                return [
+//                    'slug' => $relative->slug,
+//                    'relation' => $relative->pivot->type,
+//                ];
+//            }),
+//            'spellings' => $term->spellings,
+//            'inflections' => $term->inflections,
+//            'glosses' => $term->glosses->map(function ($gloss) {
+//                return [
+//                    'id' => $gloss->id,
+//                    'gloss' => $gloss->gloss,
+//                    'attributes' => $gloss->attributes,
+//                    'relatives' => $gloss->relatives->map(function ($relative) {
+//                        return [
+//                            'slug' => $relative->slug,
+//                            'relation' => $relative->pivot->type,
+//                        ];
+//                    }),
+//                ];
+//            }),
+//        ]);
+//    }
+
+    public function show(Term $term, Request $request): \Inertia\Response
     {
-        $term = Term::with([
-            'root',
-            'patterns',
-            'attributes',
-            'pronunciations',
-            'relatives',
-            'spellings',
-            'inflections',
-            'glosses' => function ($query) {
-                $query->with([
-                    'attributes',
-                    'relatives',
-                ]);
-            },
-        ])->findOrFail($id);
+        $term->load(['root']);
 
-        return response()->json([
-            'term' => $term,
-            'root' => $term->root->root ?? '',
-            'singPatterns' => $term->patterns->where('type', 'singular')->values(),
-            'plurPatterns' => $term->patterns->where('type', 'plural')->values(),
-            'verbPatterns' => $term->patterns->where('type', 'verbal')->values(),
-            'pronunciations' => $term->pronunciations,
-            'variants' => $term->variants->map(function ($relative) {
-                return [
-                    'slug' => $relative->slug,
-                    'relation' => $relative->pivot->type,
-                ];
-            }),
-            'references' => $term->references->map(function ($relative) {
-                return [
-                    'slug' => $relative->slug,
-                    'relation' => $relative->pivot->type,
-                ];
-            }),
-            'components' => $term->components->map(function ($relative) {
-                return [
-                    'slug' => $relative->slug,
-                    'relation' => $relative->pivot->type,
-                ];
-            }),
-            'descendants' => $term->descendants->map(function ($relative) {
-                return [
-                    'slug' => $relative->slug,
-                    'relation' => $relative->pivot->type,
-                ];
-            }),
-            'spellings' => $term->spellings,
-            'inflections' => $term->inflections,
-            'glosses' => $term->glosses->map(function ($gloss) {
-                return [
-                    'id' => $gloss->id,
-                    'gloss' => $gloss->gloss,
-                    'attributes' => $gloss->attributes,
-                    'relatives' => $gloss->relatives->map(function ($relative) {
-                        return [
-                            'slug' => $relative->slug,
-                            'relation' => $relative->pivot->type,
-                        ];
-                    }),
-                ];
-            }),
-        ]);
-    }
+        if ($term->root) {
+            $rootData = $term->root->generateRoot($term);
 
-    public function show(Term $term, Request $request): \Illuminate\View\View
-    {
-        if ($request->routeIs('terms.show')) {
-            $likeTerms = $this->termRepository->getLikeTerms($term);
-            $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
-
-        } else {
-            $terms = collect([$term]);
+            $root = [
+                'ar' => $rootData['ar'],
+                'en' => $rootData['en'],
+                'all' => $rootData['all'],
+                'terms' => $term->root->terms->sortBy('term')->map(function ($term) {
+                    return [
+                        'id' => $term->id,
+                        'slug' => $term->slug,
+                        'term' => $term->term,
+                        'translit' => $term->translit,
+                    ];
+                })
+            ];
         }
 
-        $terms = $this->loadPronunciations($terms, $request);
+        $likeTerms = $this->termRepository->getLikeTerms($term);
+        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
 
-        $attributeOrder = ['masculine', 'feminine', 'plural', 'collective', 'demonym', 'clitic', 'idiom'];
-        $sortedAttributes = $term->attributes->sortBy(function ($attr) use ($attributeOrder) {
-            return array_search($attr->attribute, $attributeOrder);
-        });
-        $term->attributes = $sortedAttributes->values();
+        foreach ($terms as $model) {
+            $model
+                ->load([
+                    'attributes',
+                    'spellings',
+                    'variants',
+                    'references',
+                    'components',
+                    'descendants',
+                    'patterns',
+                    'glosses' => function ($query) {
+                        $query->with([
+                            'attributes',
+                            'synonyms',
+                            'antonyms',
+                            'valences'
+                        ]);
+                    },
+                    'inflections',
+                    'decks',
+                ])
+                ->loadCount(['pronunciations']);
 
-        View::share('pageTitle', 'Term: '.$term->term.' ('.$term->translit.')');
-        View::share('pageDescription',
-            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+            $model->sentences = $model->getSingleGlossSentence();
+        }
 
-        return view('terms.show', [
-            'terms' => $terms,
+        return Inertia::render('Library/Terms/Show', [
+            'section' => 'library',
+            'root' => $root ?? null,
+            'terms' => TermResource::collection(
+                $terms->map(function ($term) {
+                    return new TermResource($term)->additional(['detail' => true]);
+                })
+            ),
         ]);
+
+//        View::share('pageDescription',
+//            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+    }
+
+    public function getPronunciations(Term $term): AnonymousResourceCollection
+    {
+        $pronunciations = $term->pronunciations()
+            ->with([
+                'audios' => fn ($query) => $query
+                    ->limit(1)
+                    ->with(['speaker.user'])
+            ])
+            ->withCount('audios')
+            ->get();
+
+        return PronunciationResource::collection($pronunciations);
+    }
+
+    public function getSentences(Term $term, $glossId): AnonymousResourceCollection
+    {
+        $sentences = $term->sentences()
+            ->where('gloss_id', $glossId)
+            ->get();
+
+        return SentenceResource::collection($sentences);
     }
 
     public function create(): \Illuminate\View\View

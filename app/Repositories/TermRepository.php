@@ -49,31 +49,19 @@ class TermRepository
             ->get();
     }
 
-    public function getTerms(array $filter = [], $perPage = 100)
-    {
-        return Term::query()
-            ->select('terms.*')
-            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-            ->orderByRaw('COALESCE(roots.root, terms.term) ASC')
-            ->orderBy('terms.term')
-            ->filter($filter)
-            ->paginate($perPage)
-            ->onEachSide(1);
-    }
-
     public function getLikeTerms(Term $mainTerm): object
     {
         // Get like terms belonging to the same category (e.g. ريحة rīħa & ريحا rīħa).
-        $duplicates = Term::query()->where('translit', '=', $mainTerm->translit)
+        $duplicates = Term::query()
+            ->where('translit', '=', $mainTerm->translit)
             ->where('category', '=', $mainTerm->category)
             ->where('id', '!=', $mainTerm->id)
-            ->with('pronunciations')
             ->get();
 
         // Get like terms belonging to other categories (e.g. adj كثير & adv كثير).
-        $homophones = Term::query()->where('translit', '=', $mainTerm->translit)
+        $homophones = Term::query()
+            ->where('translit', '=', $mainTerm->translit)
             ->where('category', '!=', $mainTerm->category)
-            ->with('pronunciations')
             ->get();
 
         return (object) [

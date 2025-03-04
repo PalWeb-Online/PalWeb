@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\DeckScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,8 @@ class Deck extends Model
     protected static function boot(): void
     {
         parent::boot();
+
+        static::addGlobalScope(new DeckScope);
 
         static::deleting(function ($deck) {
             $deck->bookmarks()->delete();

@@ -16,29 +16,25 @@ class SpeakerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->whenLoaded('user', function () {
-                return [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                    'username' => $this->user->username,
-                    'avatar' => $this->user->avatar,
-                    'private' => $this->user->private
-                ];
-            }),
-            'dialect' => $this->whenLoaded('user', function () {
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'username' => $this->user->username,
+                'avatar' => $this->user->avatar,
+                'private' => $this->user->private
+            ],
+            'dialect' => $this->whenLoaded('dialect', function () {
                 return [
                     'name' => $this->dialect->name,
                 ];
             }),
-            'location' => $this->whenLoaded('user', function () {
-                return [
-                    'name_ar' => $this->location->name_ar,
-                    'name_en' => $this->location->name_en,
-                ];
-            }),
+            'location' => [
+                'name_ar' => $this->location->name_ar,
+                'name_en' => $this->location->name_en,
+            ],
             'fluency' => $this->fluency_alias,
             'gender' => $this->gender,
-            'audios_count' => $this->audios_count ?? 0,
+            'audios_count' => $this->whenCounted('audios'),
         ];
     }
 }

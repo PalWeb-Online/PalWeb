@@ -71,6 +71,25 @@
     }
 }
 
+.pronunciations-list {
+    display: grid;
+    gap: 0.8rem;
+
+    & > button {
+        text-align: center;
+        background: $purple-pastel-light;
+        border: 0.1rem solid $purple-pastel;
+        padding-block-end: 0.2rem;
+        border-radius: 3.2rem;
+        @include link-primary;
+
+        &:hover {
+            text-decoration: none;
+            background: $purple-pastel;
+        }
+    }
+}
+
 .pronunciation-item-wrapper {
     display: grid;
     background: white;
@@ -88,10 +107,11 @@
         border-inline-start: none;
     }
 
-    & > a {
+    & > button {
         text-align: center;
         background: $purple-pastel-light;
         border-block-start: 0.1rem solid $purple-pastel;
+        padding-block-end: 0.2rem;
         @include link-primary;
 
         &:hover {

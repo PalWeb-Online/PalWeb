@@ -23,15 +23,15 @@ class Gloss extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
-    public function synonyms()
-    {
-        return $this->relatives()->wherePivot('type', 'synonym');
-    }
-
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'gloss_relative', 'gloss_id', 'relative_id')
             ->withPivot('type');
+    }
+
+    public function synonyms()
+    {
+        return $this->relatives()->wherePivot('type', 'synonym');
     }
 
     public function antonyms()

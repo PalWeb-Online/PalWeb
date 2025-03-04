@@ -29,7 +29,7 @@ class DeckResource extends JsonResource
                 'avatar' => $this->author->avatar,
             ]),
             'terms' => TermResource::collection($this->whenLoaded('terms')),
-            'terms_count' => $this->terms_count ?? 0,
+            'terms_count' => $this->terms_count,
         ];
     }
 }

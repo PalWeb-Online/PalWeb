@@ -22,12 +22,14 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
+use App\Http\Resources\AudioResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
 use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Models\Dialog;
+use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
 use Illuminate\Support\Facades\Route;
@@ -77,18 +79,22 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
-        Route::get('/{term:slug}/usages', 'show')->name('terms.usages');
-        Route::get('/{term:slug}/audios', 'show')->name('terms.audios');
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
 
 //        todo: overwrites getter for Term Editor
         Route::get('/{term}/get', function (Term $term) {
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
+
+        Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
+        Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
+        Route::get('/{pronunciation}/get/audios', function (Pronunciation $pronunciation) {
+            return AudioResource::collection($pronunciation->audios);
+        })->name('terms.get.pronunciations.audios');
     });
 
     Route::get('/random', function () {
-        return to_route('terms.show', \App\Models\Term::inRandomOrder()->first());
+        return to_route('terms.show', Term::inRandomOrder()->first());
     })->name('terms.random');
 });
 

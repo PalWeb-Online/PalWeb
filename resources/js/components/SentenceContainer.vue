@@ -1,4 +1,5 @@
 <script setup>
+import {Link} from '@inertiajs/inertia-vue3'
 import {route} from 'ziggy-js';
 import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
@@ -34,12 +35,12 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                 <div class="sentence-arb">
                     <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
                         <template v-if="term.id">
-                            <a :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                            <Link :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                                :target="isCurrentTerm(term) ? '' : '_blank'"
                                :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
                                 <div>{{ term.sentencePivot.sent_term }}</div>
                                 <div>{{ term.sentencePivot.sent_translit }}</div>
-                            </a>
+                            </Link>
                         </template>
                         <template v-else>
                             <div class="sentence-term">

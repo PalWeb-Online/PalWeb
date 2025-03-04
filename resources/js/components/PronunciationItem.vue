@@ -4,14 +4,23 @@ import {Link} from '@inertiajs/inertia-vue3';
 import AudioItem from "./AudioItem.vue";
 
 const props = defineProps({
-    id: Number,
-    model: {
-        type: Object,
-        required: false,
-        default: null,
-    },
+    model: Object,
     audio: Object,
 });
+
+const fetchAudios = async () => {
+    try {
+        const response = await axios.get(route('terms.get.pronunciations.audios', {pronunciation: props.model.id}));
+        const audios = response.data.filter(audio =>
+            !props.model.audios.some(existing => existing.id === audio.id)
+        );
+
+        props.model.audios.push(...audios);
+
+    } catch (error) {
+        console.error('Error fetching Audios:', error);
+    }
+}
 </script>
 
 <template>
@@ -30,14 +39,14 @@ const props = defineProps({
             <div class="pronunciation-item-dialect">{{ model.dialect.name }}</div>
         </div>
 
-        <div class="pronunciation-audios">
-            <AudioItem v-if="audio" :model="audio"/>
-            <AudioItem v-else-if="model.audios.length > 0" v-for="audio in model.audios" :model="audio"/>
+        <div v-if="audio" class="pronunciation-audios">
+            <AudioItem :model="audio"/>
+        </div>
+        <div v-else-if="model.audios.length > 0" class="pronunciation-audios">
+            <AudioItem v-for="audio in model.audios" :model="audio"/>
         </div>
 
-<!--        todo: on Term Page -->
-        <!--            @if(!request()->routeIs('terms.audios') && $pronunciation->audio_count > 1)-->
-        <!--            <a href="{{ route('terms.audios', $pronunciation->term) }}">+</a>-->
-        <!--            @endif-->
+        <!--                todo: load / toggle -->
+        <button v-if="!audio && model.audios_count > 1" @click="fetchAudios">+</button>
     </div>
 </template>

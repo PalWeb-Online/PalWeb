@@ -13,7 +13,7 @@ export function useDeck(props) {
             : data.deck.description;
     });
 
-    async function fetchDeck() {
+    const fetchDeck = async () => {
         if (props.model) {
             data.deck = props.model;
             data.isLoading = false;

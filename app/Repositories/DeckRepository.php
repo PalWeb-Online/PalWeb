@@ -10,12 +10,6 @@ class DeckRepository
     public function searchDecks($matches, array $filters = []): Collection
     {
         return Deck::query()
-            ->with(['author'])
-            ->withCount('terms')
-            ->where(fn ($query) => $query
-                ->where('decks.private', false)
-                ->orWhere('decks.user_id', auth()->user()?->id)
-            )
             ->when($filters['search'] ?? false, fn ($query) => $query
                 ->where('name', 'like', '%'.$filters['search'].'%')
                 ->orWhereHas('terms', fn ($query) => $query

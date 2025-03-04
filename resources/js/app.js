@@ -6,7 +6,6 @@ import axios from 'axios';
 import Alpine from 'alpinejs';
 import {Head, Link} from '@inertiajs/inertia-vue3'
 import TermEditor from "./components/TermEditor.vue";
-import TermHead from "./components/TermHead.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckContainer from "./components/DeckContainer.vue";
@@ -50,7 +49,6 @@ InertiaProgress.init({
 
 const multiMountComponents = [
     { selector: '[data-vue-component="TermItem"]', component: TermItem },
-    { selector: '[data-vue-component="TermHead"]', component: TermHead },
     { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
     { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
     { selector: '[data-vue-component="DeckContainer"]', component: DeckContainer },

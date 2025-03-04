@@ -8,12 +8,7 @@ import {useUserStore} from "../stores/UserStore.js";
 const UserStore = useUserStore();
 
 const props = defineProps({
-    model: {
-        type: Object,
-        required: false,
-        default: null,
-    },
-    id: Number,
+    model: Object,
 });
 
 const audio = ref(null);

@@ -45,9 +45,9 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Library: Terms"/>
+    <Head title="Dictionary"/>
     <div id="app-head">
-        <h1>Terms</h1>
+        <h1>Dictionary</h1>
     </div>
     <div id="app-body">
         <!--        todo: put in a collapsible instead -->

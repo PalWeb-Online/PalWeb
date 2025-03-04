@@ -125,36 +125,37 @@ class Root extends Model
 
     public function generateRoot(?Term $term = null): array
     {
-        $arabic = mb_str_split($this->root);
-        $translit = str_replace(self::arabic, self::translit, $arabic);
+        $ar = mb_str_split($this->root);
+        $en = str_replace(self::arabic, self::translit, $ar);
+        $all = [];
 
         if ($term) {
-            $arabic = str_replace('ء', 'أ', $arabic);
-            $translits = [];
+            $arArray = str_replace('ء', 'أ', $ar);
 
             foreach ($term->pronunciations as $pronunciation) {
                 $dialect = $pronunciation->dialect;
-                $dialectTranslit = $this->generateTranslits($translit, $dialect);
+                $enArray = $this->generateTranslits($en, $dialect);
 
-                $translits[] = [
+                $all[] = [
+                    'ar' => $arArray,
+                    'en' => $enArray,
                     'dialect' => $dialect->name,
-                    'translit' => $dialectTranslit,
                 ];
             }
-
-            return [$arabic, $translits];
-
-        } else {
-            $arabic = implode(' ', $arabic);
-            $translit = implode(' ', $translit);
-
-            return [$arabic, $translit];
         }
+
+        $arString = implode(' ', $ar);
+        $enString = implode(' ', $en);
+
+        return [
+            'ar' => $arString,
+            'en' => $enString,
+            'all' => $all,
+        ];
     }
 
     private function generateTranslits(array $translit, $dialect): array|string
     {
-
         if (isset(self::translitOverrides[$dialect->id])) {
             $overrides = self::translitOverrides[$dialect->id];
 

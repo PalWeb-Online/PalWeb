@@ -12,7 +12,6 @@ const props = defineProps({
         default: null,
     },
     id: Number,
-    size: {type: String, default: 'm'},
 });
 
 const {data} = useDeck(props);
