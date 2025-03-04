@@ -1,5 +1,6 @@
 <script setup>
 import {route} from 'ziggy-js';
+import {Link} from '@inertiajs/inertia-vue3'
 import {useActions} from "../composables/Actions.js";
 
 const props = defineProps({
@@ -22,8 +23,8 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
         <img ref="reference" class="gear" src="/img/gear.svg" @click="toggleMenu" alt="options"/>
 
         <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-            <a :href="route('dialogs.show', model.id)">View Dialog</a>
-            <a :href="route('dialogs.edit', model.id)">Edit Dialog</a>
+            <Link :href="route('dialogs.show', model.id)">View Dialog</Link>
+            <Link :href="route('dialogs.edit', model.id)">Edit Dialog</Link>
             <form :action="route('dialogs.destroy', model.id)" method="POST" @submit="confirmDelete">
                 <input type="hidden" name="_method" value="DELETE">
                 <input type="hidden" name="_token" :value="csrfToken">

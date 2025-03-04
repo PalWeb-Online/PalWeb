@@ -92,7 +92,6 @@ class DeckController extends Controller
         $this->authorize('interact', $deck);
 
         $deck->load([
-            'author',
             'terms' => function ($query) {
                 $query->orderBy('deck_term.id');
             },

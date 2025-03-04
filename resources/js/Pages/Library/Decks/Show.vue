@@ -8,7 +8,7 @@ defineOptions({
     layout: Layout
 });
 
-const props = defineProps({
+defineProps({
     deck: Object
 });
 </script>
@@ -19,6 +19,6 @@ const props = defineProps({
     </div>
     <div id="app-body">
         <Link :href="route('decks.index')"><- to All</Link>
-        <DeckContainer :key="deck.id" :model="deck"/>
+        <DeckContainer :model="deck"/>
     </div>
 </template>

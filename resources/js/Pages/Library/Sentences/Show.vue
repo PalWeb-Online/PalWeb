@@ -8,7 +8,7 @@ defineOptions({
     layout: Layout
 });
 
-const props = defineProps({
+defineProps({
     sentence: Object
 });
 </script>
@@ -19,6 +19,6 @@ const props = defineProps({
     </div>
     <div id="app-body">
         <Link :href="route('sentences.index')"><- to All</Link>
-        <SentenceContainer :key="sentence.id" :model="sentence" size="l"/>
+        <SentenceContainer :model="sentence" size="l"/>
     </div>
 </template>

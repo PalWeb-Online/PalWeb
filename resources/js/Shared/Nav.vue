@@ -81,9 +81,9 @@ const toSection = async (section, key) => {
                                     <div>lessons</div>
                                     <div>learn Palestinian Arabic</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('dialogs.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Academy/Dialogs/Index', 'Academy/Dialogs/Show'].includes($page.component) }"
                                 >
                                     <div>dialogs</div>
                                     <div>natural language input</div>

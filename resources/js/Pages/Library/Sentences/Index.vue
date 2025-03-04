@@ -10,7 +10,7 @@ defineOptions({
     layout: Layout
 });
 
-const props = defineProps({
+defineProps({
     sentences: Object,
     totalCount: Number,
     filters: Object,

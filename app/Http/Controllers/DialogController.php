@@ -27,45 +27,44 @@ class DialogController extends Controller
     ) {
     }
 
-    public function index(Request $request): \Illuminate\View\View|RedirectResponse
+    public function index(Request $request): \Inertia\Response|RedirectResponse
     {
         $auth = $request->user();
 
         View::share('pageTitle', 'Dialog Library');
-        View::share('pageDescription',
-            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
 
         return $this->redirectToSubscribeOnFail(function () use ($auth) {
             $this->failIfFalse($this->can->viewIndex($auth));
 
-            return view('dialogs.index', [
-                'dialogs' => Dialog::paginate(15)->onEachSide(1),
+            return Inertia::render('Academy/Dialogs/Index', [
+                'section' => 'academy',
+                'dialogs' => DialogResource::collection(Dialog::paginate(25)->onEachSide(1)),
             ]);
         });
     }
 
-    public function show(Request $request, Dialog $dialog): \Illuminate\View\View|RedirectResponse
+    public function show(Request $request, Dialog $dialog): \Inertia\Response|RedirectResponse
     {
         $auth = $request->user();
 
         View::share('pageTitle', 'Dialog: '.$dialog->title);
-        View::share('pageDescription',
-            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
 
         return $this->redirectToSubscribeOnFail(function () use ($auth, $dialog) {
             $this->failIfFalse($this->can->viewText($auth));
 
-            return view('dialogs.show', [
-                'dialog' => $dialog,
-                'bodyBackground' => 'yellow-pastel',
+            return Inertia::render('Academy/Dialogs/Show', [
+                'section' => 'academy',
+                'dialog' => new DialogResource($dialog->load('sentences')),
             ]);
         });
+//        View::share('pageDescription',
+//            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
     }
 
     public function create(): \Inertia\Response
     {
         return Inertia::render('Admin/Dialogger', [
-            'section' => 'admin',
+            'section' => 'academy',
             'mode' => 'dialog',
         ]);
     }
@@ -75,7 +74,7 @@ class DialogController extends Controller
         $dialog->load('sentences');
 
         return Inertia::render('Admin/Dialogger', [
-            'section' => 'admin',
+            'section' => 'academy',
             'mode' => 'dialog',
             'stagedModel' => new DialogResource($dialog),
         ]);
