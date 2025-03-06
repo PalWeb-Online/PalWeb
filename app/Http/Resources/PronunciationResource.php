@@ -22,6 +22,7 @@ class PronunciationResource extends JsonResource
             'borrowed' => $this->borrowed,
             'dialect' => $this->whenLoaded('dialect', function () {
                 return [
+                    'id' => $this->dialect->id,
                     'name' => $this->dialect->name,
                 ];
             }),

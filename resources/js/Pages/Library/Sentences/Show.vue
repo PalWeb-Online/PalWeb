@@ -19,6 +19,6 @@ defineProps({
     </div>
     <div id="app-body">
         <Link :href="route('sentences.index')"><- to All</Link>
-        <SentenceContainer :model="sentence" size="l"/>
+        <SentenceContainer :model="sentence" size="l" dialog/>
     </div>
 </template>

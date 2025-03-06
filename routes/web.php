@@ -3,6 +3,7 @@
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\RootController;
 use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\PinBoardController;
@@ -92,6 +93,8 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
             return AudioResource::collection($pronunciation->audios);
         })->name('terms.get.pronunciations.audios');
     });
+
+    Route::get('/roots/{root}', [RootController::class, 'show'])->name('roots.show');
 
     Route::get('/random', function () {
         return to_route('terms.show', Term::inRandomOrder()->first());

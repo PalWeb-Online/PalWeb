@@ -50,22 +50,21 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                         </template>
                     </template>
                     <template v-else>
-                        <div class="sentence-term">
+                        <div class="sentence-term" style="background: none">
                             <div>{{ data.sentence.sentence }}</div>
                         </div>
                     </template>
                 </div>
 
-<!--                todo: make this not selectable when Sentence is small -->
                 <div class="sentence-eng">
                     {{ data.sentence.trans }}
                 </div>
             </div>
             <div v-if="dialog && data.sentence.dialog" class="sentence-dialog">
                 <div>Dialog</div>
-                <a :href="route('dialogs.show', data.sentence.dialog.id )" target="_blank">
+                <Link :href="route('dialogs.show', data.sentence.dialog.id )" target="_blank">
                     {{ data.sentence.dialog.title }}
-                </a>
+                </Link>
             </div>
         </div>
 

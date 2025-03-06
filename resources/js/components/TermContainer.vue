@@ -1,4 +1,5 @@
 <script setup>
+import {computed} from "vue";
 import {Link} from '@inertiajs/inertia-vue3'
 import {route} from 'ziggy-js';
 import {useTerm} from "../composables/Term.js";
@@ -10,8 +11,8 @@ import SentenceContainer from "./SentenceContainer.vue";
 import DeckItem from "./DeckItem.vue";
 import ChartEnclitic from "./charts/ChartEnclitic.vue";
 import ChartInflection from "./charts/ChartInflection.vue";
-import DialogContainer from "./DialogContainer.vue";
 import ChartConjugation from "./charts/ChartConjugation.vue";
+import DialogLine from "./charts/DialogLine.vue";
 
 const props = defineProps({
     model: {
@@ -20,15 +21,41 @@ const props = defineProps({
         default: null,
     },
     id: Number,
-    root: {
-        type: Object,
-        required: false,
-        default: null
-    },
 });
 
-// todo: consider creating TermStore for Show page & Term Editor. (how would this work with >1 Terms per page?)
 const {data, fetchPronunciations, fetchSentences} = useTerm(props);
+
+const variants = computed(() =>
+    data.term.relatives.filter(relative => relative.type === "variant") ?? []
+);
+
+const references = computed(() =>
+    data.term.relatives.filter(relative => relative.type === "reference") ?? []
+);
+
+const components = computed(() =>
+    data.term.relatives.filter(relative => relative.type === "component") ?? []
+);
+
+const descendants = computed(() =>
+    data.term.relatives.filter(relative => relative.type === "descendant") ?? []
+);
+
+const hostForms = computed(() =>
+    data.term.inflections.filter(inflection => ['genitive', 'accusative'].includes(inflection.form)) ?? []
+);
+
+const responseForms = computed(() =>
+    data.term.inflections.filter(inflection => inflection.form === 'resp') ?? []
+);
+
+const constructForms = computed(() =>
+    data.term.inflections.filter(inflection => inflection.form === 'cnst') ?? []
+);
+
+const inflections = computed(() =>
+    data.term.inflections.filter(inflection => !['cnst', 'resp', 'genitive', 'accusative'].includes(inflection.form)) ?? []
+);
 
 const attributeLinks = {
     collective: {text: "nouns", url: route("wiki.show", "nouns")},
@@ -52,29 +79,29 @@ const attributeLinks = {
                     </div>
 
                     <div class="term-headword-data">{{ data.term.category }}.
-                        <template v-for="attribute in data.term.attributes" :key="attribute">
-                            <template v-if="attributeLinks[attribute]">
+                        <template v-for="attribute in data.term.attributes" :key="attribute.id">
+                            <template v-if="attributeLinks[attribute.attribute]">
                                 <a
-                                    :href="attributeLinks[attribute].url"
+                                    :href="attributeLinks[attribute.attribute].url"
                                     target="_blank"
                                     class="attribute-link"
                                 >
-                                    {{ attribute }}.
+                                    {{ attribute.attribute }}.
                                 </a>
                             </template>
-                            <template v-else-if="['idiom', 'clitic'].includes(attribute)">
+                            <template v-else-if="['idiom', 'clitic'].includes(attribute.attribute)">
                                 <span style="font-weight: 400; font-style: italic">
-                                    {{ attribute }}.
+                                    {{ attribute.attribute }}.
                                 </span>
                             </template>
                             <template v-else>
-                                <span style="font-weight: 400">{{ attribute }}.</span>
+                                <span style="font-weight: 400">{{ attribute.attribute }}.</span>
                             </template>
                         </template>
-                        <template v-if="data.term.inflections.construct.length > 0">
+                        <template v-if="constructForms.length > 0">
                             <span style="font-weight: 400">construct:</span>
-                            {{ data.term.inflections.construct[0].inflection }}
-                            ({{ data.term.inflections.construct[0].translit }})
+                            {{ constructForms[0].inflection }}
+                            ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="data.term.category === 'verb'">
                             <a v-for="pattern in data.term.patterns"
@@ -84,7 +111,7 @@ const attributeLinks = {
                     </div>
                 </div>
                 <div class="term-references"
-                     v-if="data.term.spellings.length + data.term.variants.length + data.term.references.length > 0">
+                     v-if="data.term.spellings.length + variants.length + references.length > 0">
                     <div v-if="data.term.spellings.length > 0">
                         <div>or</div>
                         <div v-for="spelling in data.term.spellings" style="font-weight: 700">
@@ -92,16 +119,16 @@ const attributeLinks = {
                         </div>
                     </div>
 
-                    <div v-if="data.term.variants.length > 0">
+                    <div v-if="variants.length > 0">
                         <div>alt.</div>
-                        <Link v-for="variant in data.term.variants" :href="route('terms.show', variant.slug)">
+                        <Link v-for="variant in variants" :href="route('terms.show', variant.slug)">
                             {{ variant.term }} ({{ variant.translit }})
                         </Link>
                     </div>
 
-                    <div v-if="data.term.references.length > 0">
+                    <div v-if="references.length > 0">
                         <div>see:</div>
-                        <Link v-for="reference in data.term.references" :href="route('terms.show', reference.slug)">
+                        <Link v-for="reference in references" :href="route('terms.show', reference.slug)">
                             {{ reference.term }} ({{ reference.translit }})
                         </Link>
                     </div>
@@ -118,48 +145,54 @@ const attributeLinks = {
 
             <div class="term-etymology">
                 <div class="featured-title">etymology</div>
-                <div>
-                    <span style="text-transform: capitalize">{{ data.term.etymology.type }}</span><span
-                    v-if="data.term.etymology.source" style="font-style: italic"> {{
-                        data.term.etymology.source
-                    }}</span>.
+                <div class="term-etymology-content">
+                    <Link class="term-root" v-if="data.term.root" :href="route('roots.show', data.term.root.id )">
+                        <div class="term-root-ar">{{ data.term.root.ar }}</div>
+                        <div class="term-root-en">({{ data.term.root.en }})</div>
+                    </Link>
+                    <div class="term-data">
+                        <span style="text-transform: capitalize">{{ data.term.etymology.type }}</span>
+                        <span v-if="data.term.etymology.source" style="font-style: italic"> {{
+                                data.term.etymology.source
+                            }}</span>.
 
-                    <!-- todo: link to Wiki page with info on Patterns;
-                            weird spacing; plural may appear before singular (شيكل) -->
-                    <template v-for="pattern in data.term.patterns">
-                        <template v-if="pattern.type === 'singular'">
-                            In the
-                            <b v-if="pattern.form">Form {{ pattern.form }}</b>
-                            <b>{{ pattern.pattern }}</b>
-                            pattern.
+                        <!-- todo: link to Wiki page with info on Patterns;
+                                weird spacing; plural may appear before singular (شيكل) -->
+                        <template v-for="pattern in data.term.patterns">
+                            <template v-if="pattern.type === 'singular'">
+                                In the
+                                <b v-if="pattern.form">Form {{ pattern.form }}</b>
+                                <b>{{ pattern.pattern }}</b>
+                                pattern.
+                            </template>
+                            <template v-if="pattern.type === 'plural'">
+                                Has a
+                                <b>{{ pattern.pattern }}</b>
+                                {{ ['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken' }}
+                                plural.
+                            </template>
                         </template>
-                        <template v-if="pattern.type === 'plural'">
-                            Has a
-                            <b>{{ pattern.pattern }}</b>
-                            {{ ['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken' }}
-                            plural.
-                        </template>
-                    </template>
 
-                    <template v-if="data.term.components.length > 0">
-                        Idiom from
-                        <template v-for="(component, index) in data.term.components">
-                            <Link :href="route('terms.show', component.slug)">
-                                {{ component.term }} ({{ component.translit }})
-                            </Link>
-                            {{ index < data.term.components.length - 1 ? ', ' : '.' }}
+                        <template v-if="components.length > 0">
+                            Idiom from
+                            <template v-for="(component, index) in components">
+                                <Link :href="route('terms.show', component.slug)">
+                                    {{ component.term }} ({{ component.translit }})
+                                </Link>
+                                {{ index < components.length - 1 ? ', ' : '.' }}
+                            </template>
                         </template>
-                    </template>
 
-                    <template v-if="data.term.descendants.length > 0">
-                        Component of
-                        <template v-for="(descendant, index) in data.term.descendants">
-                            <Link :href="route('terms.show', descendant.slug)">
-                                {{ descendant.term }} ({{ descendant.translit }})
-                            </Link>
-                            {{ index < data.term.descendants.length - 1 ? ', ' : '.' }}
+                        <template v-if="descendants.length > 0">
+                            Component of
+                            <template v-for="(descendant, index) in descendants">
+                                <Link :href="route('terms.show', descendant.slug)">
+                                    {{ descendant.term }} ({{ descendant.translit }})
+                                </Link>
+                                {{ index < descendants.length - 1 ? ', ' : '.' }}
+                            </template>
                         </template>
-                    </template>
+                    </div>
                 </div>
             </div>
 
@@ -178,21 +211,24 @@ const attributeLinks = {
                             <div class="gloss-li-content-gloss">
                                 {{ gloss.gloss }}
                             </div>
-                            <div v-if="gloss.synonyms.length > 0">
+                            <div v-if="gloss.relatives.find(relative => relative.type === 'synonym')?.length > 0">
                                 syn.
-                                <Link v-for="synonym in gloss.synonyms" :href="route('terms.show', synonym.slug)">
+                                <Link v-for="synonym in gloss.relatives.find(relative => relative.type === 'synonym')"
+                                      :href="route('terms.show', synonym.slug)">
                                     {{ synonym.term }}
                                     ({{ synonym.translit }})
                                 </Link>
                             </div>
-                            <div v-if="gloss.antonyms.length > 0">
+                            <div v-if="gloss.relatives.find(relative => relative.type === 'antonym')?.length > 0">
                                 ant.
-                                <Link v-for="antonym in gloss.antonyms" :href="route('terms.show', antonym.slug)">
+                                <Link v-for="antonym in gloss.relatives.find(relative => relative.type === 'antonym')"
+                                      :href="route('terms.show', antonym.slug)">
                                     {{ antonym.term }}
                                     ({{ antonym.translit }})
                                 </Link>
                             </div>
-                            <div v-for="pair in gloss.valences">
+                            <div
+                                v-for="pair in gloss.relatives.find(relative => ['isPatient', 'noPatient', 'hasObject'].includes(relative.type))">
                                 {{ pair.type }}
                                 <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
                                     ({{ pair.translit }})
@@ -213,29 +249,30 @@ const attributeLinks = {
             </div>
 
             <ChartConjugation
-                v-if="data.term.category === 'verb'"
-                :roots="root.all"
+                v-if="data.term.category === 'verb' && !hostForms.length"
+                :roots="data.term.root.all"
                 :patterns="data.term.patterns"
             />
 
             <ChartInflection
-                v-if="['verb', 'noun', 'adjective'].includes(data.term.category) && data.term.inflections.other.length > 0"
+                v-if="['verb', 'noun', 'adjective'].includes(data.term.category) && inflections.length > 0"
                 :term="data.term"
-                :inflections="data.term.inflections.other"
+                :inflections="inflections"
             />
             <ChartEnclitic
-                v-if="data.term.inflections.host.length > 0"
-                :inflections="data.term.inflections.host"
+                v-if="hostForms.length > 0"
+                :inflections="hostForms"
             />
 
-<!--             todo: DialogContainer slot for one-off DialogLine items not associated with a Sentence. -->
-            <!--            <DialogContainer v-if="data.term.inflections.response.length > 0">-->
-            <!--                <x-dialog-line speaker="دعاء" :arb="$term->term" :eng="$term->translit" audio/>-->
-            <!--                <x-dialog-line v-for="response in data.term.inflections.response" ltr speaker="جواب" :arb="$response->inflection" :eng="$response->translit" audio/>-->
-            <!--            </DialogContainer>-->
+            <div class="chart-dialog" v-if="responseForms.length > 0">
+                <DialogLine speaker="دعاء" :ar="data.term.term" :en="data.term.translit" />
+                <DialogLine speaker="جواب" align="ltr" v-for="response in responseForms"
+                            :ar="response.inflection"
+                            :en="response.translit"/>
+            </div>
 
             <figure v-if="data.term.image" class="term-image">
-                <img alt="Term Image" src="{{ data.term.image }}">
+                <img alt="Term Image" :src="data.term.image">
             </figure>
 
             <!--            note that my user is hard-coded -->

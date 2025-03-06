@@ -1,14 +1,4 @@
 .term-container {
-    .term-etymology {
-        display: grid;
-        gap: 0.8rem;
-
-        .featured-title {
-            font-size: 2.4rem;
-            color: $accent-yellow
-        }
-    }
-
     .term-container-glosses {
         margin-block: 3.2rem;
     }
@@ -38,7 +28,7 @@
     gap: 3.2rem;
 }
 
-.term-container-head, .term-etymology, .gloss-li-container, .root-container {
+.term-container-head, .term-etymology, .gloss-li-container {
     a {
         color: $purple-primary;
         font-weight: 700;
@@ -93,6 +83,54 @@
     }
 }
 
+.term-etymology {
+    display: grid;
+    gap: 0.8rem;
+
+    .featured-title {
+        font-size: 2.4rem;
+        color: $accent-yellow
+    }
+
+    .term-etymology-content {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        gap: 1.6rem;
+    }
+
+    .term-data {
+        flex-grow: 1;
+    }
+
+    .term-root {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        direction: rtl;
+        border: 0.1rem solid $purple-primary;
+        border-radius: 0.6rem;
+        padding: 0.4rem 1.2rem;
+
+        &:hover {
+            color: $accent-yellow;
+            border: 0.1rem solid $accent-yellow;
+            text-decoration: none;
+        }
+
+        .term-root-ar {
+            font-family: $ar_bodyFont;
+            font-size: 2.0rem;
+        }
+
+        .term-root-en {
+            font-family: $monoFont;
+            font-size: 1.6rem;
+        }
+    }
+}
+
+
 .term-references {
     display: flex;
     flex-flow: row-reverse wrap;
@@ -103,50 +141,6 @@
         display: flex;
         align-items: center;
         gap: 0.8rem;
-    }
-}
-
-.root-container {
-    display: grid;
-    justify-items: center;
-    color: white;
-    background: $purple-deep;
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.2);
-    border-radius: 1.2rem;
-    gap: 1.2rem;
-    padding: 0.8rem 0.4rem 0.4rem;
-
-    .root-root {
-        display: flex;
-        gap: 1.2rem;
-        align-items: center;
-        font-weight: 700;
-        padding-inline: 2.0rem;
-
-        .root-ar {
-            font-size: 2.4rem;
-            font-family: 'Vazirmatn', monospace;
-        }
-
-        .root-en {
-            font-family: $monoFont;
-        }
-    }
-
-    .root-terms {
-        width: 100%;
-        display: grid;
-        gap: 1.2rem;
-        background: white;
-        padding: 1.6rem 1.2rem;
-        border-radius: 0.8rem;
-        color: $purple-primary;
-        font-weight: 700;
-    }
-
-    button {
-        color: $accent-yellow;
-
     }
 }
 
@@ -548,7 +542,6 @@
     }
 }
 
-
 .inflection-chart-wrapper {
     display: flex;
     flex-flow: row wrap;
@@ -645,6 +638,19 @@
             }
         }
     }
+}
+
+.chart-dialog {
+    justify-self: center;
+    min-width: 50%;
+    display: grid;
+    row-gap: .8rem;
+    direction: rtl;
+    text-align: start;
+    margin-block: 1.6rem;
+    background: #fff0ca;
+    border-radius: 1.2rem;
+    padding: 1.6rem 3.2rem 2.4rem;
 }
 
 .missing-terms {

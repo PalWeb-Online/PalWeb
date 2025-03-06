@@ -29,18 +29,18 @@ class Gloss extends Model
             ->withPivot('type');
     }
 
-    public function synonyms()
-    {
-        return $this->relatives()->wherePivot('type', 'synonym');
-    }
-
-    public function antonyms()
-    {
-        return $this->relatives()->wherePivot('type', 'antonym');
-    }
-
-    public function valences()
-    {
-        return $this->relatives()->wherePivotIn('type', ['isPatient', 'noPatient', 'hasObject']);
-    }
+//    public function synonyms()
+//    {
+//        return $this->relatives()->wherePivot('type', 'synonym');
+//    }
+//
+//    public function antonyms()
+//    {
+//        return $this->relatives()->wherePivot('type', 'antonym');
+//    }
+//
+//    public function valences()
+//    {
+//        return $this->relatives()->wherePivotIn('type', ['isPatient', 'noPatient', 'hasObject']);
+//    }
 }

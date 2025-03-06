@@ -84,23 +84,6 @@ export const useDeckStore = defineStore('DeckStore', () => {
         data.stagedDeck = cloneDeep(data.originalDeck);
     };
 
-    // const viewDeck = async () => {
-    //     window.open(`/community/decks/${data.stagedDeck.id}`, '_blank');
-    // };
-    //
-    // const deleteDeck = async () => {
-    //     try {
-    //         await axios.delete('/community/decks/' + data.stagedDeck.id);
-    //
-    //         StateStore.data.errorMessage = null;
-    //         return true;
-    //
-    //     } catch (error) {
-    //         StateStore.data.errorMessage = error.response?.data?.message || 'Oh no! Your Deck could not be deleted.';
-    //         return false;
-    //     }
-    // };
-
     const resetCards = () => {
         data.cards = [...defaultOrder.value];
         currentSlideIndex.value = 0;
