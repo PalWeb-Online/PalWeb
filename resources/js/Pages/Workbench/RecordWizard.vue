@@ -15,7 +15,7 @@ const StateStore = useStateStore();
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
 
-const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore);
+const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore.hasNavigationGuard);
 
 onBeforeUnmount(() => {
     StateStore.data.step = 'speaker';

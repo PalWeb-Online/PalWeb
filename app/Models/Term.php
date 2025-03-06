@@ -146,6 +146,25 @@ class Term extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
+    public function getSortedAttributesAttribute(): Collection
+    {
+        $priority = [
+            'collective' => 1,
+            'demonym' => 1,
+            'defect' => 1,
+            'pseudo' => 1,
+            'masculine' => 2,
+            'feminine' => 2,
+            'plural' => 2,
+            'idiom' => 3,
+            'clitic' => 3,
+        ];
+
+        return $this->attributes()->get()->sortBy(function ($attribute) use ($priority) {
+            return $priority[$attribute->attribute] ?? PHP_INT_MAX;
+        })->values();
+    }
+
     public function patterns(): BelongsToMany
     {
         return $this->belongsToMany(Pattern::class);

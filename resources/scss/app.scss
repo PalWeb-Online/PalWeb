@@ -731,33 +731,6 @@ ul.search-results {
     }
 }
 
-.form-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.8rem;
-    font-size: 1.4rem;
-
-    label {
-        flex-basis: 8rem;
-        white-space: nowrap;
-        margin-inline-end: 0.4rem;
-    }
-
-    input {
-        flex-grow: 1;
-    }
-
-    select {
-        flex-grow: 1;
-    }
-
-    img {
-        width: 1.6rem !important;
-    }
-}
-
 .auth-field {
     display: grid;
     justify-items: start;
@@ -826,77 +799,94 @@ ul.search-results {
     }
 }
 
-// TERM EDITOR
-
-.term-editor-body, .term-editor-body > * {
-    width: 100%;
+.field-block-wrapper {
     display: grid;
-    gap: 3.2rem;
-    align-content: start;
+    gap: 0.8rem;
 }
+.field-block {
+    display: grid;
+    gap: 0.6rem;
+    border: 0.1rem solid $purple-deep;
+    border-radius: 0.8rem;
+    box-shadow: -0.2rem 0.2rem 0 $purple-deep;
+    overflow: hidden;
+    background: white;
 
-@media (min-width: 960px) {
-    .term-editor-body {
-        grid-template-columns: repeat(2, 1fr);
+    .field-block-head {
+        display: flex;
+        gap: 1.6rem;
+        align-items: center;
+        justify-content: space-between;
+        font-family: $headFont;
+        font-size: 2.4rem;
+        font-weight: 700;
+        text-transform: lowercase;
+        padding: 1.0rem 1.6rem 0.8rem;
+        color: $purple-deep;
+        background: $accent-yellow-pastel;
+    }
 
-        & > *:nth-child(3) {
-            grid-column: span 2;
+    .field-block-body {
+        display: grid;
+        gap: 1.2rem;
+        padding: 1.2rem;
+    }
+
+    .field-block {
+        box-shadow: none;
+        border: 0.1rem solid $purple-pastel-dark;
+
+        .field-block-head {
+            background: $purple-pastel-light;
+            font-size: 1.8rem;
         }
     }
 }
 
-.field-wrapper {
+.field-item-add {
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        color: $accent-yellow;
+    }
+}
+
+.field-set {
+    position: relative;
     display: grid;
-    gap: 1.6rem;
-    padding-block-end: 3.2rem;
-    border-block-end: 0.2rem dotted $purple-primary;
-
-    &.compound-field .with-add-object {
-        margin-inline-start: 3.2rem;
-        margin-block-start: 1.6rem;
-        padding: 0;
-        border: none;
-    }
-
-    &.with-add-field, &.compound-field {
-        padding: 0;
-        border: none;
-    }
-
-    &.with-add-object {
-        gap: 3.2rem;
-    }
-
-    &.with-add-field .field-add {
-        color: $purple-primary;
-    }
-
-    .field-label {
-        color: $accent-yellow;
-        font-size: 2.4rem;
-        font-weight: 700;
-        text-transform: capitalize;
-
-        display: flex;
-        gap: 1.6rem;
-        justify-content: space-between;
-    }
-
-    .field-add {
-        justify-self: start;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        font-size: 1.4rem;
-        font-weight: 700;
-        font-family: $monoFont;
-        cursor: pointer;
-        color: $accent-yellow;
-    }
+    gap: 1.2rem;
+    padding: 1.2rem;
+    border: 0.1rem solid $purple-pastel;
+    border-radius: 0.8rem;
 
     img {
+        top: -0.8rem;
+        right: 1.6rem;
+        position: absolute;
         cursor: pointer;
         width: 2.0rem;
+        z-index: 1;
+    }
+}
+
+.field-item {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+
+    label {
+        font-family: $headFont;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: $purple-deep;
+    }
+
+    .field-error {
+        color: red;
+        font-size: 1.2rem;
+        font-family: $monoFont;
     }
 }
 

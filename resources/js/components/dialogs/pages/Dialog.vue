@@ -21,7 +21,7 @@ const StateStore = useStateStore();
 const DialogStore = useDialogStore();
 const SentenceStore = useSentenceStore();
 
-const {showAlert, handleConfirm, handleCancel} = useNavGuard(StateStore);
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(StateStore.hasNavigationGuard);
 
 const insertSentence = (sentence) => {
     DialogStore.data.stagedDialog.sentences.push({

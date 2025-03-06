@@ -10,18 +10,18 @@
     }
 
     &.academy, &.workbench:has(.dm-mode-study) {
+        background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    &.library {
         background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, $purple-pastel;
         background-attachment: fixed;
     }
 
-    &.library {
-        background: $accent-yellow-pastel;
-    }
-
     &.community {
-        background: $accent-yellow url(../../public/img/waves-yellow.svg) no-repeat center center;
-        background-attachment: fixed;
-        background-size: cover;
+        background: $accent-yellow-pastel;
     }
 
     &.workbench {

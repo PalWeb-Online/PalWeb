@@ -12,6 +12,11 @@ const emit = defineEmits(['confirm', 'cancel']);
 <template>
     <div class="app-dialog-overlay">
         <div class="app-dialog">
+            <div class="app-dialog-tab">
+                <div class="app-dialog-title">
+                    Alert
+                </div>
+            </div>
             <div class="app-dialog-body">
                 <p>{{ message }}</p>
                 <div class="app-alert-actions">

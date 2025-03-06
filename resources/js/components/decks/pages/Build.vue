@@ -21,7 +21,7 @@ const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const DeckStore = useDeckStore();
 
-const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore);
+const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore.hasNavigationGuard);
 
 const insertTerm = (term) => {
     const termExists = DeckStore.data.stagedDeck.terms.some(existingTerm => existingTerm.id === term.id);

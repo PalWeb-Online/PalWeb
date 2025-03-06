@@ -2,7 +2,7 @@ import {onMounted, onUnmounted, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {router} from "@inertiajs/vue3";
 
-export function useNavGuard(StateStore) {
+export function useNavGuard(hasNavigationGuard) {
     const showAlert = ref(false);
     const pendingVisit = ref(null);
     const isSkippingGuard = ref(false);
@@ -38,7 +38,7 @@ export function useNavGuard(StateStore) {
 
     onMounted(async () => {
         const handleBeforeUnload = (event) => {
-            if (StateStore.hasNavigationGuard) {
+            if (hasNavigationGuard.value) {
                 event.preventDefault();
                 event.returnValue = '';
             }
@@ -47,11 +47,12 @@ export function useNavGuard(StateStore) {
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         const unsubscribe = router.on('before', (event) => {
+
             if (isSkippingGuard.value) {
                 return;
             }
 
-            if (StateStore.hasNavigationGuard) {
+            if (hasNavigationGuard.value) {
                 event.preventDefault();
                 showAlert.value = true;
                 pendingVisit.value = event.detail.visit;

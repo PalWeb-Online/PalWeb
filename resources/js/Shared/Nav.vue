@@ -179,7 +179,7 @@ const toSection = async (section, key) => {
             <div class="nav-admin-menu">
                 <div class="nav-admin-menu-head">Admin</div>
                 <div class="nav-admin-menu-items">
-                    <div>New Term</div>
+                    <Link :href="route('terms.create')">New Term</Link>
                     <div>New Sentence</div>
                     <Link :href="route('dialogs.create')">New Dialog</Link>
                     <div>New Mail</div>

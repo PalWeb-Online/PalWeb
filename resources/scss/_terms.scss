@@ -653,6 +653,24 @@
     padding: 1.6rem 3.2rem 2.4rem;
 }
 
+.term-editor, .term-editor > * {
+    width: 100%;
+    max-width: 96rem;
+    display: grid;
+    gap: 3.2rem;
+    align-content: start;
+}
+
+@media (min-width: 960px) {
+    .term-editor {
+        grid-template-columns: repeat(2, 1fr);
+
+        & > *:nth-child(3) {
+            grid-column: span 2;
+        }
+    }
+}
+
 .missing-terms {
     display: grid;
     gap: 0.2rem;

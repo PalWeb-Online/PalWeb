@@ -20,7 +20,7 @@ const NotificationStore = useNotificationStore();
 const StateStore = useStateStore();
 const SentenceStore = useSentenceStore();
 
-const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore);
+const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore.hasNavigationGuard);
 
 const insertTerm = (term) => {
     SentenceStore.data.stagedSentence.terms.push({

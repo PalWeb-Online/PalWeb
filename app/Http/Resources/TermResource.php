@@ -60,64 +60,40 @@ class TermResource extends JsonResource
 
         $detail = [];
         if ($this->withDetail()) {
-            $priority = [
-                'collective' => 1,
-                'demonym' => 1,
-                'defect' => 1,
-                'pseudo' => 1,
-                'masculine' => 2,
-                'feminine' => 2,
-                'plural' => 2,
-                'idiom' => 3,
-                'clitic' => 3,
-            ];
-
-            $sortedAttributes = $this->attributes->pluck('attribute')->toArray();
-            usort($sortedAttributes, function ($a, $b) use ($priority) {
-                return ($priority[$a] ?? PHP_INT_MAX) - ($priority[$b] ?? PHP_INT_MAX);
-            });
-
             $detail = [
-                'attributes' => $sortedAttributes,
-                'spellings' => $this->spellings,
-                'variants' => $this->variants,
-                'references' => $this->references,
-                'components' => $this->components,
-                'descendants' => $this->descendants,
+                'root' => $this->when($this->relationLoaded('root') && $this->root !== null,
+                    function () {
+                        return new RootResource($this->root);
+                    }
+                ),
                 'etymology' => $this->etymology,
+                'attributes' => $this->sorted_attributes,
+                'spellings' => $this->spellings,
+                'relatives' => $this->relatives->map(function ($relative) {
+                    return [
+                        'id' => $relative->id,
+                        'slug' => $relative->slug,
+                        'term' => $relative->term,
+                        'translit' => $relative->translit,
+                        'type' => $relative->pivot->type,
+                    ];
+                }),
                 'patterns' => $this->patterns->map(function ($pattern) {
                     return [
                         'type' => $pattern->type,
                         'form' => $pattern->form,
-                        'pattern' => $pattern->pattern_alias,
+                        'pattern' => $pattern->pattern,
+                        'pattern_alias' => $pattern->pattern_alias,
                     ];
                 }),
                 'glosses' => $this->glosses->map(function ($gloss) {
                     return [
                         'id' => $gloss->id,
                         'gloss' => $gloss->gloss,
-                        'attributes' => $gloss->attributes->map(function ($attribute) {
+                        'attributes' => $gloss->attributes,
+                        'relatives' => $gloss->relatives->map(function ($relative) {
                             return [
-                                'attribute' => $attribute->attribute,
-                                'category' => $attribute->category,
-                            ];
-                        }),
-                        'synonyms' => $gloss->synonyms->map(function ($relative) {
-                            return [
-                                'slug' => $relative->slug,
-                                'term' => $relative->term,
-                                'translit' => $relative->translit,
-                            ];
-                        }),
-                        'antonyms' => $gloss->antonyms->map(function ($relative) {
-                            return [
-                                'slug' => $relative->slug,
-                                'term' => $relative->term,
-                                'translit' => $relative->translit,
-                            ];
-                        }),
-                        'valences' => $gloss->valences->map(function ($relative) {
-                            return [
+                                'id' => $relative->id,
                                 'slug' => $relative->slug,
                                 'term' => $relative->term,
                                 'translit' => $relative->translit,
@@ -127,12 +103,9 @@ class TermResource extends JsonResource
                         'sentences' => SentenceResource::collection($this->sentences[$gloss->id] ?? []),
                     ];
                 }),
-                'inflections' => [
-                    'host' => $this->inflections->whereIn('form', ['genitive', 'accusative']),
-                    'response' => $this->inflections->where('form', 'resp'),
-                    'construct' => $this->inflections->where('form', 'cnst'),
-                    'other' => $this->inflections->whereNotIn('form', ['cnst', 'resp', 'genitive', 'accusative']),
-                ],
+                'inflections' => $this->inflections,
+                'image' => $this->image,
+                'usage' => $this->usage,
                 'decks' => DeckResource::collection($this->whenLoaded('decks')),
             ];
         }

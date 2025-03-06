@@ -5,7 +5,6 @@ import { createPinia } from 'pinia';
 import axios from 'axios';
 import Alpine from 'alpinejs';
 import {Head, Link} from '@inertiajs/inertia-vue3'
-import TermEditor from "./components/TermEditor.vue";
 import TermItem from "./components/TermItem.vue";
 import DeckItem from "./components/DeckItem.vue";
 import DeckContainer from "./components/DeckContainer.vue";
@@ -75,11 +74,3 @@ function mountMultiComponents(selector, component) {
 multiMountComponents.forEach(({ selector, component }) => {
     mountMultiComponents(selector, component);
 });
-
-// TODO: Simplify the following initializations as well.
-
-if (document.querySelector('#termEditor')) {
-    const termEditorApp = createApp({});
-    termEditorApp.component('TermEditor', TermEditor);
-    termEditorApp.mount('#termEditor');
-}

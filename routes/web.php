@@ -82,7 +82,6 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
         Route::get('/{term:slug}', 'show')->name('terms.show');
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
 
-//        todo: overwrites getter for Term Editor
         Route::get('/{term}/get', function (Term $term) {
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
