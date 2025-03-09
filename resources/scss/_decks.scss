@@ -90,10 +90,10 @@
         align-items: start;
         align-content: start;
         gap: 1.2rem;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
         background: white;
         border-radius: 1.2rem;
-        border: 0.2rem solid $purple-primary-dark;
+        border: 0.2rem solid var(--color-dark-primary);
         box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     }
 
@@ -111,7 +111,7 @@
 
         .deck-flashcard-front-body {
             padding-block-start: 1.2rem;
-            border-block-start: 0.2rem dotted $purple-primary-dark;
+            border-block-start: 0.2rem dotted var(--color-medium-secondary);
         }
     }
 
@@ -138,7 +138,7 @@
         }
 
         .deck-flashcard-back-count {
-            color: $accent-yellow;
+            color: var(--color-accent-medium);
             text-transform: uppercase;
         }
     }
@@ -147,7 +147,7 @@
         color: white;
         font-size: 6.4rem;
         font-family: $displayFont;
-        background: $purple-deep;
+        background: var(--color-dark-primary);
         padding-block: 50%;
         text-align: center;
         text-transform: uppercase;
@@ -299,13 +299,13 @@
     .deck-term-count {
         font-family: $headFont;
         font-weight: 700;
-        color: $accent-yellow;
+        color: var(--color-accent-medium);
         text-align: right;
         margin-inline: 1.6rem
     }
 
     .tip {
-        border: 0.1rem solid $purple-primary;
+        border: 0.1rem solid var(--color-medium-primary);
     }
 }
 
@@ -347,7 +347,7 @@
 #dm-mode-toggle {
     height: 4.8rem;
     width: 24rem;
-    border: 0.2rem solid $purple-deep;
+    border: 0.2rem solid var(--color-dark-primary);
     border-radius: 1.6rem;
     cursor: pointer;
     padding: 0.2rem;
@@ -366,13 +366,13 @@
         transition: 0.3s ease;
 
         color: white;
-        background: $purple-primary;
+        background: var(--color-medium-primary);
         transform: translateX(0%);
     }
 
     &.study .dm-mode-toggle-slider {
-        color: $purple-deep;
-        background: $accent-yellow;
+        color: var(--color-dark-primary);
+        background: var(--color-accent-medium);
         transform: translateX(100%);
     }
 }
@@ -436,7 +436,7 @@
     max-width: 96rem;
     background: white;
     border-radius: 0.8rem;
-    border: 2px solid $purple-primary-dark;
+    border: 2px solid var(--color-medium-secondary);
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     padding: 1.6rem;
     position: relative;
@@ -454,7 +454,7 @@
         font-family: $headFont;
         padding-block-start: 0.2rem;
         margin-inline-end: 1.6rem;
-        color: $purple-primary;
+        color: var(--color-medium-primary);
     }
 
     & > div:nth-child(2) {
@@ -465,7 +465,7 @@
 
         button {
             color: white;
-            background: $purple-primary;
+            background: var(--color-medium-primary);
             padding: 0.4rem 0.8rem;
             font-weight: 700;
             border-radius: 0.4rem;
@@ -498,7 +498,7 @@
         line-height: normal;
         font-family: $monoFont;
         border-radius: 1.2rem;
-        border: 0.2rem solid $purple-deep;
+        border: 0.2rem solid var(--color-dark-primary);
         backface-visibility: hidden;
         box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
         transition: transform 0.3s cubic-bezier(.25, .46, .45, .94);
@@ -510,7 +510,7 @@
         gap: 3.2rem;
 
         padding: 3.2rem 1.6rem;
-        background: $purple-deep;
+        background: var(--color-dark-primary);
         color: white;
         font-weight: 700;
 
@@ -558,7 +558,7 @@
         gap: 3.2rem;
         padding: 3.2rem;
         background: white;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
         font-family: $bodyFont;
         transform: rotateX(-180deg);
 
@@ -566,7 +566,7 @@
             display: grid;
             gap: 0.8rem;
             padding-block-end: 1.6rem;
-            border-block-end: 2px dotted $accent-yellow;
+            border-block-end: 2px dotted var(--color-accent-medium);
         }
 
         .term-flashcard-headword {
@@ -681,13 +681,13 @@
 
 .carousel__pagination-button--active::after {
     height: 0.8rem !important;
-    background: $purple-primary !important;
+    background: var(--color-medium-primary) !important;
     //height: 3.2rem !important;
     //background: url(../../public/img/watermelon.svg) no-repeat center center !important;
 }
 
 .carousel-index {
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     font-weight: 700;
     font-size: 2.4rem;
     font-family: $headFont;

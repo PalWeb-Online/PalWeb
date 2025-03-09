@@ -5,6 +5,7 @@ import {Link} from '@inertiajs/inertia-vue3'
 import {route} from 'ziggy-js';
 import {ref} from "vue";
 import {Carousel, Slide} from "vue3-carousel";
+import ThemePicker from "../components/ThemePicker.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -176,6 +177,7 @@ const toSection = async (section, key) => {
                     </Slide>
                 </Carousel>
             </div>
+            <ThemePicker />
             <div class="nav-admin-menu">
                 <div class="nav-admin-menu-head">Admin</div>
                 <div class="nav-admin-menu-items">

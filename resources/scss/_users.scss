@@ -83,7 +83,7 @@
     display: grid;
     grid-auto-rows: max-content;
     gap: 1.6rem;
-    background-color: $purple-deep;
+    background-color: var(--color-dark-primary);
     box-shadow: 0 0.3rem 0 rgba(black, 0.25);
     transition: 0.3s ease-in-out;
 
@@ -95,10 +95,10 @@
         bottom: 2.4rem;
         left: -13.6rem;
         z-index: 99;
-        color: $purple-deep;
-        border: 0.2rem solid $accent-yellow;
+        color: var(--color-dark-primary);
+        border: 0.2rem solid var(--color-accent-medium);
         box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.2);
-        background: $accent-yellow-pastel;
+        background: var(--color-accent-light);
         border-radius: 1.6rem;
         padding-block: 0.8rem;
         padding-inline: 2.4rem 4.8rem;
@@ -126,7 +126,7 @@
     }
 
     .featured-title {
-        color: $accent-yellow;
+        color: var(--color-accent-medium);
 
         // Mobile
         justify-self: end;
@@ -157,14 +157,14 @@
             display: grid;
             gap: 0.2rem;
             text-transform: capitalize;
-            color: $purple-deep;
+            color: var(--color-dark-primary);
             background: white;
             padding: 1.6rem;
             padding-inline-end: 3.2rem;
             margin-block-end: 1.6rem;
             border-radius: 0 1.6rem 1.6rem 0;
-            border-inline-end: 0.2rem solid $purple-deep;
-            border-block: 0.2rem solid $purple-deep;
+            border-inline-end: 0.2rem solid var(--color-dark-primary);
+            border-block: 0.2rem solid var(--color-dark-primary);
             box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
             user-select: none;
 
@@ -198,13 +198,13 @@
             user-select: none;
 
             &:hover {
-                background: $purple-deep-dark;
+                background: var(--color-dark-secondary);
             }
 
             *:first-child {
                 font-weight: 700;
                 font-size: 2.4rem;
-                color: $accent-yellow;
+                color: var(--color-accent-medium);
             }
 
             *:last-child {
@@ -214,12 +214,12 @@
             }
 
             &.active {
-                background: $accent-yellow;
-                color: $purple-deep;
+                background: var(--color-accent-medium);
+                color: var(--color-dark-primary);
 
                 *:first-child {
                     font-size: 2.4rem;
-                    color: $purple-deep;
+                    color: var(--color-dark-primary);
                 }
             }
         }
@@ -232,41 +232,41 @@
 
 #workbench.nav-user .nav-user-dashboard {
     background: white;
-    border-inline-start: 0.2rem solid $purple-deep;
+    border-inline-start: 0.2rem solid var(--color-dark-primary);
 
     .featured-title {
         font-size: 4.2rem;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
     }
 
     .nav-user-dashboard-option {
-        color: $purple-deep;
+        color: var(--color-dark-primary);
         display: grid;
         gap: 0.4rem;
         padding-block-start: 2.4rem;
         cursor: pointer;
 
         &:hover {
-            background: $accent-yellow-pastel;
+            background: var(--color-accent-light);
         }
 
         *:first-child {
-            color: $purple-deep;
+            color: var(--color-dark-primary);
         }
 
         &.active {
-            background: $purple-deep;
+            background: var(--color-dark-primary);
             color: white;
 
             *:first-child {
                 font-size: 2.4rem;
-                color: $accent-yellow;
+                color: var(--color-accent-medium);
             }
         }
     }
 
     .nav-user-menu-head {
-        border-block-start: 0.8rem solid $accent-yellow;
+        border-block-start: 0.8rem solid var(--color-accent-medium);
         padding-block-start: 0.8rem;
         display: flex;
         align-items: center;
@@ -280,7 +280,7 @@
         }
 
         & > * {
-            color: $purple-deep;
+            color: var(--color-dark-primary);
             font-family: $monoFont;
             font-size: 1.8rem;
             font-weight: 700;
@@ -301,7 +301,7 @@
 .nav-admin-menu {
     display: grid;
     gap: 0.8rem;
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     font-weight: 700;
 
     .nav-admin-menu-head {
@@ -321,7 +321,7 @@
             border-radius: 0.4rem;
 
             &:hover {
-                background: $purple-deep;
+                background: var(--color-dark-primary);
                 color: white;
             }
         }
@@ -329,7 +329,7 @@
 }
 
 .nav-user-options {
-    background: $purple-pastel;
+    background: var(--color-pastel-medium);
     display: grid;
     gap: 6.4rem;
     transition: 0.3s ease-in-out;
@@ -341,7 +341,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         align-content: start;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
 
         // Mobile
         width: 100%;
@@ -349,7 +349,7 @@
 
         .featured-title {
             grid-column: span 2;
-            border-block-end: 0.8rem solid $purple-pastel-dark;
+            border-block-end: 0.8rem solid var(--color-pastel-dark);
             margin-block-end: 1.6rem;
             transform: rotate(-1deg);
         }
@@ -384,7 +384,7 @@
             }
 
             button {
-                color: $purple-deep;
+                color: var(--color-dark-primary);
                 font-size: 1.6rem;
                 padding: 0;
             }
@@ -437,7 +437,7 @@
     .user-creations-count {
         font-family: $headFont;
         font-weight: 700;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
         font-size: 1.6rem;
     }
 
@@ -457,8 +457,8 @@
     height: 14.4rem;
     display: grid;
     padding: 0.2rem;
-    background: $purple-pastel-light;
-    border: 0.4rem solid $purple-deep;
+    background: var(--color-pastel-light);
+    border: 0.4rem solid var(--color-dark-primary);
     border-radius: 2.4rem;
     z-index: 2;
 
@@ -478,7 +478,7 @@
         justify-content: center;
         opacity: 0;
         color: white;
-        background: $accent-yellow;
+        background: var(--color-accent-medium);
         transition: 0.1s;
 
         &:hover {
@@ -506,7 +506,7 @@
         flex-flow: row wrap;
         align-items: center;
         gap: 0.4rem 0.8rem;
-        color: $purple-primary-dark;
+        color: var(--color-medium-secondary);
         font-family: $headFont;
         font-size: 2.0rem;
         font-weight: 700;
@@ -521,13 +521,13 @@
     .user-comment-body {
         display: grid;
         gap: 1.6rem;
-        background: $purple-pastel-light;
+        background: var(--color-pastel-light);
         border-radius: 0.4rem 3.2rem 3.2rem 3.2rem;
         padding: 2.4rem;
         line-height: 2.4rem;
 
         .user-comment-body-content:before {
-            color: $accent-yellow;
+            color: var(--color-accent-medium);
             content: '“';
             font-size: 3.6rem;
             font-family: $headFont;
@@ -559,7 +559,7 @@
             display: flex;
             gap: 0.8rem;
             align-items: center;
-            background: $accent-yellow-pastel;
+            background: var(--color-accent-light);
             border-radius: 3.2rem;
             padding-inline: 1.6rem 2.0rem;
             font-size: 1.4rem;
@@ -581,7 +581,7 @@
     background: white;
     padding: 2.4rem;
     border-radius: 1.6rem;
-    border: 0.2rem solid $purple-primary-dark;
+    border: 0.2rem solid var(--color-medium-secondary);
 
     .user-wrapper {
         flex-flow: column;
@@ -647,8 +647,8 @@
     border-radius: 1.6rem;
     margin-block: 1.6rem;
     position: relative;
-    background: $purple-deep;
-    border: 0.2rem solid $accent-yellow;
+    background: var(--color-dark-primary);
+    border: 0.2rem solid var(--color-accent-medium);
 
     .featured-title {
         color: white;
@@ -671,7 +671,7 @@
     .badge {
         display: grid;
         border-radius: 50%;
-        background: $accent-yellow-pastel;
+        background: var(--color-accent-light);
         transform-style: preserve-3d;
         transform: perspective(960rem);
 
@@ -716,7 +716,7 @@
 
 #name-generator {
     color: white;
-    background: $purple-primary;
+    background: var(--color-medium-primary);
     padding: 0.2rem;
     margin-block-start: -3.2rem;
     margin-inline-end: -4.8rem;
@@ -743,13 +743,13 @@
         border-radius: 2.4rem;
         overflow: hidden;
         line-height: 0;
-        border: 0.3rem solid $purple-pastel-dark;
+        border: 0.3rem solid var(--color-pastel-dark);
         padding: 0.2rem;
-        background: $purple-pastel-light;
+        background: var(--color-pastel-light);
     }
 
     button:hover {
-        border: 0.3rem solid $purple-primary;
+        border: 0.3rem solid var(--color-medium-primary);
     }
 
     img {
@@ -773,9 +773,9 @@
         max-height: 16rem;
         grid-template-areas: 'overlap';
         border-radius: 1.6rem;
-        background: $purple-deep;
+        background: var(--color-dark-primary);
         overflow: hidden;
-        outline: 0.4rem solid $purple-primary;
+        outline: 0.4rem solid var(--color-medium-primary);
         box-shadow: -1.2rem 1.2rem 0 rgba(black, 0.33);
         transition: 0.1s;
         margin: 0 0 0.6rem 0.6rem;
@@ -799,7 +799,7 @@
             word-break: break-all;
             text-align: center;
             text-transform: uppercase;
-            color: $purple-deep-dark;
+            color: var(--color-dark-secondary);
             scale: 1.2;
             rotate: -3deg;
         }
@@ -829,7 +829,7 @@
     gap: 1.6rem;
 
     button {
-        color: $purple-deep;
+        color: var(--color-dark-primary);
         font-family: $bodyFont;
         font-size: 1.6rem;
 
@@ -874,11 +874,11 @@
     }
 
     .user-profile-container {
-        box-shadow: -0.6rem 0.6rem 0 0 $purple-primary-dark;
+        box-shadow: -0.6rem 0.6rem 0 0 var(--color-medium-secondary);
     }
 
     .badges-container {
-        box-shadow: -0.6rem 0.6rem 0 0 $accent-yellow;
+        box-shadow: -0.6rem 0.6rem 0 0 var(--color-accent-medium);
     }
 }
 
@@ -894,7 +894,7 @@
     }
 
     a {
-        color: $purple-primary;
+        color: var(--color-medium-primary);
         font-weight: 700;
 
         &:hover {

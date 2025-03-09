@@ -3,10 +3,10 @@
     gap: 0.8rem;
     width: 100%;
     max-width: 96rem;
-    background: $accent-yellow-pastel;
+    background: var(--color-accent-light);
     padding: 1.6rem;
     border-radius: 1.6rem;
-    border: 0.1rem solid $accent-yellow;
+    border: 0.1rem solid var(--color-accent-medium);
     margin-block-start: 3.2rem;
 
     .speaker-profile-head {
@@ -16,9 +16,9 @@
         margin-block-start: -4.8rem;
 
         & > * {
-            border: 0.1rem solid $accent-yellow;
-            background: $accent-yellow-pastel;
-            color: $purple-deep;
+            border: 0.1rem solid var(--color-accent-medium);
+            background: var(--color-accent-light);
+            color: var(--color-dark-primary);
         }
 
         & > *:nth-child(1) {
@@ -41,7 +41,7 @@
         display: grid;
         gap: 0.1rem;
         border-radius: 0.8rem;
-        background: $accent-yellow-pastel;
+        background: var(--color-accent-light);
         overflow: hidden;
 
         .speaker-profile-row {
@@ -56,7 +56,7 @@
     }
 
     .speaker-profile-row {
-        color: $purple-deep;
+        color: var(--color-dark-primary);
 
         & > div:nth-child(1) {
             font-family: $headFont;
@@ -77,15 +77,15 @@
 
     & > button {
         text-align: center;
-        background: $purple-pastel-light;
-        border: 0.1rem solid $purple-pastel;
+        background: var(--color-pastel-light);
+        border: 0.1rem solid var(--color-pastel-medium);
         padding-block-end: 0.2rem;
         border-radius: 3.2rem;
         @include link-primary;
 
         &:hover {
             text-decoration: none;
-            background: $purple-pastel;
+            background: var(--color-pastel-medium);
         }
     }
 }
@@ -94,7 +94,7 @@
     display: grid;
     background: white;
     border-radius: 0.8rem;
-    border: 0.1rem solid $accent-yellow;
+    border: 0.1rem solid var(--color-accent-medium);
     overflow: hidden;
 
     .pronunciation-audios {
@@ -103,20 +103,20 @@
         gap: 0.4rem;
         justify-items: start;
         padding: 0.4rem 0.8rem;
-        border-block-start: 0.1rem solid $purple-pastel;
+        border-block-start: 0.1rem solid var(--color-pastel-medium);
         border-inline-start: none;
     }
 
     & > button {
         text-align: center;
-        background: $purple-pastel-light;
-        border-block-start: 0.1rem solid $purple-pastel;
+        background: var(--color-pastel-light);
+        border-block-start: 0.1rem solid var(--color-pastel-medium);
         padding-block-end: 0.2rem;
         @include link-primary;
 
         &:hover {
             text-decoration: none;
-            background: $purple-pastel;
+            background: var(--color-pastel-medium);
         }
     }
 
@@ -129,7 +129,7 @@
 
         .pronunciation-audios {
             border-block-start: none;
-            border-inline-start: 0.1rem solid $purple-pastel;
+            border-inline-start: 0.1rem solid var(--color-pastel-medium);
         }
     }
 }
@@ -141,7 +141,7 @@
     direction: rtl;
     padding: 0.4rem 1.6rem;
     gap: 1.6rem;
-    background: $accent-yellow-pastel;
+    background: var(--color-accent-light);
 
     .pronunciation-item-term {
         flex-basis: 15%;
@@ -150,7 +150,7 @@
         font-weight: 700;
         white-space: nowrap;
         padding-inline-end: 1.6rem;
-        border-inline-end: 0.1rem solid $accent-yellow;
+        border-inline-end: 0.1rem solid var(--color-accent-medium);
     }
 
     .pronunciation-item-dialect {
@@ -188,7 +188,7 @@
         font-family: $monoFont;
         font-size: 1.2rem;
         padding-inline-end: 0.8rem;
-        border-inline-end: 0.1rem solid $accent-yellow
+        border-inline-end: 0.1rem solid var(--color-accent-medium)
     }
 
     .audio-item-info {
