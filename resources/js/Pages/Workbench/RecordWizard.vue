@@ -1,6 +1,7 @@
 <script setup>
-import {onBeforeUnmount} from "vue";
+import {onBeforeUnmount, onMounted} from "vue";
 import {useStateStore} from '../../components/record/stores/StateStore.js';
+import {useSpeakerStore} from "../../components/record/stores/SpeakerStore.js";
 import {useQueueStore} from "../../components/record/stores/QueueStore.js";
 import {useRecordStore} from "../../components/record/stores/RecordStore.js";
 import {useNavGuard} from "../../composables/NavGuard.js";
@@ -10,21 +11,32 @@ import Record from '../../components/record/pages/Record.vue';
 import Check from '../../components/record/pages/Check.vue';
 import Layout from "../../Shared/Layout.vue";
 import AppAlert from "../../components/AppAlert.vue";
+import {merge} from "lodash";
+
+const props = defineProps({
+    speaker: Object,
+});
+
+defineOptions({
+    layout: Layout
+});
 
 const StateStore = useStateStore();
+const SpeakerStore = useSpeakerStore();
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
 
 const { showAlert, handleConfirm, handleCancel } = useNavGuard(StateStore.hasNavigationGuard);
+
+onMounted(() => {
+    SpeakerStore.speaker = merge(SpeakerStore.speaker, props.speaker);
+});
 
 onBeforeUnmount(() => {
     StateStore.data.step = 'speaker';
     QueueStore.data.items = [];
 });
 
-defineOptions({
-    layout: Layout
-});
 </script>
 
 <template>

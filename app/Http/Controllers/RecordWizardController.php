@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SpeakerResource;
 use App\Models\Deck;
 use App\Models\Dialect;
 use App\Models\Pronunciation;
+use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -16,8 +18,11 @@ class RecordWizardController extends Controller
     {
         View::share('pageTitle', 'Record Wizard');
 
+        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
+
         return Inertia::render('Workbench/RecordWizard', [
             'section' => 'workbench',
+            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
     }
 

@@ -1,5 +1,6 @@
 <script setup>
 import {computed, onMounted, reactive, ref} from 'vue';
+import {useUserStore} from "../../../stores/UserStore.js";
 import {useStateStore} from "../stores/StateStore.js";
 import {useSpeakerStore} from "../stores/SpeakerStore.js";
 import {useRecordStore} from "../stores/RecordStore.js";
@@ -8,6 +9,7 @@ import WizardButton from "../ui/WizardButton.vue";
 import LinguaRecorder from "../../../utils/LinguaRecorder.js";
 import AppDialog from "../../AppDialog.vue";
 
+const UserStore = useUserStore();
 const StateStore = useStateStore();
 const SpeakerStore = useSpeakerStore();
 const RecordStore = useRecordStore();
@@ -42,8 +44,8 @@ const fetchSpeakerOptions = async () => {
 }
 
 const isFormValid = computed(() => {
-    const speaker = SpeakerStore.data.speaker;
-    return speaker.dialect_id && speaker.location_id && speaker.gender;
+    const speaker = SpeakerStore.speaker;
+    return speaker.dialect.id && speaker.location.id && speaker.gender;
 });
 
 const recorder = ref(null);
@@ -120,10 +122,7 @@ const testPlay = (record) => {
 
 onMounted(async () => {
     getAudioStream();
-
-    await SpeakerStore.fetchSpeaker();
     await fetchSpeakerOptions();
-
     await RecordStore.clearStash();
 });
 </script>
@@ -206,8 +205,8 @@ onMounted(async () => {
         <div class="rw-page__speaker">
             <section>
                 <div class="rw-speaker-profile-head">
-                    <div class="rw-speaker-name">Welcome, {{ SpeakerStore.data.speaker.name ?? 'Loading...' }}!</div>
-                    <p v-if="!SpeakerStore.data.speaker.exists">It looks like you don't have a Speaker profile yet.
+                    <div class="rw-speaker-name">Welcome, {{ UserStore.user.name }}!</div>
+                    <p v-if="!SpeakerStore.speaker.id">It looks like you don't have a Speaker profile yet.
                         Let's get you set up: fill out this form & click Create to get started. Refer to the Info box in
                         the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
                             profile is created, your Dialect can only be changed by the site administrator.</b></p>
@@ -220,39 +219,35 @@ onMounted(async () => {
                 <div class="rw-speaker-field">
                     <label for="dialect">Dialect</label>
                     <WizardDropdown
-                        id="dialect"
-                        :disabled="SpeakerStore.data.speaker.exists"
+                        v-model="SpeakerStore.speaker.dialect.id"
                         :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                        v-model="SpeakerStore.data.speaker.dialect_id"
+                        :disabled="SpeakerStore.speaker.id"
                     />
                 </div>
                 <div class="rw-speaker-field">
                     <label for="location">Location</label>
                     <WizardDropdown
-                        id="location"
+                        v-model="SpeakerStore.speaker.location.id"
                         :options="locations.map(location => ({ data: location.id, label: location.name_ar }))"
-                        v-model="SpeakerStore.data.speaker.location_id"
                     />
                 </div>
                 <div class="rw-speaker-field">
                     <label for="location">Fluency</label>
                     <WizardDropdown
-                        id="location"
+                        v-model="SpeakerStore.speaker.fluency"
                         :options="levels"
-                        v-model="SpeakerStore.data.speaker.fluency"
                     />
                 </div>
                 <div class="rw-speaker-field">
                     <label for="gender">Gender</label>
                     <WizardDropdown
-                        id="gender"
+                        v-model="SpeakerStore.speaker.gender"
                         :options="genders"
-                        v-model="SpeakerStore.data.speaker.gender"
                     />
                 </div>
 
                 <WizardButton
-                    :label="SpeakerStore.data.speaker.exists ? 'Update' : 'Create'"
+                    :label="SpeakerStore.speaker.id ? 'Update' : 'Create'"
                     :disabled="!isFormValid"
                     @click="SpeakerStore.saveSpeaker()"
                 />
@@ -261,7 +256,7 @@ onMounted(async () => {
                 <div class="rw-test-booth">
                     <div class="user-avatar">
                         <img alt="Profile Picture"
-                             :src="`/img/avatars/${ SpeakerStore.data.speaker.avatar }`"/>
+                             :src="`/img/avatars/${ UserStore.user.avatar }`"/>
                     </div>
                     <img
                         v-if="StateStore.data.testState !== 'ready'"

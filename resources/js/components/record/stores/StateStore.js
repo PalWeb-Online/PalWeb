@@ -25,7 +25,7 @@ export const useStateStore = defineStore('RecordWizardStateStore', () => {
             backStep: null,
             nextStep: 'queue',
             canMoveBack: () => false,
-            canMoveNext: () => data.hasPermission && SpeakerStore.data.speaker.exists,
+            canMoveNext: () => data.hasPermission,
         },
         queue: {
             backStep: null,

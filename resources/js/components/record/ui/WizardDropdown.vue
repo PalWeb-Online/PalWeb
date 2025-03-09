@@ -37,10 +37,9 @@ watch(
 
 <template>
   <select
-      :id="inputId"
-      :disabled="disabled"
       v-model="selectedValue"
       @change="handleChange"
+      :disabled="disabled"
   >
     <option v-for="option in options" :key="option.data" :value="option.data">
       {{ option.label }}

@@ -3,51 +3,39 @@ import {reactive} from 'vue';
 import axios from 'axios';
 
 export const useSpeakerStore = defineStore('SpeakerStore', () => {
-    const data = reactive({
-        speaker: {
-            id: '',
+    const speaker = reactive({
+        id: null,
+        user: {
+            id: null,
             name: '',
             avatar: '',
-            user_id: null,
-            dialect_id: null,
-            location_id: null,
-            fluency: '',
-            gender: '',
-            exists: false,
         },
+        dialect: {
+            id: null,
+            name: '',
+        },
+        location: {
+            id: '',
+            name_ar: '',
+            name_en: '',
+        },
+        fluency: '',
+        gender: '',
     });
-
-    const fetchSpeaker = async () => {
-        if (!data.speaker.user_id) {
-            try {
-                const response = await axios.get('/workbench/record-wizard/speaker');
-                if (response.data) {
-                    Object.assign(data.speaker, response.data.speaker, {
-                        name: response.data.name,
-                        avatar: response.data.avatar,
-                        exists: response.data.exists,
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading speaker:', error);
-            }
-        }
-    };
 
     const saveSpeaker = async () => {
         try {
             const response = await axios.post('/workbench/record-wizard/speaker', {
-                user_id: data.speaker.user_id,
-                dialect_id: data.speaker.dialect_id,
-                location_id: data.speaker.location_id,
-                fluency: data.speaker.fluency,
-                gender: data.speaker.gender,
+                user_id: speaker.user.id,
+                dialect_id: speaker.dialect.id,
+                location_id: speaker.location.id,
+                fluency: speaker.fluency,
+                gender: speaker.gender,
             });
 
-            Object.assign(data.speaker, response.data.speaker, {
+            Object.assign(speaker, response.data.speaker, {
                 name: response.data.name,
                 avatar: response.data.avatar,
-                exists: true,
             });
             alert(response.data.message);
 
@@ -60,8 +48,7 @@ export const useSpeakerStore = defineStore('SpeakerStore', () => {
     };
 
     return {
-        data,
-        fetchSpeaker,
+        speaker,
         saveSpeaker
     };
 });

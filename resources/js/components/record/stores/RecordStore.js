@@ -172,7 +172,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const stashRecord = async (item, blob) => {
         if (!data.records[item.id]) {
             data.records[item.id] = new Record(item);
-            data.records[item.id].setSpeaker(SpeakerStore.data.speaker);
+            data.records[item.id].setSpeaker(SpeakerStore.speaker);
         }
 
         const record = data.records[item.id];
@@ -262,7 +262,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
     const clearStash = async () => {
         try {
-            await axios.delete(`/api/record-wizard/clear/${SpeakerStore.data.speaker.id}`);
+            await axios.delete(`/api/record-wizard/clear/${SpeakerStore.speaker.id}`);
 
             Object.keys(data.status).forEach(key => {
                 if (data.status[key] === 'stashed') {

@@ -25,10 +25,12 @@ class SpeakerResource extends JsonResource
             ],
             'dialect' => $this->whenLoaded('dialect', function () {
                 return [
+                    'id' => $this->dialect->id,
                     'name' => $this->dialect->name,
                 ];
             }),
             'location' => [
+                'id' => $this->location->id,
                 'name_ar' => $this->location->name_ar,
                 'name_en' => $this->location->name_en,
             ],
