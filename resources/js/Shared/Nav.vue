@@ -75,7 +75,7 @@ const toSection = async (section, key) => {
                     <Slide key="1">
                         <div class="nav-user-dashboard-options">
                             <template v-if="NavigationStore.data.section === 'academy'">
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/Index' }"
                                 >
@@ -89,14 +89,14 @@ const toSection = async (section, key) => {
                                     <div>dialogs</div>
                                     <div>natural language input</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/Index' }"
                                 >
                                     <div>quizzer</div>
                                     <div>quiz Decks, Skills & Dialogs</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/Index' }"
                                 >
@@ -135,14 +135,14 @@ const toSection = async (section, key) => {
                                 </Link>
                             </template>
                             <template v-if="NavigationStore.data.section === 'community'">
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/Index' }"
                                 >
                                     <div>Hub</div>
                                     <div>see where it's at</div>
                                 </Link>
-                                <Link :href="route('workbench.index')"
+                                <Link :href="route('terms.index')"
                                       class="nav-user-dashboard-option"
                                       :class="{ 'active': $page.component === 'Workbench/Index' }"
                                 >
@@ -151,23 +151,23 @@ const toSection = async (section, key) => {
                                 </Link>
                             </template>
                             <template v-if="NavigationStore.data.section === 'workbench'">
-                                <Link :href="route('workbench.index')"
-                                      class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/PinBoard' }"
-                                >
-                                    <div>pinBoard</div>
-                                    <div>see your pinned Terms & Sentences</div>
-                                </Link>
                                 <Link :href="route('deck-master.index')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/DeckMaster' }"
+                                      :class="{ 'active': $page.component === 'Workbench/DeckMaster/DeckMaster' }"
                                 >
                                     <div>deckMaster</div>
-                                    <div>study pinned Decks or build new</div>
+                                    <div>build & study Decks</div>
+                                </Link>
+                                <Link :href="route('speech-maker.dialog')"
+                                      class="nav-user-dashboard-option"
+                                      :class="{ 'active': $page.component === 'Workbench/SpeechMaker/SpeechMaker' }"
+                                >
+                                    <div>speechMaker</div>
+                                    <div>create Sentences & Dialogs</div>
                                 </Link>
                                 <Link :href="route('audios.record')"
                                       class="nav-user-dashboard-option"
-                                      :class="{ 'active': $page.component === 'Workbench/RecordWizard' }"
+                                      :class="{ 'active': $page.component === 'Workbench/RecordWizard/RecordWizard' }"
                                 >
                                     <div>recordWizard</div>
                                     <div>immortalize Palestinian Arabic</div>
@@ -182,8 +182,6 @@ const toSection = async (section, key) => {
                 <div class="nav-admin-menu-head">Admin</div>
                 <div class="nav-admin-menu-items">
                     <Link :href="route('terms.create')">New Term</Link>
-                    <div>New Sentence</div>
-                    <Link :href="route('dialogs.create')">New Dialog</Link>
                     <div>New Mail</div>
                     <div>Terms to-Do</div>
                     <div>Sentences to-Do</div>

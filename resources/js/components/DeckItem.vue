@@ -10,40 +10,39 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    id: Number,
     size: {type: String, default: 'm'},
 });
 
-const {data, description} = useDeck(props);
+const {deck, blurb, isLoading} = useDeck(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="! isLoading">
         <div :class="['deck-item-wrapper', size]">
-            <DeckActions :model="data.deck"/>
+            <DeckActions :model="deck"/>
             <div class="deck-item">
                 <div class="item-data">
                     <div style="display: flex; gap: 0.8rem; align-items: center">
                         <div class="item-title">
-                            {{ data.deck.name }}
+                            {{ deck.name }}
                         </div>
                         <div class="deck-term-count">
-                            ({{ data.deck.terms_count }})
+                            ({{ deck.terms_count }})
                         </div>
                     </div>
-                    <div v-if="size === 'l' && data.deck.description" class="item-description">
-                        {{ description }}
+                    <div v-if="size === 'l' && blurb" class="item-description">
+                        {{ blurb }}
                     </div>
                 </div>
 
                 <div class="deck-author">
-                    <div class="deck-author-name">by {{ data.deck.author.name }}</div>
+                    <div class="deck-author-name">by {{ deck.author.name }}</div>
                     <div class="deck-author-avatar">
-                        <img alt="Profile Picture" :src="`/img/avatars/${data.deck.author.avatar}`"/>
+                        <img alt="Profile Picture" :src="`/img/avatars/${deck.author.avatar}`"/>
                     </div>
                 </div>
-                <PinButton modelType="deck" :model="data.deck"/>
-                <PrivacyToggleButton modelType="deck" :model="data.deck"/>
+                <PinButton modelType="deck" :model="deck"/>
+                <PrivacyToggleButton modelType="deck" :model="deck"/>
             </div>
         </div>
     </template>

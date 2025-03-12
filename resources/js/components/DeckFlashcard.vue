@@ -13,8 +13,6 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    id: {type: Number, default: null},
-    size: {type: String, default: 'm'},
     active: {type: Boolean, default: false},
     disabled: {type: Boolean, default: false},
 });
@@ -25,7 +23,7 @@ const flipCard = (event) => {
     const card = event.target.closest('.deck-flashcard-wrapper').querySelector('.deck-flashcard');
     if (card) card.classList.toggle('flipped');
 
-    emit('flip', data.deck.id);
+    emit('flip', deck.id);
 };
 
 const tooltip = ref(null);
@@ -39,11 +37,11 @@ onMounted(() => {
     });
 });
 
-const {data, description} = useDeck(props);
+const {deck, blurb, isLoading} = useDeck(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="! isLoading">
         <div :class="['deck-flashcard-wrapper', { active: active }]"
              @mousemove="disabled && tooltip.showTooltip('This Deck is empty.', $event);"
              @mouseleave="disabled && tooltip.hideTooltip()"
@@ -52,29 +50,29 @@ const {data, description} = useDeck(props);
                  @click="flipCard">
                 <div class="deck-flashcard-front">
                     <div class="deck-flashcard-front-head">
-                        <div class="item-title">{{ data.deck.name }}</div>
+                        <div class="item-title">{{ deck.name }}</div>
                         <div class="deck-author" style="align-self: flex-end">
-                            <div class="deck-author-name">by {{ data.deck.author.name }}</div>
+                            <div class="deck-author-name">by {{ deck.author.name }}</div>
                             <img class="deck-author-avatar" alt="Profile Picture"
-                                 :src="`/img/avatars/${data.deck.author.avatar}`"/>
+                                 :src="`/img/avatars/${deck.author.avatar}`"/>
                             <!--                        <div class="deck-author-name">by Deleted User</div>-->
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body">
-                        <div v-if="data.deck.description" class="item-description">{{ description }}</div>
+                        <div v-if="blurb" class="item-description">{{ blurb }}</div>
                     </div>
                 </div>
                 <div class="deck-flashcard-back">
                     <div class="deck-flashcard-back-terms">
-                        <div v-for="term in data.deck.terms.slice(0, 16)">{{ term.term }}</div>
+                        <div v-for="term in deck.terms.slice(0, 16)">{{ term.term }}</div>
                     </div>
-                    <div class="deck-flashcard-back-count">{{ data.deck.terms.length }} terms</div>
+                    <div class="deck-flashcard-back-count">{{ deck.terms.length }} terms</div>
                 </div>
             </div>
 
-            <PinButton modelType="deck" :model="data.deck"/>
-            <PrivacyToggleButton modelType="deck" :model="data.deck"/>
-            <DeckActions :model="data.deck"/>
+            <PinButton modelType="deck" :model="deck"/>
+            <PrivacyToggleButton modelType="deck" :model="deck"/>
+            <DeckActions :model="deck"/>
         </div>
 
         <AppTooltip ref="tooltip"/>

@@ -47,7 +47,6 @@ export function useNavGuard(hasNavigationGuard) {
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         const unsubscribe = router.on('before', (event) => {
-
             if (isSkippingGuard.value) {
                 return;
             }

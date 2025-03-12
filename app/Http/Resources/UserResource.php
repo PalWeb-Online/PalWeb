@@ -30,12 +30,6 @@ class UserResource extends JsonResource
                 ];
             }),
             'decks' => DeckResource::collection($this->whenLoaded('decks')),
-            'pinned' => [
-//                todo: filter by private
-                'decks' => DeckResource::collection(Deck::with(['author', 'terms'])->whereHasBookmark($request->user())->get()),
-                'terms' => TermResource::collection(Term::whereHasBookmark($request->user())->get()),
-                'sentences' => SentenceResource::collection(Sentence::whereHasBookmark($request->user())->get()),
-            ],
         ];
 
     }

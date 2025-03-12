@@ -50,7 +50,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         </div>
 
         <div class="audio-item-info">
-            {{ model.speaker.fluency }}
+            {{ model.speaker.fluency_alias }}
             <span style="text-transform: capitalize">{{
                     model.speaker.gender !== 'other' ? model.speaker.gender : ''
                 }}</span>

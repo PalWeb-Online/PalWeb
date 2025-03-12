@@ -133,7 +133,7 @@ class TermController extends Controller
                 ])
                 ->loadCount(['pronunciations']);
 
-            $model->sentences = $model->getSingleGlossSentence();
+            $model->gloss_sentences = $model->getSingleGlossSentence();
         }
 
         return Inertia::render('Library/Terms/Show', [

@@ -50,12 +50,6 @@ class DeckController extends Controller
 
         if (! collect($filters)->some(fn ($value) => ! empty($value))) {
             $decks = Deck::query()
-                ->with(['author'])
-                ->withCount('terms')
-                ->where(fn ($query) => $query
-                    ->where('decks.private', false)
-                    ->orWhere('decks.user_id', auth()->user()?->id)
-                )
                 ->orderByDesc('id')
                 ->paginate(25)
                 ->onEachSide(1)
@@ -103,7 +97,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function store(StoreDeckRequest $request): JsonResponse
+    public function store(StoreDeckRequest $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -118,12 +112,10 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        return response()->json([
-            'deck' => $deck,
-        ]);
+        return to_route('decks.show', $deck);
     }
 
-    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
+    public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
     {
         $this->authorize('modify', $deck);
 
@@ -134,9 +126,7 @@ class DeckController extends Controller
 
         $this->linkTerms($deck, $request->deck['terms']);
 
-        return response()->json([
-            'deck' => $deck,
-        ]);
+        return to_route('decks.show', $deck);
     }
 
     private function linkTerms($deck, $terms): void
@@ -147,8 +137,8 @@ class DeckController extends Controller
             if ($term) {
                 $deck->terms()->syncWithoutDetaching([
                     $term->id => [
-                        'gloss_id' => $termData['gloss_id'],
-                        'position' => $termData['position'],
+                        'gloss_id' => $termData['deckPivot']['gloss_id'],
+                        'position' => $termData['deckPivot']['position'],
                     ],
                 ]);
             }

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, watch} from "vue";
+import {ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
@@ -12,9 +12,7 @@ const props = defineProps({
 });
 
 let pinCount = ref(props.model.pinCount);
-const isPinned = computed(() =>
-    UserStore.user.pinned[`${props.modelType}s`].some(item => item.id === props.model.id)
-);
+let isPinned = ref(props.model.isPinned);
 
 const notifVisible = ref(false);
 const notifContent = ref('');
@@ -34,14 +32,7 @@ const pin = async () => {
             pinCount.value = response.data.pinCount;
         }
 
-        if (!isPinned.value) {
-            UserStore.user.pinned[`${props.modelType}s`].push(props.model);
-
-        } else {
-            UserStore.user.pinned[`${props.modelType}s`].splice(
-                UserStore.user.pinned[`${props.modelType}s`].findIndex(item => item.id === props.model.id), 1
-            )
-        }
+        isPinned.value = !isPinned.value;
 
         notifContent.value = response.data.message;
         notifVisible.value = true;

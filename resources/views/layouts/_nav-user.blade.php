@@ -72,14 +72,14 @@
                     <div class="nav-user-options-row">
                         <div class="nav-user-options-row-title">{{ __('sentences') }}</div>
                         <div class="nav-user-options-row-content">
-                            <a href="{{ route('sentences.create') }}">Create New</a>
+                            <a href="{{ route('speech-maker.sentence') }}">Create New</a>
                             <a href="{{ route('missing.sentences.index') }}">to-Do List</a>
                         </div>
                     </div>
 
                     <div class="nav-user-options-row">
                         <a class="nav-user-options-row-title" href="{{ route('email.create') }}">Compose Mail</a>
-                        <a class="nav-user-options-row-title" href="{{ route('dialogs.create') }}">New Dialog</a>
+                        <a class="nav-user-options-row-title" href="{{ route('speech-maker.dialog') }}">New Dialog</a>
                     </div>
                 </div>
             @endif

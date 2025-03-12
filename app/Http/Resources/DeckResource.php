@@ -28,8 +28,10 @@ class DeckResource extends JsonResource
                 'username' => $this->author->username,
                 'avatar' => $this->author->avatar,
             ]),
-            'terms' => TermResource::collection($this->whenLoaded('terms')),
-            'terms_count' => $this->terms_count,
+            'terms' => $this->whenLoaded('terms', function () {
+                return TermResource::collection($this->terms->sortBy('position')->values());
+            }),
+            'terms_count' => $this->terms_count ?? 0,
         ];
     }
 }

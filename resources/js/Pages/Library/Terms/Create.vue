@@ -2,12 +2,13 @@
 import Layout from "../../../Shared/Layout.vue";
 import {cloneDeep, isEqual, merge} from "lodash";
 import {route} from 'ziggy-js';
-import {computed, onMounted, reactive} from "vue";
+import {computed, onMounted, reactive, watch} from "vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import AppButton from "../../../components/AppButton.vue";
 import {Inertia} from "@inertiajs/inertia";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import AppAlert from "../../../components/AppAlert.vue";
+import {useSearchStore} from "../../../stores/SearchStore.js";
 
 const props = defineProps({
     term: Object,
@@ -18,6 +19,7 @@ defineOptions({
     layout: Layout
 });
 
+const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const init = {
@@ -53,7 +55,26 @@ onMounted(() => {
     if (!stagedTerm.pronunciations.length) addPronunciation();
     if (!stagedTerm.glosses.length) addGloss();
     Object.assign(originalTerm, cloneDeep(stagedTerm));
+
+    watch(
+        () => SearchStore.data.selectedModel,
+        (newModel) => {
+            if (newModel) {
+                insertRelative(newModel);
+                SearchStore.deselectModel();
+            }
+        }
+    );
 });
+
+const insertRelative = (relative) => {
+    console.log(relative);
+
+    stagedTerm.relatives.push({
+        slug: relative.slug,
+        type: '',
+    });
+};
 
 const addPronunciation = () => {
     stagedTerm.pronunciations.push({
@@ -87,21 +108,6 @@ const addSpelling = () => {
     })
 };
 
-const addRelative = (model, index = null) => {
-    if (model === 'term') {
-        stagedTerm.relatives.push({
-            slug: '',
-            type: '',
-        });
-
-    } else if (model === 'gloss') {
-        stagedTerm.glosses[index].relatives.push({
-            slug: '',
-            type: '',
-        });
-    }
-};
-
 const addPattern = () => {
     stagedTerm.patterns.push({
         type: '',
@@ -131,6 +137,7 @@ const removeItem = (index, fieldType) => {
 };
 
 const saveTerm = async () => {
+    // todo: the problem with this is that if the request fails, you can't try again at all.
     Object.assign(originalTerm, cloneDeep(stagedTerm));
 
     if (stagedTerm.id) {
@@ -139,7 +146,6 @@ const saveTerm = async () => {
                 onSuccess: () => {
                     NotificationStore.addNotification('The Term has been saved!');
                 },
-
                 onError: () => {
                     NotificationStore.addNotification('Oh no! The Term could not be saved.');
                 },
@@ -152,7 +158,6 @@ const saveTerm = async () => {
                 onSuccess: () => {
                     NotificationStore.addNotification('The Term has been saved!');
                 },
-
                 onError: () => {
                     NotificationStore.addNotification('Oh no! The Term could not be saved.');
                 },
@@ -165,7 +170,7 @@ const resetTerm = async () => {
     Object.assign(stagedTerm, cloneDeep(originalTerm));
 };
 
-const { showAlert, handleConfirm, handleCancel } = useNavGuard(hasNavigationGuard);
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 
 <template>
@@ -603,7 +608,7 @@ const { showAlert, handleConfirm, handleCancel } = useNavGuard(hasNavigationGuar
                         <div class="field-block">
                             <div class="field-block-head">
                                 <div>relatives</div>
-                                <div class="field-item-add" @click="addRelative('term')">+</div>
+                                <div class="field-item-add" @click="SearchStore.openSearchGenie('insert', 'terms')">+</div>
                             </div>
                             <div class="field-block-body" v-if="stagedTerm.relatives.length > 0">
                                 <div class="field-set" v-for="(relative, index) in stagedTerm.relatives" :key="index">
@@ -621,7 +626,7 @@ const { showAlert, handleConfirm, handleCancel } = useNavGuard(hasNavigationGuar
                                         </div>
                                     </div>
                                     <div class="field-item">
-                                        <input v-model="relative.slug" type="text"/>
+                                        <div>{{ relative.slug }}</div>
                                         <div v-if="errors[`term.relatives.${index}.slug`]" class="field-error">
                                             {{ errors[`term.relatives.${index}.slug`] }}
                                         </div>

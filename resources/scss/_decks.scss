@@ -30,7 +30,7 @@
     justify-content: center;
 }
 
-.deck-flashcard-wrapper, .term-flashcard-wrapper {
+.deck-flashcard-wrapper {
     display: grid;
     grid-template-rows: auto 2.4rem;
     justify-items: center;
@@ -173,8 +173,6 @@
 }
 
 .deck-item-wrapper {
-    margin: 1.6rem 0 calc(1.6rem + 0.3rem) 0.3rem;
-
     &.l {
         .deck-item .item-data {
             padding-block: 0.8rem
@@ -346,7 +344,7 @@
 
 #dm-mode-toggle {
     height: 4.8rem;
-    width: 24rem;
+    width: 32rem;
     border: 0.2rem solid var(--color-dark-primary);
     border-radius: 1.6rem;
     cursor: pointer;
@@ -361,9 +359,10 @@
         justify-content: center;
         padding-block-end: 0.2rem;
         font-family: $displayFont;
-        font-size: 2.4rem;
+        font-size: 2.0rem;
         text-transform: uppercase;
         transition: 0.3s ease;
+        user-select: none;
 
         color: white;
         background: var(--color-medium-primary);
@@ -375,15 +374,22 @@
         background: var(--color-accent-medium);
         transform: translateX(100%);
     }
+
+    &.sentence .dm-mode-toggle-slider {
+        color: var(--color-dark-primary);
+        background: var(--color-accent-medium);
+        transform: translateX(100%);
+    }
 }
 
 #dm-select {
     display: grid;
+    gap: 3.2rem;
+    width: 100%;
+    height: 100%;
     justify-items: center;
     grid-auto-rows: min-content;
-    gap: 3.2rem;
     overflow: hidden;
-    width: 100%;
 
     .deck-item-grid {
         display: flex;
@@ -402,8 +408,9 @@
 #dm-build {
     display: grid;
     gap: 2.4rem;
-    justify-items: center;
     width: 100%;
+    max-width: 96rem;
+    justify-items: center;
 
     .db-item {
         display: flex;
@@ -422,8 +429,9 @@
 
 #dm-study {
     display: grid;
-    width: 100%;
     gap: 2.4rem;
+    width: 100%;
+    max-width: 96rem;
 }
 
 .dm-study-options {
@@ -431,12 +439,11 @@
     display: grid;
     grid-template-rows: min-content;
     align-items: start;
-    gap: 0.8rem;
+    gap: 1.6rem;
     width: 100%;
-    max-width: 96rem;
     background: white;
     border-radius: 0.8rem;
-    border: 2px solid var(--color-medium-secondary);
+    border: 2px solid var(--color-accent-dark);
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     padding: 1.6rem;
     position: relative;
@@ -454,7 +461,7 @@
         font-family: $headFont;
         padding-block-start: 0.2rem;
         margin-inline-end: 1.6rem;
-        color: var(--color-medium-primary);
+        color: var(--color-accent-dark);
     }
 
     & > div:nth-child(2) {
@@ -465,7 +472,7 @@
 
         button {
             color: white;
-            background: var(--color-medium-primary);
+            background: var(--color-accent-dark);
             padding: 0.4rem 0.8rem;
             font-weight: 700;
             border-radius: 0.4rem;
@@ -475,11 +482,40 @@
 }
 
 .term-flashcard-wrapper {
+    display: grid;
     width: 100%;
-    padding-block: 1.6rem;
+    max-width: 96rem;
+    gap: 3.2rem;
+    grid-template-rows: auto 4.8rem;
+    justify-items: center;
+    position: relative;
+    border-radius: 1.2rem;
+    padding-block: 3.2rem 0;
 
-    .play {
-        width: 2.8rem;
+    &.active .deck-flashcard {
+        outline: 0.8rem solid white;
+    }
+
+    .pin, .pin-counter, .lock {
+        z-index: 1;
+    }
+
+    .pin {
+        width: 3.6rem;
+    }
+
+    .pin-counter {
+        top: 2.4rem;
+    }
+
+    .lock {
+        top: -1.2rem;
+        right: 0.8rem;
+        width: 2.4rem;
+    }
+
+    .popup-menu-wrapper {
+        width: 2.4rem;
     }
 }
 
@@ -644,6 +680,10 @@
     display: grid;
     grid-template-rows: auto min-content min-content;
     gap: 1.6rem 0;
+
+    .app-button {
+        justify-self: center;
+    }
 }
 
 .carousel__track {
@@ -682,8 +722,6 @@
 .carousel__pagination-button--active::after {
     height: 0.8rem !important;
     background: var(--color-medium-primary) !important;
-    //height: 3.2rem !important;
-    //background: url(../../public/img/watermelon.svg) no-repeat center center !important;
 }
 
 .carousel-index {

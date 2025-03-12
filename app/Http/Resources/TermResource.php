@@ -100,7 +100,7 @@ class TermResource extends JsonResource
                                 'type' => $relative->pivot->type,
                             ];
                         }),
-                        'sentences' => SentenceResource::collection($this->sentences[$gloss->id] ?? []),
+                        'sentences' => SentenceResource::collection($this->gloss_sentences[$gloss->id] ?? []),
                     ];
                 }),
                 'inflections' => $this->inflections,

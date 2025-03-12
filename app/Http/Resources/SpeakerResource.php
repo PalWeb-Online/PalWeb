@@ -34,7 +34,8 @@ class SpeakerResource extends JsonResource
                 'name_ar' => $this->location->name_ar,
                 'name_en' => $this->location->name_en,
             ],
-            'fluency' => $this->fluency_alias,
+            'fluency' => $this->fluency,
+            'fluency_alias' => $this->fluency_alias,
             'gender' => $this->gender,
             'audios_count' => $this->whenCounted('audios'),
         ];

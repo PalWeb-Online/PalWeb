@@ -2,23 +2,24 @@
 import Nav from "./Nav.vue";
 import NotificationContainer from "../components/NotificationContainer.vue";
 import SearchGenie from "./SearchGenie.vue";
+import SearchGenieTrigger from "./SearchGenieTrigger.vue";
 
 defineProps({
     section: {
         type: String,
-        default: 'library', // Fallback value if section is not provided
+        default: 'library',
     }
 });
 </script>
 
 <template>
-    <div id="page-body" class="inertia" :class="section">
-        <div id="page-content">
-            <Nav/>
+    <div id="app-container" :class="section">
+        <Nav/>
 
-            <slot/>
-            <SearchGenie/>
-            <NotificationContainer/>
-        </div>
+        <slot/>
+
+        <SearchGenieTrigger/>
+        <SearchGenie/>
+        <NotificationContainer/>
     </div>
 </template>

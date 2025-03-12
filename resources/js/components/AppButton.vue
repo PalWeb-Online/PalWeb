@@ -4,6 +4,7 @@ import { computed } from 'vue';
 const props = defineProps({
     label: { type: String, default: '' },
     class: { type: String, default: '' },
+    active: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
 });
 
@@ -13,8 +14,8 @@ const buttonClass = computed(() => {
     return [
         'app-button',
         props.class,
-        { disabled: props.disabled }
-    ].filter(Boolean).join(' ');
+        { active: props.active, disabled: props.disabled },
+    ];
 });
 
 const handleClick = (event) => {

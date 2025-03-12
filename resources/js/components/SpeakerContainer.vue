@@ -35,7 +35,7 @@ const props = defineProps({
             </div>
             <div class="speaker-profile-row">
                 <div>Fluency</div>
-                <div>{{ model.fluency }}</div>
+                <div>{{ model.fluency_alias }}</div>
             </div>
             <div class="speaker-profile-row">
                 <div>Audios</div>

@@ -33,7 +33,7 @@ class SpeakerController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $user = $request->user();
 
@@ -50,12 +50,7 @@ class SpeakerController extends Controller
         $user->update(['speaker_id' => $speaker->id]);
         $user->refresh();
 
-        return response()->json([
-            'speaker' => $speaker,
-            'name' => $user->name,
-            'avatar' => $user->avatar,
-            'message' => 'Your Speaker profile has been saved successfully.',
-        ]);
+        return back()->with(['id' => $speaker->id]);
     }
 
     public function getSpeakerOptions(): JsonResponse

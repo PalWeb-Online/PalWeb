@@ -10,30 +10,29 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    id: Number,
     size: {type: String, default: 'm'},
     glossId: {type: Number, default: null},
 });
 
-const {data, playAudio} = useTerm(props);
+const {term, isLoading, playAudio} = useTerm(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="! isLoading">
         <div :class="['term-item-wrapper', size]">
             <div class="term-item">
                 <div class="term-item-head">
-                    <div class="arb">{{ data.term.term }}</div>
-                    <img class="play" v-if="data.term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>
-                    <div class="translit">{{ data.term.translit }}</div>
+                    <div class="arb">{{ term.term }}</div>
+                    <img class="play" v-if="term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>
+                    <div class="translit">{{ term.translit }}</div>
                 </div>
                 <div class="term-item-body">
-                    <div class="eng">{{ data.term.gloss?.gloss ?? data.term.glosses[0].gloss }}</div>
-                    <TermDeckToggleButton :model="data.term"/>
+                    <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>
+                    <TermDeckToggleButton :model="term"/>
                 </div>
-                <PinButton modelType="term" :model="data.term"/>
+                <PinButton modelType="term" :model="term"/>
             </div>
-            <TermActions :model="data.term"/>
+            <TermActions :model="term"/>
         </div>
     </template>
 </template>

@@ -3,26 +3,26 @@
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\RootController;
-use App\Http\Controllers\UserAvatarController;
-use App\Http\Controllers\UserPasswordController;
-use App\Http\Controllers\PinBoardController;
-use App\Http\Controllers\DeckMasterController;
 use App\Http\Controllers\DeckController;
+use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MissingTermController;
-use App\Http\Controllers\RecordWizardController;
+use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
-use App\Http\Controllers\DialogController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Workbench\DeckMasterController;
+use App\Http\Controllers\Workbench\RecordWizardController;
+use App\Http\Controllers\Workbench\SpeechMakerController;
 use App\Http\Resources\AudioResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
@@ -124,8 +124,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::middleware('admin')->group(function () {
-            Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create']);
-            Route::get('/create/dialogs', [DialogController::class, 'create'])->name('dialogs.create');
+            Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         });
     });
 
@@ -156,8 +155,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
             Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
 
-            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create']);
-            Route::get('/create/sentences', [SentenceController::class, 'create'])->name('sentences.create');
+            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
 
             Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
             Route::delete('/missing/terms/{missingTerm}',
@@ -195,10 +193,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/workbench')->group(function () {
-        Route::get('/pin-board', [PinBoardController::class, 'index'])->name('workbench.index');
+
+        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
+            Route::get('/dialog/{id?}', 'dialog')->name('speech-maker.dialog');
+            Route::get('/sentence/{id?}', 'sentence')->name('speech-maker.sentence');
+        });
 
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/', 'index')->name('deck-master.index');
+            Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
             Route::get('/build', 'create')->name('deck-master.create');
             Route::get('/build/{deck}', 'edit')->name('deck-master.edit');
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
@@ -211,7 +214,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/decks/{deck}', 'getDeckItems');
             });
             Route::controller(SpeakerController::class)->group(function () {
-                Route::post('/speaker', 'store');
+                Route::post('/speaker', 'store')->name('speaker.store');
                 Route::get('/speaker', 'getSpeaker');
                 Route::get('/options', 'getSpeakerOptions');
             });

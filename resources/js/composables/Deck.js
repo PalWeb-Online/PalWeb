@@ -1,36 +1,22 @@
-import {computed, onMounted, reactive} from "vue";
-import {route} from "ziggy-js";
+import {onMounted, reactive, ref} from "vue";
 
 export function useDeck(props) {
-    const data = reactive({
-        deck: {},
-        isLoading: true
-    });
 
-    const description = computed(() => {
-        return data.deck.description.length > 190
-            ? data.deck.description.substring(0, 187) + '...'
-            : data.deck.description;
-    });
+    const deck = reactive({});
+    const blurb = ref(null);
+    const isLoading = ref(true);
 
-    const fetchDeck = async () => {
-        if (props.model) {
-            data.deck = props.model;
-            data.isLoading = false;
+    onMounted(() => {
+        Object.assign(deck, props.model);
 
-        } else {
-            try {
-                const response = await axios.get(route('decks.get', props.id));
-                data.deck = response.data.data;
-                data.isLoading = false;
-
-            } catch (error) {
-                console.error("Error fetching Deck:", error);
-            }
+        if (deck.description) {
+            blurb.value = deck.description.length > 190
+                ? deck.description.substring(0, 187) + '...'
+                : deck.description;
         }
-    }
 
-    onMounted(fetchDeck);
+        isLoading.value = false;
+    });
 
-    return {data, description};
+    return {deck, blurb, isLoading};
 }
