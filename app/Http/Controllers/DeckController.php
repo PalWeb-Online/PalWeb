@@ -151,23 +151,13 @@ class DeckController extends Controller
         }
     }
 
-    public function destroy(Request $request, Deck $deck): RedirectResponse|JsonResponse
+    public function destroy(Deck $deck): RedirectResponse|JsonResponse
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => 'success',
-            ]);
-
-        } else {
-            $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
-
-            return to_route('decks.index');
-        }
-
+        return to_route('decks.index');
     }
 
     public function togglePrivacy(Deck $deck): JsonResponse

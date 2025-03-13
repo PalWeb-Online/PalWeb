@@ -173,20 +173,11 @@ class SentenceController extends Controller
         }
     }
 
-    public function destroy(Request $request, Sentence $sentence): RedirectResponse|JsonResponse
+    public function destroy(Sentence $sentence): RedirectResponse|JsonResponse
     {
         $sentence->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => 'success',
-            ]);
-
-        } else {
-            $this->flasher->addSuccess(__('deleted', ['thing' => $sentence->sentence]));
-
-            return to_route('sentences.index');
-        }
+        return to_route('sentences.index');
     }
 
     public function todo(): \Illuminate\View\View

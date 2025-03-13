@@ -454,8 +454,6 @@ class TermController extends Controller
             }
         }
 
-        $this->flasher->addSuccess(__('deleted', ['thing' => $term->term]));
-
         return to_route('terms.index');
     }
 }

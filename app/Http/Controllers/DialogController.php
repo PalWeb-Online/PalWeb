@@ -129,19 +129,10 @@ class DialogController extends Controller
         }
     }
 
-    public function destroy(Request $request, Dialog $dialog): RedirectResponse|JsonResponse
+    public function destroy(Dialog $dialog): RedirectResponse|JsonResponse
     {
         $dialog->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => 'success',
-            ]);
-
-        } else {
-            $this->flasher->addSuccess(__('deleted', ['thing' => $dialog->title]));
-
-            return to_route('dialogs.index');
-        }
+        return to_route('dialogs.index');
     }
 }

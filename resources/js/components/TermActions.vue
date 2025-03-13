@@ -3,19 +3,24 @@ import {route} from 'ziggy-js';
 import {Link} from '@inertiajs/inertia-vue3'
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
-
-const UserStore = useUserStore();
+import {Inertia} from "@inertiajs/inertia";
+import {useNotificationStore} from "../stores/NotificationStore.js";
 
 const props = defineProps({
     model: Object,
 });
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
 
-const confirmDelete = (event) => {
-    if (!confirm(`Are you sure you want to delete this Term?`)) {
-        event.preventDefault();
-    }
+const deleteTerm = () => {
+    if (!confirm('Are you sure you want to delete this Term?')) return;
+
+    Inertia.delete(route('terms.destroy', props.model.id), {
+        onSuccess: () => {
+            NotificationStore.addNotification('The Term has been deleted!');
+        }
+    });
 };
 
 const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
@@ -30,12 +35,7 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 
             <template v-if="UserStore.isAdmin">
                 <Link :href="route('terms.edit', model.id)">Edit Term</Link>
-
-                <form :action="route('terms.destroy', model.id)" method="POST" @submit="confirmDelete">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" :value="csrfToken">
-                    <button type="submit">Delete Term</button>
-                </form>
+                <button @click="deleteTerm">Delete Term</button>
             </template>
         </div>
     </div>

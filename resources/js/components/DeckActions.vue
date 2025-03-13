@@ -4,12 +4,15 @@ import {route} from 'ziggy-js';
 import {Link} from '@inertiajs/inertia-vue3'
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
-
-const UserStore = useUserStore();
+import {useNotificationStore} from "../stores/NotificationStore.js";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     model: Object,
 });
+
+const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
 
 const isAuthor = computed(() => {
     return props.model.author.id === UserStore.user.id;
@@ -17,10 +20,14 @@ const isAuthor = computed(() => {
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-const confirmDelete = (event) => {
-    if (!confirm(`Are you sure you want to delete this Deck?`)) {
-        event.preventDefault();
-    }
+const deleteDeck = () => {
+    if (!confirm('Are you sure you want to delete this Deck?')) return;
+
+    Inertia.delete(route('decks.destroy', props.model.id), {
+        onSuccess: () => {
+            NotificationStore.addNotification('The Deck has been deleted!');
+        }
+    });
 };
 
 const confirmCopy = (event) => {
@@ -39,7 +46,7 @@ const copyLink = (event) => {
     });
 };
 
-const { toggleMenu, floatingStyles, isOpen, reference, floating } = useActions();
+const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 </script>
 
 <template>
@@ -50,22 +57,18 @@ const { toggleMenu, floatingStyles, isOpen, reference, floating } = useActions()
             <Link :href="route('decks.show', model.id)">View Deck</Link>
 
             <template v-if="isAuthor">
-                <Link :href="route('deck-master.edit', model.id)">Edit Deck</Link>
-
-                <form :action="route('decks.destroy', model.id)" method="POST" @submit="confirmDelete">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" :value="csrfToken">
-                    <button type="submit">Delete Deck</button>
-                </form>
+                <Link :href="route('deck-master.build', model.id)">Edit Deck</Link>
+                <button @click="deleteDeck">Delete Deck</button>
             </template>
 
             <template v-if="UserStore.isUser">
-                <a :href="route('users.show', model.author.username)">View Creator</a>
+                <Link :href="route('users.show', model.author.username)">View Creator</Link>
+<!--                todo: refactor for Inertia-->
                 <form :action="route('decks.copy', model.id)" method="POST" @submit="confirmCopy">
                     <input type="hidden" name="_token" :value="csrfToken">
                     <button type="submit">Copy Deck</button>
                 </form>
-                <a href="#" @click="copyLink">Share Link</a>
+                <button @click="copyLink">Share Link</button>
                 <form :action="route('decks.export', model.id)" method="POST">
                     <input type="hidden" name="_token" :value="csrfToken">
                     <button type="submit">Export CSV</button>

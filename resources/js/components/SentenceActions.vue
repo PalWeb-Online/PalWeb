@@ -3,19 +3,24 @@ import {route} from 'ziggy-js';
 import {Link} from '@inertiajs/inertia-vue3';
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
-
-const UserStore = useUserStore();
+import {useNotificationStore} from "../stores/NotificationStore.js";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     model: Object,
 });
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
 
-const confirmDelete = (event) => {
-    if (!confirm(`Are you sure you want to delete this Sentence?`)) {
-        event.preventDefault();
-    }
+const deleteSentence = () => {
+    if (!confirm('Are you sure you want to delete this Sentence?')) return;
+
+    Inertia.delete(route('sentences.destroy', props.model.id), {
+        onSuccess: () => {
+            NotificationStore.addNotification('The Sentence has been deleted!');
+        }
+    });
 };
 
 const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
@@ -29,13 +34,8 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
             <Link :href="route('sentences.show', model.id)">View Sentence</Link>
 
             <template v-if="UserStore.isAdmin">
-                <Link :href="route('sentences.edit', model.id)">Edit Sentence</Link>
-
-                <form :action="route('sentences.destroy', model.id)" method="POST" @submit="confirmDelete">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" :value="csrfToken">
-                    <button type="submit">Delete Sentence</button>
-                </form>
+                <Link :href="route('speech-maker.sentence', model.id)">Edit Sentence</Link>
+                <button @click="deleteSentence">Delete Sentence</button>
             </template>
         </div>
     </div>
