@@ -2,7 +2,7 @@
 
 @section('page-hero')
     <div id="hero-panel">
-        <a href="{{ route('deck-master.create') }}" class="feature-callout">Build Your Own! -></a>
+        <a href="{{ route('deck-master.build') }}" class="feature-callout">Build Your Own! -></a>
         <h1>{{ __('decks') }}</h1>
         <x-sg-trigger/>
     </div>

@@ -14,7 +14,6 @@ class UpdateDialogRequest extends FormRequest
         return [
             'dialog.title' => ['required', 'max:50'],
             'dialog.description' => ['nullable', 'max:500'],
-            'dialog.sentences' => ['required', 'array'],
             'dialog.sentences.*.speaker' => ['required'],
             'dialog.sentences.*.position' => ['required', 'integer'],
         ];

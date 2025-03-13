@@ -18,7 +18,7 @@ class SpeakerController extends Controller
     {
         return Inertia::render('Library/Audios/Speaker', [
             'section' => 'library',
-            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount('audios')),
+            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
             'audios' => AudioResource::collection(
                 Audio::query()
                     ->where('speaker_id', $speaker->id)

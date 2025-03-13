@@ -85,7 +85,7 @@ function updateFilter({filter, value}) {
         <AppTip>
             <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Audios
                 matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Dictionary.</p>
+            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Library.</p>
             <p v-else>No Audios matching this query.</p>
         </AppTip>
 

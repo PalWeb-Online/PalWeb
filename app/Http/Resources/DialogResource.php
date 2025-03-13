@@ -20,6 +20,7 @@ class DialogResource extends JsonResource
             'description' => $this->description,
             'media' => $this->media,
             'sentences' => SentenceResource::collection($this->whenLoaded('sentences')),
+            'sentences_count' => $this->whenCounted('sentences')
         ];
     }
 }

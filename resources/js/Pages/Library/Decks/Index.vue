@@ -41,7 +41,7 @@ function updateFilter({filter, value}) {
         <AppTip>
             <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Decks
                 matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Dictionary.</p>
+            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
             <p v-else>No Decks matching this query.</p>
         </AppTip>
 
