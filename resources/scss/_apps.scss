@@ -41,11 +41,6 @@
     position: relative;
     z-index: 1;
 
-    button, a {
-        justify-self: start;
-        @include link-purple-deep;
-    }
-
     h1 {
         text-align: center;
         font-family: $displayFont;
@@ -133,6 +128,73 @@ body:has(#app-body) {
 
         div.active ~ div {
             color: var(--color-pastel-medium);
+        }
+    }
+}
+
+#app-mode-toggle {
+    height: 4.8rem;
+    width: 32rem;
+    border: 0.2rem solid var(--color-dark-primary);
+    border-radius: 1.6rem;
+    cursor: pointer;
+    padding: 0.2rem;
+
+    .app-mode-toggle-slider {
+        height: 100%;
+        width: 50%;
+        border-radius: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-block-end: 0.2rem;
+        font-family: $displayFont;
+        font-size: 2.4rem;
+        text-transform: uppercase;
+        transition: 0.3s ease;
+        user-select: none;
+
+        color: white;
+        background: var(--color-medium-primary);
+        transform: translateX(0%);
+    }
+
+    &.study .app-mode-toggle-slider {
+        color: var(--color-dark-primary);
+        background: var(--color-accent-medium);
+        transform: translateX(100%);
+    }
+
+    &.sentence .app-mode-toggle-slider {
+        color: var(--color-dark-primary);
+        background: var(--color-accent-medium);
+        transform: translateX(100%);
+    }
+}
+
+.app-mode-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
+    width: 100%;
+    max-width: 96rem;
+
+    button {
+        color: var(--color-dark-primary);
+        background: var(--color-polar-light);
+        border-radius: 1.2rem;
+        border: 0.2rem solid var(--color-dark-primary);
+        box-shadow: -0.3rem 0.3rem 0 var(--color-dark-primary);
+        flex-basis: 24rem;
+        font-family: $displayFont;
+        font-weight: 400;
+        font-size: 2.4rem;
+        padding-block-end: 0.8rem;
+
+        &:hover, &:active, &.active {
+            box-shadow: none;
+            translate: -0.3rem 0.3rem;
         }
     }
 }

@@ -21,11 +21,12 @@
     padding: 0.8rem 1.2rem;
 }
 
-@mixin box-yellow-pastel {
+@mixin box-accent-light {
     color: var(--color-dark-primary);
     background: var(--color-accent-light);
     border: 0.1rem solid var(--color-accent-medium);
     border-radius: 0.8rem;
+    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
 }
 
 @mixin link-primary {

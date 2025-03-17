@@ -95,37 +95,22 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function create(): \Inertia\Response
-    {
-        return Inertia::render('Admin/Dialogger', [
-            'mode' => 'sentence',
-        ]);
-    }
-
-    public function edit(Sentence $sentence): \Inertia\Response
-    {
-        return Inertia::render('Admin/Dialogger', [
-            'mode' => 'sentence',
-            'stagedModel' => new SentenceResource($sentence),
-        ]);
-    }
-
-    public function store(StoreSentenceRequest $request): JsonResponse
+    public function store(StoreSentenceRequest $request): RedirectResponse
     {
         $sentenceData = $request->sentence;
+
         $sentence = Sentence::create($this->buildSentence($sentenceData));
 
         $this->linkTerms($sentence, $request->sentence['terms']);
 
-        return response()->json([
-            'sentence' => $sentence,
-        ]);
+        return to_route('speech-maker.sentence', $sentence);
     }
 
-    public function update(UpdateSentenceRequest $request, Sentence $sentence): JsonResponse
+    public function update(UpdateSentenceRequest $request, Sentence $sentence): RedirectResponse
     {
         $sentenceData = $request->sentence;
-        unset($sentenceData['dialog']);
+
+//        todo: is unsetting necessary?
         unset($sentenceData['audio']);
         unset($sentenceData['isPinned']);
 
@@ -133,9 +118,7 @@ class SentenceController extends Controller
 
         $this->linkTerms($sentence, $request->sentence['terms']);
 
-        return response()->json([
-            'sentence' => $sentence,
-        ]);
+        return to_route('speech-maker.sentence', $sentence);
     }
 
     private function buildSentence($sentenceData): array
@@ -151,6 +134,8 @@ class SentenceController extends Controller
         $sentence['translit'] = implode(' ', $translits);
 
         unset($sentence['terms']);
+
+        $sentence['dialog_id'] = $sentenceData['dialog']['id'];
 
         return $sentence;
     }

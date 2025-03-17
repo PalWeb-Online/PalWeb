@@ -61,26 +61,7 @@ class DialogController extends Controller
 //            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
     }
 
-    public function create(): \Inertia\Response
-    {
-        return Inertia::render('Admin/Dialogger', [
-            'section' => 'academy',
-            'mode' => 'dialog',
-        ]);
-    }
-
-    public function edit(Dialog $dialog): \Inertia\Response
-    {
-        $dialog->load('sentences');
-
-        return Inertia::render('Admin/Dialogger', [
-            'section' => 'academy',
-            'mode' => 'dialog',
-            'stagedModel' => new DialogResource($dialog),
-        ]);
-    }
-
-    public function store(StoreDialogRequest $request): JsonResponse
+    public function store(StoreDialogRequest $request): RedirectResponse
     {
         $dialogData = $request->dialog;
         unset($dialogData['sentences']);
@@ -89,12 +70,10 @@ class DialogController extends Controller
 
         $this->linkSentences($dialog, $request->dialog['sentences']);
 
-        return response()->json([
-            'dialog' => $dialog,
-        ]);
+        return to_route('speech-maker.dialog', $dialog);
     }
 
-    public function update(UpdateDialogRequest $request, Dialog $dialog): JsonResponse
+    public function update(UpdateDialogRequest $request, Dialog $dialog): RedirectResponse
     {
         $dialogData = $request->dialog;
         unset($dialogData['sentences']);
@@ -103,9 +82,7 @@ class DialogController extends Controller
 
         $this->linkSentences($dialog, $request->dialog['sentences']);
 
-        return response()->json([
-            'dialog' => $dialog,
-        ]);
+        return to_route('speech-maker.dialog', $dialog);
     }
 
     private function linkSentences(Dialog $dialog, array $sentences): void
@@ -121,7 +98,7 @@ class DialogController extends Controller
         }
 
         foreach ($dialog->sentences as $sentence) {
-            if (!in_array($sentence->id, array_column($sentences, 'id'))) {
+            if (! in_array($sentence->id, array_column($sentences, 'id'))) {
                 $sentence->update([
                     'dialog_id' => null,
                 ]);

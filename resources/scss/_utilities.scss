@@ -612,8 +612,18 @@ h3 {
     }
 }
 
+.draggable-item {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    .trash {
+        width: 2.0rem;
+    }
+}
+
 .tip, .faq {
-    @include box-yellow-pastel;
+    @include box-accent-light;
     font-family: $bodyFont;
 }
 

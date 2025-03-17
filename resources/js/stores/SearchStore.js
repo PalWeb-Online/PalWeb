@@ -1,156 +1,145 @@
 import {defineStore} from 'pinia';
+import {reactive} from "vue";
 import axios from 'axios';
 
-export const useSearchStore = defineStore('SearchStore', {
-    state: () => ({
+export const useSearchStore = defineStore('SearchStore', () => {
+    const data = reactive({
         isOpen: false,
         action: 'search',
         activeModel: 'terms',
+        enabledModel: 'terms',
         selectedModel: null,
         filters: {
             search: '',
+            match: 'term',
+            pinned: 0,
             category: '',
             attribute: '',
             form: '',
             singular: '',
             plural: ''
         },
-        searchResults: {
+        results: {
             terms: [],
             sentences: [],
             decks: [],
         },
-        tabs: [
-            {
-                label: 'Terms',
-                value: 'terms',
-                disabled: false,
-            },
-            {
-                label: 'Sentences',
-                value: 'sentences',
-                disabled: false,
-            },
-            {
-                label: 'Decks',
-                value: 'decks',
-                disabled: false,
-            },
-        ],
-    }),
+    });
 
-    actions: {
-        openSearchGenie() {
-            const triggerButtons = document.querySelectorAll('.sg-trigger');
-            triggerButtons.forEach((button) => {
-                button.classList.add('active');
-            });
+    const tabs = reactive({
+        terms: {label: 'terms', disabled: false},
+        decks: {label: 'decks', disabled: false},
+        sentences: {label: 'sentences', disabled: false},
+    });
 
-            this.tabs = this.tabs.map(tab => {
-                if (this.queue === 'record') {
-                    this.activeModel = 'decks';
-                    return {
-                        ...tab,
-                        disabled: tab.value !== 'decks',
-                    };
-                } else if (this.queue === 'viewer') {
-                    this.activeModel = 'decks';
-                    return {
-                        ...tab,
-                        disabled: tab.value !== 'decks',
-                    };
-                } else if (this.queue === 'builder') {
-                    this.activeModel = 'terms';
-                    return {
-                        ...tab,
-                        disabled: tab.value !== 'terms',
-                    };
-                } else if (this.queue === 'dialogger') {
-                    this.activeModel = 'sentences';
-                    return {
-                        ...tab,
-                        disabled: tab.value !== 'sentences',
-                    };
-                }
+    const openSearchGenie = (action = 'search', enabledModel = null) => {
+        const triggerButtons = document.querySelectorAll('.sg-trigger');
+        triggerButtons.forEach((button) => {
+            button.classList.add('active');
+        });
 
-                return {...tab, disabled: false};
-            });
+        data.action = action;
+        data.activeModel = enabledModel || 'terms';
 
-            this.isOpen = true;
-            document.body.style.overflow = 'hidden';
-        },
+        Object.values(tabs).forEach((tab) => {
+            tab.disabled = enabledModel ? tab.label !== enabledModel : false;
+        });
 
-        closeSearchGenie() {
-            this.isOpen = false;
-            this.activeModel = 'terms';
-            this.filters = {
-                search: '',
-                category: '',
-                attribute: '',
-                form: '',
-                singular: '',
-                plural: ''
-            };
-            this.searchResults = {
+        data.isOpen = true;
+        document.body.style.overflow = 'hidden';
+
+        // todo: focus on search bar on opening search genie; the search bar is in _SearchFilters
+        // nextTick(() => {
+        //     searchInput.value?.focus();
+        // });
+    };
+
+
+    const closeSearchGenie = () => {
+        data.isOpen = false;
+        data.activeModel = 'terms';
+        data.filters = {
+            search: '',
+            match: 'term',
+            pinned: 0,
+            category: '',
+            attribute: '',
+            form: '',
+            singular: '',
+            plural: ''
+        };
+        data.results = {
+            terms: [],
+            sentences: [],
+            decks: []
+        };
+
+        document.body.style.overflow = '';
+
+        const triggerButtons = document.querySelectorAll('.sg-trigger');
+        triggerButtons.forEach((button) => {
+            button.classList.remove('active');
+        });
+    };
+
+    const updateFilter = (key, value) => {
+        data.filters[key] = value;
+        search();
+    };
+
+    const search = async () => {
+        if (!data.filters['search'] && Object.values(data.filters).every(value => !value)) {
+            data.results = {
                 terms: [],
                 sentences: [],
                 decks: []
             };
+            return;
+        }
 
-            document.body.style.overflow = '';
-
-            const triggerButtons = document.querySelectorAll('.sg-trigger');
-            triggerButtons.forEach((button) => {
-                button.classList.remove('active');
+        try {
+            const response = await axios.post('/search', {
+                search: data.filters['search'] || '',
+                ...data.filters,
             });
-        },
+            data.results = response.data;
 
-        updateFilter(key, value) {
-            this.filters[key] = value;
-            this.search();
-        },
+        } catch (error) {
+            console.error('Search error:', error);
+            data.results = {
+                terms: [],
+                sentences: [],
+                decks: []
+            };
+        }
+    };
 
-        async search() {
-            if (!this.filters['search'] && Object.values(this.filters).every(value => !value)) {
-                this.searchResults = {
-                    terms: [],
-                    sentences: [],
-                    decks: []
-                };
-                return;
-            }
+    const setAction = (action) => {
+        data.action = action;
+    };
 
-            try {
-                const response = await axios.post('/search', {
-                    search: this.filters['search'] || '',
-                    ...this.filters,
-                });
-                this.searchResults = response.data;
+    const resetAction = () => {
+        data.action = 'search';
+    };
 
-            } catch (error) {
-                console.error('Search error:', error);
-                this.searchResults = {
-                    terms: [],
-                    sentences: [],
-                    decks: []
-                };
-            }
-        },
+    const selectModel = (model) => {
+        data.selectedModel = model;
+    };
 
-        setAction(action) {
-            this.action = action;
-        },
+    const deselectModel = () => {
+        data.selectedModel = null;
+    };
 
-        resetAction() {
-            this.action = 'search';
-        },
-
-        selectModel(model) {
-            this.selectedModel = model;
-        },
-
-        deselectModel() {
-            this.selectedModel = null;
-        },
-    },
+    return {
+        data,
+        tabs,
+        openSearchGenie,
+        closeSearchGenie,
+        updateFilter,
+        search,
+        setAction,
+        resetAction,
+        selectModel,
+        deselectModel
+    }
 });

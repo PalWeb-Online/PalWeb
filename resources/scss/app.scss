@@ -703,7 +703,7 @@ ul.search-results {
     }
 
     .form-errors {
-        @include box-yellow-pastel;
+        @include box-accent-light;
         font-size: 1.4rem;
         padding: 1.6rem;
 

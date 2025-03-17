@@ -20,7 +20,40 @@ class DeckMasterController extends Controller
         ]);
     }
 
-    public function getDecks(Request $request)
+    public function build(?Deck $deck = null): \Inertia\Response
+    {
+        if ($deck) {
+            $this->authorize('modify', $deck);
+            $deck->load(['terms']);
+        }
+
+        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
+            'section' => 'workbench',
+            'mode' => 'build',
+            'step' => 'build',
+            'deck' => $deck ? new DeckResource($deck) : null,
+        ]);
+    }
+
+    public function study(Deck $deck): \Inertia\Response
+    {
+        $this->authorize('interact', $deck);
+//        todo: I'm not loading Terms, so I'm not sure why I'm still seeing them.
+
+        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
+            'section' => 'academy',
+            'mode' => 'study',
+            'step' => 'study',
+            'deck' => new DeckResource($deck),
+            'terms' => TermResource::collection(
+                $deck->terms->map(function ($term) {
+                    return new TermResource($term)->additional(['detail' => true]);
+                })
+            )
+        ]);
+    }
+
+    public function getDecks(Request $request): \Illuminate\Http\JsonResponse
     {
         $mode = $request->query('mode', 'build');
 
@@ -32,47 +65,6 @@ class DeckMasterController extends Controller
 
         return response()->json([
             'decks' => DeckResource::collection($decks),
-        ]);
-    }
-
-
-    public function create(Request $request): \Inertia\Response
-    {
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
-            'section' => 'workbench',
-            'mode' => 'build',
-            'step' => 'build'
-        ]);
-    }
-
-    public function edit(Request $request, Deck $deck): \Inertia\Response
-    {
-        $this->authorize('modify', $deck);
-        $deck->load(['terms']);
-
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
-            'section' => 'workbench',
-            'mode' => 'build',
-            'step' => 'build',
-            'stagedDeck' => new DeckResource($deck),
-        ]);
-    }
-
-    public function study(Request $request, Deck $deck): \Inertia\Response
-    {
-        $this->authorize('interact', $deck);
-        $deck->load(['terms']);
-
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
-            'section' => 'academy',
-            'mode' => 'study',
-            'step' => 'study',
-            'stagedDeck' => new DeckResource($deck),
-            'deckCards' => TermResource::collection(
-                $deck->terms->map(function ($term) {
-                    return new TermResource($term)->additional(['detail' => true]);
-                })
-            )
         ]);
     }
 }

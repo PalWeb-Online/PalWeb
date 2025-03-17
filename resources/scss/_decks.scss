@@ -342,46 +342,6 @@
     }
 }
 
-#dm-mode-toggle {
-    height: 4.8rem;
-    width: 32rem;
-    border: 0.2rem solid var(--color-dark-primary);
-    border-radius: 1.6rem;
-    cursor: pointer;
-    padding: 0.2rem;
-
-    .dm-mode-toggle-slider {
-        height: 100%;
-        width: 50%;
-        border-radius: 1.2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-block-end: 0.2rem;
-        font-family: $displayFont;
-        font-size: 2.0rem;
-        text-transform: uppercase;
-        transition: 0.3s ease;
-        user-select: none;
-
-        color: white;
-        background: var(--color-medium-primary);
-        transform: translateX(0%);
-    }
-
-    &.study .dm-mode-toggle-slider {
-        color: var(--color-dark-primary);
-        background: var(--color-accent-medium);
-        transform: translateX(100%);
-    }
-
-    &.sentence .dm-mode-toggle-slider {
-        color: var(--color-dark-primary);
-        background: var(--color-accent-medium);
-        transform: translateX(100%);
-    }
-}
-
 #dm-select {
     display: grid;
     gap: 3.2rem;
@@ -412,19 +372,6 @@
     max-width: 96rem;
     justify-items: center;
 
-    .db-item {
-        display: flex;
-        align-items: center;
-        gap: 1.6rem;
-
-        .trash {
-            width: 2.0rem;
-        }
-
-        .play {
-            width: 3.2rem;
-        }
-    }
 }
 
 #dm-study {

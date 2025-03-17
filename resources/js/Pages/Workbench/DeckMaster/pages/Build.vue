@@ -1,8 +1,8 @@
 <script setup>
-import {computed, onMounted, watch} from "vue";
-import {cloneDeep} from "lodash";
+import {computed, onMounted, reactive, ref, watch} from "vue";
+import {route} from "ziggy-js";
+import {cloneDeep, isEqual} from "lodash";
 import draggable from 'vuedraggable';
-import {useDeckMasterStore} from "../stores/DeckMasterStore.js";
 import TermItem from "../ui/TermItem.vue";
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
@@ -12,26 +12,55 @@ import PinButton from "../../../../components/PinButton.vue";
 import DeckActions from "../../../../components/DeckActions.vue";
 import AppAlert from "../../../../components/AppAlert.vue";
 import {Inertia} from "@inertiajs/inertia";
+import {useUserStore} from "../../../../stores/UserStore.js";
 
+const props = defineProps({
+    deck: Object,
+});
+
+const UserStore = useUserStore();
 const SearchStore = useSearchStore();
-
 const NotificationStore = useNotificationStore();
-const DeckMasterStore = useDeckMasterStore();
+
+const stagedDeck = reactive({
+    id: null,
+    name: '',
+    description: '',
+    private: false,
+    isPinned: false,
+    pinCount: 0,
+    created_at: null,
+    author: {
+        id: UserStore.user.id,
+        name: UserStore.user.name,
+        username: UserStore.user.username,
+        avatar: UserStore.user.avatar,
+    },
+    terms: [],
+});
+
+const originalDeck = ref(null);
+
+const resetDeck = async () => {
+    Object.assign(stagedDeck, cloneDeep(originalDeck.value));
+};
+
+const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return JSON.stringify(DeckMasterStore.data.stagedDeck) !== JSON.stringify(DeckMasterStore.data.originalDeck)
+    return !isEqual(stagedDeck, originalDeck.value) && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const insertTerm = (term) => {
-    const termExists = DeckMasterStore.data.stagedDeck.terms.some(existingTerm => existingTerm.id === term.id);
+    const termExists = stagedDeck.terms.some(existingTerm => existingTerm.id === term.id);
 
     if (termExists) {
         NotificationStore.addNotification('This Term is already in the Deck!', 'error');
 
     } else {
-        DeckMasterStore.data.stagedDeck.terms.push({
+        stagedDeck.terms.push({
             id: term.id,
             term: term.term,
             category: term.category,
@@ -51,56 +80,62 @@ const insertTerm = (term) => {
 }
 
 const removeTerm = (index) => {
-    DeckMasterStore.data.stagedDeck.terms.splice(index, 1);
+    stagedDeck.terms.splice(index, 1);
     updatePosition();
 }
 
 const updatePosition = () => {
-    DeckMasterStore.data.stagedDeck.terms.forEach((term, index) => {
+    stagedDeck.terms.forEach((term, index) => {
         term.deckPivot.position = index + 1;
     });
 }
 
 const isValidRequest = computed(() => {
-    return DeckMasterStore.data.stagedDeck.name;
+    return stagedDeck.name;
 });
 
 const saveDeck = async () => {
-    // todo: the problem with this is that if the request fails, you can't try again at all.
-    DeckMasterStore.data.originalDeck = cloneDeep(DeckMasterStore.data.stagedDeck);
+    isSaving.value = true;
 
-    if (DeckMasterStore.data.stagedDeck.id) {
-        Inertia.patch(route('decks.update', DeckMasterStore.data.stagedDeck.id), {deck: DeckMasterStore.data.stagedDeck},
-            {
-                onSuccess: () => {
-                    NotificationStore.addNotification('The Deck has been saved!');
-                },
-                onError: () => {
-                    NotificationStore.addNotification('Oh no! The Deck could not be saved.');
-                }
-            }
-        );
+    const method = stagedDeck.id
+        ? Inertia.patch.bind(Inertia)
+        : Inertia.post.bind(Inertia);
 
-    } else {
-        Inertia.post(route('decks.store'), {deck: DeckMasterStore.data.stagedDeck},
-            {
-                onSuccess: () => {
-                    NotificationStore.addNotification('The Deck has been saved!');
-                },
-                onError: () => {
-                    NotificationStore.addNotification('Oh no! The Deck could not be saved.');
-                }
+    const url = stagedDeck.id
+        ? route('decks.update', stagedDeck.id)
+        : route('decks.store');
+
+    method(url, {deck: stagedDeck},
+        {
+            onSuccess: () => {
+                NotificationStore.addNotification('The Deck has been saved!');
+                originalDeck.value = cloneDeep(stagedDeck);
+                isSaving.value = false;
+            },
+            onError: () => {
+                NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+                isSaving.value = false;
             }
-        );
-    }
+        }
+    );
 };
 
-const resetDeck = async () => {
-    DeckMasterStore.data.stagedDeck = cloneDeep(DeckMasterStore.data.originalDeck);
-};
+watch(
+    () => props.deck,
+    (newValue) => {
+        if (newValue) {
+            Object.assign(stagedDeck, newValue);
+        }
+    },
+    {deep: true}
+);
 
 onMounted(async () => {
-    DeckMasterStore.data.originalDeck = cloneDeep(DeckMasterStore.data.stagedDeck);
+    if (!!props.deck) {
+        Object.assign(stagedDeck, props.deck);
+    }
+
+    originalDeck.value = cloneDeep(stagedDeck);
 
     watch(
         () => SearchStore.data.selectedModel,
@@ -116,65 +151,65 @@ onMounted(async () => {
 
 <template>
     <div class="app-nav-interact">
-        <img src="/img/reverse.svg" @click="DeckMasterStore.toSelect" alt="Back"/>
+        <img src="/img/finger-back.svg" @click="Inertia.get(route('deck-master.index', {mode: 'build'}))" alt="Back"/>
         <div class="app-nav-interact-buttons">
-            <AppButton :disabled="!hasNavigationGuard || !isValidRequest" label="Save"
+            <AppButton :disabled="isSaving || !hasNavigationGuard || !isValidRequest" label="Save"
                        @click="saveDeck"
             />
-            <AppButton :disabled="!hasNavigationGuard" label="Reset"
+            <AppButton :disabled="isSaving || !hasNavigationGuard" label="Reset"
                        @click="resetDeck"
             />
-            <AppButton label="Insert Term"
-                       @click="SearchStore.openSearchGenie('insert', 'terms')"
+            <AppButton @click="SearchStore.openSearchGenie('insert', 'terms')"
+                       label="Insert Term"
             />
         </div>
     </div>
 
     <div class="deck-container">
         <div class="deck-container-head">
-            <PinButton v-if="DeckMasterStore.data.stagedDeck.id" modelType="deck"
-                       :model="DeckMasterStore.data.stagedDeck"/>
-            <input class="deck-container-head-title" v-model="DeckMasterStore.data.stagedDeck.name"
+            <PinButton v-if="stagedDeck.id" modelType="deck"
+                       :model="stagedDeck"/>
+            <input class="deck-container-head-title" v-model="stagedDeck.name"
                    placeholder="Required: Deck Name"
             />
-            <img :class="['lock', { public: !DeckMasterStore.data.stagedDeck.private }]"
-                 :src="`/img/${DeckMasterStore.data.stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
-                 @click="DeckMasterStore.data.stagedDeck.private = !DeckMasterStore.data.stagedDeck.private"
+            <img :class="['lock', { public: !stagedDeck.private }]"
+                 :src="`/img/${stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
+                 @click="stagedDeck.private = !stagedDeck.private"
                  alt="lock"/>
-            <DeckActions v-if="DeckMasterStore.data.stagedDeck.id" :model="DeckMasterStore.data.stagedDeck"/>
+            <DeckActions v-if="stagedDeck.id" :model="stagedDeck"/>
         </div>
         <div class="user-wrapper">
             <div class="user-avatar">
-                <img :src="`/img/avatars/${DeckMasterStore.data.stagedDeck.author.avatar}`" alt="Profile Picture"/>
+                <img :src="`/img/avatars/${stagedDeck.author.avatar}`" alt="Profile Picture"/>
             </div>
             <div class="user-comment">
                 <div class="user-comment-head">
-                    <div>{{ DeckMasterStore.data.stagedDeck.author.name }}</div>
-                    <div>({{ DeckMasterStore.data.stagedDeck.author.username }})</div>
+                    <div>{{ stagedDeck.author.name }}</div>
+                    <div>({{ stagedDeck.author.username }})</div>
                 </div>
                 <div class="user-comment-body">
-                    <textarea class="user-comment-body-content" id="deck[description]"
-                              v-model="DeckMasterStore.data.stagedDeck.description"
-                              name="deck[description]" placeholder="(Optional) Tell us something about this Deck."
+                    <textarea class="user-comment-body-content"
+                              v-model="stagedDeck.description"
+                              placeholder="(Optional) Tell us something about this Deck."
                     />
                 </div>
             </div>
         </div>
 
-        <draggable :list="DeckMasterStore.data.stagedDeck.terms" itemKey="id"
+        <draggable :list="stagedDeck.terms" itemKey="id"
                    @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
-                <div class="db-item">
+                <div class="draggable-item">
                     <TermItem :term="element"/>
                     <img src="/img/trash.svg" class="trash" alt="Delete"
-                         v-show="DeckMasterStore.data.stagedDeck.terms.length > 0"
+                         v-show="stagedDeck.terms.length > 0"
                          @click="removeTerm(index)"/>
                 </div>
             </template>
         </draggable>
 
-        <div class="deck-term-count">{{ DeckMasterStore.data.stagedDeck.terms.length }} Terms</div>
+        <div class="deck-term-count">{{ stagedDeck.terms.length }} Terms</div>
     </div>
 
     <AppAlert
