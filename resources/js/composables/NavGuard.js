@@ -1,5 +1,4 @@
 import {onMounted, onUnmounted, ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
 import {router} from "@inertiajs/vue3";
 
 export function useNavGuard(hasNavigationGuard) {
@@ -16,7 +15,7 @@ export function useNavGuard(hasNavigationGuard) {
             const { href } = pendingVisit.value.url;
             const { method, data, headers, replace, preserveState, preserveScroll } = pendingVisit.value;
 
-            Inertia.visit(href, {
+            router.visit(href, {
                 method,
                 data,
                 headers,

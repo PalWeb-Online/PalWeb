@@ -6,7 +6,7 @@ import Study from "./pages/Study.vue";
 import AppButton from "../../../components/AppButton.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
-import {Inertia} from "@inertiajs/inertia";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     mode: {type: String, default: 'build'},
@@ -56,13 +56,13 @@ const toggleSelectDeck = (index) => {
 
 const toBuild = () => {
     selectedDeck.value?.id
-        ? Inertia.get(route('deck-master.build', selectedDeck.value?.id))
-        : Inertia.get(route('deck-master.build'))
+        ? router.get(route('deck-master.build', selectedDeck.value?.id))
+        : router.get(route('deck-master.build'))
 };
 
 const toStudy = () => {
     selectedDeck.value?.id
-    && Inertia.get(route('deck-master.study', selectedDeck.value?.id));
+    && router.get(route('deck-master.study', selectedDeck.value?.id));
 };
 
 onMounted(async () => {

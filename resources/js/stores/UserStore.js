@@ -1,22 +1,29 @@
 import {defineStore} from 'pinia';
-import {computed, reactive} from 'vue';
+import {computed} from 'vue';
+import {usePage} from "@inertiajs/vue3";
 
 export const useUserStore = defineStore('UserStore', () => {
-    const user = reactive(window.Laravel?.user || null);
+    const page = usePage();
+    const user = computed(() => page.props.auth.user || null);
 
-    const roles = computed(() =>
-        user?.roles?.map(role => role.name) || []
-    );
+    const isUser = computed(() => !!user.value);
 
-    const isUser = computed(() => !!user);
+    const isStudent = computed(() => user.value?.roles?.includes('student'));
 
-    const isAdmin = computed(() =>
-        roles.value.some(role => role === 'admin')
-    );
+    const isAdmin = computed(() => user.value?.roles?.includes('admin'));
+
+    const highestRole = computed(() => {
+        if (isAdmin) return 'admin';
+        if (isStudent) return 'student';
+        if (isUser) return 'pal';
+        return 'guest';
+    });
 
     return {
         user,
         isUser,
+        isStudent,
         isAdmin,
+        highestRole
     };
 });

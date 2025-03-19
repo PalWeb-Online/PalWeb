@@ -1,12 +1,11 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useSearchStore} from '../stores/SearchStore.js';
-import {Link} from '@inertiajs/inertia-vue3';
+import {router} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
 import AppDialog from "../components/AppDialog.vue";
 import AppTooltip from "../components/AppTooltip.vue";
-import SearchFilters from "./_SearchFilters.vue";
-import {Inertia} from "@inertiajs/inertia";
+import SearchFilters from "./SearchFilters.vue";
 
 const SearchStore = useSearchStore();
 
@@ -69,7 +68,7 @@ const selectModel = (model) => {
     } else if (routes[SearchStore.data.activeModel]) {
         const { route: targetRoute, idField } = routes[SearchStore.data.activeModel];
         const param = model[idField];
-        Inertia.get(route(targetRoute, param));
+        router.get(route(targetRoute, param));
     }
 };
 

@@ -15,7 +15,7 @@ let isPrivate = ref(props.model.private);
 
 const isAuthor = computed(() => {
     if (props.modelType === 'deck') {
-        return props.model.author.id === UserStore.user.id;
+        return UserStore.user?.id === props.model.author.id;
 
     } else {
         return false;

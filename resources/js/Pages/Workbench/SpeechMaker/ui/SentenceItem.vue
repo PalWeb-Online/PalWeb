@@ -1,6 +1,5 @@
 <script setup>
 import {route} from "ziggy-js";
-import {Link} from '@inertiajs/inertia-vue3'
 import PinButton from "../../../../components/PinButton.vue";
 import SentenceActions from "../../../../components/SentenceActions.vue";
 

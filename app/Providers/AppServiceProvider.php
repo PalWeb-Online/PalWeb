@@ -41,11 +41,6 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
 
-        $this->bootRoute();
-    }
-
-    public function bootRoute(): void
-    {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(100)->by($request->user()?->id ?: $request->ip());
         });

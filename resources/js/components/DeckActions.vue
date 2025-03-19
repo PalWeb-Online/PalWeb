@@ -1,11 +1,10 @@
 <script setup>
 import {computed} from "vue";
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3'
+import {router} from '@inertiajs/vue3'
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
-import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     model: Object,
@@ -15,7 +14,7 @@ const UserStore = useUserStore();
 const NotificationStore = useNotificationStore();
 
 const isAuthor = computed(() => {
-    return props.model.author.id === UserStore.user.id;
+    return UserStore.user?.id === props.model.author.id;
 })
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -23,7 +22,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute
 const deleteDeck = () => {
     if (!confirm('Are you sure you want to delete this Deck?')) return;
 
-    Inertia.delete(route('decks.destroy', props.model.id), {
+    router.delete(route('decks.destroy', props.model.id), {
         onSuccess: () => {
             NotificationStore.addNotification('The Deck has been deleted!');
         }

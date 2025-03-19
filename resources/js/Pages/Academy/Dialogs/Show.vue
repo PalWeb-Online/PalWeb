@@ -1,7 +1,6 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {Link} from "@inertiajs/inertia-vue3";
 import DialogContainer from "../../../components/DialogContainer.vue";
 
 defineOptions({

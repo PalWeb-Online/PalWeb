@@ -5,6 +5,7 @@ import VanillaTilt from 'vanilla-tilt';
 
 const props = defineProps({
     badge: Object,
+    user: Object,
 });
 
 const isOpen = ref(false);
@@ -37,7 +38,7 @@ onMounted(() => {
 
 <template>
     <div ref="reference" :class="['badge', badge.enabled ? '' : 'disabled']">
-        <img :alt="badge.name" :src="badge.image"/>
+        <img :alt="badge.name" :src="`/img/badges/${badge.image}`"/>
     </div>
     <div ref="floating" v-if="isOpen" :style="floatingStyles" class="notification badge-data">
         <div>{{ badge.enabled ? badge.name : '???' }}</div>

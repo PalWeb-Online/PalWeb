@@ -9,8 +9,8 @@ import AppButton from "../../../../components/AppButton.vue";
 import DialogActions from "../../../../components/DialogActions.vue";
 import AppAlert from "../../../../components/AppAlert.vue";
 import {cloneDeep, isEqual} from "lodash";
-import {Inertia} from "@inertiajs/inertia";
 import {route} from "ziggy-js";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     dialog: Object,
@@ -85,8 +85,8 @@ const saveDialog = async () => {
     isSaving.value = true;
 
     const method = stagedDialog.id
-        ? Inertia.patch.bind(Inertia)
-        : Inertia.post.bind(Inertia);
+        ? router.patch.bind(router)
+        : router.post.bind(router);
 
     const url = stagedDialog.id
         ? route('dialogs.update', stagedDialog.id)
@@ -149,7 +149,7 @@ onMounted(() => {
             <AppButton @click="SearchStore.openSearchGenie('insert', 'sentences')"
                        label="Insert Sentence"
             />
-            <AppButton @click="Inertia.get(route('speech-maker.dialog-sentence', stagedDialog.id))"
+            <AppButton @click="router.get(route('speech-maker.dialog-sentence', stagedDialog.id))"
                        :disabled="!stagedDialog.id" label="New Sentence"
             />
         </div>

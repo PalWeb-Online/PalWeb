@@ -2,7 +2,6 @@
 import Layout from "../../../Shared/Layout.vue";
 import DeckContainer from "../../../components/DeckContainer.vue";
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3'
 
 defineOptions({
     layout: Layout

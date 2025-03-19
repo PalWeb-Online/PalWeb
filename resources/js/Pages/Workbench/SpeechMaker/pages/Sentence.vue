@@ -9,8 +9,9 @@ import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
 import AppButton from "../../../../components/AppButton.vue";
 import AppAlert from "../../../../components/AppAlert.vue";
-import {Inertia} from "@inertiajs/inertia";
 import AppTip from "../../../../components/AppTip.vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     dialog: Object,
@@ -106,8 +107,8 @@ const saveSentence = async () => {
     isSaving.value = true;
 
     const method = stagedSentence.id
-        ? Inertia.patch.bind(Inertia)
-        : Inertia.post.bind(Inertia);
+        ? router.patch.bind(router)
+        : router.post.bind(router);
 
     const url = stagedSentence.id
         ? route('sentences.update', stagedSentence.id)
@@ -121,7 +122,7 @@ const saveSentence = async () => {
                 isSaving.value = false;
 
                 if (!!props.dialog) {
-                    Inertia.visit(route('speech-maker.dialog', props.dialog.id));
+                    router.visit(route('speech-maker.dialog', props.dialog.id));
                 }
             },
             onError: () => {

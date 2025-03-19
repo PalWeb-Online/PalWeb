@@ -85,11 +85,7 @@ class DeckController extends Controller
     {
         $this->authorize('interact', $deck);
 
-        $deck->load([
-            'terms' => function ($query) {
-                $query->orderBy('deck_term.id');
-            },
-        ]);
+        $deck->load(['terms']);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',

@@ -4,15 +4,17 @@ import Paginator from "../../../Shared/Paginator.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import SpeakerContainer from "../../../components/SpeakerContainer.vue";
 import {route} from "ziggy-js";
-import {Link} from "@inertiajs/inertia-vue3";
-
-defineOptions({
-    layout: Layout
-});
+import AppTip from "../../../components/AppTip.vue";
 
 const props = defineProps({
     speaker: Object,
+
+    // todo: why is this an object?
     audios: Object
+});
+
+defineOptions({
+    layout: Layout
 });
 </script>
 <template>

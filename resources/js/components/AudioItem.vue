@@ -1,7 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3';
 import {Howl} from "howler";
 import {useUserStore} from "../stores/UserStore.js";
 
@@ -60,7 +59,7 @@ watch(() => props.model, loadAudio, {immediate: true});
             {{ model.created_at }}
         </div>
 
-        <template v-if="UserStore.user.id === model.speaker.user.id">
+        <template v-if="UserStore.user?.id === model.speaker.user.id">
             <form :action="route('audios.destroy', model.id)" method="POST">
                 <input type="hidden" name="_method" value="DELETE">
                 <input type="hidden" name="_token" :value="csrfToken">

@@ -1,6 +1,5 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3';
 import AudioItem from "./AudioItem.vue";
 
 const props = defineProps({

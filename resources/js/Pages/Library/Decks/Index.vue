@@ -2,9 +2,9 @@
 import Layout from "../../../Shared/Layout.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
-import {Inertia} from "@inertiajs/inertia";
 import AppTip from "../../../components/AppTip.vue";
-import SearchFilters from "../../../Shared/_SearchFilters.vue";
+import SearchFilters from "../../../Shared/SearchFilters.vue";
+import {router} from "@inertiajs/vue3";
 
 defineOptions({
     layout: Layout
@@ -23,7 +23,7 @@ function updateFilter({filter, value}) {
     searchParams.delete('page');
 
     const params = Object.fromEntries(searchParams.entries());
-    Inertia.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
+    router.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
 }
 </script>
 <template>

@@ -1,8 +1,7 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3'
+import {router} from '@inertiajs/vue3'
 import {useActions} from "../composables/Actions.js";
-import {Inertia} from "@inertiajs/inertia";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {useUserStore} from "../stores/UserStore.js";
 
@@ -16,7 +15,7 @@ const NotificationStore = useNotificationStore();
 const deleteDialog = () => {
     if (!confirm('Are you sure you want to delete this Dialog?')) return;
 
-    Inertia.delete(route('dialogs.destroy', props.model.id), {
+    router.delete(route('dialogs.destroy', props.model.id), {
         onSuccess: () => {
             NotificationStore.addNotification('The Dialog has been deleted!');
         }

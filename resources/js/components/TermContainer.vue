@@ -1,6 +1,5 @@
 <script setup>
 import {computed} from "vue";
-import {Link} from '@inertiajs/inertia-vue3'
 import {route} from 'ziggy-js';
 import {useTerm} from "../composables/Term.js";
 import TermActions from "./TermActions.vue";

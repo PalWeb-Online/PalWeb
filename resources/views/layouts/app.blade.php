@@ -2,8 +2,6 @@
 
 <html lang="{{ app()->getLocale() }}" @if (app()->getLocale() == 'ar') dir="rtl" @else dir="ltr" @endif>
 <head>
-{{--    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>--}}
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -45,26 +43,13 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
-    <script>
-        window.Laravel = @json([
-            'user' => auth()->check()
-                ? new \App\Http\Resources\UserResource(auth()->user()->load(['decks.terms', 'roles']))
-                : null,
-        ]);
-    </script>
-
     @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    @yield('inertia-head')
+    @inertiaHead
 </head>
 
 <body class="{{ $bodyBackground ?? '' }}">
-
-@yield('inertia-body')
-@yield('main-body')
-
+    @inertia
+    <script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>
 </body>
-
-<script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>
-
 </html>

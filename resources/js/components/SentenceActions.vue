@@ -1,10 +1,9 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {Link} from '@inertiajs/inertia-vue3';
+import {router} from '@inertiajs/vue3';
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
-import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     model: Object,
@@ -16,7 +15,7 @@ const NotificationStore = useNotificationStore();
 const deleteSentence = () => {
     if (!confirm('Are you sure you want to delete this Sentence?')) return;
 
-    Inertia.delete(route('sentences.destroy', props.model.id), {
+    router.delete(route('sentences.destroy', props.model.id), {
         onSuccess: () => {
             NotificationStore.addNotification('The Sentence has been deleted!');
         }

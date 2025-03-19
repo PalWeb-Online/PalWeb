@@ -3,8 +3,8 @@ import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {Inertia} from "@inertiajs/inertia";
 import {ref, watch} from "vue";
+import {router} from "@inertiajs/vue3";
 
 defineOptions({
     layout: Layout
@@ -48,7 +48,7 @@ function updateFilter({filter, value}) {
     searchParams.delete('page');
 
     const params = Object.fromEntries(searchParams.entries());
-    Inertia.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
+    router.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
 }
 </script>
 <template>

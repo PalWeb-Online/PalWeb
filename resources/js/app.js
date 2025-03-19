@@ -1,19 +1,10 @@
 import { createApp, h } from "vue/dist/vue.esm-bundler";
-import { createInertiaApp } from "@inertiajs/inertia-vue3";
+import { createInertiaApp } from "@inertiajs/vue3";
 import { InertiaProgress } from '@inertiajs/progress'
 import { createPinia } from 'pinia';
 import axios from 'axios';
 import Alpine from 'alpinejs';
-import {Head, Link} from '@inertiajs/inertia-vue3'
-import TermItem from "./components/TermItem.vue";
-import DeckItem from "./components/DeckItem.vue";
-import DeckContainer from "./components/DeckContainer.vue";
-import DeckFlashcard from "./components/DeckFlashcard.vue";
-import SentenceContainer from "./components/SentenceContainer.vue";
-import DialogItem from "./components/DialogItem.vue";
-import DialogContainer from "./components/DialogContainer.vue";
-import BadgeItem from "./components/BadgeItem.vue";
-import PrivacyToggleButton from "./components/PrivacyToggleButton.vue";
+import {Head, Link} from '@inertiajs/vue3'
 
 const pinia = createPinia();
 
@@ -45,32 +36,3 @@ InertiaProgress.init({
     includeCSS: true,
     showSpinner: false,
 })
-
-const multiMountComponents = [
-    { selector: '[data-vue-component="TermItem"]', component: TermItem },
-    { selector: '[data-vue-component="DeckItem"]', component: DeckItem },
-    { selector: '[data-vue-component="DeckFlashcard"]', component: DeckFlashcard },
-    { selector: '[data-vue-component="DeckContainer"]', component: DeckContainer },
-    { selector: '[data-vue-component="SentenceContainer"]', component: SentenceContainer },
-    { selector: '[data-vue-component="DialogItem"]', component: DialogItem },
-    { selector: '[data-vue-component="DialogContainer"]', component: DialogContainer },
-    { selector: '[data-vue-component="BadgeItem"]', component: BadgeItem },
-    { selector: '[data-vue-component="PrivacyToggleButton"]', component: PrivacyToggleButton },
-];
-
-function mountMultiComponents(selector, component) {
-    document.querySelectorAll(selector).forEach(element => {
-        const propsData = JSON.parse(element.dataset.props || '{}');
-
-        const app = createApp({
-            render: () => h(component, propsData),
-        });
-
-        app.use(pinia);
-        app.mount(element);
-    });
-}
-
-multiMountComponents.forEach(({ selector, component }) => {
-    mountMultiComponents(selector, component);
-});

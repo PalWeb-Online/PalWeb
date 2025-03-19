@@ -11,8 +11,8 @@ import AppButton from "../../../../components/AppButton.vue";
 import PinButton from "../../../../components/PinButton.vue";
 import DeckActions from "../../../../components/DeckActions.vue";
 import AppAlert from "../../../../components/AppAlert.vue";
-import {Inertia} from "@inertiajs/inertia";
 import {useUserStore} from "../../../../stores/UserStore.js";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     deck: Object,
@@ -98,8 +98,8 @@ const saveDeck = async () => {
     isSaving.value = true;
 
     const method = stagedDeck.id
-        ? Inertia.patch.bind(Inertia)
-        : Inertia.post.bind(Inertia);
+        ? router.patch.bind(router)
+        : router.post.bind(router);
 
     const url = stagedDeck.id
         ? route('decks.update', stagedDeck.id)
@@ -151,7 +151,7 @@ onMounted(async () => {
 
 <template>
     <div class="app-nav-interact">
-        <img src="/img/finger-back.svg" @click="Inertia.get(route('deck-master.index', {mode: 'build'}))" alt="Back"/>
+        <img src="/img/finger-back.svg" @click="router.get(route('deck-master.index', {mode: 'build'}))" alt="Back"/>
         <div class="app-nav-interact-buttons">
             <AppButton :disabled="isSaving || !hasNavigationGuard || !isValidRequest" label="Save"
                        @click="saveDeck"

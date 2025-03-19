@@ -4,7 +4,7 @@ import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
 import {useRecordStore} from "../stores/RecordStore.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import WizardButton from "../ui/WizardButton.vue";
-import {Inertia} from "@inertiajs/inertia";
+import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";

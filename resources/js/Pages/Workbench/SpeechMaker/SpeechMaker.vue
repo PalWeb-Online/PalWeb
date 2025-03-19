@@ -1,10 +1,10 @@
 <script setup>
 import {route} from "ziggy-js";
+import {router} from "@inertiajs/vue3";
 import Layout from "../../../Shared/Layout.vue";
 import Dialog from "./pages/Dialog.vue";
 import Sentence from "./pages/Sentence.vue";
 import AppButton from "../../../components/AppButton.vue";
-import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     mode: String,
@@ -24,9 +24,9 @@ defineOptions({
         <h1>Speech Maker</h1>
         <div id="app-nav">
             <div :class="['app-mode-buttons', mode]">
-                <AppButton @click="Inertia.get(route('speech-maker.dialog'))" :active="mode === 'dialog'"
+                <AppButton @click="router.get(route('speech-maker.dialog'))" :active="mode === 'dialog'"
                            label="dialog"/>
-                <AppButton @click="Inertia.get(route('speech-maker.sentence'))" :active="mode === 'sentence'"
+                <AppButton @click="router.get(route('speech-maker.sentence'))" :active="mode === 'sentence'"
                            label="sentence"/>
             </div>
         </div>
