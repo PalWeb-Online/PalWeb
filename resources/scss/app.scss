@@ -288,67 +288,66 @@ figure.data-box {
 
 // Subscriptions
 
-.tiers-container {
+.tiers-array {
+    width: 100%;
+    max-width: 96rem;
     display: grid;
+    align-items: start;
     gap: 1.6rem;
     grid-template-columns: repeat(1, 1fr);
 
     @media (min-width: 960px) {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 .tier-item-wrapper {
     display: grid;
-    grid-template: 1fr / 1fr;
-    border-radius: 1.6rem;
-    border: 0.3rem solid var(--color-medium-secondary);
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
-    overflow: hidden;
-}
+    gap: 1.6rem;
 
-.tier-item-unlocked {
-    grid-area: 1 / 1;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: $displayFont;
-    font-size: 3.2rem;
-    color: var(--color-medium-primary);
-    background: var(--color-pastel-light);
-    text-transform: uppercase;
-    opacity: 0.8;
+    .tier-name {
+        color: var(--color-medium-secondary);
+        text-align: center;
+        font-family: $headFont;
+        font-size: 3.6rem;
+        font-weight: 700;
+    }
 
-    & > div {
-        transform: rotate(-15deg);
+    .current-tier {
+        background: var(--color-accent-medium);
+        color: var(--color-dark-primary);
+        padding: 1.0rem 1.6rem 0.8rem;
+        font-family: $headFont;
+        font-weight: 700;
+        text-align: center;
+        border-radius: 1.6rem;
     }
 }
 
 .tier-item {
-    grid-area: 1 / 1;
+    overflow: hidden;
     background: white;
+    border-radius: 1.6rem;
+    border: 0.2rem solid var(--color-dark-primary);
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
 
-    .tier-head {
-        background: var(--color-medium-secondary);
-        text-transform: capitalize;
-        color: white;
-        padding: 1.2rem 0 0.8rem;
-        text-align: center;
-        font-family: $headFont;
-        font-weight: 700;
-        font-size: 2.0rem
+    &:hover {
+        border: 0.2rem solid var(--color-accent-medium);
     }
 
     .tier-body {
         display: grid;
-        text-align: center;
-        padding: 0.4rem 0.8rem;
+        text-align: left;
+        padding: 0.6rem 1.2rem;
         color: var(--color-dark-primary);
 
         & > * {
-            padding: 0.8rem;
+            padding: 1.2rem 0.6rem;
             border-block-end: 0.2rem dotted var(--color-pastel-dark);
+        }
+
+        & > *:last-child {
+            border-block-end: none;
         }
 
         & > *.disabled {
@@ -356,50 +355,15 @@ figure.data-box {
         }
     }
 
-    .tiers-pricing, .tiers-action {
-        display: block;
+    .tiers-pricing {
+        padding: 1.6rem;
         background: var(--color-medium-secondary);
         color: white;
         font-family: $headFont;
-        font-weight: 700;
-        text-transform: uppercase;
-        text-align: center;
-        padding: 1.2rem 0.8rem 0.8rem;
-    }
-
-    .tiers-pricing {
-        background: none;
-        color: var(--color-medium-secondary);
         font-size: 2.4rem;
+        font-weight: 700;
+        text-align: center;
         text-transform: none;
-        padding: 1.6rem;
-    }
-
-    @media (min-width: 960px) {
-        .tier-body {
-            text-align: left;
-        }
-    }
-}
-
-.tier-item.unlockable {
-
-    .tier-head, .tiers-action {
-        background: var(--color-pastel-dark);
-    }
-
-    .tiers-pricing {
-        color: var(--color-pastel-dark);
-    }
-
-    &:hover {
-        .tier-head, .tiers-action {
-            background: var(--color-medium-primary);
-        }
-
-        .tiers-pricing {
-            color: var(--color-medium-primary);
-        }
     }
 }
 

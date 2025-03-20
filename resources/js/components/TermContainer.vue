@@ -263,7 +263,7 @@ const attributeLinks = {
             />
 
             <div class="chart-dialog" v-if="responseForms.length > 0">
-                <DialogLine speaker="دعاء" :ar="term.term" :en="term.translit" />
+                <DialogLine speaker="دعاء" :ar="term.term" :en="term.translit"/>
                 <DialogLine speaker="جواب" align="ltr" v-for="response in responseForms"
                             :ar="response.inflection"
                             :en="response.translit"/>
@@ -274,18 +274,22 @@ const attributeLinks = {
             </figure>
 
             <!--            note that my user is hard-coded -->
-            <div v-if="term.usage" class="user-wrapper">
-                <div class="user-avatar">
+            <div v-if="term.usage" class="user-item m">
+                <Link class="user-avatar" :href="route('users.show', 'permanent.intifada')">
                     <img src="/img/avatars/character02.jpg"
                          alt="Profile Picture"/>
-                </div>
-                <div class="user-comment">
-                    <div class="user-comment-head">Editor's Note</div>
-                    <div class="user-comment-body">
-                        <div class="user-comment-body-content">
+                </Link>
+                <div class="user-data-wrapper">
+                    <div class="user-name">
+                        <div class="user-name-en">
+                            <div>Editor's Note</div>
+                        </div>
+                    </div>
+                    <div class="user-comment">
+                        <div class="user-comment-content">
                             {{ term.usage }}
                         </div>
-                        <div class="user-comment-body-data">
+                        <div class="user-comment-data">
                             — R. Adrian (permanent.intifada)
                         </div>
                     </div>

@@ -2,7 +2,7 @@
 import Nav from "./Nav.vue";
 import NotificationContainer from "../components/NotificationContainer.vue";
 import SearchGenie from "./SearchGenie.vue";
-import SearchGenieTrigger from "./SearchGenieTrigger.vue";
+import Footer from "./Footer.vue";
 import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {usePage} from "@inertiajs/vue3";
@@ -32,6 +32,12 @@ watch(() => page.props.flash.notification, (notification) => {
         <slot/>
 
         <SearchGenieTrigger/>
+        <Footer v-if="![
+            'Workbench/RecordWizard/RecordWizard',
+            'Workbench/DeckMaster/DeckMaster',
+            'Workbench/SpeechMaker/SpeechMaker',
+            ].includes($page.component)"/>
+    </div>
         <SearchGenie/>
         <NotificationContainer/>
 

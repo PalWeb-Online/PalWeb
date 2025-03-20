@@ -46,10 +46,15 @@ use Inertia\Inertia;
 |
 */
 
-Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageTitle:Home')->name('homepage');
+Route::get('/', function () {
+    return Inertia::render('Index');
+})->name('homepage');
 
-Route::view('/denied', 'denied',
-    ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('denied');
+Route::get('/denied', function () {
+    return Inertia::render('Auth/Subscription', [
+        'denied' => true,
+    ]);
+})->name('denied');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -231,10 +236,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/subscription', function () {
-        View::share('pageTitle', 'Subscription');
-        return view('users.dashboard.subscription', [
+        return Inertia::render('Auth/Subscription', [
+            'section' => 'account',
             'user' => auth()->user(),
-            'bodyBackground' => 'hero-yellow',
         ]);
     })->name('subscription.index');
 });

@@ -17,6 +17,7 @@ defineProps({
         <h1>Dialogs</h1>
     </div>
     <div id="app-body">
+<!--        todo: v-if totalCount > 0; why decks-list & not dialogs-list?-->
         <div class="decks-list">
             <DialogItem v-for="dialog in dialogs.data" :key="dialog.id" :model="dialog"/>
         </div>

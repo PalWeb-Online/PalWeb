@@ -881,9 +881,7 @@ nav {
 
 .footer-container {
     display: grid;
-    grid-template-columns: auto 3fr 1fr 1fr;
-    align-content: end;
-    gap: 2.4rem;
+    gap: 6.4rem;
 
     font-family: $headFont;
     color: white;
@@ -902,6 +900,8 @@ nav {
     }
 
     .footer-social {
+        display: flex;
+        gap: 0.8rem;
         position: absolute;
         top: -2.4rem;
         right: 4.8rem;
@@ -917,19 +917,50 @@ nav {
         }
     }
 
-    .footer-image {
-        display: none;
-        width: 16rem;
-        margin-block-start: calc(-4.8rem - 4.8rem);
+    .footer-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 6.4rem;
     }
 
-    .footer-logo {
+    .footer-hero {
         display: none;
+        gap: 1.6rem;
+        width: 100%;
+        max-width: 64rem;
 
-        .footer-title {
-            font-size: 6.4rem;
+        .footer-hero-title {
+            font-size: 12.8rem;
             font-weight: 700;
-            line-height: 1;
+            font-family: $logoFont;
+            text-transform: lowercase;
+            margin-inline-start: 0.4rem;
+            filter: drop-shadow(-0.8rem 0.8rem 0 rgba(black, 0.25));
+        }
+
+        .footer-hero-subtitle {
+            font-family: $monoFont;
+            font-size: 1.4rem;
+            line-height: 1.75;
+        }
+
+        @media (min-width: 960px) {
+            display: grid;
+        }
+    }
+
+    .footer-links-wrapper {
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 33%;
+        display: grid;
+        gap: 1.6rem;
+        grid-template-columns: repeat(2, 1fr);
+        padding-block-end: 1.6rem;
+
+        @media (min-width: 960px) {
+            flex-grow: 0;
         }
     }
 
@@ -943,7 +974,7 @@ nav {
             color: var(--color-accent-medium);
             text-transform: uppercase;
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 2.0rem;
         }
 
         a:hover {
@@ -952,26 +983,15 @@ nav {
     }
 
     .footer-bottom {
-        grid-column: span 5;
         font-size: 1.2rem;
         text-align: center;
-        border-block-start: 0.2rem dotted white;
+        border-block-start: 0.3rem dotted var(--color-accent-medium);
         padding-block: 1.6rem;
     }
 }
 
 @media (min-width: 960px) {
-    .nav-mobile, .nav-mobile-toggle {
-        display: none;
-    }
-
     #page-body > .nav-wiki {
         display: grid;
-    }
-
-    .footer-container {
-        .footer-image, .footer-logo {
-            display: block;
-        }
     }
 }

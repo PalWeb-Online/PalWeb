@@ -5,6 +5,7 @@ import DeckActions from "./DeckActions.vue";
 import PinButton from "./PinButton.vue";
 import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import TermItem from "./TermItem.vue";
+import UserItem from "./UserItem.vue";
 
 const props = defineProps({
     model: {
@@ -24,34 +25,23 @@ const {deck, isLoading} = useDeck(props);
                 <div class="deck-container-head-title">{{ deck.name }}</div>
 
                 <PinButton modelType="deck" :model="deck"/>
-                <PrivacyToggleButton modelType="deck" :model="deck"/>
                 <DeckActions :model="deck"/>
+                <div class="action-buttons">
+                    <PrivacyToggleButton modelType="deck" :model="deck"/>
+                </div>
             </div>
 
-            <div class="user-wrapper">
-                <div class="user-avatar">
-                    <img :src="`/img/avatars/${deck.author.avatar}`" alt="Profile Picture"/>
+            <UserItem :user="deck.author" size="m" comment>
+                <div class="user-comment-content">
+                    <template v-if="deck.description">
+                        {{ deck.description }}
+                    </template>
+                    <template v-else>
+                        <i>Sadly, {{ deck.author.name }} hasn't told us anything about this Deck yet.</i>
+                    </template>
                 </div>
-                <div class="user-comment">
-                    <div class="user-comment-head">
-                        <div>{{ deck.author.name }}</div>
-                        <div>({{ deck.author.username }})</div>
-                    </div>
-                    <div class="user-comment-body">
-                        <div class="user-comment-body-content">
-                            <template v-if="deck.description">
-                                {{ deck.description }}
-                            </template>
-                            <template v-else>
-                                <i>Sadly, {{ deck.author.name }} hasn't told us anything about this Deck yet.</i>
-                            </template>
-                        </div>
-                        <div class="user-comment-body-data">Created by {{ deck.author.name }}
-                            on {{ deck.created_at }}.
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div class="user-comment-data">Created by {{ deck.author.name }} on {{ deck.created_at }}.</div>
+            </UserItem>
 
             <template v-if="deck.terms.length > 0">
                 <div class="terms-list">
@@ -64,13 +54,16 @@ const {deck, isLoading} = useDeck(props);
                     <div class="material-symbols-rounded">info</div>
                     <div class="tip-content">
                         <p>This Deck is still empty! If this Deck is yours, use the menu in the top-right corner of this
-                            page to <Link :href="route('decks.edit', deck.id)">Edit the Deck</Link>, or hover over the Context
+                            page to
+                            <Link :href="route('decks.edit', deck.id)">Edit the Deck</Link>
+                            , or hover over the Context
                             Actions
                             menu of a term & select the "Add to Deck" option to view a list of your Decks that you can
                             add
                             the
                             term
-                            to.</p>
+                            to.
+                        </p>
                     </div>
                 </div>
             </template>
