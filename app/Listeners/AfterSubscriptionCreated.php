@@ -24,7 +24,6 @@ class AfterSubscriptionCreated
      */
     public function handle(SubscriptionCreated $event): void
     {
-        /** @var User $user */
         $user = $event->billable;
         $user->grantStudentRole();
 

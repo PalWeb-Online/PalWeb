@@ -28,7 +28,7 @@ class AwardDeckBuiltBadge
 
             if ($event->user->decks->count() >= 1) {
                 $event->user->badges()->attach($badge);
-                $this->flasher->addInfo(__('badges.get', ['badge' => $badge->name]));
+                session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
             }
         }
     }

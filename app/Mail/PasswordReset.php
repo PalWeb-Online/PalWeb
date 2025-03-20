@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordChanged extends Mailable
+class PasswordReset extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +18,7 @@ class PasswordChanged extends Mailable
      *
      * @return void
      */
-    public function __construct(protected User $user) {}
+    public function __construct(protected $user) {}
 
     /**
      * Get the message envelope.

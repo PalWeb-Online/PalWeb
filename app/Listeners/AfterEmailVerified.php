@@ -27,9 +27,9 @@ class AfterEmailVerified
         $badge = Badge::where('name', 'I\'m Just Happy to Be Here')->first();
 
         $event->user->badges()->attach($badge);
-        $this->flasher->addInfo("You got the $badge->name Badge! Good job!");
 
-        // Send an email confirming the succesful verification.
+        session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
+
         Mail::to($event->user)->send(new UserVerified($event->user));
     }
 }

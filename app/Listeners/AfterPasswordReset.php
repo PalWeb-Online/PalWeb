@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Mail\PasswordChanged;
+use App\Mail\PasswordReset;
 use Illuminate\Support\Facades\Mail;
 
 class AfterPasswordReset
@@ -20,9 +20,8 @@ class AfterPasswordReset
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(\Illuminate\Auth\Events\PasswordReset $event): void
     {
-        // Send a password changed email to the user
-        Mail::to($event->user)->send(new PasswordChanged($event->user));
+        Mail::to($event->user)->send(new PasswordReset($event->user));
     }
 }

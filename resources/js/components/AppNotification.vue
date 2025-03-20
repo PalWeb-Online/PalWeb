@@ -10,6 +10,9 @@ const props = defineProps({
 
 <template>
     <div class="app-notification" :class="type">
-        {{ message }}
+        <div class="app-notification-title">{{ type }}</div>
+        <div class="app-notification-message">
+            {{ message }}
+        </div>
     </div>
 </template>

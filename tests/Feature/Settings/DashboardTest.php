@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Settings;
 
-use App\Events\PasswordChanged;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -100,7 +99,7 @@ class DashboardTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $result = $this->patch(route('settings.password.update'), [
+        $result = $this->patch(route('password.update'), [
             'old' => 'password',
             'new' => 'password234',
             'confirm' => 'password234',
@@ -111,6 +110,6 @@ class DashboardTest extends TestCase
         $result->assertStatus(200);
         $this->assertTrue(Hash::check('password234', $user->password));
 
-        Event::assertDispatched(PasswordChanged::class);
+        Event::assertDispatched(PasswordReset::class);
     }
 }

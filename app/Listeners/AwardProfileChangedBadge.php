@@ -26,7 +26,7 @@ class AwardProfileChangedBadge
 
         if (! $event->user->badges->contains($badge->id)) {
             $event->user->badges()->attach($badge);
-            $this->flasher->addInfo(__('badges.get', ['badge' => $badge->name]));
+            session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
         }
     }
 }

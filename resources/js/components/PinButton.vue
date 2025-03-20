@@ -3,6 +3,7 @@ import {ref} from "vue";
 import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
+import {router} from "@inertiajs/vue3";
 
 const UserStore = useUserStore();
 
@@ -45,6 +46,8 @@ const pin = async () => {
         notifVisible.value = true;
         setTimeout(() => notifVisible.value = false, 1000);
     }
+
+    router.reload();
 };
 </script>
 
