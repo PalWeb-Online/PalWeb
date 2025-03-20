@@ -15,10 +15,8 @@ use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UnitController;
-use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
-use App\Http\Controllers\UserPrivacyController;
 use App\Http\Controllers\WikiController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\RecordWizardController;
@@ -33,8 +31,9 @@ use App\Models\Dialog;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +104,23 @@ Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
     Route::get('/{page}', 'show')->name('wiki.show');
 });
 
+Route::middleware(['auth'])->prefix('/hub')->group(function () {
+    Route::prefix('/users')->group(function () {
+        Route::get('/', [CommunityController::class, 'index'])->name('users.index');
+        Route::get('/{user:username}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/{user:username}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
+    });
+
+    Route::get('/avatars/get', function () {
+        $avatars = File::files(public_path('img/avatars'));
+
+        return array_map(function ($file) {
+            return basename($file);
+        }, $avatars);
+    })->name('avatars.get');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->group(function () {
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
@@ -151,25 +167,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{page}', 'show')->name('explore.show');
         });
 
-        Route::middleware('admin')->group(function () {
-            Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
-            Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
-
-            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
-
-            Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
-            Route::delete('/missing/terms/{missingTerm}',
-                [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
-            Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
-        });
-    });
-
-    Route::prefix('/community')->group(function () {
-        Route::get('/',
-            [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
-
-        Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
-
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
@@ -189,6 +186,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', [AudioController::class, 'index'])->name('audios.index');
             Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
             Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
+        });
+
+        Route::middleware('admin')->group(function () {
+            Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
+            Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
+
+            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
+
+            Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
+            Route::delete('/missing/terms/{missingTerm}',
+                [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
+            Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
         });
     });
 
@@ -228,16 +237,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'bodyBackground' => 'hero-yellow',
         ]);
     })->name('subscription.index');
-});
-
-Route::prefix('/settings')->middleware('auth')->group(function () {
-    Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
-    Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
-    Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
-    Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
-    Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
-    Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
-    Route::patch('/privacy', [UserPrivacyController::class, 'update'])->name('users.privacy.toggle');
 });
 
 require __DIR__.'/auth.php';

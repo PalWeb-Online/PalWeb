@@ -24,10 +24,18 @@ defineOptions({
     </div>
     <div id="app-body">
         <Link :href="route('audios.index')"><- to All</Link>
-        <SpeakerContainer :model="speaker"/>
-        <div class="audios-list">
-            <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
-        </div>
-        <Paginator :links="audios.meta.links"/>
+        <SpeakerContainer :speaker="speaker"/>
+
+        <template v-if="audios.data.length > 0">
+            <div class="audios-list">
+                <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
+            </div>
+            <Paginator :links="audios.meta.links"/>
+        </template>
+        <template v-else>
+            <AppTip>
+                <p>{{ speaker.user.private ? 'This Speaker' : speaker.user.name }} has not uploaded any Audios yet.</p>
+            </AppTip>
+        </template>
     </div>
 </template>

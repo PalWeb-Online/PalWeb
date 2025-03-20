@@ -8,6 +8,7 @@
     border-radius: 1.6rem;
     border: 0.1rem solid var(--color-accent-medium);
     margin-block-start: 3.2rem;
+    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
 
     .speaker-profile-head {
         display: flex;
@@ -19,6 +20,7 @@
             border: 0.1rem solid var(--color-accent-medium);
             background: var(--color-accent-light);
             color: var(--color-dark-primary);
+            box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
         }
 
         & > *:nth-child(1) {

@@ -1,8 +1,9 @@
 <script setup>
+import PronunciationItem from "./PronunciationItem.vue";
 import {route} from 'ziggy-js';
 
 const props = defineProps({
-    model: Object,
+    speaker: Object,
 });
 </script>
 
@@ -11,45 +12,44 @@ const props = defineProps({
         <div class="speaker-profile-head">
             <div>Speaker</div>
 
-            <!--    todo: if page is not Users/Show-->
-            <div v-if="model.user.private" style="padding-inline: 1.6rem">Speaker #{{ model.id }}</div>
-            <Link v-else class="mini-user-profile" :href="route('users.show', model.user)">
-                <div>{{ model.user.name }} ({{ model.user.username }})</div>
-                <img alt="User Avatar" :src="`/img/avatars/${model.user.avatar}`"/>
-            </Link>
+            <template v-if="$page.component === 'Library/Audios/Speaker'">
+                <div v-if="speaker.user.private" style="padding-inline: 1.6rem">Speaker #{{ speaker.id }}</div>
+                <Link v-else class="mini-user-profile" :href="route('users.show', speaker.user)">
+                    <div>{{ speaker.user.name }} ({{ speaker.user.username }})</div>
+                    <img alt="User Avatar" :src="`/img/avatars/${speaker.user.avatar}`"/>
+                </Link>
+            </template>
         </div>
 
         <div class="speaker-profile-body">
             <div class="speaker-profile-row">
                 <div>Dialect</div>
-                <div>{{ model.dialect.name }}</div>
+                <div>{{ speaker.dialect.name }}</div>
             </div>
             <div class="speaker-profile-row">
                 <div>Location</div>
-                <div>{{ model.location.name_ar }} ({{ model.location.name_en }})</div>
+                <div>{{ speaker.location.name_ar }} ({{ speaker.location.name_en }})</div>
             </div>
             <div class="speaker-profile-row">
                 <div>Gender</div>
-                <div>{{ model.gender }}</div>
+                <div>{{ speaker.gender }}</div>
             </div>
             <div class="speaker-profile-row">
                 <div>Fluency</div>
-                <div>{{ model.fluency_alias }}</div>
+                <div>{{ speaker.fluency_alias }}</div>
             </div>
             <div class="speaker-profile-row">
                 <div>Audios</div>
-                <div>{{ model.audios_count }}</div>
+                <div>{{ speaker.audios_count }}</div>
             </div>
         </div>
 
-        <!--    todo: if page is Users/Show-->
-    <!--        @if(!request()->routeIs('speaker.show') && $speaker->audios->count() > 0)-->
-    <!--        <a href="{{ route('speaker.show', $speaker) }}">See All Audios by this Speaker</a>-->
-    <!--            -->
-    <!--        <div class="featured-title s">Latest</div>-->
-    <!--        @foreach($speaker->audios->sortByDesc('id')->take(5) as $audio)-->
-    <!--        <x-pronunciation-item :pronunciation="$audio->pronunciation" :audio="$audio"/>-->
-    <!--        @endforeach-->
-    <!--        @endif-->
+        <!--        todo: Speaker Audios > 0-->
+        <template v-if="$page.component === 'Community/Profile'">
+            <Link :href="route('speaker.show', speaker.id)">See All Audios by this Speaker</Link>
+
+            <div class="featured-title s">Latest</div>
+<!--            <PronunciationItem v-for="audio in speaker.audios" :model="audio.pronunciation" :audio="audio"/>-->
+        </template>
     </div>
 </template>

@@ -291,6 +291,27 @@ h3 {
     }
 }
 
+.lock {
+    //position: absolute;
+    transition: 0.05s;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.25) saturate(1);
+        opacity: 50%;
+    }
+
+    &.public {
+        filter: brightness(1.5) saturate(0);
+        opacity: 25%;
+
+        &:hover {
+            filter: brightness(1.25) saturate(1);
+            opacity: 50%;
+        }
+    }
+}
+
 .gear {
     transition: 0.1s;
 
@@ -859,7 +880,7 @@ $flashers: (
     font-size: 1.2rem;
     padding: 0.4rem 1.2rem;
     white-space: nowrap;
-    z-index: 99;
+    z-index: 9999;
 }
 
 .notification-leave-active {

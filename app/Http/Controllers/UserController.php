@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\ProfileChanged;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\SpeakerResource;
+use App\Http\Resources\UserResource;
 use App\Models\Badge;
 use App\Models\User;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -18,53 +20,51 @@ class UserController extends Controller
     {
     }
 
-    public function show(Request $request, User $user): \Illuminate\View\View|RedirectResponse
+    public function show(User $user): \Inertia\Response
     {
         $this->authorize('interact', $user);
 
-        $decks = $user->decks()->with('author')
-            ->where(fn ($query) => $query->where('decks.private', false)
-                ->orWhere('decks.user_id', $request->user()->id)
-            )
-            ->get();
+        $user->load(['badges', 'speaker', 'decks']);
 
-        View::share('pageTitle', $user->username);
+        $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
-        return view('users.show', [
-            'user' => $user,
+        return Inertia::render('Community/Users/Show', [
+            'section' => 'community',
+            'user' => new UserResource($user),
+            'decks' => DeckResource::collection($user->decks),
             'badges' => Badge::all(),
-            'decks' => $decks,
-            'bodyBackground' => 'hero-yellow',
+            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
     }
 
-    public function edit(Request $request): \Illuminate\View\View
+    public function edit(User $user): \Inertia\Response
     {
-        View::share('pageTitle', 'Settings: Change Profile');
+//        todo: very important to only allow you to edit your own user
 
-        return view('users.dashboard.change-profile', [
-            'user' => $request->user(),
+        return Inertia::render('Community/Users/Edit', [
+            'section' => 'community',
+            'user' => new UserResource($user),
         ]);
     }
 
-    public function update(UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
+    public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
     {
-        $user = $request->user();
+//        todo: does the guard go in edit or update?
 
         $user->update([
             'name' => $request->name,
-            'ar_name' => $request->ar_name,
             'username' => $request->username,
+            'ar_name' => $request->ar_name,
             'home' => $request->home,
             'bio' => $request->bio,
-            'dialect_id' => $request->dialect,
+            'avatar' => $request->avatar,
+            'private' => $request->private,
+            'dialect_id' => $request->dialect_id,
         ]);
 
         event(new ProfileChanged($user));
 
-        $this->flasher->addSuccess(__('settings.updated'));
-
-        return to_route('users.show', $request->user());
+        return to_route('users.show', $user);
     }
 
     public function getDecks($termId): JsonResponse

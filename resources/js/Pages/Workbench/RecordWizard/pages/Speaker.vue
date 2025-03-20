@@ -123,7 +123,7 @@ const fetchSpeakerOptions = async () => {
 }
 
 const saveSpeaker = async () => {
-    Inertia.post(route('speaker.store'), {
+    router.post(route('speaker.store'), {
             dialect_id: RecordWizardStore.speaker.dialect.id,
             location_id: RecordWizardStore.speaker.location.id,
             fluency: RecordWizardStore.speaker.fluency,
