@@ -1,6 +1,5 @@
 <script setup>
 import PinButton from "./PinButton.vue";
-import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";
 import {useDeck} from "../composables/Deck.js";
 
@@ -48,7 +47,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 <PinButton modelType="deck" :model="deck"/>
 
                 <div class="action-buttons">
-                    <PrivacyToggleButton modelType="deck" :model="deck"/>
+                    <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>
                 </div>
             </div>
         </div>

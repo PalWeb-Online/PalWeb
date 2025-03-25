@@ -3,7 +3,6 @@ import {useDeck} from "../composables/Deck.js";
 import {route} from "ziggy-js";
 import DeckActions from "./DeckActions.vue";
 import PinButton from "./PinButton.vue";
-import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import TermItem from "./TermItem.vue";
 import UserItem from "./UserItem.vue";
 
@@ -27,7 +26,7 @@ const {deck, isLoading} = useDeck(props);
                 <PinButton modelType="deck" :model="deck"/>
                 <DeckActions :model="deck"/>
                 <div class="action-buttons">
-                    <PrivacyToggleButton modelType="deck" :model="deck"/>
+                    <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>
                 </div>
             </div>
 
@@ -53,16 +52,9 @@ const {deck, isLoading} = useDeck(props);
                 <div class="tip">
                     <div class="material-symbols-rounded">info</div>
                     <div class="tip-content">
-                        <p>This Deck is still empty! If this Deck is yours, use the menu in the top-right corner of this
-                            page to
-                            <Link :href="route('decks.edit', deck.id)">Edit the Deck</Link>
-                            , or hover over the Context
-                            Actions
-                            menu of a term & select the "Add to Deck" option to view a list of your Decks that you can
-                            add
-                            the
-                            term
-                            to.
+                        <p>This Deck is still empty! If this Deck is yours, you can edit the Deck in the Deck Master by
+                            selecting <b>Edit Deck</b> in the Context Actions menu. You may also click the folder icon
+                            on any Term to view a list of your created Decks that you can add the Term to.
                         </p>
                     </div>
                 </div>

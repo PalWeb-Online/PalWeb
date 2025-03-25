@@ -80,7 +80,7 @@ Route::prefix('/email')->middleware('admin')->group(function () {
     });
 });
 
-Route::prefix('/dictionary')->controller(TermController::class)->group(function () {
+Route::prefix('/library')->controller(TermController::class)->group(function () {
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
@@ -90,11 +90,24 @@ Route::prefix('/dictionary')->controller(TermController::class)->group(function 
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
 
+//        todo: should these be API routes?
         Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
         Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
         Route::get('/{pronunciation}/get/audios', function (Pronunciation $pronunciation) {
             return AudioResource::collection($pronunciation->audios);
         })->name('terms.get.pronunciations.audios');
+    });
+
+    Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
+        Route::get('/', 'index')->name('sentences.index');
+        Route::get('/{sentence}', 'show')->name('sentences.show');
+        Route::post('/{sentence}/pin', 'pin')->middleware(['auth', 'verified'])->name('sentences.pin');
+
+        Route::get('/{sentence}/get', function (Sentence $sentence) {
+            return new SentenceResource(
+                Sentence::with(['dialog'])->findOrFail($sentence->id)
+            );
+        })->name('sentences.get');
     });
 
     Route::get('/roots/{root}', [RootController::class, 'show'])->name('roots.show');
@@ -127,7 +140,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('/academy')->group(function () {
+    Route::prefix('/academy')->middleware(['student'])->group(function () {
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('academy.index');
             Route::get('/{unit}', 'unit')->name('academy.unit');
@@ -147,29 +160,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('admin')->group(function () {
             Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         });
-    });
-
-    Route::prefix('/dictionary')->group(function () {
-        Route::controller(MissingTermController::class)->group(function () {
-            Route::get('/missing/terms/create', 'create')->name('missing.terms.create');
-            Route::post('/missing/terms', 'store')->name('missing.terms.store');
-        });
-
-        Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
-            Route::get('/', 'index')->name('sentences.index');
-            Route::get('/{sentence}', 'show')->name('sentences.show');
-            Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
-
-            Route::get('/{sentence}/get', function (Sentence $sentence) {
-                return new SentenceResource(
-                    Sentence::with(['dialog'])->findOrFail($sentence->id)
-                );
-            })->name('sentences.get');
-        });
 
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
             Route::get('/', 'index')->name('explore.index');
             Route::get('/{page}', 'show')->name('explore.show');
+        });
+    });
+
+    Route::prefix('/library')->group(function () {
+        Route::controller(MissingTermController::class)->group(function () {
+            Route::get('/missing/terms/create', 'create')->name('missing.terms.create');
+            Route::post('/missing/terms', 'store')->name('missing.terms.store');
         });
 
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
@@ -181,9 +182,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
 
             Route::get('/{deck}/get', function (Deck $deck) {
-                return new DeckResource(
-                    Deck::with(['author', 'terms'])->findOrFail($deck->id)
-                );
+                return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
             })->name('decks.get');
         });
 

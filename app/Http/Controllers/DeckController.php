@@ -15,7 +15,6 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
@@ -154,20 +153,6 @@ class DeckController extends Controller
         $deck->delete();
 
         return to_route('decks.index');
-    }
-
-    public function togglePrivacy(Deck $deck): JsonResponse
-    {
-        $this->authorize('modify', $deck);
-
-        $deck->private = ! $deck->private;
-        $deck->private ? $status = 'Private' : $status = 'Public';
-        $deck->save();
-
-        return response()->json([
-            'isPrivate' => $deck->private,
-            'message' => __('privacy.updated', ['status' => $status]),
-        ]);
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse

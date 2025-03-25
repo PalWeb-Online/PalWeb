@@ -193,7 +193,7 @@ function generateArabicName()  {
 
         <div class="user-container">
             <div class="action-buttons">
-                <img :class="['lock', { public: !form.private }]"
+                <img class="toggle" :class="['lock', { public: !form.private }]"
                      :src="`/img/${form.private ? 'lock.svg' : 'lock-open.svg'}`"
                      @click="form.private = !form.private"
                      alt="Privacy"/>

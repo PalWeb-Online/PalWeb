@@ -4,6 +4,9 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
@@ -30,11 +33,27 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleApi();
 
         $middleware->alias([
-            'admin' => \App\Http\Middleware\MustBeAdministrator::class,
+            'admin' => \App\Http\Middleware\MustBeAdmin::class,
+            'student' => \App\Http\Middleware\MustBeStudent::class,
             'pageDescription' => \App\Http\Middleware\PageDescription::class,
             'pageTitle' => \App\Http\Middleware\PageTitle::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
+            if (in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+                return Inertia::render('Error', [
+                    'section' => 'community',
+                    'status' => $response->getStatusCode()
+                ])
+                    ->toResponse($request)
+                    ->setStatusCode($response->getStatusCode());
+
+            } elseif ($response->getStatusCode() === 419) {
+                session()->flash('notification', ['type' => 'error', 'message' => 'The page expired, please try again.']);
+                return back();
+            }
+
+            return $response;
+        });
     })->create();

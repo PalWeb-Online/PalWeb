@@ -65,6 +65,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('admin');
     }
 
+    public function isStudent(): bool
+    {
+        return $this->hasRole('student');
+    }
+
     /**
      * Returns all roles as a CSV string
      */

@@ -47,7 +47,7 @@ class UserController extends Controller
 
     public function edit(User $user): \Inertia\Response
     {
-//        todo: very important to only allow you to edit your own user
+        $this->authorize('modify', $user);
 
         return Inertia::render('Community/Users/Edit', [
             'section' => 'community',
@@ -57,7 +57,7 @@ class UserController extends Controller
 
     public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
     {
-//        todo: does the guard go in edit or update?
+        $this->authorize('modify', $user);
 
         $user->update([
             'name' => $request->name,

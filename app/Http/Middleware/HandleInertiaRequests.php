@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user()
-                    ? new \App\Http\Resources\AuthUserResource($request->user())
+                    ? new \App\Http\Resources\AuthUserResource($request->user()->load(['decks.terms', 'roles']))
                     : null,
             ],
             'flash' => [

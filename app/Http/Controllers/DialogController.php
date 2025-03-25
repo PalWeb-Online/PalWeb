@@ -7,56 +7,27 @@ use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
-use App\Policies\TextPolicy;
-use App\Traits\RedirectsToSubscribe;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 
 class DialogController extends Controller
 {
-    use RedirectsToSubscribe;
-
-//    todo: rename TextPolicy to DialogPolicy
-    public function __construct(
-        protected TextPolicy $can,
-        protected FlasherInterface $flasher
-    ) {
+    public function index(): \Inertia\Response|RedirectResponse
+    {
+        return Inertia::render('Academy/Dialogs/Index', [
+            'section' => 'academy',
+            'dialogs' => DialogResource::collection(Dialog::paginate(25)->onEachSide(1)),
+        ]);
     }
 
-    public function index(Request $request): \Inertia\Response|RedirectResponse
+    public function show(Dialog $dialog): \Inertia\Response|RedirectResponse
     {
-        $auth = $request->user();
+        return Inertia::render('Academy/Dialogs/Show', [
+            'section' => 'academy',
+            'dialog' => new DialogResource($dialog->load('sentences')),
+        ]);
 
-        View::share('pageTitle', 'Dialog Library');
-
-        return $this->redirectToSubscribeOnFail(function () use ($auth) {
-            $this->failIfFalse($this->can->viewIndex($auth));
-
-            return Inertia::render('Academy/Dialogs/Index', [
-                'section' => 'academy',
-                'dialogs' => DialogResource::collection(Dialog::paginate(25)->onEachSide(1)),
-            ]);
-        });
-    }
-
-    public function show(Request $request, Dialog $dialog): \Inertia\Response|RedirectResponse
-    {
-        $auth = $request->user();
-
-        View::share('pageTitle', 'Dialog: '.$dialog->title);
-
-        return $this->redirectToSubscribeOnFail(function () use ($auth, $dialog) {
-            $this->failIfFalse($this->can->viewText($auth));
-
-            return Inertia::render('Academy/Dialogs/Show', [
-                'section' => 'academy',
-                'dialog' => new DialogResource($dialog->load('sentences')),
-            ]);
-        });
 //        View::share('pageDescription',
 //            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
     }

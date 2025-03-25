@@ -3,7 +3,6 @@ import {onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 import {useDeck} from "../composables/Deck.js";
 import PinButton from "./PinButton.vue";
-import PrivacyToggleButton from "./PrivacyToggleButton.vue";
 import DeckActions from "./DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
 
@@ -78,7 +77,7 @@ const {deck, blurb, isLoading} = useDeck(props);
             <DeckActions :model="deck"/>
 
             <div class="action-buttons">
-                <PrivacyToggleButton modelType="deck" :model="deck"/>
+                <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>
             </div>
         </div>
 
