@@ -37,6 +37,7 @@ class SpeakerResource extends JsonResource
             'fluency' => $this->fluency,
             'fluency_alias' => $this->fluency_alias,
             'gender' => $this->gender,
+            'audios' => AudioResource::collection($this->whenLoaded('audios')),
             'audios_count' => $this->whenCounted('audios'),
         ];
     }

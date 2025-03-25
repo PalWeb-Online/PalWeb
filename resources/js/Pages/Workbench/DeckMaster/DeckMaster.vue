@@ -7,6 +7,7 @@ import AppButton from "../../../components/AppButton.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
 import {router} from "@inertiajs/vue3";
+import AppTip from "../../../components/AppTip.vue";
 
 const props = defineProps({
     mode: {type: String, default: 'build'},
@@ -103,6 +104,12 @@ defineOptions({
                                :active="selectedDeck?.id === deck.id"
                                @flip="toggleSelectDeck(index)"
                 />
+            </div>
+            <div v-else-if="!isLoading && decks.length === 0" class="deck-item-grid">
+                <AppTip>
+                    <p v-if="mode === 'build'">It looks like you haven't created any Decks yet. Click <b>New</b> to get started!</p>
+                    <p v-if="mode === 'study'">It looks like you haven't pinned any Decks yet. Watch this space.</p>
+                </AppTip>
             </div>
             <div v-show="isLoading" class="app-loading">
                 <img src="/img/wait.svg" alt="Loading"/>

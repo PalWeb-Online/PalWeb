@@ -27,6 +27,7 @@ class DeckResource extends JsonResource
                 'name' => $this->author->name,
                 'username' => $this->author->username,
                 'avatar' => $this->author->avatar,
+                'private' => $this->author->private,
             ]),
             'terms' => $this->whenLoaded('terms', function () {
                 return TermResource::collection($this->terms->sortBy('position')->values());

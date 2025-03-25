@@ -44,12 +44,11 @@ const props = defineProps({
             </div>
         </div>
 
-        <!--        todo: Speaker Audios > 0-->
-        <template v-if="$page.component === 'Community/Profile'">
+        <template v-if="$page.component === 'Community/Users/Show' && speaker.audios_count > 0">
             <Link :href="route('speaker.show', speaker.id)">See All Audios by this Speaker</Link>
 
             <div class="featured-title s">Latest</div>
-<!--            <PronunciationItem v-for="audio in speaker.audios" :model="audio.pronunciation" :audio="audio"/>-->
+            <PronunciationItem v-for="audio in speaker.audios" :model="audio.pronunciation" :audio="audio"/>
         </template>
     </div>
 </template>

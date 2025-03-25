@@ -26,7 +26,15 @@ class UserController extends Controller
 
         $user->load(['badges', 'speaker', 'decks']);
 
-        $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
+        $speaker = $user->speaker?->load([
+            'dialect',
+            'audios' => function ($query) {
+                $query->with([
+                    'speaker',
+                    'pronunciation.term',
+                ])->orderByDesc('id')->limit(10);
+            },
+        ])->loadCount(['audios']);
 
         return Inertia::render('Community/Users/Show', [
             'section' => 'community',

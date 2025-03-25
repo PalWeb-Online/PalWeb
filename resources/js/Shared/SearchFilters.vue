@@ -10,6 +10,16 @@ const props = defineProps({
     filters: Object,
 });
 
+const searchInput = ref(null);
+
+const focusInput = () => {
+    searchInput.value?.focus();
+};
+
+defineExpose({
+    focusInput,
+});
+
 const filters = ref({
     search: props.filters.search || '',
     match: props.filters.match || 'term',

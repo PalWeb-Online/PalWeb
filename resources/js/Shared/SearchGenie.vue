@@ -32,12 +32,6 @@ function handleMouseLeave() {
     tooltip.value.hideTooltip();
 }
 
-const exit = (event) => {
-    if (event.target.classList.contains('app-dialog-overlay')) {
-        SearchStore.closeSearchGenie();
-    }
-};
-
 const scrollToActiveItem = () => {
     const container = document.querySelector('.sg-results');
     const activeItem = container?.querySelector('.sg-result-item.active');
@@ -57,22 +51,26 @@ const setActiveModel = (model) => {
 
 const selectModel = (model) => {
     const routes = {
-        terms: { route: 'terms.show', idField: 'slug' },
-        sentences: { route: 'sentences.show', idField: 'id' },
-        decks: { route: 'decks.show', idField: 'id' },
+        terms: {route: 'terms.show', idField: 'slug'},
+        sentences: {route: 'sentences.show', idField: 'id'},
+        decks: {route: 'decks.show', idField: 'id'},
     };
 
     if (SearchStore.data.action === 'insert') {
         SearchStore.selectModel(model);
 
     } else if (routes[SearchStore.data.activeModel]) {
-        const { route: targetRoute, idField } = routes[SearchStore.data.activeModel];
+        const {route: targetRoute, idField} = routes[SearchStore.data.activeModel];
         const param = model[idField];
         router.get(route(targetRoute, param));
     }
 };
 
+const filtersRef = ref(null);
+
 onMounted(() => {
+    filtersRef.value?.focusInput();
+
     const navigationListener = (event) => {
         if (!SearchStore.data.isOpen) return;
 
@@ -99,6 +97,7 @@ onMounted(() => {
     document.addEventListener('keydown', navigationListener);
 
     onBeforeUnmount(() => {
+        SearchStore.resetSearchGenie();
         document.removeEventListener('keydown', navigationListener);
     });
 });
@@ -109,58 +108,59 @@ watch(() => SearchStore.data.results, () => {
 </script>
 
 <template>
-    <div v-if="SearchStore.data.isOpen" class="app-dialog-overlay" @click="exit">
-        <div class="sg-container">
-            <div class="sg-tabs">
-                <button
-                    v-for="[model, tab] in Object.entries(SearchStore.tabs)"
-                    :class="{
+    <div class="sg-container">
+        <div class="sg-tabs">
+            <button
+                v-for="[model, tab] in Object.entries(SearchStore.tabs)"
+                :class="{
                         active: SearchStore.data.activeModel === model,
                         disabled: tab.disabled
                     }"
-                    @click="!tab.disabled && setActiveModel(model)"
+                @click="!tab.disabled && setActiveModel(model)"
+            >
+                {{ tab.label }}
+            </button>
+        </div>
+
+        <SearchFilters
+            ref="filtersRef"
+            :activeModel="SearchStore.data.activeModel"
+            :filters="SearchStore.data.filters"
+            @updateFilter="({ filter, value }) => SearchStore.updateFilter(filter, value)"
+        />
+
+        <div class="sg-results">
+            <template v-if="SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
+                <div
+                    v-for="(model, index) in SearchStore.data.results[SearchStore.data.activeModel]"
+                    :key="model.id"
+                    :class="['sg-result-item', SearchStore.data.activeModel, { active: activeIndex === index }]"
+                    @mousemove="handleMouseMove($event)"
+                    @mouseleave="handleMouseLeave"
+                    @mouseover="activeIndex = index"
+                    @click="selectModel(model)"
                 >
-                    {{ tab.label }}
-                </button>
-            </div>
-
-            <SearchFilters
-                :activeModel="SearchStore.data.activeModel"
-                :filters="SearchStore.data.filters"
-                @updateFilter="({ filter, value }) => SearchStore.updateFilter(filter, value)"
-            />
-
-            <div class="sg-results">
-                <template v-if="SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
-                    <div
-                        v-for="(model, index) in SearchStore.data.results[SearchStore.data.activeModel]"
-                        :key="model.id"
-                        :class="['sg-result-item', SearchStore.data.activeModel, { active: activeIndex === index }]"
-                        @mousemove="handleMouseMove($event)"
-                        @mouseleave="handleMouseLeave"
-                        @mouseover="activeIndex = index"
-                        @click="selectModel(model)"
-                    >
-                        <template v-if="SearchStore.data.activeModel === 'terms'">
-                            <div>{{ model.term }}</div>
-                            <div>({{ model.translit }}) {{ model.category }}.</div>
-                        </template>
-                        <template v-else-if="SearchStore.data.activeModel === 'sentences'">
-                            <div>{{ model.sentence }}</div>
-                        </template>
-                        <template v-else-if="SearchStore.data.activeModel === 'decks'">
-                            <div>{{ model.name }}</div>
-                        </template>
-                    </div>
-                </template>
-
-                <div v-else class="sg-empty">
-                    Nothing yet.
+                    <template v-if="SearchStore.data.activeModel === 'terms'">
+                        <div>{{ model.term }}</div>
+                        <div>({{ model.translit }}) {{ model.category }}.</div>
+                    </template>
+                    <template v-else-if="SearchStore.data.activeModel === 'sentences'">
+                        <div>{{ model.sentence }}</div>
+                    </template>
+                    <template v-else-if="SearchStore.data.activeModel === 'decks'">
+                        <div>{{ model.name }}</div>
+                    </template>
                 </div>
-            </div>
+            </template>
 
-            <div class="sg-all-results" v-if="SearchStore.data.activeModel === 'terms' && SearchStore.data.results.terms?.length > 0">
-                <Link class="sg-all-results" :href="route('terms.index', {
+            <div v-else class="sg-empty">
+                Nothing yet.
+            </div>
+        </div>
+
+        <div class="sg-all-results"
+             v-if="SearchStore.data.activeModel === 'terms' && SearchStore.data.results.terms?.length > 0">
+            <Link class="sg-all-results" :href="route('terms.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned,
@@ -170,33 +170,35 @@ watch(() => SearchStore.data.results, () => {
                     singular: SearchStore.data.filters.singular,
                     plural: SearchStore.data.filters.plural
                 })">
-                    See All Results
-                </Link>
-            </div>
-            <div class="sg-all-results" v-if="SearchStore.data.activeModel === 'sentences' && SearchStore.data.results.sentences?.length > 0">
-                <Link class="sg-all-results" :href="route('sentences.index', {
+                See All Results
+            </Link>
+        </div>
+        <div class="sg-all-results"
+             v-if="SearchStore.data.activeModel === 'sentences' && SearchStore.data.results.sentences?.length > 0">
+            <Link class="sg-all-results" :href="route('sentences.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
                 })">
-                    See All Results
-                </Link>
-            </div>
-            <div class="sg-all-results" v-if="SearchStore.data.activeModel === 'decks' && SearchStore.data.results.decks?.length > 0">
-                <Link class="sg-all-results" :href="route('decks.index', {
+                See All Results
+            </Link>
+        </div>
+        <div class="sg-all-results"
+             v-if="SearchStore.data.activeModel === 'decks' && SearchStore.data.results.decks?.length > 0">
+            <Link class="sg-all-results" :href="route('decks.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
                 })">
-                    See All Results
-                </Link>
-            </div>
+                See All Results
+            </Link>
+        </div>
 
-            <div class="sg-footer">
-                <div><b>Enter</b> selects</div>
-                <div><b>Up/Dwn</b> navigates</div>
-                <div><b>Ctrl+K</b> toggles Search Genie</div>
-            </div>
+        <div class="sg-footer">
+            <div><b>Enter</b> selects</div>
+            <div><b>Up/Dwn</b> navigates</div>
+            <div><b>Ctrl+K</b> toggles Search Genie</div>
+        </div>
 
             <AppDialog title="Search Genie" size="large">
                 <template #trigger>

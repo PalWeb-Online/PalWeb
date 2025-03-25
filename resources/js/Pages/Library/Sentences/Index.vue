@@ -5,6 +5,11 @@ import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+import AppButton from "../../../components/AppButton.vue";
+import {useUserStore} from "../../../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 defineOptions({
     layout: Layout
@@ -31,6 +36,7 @@ function updateFilter({filter, value}) {
     <Head title="Library: Sentences"/>
     <div id="app-head">
         <h1>Sentences</h1>
+        <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.sentence'))"/>
     </div>
     <div id="app-body">
         <SearchFilters
@@ -41,8 +47,7 @@ function updateFilter({filter, value}) {
 
         <AppTip>
             <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
-                Sentences
-                matching this query.</p>
+                Sentences matching this query.</p>
             <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Sentences in the Library.</p>
             <p v-else>No Sentences matching this query.</p>
         </AppTip>

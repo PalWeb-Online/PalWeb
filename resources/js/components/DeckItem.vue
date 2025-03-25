@@ -36,13 +36,20 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
 
                 <div class="deck-author">
-                    <div class="deck-author-name">by {{ deck.author.name }}</div>
-                    <div class="deck-author-avatar">
-                        <img alt="Profile Picture" :src="`/img/avatars/${deck.author.avatar}`"/>
-                    </div>
+                    <template v-if="!deck.author.private">
+                        <div class="deck-author-name">by {{ deck.author.name }}</div>
+                        <img class="deck-author-avatar" alt="Profile Picture"
+                             :src="`/img/avatars/${deck.author.avatar}`"/>
+                    </template>
+                    <template v-else>
+                        <div class="deck-author-name" style="padding-inline-end: 0.8rem">by Anonymous</div>
+                    </template>
                 </div>
                 <PinButton modelType="deck" :model="deck"/>
-                <PrivacyToggleButton modelType="deck" :model="deck"/>
+
+                <div class="action-buttons">
+                    <PrivacyToggleButton modelType="deck" :model="deck"/>
+                </div>
             </div>
         </div>
     </template>

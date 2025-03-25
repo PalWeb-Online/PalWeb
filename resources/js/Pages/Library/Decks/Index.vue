@@ -5,6 +5,11 @@ import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+import AppButton from "../../../components/AppButton.vue";
+import {useUserStore} from "../../../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 defineOptions({
     layout: Layout
@@ -30,6 +35,7 @@ function updateFilter({filter, value}) {
     <Head title="Library: Decks"/>
     <div id="app-head">
         <h1>Decks</h1>
+        <button v-if="UserStore.isUser" class="feature-callout" @click="router.get(route('deck-master.build'))">Build Your Own!</button>
     </div>
     <div id="app-body">
         <SearchFilters

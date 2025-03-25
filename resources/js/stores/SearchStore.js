@@ -33,11 +33,6 @@ export const useSearchStore = defineStore('SearchStore', () => {
     });
 
     const openSearchGenie = (action = 'search', enabledModel = null) => {
-        const triggerButtons = document.querySelectorAll('.sg-trigger');
-        triggerButtons.forEach((button) => {
-            button.classList.add('active');
-        });
-
         data.action = action;
         data.activeModel = enabledModel || 'terms';
 
@@ -46,17 +41,9 @@ export const useSearchStore = defineStore('SearchStore', () => {
         });
 
         data.isOpen = true;
-        document.body.style.overflow = 'hidden';
-
-        // todo: focus on search bar on opening search genie; the search bar is in _SearchFilters
-        // nextTick(() => {
-        //     searchInput.value?.focus();
-        // });
     };
 
-
-    const closeSearchGenie = () => {
-        data.isOpen = false;
+    const resetSearchGenie = () => {
         data.activeModel = 'terms';
         data.filters = {
             search: '',
@@ -73,14 +60,7 @@ export const useSearchStore = defineStore('SearchStore', () => {
             sentences: [],
             decks: []
         };
-
-        document.body.style.overflow = '';
-
-        const triggerButtons = document.querySelectorAll('.sg-trigger');
-        triggerButtons.forEach((button) => {
-            button.classList.remove('active');
-        });
-    };
+    }
 
     const updateFilter = (key, value) => {
         data.filters[key] = value;
@@ -134,7 +114,7 @@ export const useSearchStore = defineStore('SearchStore', () => {
         data,
         tabs,
         openSearchGenie,
-        closeSearchGenie,
+        resetSearchGenie,
         updateFilter,
         search,
         setAction,

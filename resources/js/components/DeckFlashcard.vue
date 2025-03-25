@@ -52,10 +52,14 @@ const {deck, blurb, isLoading} = useDeck(props);
                     <div class="deck-flashcard-front-head">
                         <div class="item-title">{{ deck.name }}</div>
                         <div class="deck-author" style="align-self: flex-end">
-                            <div class="deck-author-name">by {{ deck.author.name }}</div>
-                            <img class="deck-author-avatar" alt="Profile Picture"
-                                 :src="`/img/avatars/${deck.author.avatar}`"/>
-                            <!--                        <div class="deck-author-name">by Deleted User</div>-->
+                            <template v-if="!deck.author.private">
+                                <div class="deck-author-name">by {{ deck.author.name }}</div>
+                                <img class="deck-author-avatar" alt="Profile Picture"
+                                     :src="`/img/avatars/${deck.author.avatar}`"/>
+                            </template>
+                            <template v-else>
+                                <div class="deck-author-name">by Anonymous</div>
+                            </template>
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body">
@@ -71,8 +75,11 @@ const {deck, blurb, isLoading} = useDeck(props);
             </div>
 
             <PinButton modelType="deck" :model="deck"/>
-            <PrivacyToggleButton modelType="deck" :model="deck"/>
             <DeckActions :model="deck"/>
+
+            <div class="action-buttons">
+                <PrivacyToggleButton modelType="deck" :model="deck"/>
+            </div>
         </div>
 
         <AppTooltip ref="tooltip"/>
