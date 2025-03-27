@@ -16,13 +16,15 @@ use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
+    public function __construct(protected FlasherInterface $flasher)
+    {
+    }
 
     public function redirect(Request $request): RedirectResponse
     {
         if ($request->user() && $request->user()->discord_id) {
-            $this->flasher->addWarning('Your Discord account is already connected.');
-            return to_route('homepage');
+            $this->flasher->addInfo('Your Discord account is already connected.');
+            return back();
 
         } else {
             return Socialite::driver('discord')->scopes(['identify', 'email', 'guilds'])->redirect();
@@ -69,7 +71,7 @@ class OAuthController extends Controller
                         $this->checkMembership($request->user(), $discordUser->token);
 
                     } else {
-                        $this->flasher->addWarning('We couldn\'t sign you in, because there is no PalWeb account that is connected to or has the same email as the provided Discord account. Please sign in normally first & connect your Discord account through the Dashboard before trying to log in this way.');
+                        $this->flasher->addWarning('We couldn\'t sign you in, because there is no PalWeb account that is connected to or has the same email as the provided Discord account. Please sign in normally first & connect your Discord account before trying to log in this way.');
                     }
                 }
             }
@@ -115,39 +117,48 @@ class OAuthController extends Controller
     public function revoke(Request $request): RedirectResponse
     {
         if (! $request->user()->password) {
-            $this->flasher->addWarning('You have not set a password for this account. You cannot disconnect from Discord until you have set a password on PalWeb. Please set a password first, then try again.');
-
-            return to_route('homepage');
+            session()->flash('notification', ['type' => 'warning', 'message' => 'You have not set a password yet. You cannot disconnect from Discord until you have set a password on PalWeb. Set a password first, then try again.']);
+            return back();
         }
 
-        $token = $request->input('token');
+        $token = $request->user()->discord_token;
 
-        $client = new Client;
-        $response = $client->post('https://discord.com/api/oauth2/token/revoke', [
-            'form_params' => [
-                'token' => $token,
-                'client_id' => config('settings.discord_client_id'),
-                'client_secret' => config('settings.discord_client_secret'),
-            ],
-            'headers' => [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-        ]);
+        if (! $token) {
+            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. No Discord token was found.']);
+            return back();
+        }
 
-        if ($response->getStatusCode() == 200) {
-            $request->user()->update([
-                'discord_id' => null,
-                'discord_token' => null,
-                'discord_refresh_token' => null,
+        try {
+            $client = new Client;
+            $response = $client->post('https://discord.com/api/oauth2/token/revoke', [
+                'form_params' => [
+                    'token' => $token,
+                    'client_id' => config('settings.discord_client_id'),
+                    'client_secret' => config('settings.discord_client_secret'),
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
             ]);
 
-            $this->flasher->addSuccess('Disconnected your Discord account.');
+            if ($response->getStatusCode() == 200) {
+                $request->user()->update([
+                    'discord_id' => null,
+                    'discord_token' => null,
+                    'discord_refresh_token' => null,
+                ]);
 
-        } else {
-            $this->flasher->addError('Failed to disconnect Discord account.');
+                session()->flash('notification', ['type' => 'success', 'message' => 'Disconnected your Discord account.']);
+
+            } else {
+                session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. Unable to contact Discord.']);
+            }
+
+        } catch (\Exception $e) {
+            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. ' . $e->getMessage()]);
         }
 
-        return to_route('homepage');
+        return back();
     }
 
     protected function createUser($discordUser)
