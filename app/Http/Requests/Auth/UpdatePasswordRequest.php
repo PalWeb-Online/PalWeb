@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class StoreNewPasswordRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,12 +13,7 @@ class StoreNewPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => ['required'],
-            'email' => [
-                'required',
-                'email',
-            ],
-            'password_new' => [
+            'password' => [
                 'required',
                 'confirmed',
                 Password::defaults(),

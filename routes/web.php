@@ -16,7 +16,6 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\WikiController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\RecordWizardController;
@@ -26,11 +25,14 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
 use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
+use App\Http\Resources\UserResource;
+use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -83,11 +85,18 @@ Route::prefix('/search')->controller(SearchGenieController::class)->group(functi
 
 Route::prefix('/email')->middleware('auth')->group(function () {
     Route::controller(EmailVerificationController::class)->group(function () {
-        Route::get('/verification', 'prompt')->name('verification.notice');
-        Route::get('/verification/{id}/{hash}', 'verify')->middleware([
-            'signed', 'throttle:6,1',
-        ])->name('verification.verify');
-        Route::post('/verification/link', 'link')->middleware('throttle:6,1')->name('verification.send');
+        Route::get('/verification', function () {
+            return to_route('users.show', auth()->user())->with('notification', [
+                'type' => 'warning',
+                'message' => 'You must verify your email to access this feature.'
+            ]);
+        })->name('verification.notice');
+        Route::post('/verification/link', 'link')
+            ->middleware('throttle:6,1')
+            ->name('verification.send');
+        Route::get('/verification/{id}/{hash}', 'verify')
+            ->middleware(['signed', 'throttle:6,1',])
+            ->name('verification.verify');
     });
 });
 

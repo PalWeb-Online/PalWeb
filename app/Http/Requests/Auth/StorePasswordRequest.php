@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class UpdateUserPasswordRequest extends FormRequest
+class StorePasswordRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,7 +13,12 @@ class UpdateUserPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password_new' => [
+            'token' => ['required'],
+            'email' => [
+                'required',
+                'email',
+            ],
+            'password' => [
                 'required',
                 'confirmed',
                 Password::defaults(),

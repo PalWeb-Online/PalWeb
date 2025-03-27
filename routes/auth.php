@@ -15,28 +15,28 @@ Route::prefix('/auth/discord')->controller(OAuthController::class)->group(functi
 });
 
 Route::middleware('guest')->group(function () {
+    Route::post('signup', [RegisteredUserController::class, 'store'])->name('signup');
+    Route::post('signin', [AuthenticatedSessionController::class, 'store'])->name('signin');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+});
 
-    Route::get('signup', [RegisteredUserController::class, 'create'])
-        ->name('signup');
-    Route::post('signup', [RegisteredUserController::class, 'store']);
+Route::controller(NewPasswordController::class)->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/reset-password/{token}', 'show')
+            ->name('password.create');
+        Route::post('/reset-password', 'store')
+            ->name('password.store');
+    });
 
-    Route::get('signin', [AuthenticatedSessionController::class, 'create'])
-        ->name('signin');
-    Route::post('signin', [AuthenticatedSessionController::class, 'store']);
-
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
+    Route::middleware('auth')->group(function () {
+        Route::get('/change-password', 'show')
+            ->name('password.edit');
+        Route::patch('/change-password', 'update')
+            ->name('password.update');
+    });
 });
 
 Route::middleware('auth')->group(function () {
-
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');
 
