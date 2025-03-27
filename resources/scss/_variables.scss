@@ -47,7 +47,7 @@
     color: var(--color-dark-primary);
 
     &:hover {
-        text-decoration: underline;
+        text-decoration: 0.2rem solid underline;
     }
 }
 
@@ -103,16 +103,12 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-pastel-medium: hsl(255, 80%, 92%);
     --color-pastel-light: hsl(260, 90%, 97%);
     --color-transparent: hsla(255, 80%, 92%, 0.75);
-    --color-accent-dark: hsl(45, 95%, 55%);
-    --color-accent-medium: hsl(45, 95%, 55%);
-    --color-accent-light: hsl(45, 95%, 90%);
+    --color-accent-dark: hsl(28, 85%, 48%);
+    --color-accent-medium: hsl(42, 95%, 58%);
+    --color-accent-light: hsl(42, 95%, 90%);
 }
 
-.theme-palweb {
-    button.palweb {
-        box-shadow: -0.2rem 0.3rem 0 var(--color-medium-primary);
-    }
-}
+
 
 .theme-watermelon {
     --color-polar-dark: hsl(0, 0%, 0%);
@@ -128,10 +124,6 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-dark: #cc2944;
     --color-accent-medium: hsl(0, 95%, 80%);
     --color-accent-light: hsl(0, 93%, 97%);
-
-    button.watermelon {
-        box-shadow: -0.2rem 0.3rem 0 var(--color-medium-primary);
-    }
 }
 
 .theme-jerusalem {
@@ -142,16 +134,12 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-medium-secondary: hsl(215, 90%, 45%);
     --color-medium-primary: hsl(170, 95%, 38%);
     --color-pastel-dark: hsl(200, 75%, 80%);
-    --color-pastel-medium: hsl(38, 90%, 88%);
-    --color-pastel-light: hsl(38, 90%, 94%);
+    --color-pastel-medium: hsl(200, 90%, 92%);
+    --color-pastel-light: hsl(170, 50%, 94%);
     --color-transparent: hsla(38, 90%, 88%, 0.75);
-    --color-accent-dark: #d9a50b;
-    --color-accent-medium: hsl(48, 95%, 55%);
-    --color-accent-light: hsl(48, 95%, 90%);
-
-    button.jerusalem {
-        box-shadow: -0.2rem 0.3rem 0 var(--color-medium-primary);
-    }
+    --color-accent-dark: hsl(30, 60%, 40%);
+    --color-accent-medium: hsl(38, 65%, 65%);
+    --color-accent-light: hsl(38, 90%, 94%);
 }
 
 .theme-zaatar {
@@ -168,10 +156,6 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-dark: hsl(42, 70%, 35%);
     --color-accent-medium: hsl(48, 90%, 55%);
     --color-accent-light: hsl(45, 90%, 92%);
-
-    button.zaatar {
-        box-shadow: -0.2rem 0.3rem 0 var(--color-medium-primary);
-    }
 }
 
 .theme-jericho {
@@ -188,51 +172,48 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-dark: hsl(190, 50%, 35%);
     --color-accent-medium: hsl(190, 50%, 70%);
     --color-accent-light: hsl(190, 50%, 95%);
-
-    button.jericho {
-        box-shadow: -0.2rem 0.3rem 0 var(--color-medium-primary);
-    }
 }
 
-.theme-picker {
+.theme-picker-wrapper {
     display: grid;
-    gap: 1.6rem;
+    width: 80%;
+    max-width: 64rem;
     justify-items: center;
-    border-radius: 1.6rem;
-    padding: 1.6rem;
-    background: var(--color-accent-light);
+    gap: 1.6rem;
 }
 
-.theme-picker-theme {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+.theme-picker-option {
+    display: flex;
+    width: 100%;
     align-items: center;
+    justify-content: space-between;
     gap: 1.6rem;
+    background: white;
+    padding: 1.2rem;
+    border-radius: 3.2rem;
+    user-select: none;
 
-    .theme-picker-theme-name {
+    .theme-name {
         font-family: $headFont;
         font-weight: 700;
-        text-transform: capitalize;
+        font-size: 2.0rem;
         color: var(--color-dark-primary);
+        padding-inline-start: 1.2rem;
+        padding-block-start: 0.2rem;
     }
 
-    button {
+    .theme-preview {
         display: flex;
         gap: 0.4rem;
-        border-radius: 3.2rem;
-        background: white;
-        border: 0.4rem solid white;
-        transform: translate(0.2rem, -0.3rem);
-        box-shadow: -0.2rem 0.3rem 0 rgba(black, 0.125);
     }
 
-    button > * {
+    .theme-preview > * {
         width: 3.6rem;
         height: 3.6rem;
         border-radius: 50%;
     }
 
-    button.palweb {
+    .theme-preview.palweb {
         div:nth-child(1) {
             background: hsl(265, 95%, 35%);
         }
@@ -242,11 +223,11 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         }
 
         div:nth-child(3) {
-            background: hsl(45, 95%, 55%);
+            background: hsl(42, 95%, 58%);
         }
     }
 
-    button.watermelon {
+    .theme-preview.watermelon {
         div:nth-child(1) {
             background: hsl(170, 90%, 15%);
         }
@@ -260,7 +241,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         }
     }
 
-    button.jerusalem {
+    .theme-preview.jerusalem {
         div:nth-child(1) {
             background: hsl(250, 90%, 35%);
         }
@@ -270,11 +251,11 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         }
 
         div:nth-child(3) {
-            background: hsl(48, 95%, 55%);
+            background: hsl(38, 65%, 65%);
         }
     }
 
-    button.zaatar {
+    .theme-preview.zaatar {
         div:nth-child(1) {
             background: hsl(100, 80%, 16%);
         }
@@ -288,7 +269,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         }
     }
 
-    button.jericho {
+    .theme-preview.jericho {
         div:nth-child(1) {
             background: hsl(20, 50%, 22%);
         }
@@ -300,6 +281,14 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         div:nth-child(3) {
             background: hsl(180, 45%, 70%);
         }
+    }
+
+    &:hover {
+        box-shadow: 0 0 0 0.3rem var(--color-accent-medium);
+    }
+
+    &.active {
+        box-shadow: 0 0 0 0.3rem var(--color-medium-primary);
     }
 }
 

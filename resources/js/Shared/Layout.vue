@@ -1,12 +1,14 @@
 <script setup>
-import Nav from "./Nav.vue";
-import NotificationContainer from "../components/NotificationContainer.vue";
+import NavSticky from "./NavSticky.vue";
+import NavSidebar from "./NavSidebar.vue";
 import SearchGenie from "./SearchGenie.vue";
 import Footer from "./Footer.vue";
 import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useSearchStore} from "../stores/SearchStore.js";
 import {usePage} from "@inertiajs/vue3";
 import {watch} from "vue";
+import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 
 defineProps({
     section: {
@@ -14,6 +16,8 @@ defineProps({
         default: 'library',
     }
 });
+
+const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const page = usePage();
@@ -26,20 +30,22 @@ watch(() => page.props.flash.notification, (notification) => {
 </script>
 
 <template>
-    <div id="app-container" :class="section">
-        <Nav/>
+    <NavSticky/>
+    <NavSidebar/>
 
+    <div id="app-container" :class="section">
         <slot/>
 
-        <SearchGenieTrigger/>
         <Footer v-if="![
             'Workbench/RecordWizard/RecordWizard',
             'Workbench/DeckMaster/DeckMaster',
             'Workbench/SpeechMaker/SpeechMaker',
             ].includes($page.component)"/>
     </div>
+
+    <ModalWrapper v-model="SearchStore.data.isOpen">
         <SearchGenie/>
-        <NotificationContainer/>
+    </ModalWrapper>
 
     <div class="notification-container" :class="{'visible': NotificationStore.notifications.length > 0}">
         <AppNotification

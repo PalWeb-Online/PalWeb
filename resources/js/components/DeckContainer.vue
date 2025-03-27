@@ -1,6 +1,5 @@
 <script setup>
 import {useDeck} from "../composables/Deck.js";
-import {route} from "ziggy-js";
 import DeckActions from "./DeckActions.vue";
 import PinButton from "./PinButton.vue";
 import TermItem from "./TermItem.vue";

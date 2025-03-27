@@ -3,9 +3,9 @@ import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useSearchStore} from '../stores/SearchStore.js';
 import {router} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
-import AppDialog from "../components/AppDialog.vue";
 import AppTooltip from "../components/AppTooltip.vue";
 import SearchFilters from "./SearchFilters.vue";
+import PopupWindow from "../components/Modals/PopupWindow.vue";
 
 const SearchStore = useSearchStore();
 
@@ -109,6 +109,40 @@ watch(() => SearchStore.data.results, () => {
 
 <template>
     <div class="sg-container">
+        <div class="window-head">
+            <div>Search Genie</div>
+            <PopupWindow title="Search Genie">
+                <template #trigger>
+                    <div class="material-symbols-rounded">help</div>
+                </template>
+                <template #content>
+                    <p>Welcome to the <b>Search Genie</b>!</p>
+                    <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
+                        so by matching your search with a variety of attributes on the items you are searching for.</p>
+                    <div>Terms are found if ...</div>
+                    <ul>
+                        <li>
+                            (typing in Arabic script) the search string matches the Arabic term or any of its
+                            alternative spellings, or the default spelling of any of its listed inflections;
+                        </li>
+                        <li>(typing in Latin script) the search string matches the transliteration of any of its
+                            pronunciations, or the default transliteration of any of its listed inflections — or any
+                            word in any of its definitions.
+                        </li>
+                    </ul>
+                    <div>Sentences are found if ...</div>
+                    <ul>
+                        <li>the Sentence contains a Term matching the search, based on the above criteria.</li>
+                    </ul>
+                    <div>Decks are found if ...</div>
+                    <ul>
+                        <li>the search string matches the Deck's title, or</li>
+                        <li>the Deck contains a Term matching the search, based on the above criteria.</li>
+                    </ul>
+                </template>
+            </PopupWindow>
+        </div>
+
         <div class="sg-tabs">
             <button
                 v-for="[model, tab] in Object.entries(SearchStore.tabs)"
@@ -198,38 +232,6 @@ watch(() => SearchStore.data.results, () => {
             <div><b>Enter</b> selects</div>
             <div><b>Up/Dwn</b> navigates</div>
             <div><b>Ctrl+K</b> toggles Search Genie</div>
-        </div>
-
-            <AppDialog title="Search Genie" size="large">
-                <template #trigger>
-                    <img alt="Info" src="/img/idea.svg"/>
-                </template>
-                <template #content>
-                    <p>Welcome to the <b>Search Genie</b>!</p>
-                    <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
-                        so by matching your search with a variety of attributes on the items you are searching for.</p>
-                    <div>Terms are found if ...</div>
-                    <ul>
-                        <li>
-                            (typing in Arabic script) the search string matches the Arabic term or any of its
-                            alternative spellings, or the default spelling of any of its listed inflections;
-                        </li>
-                        <li>(typing in Latin script) the search string matches the transliteration of any of its
-                            pronunciations, or the default transliteration of any of its listed inflections — or any
-                            word in any of its definitions.
-                        </li>
-                    </ul>
-                    <div>Sentences are found if ...</div>
-                    <ul>
-                        <li>the Sentence contains a Term matching the search, based on the above criteria.</li>
-                    </ul>
-                    <div>Decks are found if ...</div>
-                    <ul>
-                        <li>the search string matches the Deck's title, or</li>
-                        <li>the Deck contains a Term matching the search, based on the above criteria.</li>
-                    </ul>
-                </template>
-            </AppDialog>
         </div>
     </div>
 

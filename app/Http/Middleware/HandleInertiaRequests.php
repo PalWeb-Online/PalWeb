@@ -41,9 +41,12 @@ class HandleInertiaRequests extends Middleware
                     ? new \App\Http\Resources\AuthUserResource($request->user()->load(['decks.terms', 'roles']))
                     : null,
             ],
+            'time' => now()
+                ->setTimezone('Asia/Jerusalem')
+                ->format('Y-m-d H:i:s'),
             'flash' => [
                 'notification' => fn () => $request->session()->get('notification'),
-            ]
+            ],
         ]);
     }
 }

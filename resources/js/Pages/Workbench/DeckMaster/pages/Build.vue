@@ -172,29 +172,23 @@ onMounted(async () => {
             <input class="deck-container-head-title" v-model="stagedDeck.name"
                    placeholder="Required: Deck Name"
             />
-            <img :class="['lock', { public: !stagedDeck.private }]"
-                 :src="`/img/${stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
-                 @click="stagedDeck.private = !stagedDeck.private"
-                 alt="lock"/>
             <DeckActions v-if="stagedDeck.id" :model="stagedDeck"/>
-        </div>
-        <div class="user-wrapper">
-            <div class="user-avatar">
-                <img :src="`/img/avatars/${stagedDeck.author.avatar}`" alt="Profile Picture"/>
-            </div>
-            <div class="user-comment">
-                <div class="user-comment-head">
-                    <div>{{ stagedDeck.author.name }}</div>
-                    <div>({{ stagedDeck.author.username }})</div>
-                </div>
-                <div class="user-comment-body">
-                    <textarea class="user-comment-body-content"
-                              v-model="stagedDeck.description"
-                              placeholder="(Optional) Tell us something about this Deck."
-                    />
-                </div>
+            <div class="action-buttons">
+                <img class="toggle" :class="['lock', { public: !stagedDeck.private }]"
+                     :src="`/img/${stagedDeck.private ? 'lock.svg' : 'lock-open.svg'}`"
+                     @click="stagedDeck.private = !stagedDeck.private"
+                     alt="lock"/>
             </div>
         </div>
+
+        <UserItem :user="stagedDeck.author" size="m" comment>
+            <textarea class="user-comment-content" v-model="stagedDeck.description"
+                      :placeholder="`Sadly, ${stagedDeck.author.name} hasn't told us anything about this Deck yet.`"
+            />
+            <div v-if="stagedDeck.id" class="user-comment-data">Created by {{ stagedDeck.author.name }} on
+                {{ stagedDeck.created_at }}.
+            </div>
+        </UserItem>
 
         <draggable :list="stagedDeck.terms" itemKey="id"
                    @end="updatePosition()"

@@ -9,14 +9,14 @@ const UserStore = useUserStore();
 <template>
     <template v-if="UserStore.user">
         <div class="nav-auth-wrapper">
-            <div class="auth-role">
+            <Link class="auth-role" :href="route('subscription.index')">
                 {{ UserStore.highestRole }}
-            </div>
-            <Link class="nav-auth" :href="route('users.show', UserStore.user.username)">
-                <div class="user-avatar">
+            </Link>
+            <div class="nav-auth">
+                <Link class="user-avatar" :href="route('users.show', UserStore.user.username)">
                     <img alt="User Avatar"
                          :src="`/img/avatars/${UserStore.user.avatar}`"/>
-                </div>
+                </Link>
 
                 <div class="user-name">
                     <div class="user-name-ar">{{ UserStore.user.ar_name }}</div>
@@ -25,7 +25,7 @@ const UserStore = useUserStore();
                         <div>{{ UserStore.user.username }}</div>
                     </div>
                 </div>
-            </Link>
+            </div>
             <div class="auth-email">
                 <div>{{ UserStore.user.email }}</div>
                 <div v-if="UserStore.user.is_verified">Verified</div>

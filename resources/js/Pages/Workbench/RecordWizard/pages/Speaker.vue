@@ -8,8 +8,8 @@ import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
-import AppDialog from "../../../../components/AppDialog.vue";
 import LinguaRecorder from "../../../../utils/LinguaRecorder.js";
+import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 
 const UserStore = useUserStore();
 const RecordStore = useRecordStore();
@@ -152,12 +152,12 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="rw-page-title">
+    <div class="rw-container-head window-head">
         <h2>Speaker</h2>
 
-        <AppDialog size="large">
+        <PopupWindow title="Record Wizard: Speaker">
             <template #trigger>
-                <img alt="Info" src="/img/idea.svg"/>
+                <div class="material-symbols-rounded">help</div>
             </template>
             <template #content>
                 <div>What is my Speaker profile?</div>
@@ -205,7 +205,7 @@ onMounted(async () => {
                     Err on
                     the side of underestimation.</p>
             </template>
-        </AppDialog>
+        </PopupWindow>
     </div>
 
     <template v-if="!RecordWizardStore.data.hasPermission">

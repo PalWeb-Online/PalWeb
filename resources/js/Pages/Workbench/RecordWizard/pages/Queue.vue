@@ -4,8 +4,9 @@ import {useQueueStore} from '../stores/QueueStore.js';
 import Draggable from 'vuedraggable';
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
-import AppDialog from "../../../../components/AppDialog.vue";
 import AppTooltip from "../../../../components/AppTooltip.vue";
+import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
+import AppButton from "../../../../components/AppButton.vue";
 
 const SearchStore = useSearchStore();
 
@@ -37,12 +38,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="rw-page-title">
+    <div class="rw-container-head window-head">
         <h2>Queue</h2>
 
-        <AppDialog size="large">
+        <PopupWindow title="Record Wizard: Queue">
             <template #trigger>
-                <img alt="Info" src="/img/idea.svg"/>
+                <div class="material-symbols-rounded">help</div>
             </template>
             <template #content>
                 <div>What is the Queue?</div>
@@ -66,7 +67,7 @@ onMounted(() => {
                     With <b>Queue Deck</b>, items are not sorted by Audio count; they are listed in the order
                     in which they appear in the Deck.</p>
             </template>
-        </AppDialog>
+        </PopupWindow>
     </div>
     <div class="tip">
         <div class="material-symbols-rounded">info</div>
@@ -79,7 +80,7 @@ onMounted(() => {
         </div>
     </div>
 
-    <button @click="SearchStore.openSearchGenie('insert', 'decks')">Search Genie</button>
+    <AppButton @click="SearchStore.openSearchGenie('insert', 'decks')" label="Load Deck" style="margin-block-start: 1.6rem;"/>
 
     <div class="rw-page__queue">
         <div class="rw-queue-body"

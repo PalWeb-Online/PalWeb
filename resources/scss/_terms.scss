@@ -481,40 +481,6 @@
     gap: 0.8rem;
 }
 
-.letters-array {
-    width: 100%;
-    max-width: 96rem;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    gap: 0.8rem;
-    direction: rtl;
-
-    button {
-        width: 4.8rem;
-        height: 4.8rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: $monoFont;
-        font-size: 2.4rem;
-        font-weight: 700;
-        user-select: none;
-        color: var(--color-accent-medium);
-        background: white;
-
-        &:hover {
-            color: var(--color-medium-primary)
-        }
-
-        &.active {
-            color: white;
-            background: var(--color-medium-primary);
-        }
-    }
-}
-
 .inflection-carousel {
     background: var(--color-pastel-light);
     border-radius: 1.2rem;

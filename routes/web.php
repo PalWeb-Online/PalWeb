@@ -179,7 +179,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
             Route::post('/{deck}/export', 'export')->name('decks.export');
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
-            Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
 
             Route::get('/{deck}/get', function (Deck $deck) {
                 return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
@@ -206,17 +205,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/workbench')->group(function () {
-
-        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
-            Route::get('/dialog/{id?}', 'dialog')->name('speech-maker.dialog');
-            Route::get('/sentence/{id?}', 'sentence')->name('speech-maker.sentence');
+        Route::prefix('/speech-maker')->middleware(['admin'])->controller(SpeechMakerController::class)->group(function () {
+            Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
+            Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
+            Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
+            Route::get('/get-terms/{id}', function (string $sentenceId) {
+                return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
+            })->name('speech-maker.get-terms');
         });
 
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/', 'index')->name('deck-master.index');
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
-            Route::get('/build', 'create')->name('deck-master.create');
-            Route::get('/build/{deck}', 'edit')->name('deck-master.edit');
+            Route::get('/build/{deck?}', 'build')->name('deck-master.build');
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
         });
 

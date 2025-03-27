@@ -2,13 +2,15 @@
 import Layout from "../../../Shared/Layout.vue";
 import {cloneDeep, isEqual, merge} from "lodash";
 import {route} from 'ziggy-js';
-import {computed, onMounted, reactive, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import AppButton from "../../../components/AppButton.vue";
-import {Inertia} from "@inertiajs/inertia";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import AppAlert from "../../../components/AppAlert.vue";
 import {useSearchStore} from "../../../stores/SearchStore.js";
+import {router} from "@inertiajs/vue3";
+import NavGuard from "../../../components/Modals/NavGuard.vue";
+import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 
 const props = defineProps({
     term: Object,
@@ -46,6 +48,8 @@ const init = {
 
 const stagedTerm = reactive(merge(init, props.term?.data || {}));
 let originalTerm = reactive({});
+
+const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
     return !isEqual(stagedTerm, originalTerm);
@@ -137,33 +141,29 @@ const removeItem = (index, fieldType) => {
 };
 
 const saveTerm = async () => {
-    // todo: the problem with this is that if the request fails, you can't try again at all.
-    Object.assign(originalTerm, cloneDeep(stagedTerm));
+    isSaving.value = true;
 
-    if (stagedTerm.id) {
-        Inertia.patch(route('terms.update', stagedTerm.id), {term: stagedTerm},
-            {
-                onSuccess: () => {
-                    NotificationStore.addNotification('The Term has been saved!');
-                },
-                onError: () => {
-                    NotificationStore.addNotification('Oh no! The Term could not be saved.');
-                },
-            }
-        );
+    const method = stagedTerm.id
+        ? router.patch.bind(router)
+        : router.post.bind(router);
 
-    } else {
-        Inertia.post(route('terms.store'), {term: stagedTerm},
-            {
-                onSuccess: () => {
-                    NotificationStore.addNotification('The Term has been saved!');
-                },
-                onError: () => {
-                    NotificationStore.addNotification('Oh no! The Term could not be saved.');
-                },
-            }
-        );
-    }
+    const url = stagedTerm.id
+        ? route('terms.update', stagedTerm.id)
+        : route('terms.store');
+
+    method(url, {term: stagedTerm},
+        {
+            onSuccess: () => {
+                NotificationStore.addNotification('The Term has been saved!');
+                // Object.assign(originalTerm, cloneDeep(stagedTerm));
+                isSaving.value = false;
+            },
+            onError: () => {
+                NotificationStore.addNotification('Oh no! The Term could not be saved.');
+                isSaving.value = false;
+            },
+        }
+    );
 }
 
 const resetTerm = async () => {

@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="rw-page-title">
+    <div class="rw-container-head">
         <h2>Check</h2>
     </div>
     <div class="tip">

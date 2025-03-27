@@ -2,7 +2,7 @@
 import Layout from "../../../Shared/Layout.vue";
 import {useForm} from "@inertiajs/vue3";
 import {computed, onMounted, ref} from "vue";
-import ModalWrapper from "../../../components/ModalWrapper.vue";
+import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import {route} from "ziggy-js";
 import AppButton from "../../../components/AppButton.vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
