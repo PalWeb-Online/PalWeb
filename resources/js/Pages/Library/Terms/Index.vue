@@ -70,30 +70,34 @@ function updateFilter({filter, value}) {
             </div>
         </div>
 
-        <div class="letters-array">
-            <button
-                v-for="letter in letters"
-                :key="letter"
-                :class="{ 'active': selectedLetter === letter }"
-                @click="updateFilter({ filter: 'letter', value: letter })"
-            >
-                {{ letter }}
-            </button>
+        <div class="search-filters-wrapper">
+            <div class="letters-array">
+                <button
+                    v-for="letter in letters"
+                    :key="letter"
+                    :class="{ 'active': selectedLetter === letter }"
+                    @click="updateFilter({ filter: 'letter', value: letter })"
+                >
+                    {{ letter }}
+                </button>
+            </div>
+            <SearchFilters
+                :activeModel="'terms'"
+                :filters="filters"
+                @updateFilter="updateFilter"
+            />
+            <AppTip>
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                    Terms
+                    matching this query.</p>
+                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
+                <p v-else>No Terms matching this query. Is a term missing from the Dictionary?
+                    <Link :href="route('missing.terms.create')">Request</Link>
+                    it here!
+                </p>
+            </AppTip>
         </div>
 
-        <SearchFilters
-            :activeModel="'terms'"
-            :filters="filters"
-            @updateFilter="updateFilter"
-        />
-
-        <AppTip>
-            <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Terms
-                matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
-            <p v-else>No Terms matching this query. Is a term missing from the Dictionary? <Link :href="route('missing.terms.create')">Request</Link>
-                it here!</p>
-        </AppTip>
 
         <template v-if="totalCount > 0">
             <div class="deck-container">

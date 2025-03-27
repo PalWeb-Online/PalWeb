@@ -35,21 +35,25 @@ function updateFilter({filter, value}) {
     <Head title="Library: Decks"/>
     <div id="app-head">
         <h1>Decks</h1>
-        <button v-if="UserStore.isUser" class="feature-callout" @click="router.get(route('deck-master.build'))">Build Your Own!</button>
+        <button v-if="UserStore.isUser" class="feature-callout" @click="router.get(route('deck-master.build'))">Build
+            Your Own!
+        </button>
     </div>
     <div id="app-body">
-        <SearchFilters
-            :activeModel="'decks'"
-            :filters="filters"
-            @updateFilter="updateFilter"
-        />
-
-        <AppTip>
-            <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Decks
-                matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
-            <p v-else>No Decks matching this query.</p>
-        </AppTip>
+        <div class="search-filters-wrapper">
+            <SearchFilters
+                :activeModel="'decks'"
+                :filters="filters"
+                @updateFilter="updateFilter"
+            />
+            <AppTip>
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                    Decks
+                    matching this query.</p>
+                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
+                <p v-else>No Decks matching this query.</p>
+            </AppTip>
+        </div>
 
         <template v-if="totalCount > 0">
             <div class="decks-list">

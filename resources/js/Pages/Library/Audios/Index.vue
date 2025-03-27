@@ -57,37 +57,40 @@ function updateFilter({filter, value}) {
         <h1>Audios</h1>
     </div>
     <div id="app-body">
-        <div class="search-filters-container">
-            <div class="search-filters">
-                <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''">
-                    <option value="">Dialect</option>
-                    <option v-for="dialect in dialects" :value="dialect.id">{{ dialect.name }}</option>
-                </select>
+        <div class="search-filters-wrapper">
+            <div class="search-filters-container">
+                <div class="search-filters">
+                    <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''">
+                        <option value="">Dialect</option>
+                        <option v-for="dialect in dialects" :value="dialect.id">{{ dialect.name }}</option>
+                    </select>
 
-                <select v-model="filters.location" :class="filters.location ? 'persisting' : ''">
-                    <option value="">Location</option>
-                    <option v-for="location in locations" :value="location.id">{{ location.name_ar }}</option>
-                </select>
+                    <select v-model="filters.location" :class="filters.location ? 'persisting' : ''">
+                        <option value="">Location</option>
+                        <option v-for="location in locations" :value="location.id">{{ location.name_ar }}</option>
+                    </select>
 
-                <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''">
-                    <option value="">Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
+                    <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''">
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
 
-                <select v-model="filters.sort">
-                    <option value="latest">by Latest</option>
-                    <option value="fluency">by Fluency</option>
-                </select>
+                    <select v-model="filters.sort">
+                        <option value="latest">by Latest</option>
+                        <option value="fluency">by Fluency</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <AppTip>
-            <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Audios
-                matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Library.</p>
-            <p v-else>No Audios matching this query.</p>
-        </AppTip>
+            <AppTip>
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                    Audios
+                    matching this query.</p>
+                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Library.</p>
+                <p v-else>No Audios matching this query.</p>
+            </AppTip>
+        </div>
 
         <template v-if="totalCount > 0">
             <div class="audios-list">

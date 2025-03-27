@@ -12,9 +12,9 @@ defineProps({
 });
 </script>
 <template>
-    <Head :title="`Library: Sentences: ${sentence.sentence}`"/>
+    <Head :title="`Library: Phrasebook: ${sentence.sentence}`"/>
     <div id="app-head">
-        <h1>Sentences</h1>
+        <h1>Phrasebook</h1>
     </div>
     <div id="app-body">
         <Link :href="route('sentences.index')"><- to All</Link>

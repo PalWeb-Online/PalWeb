@@ -47,14 +47,32 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Index');
+    return Inertia::render('Index', [
+        'count' => [
+            'terms' => Term::count(),
+            'sentences' => Sentence::count(),
+            'users' => User::count(),
+            'decks' => Deck::count(),
+            'dialogs' => Dialog::count(),
+            'audios' => Audio::count(),
+        ],
+        'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
+        'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
+        'sentences' => SentenceResource::collection(Sentence::find([255, 256, 257])->all()),
+        'featuredUser' => new UserResource(User::find(1)),
+        'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms'])),
+    ]);
 })->name('homepage');
+
+Route::get('/coming-soon', function () {
+    return Inertia::render('ComingSoon');
+})->name('coming-soon');
 
 Route::get('/denied', function () {
     return Inertia::render('Auth/Subscription', [
         'denied' => true,
     ]);
-})->name('denied');
+})->middleware(['guest'])->name('denied');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 

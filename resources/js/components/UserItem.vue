@@ -15,6 +15,17 @@ defineProps({
             <img alt="Avatar"
                  :src="`/img/avatars/${user.avatar}`"/>
         </Link>
+        <div class="user-scorecard" v-if="size === 's'">
+            <div>{{ user.ar_name }}</div>
+            <div class="user-creations">
+                <div>decks</div>
+                <div>{{ user.decks_count }}</div>
+            </div>
+            <div class="user-creations">
+                <div>audios</div>
+                <div>{{ user.audios_count }}</div>
+            </div>
+        </div>
 
         <div class="user-data-wrapper">
             <div class="user-name">

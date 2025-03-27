@@ -28,6 +28,10 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at->format('j F Y'),
             'created_ago' => $this->created_at->diffForHumans(),
             'decks' => DeckResource::collection($this->whenLoaded('decks')),
+
+//            todo: performance
+            'decks_count' => $this->decks->count(),
+            'audios_count' => $this->speaker?->audios->count() ?? 0,
         ];
     }
 }

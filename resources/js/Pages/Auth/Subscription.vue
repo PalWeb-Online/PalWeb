@@ -18,8 +18,8 @@ defineOptions({
     </div>
     <div id="app-body">
         <AppTip v-if="denied">
-            <p>Sorry, but you currently don't have access to this content. Please review & update your Subscription
-                tier & try again.</p>
+            <p>Sorry, but you currently don't have access to this content.
+                Please review & update your Subscription tier & try again.</p>
         </AppTip>
         <div class="tiers-array">
             <SubscriptionTier tier="pal"/>

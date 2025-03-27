@@ -1,12 +1,14 @@
 <script setup>
 import {useUserStore} from "../stores/UserStore.js";
 import {computed} from "vue";
+import {useNavigationStore} from "../stores/NavigationStore.js";
 
 const props = defineProps({
     tier: String,
 })
 
 const UserStore = useUserStore();
+const NavigationStore = useNavigationStore();
 
 const unlocked = computed(() => {
     if (props.tier === 'pal') return UserStore.isUser;
@@ -52,8 +54,6 @@ const unlocked = computed(() => {
             <div class="tiers-pricing">{{ tier === 'student' ? '$12/m $80/y' : 'FREE' }}</div>
         </a>
 
-<!--        todo: compute based on highest tier -->
-        <div v-if="tier === 'student'" class="current-tier">you are here</div>
+        <div v-if="UserStore.highestRole === tier" class="current-tier">you are here</div>
     </div>
-
 </template>

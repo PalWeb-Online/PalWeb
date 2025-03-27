@@ -33,24 +33,25 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Library: Sentences"/>
+    <Head title="Library: Phrasebook"/>
     <div id="app-head">
-        <h1>Sentences</h1>
+        <h1>Phrasebook</h1>
         <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.sentence'))"/>
     </div>
     <div id="app-body">
-        <SearchFilters
-            :activeModel="'sentences'"
-            :filters="filters"
-            @updateFilter="updateFilter"
-        />
-
-        <AppTip>
-            <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
-                Sentences matching this query.</p>
-            <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Sentences in the Library.</p>
-            <p v-else>No Sentences matching this query.</p>
-        </AppTip>
+        <div class="search-filters-wrapper">
+            <SearchFilters
+                :activeModel="'sentences'"
+                :filters="filters"
+                @updateFilter="updateFilter"
+            />
+            <AppTip>
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                    Sentences matching this query.</p>
+                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Sentences in the Library.</p>
+                <p v-else>No Sentences matching this query.</p>
+            </AppTip>
+        </div>
 
         <template v-if="totalCount > 0">
             <div class="deck-container">
