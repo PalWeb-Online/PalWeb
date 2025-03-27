@@ -225,10 +225,11 @@ const attributeLinks = {
                                     ({{ antonym.translit }})
                                 </Link>
                             </div>
-                            <div
+                            <div v-if="gloss.relatives.find(relative => ['isPatient', 'noPatient', 'hasObject'].includes(relative.type))?.length > 0"
                                 v-for="pair in gloss.relatives.find(relative => ['isPatient', 'noPatient', 'hasObject'].includes(relative.type))">
                                 {{ pair.type }}
-                                <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
+                                <Link
+                                    :href="route('terms.show', pair.slug)">{{ pair.term }}
                                     ({{ pair.translit }})
                                 </Link>
                             </div>

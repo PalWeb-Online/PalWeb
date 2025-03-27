@@ -14,10 +14,10 @@ const props = defineProps({
     flipDefaultInflections: Boolean,
     showTerm: Boolean,
     showTranslit: Boolean,
-    canInteract: Boolean,
 });
 
 const flashcard = ref(null);
+const showModel = ref(false);
 
 const flipCard = () => {
     const cardElements = document.querySelectorAll(`[data-id="${props.model.id}"]`);
@@ -27,7 +27,7 @@ const flipCard = () => {
 };
 
 const handleKeydown = (event) => {
-    if (event.key === 'ArrowUp' || event.key === 'w') {
+    if (event.key === 'ArrowUp' || event.key === 'w' || event.key === 'ArrowDown' || event.key === 's') {
         event.preventDefault();
         flipCard();
     }
@@ -101,6 +101,15 @@ watch(() => props.active, (newVal) => {
                 </div>
             </div>
         </div>
-        <TermItem v-show="canInteract" :model="model" :glossId="model.deckPivot.gloss_id ?? null"/>
+        <div class="dm-term-preview">
+            <div class="window-head">
+                <div>Term</div>
+                <div class="material-symbols-rounded" @click="showModel = !showModel">visibility</div>
+            </div>
+            <div class="window-body">
+                <div v-show="!showModel" class="overlay"></div>
+                <TermItem :model="model" :glossId="model.deckPivot.gloss_id ?? null"/>
+            </div>
+        </div>
     </div>
 </template>
