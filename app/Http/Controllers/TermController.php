@@ -208,7 +208,7 @@ class TermController extends Controller
     public function store(StoreTermRequest $request): RedirectResponse
     {
         $term = DB::transaction(function () use ($request) {
-            $formData = $request->term;
+            $formData = $request->all();
 
             if ($formData['root']['root']) {
                 $formData = array_merge($formData,
@@ -222,7 +222,7 @@ class TermController extends Controller
 
             $term = Term::create($formData);
 
-            $attributes = array_map(fn ($item) => $item['attribute'], $request->term['attributes']);
+            $attributes = array_map(fn ($item) => $item['attribute'], $request->attributes);
             foreach ($attributes as $attribute) {
                 Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
             }
@@ -255,7 +255,7 @@ class TermController extends Controller
     public function update(Term $term, UpdateTermRequest $request): RedirectResponse
     {
         $term = DB::transaction(function () use ($term, $request) {
-            $formData = $request->term;
+            $formData = $request->all();
 
             if ($formData['root']['root']) {
                 $formData = array_merge($formData,

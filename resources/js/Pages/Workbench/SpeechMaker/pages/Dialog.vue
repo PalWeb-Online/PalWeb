@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import draggable from 'vuedraggable';
 import SentenceItem from "../ui/SentenceItem.vue";
 import {useSearchStore} from "../../../../stores/SearchStore.js";
@@ -7,10 +7,10 @@ import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
 import AppButton from "../../../../components/AppButton.vue";
 import DialogActions from "../../../../components/DialogActions.vue";
-import AppAlert from "../../../../components/AppAlert.vue";
-import {cloneDeep, isEqual} from "lodash";
 import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
+import NavGuard from "../../../../components/Modals/NavGuard.vue";
+import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 
 const props = defineProps({
     dialog: Object,
@@ -19,60 +19,62 @@ const props = defineProps({
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
-const stagedDialog = reactive({
-    id: null,
-    title: '',
-    description: '',
-    media: '',
-    sentences: [],
+const dialog = useForm({
+    id: props.dialog?.id || null,
+    title: props.dialog?.title || '',
+    description: props.dialog?.description || '',
+    media: props.dialog?.media || '',
+    sentences: props.dialog?.sentences || [],
 });
-
-const originalDialog = ref(null);
-
-const resetDialog = () => {
-    Object.assign(stagedDialog, cloneDeep(originalDialog.value));
-}
 
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return !isEqual(stagedDialog, originalDialog.value) && !isSaving.value;
+    return dialog.isDirty && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const insertSentence = async (sentence) => {
-    // todo: check if the Sentence already exists; see Build page
+    const sentenceExists = dialog.sentences.some(existingSentence => existingSentence.id === sentence.id);
 
-    const response = await axios.get(route('speech-maker.get-terms', sentence.id));
+    if (sentenceExists) {
+        NotificationStore.addNotification('This Sentence is already in the Dialog!', 'error');
 
-    stagedDialog.sentences.push({
-        id: sentence.id,
-        sentence: sentence.sentence,
-        translit: sentence.translit,
-        trans: sentence.trans,
-        terms: response.data.terms,
-    });
+    } else if (sentence.dialog) {
+        NotificationStore.addNotification('This Sentence is already in a Dialog!', 'error');
 
-    updatePosition();
-    NotificationStore.addNotification(`Added ${sentence.sentence} to the Dialog!`);
+    } else {
+        const response = await axios.get(route('speech-maker.get-terms', sentence.id));
+
+        dialog.sentences.push({
+            id: sentence.id,
+            sentence: sentence.sentence,
+            translit: sentence.translit,
+            trans: sentence.trans,
+            terms: response.data.terms,
+        });
+
+        updatePosition();
+        NotificationStore.addNotification(`Added ${sentence.sentence} to the Dialog!`);
+    }
 }
 
 const removeSentence = (index) => {
-    stagedDialog.sentences.splice(index, 1);
+    dialog.sentences.splice(index, 1);
     updatePosition();
 }
 
 const updatePosition = () => {
-    stagedDialog.sentences.forEach((sentence, index) => {
+    dialog.sentences.forEach((sentence, index) => {
         sentence.position = index + 1;
     });
 }
 
 const isValidRequest = computed(() => {
-    if (!stagedDialog.title) return false;
+    if (!dialog.title) return false;
 
-    for (const sentence of stagedDialog.sentences) {
+    for (const sentence of dialog.sentences) {
         if (!sentence.speaker || !sentence.position) {
             return false;
         }
@@ -84,47 +86,38 @@ const isValidRequest = computed(() => {
 const saveDialog = async () => {
     isSaving.value = true;
 
-    const method = stagedDialog.id
-        ? router.patch.bind(router)
-        : router.post.bind(router);
+    const method = dialog.id
+        ? dialog.patch.bind(dialog)
+        : dialog.post.bind(dialog);
 
-    const url = stagedDialog.id
-        ? route('dialogs.update', stagedDialog.id)
+    const url = dialog.id
+        ? route('dialogs.update', dialog.id)
         : route('dialogs.store');
 
-    method(url, {dialog: stagedDialog},
-        {
-            onSuccess: () => {
-                NotificationStore.addNotification('The Dialog has been saved!');
-                originalDialog.value = cloneDeep(stagedDialog);
-                isSaving.value = false;
-            },
-            onError: () => {
-                NotificationStore.addNotification('Oh no! The Dialog could not be saved.');
-                isSaving.value = false;
-            }
+    method(url, {
+        onSuccess: () => {
+            NotificationStore.addNotification('The Dialog has been saved!');
+            dialog.defaults();
+            isSaving.value = false;
+        },
+        onError: () => {
+            NotificationStore.addNotification('Oh no! The Dialog could not be saved.');
+            isSaving.value = false;
         }
-    );
-
+    });
 };
 
 watch(
     () => props.dialog,
     (newValue) => {
         if (newValue) {
-            Object.assign(stagedDialog, newValue);
+            Object.assign(dialog, newValue);
         }
     },
     {deep: true}
 );
 
 onMounted(() => {
-    if (!!props.dialog) {
-        Object.assign(stagedDialog, props.dialog);
-    }
-
-    originalDialog.value = cloneDeep(stagedDialog);
-
     watch(
         () => SearchStore.data.selectedModel,
         (newModel) => {
@@ -141,39 +134,39 @@ onMounted(() => {
     <div class="app-nav-interact">
         <div class="app-nav-interact-buttons">
             <AppButton @click="saveDialog" label="Save"
-                       :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
+                       :disabled="dialog.processing || !hasNavigationGuard || !isValidRequest"
             />
-            <AppButton @click="resetDialog" label="Reset"
-                       :disabled="isSaving || !hasNavigationGuard"
+            <AppButton @click="dialog.reset()" label="Reset"
+                       :disabled="dialog.processing || !hasNavigationGuard"
             />
             <AppButton @click="SearchStore.openSearchGenie('insert', 'sentences')"
                        label="Insert Sentence"
             />
-            <AppButton @click="router.get(route('speech-maker.dialog-sentence', stagedDialog.id))"
-                       :disabled="!stagedDialog.id" label="New Sentence"
+            <AppButton @click="router.get(route('speech-maker.dialog-sentence', dialog.id))"
+                       :disabled="!dialog.id" label="New Sentence"
             />
         </div>
     </div>
 
     <div class="dialog-container">
         <div class="dialog-container-head">
-            <input class="dialog-container-head-title" v-model="stagedDialog.title"
+            <input class="dialog-container-head-title" v-model="dialog.title"
                    placeholder="Required: Dialog Title"
             />
-            <DialogActions v-if="stagedDialog.id" :model="stagedDialog"/>
+            <DialogActions v-if="dialog.id" :model="dialog"/>
         </div>
-        <input v-model="stagedDialog.media"/>
-        <textarea class="dialog-description" v-model="stagedDialog.description"/>
+        <input v-model="dialog.media"/>
+        <textarea class="dialog-description" v-model="dialog.description"/>
 
         <div class="dialog-body">
-            <draggable :list="stagedDialog.sentences" itemKey="id"
+            <draggable :list="dialog.sentences" itemKey="id"
                        @end="updatePosition()"
                        class="draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                        <SentenceItem :sentence="element" page="dialog"/>
+                        <SentenceItem :sentence="element" page="dialog" inDialog/>
                         <img src="/img/trash.svg" class="trash" alt="Delete"
-                             v-show="stagedDialog.sentences.length > 0"
+                             v-show="dialog.sentences.length > 0"
                              @click="removeSentence(index)"/>
                     </div>
                 </template>
@@ -181,10 +174,11 @@ onMounted(() => {
         </div>
     </div>
 
-    <AppAlert
-        v-if="showAlert"
-        message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
-    />
+    <ModalWrapper v-model="showAlert">
+        <NavGuard
+            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            @confirm="handleConfirm"
+            @cancel="handleCancel"
+        />
+    </ModalWrapper>
 </template>

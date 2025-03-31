@@ -13,6 +13,8 @@ const props = defineProps({
     user: Object,
 });
 
+const NotificationStore = useNotificationStore();
+
 const form = useForm({
     name: props.user?.name || '',
     username: props.user?.username || '',
@@ -23,8 +25,6 @@ const form = useForm({
     private: props.user?.private || false,
     dialect_id: props.user?.dialect.id || '',
 });
-
-const NotificationStore = useNotificationStore();
 
 const isSaving = ref(false);
 
@@ -69,7 +69,7 @@ defineOptions({
     layout: Layout
 });
 
-function generateArabicName()  {
+function generateArabicName() {
     const names = [
         'محمد',
         'أحمد',
@@ -246,6 +246,7 @@ function generateArabicName()  {
                         <div class="user-comment-data">
                             Joined on {{ user.created_at }} ({{ user.created_ago }}).
                         </div>
+                        <div v-if="form.errors.bio" v-text="form.errors.bio" class="field-error"/>
                     </div>
                     <div class="user-tag-wrapper">
                         <div class="user-tag">
@@ -256,12 +257,14 @@ function generateArabicName()  {
                             />
                         </div>
                         <div class="user-tag">
-<!--                            todo: selecting something else causes the form to be dirty?-->
                             <img class="dialect" src="/img/mouth.svg" alt="dialect"/>
                             <select v-model="form.dialect_id">
-                                <option value="1">General Palestinian</option>
-                                <option value="2">Urban Palestinian</option>
-                                <option value="3">Rural Palestinian</option>
+                                <option :value="8">Central Urban Palestinian</option>
+                                <option :value="9">Northern Urban Palestinian</option>
+                                <option :value="10">Central Rural Palestinian</option>
+                                <option :value="11">Northern Rural Palestinian</option>
+                                <option :value="6">Palestinian Bedouin</option>
+                                <option :value="7">Palestinian Druze</option>
                             </select>
                         </div>
                     </div>

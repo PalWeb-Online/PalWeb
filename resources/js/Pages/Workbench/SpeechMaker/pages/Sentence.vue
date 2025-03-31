@@ -1,6 +1,5 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch} from "vue";
-import {cloneDeep, isEqual} from "lodash";
+import {computed, onMounted, ref, watch} from "vue";
 import draggable from 'vuedraggable';
 import SentenceItem from "../ui/SentenceItem.vue";
 import TermItem from "../ui/TermItem.vue";
@@ -8,10 +7,11 @@ import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
 import AppButton from "../../../../components/AppButton.vue";
-import AppAlert from "../../../../components/AppAlert.vue";
 import AppTip from "../../../../components/AppTip.vue";
-import {router} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import NavGuard from "../../../../components/Modals/NavGuard.vue";
+import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 
 const props = defineProps({
     dialog: Object,
@@ -21,33 +21,27 @@ const props = defineProps({
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
-const stagedSentence = reactive({
-    id: null,
-    sentence: '',
-    translit: '',
-    trans: '',
-    dialog: {},
-    speaker: '',
-    position: '',
-    terms: [],
+const sentence = useForm({
+    id: props.sentence?.id || null,
+    sentence: props.sentence?.sentence || '',
+    translit: props.sentence?.translit || '',
+    trans: props.sentence?.trans || '',
+    dialog: props.sentence?.dialog || {},
+    speaker: props.sentence?.speaker || '',
+    position: props.sentence?.position || '',
+    terms: props.sentence?.terms || [],
 });
-
-const originalSentence = ref(null);
-
-const resetSentence = () => {
-    Object.assign(stagedSentence, cloneDeep(originalSentence.value));
-};
 
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return !isEqual(stagedSentence, originalSentence.value) && !isSaving.value;
+    return sentence.isDirty && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const insertTerm = (term) => {
-    stagedSentence.terms.push({
+    sentence.terms.push({
         id: term.id,
         term: term.term,
         category: term.category,
@@ -68,7 +62,7 @@ const insertTerm = (term) => {
 }
 
 const addTerm = () => {
-    stagedSentence.terms.push({
+    sentence.terms.push({
         sentencePivot: {
             sent_term: '',
             sent_translit: '',
@@ -79,22 +73,22 @@ const addTerm = () => {
 }
 
 const removeTerm = (index) => {
-    stagedSentence.terms.splice(index, 1);
+    sentence.terms.splice(index, 1);
     updatePosition();
 }
 
 const updatePosition = () => {
-    stagedSentence.terms.forEach((term, index) => {
+    sentence.terms.forEach((term, index) => {
         term.sentencePivot.position = index + 1;
     });
 }
 
 const isValidRequest = computed(() => {
-    if (!stagedSentence.trans) return false;
-    if (stagedSentence.terms.length === 0) return false;
-    if (!!props.dialog && !stagedSentence.speaker) return false;
+    if (!sentence.trans) return false;
+    if (sentence.terms.length === 0) return false;
+    if (!!props.dialog && !sentence.speaker) return false;
 
-    for (const term of stagedSentence.terms) {
+    for (const term of sentence.terms) {
         if (!term.sentencePivot.sent_term || !term.sentencePivot.sent_translit) {
             return false;
         }
@@ -106,54 +100,45 @@ const isValidRequest = computed(() => {
 const saveSentence = async () => {
     isSaving.value = true;
 
-    const method = stagedSentence.id
-        ? router.patch.bind(router)
-        : router.post.bind(router);
+    const method = sentence.id
+        ? sentence.patch.bind(sentence)
+        : sentence.post.bind(sentence);
 
-    const url = stagedSentence.id
-        ? route('sentences.update', stagedSentence.id)
+    const url = sentence.id
+        ? route('sentences.update', sentence.id)
         : route('sentences.store');
 
-    method(url, {sentence: stagedSentence},
-        {
-            onSuccess: () => {
-                NotificationStore.addNotification('The Sentence has been saved!');
-                originalSentence.value = cloneDeep(stagedSentence);
-                isSaving.value = false;
+    method(url, {
+        onSuccess: () => {
+            NotificationStore.addNotification('The Sentence has been saved!');
+            sentence.defaults();
+            isSaving.value = false;
 
-                if (!!props.dialog) {
-                    router.visit(route('speech-maker.dialog', props.dialog.id));
-                }
-            },
-            onError: () => {
-                NotificationStore.addNotification('Oh no! The Deck could not be saved.');
-                isSaving.value = false;
+            if (!!props.dialog) {
+                router.visit(route('speech-maker.dialog', props.dialog.id));
             }
+        },
+        onError: () => {
+            NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+            isSaving.value = false;
         }
-    );
+    });
 };
 
 watch(
     () => props.sentence,
     (newValue) => {
         if (newValue) {
-            Object.assign(stagedSentence, newValue);
+            Object.assign(sentence, newValue);
         }
     },
     {deep: true}
 );
 
 onMounted(() => {
-    if (!!props.sentence) {
-        Object.assign(stagedSentence, props.sentence);
-    }
-
     if (!!props.dialog) {
-        Object.assign(stagedSentence.dialog, props.dialog);
-        stagedSentence.position = stagedSentence.dialog.sentences_count + 1;
+        sentence.position = props.dialog.sentences_count + 1;
     }
-
-    originalSentence.value = cloneDeep(stagedSentence);
 
     watch(
         () => SearchStore.data.selectedModel,
@@ -170,11 +155,11 @@ onMounted(() => {
 <template>
     <div class="app-nav-interact">
         <div class="app-nav-interact-buttons">
-            <AppButton :disabled="!hasNavigationGuard || !isValidRequest" label="Save"
+            <AppButton :disabled="sentence.processing || !hasNavigationGuard || !isValidRequest" label="Save"
                        @click="saveSentence"
             />
-            <AppButton :disabled="!hasNavigationGuard" label="Reset"
-                       @click="resetSentence"
+            <AppButton :disabled="sentence.processing || !hasNavigationGuard" label="Reset"
+                       @click="sentence.reset()"
             />
             <AppButton @click="SearchStore.openSearchGenie('insert', 'terms')"
                        label="Insert Term"
@@ -190,25 +175,27 @@ onMounted(() => {
     </AppTip>
 
     <div class="sentence-container">
-        <SentenceItem :sentence="stagedSentence" page="sentence" :inDialog="!!dialog"/>
-        <draggable :list="stagedSentence.terms" itemKey="id"
+        <SentenceItem :sentence="sentence" page="sentence" :inDialog="!!dialog"/>
+        <draggable :list="sentence.terms" itemKey="id"
                    @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
                     <TermItem :term="element"/>
                     <img src="/img/trash.svg" class="trash" alt="Delete"
-                         v-show="stagedSentence.terms.length > 0"
+                         v-show="sentence.terms.length > 0"
                          @click="removeTerm(index)"/>
                 </div>
             </template>
         </draggable>
     </div>
 
-    <AppAlert
-        v-if="showAlert"
-        message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
-    />
+    <ModalWrapper v-model="showAlert">
+        <NavGuard
+            v-if="showAlert"
+            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            @confirm="handleConfirm"
+            @cancel="handleCancel"
+        />
+    </ModalWrapper>
 </template>

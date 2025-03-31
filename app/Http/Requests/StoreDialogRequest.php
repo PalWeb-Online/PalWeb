@@ -12,10 +12,10 @@ class StoreDialogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'dialog.title' => ['required', 'max:50'],
-            'dialog.description' => ['nullable', 'max:500'],
-            'dialog.sentences.*.speaker' => ['required'],
-            'dialog.sentences.*.position' => ['required', 'integer'],
+            'title' => ['required', 'max:50'],
+            'description' => ['nullable', 'max:500'],
+            'sentences.*.speaker' => ['required'],
+            'sentences.*.position' => ['required', 'integer'],
         ];
     }
 }

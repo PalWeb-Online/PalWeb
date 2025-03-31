@@ -12,10 +12,10 @@ class StoreSentenceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sentence.trans' => ['required'],
-            'sentence.terms' => ['required', 'array'],
-            'sentence.terms.*.sentencePivot.sent_term' => ['required'],
-            'sentence.terms.*.sentencePivot.sent_translit' => ['required'],
+            'trans' => ['required'],
+            'terms' => ['required', 'array'],
+            'terms.*.sentencePivot.sent_term' => ['required'],
+            'terms.*.sentencePivot.sent_translit' => ['required'],
         ];
     }
 }

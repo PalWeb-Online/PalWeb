@@ -34,24 +34,16 @@ class DialogController extends Controller
 
     public function store(StoreDialogRequest $request): RedirectResponse
     {
-        $dialogData = $request->dialog;
-        unset($dialogData['sentences']);
-
-        $dialog = Dialog::create($dialogData);
-
-        $this->linkSentences($dialog, $request->dialog['sentences']);
+        $dialog = Dialog::create($request->all());
+        $this->linkSentences($dialog, $request->sentences);
 
         return to_route('speech-maker.dialog', $dialog);
     }
 
     public function update(UpdateDialogRequest $request, Dialog $dialog): RedirectResponse
     {
-        $dialogData = $request->dialog;
-        unset($dialogData['sentences']);
-
-        $dialog->update($dialogData);
-
-        $this->linkSentences($dialog, $request->dialog['sentences']);
+        $dialog->update($request->all());
+        $this->linkSentences($dialog, $request->sentences);
 
         return to_route('speech-maker.dialog', $dialog);
     }

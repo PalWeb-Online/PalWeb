@@ -96,12 +96,8 @@ class DeckController extends Controller
     {
         $user = $request->user();
 
-        $deckData = $request->deck;
-        unset($deckData['terms']);
-
-        $deck = Deck::create(array_merge($deckData, ['user_id' => $user->id]));
-
-        $this->linkTerms($deck, $request->deck['terms']);
+        $deck = Deck::create(array_merge($request->all(), ['user_id' => $user->id]));
+        $this->linkTerms($deck, $request->terms);
 
         Bookmark::add($deck, $user);
         event(new ModelPinned($user));
@@ -114,12 +110,8 @@ class DeckController extends Controller
     {
         $this->authorize('modify', $deck);
 
-        $deckData = $request->deck;
-        unset($deckData['terms']);
-
-        $deck->update($deckData);
-
-        $this->linkTerms($deck, $request->deck['terms']);
+        $deck->update($request->all());
+        $this->linkTerms($deck, $request->terms);
 
         return to_route('decks.show', $deck);
     }
