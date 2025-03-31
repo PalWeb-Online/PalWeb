@@ -8,7 +8,7 @@ use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\MissingTermController;
+use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
