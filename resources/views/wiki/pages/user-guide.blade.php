@@ -3,7 +3,7 @@
     <x-link :href="route('wiki.show', 'user-guide')">{{ __('user guide') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Introduction</h1>
     <p><b>PalWeb</b> is divided into a few primary areas:</p>
     <ul>
@@ -52,7 +52,7 @@
     </ul>
 </div>
 
-<div class="doc-section" id="search-genie">
+<div class="wiki-container" id="search-genie">
     <h1>Search Genie</h1>
     <p>The <b>Search Genie</b> is your all-in-one search solution on PalWeb. It is accessible anywhere that you see a
         button prompt on the top-right corner of the page (you should see it on this page), or in the navigation menu on

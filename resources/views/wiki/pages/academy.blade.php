@@ -3,7 +3,7 @@
     <x-link :href="route('wiki.show', 'academy')">{{ __('academy') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>{{ __('academy') }}</h1>
     <p>Welcome to the <b>PalWeb Academy</b>! Over the course of three <b>Levels</b>,
         the <b>Curriculum</b> will guide you through attaining an intermediate level in Palestinian

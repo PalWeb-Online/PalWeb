@@ -4,7 +4,7 @@
     <x-link :href="route('explore.show', 'animals')">{{ __('animals') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <x-vocabulary title="mammals">
         <x-term-item :term="$terms->firstWhere('translit', 'ħaywān')"/>
         <x-term-item :term="$terms->firstWhere('translit', 'kalb')"/>

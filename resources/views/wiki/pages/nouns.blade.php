@@ -5,7 +5,7 @@
     <x-link :href="route('wiki.show', 'nouns')">{{ __('nouns') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Syntax</h1>
 
     <h1>Agreement</h1>
@@ -79,7 +79,7 @@
 
 </div>
 
-<div id="pronoun" class="doc-section">
+<div id="pronoun" class="wiki-container">
     <h1>Pronouns</h1>
 
     <p>Alongside <b>content nouns</b>, the <b>Nouns</b> category includes various types of <b>pronouns</b>. Although <b>pronouns</b>

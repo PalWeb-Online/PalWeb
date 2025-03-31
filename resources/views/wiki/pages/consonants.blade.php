@@ -5,7 +5,7 @@
     <x-link :href="route('wiki.show', 'consonants')">{{ __('consonants') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Inventory</h1>
     <p>In this section, we're going to discuss <b>Consonants</b> in Palestinian Arabic.</p>
 

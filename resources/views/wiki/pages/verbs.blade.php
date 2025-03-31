@@ -5,7 +5,7 @@
     <x-link :href="route('wiki.show', 'verbs')">{{ __('verbs') }}</x-link>
 </x-page-head>
 
-<div id="copula" class="doc-section">
+<div id="copula" class="wiki-container">
     <h1>Copulae</h1>
 
     <h2>the Stative Copula</h2>
@@ -359,7 +359,7 @@
     </div>
 </div>
 
-<div id="pseudo" class="doc-section">
+<div id="pseudo" class="wiki-container">
     <h1>pseudo-verbs</h1>
     <p>Alongside etymological verbs, a few other terms in Palestinian Arabic have been grammaticalized as verbs. What
         these <b>pseudo-verbs</b> have in common
@@ -492,7 +492,7 @@
     </x-vocabulary>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>auxiliaries</h1>
     <x-vocabulary title="aspectual">
         <x-term-item :term="$terms->firstWhere('translit', 'kān')"/>

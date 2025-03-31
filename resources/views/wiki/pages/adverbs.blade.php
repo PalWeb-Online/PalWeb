@@ -36,7 +36,7 @@
     <x-sentence-term arb="جوّا" eng="inside" :term="$terms->firstWhere('translit', 'juwwa')"/>
 </x-sentence-item>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>{{ __('inventory') }}</h1>
 
     <h2>Deictic Adverbs</h2>

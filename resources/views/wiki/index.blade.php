@@ -8,7 +8,7 @@
         <x-link :href="route('wiki.index')">{{ __('home') }}</x-link>
     </x-page-head>
 
-    <div class="doc-section">
+    <div class="wiki-container">
         <p>
             Welcome to the <b>PalWeb Wiki</b>! Use the menu on the left (tap the
             green arrow to view it on mobile) to navigate between sections.</p>

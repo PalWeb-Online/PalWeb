@@ -109,7 +109,7 @@
     </x-sentence-item>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Morphology</h1>
 
     <p><b>Adjectives</b> in Palestinian Arabic have relatively predictable morphological behavior. Most have sound
@@ -259,7 +259,7 @@
     </div>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Semantics</h1>
 
     <p>Some of the aforementioned adjective patterns have semantic associations.</p>

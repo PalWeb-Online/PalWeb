@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'workbench')">{{ __('workbench') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Introduction</h1>
     <p>Your <b>Workbench</b> is the area of your <b>Dashboard</b> where you will see all of your pinned items, namely
         Decks, Terms & Sentences. The <b>Workbench</b> provides three tools to create, study & share language materials
@@ -17,7 +17,7 @@
     <p>How these tools are used is explained in the section of this page corresponding to each.</p>
 </div>
 
-<div class="doc-section" id="deck-builder">
+<div class="wiki-container" id="deck-builder">
     <h1>Deck Builder</h1>
     <p>The <b>Deck Builder</b> is a tool to create Decks by grouping Terms from the PalWeb Dictionary. Once created, you
         can study these Decks in the <b>Card Viewer</b> & share them with others. The <b>Deck Builder</b> is divided
@@ -61,7 +61,7 @@
         privacy status at any time by clicking this button anywhere else on PalWeb where your Deck appears.</p>
 </div>
 
-<div class="doc-section" id="card-viewer">
+<div class="wiki-container" id="card-viewer">
     <h1>Card Viewer</h1>
     <p>The <b>Card Viewer</b> is a tool to study Decks you have pinned as flashcards. The <b>Card Viewer</b> is divided
         into two pages:</p>
@@ -81,7 +81,7 @@
         controls.)
     </p>
 </div>
-<div class="doc-section" id="record-wizard">
+<div class="wiki-container" id="record-wizard">
     <h1>Record Wizard</h1>
     <p>The <b>Record Wizard</b> is a tool to record yourself speaking Arabic. Its primary purpose is as a means to
         source audio samples of the many possible Pronunciations of the Terms in the PalWeb Dictionary; this is for

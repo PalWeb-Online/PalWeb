@@ -60,7 +60,7 @@
     finite, the grammatical category of <b>Numerals</b> is considered an open category insofar as it contains the <b>elative</b>
     forms of all <b>Adjectives</b>.</p>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Numbers</h1>
     <p><b>Cardinal Numbers</b> may be grouped in the following sets:</p>
     <ul>
@@ -82,7 +82,7 @@
         position; there is no productive way to form higher ordinals.</p>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Adjectives</h1>
     <p>Although the <b>elative</b> forms of all <b>Adjectives</b> fall within this category, they are not
         individually recorded as distinct lemmas unless they are not related to any <b>positive</b> form — with the

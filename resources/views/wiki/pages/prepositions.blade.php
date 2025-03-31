@@ -37,7 +37,7 @@
 
 <x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(35)"/>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Prepositions & Verbs</h1>
     <p>Generally speaking, Arabic is very literal in its use of prepositions. Sometimes, though, certain prepositions
         are used — namely with verbs — in a way that doesn't translate very well into English. These usages may be

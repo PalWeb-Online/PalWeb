@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'ajp')">{{ __('ajp') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>What is AJP?</h1>
     <p><b>AJP</b> is the official <a
             href="https://en.wikipedia.org/wiki/International_Organization_for_Standardization"

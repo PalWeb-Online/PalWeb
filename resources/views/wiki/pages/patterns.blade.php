@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'patterns')">{{ __('patterns') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Singular Patterns</h1>
 
     <h2 id="CvCC" style="scroll-margin: 8rem">CCC</h2>
@@ -94,7 +94,7 @@
     </x-vocabulary>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Plural Patterns</h1>
 
     <h2 id="CvCC" style="scroll-margin: 8rem">CCC</h2>

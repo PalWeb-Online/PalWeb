@@ -67,7 +67,7 @@
     head noun — which must be definite in the <b>تبع</b> structure — but displays that agreement via <b>iḍāfa</b>.
 </p>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>{{ __('inventory') }}</h1>
     <x-vocabulary title="{{ __('particles') }}">
         <x-term-item :term="$terms->firstWhere('translit', 'ya-')"/>

@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'roots')">{{ __('roots') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <p>In Arabic, nearly every term has a triliteral (i.e. three-letter) Root; arguably, the
         majority of
         terms in Arabic are ultimately no more than a root placed in one of a few high-frequency

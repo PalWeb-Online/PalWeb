@@ -4,11 +4,11 @@
     <x-link :href="route('wiki.show', 'syntax')">{{ __('syntax') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Sentence Structure</h1>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Parts of Speech</h1>
     <p>Palestinian Arabic terms are grouped into ten categories based on their morphological & syntactic properties.
         While each category has a variety of characteristics in terms of their usage, they may be defined by one or two
@@ -68,7 +68,7 @@
     </ol>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Clause Types</h1>
 </div>
 

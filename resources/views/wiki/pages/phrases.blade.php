@@ -10,7 +10,7 @@
         proverbial expressions are generally not included in the Dictionary.</p>
 </x-tip>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>{{ __('inventory') }}</h1>
     <x-vocabulary title="{{ __('greetings') }}">
         <x-term-item :term="$terms->firstWhere('translit', 'marħaba')"/>

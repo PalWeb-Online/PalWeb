@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'phonology')">{{ __('phonology') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Overview</h1>
     <p>In this section of the Wiki, the phonological features of Palestinian Arabic will be discussed. These
         features are divided into four areas:</p>

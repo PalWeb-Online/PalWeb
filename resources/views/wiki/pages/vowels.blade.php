@@ -5,7 +5,7 @@
     <x-link :href="route('wiki.show', 'vowels')">{{ __('vowels') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Inventory</h1>
 
     <p>The <b>vowel inventory</b> of Palestinian Arabic — that is, the set of all possible vowels in the language —

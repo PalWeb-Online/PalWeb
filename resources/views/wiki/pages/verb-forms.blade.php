@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'verb-forms')">{{ __('forms') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
 
     <p>The <b>Dictionary</b> distinguishes between eight primary <b>Verb Forms</b>:</p>
 

@@ -3,7 +3,7 @@
     <x-link :href="route('wiki.show', 'dictionary')">{{ __('dictionary') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Background</h1>
 
     <p>Welcome to the <b>PalWeb Dictionary</b>. PalWeb's digital interactive Dictionary is the culmination of several
@@ -73,7 +73,7 @@
         using the site's markup language.</p>
 </div>
 
-<div class="doc-section" id="conventions">
+<div class="wiki-container" id="conventions">
     <h1>Conventions</h1>
     <p>Because of the lack of standardization in Palestinian Arabic, a variety of conventions had to be developed to
         maintain consistency across entries in the Dictionary.</p>
@@ -220,7 +220,7 @@
         lemmas with a hyphen (e.g. <b>l-bēt</b>, <b>w-l-bēt</b>, <b>b-l-bēt</b>, <b>ha-l-bēt</b>, <b>b-ha-l-bēt</b>, <b>la-ha-l-bēt</b>).
     </p>
 </div>
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Entry Content</h1>
     <p>Creating a dictionary is more than just listing terms & writing their definitions. Indeed,
         any
@@ -395,7 +395,7 @@
             class="grn">yimkin</b></p>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Glossary</h1>
 
     <x-vocabulary title="vowels">

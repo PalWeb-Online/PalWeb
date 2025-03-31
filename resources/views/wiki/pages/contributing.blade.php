@@ -3,7 +3,7 @@
     <x-link :href="route('wiki.show', 'contributing')">{{ __('contributing') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>for Developers</h1>
     <p>PalWeb is now open source! Check out the public repository on GitHub!</p>
     <p>PalWeb is built on Laravel & primarily uses the Blade templating engine to render views, but I will probably have
@@ -25,13 +25,13 @@
     </ul>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>for Palestinian Arabic Speakers</h1>
     <p>I'm primarily looking for people who would be willing to volunteer to record audio samples of terms & sentences
         for the Dictionary, so please get in touch (<b>adrian@abdulbaha.xyz</b>) if that sounds like you.</p>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Everyone Else</h1>
     <p>Even if you're not a developer or an Arabic speaker, there's plenty you can do to contribute to the project.
         Just by using the site, you help to build it! <a href="{{ route('decks.create') }}" target="_blank">Building

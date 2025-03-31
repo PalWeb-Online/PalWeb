@@ -3,7 +3,7 @@
     <x-link :href="route('wiki.show', 'about')">{{ __('about') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1 style="text-transform: none">Welcome to PalWeb!</h1>
     <p>Welcome to <b>PalWeb</b>, the Web of Palestinian Arabic. PalWeb is the online hub for the study & research of the
         Palestinian dialects of Spoken Arabic. If you're ready to start learning Spoken Arabic, you've come to the right
@@ -58,7 +58,7 @@
         language is next. Of course, that project will be carried out by someone else. I will focus on using the tools
         I’ve created to finish fleshing out the PalWeb Dictionary, the Academy, etc.</p>
 </div>
-<div class="doc-section">
+<div class="wiki-container">
     <h1>have We Met?</h1>
     <img src="{{ asset('img/adrian.jpeg') }}"
          style="max-width: 30%; float: right; margin-inline-start: 2.4rem; border-radius: 1.6rem" alt="R. Adrian"/>

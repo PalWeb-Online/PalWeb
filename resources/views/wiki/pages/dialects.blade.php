@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'dialects')">{{ __('dialects') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Isoglosses</h1>
     <p>Dialects are distinguished on the basis of isoglosses. However, the distribution of different distinguishing
         features of dialects do not always overlap.</p>

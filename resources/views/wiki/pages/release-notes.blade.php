@@ -4,7 +4,7 @@
     <x-link :href="route('wiki.show', 'about')">{{ __('release-notes') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1 style="text-transform: none">PalWeb v1.2</h1>
     <p><b>PalWeb v1.2</b> is probably the most significant update to the site since I first transitioned to the Laravel
         framework in 2022. And yet in retrospect it will probably be the least significant of the next few updates to
@@ -77,7 +77,7 @@
         do so before finishing most of the functionality that I would need to leverage in that area of the site.</p>
 </div>
 
-<div class="doc-section">
+<div class="wiki-container">
     <h1>Version History</h1>
     <ul>
         <li>15/01/2025 — PalWeb v1.2.0 <b>(Current)</b></li>
