@@ -9,17 +9,9 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\View;
 
 class EmailAnnouncementController extends Controller
 {
-    public function create(): \Illuminate\View\View
-    {
-        View::share('pageTitle', 'Create Email');
-
-        return view('users.dashboard.email-compose');
-    }
-
     public function store(StoreEmailAnnouncementRequest $request): RedirectResponse
     {
         $subject = $request->input('subject');
@@ -35,6 +27,8 @@ class EmailAnnouncementController extends Controller
             }
         }
 
-        return to_route('homepage')->with('success', 'Announcement email has been queued.');
+        session()->flash('notification', ['type' => 'success', 'message' => 'Mail has been queued!']);
+
+        return to_route('homepage');
     }
 }

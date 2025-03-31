@@ -74,7 +74,7 @@ Route::get('/denied', function () {
     return Inertia::render('Auth/Subscription', [
         'denied' => true,
     ]);
-})->middleware(['guest'])->name('denied');
+})->middleware('guest')->name('denied');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -83,29 +83,23 @@ Route::prefix('/search')->controller(SearchGenieController::class)->group(functi
     Route::get('/filter-options', 'getFilterOptions');
 });
 
-Route::prefix('/email')->middleware('auth')->group(function () {
-    Route::controller(EmailVerificationController::class)->group(function () {
-        Route::get('/verification', function () {
-            return to_route('users.show', auth()->user())->with('notification', [
-                'type' => 'warning',
-                'message' => 'You must verify your email to access this feature.'
-            ]);
-        })->name('verification.notice');
-        Route::post('/verification/link', 'link')
-            ->middleware('throttle:6,1')
-            ->name('verification.send');
-        Route::get('/verification/{id}/{hash}', 'verify')
-            ->middleware(['signed', 'throttle:6,1',])
-            ->name('verification.verify');
-    });
+Route::prefix('/email')->middleware('auth')->controller(EmailVerificationController::class)->group(function () {
+    Route::get('/verification', function () {
+        return to_route('users.show', auth()->user())->with('notification', [
+            'type' => 'warning',
+            'message' => 'You must verify your email to access this feature.'
+        ]);
+    })->name('verification.notice');
+    Route::post('/verification/link', 'link')
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+    Route::get('/verification/{id}/{hash}', 'verify')
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
 });
 
-Route::prefix('/email')->middleware('admin')->group(function () {
-    Route::controller(EmailAnnouncementController::class)->group(function () {
-        Route::get('/create', 'create')->name('email.create');
-        Route::post('/store', 'store')->name('email.store');
-    });
-});
+Route::post('/email', [EmailAnnouncementController::class, 'store'])
+    ->middleware('admin')->name('email.store');
 
 Route::prefix('/library')->controller(TermController::class)->group(function () {
     Route::prefix('/terms')->group(function () {
@@ -195,11 +189,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/library')->group(function () {
-        Route::controller(MissingTermController::class)->group(function () {
-            Route::get('/missing/terms/create', 'create')->name('missing.terms.create');
-            Route::post('/missing/terms', 'store')->name('missing.terms.store');
-        });
-
         Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
@@ -223,23 +212,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
 
             Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
-
-            Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
-            Route::delete('/missing/terms/{missingTerm}',
-                [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
-            Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
         });
     });
 
     Route::prefix('/workbench')->group(function () {
-        Route::prefix('/speech-maker')->middleware(['admin'])->controller(SpeechMakerController::class)->group(function () {
+        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
             Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
             Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
             Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
             Route::get('/get-terms/{id}', function (string $sentenceId) {
                 return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
             })->name('speech-maker.get-terms');
-        });
+        })->middleware(['admin']);
 
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/', 'index')->name('deck-master.index');
@@ -268,6 +252,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'user' => auth()->user(),
         ]);
     })->name('subscription.index');
+
+    Route::prefix('/todo')->controller(ToDoController::class)->group(function () {
+        Route::post('/', 'store')
+            ->name('todo.store');
+        Route::get('/', 'index')
+            ->middleware('admin')->name('todo.index');
+        Route::delete('/{feedbackComment}', 'destroy')
+            ->middleware('admin')->name('todo.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

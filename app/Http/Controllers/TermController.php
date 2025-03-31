@@ -11,7 +11,6 @@ use App\Http\Resources\TermResource;
 use App\Models\Attribute;
 use App\Models\Gloss;
 use App\Models\Inflection;
-use App\Models\MissingTerm;
 use App\Models\Pattern;
 use App\Models\Pronunciation;
 use App\Models\Root;
@@ -374,27 +373,22 @@ class TermController extends Controller
         foreach ($relatives as $relative) {
             $term = Term::firstWhere('slug', $relative['slug']);
 
-            if ($term) {
-                $requestTerms[] = $term->slug;
+            $requestTerms[] = $term->slug;
 
-                if (! in_array($term->slug, $attachedTerms)) {
-                    $model->relatives()->attach($term, ['type' => $relative['type']]);
+            if (! in_array($term->slug, $attachedTerms)) {
+                $model->relatives()->attach($term, ['type' => $relative['type']]);
 
-                    switch ($relative['type']) {
-                        default:
-                            $term->relatives()->attach($model, ['type' => $relative['type']]);
-                            break;
-                        case 'component':
-                            $term->relatives()->attach($model, ['type' => 'descendant']);
-                            break;
-                        case 'descendant':
-                            $term->relatives()->attach($model, ['type' => 'component']);
-                            break;
-                    }
+                switch ($relative['type']) {
+                    default:
+                        $term->relatives()->attach($model, ['type' => $relative['type']]);
+                        break;
+                    case 'component':
+                        $term->relatives()->attach($model, ['type' => 'descendant']);
+                        break;
+                    case 'descendant':
+                        $term->relatives()->attach($model, ['type' => 'component']);
+                        break;
                 }
-
-            } else {
-                $relative && MissingTerm::create(['translit' => $relative['slug']]);
             }
         }
 

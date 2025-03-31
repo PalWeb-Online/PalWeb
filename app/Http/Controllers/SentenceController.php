@@ -164,28 +164,4 @@ class SentenceController extends Controller
 
         return to_route('sentences.index');
     }
-
-    public function todo(): \Illuminate\View\View
-    {
-        $terms = [];
-
-        Gloss::chunk(200, function ($glosses) use (&$terms) {
-            foreach ($glosses as $gloss) {
-                if (count($gloss->term->sentences($gloss->id)->get()) < 1) {
-                    $gloss->term->gloss = $gloss->gloss;
-                    $terms[] = $gloss->term;
-                }
-
-                if (count($terms) === 100) {
-                    return false;
-                }
-            }
-        });
-
-        View::share('pageTitle', 'Phrasebook: to-Do');
-
-        return view('sentences.todo', [
-            'terms' => $terms,
-        ]);
-    }
 }

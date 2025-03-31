@@ -10,6 +10,8 @@ import {useNotificationStore} from "../stores/NotificationStore.js";
 import SignIn from "../components/Modals/SignIn.vue";
 import SignUp from "../components/Modals/SignUp.vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
+import SendFeedback from "../components/Modals/SendFeedback.vue";
+import SendMail from "../components/Modals/SendMail.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -17,6 +19,9 @@ const NotificationStore = useNotificationStore();
 
 const carouselRef = ref(null);
 const sidebarRef = ref(null);
+
+const showSendFeedback = ref(false);
+const showSendMail = ref(false);
 
 const zIndices = ref({
     home: -1,
@@ -82,7 +87,6 @@ onMounted(() => {
             <div class="featured-title l">Menu</div>
 
             <NavAuth/>
-
 
             <div class="nav-carousel-wrapper">
                 <div class="nav-carousel-head">
@@ -214,7 +218,7 @@ onMounted(() => {
                         <img src="/img/globe-africa.svg" alt="Hub"/>
                         <div>hub</div>
                     </Link>
-                    <Link :href="route('wiki.index')" class="nav-portal">
+                    <Link :href="route('wiki.show', 'about')" class="nav-portal">
                         <img src="/img/globe-america.svg" alt="Wiki"/>
                         <div>wiki</div>
                     </Link>
@@ -225,9 +229,8 @@ onMounted(() => {
                 <div class="nav-user-menu-head">myAdmin</div>
                 <div class="nav-user-menu-items">
                     <Link :href="route('terms.create')">New Term</Link>
-                    <button>New Mail</button>
-                    <button>Terms to-Do</button>
-                    <button>Sentences to-Do</button>
+                    <button @click="showSendMail = true">Send Mail</button>
+                    <Link :href="route('todo.index')">to-Do List</Link>
                 </div>
             </div>
             <div v-if="UserStore.isUser" class="nav-user-menu">
@@ -245,8 +248,7 @@ onMounted(() => {
             <div v-if="UserStore.isUser" class="nav-user-menu">
                 <div class="nav-user-menu-head">getHelp</div>
                 <div class="nav-user-menu-items">
-                    <button>Ask PalWeb</button>
-                    <button>Request Term</button>
+                    <button @click="showSendFeedback = true">Send Feedback</button>
                 </div>
             </div>
             <div v-if="!UserStore.isUser" class="nav-user-menu">
@@ -260,6 +262,12 @@ onMounted(() => {
         <div class="nav-overlay"></div>
     </div>
 
+    <ModalWrapper v-model="showSendFeedback">
+        <SendFeedback @close="showSendFeedback = false"/>
+    </ModalWrapper>
+    <ModalWrapper v-model="showSendMail">
+        <SendMail @close="showSendMail = false"/>
+    </ModalWrapper>
     <ModalWrapper v-model="NavigationStore.showSignIn">
         <SignIn @close="NavigationStore.showSignIn = false" @signUp="NavigationStore.showSignIn = false; NavigationStore.showSignUp = true"/>
     </ModalWrapper>
