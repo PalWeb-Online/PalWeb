@@ -120,7 +120,7 @@ class Root extends Model
 
     public function terms(): HasMany
     {
-        return $this->hasMany(Term::class);
+        return $this->hasMany(Term::class)->orderBy('terms.term');
     }
 
     public function generateRoot(?Term $term = null): array

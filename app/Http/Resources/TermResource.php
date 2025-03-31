@@ -59,11 +59,12 @@ class TermResource extends JsonResource
         ];
 
         $detail = [];
+
         if ($this->withDetail()) {
             $detail = [
                 'root' => $this->when($this->relationLoaded('root') && $this->root !== null,
                     function () {
-                        return new RootResource($this->root);
+                        return new RootResource($this->root, $this->resource);
                     }
                 ),
                 'etymology' => $this->etymology,

@@ -235,6 +235,8 @@ body {
         .logo {
             animation: bounceIn 0.5s;
             z-index: 1;
+
+            @include pop-on-hover;
         }
 
         h1 {

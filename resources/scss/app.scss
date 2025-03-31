@@ -94,6 +94,7 @@
     grid-template-columns: 2.4rem auto;
     gap: 0.4rem 0.8rem;
     direction: rtl;
+    align-items: center;
 }
 
 .deck-item, .dialog-item {
@@ -832,12 +833,12 @@ ul.search-results {
         font-weight: 700;
         color: var(--color-dark-primary);
     }
+}
 
-    .field-error {
-        color: var(--color-accent-dark);
-        font-size: 1.2rem;
-        font-family: $monoFont;
-    }
+.field-error {
+    color: var(--color-accent-dark);
+    font-size: 1.2rem;
+    font-family: $monoFont;
 }
 
 .field-input {

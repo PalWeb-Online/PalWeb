@@ -20,6 +20,7 @@ class PronunciationResource extends JsonResource
             'phonemic' => $this->phonemic,
             'phonetic' => $this->phonetic,
             'borrowed' => $this->borrowed,
+            'dialect_id' => $this->dialect_id,
             'dialect' => $this->whenLoaded('dialect', function () {
                 return [
                     'id' => $this->dialect->id,

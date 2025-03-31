@@ -537,7 +537,6 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: stretch;
-            background: var(--color-pastel-light);
             margin: 0 0 0.3rem 0.3rem;
             position: relative;
 
@@ -554,7 +553,7 @@
                 font-family: $monoFont, $ar_headFont;
                 border: 0.1rem solid var(--color-dark-primary);
                 box-shadow: -0.3rem 0.3rem rgba(black, 0.2);
-
+                background: var(--color-pastel-light);
                 display: flex;
                 align-items: center;
             }

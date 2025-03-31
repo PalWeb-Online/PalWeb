@@ -7,6 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class RootResource extends JsonResource
 {
+    protected ?object $term;
+
+    public function __construct($resource, $term = null)
+    {
+        parent::__construct($resource);
+        $this->term = $term;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,7 +22,7 @@ class RootResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $rootData = $this->generateRoot();
+        $rootData = $this->generateRoot($this->term);
 
         return [
             'id' => $this->id,

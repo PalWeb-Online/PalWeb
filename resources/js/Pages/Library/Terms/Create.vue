@@ -18,25 +18,25 @@ const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const term = useForm({
-    id: props.term?.id || null,
-    term: props.term?.term || '',
-    category: props.term?.category || '',
-    pronunciations: props.term?.pronunciations || [],
-    root: props.term?.root || {
+    id: props.term.data?.id || null,
+    term: props.term.data?.term || '',
+    category: props.term.data?.category || '',
+    pronunciations: props.term.data?.pronunciations || [],
+    root: props.term.data?.root || {
         root: ''
     },
-    etymology: props.term?.etymology || {
+    etymology: props.term.data?.etymology || {
         type: '',
         source: '',
     },
-    attributes: props.term?.attributes || [],
-    spellings: props.term?.spellings || [],
-    relatives: props.term?.relatives || [],
-    patterns: props.term?.patterns || [],
-    glosses: props.term?.glosses || [],
-    inflections: props.term?.inflections || [],
-    image: props.term?.image || '',
-    usage: props.term?.usage || '',
+    attributes: props.term.data?.attributes || [],
+    spellings: props.term.data?.spellings || [],
+    relatives: props.term.data?.relatives || [],
+    patterns: props.term.data?.patterns || [],
+    glosses: props.term.data?.glosses || [],
+    inflections: props.term.data?.inflections || [],
+    image: props.term.data?.image || '',
+    usage: props.term.data?.usage || '',
 });
 
 const isSaving = ref(false);
@@ -192,8 +192,8 @@ defineOptions({
                         <div class="field-item">
                             <label>Term *</label>
                             <input v-model="term.term" required/>
-                            <div v-if="term.errors[`term.term`]" class="field-error">{{
-                                    term.errors[`term.term`]
+                            <div v-if="term.errors[`term`]" class="field-error">{{
+                                    term.errors[`term`]
                                 }}
                             </div>
                         </div>
@@ -208,8 +208,8 @@ defineOptions({
                                          @click="removeItem(index, term.spellings)"/>
                                     <div class="field-item">
                                         <input v-model="spelling.spelling"/>
-                                        <div v-if="term.errors[`term.spellings.${index}.spelling`]" class="field-error">
-                                            {{ term.errors[`term.spellings.${index}.spelling`] }}
+                                        <div v-if="term.errors[`spellings.${index}.spelling`]" class="field-error">
+                                            {{ term.errors[`spellings.${index}.spelling`] }}
                                         </div>
                                     </div>
                                 </div>
@@ -230,8 +230,8 @@ defineOptions({
                                 <option value="phrase">phrase</option>
                                 <option value="affix">affix</option>
                             </select>
-                            <div v-if="term.errors[`term.category`]" class="field-error">{{
-                                    term.errors[`term.category`]
+                            <div v-if="term.errors[`category`]" class="field-error">{{
+                                    term.errors[`category`]
                                 }}
                             </div>
                         </div>
@@ -257,9 +257,9 @@ defineOptions({
                                             <option value="clitic">clitic</option>
                                             <option value="idiom">idiom</option>
                                         </select>
-                                        <div v-if="term.errors[`term.attributes.${index}.attribute`]"
+                                        <div v-if="term.errors[`attributes.${index}.attribute`]"
                                              class="field-error">
-                                            {{ errors[`term.attributes.${index}.attribute`] }}
+                                            {{ term.errors[`attributes.${index}.attribute`] }}
                                         </div>
                                     </div>
                                 </div>
@@ -281,42 +281,42 @@ defineOptions({
                             <div class="field-item">
                                 <label>Translit *</label>
                                 <input v-model="pronunciation.translit" required/>
-                                <div v-if="term.errors[`term.pronunciations.${index}.translit`]" class="field-error">
-                                    {{ term.errors[`term.pronunciations.${index}.translit`] }}
+                                <div v-if="term.errors[`pronunciations.${index}.translit`]" class="field-error">
+                                    {{ term.errors[`pronunciations.${index}.translit`] }}
                                 </div>
                             </div>
                             <div class="field-item">
                                 <label>Phonemic *</label>
                                 <input v-model="pronunciation.phonemic" required/>
-                                <div v-if="term.errors[`term.pronunciations.${index}.phonemic`]" class="field-error">
-                                    {{ term.errors[`term.pronunciations.${index}.phonemic`] }}
+                                <div v-if="term.errors[`pronunciations.${index}.phonemic`]" class="field-error">
+                                    {{ term.errors[`pronunciations.${index}.phonemic`] }}
                                 </div>
                             </div>
                             <div class="field-item">
                                 <label>Phonetic *</label>
                                 <input v-model="pronunciation.phonetic" required/>
-                                <div v-if="term.errors[`term.pronunciations.${index}.phonetic`]" class="field-error">
-                                    {{ term.errors[`term.pronunciations.${index}.phonetic`] }}
+                                <div v-if="term.errors[`pronunciations.${index}.phonetic`]" class="field-error">
+                                    {{ term.errors[`pronunciations.${index}.phonetic`] }}
                                 </div>
                             </div>
                             <div class="field-item">
                                 <label>Dialect *</label>
-                                <select v-model="pronunciation.dialect.id" required>
-                                    <option value="1">General Palestinian</option>
-                                    <option value="2">Urban Palestinian</option>
-                                    <option value="3">Rural Palestinian</option>
-                                    <option value="4">Central Palestinian</option>
-                                    <option value="5">Northern Palestinian</option>
-                                    <option value="6">Palestinian Bedouin</option>
-                                    <option value="7">Palestinian Druze</option>
-                                    <option value="8">Central Urban Palestinian</option>
-                                    <option value="9">Northern Urban Palestinian</option>
-                                    <option value="10">Central Rural Palestinian</option>
-                                    <option value="11">Northern Rural Palestinian</option>
-                                    <option value="12">Southern Urban Palestinian</option>
+                                <select v-model="pronunciation.dialect_id" required>
+                                    <option :value="1">General Palestinian</option>
+                                    <option :value="2">Urban Palestinian</option>
+                                    <option :value="3">Rural Palestinian</option>
+                                    <option :value="4">Central Palestinian</option>
+                                    <option :value="5">Northern Palestinian</option>
+                                    <option :value="6">Palestinian Bedouin</option>
+                                    <option :value="7">Palestinian Druze</option>
+                                    <option :value="8">Central Urban Palestinian</option>
+                                    <option :value="9">Northern Urban Palestinian</option>
+                                    <option :value="10">Central Rural Palestinian</option>
+                                    <option :value="11">Northern Rural Palestinian</option>
+                                    <option :value="12">Southern Urban Palestinian</option>
                                 </select>
-                                <div v-if="term.errors[`term.pronunciations.${index}.dialect.id`]" class="field-error">
-                                    {{ term.errors[`term.pronunciations.${index}.dialect.id`] }}
+                                <div v-if="term.errors[`pronunciations.${index}.dialect.id`]" class="field-error">
+                                    {{ term.errors[`pronunciations.${index}.dialect.id`] }}
                                 </div>
                             </div>
                             <label class="checkbox">
@@ -340,9 +340,8 @@ defineOptions({
                                 }}</label>
                             <input v-model="term.root.root"
                                    :required="term.category === 'verb' && !term.attributes.map(attr => attr.attribute).includes('pseudo')"/>
-                            <div v-if="term.errors[`term.root.root`]" class="field-error">{{
-                                    term.errors[`term.term.root`]
-                                }}
+                            <div v-if="term.errors[`root.root`]" class="field-error">
+                                {{ term.errors[`root.root`] }}
                             </div>
                         </div>
                         <div class="field-item">
@@ -352,8 +351,8 @@ defineOptions({
                                 <option value="hybrid">hybrid</option>
                                 <option value="borrowed">borrowed</option>
                             </select>
-                            <div v-if="term.errors[`term.etymology.type`]" class="field-error">{{
-                                    term.errors[`term.etymology.type`]
+                            <div v-if="term.errors[`etymology.type`]" class="field-error">{{
+                                    term.errors[`etymology.type`]
                                 }}
                             </div>
                         </div>
@@ -578,22 +577,22 @@ defineOptions({
                                     <option value="accusative">host (accusative)</option>
                                     <option v-if="term.category === 'phrase'" value="resp">response</option>
                                 </select>
-                                <div v-if="term.errors[`term.inflections.${index}.form`]" class="field-error">
-                                    {{ term.errors[`term.inflections.${index}.form`] }}
+                                <div v-if="term.errors[`inflections.${index}.form`]" class="field-error">
+                                    {{ term.errors[`inflections.${index}.form`] }}
                                 </div>
                             </div>
                             <div class="field-item">
                                 <label>Inflection *</label>
                                 <input v-model="inflection.inflection" required/>
-                                <div v-if="term.errors[`term.inflections.${index}.inflection`]" class="field-error">
-                                    {{ term.errors[`term.inflections.${index}.inflection`] }}
+                                <div v-if="term.errors[`inflections.${index}.inflection`]" class="field-error">
+                                    {{ term.errors[`inflections.${index}.inflection`] }}
                                 </div>
                             </div>
                             <div class="field-item">
                                 <label>Translit *</label>
                                 <input v-model="inflection.translit" required/>
-                                <div v-if="term.errors[`term.inflections.${index}.translit`]" class="field-error">
-                                    {{ term.errors[`term.inflections.${index}.translit`] }}
+                                <div v-if="term.errors[`inflections.${index}.translit`]" class="field-error">
+                                    {{ term.errors[`inflections.${index}.translit`] }}
                                 </div>
                             </div>
                         </div>
@@ -621,14 +620,14 @@ defineOptions({
                                             <option value="component">component</option>
                                             <option value="descendant">descendant</option>
                                         </select>
-                                        <div v-if="term.errors[`term.relatives.${index}.type`]" class="field-error">
-                                            {{ term.errors[`term.relatives.${index}.type`] }}
+                                        <div v-if="term.errors[`relatives.${index}.type`]" class="field-error">
+                                            {{ term.errors[`relatives.${index}.type`] }}
                                         </div>
                                     </div>
                                     <div class="field-item">
                                         <div>{{ relative.slug }}</div>
-                                        <div v-if="term.errors[`term.relatives.${index}.slug`]" class="field-error">
-                                            {{ term.errors[`term.relatives.${index}.slug`] }}
+                                        <div v-if="term.errors[`relatives.${index}.slug`]" class="field-error">
+                                            {{ term.errors[`relatives.${index}.slug`] }}
                                         </div>
                                     </div>
                                 </div>
@@ -660,8 +659,8 @@ defineOptions({
                             <div class="field-item">
                                 <label>Gloss *</label>
                                 <input v-model="gloss.gloss" required/>
-                                <div v-if="term.errors[`term.glosses.${index}.gloss`]" class="field-error">
-                                    {{ term.errors[`term.glosses.${index}.gloss`] }}
+                                <div v-if="term.errors[`glosses.${index}.gloss`]" class="field-error">
+                                    {{ term.errors[`glosses.${index}.gloss`] }}
                                 </div>
                             </div>
 
@@ -703,9 +702,9 @@ defineOptions({
                                                     </optgroup>
                                                 </template>
                                             </select>
-                                            <div v-if="term.errors[`term.glosses.${index}.attributes.${i}.attribute`]"
+                                            <div v-if="term.errors[`glosses.${index}.attributes.${i}.attribute`]"
                                                  class="field-error">
-                                                {{ term.errors[`term.glosses.${index}.attributes.${i}.attribute`] }}
+                                                {{ term.errors[`glosses.${index}.attributes.${i}.attribute`] }}
                                             </div>
                                         </div>
                                     </div>
@@ -731,16 +730,16 @@ defineOptions({
                                                     <option value="hasObject">hasObject</option>
                                                 </optgroup>
                                             </select>
-                                            <div v-if="term.errors[`term.glosses.${index}.relatives.${i}.type`]"
+                                            <div v-if="term.errors[`glosses.${index}.relatives.${i}.type`]"
                                                  class="field-error">
-                                                {{ term.errors[`term.glosses.${index}.relatives.${i}.type`] }}
+                                                {{ term.errors[`glosses.${index}.relatives.${i}.type`] }}
                                             </div>
                                         </div>
                                         <div class="field-item">
                                             <input v-model="relative.slug"/>
-                                            <div v-if="term.errors[`term.glosses.${index}.relatives.${i}.slug`]"
+                                            <div v-if="term.errors[`glosses.${index}.relatives.${i}.slug`]"
                                                  class="field-error">
-                                                {{ term.errors[`term.glosses.${index}.relatives.${i}.slug`] }}
+                                                {{ term.errors[`glosses.${index}.relatives.${i}.slug`] }}
                                             </div>
                                         </div>
                                     </div>

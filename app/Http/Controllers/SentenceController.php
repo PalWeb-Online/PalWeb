@@ -97,26 +97,16 @@ class SentenceController extends Controller
 
     public function store(StoreSentenceRequest $request): RedirectResponse
     {
-        $sentenceData = $request->sentence;
-
-        $sentence = Sentence::create($this->buildSentence($sentenceData));
-
-        $this->linkTerms($sentence, $request->sentence['terms']);
+        $sentence = Sentence::create($this->buildSentence($request->all()));
+        $this->linkTerms($sentence, $request->terms);
 
         return to_route('speech-maker.sentence', $sentence);
     }
 
     public function update(UpdateSentenceRequest $request, Sentence $sentence): RedirectResponse
     {
-        $sentenceData = $request->sentence;
-
-//        todo: is unsetting necessary?
-        unset($sentenceData['audio']);
-        unset($sentenceData['isPinned']);
-
-        $sentence->update($this->buildSentence($sentenceData));
-
-        $this->linkTerms($sentence, $request->sentence['terms']);
+        $sentence->update($this->buildSentence($request->all()));
+        $this->linkTerms($sentence, $request->terms);
 
         return to_route('speech-maker.sentence', $sentence);
     }
@@ -133,9 +123,8 @@ class SentenceController extends Controller
         $sentence['sentence'] = implode(' ', $terms);
         $sentence['translit'] = implode(' ', $translits);
 
-        unset($sentence['terms']);
-
-        $sentence['dialog_id'] = $sentenceData['dialog']['id'];
+        $dialog = $sentenceData['dialog'];
+        $sentence['dialog_id'] = $dialog ? $dialog['id'] : null;
 
         return $sentence;
     }

@@ -255,6 +255,7 @@
         border-radius: 0.4rem 3.2rem 3.2rem 3.2rem;
         padding: 2.4rem;
         line-height: 2.4rem;
+        font-family: $bodyFont;
 
         .user-comment-content:before {
             color: var(--color-accent-medium);
