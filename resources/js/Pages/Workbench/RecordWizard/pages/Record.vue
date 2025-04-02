@@ -5,15 +5,17 @@ import {useRecordStore} from '../stores/RecordStore';
 import {useQueueStore} from '../stores/QueueStore.js';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 import WizardProgressBar from "../ui/WizardProgressBar.vue";
+import AppTip from "../../../../components/AppTip.vue";
+import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 
 const RecordWizardStore = useRecordWizardStore();
 const RecordStore = useRecordStore();
 const QueueStore = useQueueStore();
 
-const originalQueueLength = QueueStore.data.items.length;
+const originalQueueLength = QueueStore.queue.length;
 
-const dialogLimitReached = ref(null);
-const dialogQueueCompleted = ref(null);
+const alertLimitReached = ref(null);
+const alertQueueCompleted = ref(null);
 
 const audioParams = reactive({
     startThreshold: 0.1,
@@ -42,7 +44,7 @@ watch(
     (recorded) => {
         if (recorded >= 500 && RecordStore.recorder) {
             RecordStore.closeRecorder();
-            dialogLimitReached.value?.openDialog();
+            alertLimitReached.value?.openDialog();
         } else if (recorded < 500 && !RecordStore.recorder) {
             RecordStore.openRecorder(audioParams);
         }
@@ -53,7 +55,7 @@ watch(
     () => RecordStore.data.statusCount.done,
     (uploaded) => {
         if (uploaded >= originalQueueLength) {
-            dialogQueueCompleted.value?.openDialog();
+            alertQueueCompleted.value?.openDialog();
         }
     }
 );
@@ -66,9 +68,14 @@ watch(
 </script>
 
 <template>
-    <div class="rw-page-title">
+    <div class="rw-container-head">
         <h2>Record</h2>
     </div>
+
+<!--    <AppTip v-if="RecordWizardStore.data.errorMessage">-->
+<!--        <p>{{ RecordWizardStore.data.errorMessage }}</p>-->
+<!--    </AppTip>-->
+
     <div v-if="RecordWizardStore.data.errorMessage" class="tip error">
         <div class="material-symbols-rounded">info</div>
         <div class="tip-content">
@@ -80,7 +87,7 @@ watch(
         <section>
             <div class="rw-record-queue">
                 <div
-                    v-for="(pronunciation, index) in QueueStore.data.items"
+                    v-for="(pronunciation, index) in QueueStore.queue"
                     :key="pronunciation.id"
                     :class="{
                         'selected': QueueStore.selected === index,
@@ -107,16 +114,16 @@ watch(
                 />
                 <div class="rw-record-item">
                     <div>
-                        {{ QueueStore.data.items[QueueStore.selected]?.term || '' }}
+                        {{ QueueStore.queue[QueueStore.selected]?.term || '' }}
                     </div>
                     <div>
-                        {{ QueueStore.data.items[QueueStore.selected]?.translit || '' }}
+                        {{ QueueStore.queue[QueueStore.selected]?.translit || '' }}
                     </div>
                 </div>
                 <img
                     :class="{
                             'arrow': true,
-                            'disabled': QueueStore.selected + 1 >= QueueStore.data.items.length
+                            'disabled': QueueStore.selected + 1 >= QueueStore.queue.length
                         }"
                     src="/img/play.svg"
                     alt="Forward"
@@ -132,7 +139,7 @@ watch(
                 <div class="rw-actions-content">
                     <div class="rw-actions-bar">
                         <template
-                            v-if="RecordStore.data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed'">
+                            v-if="RecordStore.data.status[QueueStore.queue[QueueStore.selected]?.id] !== 'stashed'">
                             <template v-if="canRecord">
                                 <img
                                     class="toggle-record"
@@ -151,7 +158,7 @@ watch(
                                 class="trash"
                                 src="/img/trash.svg"
                                 alt="Discard"
-                                @click="RecordStore.discardRecord(QueueStore.data.items[QueueStore.selected]?.id)"
+                                @click="RecordStore.discardRecord(QueueStore.queue[QueueStore.selected]?.id)"
                             />
                             <img
                                 class="audio"
@@ -163,7 +170,7 @@ watch(
                     </div>
 
                     <div class="rw-item-counter">
-                        {{ RecordStore.data.statusCount.stashed }} of {{ QueueStore.data.items.length }}
+                        {{ RecordStore.data.statusCount.stashed }} of {{ QueueStore.queue.length }}
                     </div>
                 </div>
 
@@ -234,17 +241,17 @@ watch(
         </section>
     </div>
 
-    <AppDialog ref="dialogLimitReached" title="Limit Reached" size="large">
+    <PopupWindow ref="alertLimitReached" title="Limit Reached">
         <template #content>
             <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
                 Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
                 more.</p>
         </template>
-    </AppDialog>
-    <AppDialog ref="dialogQueueCompleted" title="Queue Completed" size="large">
+    </PopupWindow>
+    <PopupWindow ref="alertQueueCompleted" title="Queue Completed">
         <template #content>
             <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
                 uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
         </template>
-    </AppDialog>
+    </PopupWindow>
 </template>

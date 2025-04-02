@@ -7,9 +7,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     const RecordWizardStore = useRecordWizardStore();
     const RecordStore = useRecordStore();
 
-    const data = reactive({
-        items: [],
-    });
+    const queue = reactive([]);
 
     const selected = ref(0);
     const selectedArray = reactive([]);
@@ -33,12 +31,12 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const initSelection = () => {
         selectedArray.splice(0, selectedArray.length);
-        for (let i = 0; i < data.items.length; i++) {
+        for (let i = 0; i < queue.length; i++) {
             selectedArray.push(false);
         }
 
-        for (let i = 0; i < data.items.length; i++) {
-            if (isSelectable(data.items[i])) {
+        for (let i = 0; i < queue.length; i++) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 break;
             }
@@ -50,7 +48,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
         selected.value = index;
         selectedArray[index] = 'selected';
 
-        const newSelected = data.items[index];
+        const newSelected = queue[index];
         if (RecordStore.data.status[newSelected.id] === 'stashed') {
             if (RecordWizardStore.data.isRecording) RecordStore.stopRecording();
             RecordStore.playRecord();
@@ -59,7 +57,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const moveBackward = () => {
         for (let i = selected.value - 1; i >= 0; i--) {
-            if (isSelectable(data.items[i])) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 return true;
             }
@@ -68,8 +66,8 @@ export const useQueueStore = defineStore('QueueStore', () => {
     };
 
     const moveForward = () => {
-        for (let i = selected.value + 1; i < data.items.length; i++) {
-            if (isSelectable(data.items[i])) {
+        for (let i = selected.value + 1; i < queue.length; i++) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 return true;
             }
@@ -81,19 +79,16 @@ export const useQueueStore = defineStore('QueueStore', () => {
         return !['up', 'ready', 'stashing'].includes(RecordStore.data.status[element]);
     }
 
-    // const beforeSelectionChange = () => true;
-    // const afterSelectionChange = () => true;
-
     const fetchAutoItems = async () => {
         try {
             const response = await axios.post('/workbench/record-wizard/pronunciations', {
                 speaker_id: RecordWizardStore.speaker.id,
                 dialect_id: RecordWizardStore.speaker.dialect.id,
-                queuedItems: data.items,
+                queuedItems: queue,
             });
 
             if (response.data) {
-                data.items.push(...response.data.items);
+                queue.push(...response.data.items);
             }
         } catch (error) {
             console.error('Error loading items:', error);
@@ -105,11 +100,11 @@ export const useQueueStore = defineStore('QueueStore', () => {
             const response = await axios.post(`/workbench/record-wizard/decks/${id}`, {
                 speaker_id: RecordWizardStore.speaker.id,
                 dialect_id: RecordWizardStore.speaker.dialect.id,
-                queuedItems: data.items,
+                queuedItems: queue,
             });
 
             if (response.data) {
-                data.items.push(...response.data.items);
+                queue.push(...response.data.items);
             }
         } catch (error) {
             console.error(`Error fetching deck with ID ${id}:`, error);
@@ -117,7 +112,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     };
 
     const removeItem = async (pronunciation) => {
-        const index = data.items.indexOf(pronunciation);
+        const index = queue.indexOf(pronunciation);
 
         if (RecordStore.data.records[pronunciation.id]) {
             if (!confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be lost.')) return false;
@@ -126,13 +121,13 @@ export const useQueueStore = defineStore('QueueStore', () => {
             if (!discarded) return false;
         }
 
-        data.items.splice(index, 1);
+        queue.splice(index, 1);
         return true;
     };
 
     const flushQueue = async () => {
-        if (data.items.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
-            data.items = [];
+        if (queue.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
+            queue.value = [];
 
             RecordStore.clearStash();
             return true;
@@ -141,7 +136,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     };
 
     return {
-        data,
+        queue,
         selected,
         selectedArray,
         initSelection,

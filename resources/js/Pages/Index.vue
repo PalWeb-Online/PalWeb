@@ -55,7 +55,7 @@ defineOptions({
     <Head title="Home"/>
     <div id="app-body" class="homepage">
         <div class="homepage-hero-wrapper">
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v1.2 Release Notes -></Link>
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.0 Release Notes -></Link>
             <HomepageHero/>
             <!--            <div class="hero-blurb">-->
             <!--                Learning a language means making it yours.-->

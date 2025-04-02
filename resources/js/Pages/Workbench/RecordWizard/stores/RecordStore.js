@@ -98,7 +98,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         if (RecordWizardStore.data.isRecording) {
             stopRecording();
         } else {
-            if (QueueStore.data.items[QueueStore.selected]) startRecording();
+            if (QueueStore.queue[QueueStore.selected]) startRecording();
         }
     };
 
@@ -116,7 +116,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const onDataAvailable = async (record) => {
-        const currentItem = QueueStore.data.items[QueueStore.selected];
+        const currentItem = QueueStore.queue[QueueStore.selected];
 
         if (currentItem) {
             const blob = record.getBlob();
@@ -129,7 +129,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
                         stopRecording();
                         QueueStore.moveForward();
 
-                        if (data.status[QueueStore.data.items[QueueStore.selected]?.id] !== 'stashed') startRecording();
+                        if (data.status[QueueStore.queue[QueueStore.selected]?.id] !== 'stashed') startRecording();
                     }
 
                 } catch (error) {
@@ -201,7 +201,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const playRecord = () => {
-        const id = QueueStore.data.items[QueueStore.selected].id;
+        const id = QueueStore.queue[QueueStore.selected].id;
 
         if (data.status[id] === 'stashed') {
             const record = data.records[id];
@@ -244,7 +244,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
             //     const currentIndex = recordIds.indexOf(String(id));
             //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
             //     const nextRecordId = recordIds[nextIndex];
-            //     const nextPronunciationIndex = QueueStore.data.items.findIndex(p => p.id === Number(nextRecordId));
+            //     const nextPronunciationIndex = QueueStore.queue.findIndex(p => p.id === Number(nextRecordId));
             //     QueueStore.selectItem(nextPronunciationIndex);
             //
             // } else {
@@ -289,7 +289,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
             for (const id of stashedIds) {
                 await requestQueue.push(async () => {
                     try {
-                        const itemIndex = QueueStore.data.items.findIndex(
+                        const itemIndex = QueueStore.queue.findIndex(
                             (p) => p.id === Number(id)
                         );
 
@@ -310,7 +310,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
                         setStatus(id, 'uploaded');
 
                         if (itemIndex !== -1) {
-                            QueueStore.data.items.splice(itemIndex, 1);
+                            QueueStore.queue.splice(itemIndex, 1);
                             QueueStore.selectedArray.splice(itemIndex, 1);
                         }
 

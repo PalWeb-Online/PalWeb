@@ -21,7 +21,7 @@ const fetchDeckItems = async (deck) => {
 }
 
 const remove = (index) => {
-    QueueStore.removeItem(QueueStore.data.items[index]);
+    QueueStore.removeItem(QueueStore.queue[index]);
 };
 
 onMounted(() => {
@@ -84,9 +84,9 @@ onMounted(() => {
 
     <div class="rw-page__queue">
         <div class="rw-queue-body"
-             v-if="QueueStore.data.items.length > 0">
-            <draggable v-if="QueueStore.data.items.length > 0"
-                       :list="QueueStore.data.items" itemKey="id"
+             v-if="QueueStore.queue.length > 0">
+            <draggable v-if="QueueStore.queue.length > 0"
+                       :list="QueueStore.queue" itemKey="id"
                        id="rw-item-queue">
                 <template #item="{ element, index }">
                     <li>
@@ -106,20 +106,20 @@ onMounted(() => {
 
         <div class="rw-queue-foot">
             <div class="rw-queue-buttons">
-                <button :class="{ disabled: QueueStore.data.items.length >= 100}"
-                        @mousemove="tooltip.showTooltip(QueueStore.data.items.length < 100 ? 'Automatically fill your Queue with up to 100 items.' : '(You already have 100 items in the Queue.)' , $event);"
+                <button :class="{ disabled: QueueStore.queue.length >= 100}"
+                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? 'Automatically fill your Queue with up to 100 items.' : '(You already have 100 items in the Queue.)' , $event);"
                         @mouseleave="tooltip.hideTooltip()"
                         @click="QueueStore.fetchAutoItems">Fetch Items
                 </button>
 
-                <button :class="{ disabled: QueueStore.data.items.length <= 0}"
-                        @mousemove="tooltip.showTooltip(QueueStore.data.items.length > 0 ? 'Remove all items from your Queue.' : '(Your Queue is already empty.)', $event);"
+                <button :class="{ disabled: QueueStore.queue.length <= 0}"
+                        @mousemove="tooltip.showTooltip(QueueStore.queue.length > 0 ? 'Remove all items from your Queue.' : '(Your Queue is already empty.)', $event);"
                         @mouseleave="tooltip.hideTooltip()"
                         @click="QueueStore.flushQueue()">Flush Queue
                 </button>
             </div>
 
-            <div class="rw-item-counter">{{ QueueStore.data.items.length }} of 100</div>
+            <div class="rw-item-counter">{{ QueueStore.queue.length }} of 100</div>
         </div>
     </div>
 

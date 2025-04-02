@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted} from "vue";
+import {computed, onBeforeUnmount, onMounted} from "vue";
 import {merge} from "lodash";
 import Layout from "../../../Shared/Layout.vue";
 import {useRecordWizardStore} from "./stores/RecordWizardStore.js";
@@ -10,7 +10,8 @@ import Speaker from "./pages/Speaker.vue";
 import Queue from "./pages/Queue.vue";
 import Record from "./pages/Record.vue";
 import Check from "./pages/Check.vue";
-import AppAlert from "../../../components/AppAlert.vue";
+import NavGuard from "../../../components/Modals/NavGuard.vue";
+import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 
 const props = defineProps({
     speaker: Object,
@@ -24,7 +25,11 @@ const RecordWizardStore = useRecordWizardStore();
 const QueueStore = useQueueStore();
 const RecordStore = useRecordStore();
 
-const { showAlert, handleConfirm, handleCancel } = useNavGuard(RecordWizardStore.hasNavigationGuard);
+const hasNavigationGuard = computed(() => {
+    return RecordStore.data.statusCount.stashed > 0;
+});
+
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 onMounted(() => {
     RecordWizardStore.speaker = merge(RecordWizardStore.speaker, props.speaker);
@@ -32,7 +37,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     RecordWizardStore.data.step = 'speaker';
-    QueueStore.data.items = [];
+    QueueStore.queue = [];
 });
 
 </script>
@@ -46,7 +51,8 @@ onBeforeUnmount(() => {
             <img :class="RecordWizardStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"
                  @click="RecordWizardStore.back"/>
             <div class="app-nav-steps">
-                <div v-if="RecordWizardStore.data.step === 'speaker'" :class="{ active: RecordWizardStore.data.step === 'speaker' }">
+                <div v-if="RecordWizardStore.data.step === 'speaker'"
+                     :class="{ active: RecordWizardStore.data.step === 'speaker' }">
                     Speaker
                 </div>
                 <template v-else>
@@ -74,10 +80,11 @@ onBeforeUnmount(() => {
         </div>
     </div>
 
-    <AppAlert
-        v-if="showAlert"
-        :message="`Are you sure you want to leave the Record Wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`"
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
-    />
+    <ModalWrapper v-model="showAlert">
+        <NavGuard
+            :message="`Are you sure you want to leave the Record Wizard? Your ${RecordStore.data.statusCount.stashed} stashed recordings will be lost.`"
+            @confirm="handleConfirm"
+            @cancel="handleCancel"
+        />
+    </ModalWrapper>
 </template>

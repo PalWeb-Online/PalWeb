@@ -2,10 +2,7 @@
 import AppButton from "../AppButton.vue";
 
 const props = defineProps({
-    message: {
-        type: String,
-        default: 'Are you sure?',
-    },
+    message: { type: String, default: ''},
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
@@ -13,13 +10,19 @@ const emit = defineEmits(['confirm', 'cancel']);
 
 <template>
     <div class="modal-container-wrapper">
-        <div class="modal-heading">warning</div>
-        <div class="modal-container">
-            <img src="/img/warning.svg" alt="Warning" style="width: 9.6rem; justify-self: center;"/>
-            <p>{{ message }}</p>
-            <div class="app-alert-actions">
-                <AppButton @click="$emit('cancel')" label="Cancel"/>
-                <AppButton @click="$emit('confirm')" label="Confirm"/>
+        <div class="popup-window">
+            <div class="window-head">
+                <div class="tutorial-window-title">
+                    warning: unsaved changes
+                </div>
+            </div>
+            <div class="tutorial-window-body">
+                <img src="/img/warning.svg" alt="Warning" style="width: 9.6rem; justify-self: center;"/>
+                <p>{{ message }}</p>
+                <div class="app-alert-actions">
+                    <AppButton @click="$emit('cancel')" label="Cancel"/>
+                    <AppButton @click="$emit('confirm')" label="Confirm"/>
+                </div>
             </div>
         </div>
     </div>
@@ -32,6 +35,10 @@ const emit = defineEmits(['confirm', 'cancel']);
     gap: 10px;
     margin-top: 10px;
     width: 100%;
+
+    button {
+        box-shadow: none;
+    }
 }
 </style>
 

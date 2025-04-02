@@ -7,6 +7,19 @@ const props = defineProps({
 });
 
 const isDialogVisible = ref(false);
+
+const openDialog = () => {
+    isDialogVisible.value = true;
+};
+
+const closeDialog = () => {
+    isDialogVisible.value = false;
+};
+
+defineExpose({
+    openDialog,
+    closeDialog,
+});
 </script>
 
 <template>

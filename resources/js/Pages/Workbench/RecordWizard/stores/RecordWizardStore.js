@@ -49,7 +49,7 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
             backStep: null,
             nextStep: 'record',
             canMoveBack: () => false,
-            canMoveNext: () => QueueStore.data.items.length > 0 || RecordStore.data.statusCount.done > 0,
+            canMoveNext: () => QueueStore.queue.length > 0 || RecordStore.data.statusCount.done > 0,
         },
         record: {
             backStep: 'queue',
@@ -64,10 +64,6 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
             canMoveNext: () => false,
         }
     };
-
-    const hasNavigationGuard = computed(() => {
-        return RecordStore.data.statusCount.stashed > 0;
-    });
 
     const backDisabled = computed(() => {
         const canMoveBack = steps[data.step]?.canMoveBack();
@@ -140,7 +136,6 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
         data,
         speaker,
         steps,
-        hasNavigationGuard,
         showRetry,
         hasPendingRequests,
         backDisabled,

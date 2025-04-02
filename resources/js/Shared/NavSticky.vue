@@ -47,7 +47,7 @@ onMounted(() => {
     <div class="nav-sticky">
         <div class="nav-sticky-info">
             <div>JER {{ time.toLocaleTimeString('en-US', { hour12: false }) }} (UTC +2)</div>
-            <Link :href="route('homepage')">PalWeb: the Web of Palestinian Arabic.</Link>
+            <Link :href="route('homepage')">PalWeb 2.0 (BETA)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button class="material-symbols-rounded" @click.stop="NavigationStore.toggleSidebar">
