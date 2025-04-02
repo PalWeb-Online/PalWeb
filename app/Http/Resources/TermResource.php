@@ -30,6 +30,7 @@ class TermResource extends JsonResource
             'translit' => $pronunciationData['translit'],
             'pronunciations' => PronunciationResource::collection($pronunciationData['pronunciations']),
             'pronunciations_count' => $this->whenCounted('pronunciations'),
+            'image' => $this->image,
             'glosses' => $this->glosses->map(function ($gloss) {
                 return [
                     'id' => $gloss->id,
@@ -105,7 +106,6 @@ class TermResource extends JsonResource
                     ];
                 }),
                 'inflections' => $this->inflections,
-                'image' => $this->image,
                 'usage' => $this->usage,
                 'decks' => DeckResource::collection($this->whenLoaded('decks')),
             ];

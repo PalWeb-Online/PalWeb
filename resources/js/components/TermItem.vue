@@ -10,7 +10,6 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    size: {type: String, default: 'm'},
     glossId: {type: Number, default: null},
 });
 
@@ -19,7 +18,7 @@ const {term, isLoading, playAudio} = useTerm(props);
 
 <template>
     <template v-if="! isLoading">
-        <div :class="['term-item-wrapper', size]">
+        <div class="term-item-wrapper">
             <div class="term-item">
                 <div class="term-item-head">
                     <div class="arb">{{ term.term }}</div>

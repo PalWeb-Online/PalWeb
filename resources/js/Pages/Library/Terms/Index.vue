@@ -9,6 +9,7 @@ import {router} from "@inertiajs/vue3";
 import AppButton from "../../../components/AppButton.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
+import TermFeatured from "../../../components/TermFeatured.vue";
 
 const UserStore = useUserStore();
 
@@ -57,12 +58,8 @@ function updateFilter({filter, value}) {
         <button v-else class="feature-callout" @click="router.get(route('terms.random'))">I'm Feeling Lucky!</button>
     </div>
     <div id="app-body">
-        <!--        todo: put in a collapsible instead -->
         <div class="terms-featured-wrapper">
-            <div class="terms-featured-daily">
-                <div class="featured-title l" style="text-transform: none">Word of the Day</div>
-                <TermItem :model="featuredTerm"/>
-            </div>
+            <TermFeatured :model="featuredTerm"/>
 
             <div class="terms-featured-latest">
                 <div class="featured-title m" style="text-transform: none">Latest</div>

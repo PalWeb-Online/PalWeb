@@ -1,6 +1,5 @@
 <script setup>
 import {useUserStore} from "../stores/UserStore.js";
-import {computed} from "vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 
 const props = defineProps({
@@ -10,16 +9,20 @@ const props = defineProps({
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 
-const unlocked = computed(() => {
-    if (props.tier === 'pal') return UserStore.isUser;
-    if (props.tier === 'student') return UserStore.isStudent || UserStore.isAdmin;
-})
+const navigate = () => {
+    if (UserStore.highestRole === 'guest') {
+        NavigationStore.showSignUp = true;
+
+    } else {
+        window.location.href = '/billing';
+    }
+}
 </script>
 
 <template>
     <div class="tier-item-wrapper">
         <div class="tier-name">{{ tier }}</div>
-        <a href="/billing" class="tier-item">
+        <div @click="navigate" class="tier-item" style="cursor: pointer">
             <div class="tier-body">
                 <div>Access to <b>Wiki</b></div>
                 <div>Access to <b>Library: Dictionary</b></div>
@@ -52,7 +55,7 @@ const unlocked = computed(() => {
                 </div>
             </div>
             <div class="tiers-pricing">{{ tier === 'student' ? '$12/m $80/y' : 'FREE' }}</div>
-        </a>
+        </div>
 
         <div v-if="UserStore.highestRole === tier" class="current-tier">you are here</div>
     </div>

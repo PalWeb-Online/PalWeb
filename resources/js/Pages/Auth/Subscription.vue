@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue";
-import SubscriptionTier from "../../components/SubscriptionTier.vue";
 import AppTip from "../../components/AppTip.vue";
+import SubscriptionTier from "../../components/SubscriptionTier.vue";
 
 defineProps({
     denied: {type: Boolean, default: false}
