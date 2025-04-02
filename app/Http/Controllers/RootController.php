@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\RootResource;
 use App\Models\Root;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class RootController extends Controller
@@ -13,7 +12,7 @@ class RootController extends Controller
     {
         return Inertia::render('Library/Terms/Root', [
             'section' => 'library',
-            'root' => new RootResource($root->load(['terms'])),
+            'root' => new RootResource($root->load(['terms.pronunciations'])),
         ]);
     }
 }

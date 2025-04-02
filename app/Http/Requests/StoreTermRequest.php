@@ -19,7 +19,7 @@ class StoreTermRequest extends FormRequest
             'pronunciations.*.translit' => ['required'],
             'pronunciations.*.phonemic' => ['required'],
             'pronunciations.*.phonetic' => ['required'],
-            'pronunciations.*.dialect.id' => ['required'],
+            'pronunciations.*.dialect_id' => ['required'],
             'root.root' => ['nullable', 'min:3', 'max:4', new ArabicScript],
             'etymology.type' => ['required'],
             'attributes.*.attribute' => ['required'],

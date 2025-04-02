@@ -196,26 +196,6 @@ class Term extends Model
             ->withPivot('type');
     }
 
-//    public function variants(): BelongsToMany
-//    {
-//        return $this->relatives()->wherePivot('type', 'variant');
-//    }
-//
-//    public function references(): BelongsToMany
-//    {
-//        return $this->relatives()->wherePivot('type', 'reference');
-//    }
-//
-//    public function components(): BelongsToMany
-//    {
-//        return $this->relatives()->wherePivot('type', 'component');
-//    }
-//
-//    public function descendants(): BelongsToMany
-//    {
-//        return $this->relatives()->wherePivot('type', 'descendant');
-//    }
-
     public function scopeMatch($query, array $filters): void
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {

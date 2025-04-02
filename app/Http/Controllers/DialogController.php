@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 
@@ -69,7 +68,7 @@ class DialogController extends Controller
         }
     }
 
-    public function destroy(Dialog $dialog): RedirectResponse|JsonResponse
+    public function destroy(Dialog $dialog): RedirectResponse
     {
         $dialog->delete();
 

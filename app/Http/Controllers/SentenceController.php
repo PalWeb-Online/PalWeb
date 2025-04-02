@@ -6,24 +6,17 @@ use App\Events\ModelPinned;
 use App\Http\Requests\StoreSentenceRequest;
 use App\Http\Requests\UpdateSentenceRequest;
 use App\Http\Resources\SentenceResource;
-use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Services\SearchService;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
 class SentenceController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
-
     public function pin(Request $request, Sentence $sentence): JsonResponse
     {
         $user = $request->user();
@@ -147,7 +140,7 @@ class SentenceController extends Controller
         }
     }
 
-    public function destroy(Sentence $sentence): RedirectResponse|JsonResponse
+    public function destroy(Sentence $sentence): RedirectResponse
     {
         $sentence->delete();
 

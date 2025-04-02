@@ -427,12 +427,11 @@
 }
 
 .dm-term-preview {
-    overflow: auto;
+    overflow: visible;
     margin-block-end: 0.3rem;
 
     div.window-body {
         display: grid;
-        grid-template-areas: 1 / 1;
         padding: 0;
 
         & > * {
@@ -441,9 +440,10 @@
         }
 
         .overlay {
-            height: 100%;
             z-index: 2;
-            background: var(--color-pastel-medium);
+            background: var(--color-accent-medium);
+            margin-inline: 0.8rem;
+            border-radius: 0.8rem;
         }
     }
 }

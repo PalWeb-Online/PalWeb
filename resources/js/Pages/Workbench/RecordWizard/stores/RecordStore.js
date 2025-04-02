@@ -1,11 +1,11 @@
 import {defineStore} from 'pinia';
 import {reactive, ref} from 'vue';
-import axios from 'axios';
 import {useRecordWizardStore} from "./RecordWizardStore.js";
 import {useQueueStore} from "./QueueStore.js";
 import Record from "../../../../utils/Record.js";
 import RequestQueue from "../../../../utils/RequestQueue.js";
 import LinguaRecorder from "../../../../utils/LinguaRecorder.js";
+import {route} from "ziggy-js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
     const data = reactive({
@@ -229,7 +229,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
 
         try {
-            await axios.delete(`/api/record-wizard/${stashKey}`);
+            await axios.delete(route('stash.destroy', stashKey));
 
             delete data.records[id];
             delete data.status[id];
@@ -260,7 +260,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
     const clearStash = async () => {
         try {
-            await axios.delete(`/api/record-wizard/clear/${RecordWizardStore.speaker.id}`);
+            await axios.delete(route('stash.clear', RecordWizardStore.speaker.id));
 
             Object.keys(data.status).forEach(key => {
                 if (data.status[key] === 'stashed') {

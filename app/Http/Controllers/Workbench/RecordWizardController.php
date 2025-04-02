@@ -37,7 +37,8 @@ class RecordWizardController extends Controller
         $queuedIds = collect($queued)->pluck('id');
         $highestId = $queuedIds->max();
 
-        $query = Pronunciation::whereIn('dialect_id', $dialectIds)
+        $query = Pronunciation::with(['term'])
+            ->whereIn('dialect_id', $dialectIds)
             ->whereNotIn('id', $queuedIds)
             ->whereDoesntHave('audios', function ($query) use ($speakerId) {
                 $query->where('speaker_id', $speakerId);
@@ -73,7 +74,7 @@ class RecordWizardController extends Controller
             $queued = $request->input('queuedItems', []);
             $queuedIds = collect($queued)->pluck('id');
 
-            $deck = Deck::firstWhere('id', $deckId);
+            $deck = Deck::firstWhere('id', $deckId)->load(['terms.pronunciations']);
             $pronunciations = [];
 
             foreach ($deck->terms as $term) {

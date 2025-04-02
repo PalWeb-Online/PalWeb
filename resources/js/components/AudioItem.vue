@@ -3,6 +3,7 @@ import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
 import {Howl} from "howler";
 import {useUserStore} from "../stores/UserStore.js";
+import {router} from "@inertiajs/vue3";
 
 const UserStore = useUserStore();
 
@@ -24,7 +25,11 @@ function playAudio() {
     }
 }
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const deleteAudio = () => {
+    if (!confirm('Are you sure you want to delete this Audio?')) return;
+
+    router.delete(route('audios.destroy', props.model.id), {preserveScroll: true});
+};
 
 watch(() => props.model, loadAudio, {immediate: true});
 </script>
@@ -60,14 +65,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         </div>
 
         <template v-if="UserStore.user?.id === model.speaker.user.id">
-            <form :action="route('audios.destroy', model.id)" method="POST">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" :value="csrfToken">
-                <img
-                    onclick="if (confirm('Are you sure you want to delete this Audio?')) this.closest('form').submit()"
-                    class="trash" alt="Delete"
-                    src="/img/trash.svg"/>
-            </form>
+            <img class="trash" src="/img/trash.svg" @click="deleteAudio" alt="Delete"/>
         </template>
     </div>
 </template>

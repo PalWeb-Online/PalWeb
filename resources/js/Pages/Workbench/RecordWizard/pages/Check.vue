@@ -2,7 +2,9 @@
 import {computed, onMounted} from 'vue';
 import {useRecordStore} from "../stores/RecordStore.js";
 import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
-import axios from "axios";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+import AppTip from "../../../../components/AppTip.vue";
 
 const RecordStore = useRecordStore();
 const RecordWizardStore = useRecordWizardStore();
@@ -26,7 +28,7 @@ const deleteAudio = async (audio) => {
             delete RecordStore.data.errors[audio.pronunciation.id];
             RecordStore.data.statusCount.done--;
 
-            await axios.delete(`/community/audios/${audio.id}`);
+            router.delete(route('audios.destroy', audio.id), {preserveScroll: true});
 
         } catch (error) {
             console.error(`Error deleting audio ${audio.id}:`, error);
@@ -43,17 +45,12 @@ onMounted(() => {
     <div class="rw-container-head">
         <h2>Check</h2>
     </div>
-    <div class="tip">
-        <div class="material-symbols-rounded">info</div>
-        <div class="tip-content">
-            <p>Check the Audios you have just published. Only the Audios published in this session of the Record Wizard
-                are shown here. Go to <a :href="`/community/audios/${ RecordWizardStore.data.speaker.id }`"
-                                              target="_blank">your Speaker profile</a> to see a full list of all the Audios
-                you have ever published. If
-                you would like to continue recording more, simply return to the <b>Queue</b> step to add more items —
-                rinse & repeat!</p>
-        </div>
-    </div>
+    <AppTip>
+        <p>Check the Audios you have just published. Only the Audios published in this session of the Record Wizard
+            are shown here. Go to <a :href="`/community/audios/${ RecordWizardStore.speaker.id }`" target="_blank">
+                your Speaker profile</a> to see a full list of all the Audios you have ever published. If you would like
+            to continue recording more, simply return to the <b>Queue</b> step to add more items — rinse & repeat!</p>
+    </AppTip>
 
     <div class="rw-page__check">
         <section>

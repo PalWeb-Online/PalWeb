@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\UserScope;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,14 +39,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::addGlobalScope(new UserScope);
-    }
-
 
     protected function casts(): array
     {

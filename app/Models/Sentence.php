@@ -76,6 +76,7 @@ class Sentence extends Model
         return $allTerms->map(function ($sentenceTerm) {
             if ($sentenceTerm->id) {
                 $term = Term::find($sentenceTerm->id);
+                $term->load(['pronunciations']);
 
                 $termResource = new TermResource($term)->toArray(request());
                 $termResource['sentencePivot'] = [

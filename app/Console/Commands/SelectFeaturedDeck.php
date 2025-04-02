@@ -27,7 +27,7 @@ class SelectFeaturedDeck extends Command
      */
     public function handle(): int
     {
-        $deck = Deck::where('private', false)->inRandomOrder()->first();
+        $deck = Deck::inRandomOrder()->first();
         Cache::put('featured-deck', $deck, now()->addWeek());
 
         return Command::SUCCESS;

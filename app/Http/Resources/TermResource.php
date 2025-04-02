@@ -19,16 +19,18 @@ class TermResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $pronunciationData = $this->getUserPronunciationData();
+        $pronunciationData = $this->relationLoaded('pronunciations')
+            ? $this->getUserPronunciationData()
+            : null;
 
         $term = [
             'id' => $this->id,
             'slug' => $this->slug,
             'term' => $this->term,
             'category' => $this->category,
-            'audio' => $pronunciationData['audio'],
-            'translit' => $pronunciationData['translit'],
-            'pronunciations' => PronunciationResource::collection($pronunciationData['pronunciations']),
+            'audio' => $pronunciationData['audio'] ?? null,
+            'translit' => $pronunciationData['translit'] ?? $this->translit,
+            'pronunciations' => PronunciationResource::collection($pronunciationData['pronunciations'] ?? []),
             'pronunciations_count' => $this->whenCounted('pronunciations'),
             'image' => $this->image,
             'glosses' => $this->glosses->map(function ($gloss) {

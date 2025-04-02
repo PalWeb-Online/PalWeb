@@ -61,7 +61,7 @@ Route::get('/', function () {
         'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
         'sentences' => SentenceResource::collection(Sentence::find([255, 256, 257])->all()),
         'featuredUser' => new UserResource(User::find(1)),
-        'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms'])),
+        'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms.pronunciations'])),
     ]);
 })->name('homepage');
 
@@ -244,8 +244,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/record-wizard')->group(function () {
             Route::controller(RecordWizardController::class)->group(function () {
                 Route::get('/', 'index')->name('audios.record');
-                Route::post('/pronunciations', 'getAutoItems');
-                Route::post('/decks/{deck}', 'getDeckItems');
+                Route::post('/pronunciations', 'getAutoItems')->name('record-wizard.get.auto');
+                Route::post('/decks/{deck}', 'getDeckItems')->name('record-wizard.get.deck');
             });
             Route::controller(SpeakerController::class)->group(function () {
                 Route::post('/speaker', 'store')->name('speaker.store');
@@ -270,6 +270,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{feedbackComment}', 'destroy')
             ->middleware('admin')->name('todo.destroy');
     });
+
+    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
 });
 
 require __DIR__.'/auth.php';

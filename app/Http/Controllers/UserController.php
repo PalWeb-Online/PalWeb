@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $this->authorize('interact', $user);
 
-        $user->load(['badges', 'speaker', 'decks']);
+        $user->load(['dialect', 'badges', 'speaker', 'decks']);
 
         $speaker = $user->speaker?->load([
             'dialect',
@@ -48,6 +48,8 @@ class UserController extends Controller
     public function edit(User $user): \Inertia\Response
     {
         $this->authorize('modify', $user);
+
+        $user->load(['dialect']);
 
         return Inertia::render('Community/Users/Edit', [
             'section' => 'community',
@@ -75,16 +77,10 @@ class UserController extends Controller
         return to_route('users.show', $user);
     }
 
-    public function getDecks($termId): JsonResponse
+    public function getDecks(): JsonResponse
     {
-        foreach (auth()->user()->decks as $deck) {
-            if ($deck->terms->contains($termId)) {
-                $deck->isPresent = true;
-            }
-        }
-
         return response()->json([
-            'decks' => auth()->user()->decks,
+            'decks' => DeckResource::collection(auth()->user()->decks->load(['terms'])),
         ]);
     }
 }

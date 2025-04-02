@@ -59,6 +59,7 @@ const addPronunciation = () => {
         translit: '',
         phonemic: '//',
         phonetic: '[]',
+        dialect_id: null,
         dialect: {
             id: null,
             name: ''
@@ -315,8 +316,8 @@ defineOptions({
                                     <option :value="11">Northern Rural Palestinian</option>
                                     <option :value="12">Southern Urban Palestinian</option>
                                 </select>
-                                <div v-if="term.errors[`pronunciations.${index}.dialect.id`]" class="field-error">
-                                    {{ term.errors[`pronunciations.${index}.dialect.id`] }}
+                                <div v-if="term.errors[`pronunciations.${index}.dialect_id`]" class="field-error">
+                                    {{ term.errors[`pronunciations.${index}.dialect_id`] }}
                                 </div>
                             </div>
                             <label class="checkbox">

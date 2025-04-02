@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {reactive, ref, watch} from 'vue';
 import {useRecordWizardStore} from "./RecordWizardStore.js";
 import {useRecordStore} from './RecordStore';
+import {route} from "ziggy-js";
 
 export const useQueueStore = defineStore('QueueStore', () => {
     const RecordWizardStore = useRecordWizardStore();
@@ -81,7 +82,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchAutoItems = async () => {
         try {
-            const response = await axios.post('/workbench/record-wizard/pronunciations', {
+            const response = await axios.post(route('record-wizard.get.auto'), {
                 speaker_id: RecordWizardStore.speaker.id,
                 dialect_id: RecordWizardStore.speaker.dialect.id,
                 queuedItems: queue,
@@ -97,7 +98,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchDeckItems = async (id) => {
         try {
-            const response = await axios.post(`/workbench/record-wizard/decks/${id}`, {
+            const response = await axios.post(route('record-wizard.get.deck', id), {
                 speaker_id: RecordWizardStore.speaker.id,
                 dialect_id: RecordWizardStore.speaker.dialect.id,
                 queuedItems: queue,
@@ -127,9 +128,9 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const flushQueue = async () => {
         if (queue.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
-            queue.value = [];
+            queue.splice(0, queue.length);
 
-            RecordStore.clearStash();
+            await RecordStore.clearStash();
             return true;
         }
         return false;

@@ -11,7 +11,6 @@ use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
 use Exception;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,10 +19,6 @@ use Maize\Markable\Models\Bookmark;
 
 class DeckController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
-
     public function pin(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
@@ -84,7 +79,7 @@ class DeckController extends Controller
     {
         $this->authorize('interact', $deck);
 
-        $deck->load(['terms']);
+        $deck->load(['terms.pronunciations']);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',
@@ -138,7 +133,7 @@ class DeckController extends Controller
         }
     }
 
-    public function destroy(Deck $deck): RedirectResponse|JsonResponse
+    public function destroy(Deck $deck): RedirectResponse
     {
         $this->authorize('modify', $deck);
 
@@ -173,7 +168,8 @@ class DeckController extends Controller
 
         $user = $request->user();
 
-        $newDeck = $deck->replicate(['id', 'private']);
+        $newDeck = $deck->replicate(['id', 'private', 'terms_count']);
+
         $newDeck->private = 0;
         $newDeck->user_id = $user->id;
         $newDeck->description = "My copy of {$deck->author->name} ({$deck->author->username})'s {$deck->name} Deck.";
@@ -189,7 +185,7 @@ class DeckController extends Controller
             $newDeck->terms()->attach($id, ['position' => $index + 1]);
         }
 
-        $this->flasher->addSuccess(__('deck.copied', ['deck' => $deck->name]));
+        session()->flash('notification', ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
 
         return to_route('decks.show', $newDeck->id);
     }
@@ -198,7 +194,7 @@ class DeckController extends Controller
     {
         $this->authorize('interact', $deck);
 
-        $deck->load('terms.glosses');
+        $deck->load(['terms.glosses']);
 
         foreach ($deck->terms as $term) {
             $glosses = $term->glosses->pluck('gloss')->implode('; ');

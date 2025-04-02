@@ -72,16 +72,9 @@ watch(
         <h2>Record</h2>
     </div>
 
-<!--    <AppTip v-if="RecordWizardStore.data.errorMessage">-->
-<!--        <p>{{ RecordWizardStore.data.errorMessage }}</p>-->
-<!--    </AppTip>-->
-
-    <div v-if="RecordWizardStore.data.errorMessage" class="tip error">
-        <div class="material-symbols-rounded">info</div>
-        <div class="tip-content">
-            <p>{{ RecordWizardStore.data.errorMessage }}</p>
-        </div>
-    </div>
+    <AppTip v-if="RecordWizardStore.data.errorMessage">
+        <p>{{ RecordWizardStore.data.errorMessage }}</p>
+    </AppTip>
 
     <div class="rw-page__record mwe-rws-audio" :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
         <section>

@@ -31,7 +31,7 @@ class TermRepository
     public function findMatchingRoots(array $filters = []): Collection
     {
         $roots = Root::query()
-            ->with('terms')
+            ->with(['terms'])
             ->where('root', 'like', $filters['search'].'%')
             ->get();
 

@@ -258,7 +258,6 @@
     direction: rtl;
     display: flex;
     flex-flow: row wrap;
-
     background: white;
     border: 0.1rem solid var(--color-accent-medium);
     box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
@@ -284,6 +283,7 @@
             border-inline-end: 0.1rem solid var(--color-accent-medium);
             padding-inline-end: 1.6rem;
             white-space: nowrap;
+            text-align: start;
         }
 
         .translit {

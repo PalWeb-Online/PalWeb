@@ -18,7 +18,6 @@ use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
 use App\Services\SearchService;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +32,6 @@ use Maize\Markable\Models\Bookmark;
 class TermController extends Controller
 {
     public function __construct(
-        protected FlasherInterface $flasher,
         protected TermRepository $termRepository
     ) {
     }
@@ -117,6 +115,7 @@ class TermController extends Controller
             $model
                 ->load([
                     'root',
+                    'pronunciations',
                     'attributes',
                     'spellings',
                     'relatives',
@@ -186,6 +185,7 @@ class TermController extends Controller
 
         $term->load([
             'root',
+            'pronunciations',
             'attributes',
             'spellings',
             'relatives',

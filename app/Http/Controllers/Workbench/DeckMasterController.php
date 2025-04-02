@@ -24,7 +24,7 @@ class DeckMasterController extends Controller
     {
         if ($deck) {
             $this->authorize('modify', $deck);
-            $deck->load(['terms']);
+            $deck->load(['terms.pronunciations']);
         }
 
         return Inertia::render('Workbench/DeckMaster/DeckMaster', [
@@ -38,7 +38,6 @@ class DeckMasterController extends Controller
     public function study(Deck $deck): \Inertia\Response
     {
         $this->authorize('interact', $deck);
-//        todo: I'm not loading Terms, so I'm not sure why I'm still seeing them.
 
         return Inertia::render('Workbench/DeckMaster/DeckMaster', [
             'section' => 'academy',
@@ -46,7 +45,7 @@ class DeckMasterController extends Controller
             'step' => 'study',
             'deck' => new DeckResource($deck),
             'terms' => TermResource::collection(
-                $deck->terms->map(function ($term) {
+                $deck->terms->load(['pronunciations'])->map(function ($term) {
                     return new TermResource($term)->additional(['detail' => true]);
                 })
             )

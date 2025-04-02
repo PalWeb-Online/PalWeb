@@ -22,6 +22,14 @@ const {floatingStyles: notificationStyles} = useFloating(notificationTrigger, no
     middleware: [offset(8), flip(), shift()],
 });
 
+const handleToggleMenu = async () => {
+    if (!UserStore.hasFetchedDecks) {
+        await UserStore.fetchDecks();
+    }
+
+    toggleMenu();
+}
+
 const toggleTerm = async (deck) => {
     try {
         const response = await axios.post(route('decks.term.toggle', {deck: deck.id, term: props.model.id}));
@@ -50,11 +58,11 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
     <template v-if="UserStore.isUser">
         <div class="popup-menu-wrapper">
             <img ref="reference" class="term-deck-toggle"
-                 :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="toggleMenu" alt="pin"/>
+                 :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="handleToggleMenu" alt="pin"/>
 
             <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-                <form v-if="UserStore.user.decks.length > 0" ref="notificationTrigger">
-                    <button v-for="deck in UserStore.user.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
+                <form v-if="UserStore.decks.length > 0" ref="notificationTrigger">
+                    <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
                     <span style="font-weight: 700; text-transform: uppercase">
                         [{{ deck.terms.some(term => term.id === model.id) ? '✓' : ' ' }}]
                     </span>

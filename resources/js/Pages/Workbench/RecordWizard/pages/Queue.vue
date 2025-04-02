@@ -7,6 +7,7 @@ import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import AppTooltip from "../../../../components/AppTooltip.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppButton from "../../../../components/AppButton.vue";
+import AppTip from "../../../../components/AppTip.vue";
 
 const SearchStore = useSearchStore();
 
@@ -69,18 +70,16 @@ onMounted(() => {
             </template>
         </PopupWindow>
     </div>
-    <div class="tip">
-        <div class="material-symbols-rounded">info</div>
-        <div class="tip-content">
-            <p>Automatically generate a list of items to record, or use the <b>Search Genie</b> to fill the Queue with
-                any
-                valid items in the Deck of your choosing. You may manually reorder the Queue or remove any items that
-                you do not wish to record. Once you are satisfied with the Queue, proceed to the next step to
-                record.</p>
-        </div>
-    </div>
+    <AppTip>
+        <p>Automatically generate a list of items to record, or use the <b>Search Genie</b> to fill the Queue with
+            any
+            valid items in the Deck of your choosing. You may manually reorder the Queue or remove any items that
+            you do not wish to record. Once you are satisfied with the Queue, proceed to the next step to
+            record.</p>
+    </AppTip>
 
-    <AppButton @click="SearchStore.openSearchGenie('insert', 'decks')" label="Load Deck" style="margin-block-start: 1.6rem;"/>
+    <AppButton @click="SearchStore.openSearchGenie('insert', 'decks')" label="Load Deck"
+               style="margin-block-start: 1.6rem;"/>
 
     <div class="rw-page__queue">
         <div class="rw-queue-body"

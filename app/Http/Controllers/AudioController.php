@@ -7,7 +7,6 @@ use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Services\AudioService;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +15,6 @@ use Inertia\Inertia;
 class AudioController extends Controller
 {
     public function __construct(
-        protected FlasherInterface $flasher,
         protected AudioService $audioService
     ) {
     }
@@ -63,6 +61,7 @@ class AudioController extends Controller
 
     public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
     {
+//        todo: create AudioPolicy
         if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
             return $request->expectsJson()
                 ? response()->json(['error' => 'Unauthorized.'], 403)
@@ -73,26 +72,12 @@ class AudioController extends Controller
             $this->audioService->deleteAudio($audio->filename);
             $audio->delete();
 
-            $message = __('deleted', ['thing' => $audio->filename]);
-
-            if ($request->expectsJson()) {
-                return response()->json(['message' => $message]);
-            } else {
-                $this->flasher->addSuccess($message);
-
-                return to_route('speaker.show', $audio->speaker);
-            }
+            session()->flash('notification', ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
+            return back();
 
         } catch (\Exception $e) {
-            $error = 'Unable to delete file from cloud storage.';
-
-            if ($request->expectsJson()) {
-                return response()->json(['error' => $error, 'details' => $e->getMessage()], 500);
-            } else {
-                $this->flasher->addError($error);
-
-                return to_route('speaker.show', $audio->speaker);
-            }
+            session()->flash('notification', ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
+            return back();
         }
     }
 }
