@@ -10,6 +10,7 @@
 @import 'record';
 @import 'audios';
 @import 'utilities';
+@import 'wiki';
 
 .term-container, .deck-container,
 .sentence-container, .dialog-container,
@@ -102,7 +103,7 @@
     color: var(--color-dark-primary);
     background: white;
     border: 0.2rem solid var(--color-dark-primary);
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.2);
+    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     font-family: $headFont;
     position: relative;
 
@@ -553,7 +554,7 @@ Search Tools
     background: white;
     border-radius: 1.2rem;
     border: 0.2rem solid var(--color-accent-medium);
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.2);
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
     min-width: 100%;
     text-wrap: avoid;
     white-space: nowrap;

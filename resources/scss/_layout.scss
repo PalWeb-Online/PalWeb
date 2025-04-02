@@ -6,8 +6,9 @@ body {
     font-size: 1.6rem;
     hyphens: auto;
     margin: 0;
-    background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
-    background-attachment: fixed;
+    background: var(--color-pastel-light);
+    //background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
+    //background-attachment: fixed;
 
     &.front-page {
         #hero-panel {
@@ -162,6 +163,90 @@ body {
         margin: calc(-2.0rem - 3.2rem) 3.2rem 6.4rem;
         padding: 9.6rem 6.4rem;
         border-radius: 3.2rem;
+    }
+}
+
+#app-container {
+    display: grid;
+    min-height: calc(100vh - 3.6rem);
+    grid-template-rows: min-content 1fr;
+    align-content: start;
+
+    &.academy, &.workbench:has(.dm-mode-study) {
+        background: var(--color-accent-medium);
+    }
+
+    &.library {
+        background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
+        background-attachment: fixed;
+
+        #app-head {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+
+            h1 {
+                font-size: 12.8rem;
+                filter: drop-shadow(-0.4rem 0.4rem 0 rgba(black, 0.25));
+            }
+        }
+    }
+
+    &.community {
+        background: var(--color-accent-light);
+    }
+
+    &.workbench {
+        background: var(--color-medium-primary);
+    }
+
+    &.admin {
+    }
+}
+
+#app-head {
+    background: white;
+    padding: 1.6rem 3.2rem 2.4rem;
+    border-block-end: 0.2rem solid var(--color-dark-primary);
+    box-shadow: 0 0.4rem 0 rgba(black, 0.25);
+    display: grid;
+    justify-items: center;
+    position: relative;
+    z-index: 1;
+
+    h1 {
+        text-align: center;
+        font-family: $displayFont;
+        font-weight: 400;
+        font-size: clamp(4.8rem, 7vw, 6.4rem);
+        line-height: 1.2em;
+        margin: 0;
+        padding-block-end: 0.8rem;
+        color: var(--color-dark-primary);
+    }
+}
+
+#app-body {
+    display: grid;
+    gap: 3.2rem;
+    grid-auto-rows: min-content;
+
+    align-items: start;
+    justify-items: center;
+    height: 100%;
+    padding: 3.2rem 1.6rem;
+    position: relative;
+
+    @media (min-width: 960px) {
+        padding: 3.2rem;
+    }
+
+    & > button, & > a {
+        width: 100%;
+        max-width: 96rem;
+        @include link-purple-deep;
+        font-family: $monoFont;
     }
 }
 
@@ -527,51 +612,6 @@ body {
     }
 }
 
-.doc-section {
-    display: block;
-    background: white;
-    padding: 3.2rem;
-    border-radius: 1.6rem;
-    width: 100%;
-
-    & > *:first-child {
-        margin-block-start: 0;
-    }
-
-    h1, h2, h3 {
-        color: var(--color-medium-secondary);
-        font-family: $headFont;
-        text-transform: capitalize;
-        font-weight: 700;
-        font-size: 3.2rem;
-    }
-
-    h2 {
-        font-size: 2.4rem;
-    }
-
-    h3 {
-        font-size: 2.0rem;
-    }
-
-    p {
-        font-size: 1.6rem
-    }
-
-    ol {
-        padding-inline-end: 0.8rem;
-    }
-
-    a {
-        color: var(--color-dark-primary);
-        font-weight: 700;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
 .footer-container {
     align-self: end;
     display: grid;
@@ -581,7 +621,7 @@ body {
     color: white;
     font-size: 1.6rem;
     padding: 4.8rem min(5vw, 3.6rem) 0;
-    margin-block-start: calc(2 * 3.2rem + 1.6rem);
+    //margin-block-start: calc(2 * 3.2rem + 1.6rem);
     background: var(--color-medium-secondary);
     position: relative;
 
@@ -590,7 +630,7 @@ body {
     }
 
     @media (min-width: 960px) {
-        margin-block-start: calc(2 * 4.8rem + 2.4rem);
+        //margin-block-start: calc(2 * 4.8rem + 2.4rem);
     }
 
     .footer-social {

@@ -4,7 +4,7 @@
     <x-link :href="route('explore.show', 'health')">{{ __('health') }}</x-link>
 </x-page-head>
 
-<div class="wiki-container">
+<div class="wiki-content-block">
     <x-vocabulary title="general">
         <x-term-item :term="$terms->firstWhere('translit', 'ṭibb')"/>
         <x-term-item :term="$terms->firstWhere('translit', 'ṭibbi')"/>

@@ -16,7 +16,6 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WikiController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\RecordWizardController;
 use App\Http\Controllers\Workbench\SpeechMakerController;
@@ -65,6 +64,21 @@ Route::get('/', function () {
         'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms'])),
     ]);
 })->name('homepage');
+
+Route::get('/wiki/{page}', function ($page) {
+//    View::share('pageDescription', 'Dive into the most detailed publicly-accessible descriptive grammar of Palestinian Arabic ever; practical enough for learners, rigorous enough for linguists. Everything you need to understand the intricacies of the language is right here.');
+
+    $componentPath = resource_path("js/Pages/Wiki/Pages/{$page}.vue");
+
+    if (file_exists($componentPath)) {
+        return Inertia::render("Wiki/Pages/{$page}", [
+            'section' => 'wiki',
+            'page' => $page
+        ]);
+    }
+
+    return Inertia::render('Error', ['status' => 404]);
+})->name('wiki.show');
 
 Route::get('/coming-soon', function () {
     return Inertia::render('ComingSoon');
@@ -136,11 +150,6 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
     Route::get('/random', function () {
         return to_route('terms.show', Term::inRandomOrder()->first());
     })->name('terms.random');
-});
-
-Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
-    Route::get('/', 'index')->name('wiki.index');
-    Route::get('/{page}', 'show')->name('wiki.show');
 });
 
 Route::middleware(['auth'])->prefix('/hub')->group(function () {

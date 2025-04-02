@@ -1,11 +1,14 @@
-<x-page-head title="{{ __('consonants') }}"
-             blurb="Get to know the consonant inventory of Palestinian Arabic & all its varieties.">
-    <x-link :href="route('wiki.index')">{{ __('wiki') }}</x-link>
-    <x-link :href="route('wiki.show', 'phonology')">{{ __('phonology') }}</x-link>
-    <x-link :href="route('wiki.show', 'consonants')">{{ __('consonants') }}</x-link>
-</x-page-head>
+<script setup>
+import {route} from "ziggy-js";
+import Wiki from "../Wiki.vue";
+import Layout from "../../../Shared/Layout.vue";
 
-<div class="wiki-container">
+defineOptions({
+    layout: [Layout, Wiki],
+})
+</script>
+<template>
+<div class="wiki-content-block">
     <h1>Inventory</h1>
     <p>In this section, we're going to discuss <b>Consonants</b> in Palestinian Arabic.</p>
 
@@ -25,33 +28,33 @@
         correspondence with a letter of the Arabic abjad. In order of appearance, they
         are:</p>
 
-    <x-vocabulary>
-        <x-term-item arb="ب" eng="/b/"/>
-        <x-term-item arb="ت" eng="/t/"/>
-        <x-term-item arb="ج" eng="/ʒ/"/>
-        <x-term-item arb="ح" eng="/ħ/"/>
-        <x-term-item arb="خ" eng="/x/"/>
-        <x-term-item arb="د" eng="/d/"/>
-        <x-term-item arb="ر" eng="/r/"/>
-        <x-term-item arb="ز" eng="/z/"/>
-        <x-term-item arb="س" eng="/s/"/>
-        <x-term-item arb="ش" eng="/ʃ/"/>
-        <x-term-item arb="ص" eng="/sˤ/"/>
-        <x-term-item arb="ض" eng="/dˤ/"/>
-        <x-term-item arb="ط" eng="/tˤ/"/>
-        <x-term-item arb="ظ" eng="/zˤ/"/>
-        <x-term-item arb="ع" eng="/ʕ/"/>
-        <x-term-item arb="غ" eng="/ɣ/"/>
-        <x-term-item arb="ف" eng="/f/"/>
-        <x-term-item arb="ل" eng="/l/"/>
-        <x-term-item arb="ك" eng="/k/"/>
-        <x-term-item arb="ن" eng="/n/"/>
-        <x-term-item arb="م" eng="/m/"/>
-        <x-term-item arb="هـ" eng="/h/"/>
-        <x-term-item arb="ء" eng="/ʔ/"/>
-        <x-term-item arb="و" eng="/w/"/>
-        <x-term-item arb="ي" eng="/j/"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item arb="ب" eng="/b/"/>-->
+<!--        <x-term-item arb="ت" eng="/t/"/>-->
+<!--        <x-term-item arb="ج" eng="/ʒ/"/>-->
+<!--        <x-term-item arb="ح" eng="/ħ/"/>-->
+<!--        <x-term-item arb="خ" eng="/x/"/>-->
+<!--        <x-term-item arb="د" eng="/d/"/>-->
+<!--        <x-term-item arb="ر" eng="/r/"/>-->
+<!--        <x-term-item arb="ز" eng="/z/"/>-->
+<!--        <x-term-item arb="س" eng="/s/"/>-->
+<!--        <x-term-item arb="ش" eng="/ʃ/"/>-->
+<!--        <x-term-item arb="ص" eng="/sˤ/"/>-->
+<!--        <x-term-item arb="ض" eng="/dˤ/"/>-->
+<!--        <x-term-item arb="ط" eng="/tˤ/"/>-->
+<!--        <x-term-item arb="ظ" eng="/zˤ/"/>-->
+<!--        <x-term-item arb="ع" eng="/ʕ/"/>-->
+<!--        <x-term-item arb="غ" eng="/ɣ/"/>-->
+<!--        <x-term-item arb="ف" eng="/f/"/>-->
+<!--        <x-term-item arb="ل" eng="/l/"/>-->
+<!--        <x-term-item arb="ك" eng="/k/"/>-->
+<!--        <x-term-item arb="ن" eng="/n/"/>-->
+<!--        <x-term-item arb="م" eng="/m/"/>-->
+<!--        <x-term-item arb="هـ" eng="/h/"/>-->
+<!--        <x-term-item arb="ء" eng="/ʔ/"/>-->
+<!--        <x-term-item arb="و" eng="/w/"/>-->
+<!--        <x-term-item arb="ي" eng="/j/"/>-->
+<!--    </x-vocabulary>-->
 
     <h3>Points of Articulation</h3>
 
@@ -110,12 +113,12 @@
 
     <p>In Palestinian Arabic, there are four <b>pharyngealized</b> (a.k.a. “dark” or “emphatic”) consonants:</p>
 
-    <x-vocabulary>
-        <x-term-item arb="ص" eng="/sˤ/"/>
-        <x-term-item arb="ض" eng="/dˤ/"/>
-        <x-term-item arb="ط" eng="/tˤ/"/>
-        <x-term-item arb="ظ" eng="/zˤ/"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item arb="ص" eng="/sˤ/"/>-->
+<!--        <x-term-item arb="ض" eng="/dˤ/"/>-->
+<!--        <x-term-item arb="ط" eng="/tˤ/"/>-->
+<!--        <x-term-item arb="ظ" eng="/zˤ/"/>-->
+<!--    </x-vocabulary>-->
 
     <p>When pronouncing these types of consonants, the front of the tongue produces the primary articulation
         while the back of the tongue is raised to the soft palate. When you say <b>/tˤ/</b>, the front of your
@@ -148,11 +151,11 @@
 
     <h3>Dental Fricatives</h3>
 
-    <x-vocabulary>
-        <x-term-item arb="ث" eng="/θ/"/>
-        <x-term-item arb="ذ" eng="/ð/"/>
-        <x-term-item arb="ظ" eng="/ðˤ/"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item arb="ث" eng="/θ/"/>-->
+<!--        <x-term-item arb="ذ" eng="/ð/"/>-->
+<!--        <x-term-item arb="ظ" eng="/ðˤ/"/>-->
+<!--    </x-vocabulary>-->
 
     <p>In Arabic, there are three of these so-called dental fricatives. In the urban dialects of Palestinian
         Arabic, dental fricatives are pronounced as either alveolar fricatives or as alveolar stops; rural
@@ -190,20 +193,20 @@
     <p>With regard to borrowed terms, they're either pronounced the original way, or as fricatives. Natively,
         Palestinian Arabic realizes them only as stops.</p>
 
-    <x-vocabulary>
-        <x-term-item :term="$terms->firstWhere('translit', 'ŧaqāfe')"/>
-        <x-term-item :term="$terms->firstWhere('translit', 'tumm')"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'ŧaqāfe')"/>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'tumm')"/>-->
+<!--    </x-vocabulary>-->
 
-    <x-vocabulary>
-        <x-term-item :term="$terms->firstWhere('translit', 'ʔiza')"/>
-        <x-term-item :term="$terms->firstWhere('translit', 'dāʔ')"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'ʔiza')"/>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'dāʔ')"/>-->
+<!--    </x-vocabulary>-->
 
-    <x-vocabulary>
-        <x-term-item :term="$terms->firstWhere('translit', 'muwaẓẓaf')"/>
-        <x-term-item :term="$terms->firstWhere('translit', 'naḍḍaf')"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'muwaẓẓaf')"/>-->
+<!--        <x-term-item :term="$terms->firstWhere('translit', 'naḍḍaf')"/>-->
+<!--    </x-vocabulary>-->
 
     <p>Notice that there is no pharyngealized form of <b>ز</b> in Standard Arabic; the native form is an
         original new sound without its own designated letter.</p>
@@ -231,9 +234,9 @@
 
     <h3>Qāf</h3>
 
-    <x-vocabulary>
-        <x-term-item arb="ق" eng="/q/"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item arb="ق" eng="/q/"/>-->
+<!--    </x-vocabulary>-->
 
     <p>As is the case with the dental fricatives, <b>/q/</b> is conserved in formal terms. Natively, though,
         Palestinian Arabic replaces it with one of a variety of other sounds. (The Druze community is the only
@@ -295,14 +298,16 @@
         pronunciation of <b>/ʒ/</b> is affricated (<b>/dʒ/</b>), as in Standard Arabic. Here’s a summary of the
         sound changes in <b>rural dialects</b>:</p>
 
-    <x-vocabulary>
-        <x-term-item arb="ث" eng="/θ/"/>
-        <x-term-item arb="ذ" eng="/ð/"/>
-        <x-term-item arb="ظ" eng="/ðˤ/"/>
-        <x-term-item arb="ق" eng="/k/"/>
-        <x-term-item arb="ك" eng="/tʃ/"/>
-        <x-term-item arb="ج" eng="/dʒ/"/>
-    </x-vocabulary>
+<!--    <x-vocabulary>-->
+<!--        <x-term-item arb="ث" eng="/θ/"/>-->
+<!--        <x-term-item arb="ذ" eng="/ð/"/>-->
+<!--        <x-term-item arb="ظ" eng="/ðˤ/"/>-->
+<!--        <x-term-item arb="ق" eng="/k/"/>-->
+<!--        <x-term-item arb="ك" eng="/tʃ/"/>-->
+<!--        <x-term-item arb="ج" eng="/dʒ/"/>-->
+<!--    </x-vocabulary>-->
 
     <p>And that's everything you need to know about <b>Consonants</b> in Palestinian Arabic!</p>
 </div>
+</template>
+

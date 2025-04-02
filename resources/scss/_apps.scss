@@ -1,134 +1,3 @@
-#app-container {
-    display: grid;
-    min-height: calc(100vh - 3.6rem);
-    grid-template-rows: min-content 1fr;
-    align-content: start;
-
-    &.academy, &.workbench:has(.dm-mode-study), &.workbench:has(.sm-mode-dialog) {
-        background: var(--color-accent-medium);
-    }
-
-    &.library, &.workbench:has(.sm-mode-sentence) {
-        background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
-        background-attachment: fixed;
-
-        //#app-head {
-        //    background: none;
-        //    border: none;
-        //    box-shadow: none;
-        //    padding: 0;
-        //
-        //    h1 {
-        //        font-size: 12.8rem;
-        //    }
-        //}
-
-        //#app-head {
-        //    rotate: -1deg;
-        //    background: var(--color-medium-secondary);
-        //    border: none;
-        //    box-shadow: none;
-        //    width: 100%;
-        //    max-width: 128rem;
-        //    justify-self: center;
-        //    margin-block: 3.2rem;
-        //    filter: drop-shadow(-0.6rem 0.6rem 0 var(--color-dark-primary));
-        //
-        //    h1 {
-        //        rotate: 1deg;
-        //        font-family: $logoFont;
-        //        text-transform: lowercase;
-        //        font-weight: 700;
-        //        color: white;
-        //        font-size: 12.8rem;
-        //        filter: drop-shadow(-0.8rem 0.8rem 0 rgba(black, 0.33));
-        //    }
-        //}
-    }
-
-    &.community {
-        background: var(--color-accent-light);
-
-        //#app-head {
-        //    background: var(--color-accent-medium);
-        //    border-radius: 9.6rem;
-        //    margin: 3.2rem;
-        //    padding-inline: 6.4rem;
-        //
-        //    h1 {
-        //        text-transform: lowercase;
-        //        font-weight: 700;
-        //        font-size: calc(1.5 * clamp(4.8rem, 7vw, 6.4rem));
-        //        font-family: $logoFont;
-        //        color: white;
-        //        filter: drop-shadow(-0.6rem 0.6rem 0 var(--color-accent-dark));
-        //    }
-        //}
-    }
-
-    &.workbench {
-        background: var(--color-medium-primary);
-
-        //#app-head {
-        //    background: white;
-        //    border-block-end: 0.2rem solid var(--color-dark-primary);
-        //    box-shadow: 0 0.4rem 0 rgba(black, 0.25);
-        //}
-    }
-
-    &.admin {
-    }
-}
-
-#app-head {
-    background: white;
-    padding: 1.6rem 3.2rem 2.4rem;
-    border-block-end: 0.2rem solid var(--color-dark-primary);
-    box-shadow: 0 0.4rem 0 rgba(black, 0.25);
-    display: grid;
-    justify-items: center;
-    position: relative;
-    z-index: 1;
-
-    h1 {
-        text-align: center;
-        font-family: $displayFont;
-        font-weight: 400;
-        font-size: clamp(4.8rem, 7vw, 6.4rem);
-        line-height: 1.2em;
-        margin: 0;
-        padding-block-end: 0.8rem;
-        color: var(--color-dark-primary);
-    }
-}
-
-body:has(#app-body) {
-    background: var(--color-pastel-light);
-}
-
-#app-body {
-    display: grid;
-    gap: 3.2rem;
-    grid-auto-rows: min-content;
-
-    align-items: start;
-    justify-items: center;
-    height: 100%;
-    padding: 3.2rem 1.6rem;
-    position: relative;
-
-    @media (min-width: 960px) {
-        padding: 3.2rem;
-    }
-
-    & > button, & > a {
-        width: 100%;
-        max-width: 96rem;
-        @include link-purple-deep;
-        font-family: $monoFont;
-    }
-}
-
 #app-nav {
     width: 100%;
     display: flex;
@@ -553,6 +422,10 @@ body:has(#app-body) {
     font-weight: 700;
     font-size: 1.8rem;
     text-transform: uppercase;
+
+    button {
+        color: var(--color-polar-light);
+    }
 
     .material-symbols-rounded {
         user-select: none;

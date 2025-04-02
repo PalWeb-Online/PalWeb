@@ -153,7 +153,7 @@
         border: 0.3rem solid var(--color-dark-primary);
         padding: 0.2rem;
         background: var(--color-pastel-light);
-        box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.2);
+        box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     }
 
     @media (min-width: 960px) {
@@ -232,7 +232,7 @@
     }
 }
 
-.doc-section > .term-item-container {
+.wiki-content-block > .term-item-container {
     margin-block: 3.2rem;
 }
 
@@ -552,7 +552,7 @@
                 padding: 0.4rem;
                 font-family: $monoFont, $ar_headFont;
                 border: 0.1rem solid var(--color-dark-primary);
-                box-shadow: -0.3rem 0.3rem rgba(black, 0.2);
+                box-shadow: -0.3rem 0.3rem rgba(black, 0.25);
                 background: var(--color-pastel-light);
                 display: flex;
                 align-items: center;
