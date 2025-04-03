@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AudioResource;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\UserResource;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class CommunityController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index(): \Inertia\Response
     {
-        $latestDecks = Deck::with('author')
-            ->where('private', false)
+        $latestDecks = Deck::query()
             ->orderByDesc('id')
             ->take(5)
             ->get();
 
-        $popularDecks = Deck::with('author')
-            ->where('private', false)
+        $popularDecks = Deck::query()
             ->join('markable_bookmarks', function ($join) {
                 $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
                     ->where('markable_bookmarks.markable_type', Deck::class);
@@ -34,12 +35,19 @@ class CommunityController extends Controller
 
         $featuredDeck = Cache::get('featured-deck');
         if (! $featuredDeck) {
-            $featuredDeck = Deck::inRandomOrder()->first();
+            $featuredDeck = Deck::inRandomOrder()->with(['terms'])->first();
         }
 
-        $latestAudios = Audio::orderByDesc('id')->take(8)->get();
+        $latestAudios = Audio::query()
+            ->with([
+                'speaker',
+                'pronunciation.term',
+            ])
+            ->orderByDesc('id')
+            ->take(10)
+            ->get();
 
-        $users = User::where('users.private', false)
+        $topUsers = User::where('users.private', false)
             ->whereNotIn('users.id', [1, 2])
             ->leftJoin('decks', function ($join) {
                 $join->on('decks.user_id', 'users.id')->where('decks.private', false);
@@ -52,14 +60,13 @@ class CommunityController extends Controller
             ->take(5)
             ->get();
 
-        View::share('pageTitle', 'Community');
-
-        return view('community.index', [
-            'latestDecks' => $latestDecks,
-            'popularDecks' => $popularDecks,
-            'featuredDeck' => $featuredDeck,
-            'latestAudios' => $latestAudios,
-            'users' => $users,
+        return Inertia::render('Community/Users/Index', [
+            'section' => 'community',
+            'latestDecks' => DeckResource::collection($latestDecks),
+            'popularDecks' => DeckResource::collection($popularDecks),
+            'featuredDeck' => new DeckResource($featuredDeck),
+            'latestAudios' => AudioResource::collection($latestAudios),
+            'topUsers' => UserResource::collection($topUsers),
         ]);
     }
 }

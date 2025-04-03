@@ -39,6 +39,10 @@
             color: var(--color-dark-primary);
             background: var(--color-accent-medium);
         }
+
+        .menu.active {
+            background: var(--color-accent-medium);
+        }
     }
 
     @media (min-width: 1280px) {

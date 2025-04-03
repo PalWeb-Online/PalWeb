@@ -108,71 +108,85 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-light: hsl(42, 95%, 90%);
 }
 
-
-
-.theme-watermelon {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(170, 80%, 12%);
-    --color-dark-primary: hsl(170, 88%, 15%);
-    --color-medium-secondary: hsl(165, 80%, 28%);
-    --color-medium-primary: hsl(160, 60%, 45%);
-    --color-pastel-dark: hsl(165, 40%, 77%);
-    --color-pastel-medium: hsl(165, 35%, 85%);
-    --color-pastel-light: hsl(165, 32%, 94%);
-    --color-transparent: hsla(165, 35%, 85%, 0.75);
-    --color-accent-dark: #cc2944;
-    --color-accent-medium: hsl(0, 95%, 80%);
-    --color-accent-light: hsl(0, 93%, 97%);
-}
-
-.theme-jerusalem {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: #050566;
-    --color-dark-primary: hsl(250, 90%, 35%);
-    --color-medium-secondary: hsl(215, 90%, 45%);
-    --color-medium-primary: hsl(170, 95%, 38%);
-    --color-pastel-dark: hsl(200, 75%, 80%);
-    --color-pastel-medium: hsl(200, 90%, 92%);
-    --color-pastel-light: hsl(170, 50%, 94%);
-    --color-transparent: hsla(38, 90%, 88%, 0.75);
-    --color-accent-dark: hsl(30, 60%, 40%);
-    --color-accent-medium: hsl(38, 65%, 65%);
-    --color-accent-light: hsl(38, 90%, 94%);
-}
-
-.theme-zaatar {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(100, 80%, 12%);
-    --color-dark-primary: hsl(100, 80%, 16%);
-    --color-medium-secondary: hsl(80, 45%, 35%);
-    --color-medium-primary: hsl(80, 45%, 45%);
-    --color-pastel-dark: hsl(65, 60%, 80%);
-    --color-pastel-medium: hsl(65, 60%, 84%);
-    --color-pastel-light: hsl(65, 60%, 92%);
-    --color-transparent: hsla(65, 60%, 84%, 0.75);
-    --color-accent-dark: hsl(42, 70%, 35%);
-    --color-accent-medium: hsl(48, 90%, 55%);
-    --color-accent-light: hsl(45, 90%, 92%);
-}
-
-.theme-jericho {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(10, 50%, 15%);
-    --color-dark-primary: hsl(10, 50%, 22%);
-    --color-medium-secondary: hsl(30, 80%, 40%);
-    --color-medium-primary: hsl(30, 70%, 60%);
-    --color-pastel-dark: hsl(40, 75%, 83%);
-    --color-pastel-medium: hsl(40, 75%, 88%);
-    --color-pastel-light: hsl(40, 75%, 97%);
-    --color-transparent: hsla(40, 75%, 88%, 0.75);
-    --color-accent-dark: hsl(190, 50%, 35%);
-    --color-accent-medium: hsl(190, 50%, 70%);
-    --color-accent-light: hsl(190, 50%, 95%);
-}
+//.theme-watermelon {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(170, 80%, 12%);
+//    --color-dark-primary: hsl(170, 88%, 15%);
+//    --color-medium-secondary: hsl(165, 80%, 28%);
+//    --color-medium-primary: hsl(160, 55%, 45%);
+//    --color-pastel-dark: hsl(165, 40%, 77%);
+//    --color-pastel-medium: hsl(165, 35%, 85%);
+//    --color-pastel-light: hsl(165, 32%, 94%);
+//    --color-transparent: hsla(165, 35%, 85%, 0.75);
+//    --color-accent-dark: #cc2944;
+//    --color-accent-medium: hsl(0, 80%, 75%);
+//    --color-accent-light: hsl(0, 93%, 97%);
+//}
+//
+//.theme-jerusalem {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: #050566;
+//    --color-dark-primary: hsl(250, 90%, 35%);
+//    --color-medium-secondary: hsl(215, 90%, 45%);
+//    --color-medium-primary: hsl(170, 95%, 38%);
+//    --color-pastel-dark: hsl(200, 75%, 80%);
+//    --color-pastel-medium: hsl(200, 90%, 92%);
+//    --color-pastel-light: hsl(170, 50%, 94%);
+//    --color-transparent: hsla(38, 90%, 88%, 0.75);
+//    --color-accent-dark: hsl(30, 60%, 40%);
+//    --color-accent-medium: hsl(34, 65%, 65%);
+//    --color-accent-light: hsl(34, 90%, 94%);
+//}
+//
+//.theme-zaatar {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(100, 80%, 12%);
+//    --color-dark-primary: hsl(100, 80%, 16%);
+//    --color-medium-secondary: hsl(80, 45%, 35%);
+//    --color-medium-primary: hsl(80, 45%, 45%);
+//    --color-pastel-dark: hsl(65, 60%, 80%);
+//    --color-pastel-medium: hsl(65, 60%, 84%);
+//    --color-pastel-light: hsl(65, 60%, 92%);
+//    --color-transparent: hsla(65, 60%, 84%, 0.75);
+//    --color-accent-dark: hsl(42, 70%, 35%);
+//    --color-accent-medium: hsl(48, 90%, 55%);
+//    --color-accent-light: hsl(45, 90%, 92%);
+//}
+//
+//.theme-jericho {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(10, 50%, 15%);
+//    --color-dark-primary: hsl(10, 50%, 22%);
+//    --color-medium-secondary: hsl(30, 80%, 40%);
+//    --color-medium-primary: hsl(30, 70%, 60%);
+//    --color-pastel-dark: hsl(40, 75%, 83%);
+//    --color-pastel-medium: hsl(40, 75%, 88%);
+//    --color-pastel-light: hsl(40, 75%, 97%);
+//    --color-transparent: hsla(40, 75%, 88%, 0.75);
+//    --color-accent-dark: hsl(190, 50%, 35%);
+//    --color-accent-medium: hsl(190, 50%, 70%);
+//    --color-accent-light: hsl(190, 50%, 95%);
+//}
+//
+//.theme-jericho {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: #533734;
+//    --color-dark-primary: #553835;
+//    --color-medium-secondary: #993636;
+//    --color-medium-primary: #c84847;
+//    --color-pastel-dark: #a0b9c0;
+//    --color-pastel-medium: #ffdf92;
+//    --color-pastel-light: #f7ebba;
+//    --color-transparent: hsla(255, 80%, 92%, 0.75);
+//    --color-accent-dark: hsl(28, 85%, 48%);
+//    --color-accent-medium: #ffdf92;
+//    --color-accent-light: #f7ebba;
+//}
 
 .theme-picker-wrapper {
     display: grid;
@@ -227,61 +241,61 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         }
     }
 
-    .theme-preview.watermelon {
-        div:nth-child(1) {
-            background: hsl(170, 90%, 15%);
-        }
-
-        div:nth-child(2) {
-            background: #36b389;
-        }
-
-        div:nth-child(3) {
-            background: hsl(0, 95%, 80%);
-        }
-    }
-
-    .theme-preview.jerusalem {
-        div:nth-child(1) {
-            background: hsl(250, 90%, 35%);
-        }
-
-        div:nth-child(2) {
-            background: hsl(170, 95%, 38%);
-        }
-
-        div:nth-child(3) {
-            background: hsl(38, 65%, 65%);
-        }
-    }
-
-    .theme-preview.zaatar {
-        div:nth-child(1) {
-            background: hsl(100, 80%, 16%);
-        }
-
-        div:nth-child(2) {
-            background: hsl(80, 45%, 45%);
-        }
-
-        div:nth-child(3) {
-            background: hsl(48, 90%, 55%);
-        }
-    }
-
-    .theme-preview.jericho {
-        div:nth-child(1) {
-            background: hsl(20, 50%, 22%);
-        }
-
-        div:nth-child(2) {
-            background: hsl(30, 70%, 60%);
-        }
-
-        div:nth-child(3) {
-            background: hsl(180, 45%, 70%);
-        }
-    }
+    //.theme-preview.watermelon {
+    //    div:nth-child(1) {
+    //        background: hsl(170, 90%, 15%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: #36b389;
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(0, 95%, 80%);
+    //    }
+    //}
+    //
+    //.theme-preview.jerusalem {
+    //    div:nth-child(1) {
+    //        background: hsl(250, 90%, 35%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(170, 95%, 38%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(38, 65%, 65%);
+    //    }
+    //}
+    //
+    //.theme-preview.zaatar {
+    //    div:nth-child(1) {
+    //        background: hsl(100, 80%, 16%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(80, 45%, 45%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(48, 90%, 55%);
+    //    }
+    //}
+    //
+    //.theme-preview.jericho {
+    //    div:nth-child(1) {
+    //        background: hsl(20, 50%, 22%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(30, 70%, 60%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(180, 45%, 70%);
+    //    }
+    //}
 
     &:hover {
         box-shadow: 0 0 0 0.3rem var(--color-accent-medium);

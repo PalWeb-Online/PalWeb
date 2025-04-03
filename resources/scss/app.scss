@@ -31,14 +31,14 @@
         right: 1.6rem;
     }
 
-    .user-item {
+    .user-avatar {
         margin-inline-start: calc(-1.2rem - 3.2rem);
     }
 
     @media (min-width: 960px) {
         box-shadow: -0.3rem 0.3rem 0 0 var(--color-dark-primary);
 
-        .user-item {
+        .user-avatar {
             margin-inline-start: calc(-3.2rem - 3.2rem);
         }
     }
@@ -644,48 +644,6 @@ ul.search-results {
     max-width: 64rem;
     font-family: $headFont;
 
-    //&:has(.sp-head) {
-    //    margin-block-start: 2.4rem;
-    //
-    //    .sp-head {
-    //        display: grid;
-    //        align-content: center;
-    //        text-transform: capitalize;
-    //        font-family: $headFont;
-    //        font-size: 3.2rem;
-    //        font-weight: 700;
-    //        padding-block-end: 0.8rem;
-    //
-    //        &:has(p) {
-    //            border-block-end: 0.2rem solid var(--color-pastel-dark);
-    //
-    //            div {
-    //                margin-block-end: 0.8rem;
-    //            }
-    //        }
-    //
-    //        div {
-    //            margin: 0 auto;
-    //            margin-block-start: -6.0rem;
-    //            border-radius: 3.2rem;
-    //            padding: 0.8rem 3.2rem 0.4rem;
-    //            background: var(--color-dark-primary);
-    //            color: white;
-    //        }
-    //    }
-    //}
-    //.sp-link {
-    //    justify-self: start;
-    //    color: var(--color-medium-primary);
-    //    font-family: $headFont;
-    //    font-size: 1.4rem;
-    //    font-weight: 400;
-    //
-    //    &:hover {
-    //        text-decoration: underline;
-    //    }
-    //}
-
     p {
         color: var(--color-dark-primary);
         background: var(--color-accent-light);
@@ -703,6 +661,7 @@ ul.search-results {
         font-family: $monoFont;
         font-weight: 700;
         color: var(--color-medium-primary);
+        font-size: 1.4rem;
 
         &:hover {
             text-decoration: 0.2rem solid underline;

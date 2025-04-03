@@ -227,6 +227,8 @@ nav {
     @media (min-width: 960px) {
         .nav-sidebar {
             width: 36rem;
+            padding-block: 2.4rem;
+            border-inline-start: 0.2rem solid var(--color-dark-primary);
         }
 
         .nav-overlay {
@@ -249,7 +251,6 @@ nav {
     background: white;
     box-shadow: 0 0.3rem 0 rgba(black, 0.25);
     transition: 0.3s ease-in-out;
-    border-inline-start: 0.2rem solid var(--color-dark-primary);
     overflow: scroll;
     position: relative;
 
@@ -449,10 +450,6 @@ nav {
             }
         }
     }
-
-    @media (min-width: 960px) {
-        padding-block: 2.4rem;
-    }
 }
 
 .nav-overlay {
@@ -594,6 +591,34 @@ nav {
             &:hover {
                 background: var(--color-accent-light);
             }
+        }
+    }
+}
+
+.nav-body {
+    width: 100%;
+    max-width: 96rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    background: var(--color-accent-medium);
+    margin-block-end: 3.2rem;
+
+    & > div {
+        visibility: hidden;
+    }
+
+    & > * {
+        font-weight: 700;
+        padding: 0.2rem 1.6rem;
+        background: var(--color-dark-primary);
+        color: var(--color-polar-light);
+        font-family: $monoFont;
+
+        &:hover {
+            background: var(--color-polar-light);
+            color: var(--color-dark-primary);
         }
     }
 }

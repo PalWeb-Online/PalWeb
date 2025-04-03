@@ -20,7 +20,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         document.body.style.overflow = ''
     }
 
-    const themes = ['palweb', 'watermelon', 'jerusalem'];
+    const themes = ['palweb'];
 
     const activeTheme = ref(localStorage.getItem('selectedTheme') || 'palweb');
 
