@@ -4,7 +4,7 @@
     <x-link :href="route('explore.show', 'language')">{{ __('language') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-content-block">
     <x-vocabulary title="linguistics">
         <x-term-item :term="$terms->firstWhere('translit', 'kilme')"/>
         <x-term-item :term="$terms->firstWhere('translit', 'žumle')"/>

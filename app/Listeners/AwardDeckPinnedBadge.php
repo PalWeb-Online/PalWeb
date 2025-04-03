@@ -29,7 +29,7 @@ class AwardDeckPinnedBadge
 
             if (Deck::whereHasBookmark($event->user)->count() >= 5) {
                 $event->user->badges()->attach($badge);
-                $this->flasher->addInfo(__('badges.get', ['badge' => $badge->name]));
+                session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
             }
         }
     }

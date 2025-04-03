@@ -6,23 +6,19 @@ use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreDeckRequest;
 use App\Http\Requests\UpdateDeckRequest;
+use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
 use Exception;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
 class DeckController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
-
     public function pin(Request $request, Deck $deck): JsonResponse
     {
         $this->authorize('interact', $deck);
@@ -42,35 +38,25 @@ class DeckController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Illuminate\View\View
+    public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = array_merge([
-            'search' => '',
-            'category' => '',
-            'attribute' => '',
-            'form' => '',
-            'singular' => '',
-            'plural' => '',
-        ], $request->only(['search', 'category', 'attribute', 'form', 'singular', 'plural']));
-        $filters = array_map(fn($value) => $value ?? '', $filters);
+        $filters = $request->only(['search', 'match', 'pinned']);
 
-        $hasFilters = collect($filters)->some(fn($value) => !empty($value));
-
-        if (!$hasFilters) {
-            $decks = Deck::with('author')
-                ->where('private', false)
+        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
+            $decks = Deck::query()
                 ->orderByDesc('id')
                 ->paginate(25)
-                ->onEachSide(1);
+                ->onEachSide(1)
+                ->appends($filters);
             $totalCount = $decks->total();
 
         } else {
-            $allResults = $searchService->search($filters, false, true)['decks'];
-            $totalCount = $allResults->count();
+            $results = $searchService->search($filters, false, true)['decks'];
+            $totalCount = $results->count();
 
             $perPage = 25;
             $currentPage = $request->input('page', 1);
-            $decks = $allResults->forPage($currentPage, $perPage);
+            $decks = $results->forPage($currentPage, $perPage);
 
             $decks = new \Illuminate\Pagination\LengthAwarePaginator(
                 $decks,
@@ -81,33 +67,48 @@ class DeckController extends Controller
             );
         }
 
-        View::share('pageTitle', 'Deck Library');
-
-        return view('decks.index', [
-            'decks' => $decks,
-            'filters' => $filters,
-            'hasFilters' => $hasFilters,
+        return Inertia::render('Library/Decks/Index', [
+            'section' => 'library',
+            'decks' => DeckResource::collection($decks),
             'totalCount' => $totalCount,
+            'filters' => $filters,
         ]);
     }
 
-    public function store(StoreDeckRequest $request): JsonResponse
+    public function show(Deck $deck): \Inertia\Response
+    {
+        $this->authorize('interact', $deck);
+
+        $deck->load(['terms.pronunciations']);
+
+        return Inertia::render('Library/Decks/Show', [
+            'section' => 'library',
+            'deck' => new DeckResource($deck)
+        ]);
+    }
+
+    public function store(StoreDeckRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $deck = $request->deck;
-        $deck = array_merge($deck, [
-            'user_id' => $user->id,
-        ]);
-        $deck = Deck::create($deck);
+
+        $deck = Deck::create(array_merge($request->all(), ['user_id' => $user->id]));
         $this->linkTerms($deck, $request->terms);
 
         Bookmark::add($deck, $user);
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        return response()->json([
-            'deck' => $deck,
-        ]);
+        return to_route('decks.show', $deck);
+    }
+
+    public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
+    {
+        $this->authorize('modify', $deck);
+
+        $deck->update($request->all());
+        $this->linkTerms($deck, $request->terms);
+
+        return to_route('decks.show', $deck);
     }
 
     private function linkTerms($deck, $terms): void
@@ -118,8 +119,8 @@ class DeckController extends Controller
             if ($term) {
                 $deck->terms()->syncWithoutDetaching([
                     $term->id => [
-                        'gloss_id' => $termData['gloss_id'],
-                        'position' => $termData['position'],
+                        'gloss_id' => $termData['deckPivot']['gloss_id'],
+                        'position' => $termData['deckPivot']['position'],
                     ],
                 ]);
             }
@@ -132,65 +133,13 @@ class DeckController extends Controller
         }
     }
 
-    public function show(Deck $deck): \Illuminate\View\View
-    {
-        $this->authorize('interact', $deck);
-
-        $deck->load([
-            'author',
-            'terms' => function ($query) {
-                $query->orderBy('deck_term.id');
-            },
-        ]);
-
-        View::share('pageTitle', 'Deck: '.$deck->name);
-
-        return view('decks.show', ['deck' => $deck]);
-    }
-
-    public function update(UpdateDeckRequest $request, Deck $deck): JsonResponse
-    {
-        $this->authorize('modify', $deck);
-
-        $deck->update($request->deck);
-        $this->linkTerms($deck, $request->terms);
-
-        return response()->json([
-            'deck' => $deck,
-        ]);
-    }
-
-    public function destroy(Request $request, Deck $deck): RedirectResponse|JsonResponse
+    public function destroy(Deck $deck): RedirectResponse
     {
         $this->authorize('modify', $deck);
 
         $deck->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => 'success',
-            ]);
-
-        } else {
-            $this->flasher->addSuccess(__('deleted', ['thing' => $deck->name]));
-
-            return to_route('decks.index');
-        }
-
-    }
-
-    public function togglePrivacy(Deck $deck): JsonResponse
-    {
-        $this->authorize('modify', $deck);
-
-        $deck->private = ! $deck->private;
-        $deck->private ? $status = 'Private' : $status = 'Public';
-        $deck->save();
-
-        return response()->json([
-            'isPrivate' => $deck->private,
-            'message' => __('privacy.updated', ['status' => $status]),
-        ]);
+        return to_route('decks.index');
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse
@@ -219,7 +168,8 @@ class DeckController extends Controller
 
         $user = $request->user();
 
-        $newDeck = $deck->replicate(['id', 'private']);
+        $newDeck = $deck->replicate(['id', 'private', 'terms_count']);
+
         $newDeck->private = 0;
         $newDeck->user_id = $user->id;
         $newDeck->description = "My copy of {$deck->author->name} ({$deck->author->username})'s {$deck->name} Deck.";
@@ -235,7 +185,7 @@ class DeckController extends Controller
             $newDeck->terms()->attach($id, ['position' => $index + 1]);
         }
 
-        $this->flasher->addSuccess(__('deck.copied', ['deck' => $deck->name]));
+        session()->flash('notification', ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
 
         return to_route('decks.show', $newDeck->id);
     }
@@ -244,7 +194,7 @@ class DeckController extends Controller
     {
         $this->authorize('interact', $deck);
 
-        $deck->load('terms.glosses');
+        $deck->load(['terms.glosses']);
 
         foreach ($deck->terms as $term) {
             $glosses = $term->glosses->pluck('gloss')->implode('; ');
@@ -256,7 +206,7 @@ class DeckController extends Controller
         }
 
         $output = fopen('php://output', 'w');
-        if (!$output) {
+        if (! $output) {
             throw new Exception('Failed to open php://output');
         }
 

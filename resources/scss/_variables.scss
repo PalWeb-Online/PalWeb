@@ -1,38 +1,39 @@
 @mixin info-box-yellow {
-    background: $accent-yellow-pastel;
-    border: 0.1rem solid $accent-yellow;
+    background: var(--color-accent-light);
+    border: 0.1rem solid var(--color-accent-medium);
 }
 
 @mixin button-primary-dark {
     background: white;
-    color: $purple-deep;
-    border: 0.1rem solid $purple-primary-dark;
-    box-shadow: -0.2rem 0.2rem 0 $purple-primary-dark;
+    color: var(--color-dark-primary);
+    border: 0.1rem solid var(--color-medium-secondary);
+    box-shadow: -0.2rem 0.2rem 0 var(--color-medium-secondary);
     border-radius: 1.2rem;
     padding: 0.8rem 1.2rem;
 }
 
 @mixin button-primary-deep {
     background: white;
-    color: $purple-deep;
-    border: 0.1rem solid $purple-deep;
+    color: var(--color-dark-primary);
+    border: 0.1rem solid var(--color-dark-primary);
     box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
     border-radius: 1.2rem;
     padding: 0.8rem 1.2rem;
 }
 
-@mixin box-yellow-pastel {
-    color: $purple-deep;
-    background: $accent-yellow-pastel;
-    border: 0.1rem solid $accent-yellow;
+@mixin box-accent-light {
+    color: var(--color-dark-primary);
+    background: var(--color-accent-light);
+    border: 0.1rem solid var(--color-accent-medium);
     border-radius: 0.8rem;
+    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
 }
 
 @mixin link-primary {
     font-family: $bodyFont;
     font-weight: 700;
     font-size: 1.6rem;
-    color: $purple-primary;
+    color: var(--color-medium-primary);
 
     &:hover {
         text-decoration: underline;
@@ -43,18 +44,18 @@
     font-family: $bodyFont;
     font-weight: 700;
     font-size: 1.6rem;
-    color: $purple-deep;
+    color: var(--color-dark-primary);
 
     &:hover {
-        text-decoration: underline;
+        text-decoration: 0.2rem solid underline;
     }
 }
 
 @mixin caption {
     padding: 0.6rem 1.8rem;
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     background: white;
-    border: 0.2rem solid $purple-deep;
+    border: 0.2rem solid var(--color-dark-primary);
     border-radius: 1.2rem;
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
     font-family: $headFont;
@@ -80,21 +81,230 @@ $bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
 $ar_headFont: 'ibm-plex-arabic', sans-serif;
 $ar_bodyFont: 'Vazirmatn', sans-serif;
 
-// PalWeb Colors
-$purple-deep-dark: #360f88;
-$purple-deep: #4313aa;
-$purple-primary-dark: #5435B0;
-$purple-primary: #7047eb;
-$purple-pastel-dark: #c6b5f7;
-$purple-pastel: #e2dafb;
-$purple-pastel-light: #f1edfd;
-$accent-yellow: #ffc32c;
-$accent-yellow-pastel: #fff0ca;
-$accent-green: #5c9e31;
-$accent-green: #B1CC33;
-$accent-pink: #ffa7c0;
-$accent-pink-light: #f5dfe5;
-$accent-pink-dark: #EA5A47;
+//var(--color-dark-secondary): #360f88;
+//var(--color-dark-primary): #4313aa;
+//var(--color-medium-secondary): #5435B0;
+//var(--color-medium-primary): #7047eb;
+//var(--color-pastel-dark): #c6b5f7;
+//var(--color-pastel-medium): #e2dafb;
+//var(--color-pastel-light): #f1edfd;
+//// one more yellow
+//var(--color-accent-medium): #ffc32c;
+//var(--color-accent-light): #fff0ca;
+
+:root, .theme-palweb {
+    --color-polar-dark: hsl(0, 0%, 0%);
+    --color-polar-light: hsl(0, 0%, 100%);
+    --color-dark-secondary: hsl(265, 95%, 28%);
+    --color-dark-primary: hsl(265, 95%, 35%);
+    --color-medium-secondary: hsl(260, 65%, 45%);
+    --color-medium-primary: hsl(255, 80%, 60%);
+    --color-pastel-dark: hsl(255, 75%, 83%);
+    --color-pastel-medium: hsl(255, 80%, 92%);
+    --color-pastel-light: hsl(260, 90%, 97%);
+    --color-transparent: hsla(255, 80%, 92%, 0.75);
+    --color-accent-dark: hsl(28, 85%, 48%);
+    --color-accent-medium: hsl(42, 95%, 58%);
+    --color-accent-light: hsl(42, 95%, 90%);
+}
+
+//.theme-watermelon {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(170, 80%, 12%);
+//    --color-dark-primary: hsl(170, 88%, 15%);
+//    --color-medium-secondary: hsl(165, 80%, 28%);
+//    --color-medium-primary: hsl(160, 55%, 45%);
+//    --color-pastel-dark: hsl(165, 40%, 77%);
+//    --color-pastel-medium: hsl(165, 35%, 85%);
+//    --color-pastel-light: hsl(165, 32%, 94%);
+//    --color-transparent: hsla(165, 35%, 85%, 0.75);
+//    --color-accent-dark: #cc2944;
+//    --color-accent-medium: hsl(0, 80%, 75%);
+//    --color-accent-light: hsl(0, 93%, 97%);
+//}
+//
+//.theme-jerusalem {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: #050566;
+//    --color-dark-primary: hsl(250, 90%, 35%);
+//    --color-medium-secondary: hsl(215, 90%, 45%);
+//    --color-medium-primary: hsl(170, 95%, 38%);
+//    --color-pastel-dark: hsl(200, 75%, 80%);
+//    --color-pastel-medium: hsl(200, 90%, 92%);
+//    --color-pastel-light: hsl(170, 50%, 94%);
+//    --color-transparent: hsla(38, 90%, 88%, 0.75);
+//    --color-accent-dark: hsl(30, 60%, 40%);
+//    --color-accent-medium: hsl(34, 65%, 65%);
+//    --color-accent-light: hsl(34, 90%, 94%);
+//}
+//
+//.theme-zaatar {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(100, 80%, 12%);
+//    --color-dark-primary: hsl(100, 80%, 16%);
+//    --color-medium-secondary: hsl(80, 45%, 35%);
+//    --color-medium-primary: hsl(80, 45%, 45%);
+//    --color-pastel-dark: hsl(65, 60%, 80%);
+//    --color-pastel-medium: hsl(65, 60%, 84%);
+//    --color-pastel-light: hsl(65, 60%, 92%);
+//    --color-transparent: hsla(65, 60%, 84%, 0.75);
+//    --color-accent-dark: hsl(42, 70%, 35%);
+//    --color-accent-medium: hsl(48, 90%, 55%);
+//    --color-accent-light: hsl(45, 90%, 92%);
+//}
+//
+//.theme-jericho {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(10, 50%, 15%);
+//    --color-dark-primary: hsl(10, 50%, 22%);
+//    --color-medium-secondary: hsl(30, 80%, 40%);
+//    --color-medium-primary: hsl(30, 70%, 60%);
+//    --color-pastel-dark: hsl(40, 75%, 83%);
+//    --color-pastel-medium: hsl(40, 75%, 88%);
+//    --color-pastel-light: hsl(40, 75%, 97%);
+//    --color-transparent: hsla(40, 75%, 88%, 0.75);
+//    --color-accent-dark: hsl(190, 50%, 35%);
+//    --color-accent-medium: hsl(190, 50%, 70%);
+//    --color-accent-light: hsl(190, 50%, 95%);
+//}
+//
+//.theme-jericho {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: #533734;
+//    --color-dark-primary: #553835;
+//    --color-medium-secondary: #993636;
+//    --color-medium-primary: #c84847;
+//    --color-pastel-dark: #a0b9c0;
+//    --color-pastel-medium: #ffdf92;
+//    --color-pastel-light: #f7ebba;
+//    --color-transparent: hsla(255, 80%, 92%, 0.75);
+//    --color-accent-dark: hsl(28, 85%, 48%);
+//    --color-accent-medium: #ffdf92;
+//    --color-accent-light: #f7ebba;
+//}
+
+.theme-picker-wrapper {
+    display: grid;
+    width: 80%;
+    max-width: 64rem;
+    justify-items: center;
+    gap: 1.6rem;
+}
+
+.theme-picker-option {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    background: white;
+    padding: 1.2rem;
+    border-radius: 3.2rem;
+    user-select: none;
+
+    .theme-name {
+        font-family: $headFont;
+        font-weight: 700;
+        font-size: 2.0rem;
+        color: var(--color-dark-primary);
+        padding-inline-start: 1.2rem;
+        padding-block-start: 0.2rem;
+    }
+
+    .theme-preview {
+        display: flex;
+        gap: 0.4rem;
+    }
+
+    .theme-preview > * {
+        width: 3.6rem;
+        height: 3.6rem;
+        border-radius: 50%;
+    }
+
+    .theme-preview.palweb {
+        div:nth-child(1) {
+            background: hsl(265, 95%, 35%);
+        }
+
+        div:nth-child(2) {
+            background: hsl(255, 80%, 60%)
+        }
+
+        div:nth-child(3) {
+            background: hsl(42, 95%, 58%);
+        }
+    }
+
+    //.theme-preview.watermelon {
+    //    div:nth-child(1) {
+    //        background: hsl(170, 90%, 15%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: #36b389;
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(0, 95%, 80%);
+    //    }
+    //}
+    //
+    //.theme-preview.jerusalem {
+    //    div:nth-child(1) {
+    //        background: hsl(250, 90%, 35%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(170, 95%, 38%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(38, 65%, 65%);
+    //    }
+    //}
+    //
+    //.theme-preview.zaatar {
+    //    div:nth-child(1) {
+    //        background: hsl(100, 80%, 16%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(80, 45%, 45%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(48, 90%, 55%);
+    //    }
+    //}
+    //
+    //.theme-preview.jericho {
+    //    div:nth-child(1) {
+    //        background: hsl(20, 50%, 22%);
+    //    }
+    //
+    //    div:nth-child(2) {
+    //        background: hsl(30, 70%, 60%);
+    //    }
+    //
+    //    div:nth-child(3) {
+    //        background: hsl(180, 45%, 70%);
+    //    }
+    //}
+
+    &:hover {
+        box-shadow: 0 0 0 0.3rem var(--color-accent-medium);
+    }
+
+    &.active {
+        box-shadow: 0 0 0 0.3rem var(--color-medium-primary);
+    }
+}
 
 // Colors
 html {
@@ -121,14 +331,6 @@ html {
 // Legacy Colors
 $red: rgb(237, 28, 36);
 $cyn: rgb(0, 174, 239);
-//$orn: rgb(242, 101, 34);
-//$yel: rgb(255, 194, 14);
-//$grn: rgb(0, 166, 81);
-//$blu: rgb(0, 114, 188);
-//$prp: rgb(102, 45, 145);
-//$mag: rgb(236, 0, 140);
-
-// New Colors
 $orn: rgb(242, 88, 36); // 15, 85, 95
 $yel: rgb(255, 179, 26); // 40, 90, 100
 $grn: rgb(0, 166, 83); // 150, 100, 65

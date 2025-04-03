@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(31)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(31)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -119,7 +119,7 @@
     </div>
 
     <p>{{ __('activity.true-false') }} If false, negate the statement.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="صحّ ولّا غلط — الدنيا شتا ببرشلونا"
                        eng="true or false — it's raining in Barcelona"/>
         <x-dialog-line speaker="جواب" arb="غلط، الدنيا مش شتا ببرشلونا" eng="false, it isn't raining in Barcelona"/>
@@ -144,7 +144,7 @@
     </div>
 
     <p>Infer whether the following statements are true or false. If false, make the statement true.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="صحّ ولّا غلط — الدنيا نهار بنيو يورك"
                        eng="true or false — it's daytime in New York"/>
         <x-dialog-line speaker="جواب" arb="غلط، الدنيا ليل بنيو يورك" eng="false, it's nighttime in New York"/>
@@ -225,7 +225,7 @@
 
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation. Jeries & Akram were standing together when Shadi sees them:</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="شادي" arb="مسا الخير — كيف الحال؟"/>
         <x-dialog-line speaker="جريس" arb="مسا النور — تمام حمدلله"/>
         <x-dialog-line speaker="أكرم" arb="مسا الورد — حمدلله شكرًا"/>
@@ -264,7 +264,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="ألو، مرحبا"/>
         <x-dialog-line speaker="شادي" arb="مرحبتين، كيف الحال؟"/>
         <x-dialog-line speaker="جريس" arb="الحمدلله، وإنتا؟ وين إنتا؟"/>

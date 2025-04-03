@@ -12,24 +12,12 @@ class DeckPolicy
 
     public function interact(User $user, Deck $deck)
     {
-        if ($deck->user_id != $user->id && $deck->private) {
-            // the Deck doesn't belong to the User & is private
-            return false;
-        }
-
-        // the Deck belongs to the User or is public
-        return true;
+        return $user->isAdmin() || $user->id === $deck->user_id || ! $deck->private;
     }
 
     public function modify(User $user, Deck $deck)
     {
-        if ($deck->user_id != $user->id) {
-            // the Deck doesn't belong to the User
-            return false;
-        }
-
-        // the Deck belongs to the User
-        return true;
+        return $user->isAdmin() || $user->id === $deck->user_id;
     }
 
     /**

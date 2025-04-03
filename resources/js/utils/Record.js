@@ -24,8 +24,8 @@ export default class Record {
 
         let filename =
             this.language + '-' +
-            this.speaker.dialect_id + '-' +
-            this.speaker.location_id + '-' +
+            this.speaker.dialect.id + '-' +
+            this.speaker.location.id + '-' +
             this.pronunciation.id + '-' +
             this.pronunciation.translit + '-' +
             this.speaker.id;

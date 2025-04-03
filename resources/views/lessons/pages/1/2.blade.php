@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(30)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(30)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -301,7 +301,7 @@
     <p>Shadow the following conversation. Jeries & Shadi were standing together when a third person passes
         by:</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="صباح الخير، أكرم"/>
         <x-dialog-line speaker="أكرم" arb="جريس؟ أهلين، صباح النور"/>
         <x-dialog-line speaker="جريس" arb="أكرم، شادي — شادي، أكرم"/>
@@ -339,7 +339,7 @@
         </div>
     </div>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="جريس" arb="شادي؟"/>
         <x-dialog-line speaker="شادي" arb="آه؟ شو؟"/>
         <x-dialog-line speaker="جريس" arb="شو ________ بالـ________؟"/>

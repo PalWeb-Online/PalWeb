@@ -4,7 +4,7 @@
     <x-link :href="route('explore.show', 'education')">{{ __('education') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-content-block">
     <x-vocabulary title="going to school">
         <x-term-item :term="$terms->firstWhere('translit', 'madrase')"/>
         <x-term-item :term="$terms->firstWhere('translit', 'ħaḍāne')"/>

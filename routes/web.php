@@ -2,29 +2,39 @@
 
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
-use App\Http\Controllers\CardViewerController;
 use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\UserAvatarController;
-use App\Http\Controllers\UserPasswordController;
-use App\Http\Controllers\WorkbenchController;
-use App\Http\Controllers\DeckBuilderController;
 use App\Http\Controllers\DeckController;
+use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\MissingTermController;
-use App\Http\Controllers\RecordWizardController;
+use App\Http\Controllers\ToDoController;
+use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
-use App\Http\Controllers\TextController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserPrivacyController;
-use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Workbench\DeckMasterController;
+use App\Http\Controllers\Workbench\RecordWizardController;
+use App\Http\Controllers\Workbench\SpeechMakerController;
+use App\Http\Resources\AudioResource;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\DialogResource;
+use App\Http\Resources\SentenceResource;
+use App\Http\Resources\TermResource;
+use App\Http\Resources\UserResource;
+use App\Models\Audio;
+use App\Models\Deck;
+use App\Models\Dialog;
+use App\Models\Pronunciation;
+use App\Models\Sentence;
+use App\Models\Term;
+use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,16 +47,48 @@ use Illuminate\Support\Facades\View;
 |
 */
 
-/**
- * Displays the homepage.
- */
-Route::view('/', 'index', ['bodyBackground' => 'front-page'])->middleware('pageTitle:Home')->name('homepage');
+Route::get('/', function () {
+    return Inertia::render('Index', [
+        'count' => [
+            'terms' => Term::count(),
+            'sentences' => Sentence::count(),
+            'users' => User::count(),
+            'decks' => Deck::count(),
+            'dialogs' => Dialog::count(),
+            'audios' => Audio::count(),
+        ],
+        'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
+        'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
+        'sentences' => SentenceResource::collection(Sentence::find([255, 256, 257])->all()),
+        'featuredUser' => new UserResource(User::find(1)),
+        'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms.pronunciations'])),
+    ]);
+})->name('homepage');
 
-/**
- * Prompts an unauthenticated user to log in.
- */
-Route::view('/denied', 'denied',
-    ['bodyBackground' => 'hero-yellow'])->middleware('pageTitle:Access Denied')->name('denied');
+Route::get('/wiki/{page}', function ($page) {
+//    View::share('pageDescription', 'Dive into the most detailed publicly-accessible descriptive grammar of Palestinian Arabic ever; practical enough for learners, rigorous enough for linguists. Everything you need to understand the intricacies of the language is right here.');
+
+    $componentPath = resource_path("js/Pages/Wiki/Pages/{$page}.vue");
+
+    if (file_exists($componentPath)) {
+        return Inertia::render("Wiki/Pages/{$page}", [
+            'section' => 'wiki',
+            'page' => $page
+        ]);
+    }
+
+    return Inertia::render('Error', ['status' => 404]);
+})->name('wiki.show');
+
+Route::get('/coming-soon', function () {
+    return Inertia::render('ComingSoon');
+})->name('coming-soon');
+
+Route::get('/denied', function () {
+    return Inertia::render('Auth/Subscription', [
+        'denied' => true,
+    ]);
+})->middleware('guest')->name('denied');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -55,147 +97,171 @@ Route::prefix('/search')->controller(SearchGenieController::class)->group(functi
     Route::get('/filter-options', 'getFilterOptions');
 });
 
-/**
- * Email Routes
- */
-Route::prefix('/email')->middleware('auth')->group(function () {
-    Route::controller(EmailVerificationController::class)->group(function () {
-        Route::get('/verification', 'prompt')->name('verification.notice');
-        Route::get('/verification/{id}/{hash}', 'verify')->middleware([
-            'signed', 'throttle:6,1',
-        ])->name('verification.verify');
-        Route::post('/verification/link', 'link')->middleware('throttle:6,1')->name('verification.send');
-    });
+Route::prefix('/email')->middleware('auth')->controller(EmailVerificationController::class)->group(function () {
+    Route::get('/verification', function () {
+        return to_route('users.show', auth()->user())->with('notification', [
+            'type' => 'warning',
+            'message' => 'You must verify your email to access this feature.'
+        ]);
+    })->name('verification.notice');
+    Route::post('/verification/link', 'link')
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+    Route::get('/verification/{id}/{hash}', 'verify')
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
 });
 
-Route::prefix('/email')->middleware('admin')->group(function () {
-    Route::controller(EmailAnnouncementController::class)->group(function () {
-        Route::get('/create', 'create')->name('email.create');
-        Route::post('/store', 'store')->name('email.store');
-    });
-});
+Route::post('/email', [EmailAnnouncementController::class, 'store'])
+    ->middleware('admin')->name('email.store');
 
-Route::prefix('/dictionary')->controller(TermController::class)->group(function () {
+Route::prefix('/library')->controller(TermController::class)->group(function () {
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
-        Route::get('/{term:slug}/usages', 'show')->name('terms.usages');
-        Route::get('/{term:slug}/audios', 'show')->name('terms.audios');
-
-        // Auth
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
+
+        Route::get('/{term}/get', function (Term $term) {
+            return new TermResource(Term::findOrFail($term->id));
+        })->name('terms.get');
+
+
+//        todo: should these be API routes?
+        Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
+        Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
+        Route::get('/{pronunciation}/get/audios', function (Pronunciation $pronunciation) {
+            return AudioResource::collection($pronunciation->audios);
+        })->name('terms.get.pronunciations.audios');
     });
 
-    Route::get('/random', function () {
-        return to_route('terms.show', \App\Models\Term::inRandomOrder()->first());
-    })->name('terms.random');
+    Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
+        Route::get('/', 'index')->name('sentences.index');
+        Route::get('/{sentence}', 'show')->name('sentences.show');
+        Route::post('/{sentence}/pin', 'pin')->middleware(['auth', 'verified'])->name('sentences.pin');
+
+        Route::get('/{sentence}/get', function (Sentence $sentence) {
+            return new SentenceResource(
+                Sentence::with(['dialog'])->findOrFail($sentence->id)
+            );
+        })->name('sentences.get');
+
+    });
+
+    Route::prefix('/random')->group(function () {
+        Route::get('/term', function () {
+            return to_route('terms.show', Term::inRandomOrder()->first());
+        })->name('terms.random');
+
+        Route::get('/sentence', function () {
+            return to_route('sentences.show', Sentence::inRandomOrder()->first());
+        })->name('sentences.random');
+    });
+
+    Route::get('/roots/{root}', [RootController::class, 'show'])->name('roots.show');
 });
 
-/**
- * Documentation Routes
- */
-Route::prefix('/wiki')->controller(WikiController::class)->group(function () {
-    Route::get('/', 'index')->name('wiki.index');
-    Route::get('/{page}', 'show')->name('wiki.show');
+Route::middleware(['auth'])->prefix('/hub')->group(function () {
+    Route::prefix('/users')->group(function () {
+        Route::get('/', [CommunityController::class, 'index'])->name('users.index');
+        Route::get('/{user:username}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/{user:username}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
+    });
+
+    Route::get('/avatars/get', function () {
+        $avatars = File::files(public_path('img/avatars'));
+
+        return array_map(function ($file) {
+            return basename($file);
+        }, $avatars);
+    })->name('avatars.get');
 });
 
-/**
- * Routes that require a verified user
- */
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('/academy')->group(function () {
+    Route::prefix('/academy')->middleware(['student'])->group(function () {
         Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('academy.index');
             Route::get('/{unit}', 'unit')->name('academy.unit');
             Route::get('/{unit}/{lesson}', 'lesson')->name('academy.lesson');
         });
-        Route::prefix('/texts')->controller(TextController::class)->group(function () {
-            Route::get('/', 'index')->name('texts.index');
-            Route::get('/{page}', 'show')->name('texts.show');
-        });
-    });
+        Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
+            Route::get('/', 'index')->name('dialogs.index');
+            Route::get('/{dialog}', 'show')->name('dialogs.show');
 
-    Route::prefix('/dictionary')->group(function () {
-        Route::controller(MissingTermController::class)->group(function () {
-            Route::get('/missing/terms/create', 'create')->name('missing.terms.create');
-            Route::post('/missing/terms', 'store')->name('missing.terms.store');
+            Route::get('/{dialog}/get', function (Dialog $dialog) {
+                return new DialogResource(
+                    Dialog::with(['sentences'])->findOrFail($dialog->id)
+                );
+            })->name('dialogs.get');
         });
 
-        Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
-            Route::get('/', 'index')->name('sentences.index');
-            Route::get('/{sentence}', 'show')->name('sentences.show');
-            Route::post('/{sentence}/pin', 'pin')->name('sentences.pin');
+        Route::middleware('admin')->group(function () {
+            Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         });
 
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
             Route::get('/', 'index')->name('explore.index');
             Route::get('/{page}', 'show')->name('explore.show');
         });
-
-        Route::middleware('admin')->group(function () {
-            Route::resource('/terms', TermController::class)->except(['index', 'show']);
-            Route::get('/terms/{term}/get', [TermController::class, 'get'])->name('terms.get');
-
-            Route::resource('/sentences', SentenceController::class)->except(['index', 'show']);
-            Route::get('/sentences/{sentence}/get', [SentenceController::class, 'get'])->name('sentences.get');
-
-            Route::get('/missing/terms', [MissingTermController::class, 'index'])->name('missing.terms.index');
-            Route::delete('/missing/terms/{missingTerm}', [MissingTermController::class, 'destroy'])->name('missing.terms.destroy');
-            Route::get('/missing/sentences', [SentenceController::class, 'todo'])->name('missing.sentences.index');
-        });
     });
 
-    Route::prefix('/community')->group(function () {
-        // Community Routes
-        Route::get('/',
-            [CommunityController::class, 'index'])->middleware('pageTitle:Community')->name('community.index');
-
-        // User Routes
-        Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
-
-        // Deck Routes
-        Route::resource('/decks', DeckController::class);
+    Route::prefix('/library')->group(function () {
+        Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
             Route::post('/{deck}/export', 'export')->name('decks.export');
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
-            Route::patch('/{deck}/privacy', 'togglePrivacy')->name('decks.privacy.toggle');
+
+            Route::get('/{deck}/get', function (Deck $deck) {
+                return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
+            })->name('decks.get');
 
         });
 
-        // Audio Routes
         Route::prefix('/audios')->group(function () {
             Route::get('/', [AudioController::class, 'index'])->name('audios.index');
             Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
             Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
         });
+
+        Route::get('/random/deck', function () {
+            return to_route('decks.show', Deck::inRandomOrder()->first());
+        })->name('decks.random');
+
+        Route::middleware('admin')->group(function () {
+            Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
+            Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
+
+            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
+        });
     });
 
     Route::prefix('/workbench')->group(function () {
-        Route::get('/', [WorkbenchController::class, 'index'])->name('workbench.index');
+        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
+            Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
+            Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
+            Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
+            Route::get('/get-terms/{id}', function (string $sentenceId) {
+                return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
+            })->name('speech-maker.get-terms');
+        })->middleware(['admin']);
 
-        Route::prefix('/deck-builder')->controller(DeckBuilderController::class)->group(function () {
-            Route::get('/', 'index')->name('decks.create');
-            Route::get('/edit/{deck}', 'edit')->name('decks.edit');
-            Route::get('/decks', 'getCreatedDecks');
-            Route::get('/decks/{deck}', 'getTerms');
-        });
-
-        Route::prefix('/card-viewer')->controller(CardViewerController::class)->group(function () {
-            Route::get('/', 'index')->name('decks.study');
-            Route::get('/decks', 'getPinnedDecks');
-            Route::get('/decks/{deck}', 'getCards');
+        Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
+            Route::get('/', 'index')->name('deck-master.index');
+            Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
+            Route::get('/build/{deck?}', 'build')->name('deck-master.build');
+            Route::get('/study/{deck}', 'study')->name('deck-master.study');
         });
 
         Route::prefix('/record-wizard')->group(function () {
             Route::controller(RecordWizardController::class)->group(function () {
                 Route::get('/', 'index')->name('audios.record');
-                Route::post('/pronunciations', 'getAutoItems');
-                Route::post('/decks/{deck}', 'getDeckItems');
+                Route::post('/pronunciations', 'getAutoItems')->name('record-wizard.get.auto');
+                Route::post('/decks/{deck}', 'getDeckItems')->name('record-wizard.get.deck');
             });
             Route::controller(SpeakerController::class)->group(function () {
-                Route::post('/speaker', 'store');
+                Route::post('/speaker', 'store')->name('speaker.store');
                 Route::get('/speaker', 'getSpeaker');
                 Route::get('/options', 'getSpeakerOptions');
             });
@@ -203,22 +269,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/subscription', function () {
-        View::share('pageTitle', 'Subscription');
-        return view('users.dashboard.subscription', [
+        return Inertia::render('Auth/Subscription', [
+            'section' => 'account',
             'user' => auth()->user(),
-            'bodyBackground' => 'hero-yellow',
         ]);
     })->name('subscription.index');
-});
 
-Route::prefix('/settings')->middleware('auth')->group(function () {
-    Route::get('/profile', [UserController::class, 'edit'])->name('settings.profile.edit');
-    Route::patch('/profile', [UserController::class, 'update'])->name('settings.profile.update');
-    Route::get('/password', [UserPasswordController::class, 'edit'])->name('settings.password.edit');
-    Route::patch('/password', [UserPasswordController::class, 'update'])->name('settings.password.update');
-    Route::get('/avatar', [UserAvatarController::class, 'edit'])->name('settings.avatar.edit');
-    Route::patch('/avatar', [UserAvatarController::class, 'update'])->name('settings.avatar.update');
-    Route::patch('/toggle-privacy', [UserPrivacyController::class, 'update'])->name('settings.privacy.update');
+    Route::prefix('/todo')->controller(ToDoController::class)->group(function () {
+        Route::post('/', 'store')
+            ->name('todo.store');
+        Route::get('/', 'index')
+            ->middleware('admin')->name('todo.index');
+        Route::delete('/{feedbackComment}', 'destroy')
+            ->middleware('admin')->name('todo.destroy');
+    });
+
+    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
 });
 
 require __DIR__.'/auth.php';

@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(60)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(60)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">

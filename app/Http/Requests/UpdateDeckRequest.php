@@ -12,8 +12,8 @@ class UpdateDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'deck.name' => ['required', 'max:50'],
-            'deck.description' => ['nullable', 'max:500'],
+            'name' => ['required', 'max:50'],
+            'description' => ['nullable', 'max:500'],
         ];
     }
 }

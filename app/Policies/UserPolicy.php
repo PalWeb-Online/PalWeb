@@ -11,7 +11,12 @@ class UserPolicy
 
     public function interact(User $auth, User $user)
     {
-        return $auth->id === $user->id || ! $user->private;
+        return $auth->isAdmin() || $auth->id === $user->id || ! $user->private;
+    }
+
+    public function modify(User $auth, User $user)
+    {
+        return $auth->isAdmin() || $auth->id === $user->id;
     }
 
     /**

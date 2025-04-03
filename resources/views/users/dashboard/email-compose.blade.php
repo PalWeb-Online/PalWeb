@@ -17,12 +17,12 @@
 
         <x-auth-validation-errors :errors="$errors"/>
 
-        <div class="form-field">
+        <div class="field-item">
             <label for="subject">Subject</label>
             <input id="subject" name="subject" type="text" required>
         </div>
 
-        <div class="form-field">
+        <div class="field-item">
             <label for="body">Body</label>
             <textarea id="body" name="body" required></textarea>
         </div>

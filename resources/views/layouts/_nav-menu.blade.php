@@ -8,7 +8,7 @@
         <x-slot name="content">
             <div class="dropdown-section-title">Portals</div>
             <x-link :href="route('academy.index')">{{ __('academy') }}</x-link>
-            <x-link :href="route('texts.index')">{{ __('texts') }}</x-link>
+            <x-link :href="route('dialogs.index')">{{ __('dialogs') }}</x-link>
         </x-slot>
     </x-dropdown>
     <x-dropdown>
@@ -40,7 +40,7 @@
             <a href="{{ route('audios.index') }}">Audios</a>
 
             <div class="dropdown-section-title">Tools</div>
-            <a href="{{ route('decks.create') }}">Deck Builder</a>
+            <a href="{{ route('deck-master.build') }}">Deck Builder</a>
             <a href="{{ route('audios.record') }}">Record Wizard</a>
         </x-slot>
     </x-dropdown>

@@ -12,7 +12,7 @@
     'select' => false
 ])
 
-<div class="auth-field">
+<div class="field-item">
     <label for="{{ $name }}">{{ __('field.label.' . $name) }}</label>
     @if($select)
         <select id="{{ $name }}"

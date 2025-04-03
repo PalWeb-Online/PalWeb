@@ -26,19 +26,25 @@ class SearchService
 
     public function search(array $filters = [], bool $withSentences = false, bool $withDecks = false): array
     {
-        $terms = $this->termRepository->findMatchingTerms($filters);
-        $glosses = $this->termRepository->findMatchingGlosses($filters);
+        $filters['search'] ??= '';
+        $filters['match'] ??= 'term';
+
+        $matches = match ($filters['match']) {
+            'root' => $this->termRepository->findMatchingRoots($filters),
+            default => $this->termRepository->findMatchingTerms($filters),
+            'gloss' => $this->termRepository->findMatchingGlosses($filters),
+        };
 
         $results = [
-            'terms' => $this->termRepository->searchTerms($terms->merge($glosses->pluck('term_id'))->unique()),
+            'terms' => $this->termRepository->searchTerms($matches, $filters),
         ];
 
-        if ($withSentences) {
-            $results['sentences'] = $this->sentenceRepository->searchSentences($terms, $glosses, $filters['search']);
+        if ($withDecks) {
+            $results['decks'] = $this->deckRepository->searchDecks($matches, $filters);
         }
 
-        if ($withDecks) {
-            $results['decks'] = $this->deckRepository->searchDecks($terms, $filters['search']);
+        if ($withSentences) {
+            $results['sentences'] = $this->sentenceRepository->searchSentences($matches, $filters);
         }
 
         return $results;

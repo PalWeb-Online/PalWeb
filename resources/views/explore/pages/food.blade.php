@@ -4,7 +4,7 @@
     <x-link :href="route('explore.show', 'food')">{{ __('food') }}</x-link>
 </x-page-head>
 
-<div class="doc-section">
+<div class="wiki-content-block">
     <x-vocabulary title="meat & dairy">
         <x-term-item :term="$terms->firstWhere('translit', 'laħm')"/>
         <x-term-item :term="$terms->firstWhere('translit', 'sfīne')"/>

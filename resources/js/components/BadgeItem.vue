@@ -16,7 +16,7 @@ const {floatingStyles} = useFloating(reference, floating, {
 });
 
 onMounted(() => {
-    if (props.badge.enabled) {
+    if (props.badge.unlocked) {
         VanillaTilt.init(reference.value, {
             max: 20,
             speed: 400,
@@ -36,11 +36,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="reference" :class="['badge', badge.enabled ? '' : 'disabled']">
-        <img :alt="badge.name" :src="badge.image"/>
+    <div ref="reference" :class="['badge', badge.unlocked ? '' : 'disabled']">
+        <img :alt="badge.name" :src="`/img/badges/${badge.image}`"/>
     </div>
     <div ref="floating" v-if="isOpen" :style="floatingStyles" class="notification badge-data">
-        <div>{{ badge.enabled ? badge.name : '???' }}</div>
+        <div>{{ badge.unlocked ? badge.name : '???' }}</div>
         <div>{{ badge.description }}</div>
     </div>
 </template>

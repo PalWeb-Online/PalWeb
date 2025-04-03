@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(52)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(52)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -60,15 +60,15 @@
         translation in English, it adds a sense of certainty & conviction to a statement that clarifies, explains or
         proves some information previously introduced in the conversation.</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="شكله غسّان مش جاي اليوم" eng="it seems Ghassan isn't coming today"/>
         <x-dialog-line speaker="سما" arb="مهو مريض" eng="well, he's sick, after all"/>
     </div>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="العربيّ عندك كثير منيح" eng="your Arabic is really good"/>
         <x-dialog-line speaker="سما" arb="مأنا فلسطينيّ" eng="well, I'm Palestinian, after all"/>
     </div>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="يي — المحلّ مسكّر" eng="oh no, the place is closed"/>
         <x-dialog-line speaker="سما" arb="مالدنيا عيد" eng="well, it's a holiday, after all"/>
     </div>
@@ -76,7 +76,7 @@
     <p>Additionally, the phrase <b>مهو (mahuwwe)</b> is commonly used as a standalone form of emphatic agreement,
         indicating that someone else's statement agrees or proves one's prior point.</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="معقول المكتبة فاتحة؟" eng="I wonder if the library is open"/>
         <x-dialog-line speaker="سما" arb="أظن لأ، الدنيا ليل" eng="I guess not, it's night-time"/>
         <x-dialog-line speaker="أكرم" arb="مهو" eng="yeah, exactly"/>

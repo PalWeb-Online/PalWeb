@@ -2,8 +2,6 @@
 
 <html lang="{{ app()->getLocale() }}" @if (app()->getLocale() == 'ar') dir="rtl" @else dir="ltr" @endif>
 <head>
-    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -45,28 +43,13 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
+    @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
+    @inertiaHead
 </head>
 
-<body class="{{ $layout ?? '' }} {{ $bodyBackground ?? '' }}">
-
-@include("layouts._nav-mobile")
-@include("layouts._nav-sticky")
-@include("layouts._nav-user")
-@include('layouts._nav-header')
-
-@yield('page-hero')
-@yield('page-body')
-
-@include("layouts._footer")
-
-@if(!request()->routeIs('decks.study', 'decks.create', 'decks.edit', 'audios.record'))
-    <div id="searchGenie"></div>
-@endif
-
+<body class="{{ $bodyBackground ?? '' }}">
+    @inertia
+    <script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>
 </body>
-
-<script type="text/javascript" src="{{ asset('js/main.js') }}?v={{ filemtime(public_path('js/main.js')) }}"></script>
-
 </html>

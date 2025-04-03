@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(59)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(59)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -109,7 +109,7 @@
 
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation between ? & ? in ?:</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="مريض" arb="مرحبا دكتور، يعطيك العافية"/>
         <x-dialog-line speaker="دكتور" arb="الله يعافيك، كيف حاسس اليوم؟"/>
         <x-dialog-line speaker="مريض" arb="مش تمام، أنا حاسس ________"/>

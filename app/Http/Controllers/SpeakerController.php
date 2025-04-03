@@ -2,33 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AudioResource;
+use App\Http\Resources\SpeakerResource;
+use App\Models\Audio;
 use App\Models\Dialect;
 use App\Models\Location;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class SpeakerController extends Controller
 {
-    public function show(Speaker $speaker): \Illuminate\View\View
+    public function show(Speaker $speaker): \Inertia\Response
     {
-        $audios = $speaker->audios()
-            ->with('speaker')
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->onEachSide(1);
-
-        View::share('pageTitle', 'Speaker: '.$speaker->user->username);
-
-        return view('community.audios.speaker', [
-            'user' => $speaker->user,
-            'speaker' => $speaker,
-            'audios' => $audios,
+        return Inertia::render('Library/Audios/Speaker', [
+            'section' => 'library',
+            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
+            'audios' => AudioResource::collection(
+                Audio::query()
+                    ->where('speaker_id', $speaker->id)
+                    ->with([
+                        'speaker',
+                        'pronunciation.term'
+                    ])
+                    ->orderByDesc('id')
+                    ->paginate(25)
+                    ->onEachSide(1)
+            ),
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $user = $request->user();
 
@@ -45,32 +50,7 @@ class SpeakerController extends Controller
         $user->update(['speaker_id' => $speaker->id]);
         $user->refresh();
 
-        return response()->json([
-            'speaker' => $speaker,
-            'name' => $user->name,
-            'avatar' => $user->avatar,
-            'message' => 'Your Speaker profile has been saved successfully.',
-        ]);
-    }
-
-    public function getSpeaker(Request $request): JsonResponse
-    {
-        $user = $request->user();
-
-        $speaker = Speaker::firstWhere('user_id', $user->id) ?? [
-            'user_id' => $user->id,
-            'dialect_id' => null,
-            'location_id' => null,
-            'fluency' => '',
-            'gender' => '',
-        ];
-
-        return response()->json([
-            'speaker' => $speaker,
-            'name' => $user->name,
-            'avatar' => $user->avatar,
-            'exists' => Speaker::where('user_id', $user->id)->exists(),
-        ]);
+        return back()->with(['id' => $speaker->id]);
     }
 
     public function getSpeakerOptions(): JsonResponse

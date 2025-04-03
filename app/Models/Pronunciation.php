@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PronunciationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +22,13 @@ class Pronunciation extends Model
     ];
 
     protected $guarded = [];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::addGlobalScope(new PronunciationScope);
+    }
 
     public function term(): BelongsTo
     {

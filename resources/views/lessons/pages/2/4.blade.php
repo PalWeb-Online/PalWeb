@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(50)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(50)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -76,7 +76,7 @@
         hypothesis as well; in this sense, it's similar to <b>يمكن (yimkin "maybe")</b>, but it conveys a sense of
         surprise toward the idea in question.</p>
 
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="أكرم" arb="وين غسّان؟" eng="where's Ghassan?"/>
         <x-dialog-line speaker="سما" arb="معقول عند أهله؟" eng="could it be he's at his parents'?"/>
         <x-dialog-line speaker="أكرم" arb="معقول؟" eng="could it be?"/>

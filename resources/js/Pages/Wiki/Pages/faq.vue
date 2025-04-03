@@ -1,0 +1,56 @@
+<script setup>
+import {route} from "ziggy-js";
+import Wiki from "../Wiki.vue";
+import Layout from "../../../Shared/Layout.vue";
+import AppTip from "../../../components/AppTip.vue";
+
+defineOptions({
+    layout: [Layout, Wiki],
+})
+</script>
+
+<template>
+    <div class="wiki-content-block">
+        <AppTip question="Do you give private lessons?">
+            <p>No, sorry.</p>
+        </AppTip>
+
+        <AppTip question="Do I need to pay to access the content on the site?">
+            <p>Some areas of the site are locked to users with a free account or to subscribed users. Refer to the
+                <Link
+                    :href="route('subscription.index')">Subscription
+                </Link>
+                Portal for more details on the perks of
+                each
+                tier.
+            </p>
+        </AppTip>
+
+        <AppTip question="How can I preview the content of the Academy section to know if I want to pay for that?">
+            <p>I give a general tour of the site in the <a href="https://www.youtube.com/watch?v=lJGDKswxg4w"
+                                                           target="_blank">May
+                Day 2023 Launch</a> video. Note that the site has changed significantly in the time since, so I will be
+                creating another tour in the near future. Unfortunately, there is no free trial at this time.</p>
+        </AppTip>
+
+        <AppTip question="I'm subscribed, but some of the content says Coming Soon. Define Soon.">
+            <p>Please refer to the <Link :href="route('wiki.show', 'release-notes')">Release Notes</Link> for a timeline of upcoming updates.</p>
+        </AppTip>
+
+        <AppTip question="I've subscribed on Patreon. Why can't I access the content on PalWeb?">
+            <p>In order to gain full access to the content on PalWeb, you need to get a subscription to PalWeb — not to
+                Patreon.
+                I cannot refund money paid to Patreon, so you will need to find a way to cancel the charge with your
+                bank.</p>
+        </AppTip>
+
+        <AppTip question="Why do you still have a Patreon then?">
+            <p>Well, there's an archive of blog posts & resources I've uploaded over the years that aren't available
+                anywhere else. But mainly it's because some folks are generous & want to support me in other ways. If
+                you're
+                one of them, you can also donate to my <a href="https://ko-fi.com/a_abdulbaha" target="_blank">Ko-fi</a>.
+            </p>
+        </AppTip>
+    </div>
+</template>
+

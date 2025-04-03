@@ -15,18 +15,6 @@ class EmailVerificationController extends Controller
     public function __construct(protected FlasherInterface $flasher) {}
 
     /**
-     * Displays a view that prompts the user to verify their email.
-     *
-     * @return mixed
-     */
-    public function prompt(Request $request)
-    {
-        return $request->user()->hasVerifiedEmail()
-            ? redirect()->intended(AppServiceProvider::HOME)
-            : view('auth.verify-email');
-    }
-
-    /**
      * Mark the user's email address as verified.
      */
     public function verify(EmailVerificationRequest $request): RedirectResponse
@@ -48,13 +36,12 @@ class EmailVerificationController extends Controller
     public function link(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(AppServiceProvider::HOME);
+            session()->flash('notification', ['type' => 'info', 'message' => 'Your email is already verified.']);
+            return back();
         }
 
         $request->user()->sendEmailVerificationNotification();
-
-        $this->flasher->addInfo(__('verification.sent'));
-
-        return redirect()->back();
+        session()->flash('notification', ['type' => 'success', 'message' => 'Verification link has been sent to your email!']);
+        return back();
     }
 }

@@ -37,7 +37,7 @@
             ready for the next step?
         </div>
         <div class="portal-button-body">
-            <a href="{{ route('texts.index') }}" class="portal-button">Texts Portal</a>
+            <a href="{{ route('dialogs.index') }}" class="portal-button">Texts Portal</a>
         </div>
     </div>
 @endsection

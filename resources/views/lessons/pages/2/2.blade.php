@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(48)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(48)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -153,7 +153,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="أكرم أيمتى معطّل هالأسبوع؟" eng="when is Akram off this week?"/>
         <x-dialog-line speaker="جواب" arb="هو معطّل يوم الـ ... ويوم الـ ..." eng="he's off on ... & ..."/>
     </div>
@@ -204,7 +204,7 @@
 
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation between Jiryis & Shadi:</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="شادي" arb="مسا الخير، كيف الحال؟"/>
         <x-dialog-line speaker="جريس" arb="مسا النور — تمام، وإنتا؟"/>
         <x-dialog-line speaker="شادي" arb="حمدلله"/>

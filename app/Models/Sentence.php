@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Resources\TermResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -20,7 +22,14 @@ class Sentence extends Model
         Bookmark::class,
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'sentence',
+        'translit',
+        'trans',
+        'dialog_id',
+        'speaker',
+        'position',
+    ];
 
     protected static function boot(): void
     {
@@ -46,6 +55,50 @@ class Sentence extends Model
         }
     }
 
+    public function getAudio(): ?string
+    {
+        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
+
+        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
+
+        return null;
+    }
+
+    public function getTerms(): array
+    {
+        $allTerms = DB::table('sentence_term')
+            ->leftJoin('terms', 'sentence_term.term_id', '=', 'terms.id')
+            ->where('sentence_term.sentence_id', $this->id)
+            ->select('sentence_term.*', 'terms.*')
+            ->orderBy('sentence_term.position')
+            ->get();
+
+        return $allTerms->map(function ($sentenceTerm) {
+            if ($sentenceTerm->id) {
+                $term = Term::find($sentenceTerm->id);
+                $term->load(['pronunciations']);
+
+                $termResource = new TermResource($term)->toArray(request());
+                $termResource['sentencePivot'] = [
+                    'gloss_id' => $sentenceTerm->gloss_id,
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ];
+
+                return $termResource;
+            }
+
+            return [
+                'sentencePivot' => [
+                    'sent_term' => $sentenceTerm->sent_term,
+                    'sent_translit' => $sentenceTerm->sent_translit,
+                    'position' => $sentenceTerm->position,
+                ],
+            ];
+        })->values()->toArray();
+    }
+
     public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class)
@@ -53,14 +106,9 @@ class Sentence extends Model
             ->orderBy('position');
     }
 
-    public function allTerms()
+    public function dialog(): BelongsTo
     {
-        return DB::table('sentence_term')
-            ->leftJoin('terms', 'sentence_term.term_id', '=', 'terms.id')
-            ->where('sentence_term.sentence_id', $this->id)
-            ->select('sentence_term.*', 'terms.*')
-            ->orderBy('sentence_term.position')
-            ->get();
+        return $this->belongsTo(Dialog::class);
     }
 
     public function file(): MorphOne

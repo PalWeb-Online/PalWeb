@@ -20,7 +20,6 @@ class TrackPageViews
     public function handle(Request $request, Closure $next): Response
     {
         if (config('app.track_page_views')) {
-            // Fire off an event log the page view
             event(new UserViewed);
         }
 

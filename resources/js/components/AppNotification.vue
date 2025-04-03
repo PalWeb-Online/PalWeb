@@ -1,30 +1,18 @@
 <script setup>
-import { ref } from 'vue';
-
-const isHidden = ref(true);
-const message = ref('');
-const type = ref('success');
-
-const showNotification = (msg, msgType = 'success', duration = 3000) => {
-    message.value = msg;
-    type.value = msgType;
-    isHidden.value = false;
-
-    setTimeout(() => {
-        isHidden.value = true;
-    }, duration);
-};
-
-defineExpose({
-    showNotification,
+const props = defineProps({
+    message: String,
+    type: {
+        type: String,
+        default: 'success',
+    },
 });
 </script>
 
 <template>
-    <div
-        class="app-notification"
-        :class="[type, { hidden: isHidden }]"
-    >
-        {{ message }}
+    <div class="app-notification" :class="type">
+        <div class="app-notification-title">{{ type }}</div>
+        <div class="app-notification-message">
+            {{ message }}
+        </div>
     </div>
 </template>

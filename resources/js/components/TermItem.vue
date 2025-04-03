@@ -1,70 +1,37 @@
 <script setup>
-import {Howl} from 'howler';
-import {computed, onMounted, ref} from 'vue';
+import {useTerm} from "../composables/Term.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
-import ContextActions from "./ContextActions.vue";
+import TermActions from "./TermActions.vue";
 
 const props = defineProps({
-    term: Object,
-    isPinned: Boolean,
-
-    // ModelActions
-    routes: Object,
-    isUser: Boolean,
-    isAdmin: Boolean,
-
-    // ActionButtons
-    userDecks: Object,
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
+    glossId: {type: Number, default: null},
 });
 
-const audio = ref(null);
-
-onMounted(() => {
-    if (props.term.audio) {
-        audio.value = new Howl({
-            src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${props.term.audio}`],
-        });
-    }
-});
-
-function playAudio() {
-    if (audio.value) {
-        audio.value.play();
-    }
-}
-
-const gloss = computed(() => {
-    return props.term.gloss.length > 85
-        ? props.term.gloss.substring(0, 85) + '...'
-        : props.term.gloss;
-});
-
+const {term, isLoading, playAudio} = useTerm(props);
 </script>
 
 <template>
-    <div :class="['term-item-wrapper', term.size]">
-        <div class="term-item">
-            <div class="term-item-head">
-                <div class="arb">{{ term.term }}</div>
-                <img class="play" v-if="term.audio" :src="`/img/audio.svg`" alt="play" @click="playAudio"/>
-                <div class="translit">{{ term.translit }}</div>
+    <template v-if="! isLoading">
+        <div class="term-item-wrapper">
+            <div class="term-item">
+                <div class="term-item-head">
+                    <div class="arb">{{ term.term }}</div>
+                    <img class="play" v-if="term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>
+                    <div class="translit">{{ term.translit }}</div>
+                </div>
+                <div class="term-item-body">
+                    <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>
+                    <TermDeckToggleButton :model="term"/>
+                </div>
+                <PinButton modelType="term" :model="term"/>
             </div>
-            <div class="term-item-body">
-                <div class="eng">{{ gloss }}</div>
-                <TermDeckToggleButton v-if="isUser"
-                    :userDecks="userDecks"
-                    :route="routes.deckToggle"/>
-            </div>
-            <PinButton v-if="isUser"
-                :isPinned="isPinned"
-                :route="routes.pin"/>
+            <TermActions :model="term"/>
         </div>
-
-        <ContextActions modelType="term"
-            :routes="routes"
-            :isUser="isUser"
-            :isAdmin="isAdmin"
-        />
-    </div>
+    </template>
 </template>

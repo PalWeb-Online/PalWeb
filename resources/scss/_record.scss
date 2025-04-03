@@ -9,21 +9,18 @@
     .rw-page-content,
     .rw-page-loading {
         //min-height: 24rem;
+        display: grid;
         background-color: #ffffff;
         border-radius: 1.6rem;
-        border: 0.2rem solid $purple-deep;
+        border: 0.2rem solid var(--color-dark-primary);
         box-shadow: -0.4rem 0.4rem 0 0 rgba(black, 0.25);
         overflow: clip;
     }
 }
 
-.rw-page-title {
-    display: flex;
-    align-items: center;
-    background: $purple-deep;
-    padding: 1.2rem 1.2rem 1.6rem 2.4rem;
-    color: white;
-    position: relative;
+.rw-container-head {
+    background: var(--color-dark-primary);
+    padding: 1.2rem 1.6rem 1.2rem 2.4rem;
 
     h2 {
         flex-grow: 1;
@@ -34,28 +31,26 @@
         color: white;
     }
 
+    .material-symbols-rounded {
+        font-size: 2.4rem;
+    }
+
     & + .tip {
         border: none;
         border-radius: 0;
-        padding-block-end: 0.4rem;
+        box-shadow: none;
     }
 
     & + .tip.error {
         color: white;
         background: $red;
     }
-
-    & > .app-dialog-trigger {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
 }
 
 .rw-page__speaker {
     display: flex;
     flex-flow: row wrap;
-    background: $accent-yellow;
+    background: var(--color-accent-medium);
     gap: 0.1rem;
 
     section:nth-child(1) {
@@ -67,7 +62,7 @@
         background: white;
 
         a {
-            color: $purple-deep;
+            color: var(--color-dark-primary);
             font-weight: 700;
 
             &:hover {
@@ -79,7 +74,7 @@
             font-family: $headFont;
             font-weight: 700;
             font-size: 2.0rem;
-            color: $purple-deep;
+            color: var(--color-dark-primary);
         }
 
         .rw-speaker-field {
@@ -94,7 +89,7 @@
                 font-family: $headFont;
                 font-weight: 700;
                 font-size: 1.6rem;
-                color: $purple-deep;
+                color: var(--color-dark-primary);
             }
         }
     }
@@ -110,7 +105,7 @@
             grid-template-areas: 'overlap';
             justify-items: center;
             align-items: center;
-            background: $accent-yellow-pastel;
+            background: var(--color-accent-light);
             padding-block: 2.4rem 3.2rem;
 
             .user-avatar {
@@ -136,7 +131,7 @@
                 flex-grow: 1;
 
                 div:nth-child(1) {
-                    color: $purple-deep;
+                    color: var(--color-dark-primary);
                     font-family: $headFont;
                     font-weight: 700;
                     font-size: 2.0rem;
@@ -208,7 +203,7 @@
     .rw-queue-body {
         padding: 1.6rem 2.4rem;
         display: grid;
-        border-block-end: 0.1rem solid $accent-yellow;
+        border-block-end: 0.1rem solid var(--color-accent-medium);
 
         p {
             margin-block: 0;
@@ -279,7 +274,7 @@
         }
 
         &:hover {
-            background: $accent-yellow-pastel;
+            background: var(--color-accent-light);
 
             .trash {
                 opacity: 1;
@@ -294,7 +289,7 @@
 
 .rw-item-counter {
     margin-block: 1.6rem;
-    color: $purple-primary;
+    color: var(--color-medium-primary);
     font-family: $headFont;
     font-size: 1.6rem;
     font-weight: 700;
@@ -306,7 +301,7 @@
 .rw-page__record {
     display: grid;
     grid-template-columns: 1fr;
-    background: $accent-yellow;
+    background: var(--color-accent-medium);
     gap: 0.1rem;
 
     section {
@@ -369,19 +364,19 @@
         //overflow-x: scroll;
 
         &.selected {
-            background-color: $purple-deep;
+            background-color: var(--color-dark-primary);
             color: white;
             font-weight: 700;
         }
 
         &.stashed {
-            color: $accent-yellow;
+            color: var(--color-accent-medium);
             font-weight: 700;
         }
 
         &:not(.selected):hover {
             cursor: pointer;
-            background: $accent-yellow-pastel;
+            background: var(--color-accent-light);
         }
 
         &.mwe-rws-stashing,
@@ -440,7 +435,7 @@
     align-items: center;
     padding: 3.2rem;
     gap: 1.6rem;
-    background: $accent-yellow-pastel;
+    background: var(--color-accent-light);
 
     .rw-record-item {
         flex-grow: 1;
@@ -472,7 +467,7 @@
 
 .rw-actions {
     &.disabled {
-        background: $accent-yellow-pastel;
+        background: var(--color-accent-light);
 
         & > * {
             visibility: hidden;
@@ -480,8 +475,8 @@
     }
 
     .rw-actions-title {
-        background: $purple-pastel;
-        color: $purple-primary;
+        background: var(--color-pastel-light);
+        color: var(--color-medium-primary);
         font-family: $headFont;
         font-size: 1.6rem;
         font-weight: 700;
@@ -497,7 +492,7 @@
 
         font-size: 1.4rem;
         font-family: $headFont;
-        color: $purple-primary;
+        color: var(--color-medium-primary);
 
         .rw-actions-bar {
             display: flex;
@@ -509,7 +504,7 @@
 
     .wizard-progress-container {
         width: 100%;
-        background-color: $accent-yellow-pastel;
+        background-color: var(--color-accent-light);
         border-radius: 3.2rem;
         height: 1.6rem;
         overflow: hidden;
@@ -517,11 +512,11 @@
 
     .wizard-progress-bar {
         height: 100%;
-        background: $purple-primary;
+        background: var(--color-medium-primary);
         transition: width 0.3s ease;
 
         &.complete {
-            background: $accent-yellow;
+            background: var(--color-accent-medium);
         }
     }
 
@@ -607,12 +602,12 @@
     gap: 0.8rem;
 
     .wizard-button {
-        background: $accent-yellow-pastel;
-        color: $purple-deep;
-        filter: drop-shadow(0 0.3rem 0 $accent-yellow);
+        background: var(--color-accent-light);
+        color: var(--color-dark-primary);
+        filter: drop-shadow(0 0.3rem 0 var(--color-accent-medium));
 
         &.selected {
-            background: $accent-yellow;
+            background: var(--color-accent-medium);
             filter: none;
             translate: none;
         }
@@ -624,9 +619,9 @@
     font-family: $headFont;
     font-weight: 700;
     text-transform: uppercase;
-    background: $purple-primary;
+    background: var(--color-medium-secondary);
     color: white;
-    filter: drop-shadow(0 0.3rem 0 $purple-deep);
+    filter: drop-shadow(0 0.3rem 0 var(--color-dark-primary));
     padding: 1.2rem 1.6rem;
     border-radius: 0.8rem;
     translate: 0 -0.3rem;
@@ -639,7 +634,7 @@
     }
 
     &[disabled] {
-        background: $purple-pastel-dark;
+        background: var(--color-pastel-dark);
         filter: none;
         translate: none;
         cursor: not-allowed;
@@ -732,14 +727,14 @@
         width: 0.8rem;
         padding-block: 1.2rem;
         border-radius: 3.2rem;
-        background: $accent-yellow-pastel;
+        background: var(--color-accent-light);
     }
 
     &.recording li {
-        background: $purple-pastel;
+        background: var(--color-pastel-medium);
 
         &.active {
-            background: $purple-primary;
+            background: var(--color-medium-primary);
         }
     }
 

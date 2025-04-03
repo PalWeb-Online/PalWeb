@@ -1,4 +1,4 @@
-<x-deck-container :deck="\App\Models\Deck::find(45)"/>
+<x-vue.deck component="DeckContainer" :deck="\App\Models\Deck::find(45)"/>
 
 <x-lesson-concept section-type="skill" section-title="grammar"
                   title="{!! __('lessons.' . $unit . '0' . $lesson . '-1') !!}">
@@ -166,7 +166,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="مين ساكن قدّام شادي؟" eng="who lives in front of Shadi?"/>
         <x-dialog-line speaker="جواب" arb="أكرم ساكن قدّام شادي" eng="Jeries lives in front of Shadi"/>
     </div>
@@ -199,7 +199,7 @@
     </div>
 
     <p>{{ __('activity.complete-sentence') }}</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="سؤال" arb="جريس ساكن بأنيه عمارة؟" eng="in which building does Jeries live?"/>
         <x-dialog-line speaker="جواب" arb="جريس ساكن بالعمارة الكبيرة" eng="Jeries lives in the big building"/>
     </div>
@@ -259,7 +259,7 @@
 <x-activity-area title="{{ __('dialogue') }}">
     <p>Shadow the following conversation. Ghassan introduces Jeries to Rafat, a diaspora Palestinian visiting
         Birzeit whom Ghassan had just met.</p>
-    <div class="activity-dialog">
+    <div class="dialog-body">
         <x-dialog-line speaker="غسّان" arb="جريس، هادا رأفت — رأفت، جريس"/>
         <x-dialog-line speaker="جريس" arb="تشرّفنا يا رأفت، كيف الحال؟"/>
         <x-dialog-line speaker="رأفت" arb="الحمدلله — إلي الشرف"/>

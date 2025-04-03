@@ -22,7 +22,6 @@ class AfterSubscriptionCancelled
      */
     public function handle(SubscriptionCancelled $event): void
     {
-        /** @var User $user */
         $user = $event->billable;
         $user->revokeStudentRole();
     }

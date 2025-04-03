@@ -1,88 +1,86 @@
 <script setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue';
-import PinButton from "./PinButton.vue";
-import PrivacyToggleButton from "./PrivacyToggleButton.vue";
-import DeckActions from "./DeckActions.vue";
+import {onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import ContextActions from "./ContextActions.vue";
+import {useDeck} from "../composables/Deck.js";
+import PinButton from "./PinButton.vue";
+import DeckActions from "./DeckActions.vue";
+import AppTooltip from "./AppTooltip.vue";
 
 const props = defineProps({
-    deck: Object,
-    isPinned: Boolean,
-
-    // ModelActions
-    routes: Object,
-    isUser: Boolean,
-
-    // DeckActions
-    isAuthor: Boolean,
+    model: {
+        type: Object,
+        required: false,
+        default: null,
+    },
+    active: {type: Boolean, default: false},
+    disabled: {type: Boolean, default: false},
 });
 
-const description = computed(() => {
-    return props.deck.description.length > 320
-        ? props.deck.description.substring(0, 317) + '...'
-        : props.deck.description;
-});
+const emit = defineEmits(['flip']);
 
 const flipCard = (event) => {
     const card = event.target.closest('.deck-flashcard-wrapper').querySelector('.deck-flashcard');
-    if (card) {
-        card.classList.toggle('flipped');
-    }
+    if (card) card.classList.toggle('flipped');
+
+    emit('flip', deck.id);
 };
 
-const trigger = ref(null);
+const tooltip = ref(null);
+const flashcard = ref(null);
 
 onMounted(() => {
-    VanillaTilt.init(trigger.value, {
+    VanillaTilt.init(flashcard.value, {
         max: 10,
         speed: 400,
         scale: 1,
     });
 });
 
+const {deck, blurb, isLoading} = useDeck(props);
 </script>
 
 <template>
-    <div class="deck-flashcard-wrapper">
-        <div class="deck-flashcard" ref="trigger" @click="flipCard">
-            <div class="deck-flashcard-front">
-                <div class="deck-flashcard-front-head">
-                    <div class="deck-title">{{ deck.name }}</div>
-                    <div class="deck-author" style="align-self: flex-end">
-                        <div class="deck-author-name">by {{ deck.authorName }}</div>
-                        <img class="deck-author-avatar" alt="Profile Picture" :src="deck.authorAvatar"/>
-                        <!--                        <div class="deck-author-name">by Deleted User</div>-->
+    <template v-if="! isLoading">
+        <div :class="['deck-flashcard-wrapper', { active: active }]"
+             @mousemove="disabled && tooltip.showTooltip('This Deck is empty.', $event);"
+             @mouseleave="disabled && tooltip.hideTooltip()"
+        >
+            <div :class="['deck-flashcard', { flipped: active }, { disabled: disabled }]" ref="flashcard"
+                 @click="flipCard">
+                <div class="deck-flashcard-front">
+                    <div class="deck-flashcard-front-head">
+                        <div class="item-title">{{ deck.name }}</div>
+                        <div class="deck-author" style="align-self: flex-end">
+                            <template v-if="!deck.author.private">
+                                <div class="deck-author-name">by {{ deck.author.name }}</div>
+                                <img class="deck-author-avatar" alt="Profile Picture"
+                                     :src="`/img/avatars/${deck.author.avatar}`"/>
+                            </template>
+                            <template v-else>
+                                <div class="deck-author-name">by Anonymous</div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="deck-flashcard-front-body">
+                        <div v-if="blurb" class="item-description">{{ blurb }}</div>
                     </div>
                 </div>
-                <div class="deck-flashcard-front-body">
-                    <div v-if="deck.description" class="deck-description">{{ description }}</div>
+                <div class="deck-flashcard-back">
+                    <div class="deck-flashcard-back-terms">
+                        <div v-for="term in deck.terms.slice(0, 16)">{{ term.term }}</div>
+                    </div>
+                    <div class="deck-flashcard-back-count">{{ deck.terms.length }} terms</div>
                 </div>
             </div>
-            <div class="deck-flashcard-back">
-                <div class="deck-flashcard-back-head">{{ deck.count }} terms</div>
-                <div class="deck-flashcard-back-body">
-                    <div v-for="term in deck.terms.slice(0, 16)">{{ term }}</div>
-                    <div v-if="deck.terms.length > 16" style="grid-column: span 2">...</div>
-                </div>
+
+            <PinButton modelType="deck" :model="deck"/>
+            <DeckActions :model="deck"/>
+
+            <div class="action-buttons">
+                <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>
             </div>
         </div>
 
-        <PinButton v-if="isUser"
-                   :route="routes.pin"
-                   :isPinned="isPinned"
-                   :pinCount="deck.pinCount"
-        />
-        <PrivacyToggleButton v-if="isAuthor"
-                             :route="routes.privacyToggle"
-                             :isPrivate="deck.isPrivate"
-        />
-
-        <ContextActions
-            modelType="deck"
-            :routes="routes"
-            :isUser="isUser"
-            :isAuthor="isAuthor"
-        />
-    </div>
+        <AppTooltip ref="tooltip"/>
+    </template>
 </template>

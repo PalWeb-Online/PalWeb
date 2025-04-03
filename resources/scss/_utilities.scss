@@ -1,6 +1,6 @@
 ::selection {
     color: white;
-    background: $purple-primary;
+    background: var(--color-medium-primary);
 }
 
 * {
@@ -34,8 +34,8 @@ li {
     line-height: 1.5em;
 }
 
-.material-icons-round {
-    font-size: 3.6rem
+.material-symbols-rounded {
+    font-size: 2.4rem
 }
 
 button {
@@ -62,7 +62,7 @@ label.checkbox {
         display: inline-flex;
         align-items: center;
         width: 1.6rem;
-        accent-color: $purple-primary;
+        accent-color: var(--color-medium-primary);
         margin: 0;
     }
 
@@ -74,9 +74,9 @@ label.checkbox {
 input, textarea, select {
     font-size: 1.2rem;
     font-family: $monoFont;
-    color: $purple-deep;
-    accent-color: $purple-deep;
-    background: $purple-pastel-light;
+    color: var(--color-dark-primary);
+    accent-color: var(--color-dark-primary);
+    background: var(--color-pastel-light);
     border: none;
     border-radius: 0.4rem;
     padding: 0.4rem 0.8rem;
@@ -127,13 +127,13 @@ figure {
 iframe {
     display: block;
     aspect-ratio: 16 / 9;
-    border-radius: 2.4rem;
+    border-radius: 1.6rem;
     width: 100%;
 
-    padding: 0.3rem;
-    background: $purple-pastel-light;
-    border: 0.6rem solid $purple-deep;
-    box-shadow: -0.6rem 0.6rem 0 0 rgba(black, 0.25);
+    padding: 0.2rem;
+    background: var(--color-pastel-light);
+    border: 0.3rem solid var(--color-dark-primary);
+    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
 }
 
 h1, h2, h3 {
@@ -171,26 +171,26 @@ h3 {
 }
 
 .featured-title {
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     font-family: $displayFont;
     text-transform: uppercase;
 
     &.l {
-        font-size: 6.4rem;
-        line-height: 4.8rem;
-        padding-block-end: 0.8rem;
+        font-size: clamp(3.2rem, 9vw, 6.4rem);
+        line-height: 0.75;
+        padding-block-end: 0.125em;
     }
 
     &.m {
-        font-size: 4.8rem;
-        line-height: 3.6rem;
-        padding-block-end: 0.6rem;
+        font-size: clamp(2.8rem, 6vw, 4.8rem);
+        line-height: 0.75;
+        padding-block-end: 0.125em;
     }
 
     &.s {
-        font-size: 3.6rem;
-        line-height: 2.6rem;
-        padding-block-end: 0.4rem;
+        font-size: clamp(2.4rem, 4vw, 3.6rem);
+        line-height: 0.75;
+        padding-block-end: 0.125em;
     }
 }
 
@@ -209,18 +209,13 @@ h3 {
 .popup-menu-wrapper {
     display: flex;
     direction: ltr;
-    flex-shrink: 0;
-
-    .gear {
-        width: 2.4rem;
-    }
 }
 
 .popup-menu {
     display: grid;
     padding: 0.4rem;
     border-radius: 0.6rem;
-    border: 0.1rem solid $purple-deep;
+    border: 0.1rem solid var(--color-dark-primary);
     box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
     background: white;
     text-align: start;
@@ -246,12 +241,12 @@ h3 {
         font-size: 1.2rem;
         font-weight: 400;
         text-transform: capitalize;
-        color: $purple-deep;
+        color: var(--color-dark-primary);
 
         &:hover {
             text-decoration: none;
             color: white;
-            background: $purple-primary-dark;
+            background: var(--color-medium-secondary);
         }
     }
 
@@ -263,7 +258,7 @@ h3 {
 
     .action-divider {
         margin: 0.3rem 0.6rem;
-        border-block-end: 0.1rem dotted $purple-primary-dark;
+        border-block-end: 0.1rem dotted var(--color-medium-secondary);
     }
 }
 
@@ -296,6 +291,23 @@ h3 {
     }
 }
 
+.lock.toggle {
+    &:hover {
+        filter: brightness(1.25) saturate(1);
+        opacity: 50%;
+    }
+
+    &.public {
+        filter: brightness(1.5) saturate(0);
+        opacity: 25%;
+
+        &:hover {
+            filter: brightness(1.25) saturate(1);
+            opacity: 50%;
+        }
+    }
+}
+
 .gear {
     transition: 0.1s;
 
@@ -322,12 +334,12 @@ h3 {
 }
 
 .feature-callout {
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     background: white;
     padding-inline: 1.6rem;
     line-height: 2;
     border-radius: 0.8rem;
-    border: 0.2rem solid $purple-deep;
+    border: 0.2rem solid var(--color-dark-primary);
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
     font-size: 1.4rem;
     font-weight: 700;
@@ -339,60 +351,6 @@ h3 {
 
     &:hover {
         transform: rotate(-5deg);
-    }
-}
-
-.portal-section {
-    margin-block-end: 1.6rem;
-
-    .portal-section-head {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: flex-end;
-        gap: 0.8rem;
-
-        .portal-section-title {
-            flex-grow: 1;
-            display: grid;
-            align-items: end;
-            grid-template-areas: 'overlap';
-
-            font-family: $displayFont;
-            color: $purple-deep;
-
-            // todo: clamp
-            font-size: 12.8rem;
-
-            & > * {
-                grid-area: overlap;
-            }
-
-            img {
-                width: 19.2rem;
-            }
-
-            div {
-                text-transform: uppercase;
-            }
-
-        }
-
-        .portal-button {
-            margin-block-end: 3.2rem;
-        }
-    }
-
-    .portal-section-blurb {
-        margin-block-start: -0.8rem;
-        padding: 1.2rem 2.4rem;
-        background: white;
-        border-radius: 3.2rem;
-
-        justify-self: start;
-        text-align: start;
-        color: $purple-deep;
-        font-size: 2.0rem;
-        font-weight: 700;
     }
 }
 
@@ -409,7 +367,7 @@ h3 {
         text-transform: uppercase;
         text-align: center;
         font-size: 3.6rem;
-        color: $purple-primary;
+        color: var(--color-medium-primary);
     }
 
     .portal-button-body {
@@ -424,8 +382,8 @@ h3 {
 }
 
 .portal-button {
-    color: $purple-deep;
-    background: $accent-yellow;
+    color: var(--color-dark-primary);
+    background: var(--color-accent-medium);
     font-family: $headFont;
     font-size: 2.4rem;
     font-weight: 700;
@@ -437,7 +395,7 @@ h3 {
 
     &:hover {
         transform: rotate(1deg) translate(0.3rem, -0.6rem);
-        box-shadow: -0.3rem 0.6rem 0 $purple-primary;
+        box-shadow: -0.3rem 0.6rem 0 var(--color-medium-primary);
     }
 }
 
@@ -465,8 +423,8 @@ h3 {
         transition: transform 0.3s ease-in-out;
         background: white;
         border-radius: 1.6rem;
-        border: 0.3rem solid $purple-deep;
-        box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.2);
+        border: 0.3rem solid var(--color-dark-primary);
+        box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
         backface-visibility: hidden;
     }
 
@@ -478,8 +436,8 @@ h3 {
         .portal-head {
             display: grid;
             gap: 0.4rem;
-            color: $accent-yellow;
-            background: $purple-deep;
+            color: var(--color-accent-medium);
+            background: var(--color-dark-primary);
             padding: 1.6rem;
             border-radius: 1.2rem 1.2rem 0 0;
 
@@ -511,12 +469,12 @@ h3 {
 
         > *:nth-child(1) {
             font-family: $headFont;
-            color: $purple-deep;
+            color: var(--color-dark-primary);
             font-size: 1.4rem;
         }
 
         > *:nth-child(2) {
-            color: $accent-yellow;
+            color: var(--color-accent-medium);
             font-family: $displayFont;
             font-size: 3.6rem;
             text-transform: capitalize;
@@ -541,31 +499,42 @@ h3 {
         background-position: top center;
         margin: 1.6rem;
         margin-inline-start: -1.6rem;
-        border: 0.3rem solid $purple-deep;
-        box-shadow: inset 0 0 0 0.2rem $purple-pastel-light, -0.3rem 0.3rem 0 rgba(black, 0.2);
+        border: 0.3rem solid var(--color-dark-primary);
+        box-shadow: inset 0 0 0 0.2rem var(--color-pastel-light), -0.3rem 0.3rem 0 rgba(black, 0.25);
     }
 }
 
 .carousel-wrapper {
     max-width: 100vw;
     padding-block: 1.6rem;
+    overflow: hidden;
 
     .carousel-track {
         transform: translateX(0%);
         display: flex;
-        flex-flow: row wrap;
         gap: 3.2rem;
-    }
-}
-
-.carousel-wrapper[data-animated="true"] {
-    overflow: hidden;
-
-    .carousel-track {
         width: max-content;
         flex-flow: row nowrap;
         animation: carousel-scroll 20s linear infinite;
     }
+}
+
+.carousel {
+    display: grid;
+    grid-template-rows: auto min-content min-content;
+    gap: 1.6rem 0;
+
+    .app-button {
+        justify-self: center;
+    }
+}
+
+.carousel__track {
+    height: 100%;
+}
+
+.carousel__slide {
+    padding: 0 1.6rem;
 }
 
 @keyframes carousel-scroll {
@@ -579,10 +548,10 @@ h3 {
     display: flex;
     flex-flow: column;
     border-radius: 1.6rem;
-    border: 0.2rem solid $purple-deep;
+    border: 0.2rem solid var(--color-dark-primary);
     overflow: hidden;
     background: white;
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.2);
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
     transition: 0.1s;
 
     &:hover {
@@ -593,7 +562,7 @@ h3 {
     .collapsible-head {
         padding: 1.6rem;
         color: white;
-        background: $purple-deep;
+        background: var(--color-dark-primary);
         text-transform: uppercase;
         line-height: 1em;
         display: flex;
@@ -617,17 +586,28 @@ h3 {
     }
 }
 
-.tip, .faq {
-    @include box-yellow-pastel;
+.draggable-item {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    .trash {
+        cursor: pointer;
+        width: 2.0rem;
+    }
+}
+
+.tip, .tip {
+    @include box-accent-light;
     font-family: $bodyFont;
 }
 
 .tip {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    text-align: start;
-    padding-inline: 1.6rem;
+    display: grid;
+    gap: 1.6rem;
+    width: 100%;
+    max-width: 96rem;
+    padding: 1.6rem;
 
     a {
         font-weight: 700;
@@ -637,8 +617,18 @@ h3 {
         }
     }
 
+    .tip-content-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+
+        &:nth-child(2) {
+            border-block-start: 0.1rem solid var(--color-accent-medium);
+            padding-block-start: 1.2rem;
+        }
+    }
+
     .tip-content {
-        margin-block: 1.6rem;
         display: flex;
         flex-flow: column;
         gap: 0.4rem;
@@ -650,85 +640,55 @@ h3 {
     }
 }
 
-.faq {
-    display: grid;
-    padding: 0.4rem 1.6rem;
-
-    .faq-question, .faq-answer {
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-    }
-
-    .faq-question {
-        border-block-end: 0.2rem dotted $purple-primary;
-    }
-
-    p {
-        margin: 0;
-        font-size: 1.6rem;
-    }
-
-    a {
-        font-weight: 700;
-
-        &:hover, &:active {
-            text-decoration: underline;
-        }
-    }
-}
-
 #paginator {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.6rem;
-    margin-block: 3.2rem;
-    color: $purple-deep;
+    color: var(--color-dark-primary);
     font-family: $headFont;
     font-weight: 700;
+    width: 100%;
+    max-width: 96rem;
 
     .item-count {
         font-size: 1.6rem;
     }
-
 
     .pagination {
         display: flex;
         flex-flow: row wrap;
         justify-content: center;
         align-items: center;
-        gap: 3.2rem;
+        gap: 1em;
         flex: 0 1 30%;
         max-width: 100%;
-
-        border-radius: 4.8rem;
-        padding: 0;
-
-        font-size: 3.6rem;
+        font-size: clamp(2.4rem, 4vw, 3.6rem);
         font-weight: 400;
         font-family: $displayFont;
         user-select: none;
 
         & > * {
+            flex-basis: 5%;
             display: flex;
             align-items: center;
             justify-content: center;
 
-            color: $purple-primary;
+            color: var(--color-medium-primary);
 
             &:not(.active):hover {
-                color: $purple-primary-dark;
+                color: var(--color-medium-secondary);
             }
-        }
 
-        & > *.active {
-            color: $accent-yellow;
+            &.active {
+                color: var(--color-accent-medium);
+            }
+
         }
 
         & > *.disabled {
-            color: $purple-pastel-dark !important;
+            color: var(--color-pastel-dark);
+
+            &:hover {
+                cursor: default;
+                color: var(--color-pastel-dark);
+            }
         }
     }
 }
@@ -744,6 +704,36 @@ h3 {
 
     * {
         print-color-adjust: exact
+    }
+}
+
+.error-container {
+    display: grid;
+    gap: 1.6rem;
+    text-align: center;
+    margin-block: 9.6rem;
+
+    .error-status {
+        font-family: $displayFont;
+        font-size: 12.8rem;
+        color: var(--color-dark-primary);
+        line-height: 0.75;
+        padding-block-end: 1.6rem;
+    }
+
+    .error-title {
+        font-family: $headFont;
+        font-size: 6.4rem;
+        font-weight: 700;
+        color: var(--color-medium-primary);
+        padding-block-start: 0.8rem;
+    }
+
+    .error-message {
+        font-family: $monoFont;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--color-dark-primary);
     }
 }
 
@@ -791,18 +781,18 @@ $flashers: (
                 .fl-progress-bar {
                     display: flex;
                     height: 0.4rem;
-                    background-color: $purple-pastel-dark;
+                    background-color: var(--color-pastel-dark);
 
                     .fl-progress {
-                        background-color: $purple-primary;
+                        background-color: var(--color-medium-primary);
                     }
                 }
 
                 &.fl-flasher {
                     border-radius: 1.6rem;
-                    border: 0.2rem solid $purple-deep;
+                    border: 0.2rem solid var(--color-dark-primary);
                     box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
-                    background: $purple-pastel-light;
+                    background: var(--color-pastel-light);
 
                     font-family: $monoFont;
                     line-height: 1.5;
@@ -829,7 +819,7 @@ $flashers: (
                     }
 
                     .fl-title {
-                        color: $purple-primary;
+                        color: var(--color-medium-primary);
                         font-size: 2.0rem;
                         font-weight: 700;
                         font-family: $headFont;
@@ -848,15 +838,15 @@ $flashers: (
     direction: ltr;
     font-family: $monoFont;
     border-radius: 0.6rem;
-    border: 0.1rem solid $purple-primary-dark;
-    box-shadow: -0.1rem 0.1rem 0 $purple-primary-dark;
-    color: $purple-primary-dark;
+    border: 0.1rem solid var(--color-medium-secondary);
+    box-shadow: -0.1rem 0.1rem 0 var(--color-medium-secondary);
+    color: var(--color-medium-secondary);
     background: white;
     font-weight: 400;
     font-size: 1.2rem;
     padding: 0.4rem 1.2rem;
     white-space: nowrap;
-    z-index: 99;
+    z-index: 9999;
 }
 
 .notification-leave-active {
