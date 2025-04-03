@@ -70,7 +70,6 @@ defineOptions({
                 <div class="feature-panel-subtitle">PalWeb is the Web of Palestinian Arabic</div>
             </div>
 
-
             <div class="model-counter-wrapper">
                 <div class="model-counter">
                     <div class="model-counter-count">{{ count.terms }}</div>

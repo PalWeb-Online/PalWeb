@@ -18,25 +18,25 @@ const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const term = useForm({
-    id: props.term.data?.id || null,
-    term: props.term.data?.term || '',
-    category: props.term.data?.category || '',
-    pronunciations: props.term.data?.pronunciations || [],
-    root: props.term.data?.root || {
+    id: props.term?.data.id || null,
+    term: props.term?.data.term || '',
+    category: props.term?.data.category || '',
+    pronunciations: props.term?.data.pronunciations || [],
+    root: props.term?.data.root || {
         root: ''
     },
-    etymology: props.term.data?.etymology || {
+    etymology: props.term?.data.etymology || {
         type: '',
         source: '',
     },
-    attributes: props.term.data?.attributes || [],
-    spellings: props.term.data?.spellings || [],
-    relatives: props.term.data?.relatives || [],
-    patterns: props.term.data?.patterns || [],
-    glosses: props.term.data?.glosses || [],
-    inflections: props.term.data?.inflections || [],
-    image: props.term.data?.image || '',
-    usage: props.term.data?.usage || '',
+    attributes: props.term?.data.attributes || [],
+    spellings: props.term?.data.spellings || [],
+    relatives: props.term?.data.relatives || [],
+    patterns: props.term?.data.patterns || [],
+    glosses: props.term?.data.glosses || [],
+    inflections: props.term?.data.inflections || [],
+    image: props.term?.data.image || '',
+    usage: props.term?.data.usage || '',
 });
 
 const isSaving = ref(false);
@@ -169,7 +169,7 @@ defineOptions({
 <template>
     <Head title="Dictionary: Build Term"/>
     <div id="app-head">
-        <h1>Dictionary</h1>
+        <Link :href="route('terms.index')"><h1>Dictionary</h1></Link>
     </div>
     <div id="app-body">
         <div class="app-nav-interact">

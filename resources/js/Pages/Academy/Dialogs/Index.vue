@@ -20,7 +20,7 @@ defineProps({
 <template>
     <Head title="Academy: Dialogs"/>
     <div id="app-head">
-        <h1>Dialogs</h1>
+        <Link :href="route('dialogs.index')"><h1>Dialogs</h1></Link>
         <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.dialog'))"/>
     </div>
     <div id="app-body">

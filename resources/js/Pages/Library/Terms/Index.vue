@@ -6,7 +6,6 @@ import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {router} from "@inertiajs/vue3";
-import AppButton from "../../../components/AppButton.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
@@ -53,11 +52,14 @@ function updateFilter({filter, value}) {
 <template>
     <Head title="Dictionary"/>
     <div id="app-head">
-        <h1>Dictionary</h1>
-        <AppButton v-if="!UserStore.isAdmin" label="Create New" @click="router.get(route('terms.create'))"/>
-        <button v-else class="feature-callout" @click="router.get(route('terms.random'))">I'm Feeling Lucky!</button>
+        <Link :href="route('terms.index')"><h1>Dictionary</h1></Link>
     </div>
     <div id="app-body">
+        <div class="nav-body">
+            <Link v-if="!UserStore.isAdmin" :href="route('terms.create')">Create New</Link>
+            <div v-else>Index</div>
+            <Link :href="route('terms.random')">to Random -></Link>
+        </div>
         <div class="terms-featured-wrapper">
             <TermFeatured :model="featuredTerm"/>
 

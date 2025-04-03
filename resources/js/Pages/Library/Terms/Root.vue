@@ -14,10 +14,12 @@ const props = defineProps({
 <template>
     <Head :title="`Dictionary: ${root.ar} (${root.en})`"/>
     <div id="app-head">
-        <h1>Dictionary</h1>
+        <Link :href="route('terms.index')"><h1>Dictionary</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('terms.index')"><- to All</Link>
+        <div class="nav-body">
+            <Link :href="route('terms.index')"><- to All</Link>
+        </div>
         <RootContainer :root="root"/>
     </div>
 </template>

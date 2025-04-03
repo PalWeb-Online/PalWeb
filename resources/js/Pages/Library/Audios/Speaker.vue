@@ -20,10 +20,12 @@ defineOptions({
 <template>
     <Head :title="`Library: Audios by ${speaker.user.name}`"/>
     <div id="app-head">
-        <h1>Audios</h1>
+        <Link :href="route('audios.index')"><h1>Audios</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('audios.index')"><- to All</Link>
+        <div class="nav-body">
+            <Link :href="route('audios.index')"><- to All</Link>
+        </div>
         <SpeakerContainer :speaker="speaker"/>
 
         <template v-if="audios.data.length > 0">

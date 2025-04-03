@@ -8,14 +8,14 @@ const props = defineProps({
     page: String,
 })
 
-const navOpen = ref(true);
+const navOpen = ref(false);
 </script>
 
 <template>
     <Head :title="`Wiki: ${page}`"/>
     <div id="wiki-container">
             <div class="window-head">
-                <button @click="navOpen = !navOpen" class="material-symbols-rounded">menu</button>
+                <button @click="navOpen = !navOpen" class="material-symbols-rounded menu" :class="{'active': navOpen}">menu</button>
                 <div>wiki: {{ page }}</div>
                 <button @click="router.get(route('homepage'))" class="material-symbols-rounded">close</button>
             </div>

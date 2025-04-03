@@ -10,6 +10,7 @@ import {useUserStore} from "../../../../stores/UserStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import LinguaRecorder from "../../../../utils/LinguaRecorder.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
+import AppTip from "../../../../components/AppTip.vue";
 
 const UserStore = useUserStore();
 const RecordStore = useRecordStore();
@@ -209,13 +210,9 @@ onMounted(async () => {
     </div>
 
     <template v-if="!RecordWizardStore.data.hasPermission">
-        <div class="tip">
-            <div class="material-symbols-rounded">info</div>
-            <div class="tip-content">
-                <p>Welcome to the PalWeb <b>Record Wizard</b>! Allow the browser to use your mic in order to proceed.
-                </p>
-            </div>
-        </div>
+        <AppTip>
+            <p>Welcome to the PalWeb <b>Record Wizard</b>! Allow the browser to use your mic in order to proceed.</p>
+        </AppTip>
 
         <div class="rw-page__speaker">
             <section style="flex-grow: 1; grid-template-rows: auto">

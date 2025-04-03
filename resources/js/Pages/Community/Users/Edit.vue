@@ -175,11 +175,9 @@ function generateArabicName() {
 <template>
     <Head title="Edit Profile"/>
     <div id="app-head">
-        <h1>Pal</h1>
+        <Link :href="route('users.index')"><h1>Community</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('users.show', user.username)"><- to Profile</Link>
-
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">
                 <AppButton :disabled="isSaving || !hasNavigationGuard || !isValidRequest" label="Save"

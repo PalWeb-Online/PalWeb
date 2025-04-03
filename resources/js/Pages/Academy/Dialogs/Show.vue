@@ -14,10 +14,9 @@ defineProps({
 <template>
     <Head :title="`Academy: Dialogs: ${dialog.title}`"/>
     <div id="app-head">
-        <h1>Dialogs</h1>
+        <Link :href="route('dialogs.index')"><h1>Dialogs</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('dialogs.index')"><- to All</Link>
         <DialogContainer :model="dialog"/>
     </div>
 </template>

@@ -19,7 +19,7 @@ const {term, isLoading, playAudio} = useTerm(props);
 <template>
     <template v-if="! isLoading">
         <div class="featured-term-container">
-            <div class="featured-title index l">Word of the Day</div>
+            <div class="featured-title l">Word of the Day</div>
             <div class="term-container">
                 <div class="term-container-head">
                     <div class="term-headword">

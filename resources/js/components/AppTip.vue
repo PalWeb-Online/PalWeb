@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    question: {type: String, default: false}
+    question: {type: String, default: ''}
 })
 </script>
 

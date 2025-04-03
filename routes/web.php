@@ -125,6 +125,7 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
 
+
 //        todo: should these be API routes?
         Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
         Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
@@ -143,13 +144,20 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
                 Sentence::with(['dialog'])->findOrFail($sentence->id)
             );
         })->name('sentences.get');
+
+    });
+
+    Route::prefix('/random')->group(function () {
+        Route::get('/term', function () {
+            return to_route('terms.show', Term::inRandomOrder()->first());
+        })->name('terms.random');
+
+        Route::get('/sentence', function () {
+            return to_route('sentences.show', Sentence::inRandomOrder()->first());
+        })->name('sentences.random');
     });
 
     Route::get('/roots/{root}', [RootController::class, 'show'])->name('roots.show');
-
-    Route::get('/random', function () {
-        return to_route('terms.show', Term::inRandomOrder()->first());
-    })->name('terms.random');
 });
 
 Route::middleware(['auth'])->prefix('/hub')->group(function () {
@@ -208,6 +216,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{deck}/get', function (Deck $deck) {
                 return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
             })->name('decks.get');
+
         });
 
         Route::prefix('/audios')->group(function () {
@@ -215,6 +224,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
             Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
         });
+
+        Route::get('/random/deck', function () {
+            return to_route('decks.show', Deck::inRandomOrder()->first());
+        })->name('decks.random');
 
         Route::middleware('admin')->group(function () {
             Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);

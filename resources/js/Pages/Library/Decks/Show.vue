@@ -14,10 +14,13 @@ defineProps({
 <template>
     <Head :title="`Library: Decks: ${deck.name}`"/>
     <div id="app-head">
-        <h1>Decks</h1>
+        <Link :href="route('decks.index')"><h1>Decks</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('decks.index')"><- to All</Link>
+        <div class="nav-body">
+            <Link :href="route('decks.index')"><- to All</Link>
+            <Link :href="route('decks.random')">to Random -></Link>
+        </div>
         <DeckContainer :model="deck"/>
     </div>
 </template>

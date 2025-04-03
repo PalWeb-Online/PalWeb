@@ -5,6 +5,7 @@ import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {ref, watch} from "vue";
 import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 defineOptions({
     layout: Layout
@@ -54,9 +55,12 @@ function updateFilter({filter, value}) {
 <template>
     <Head title="Library: Audios"/>
     <div id="app-head">
-        <h1>Audios</h1>
+        <Link :href="route('audios.index')"><h1>Audios</h1></Link>
     </div>
     <div id="app-body">
+        <div class="nav-body">
+            <div>Index</div>
+        </div>
         <div class="search-filters-wrapper">
             <div class="search-filters-container">
                 <div class="search-filters">

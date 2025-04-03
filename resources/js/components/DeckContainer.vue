@@ -4,6 +4,7 @@ import DeckActions from "./DeckActions.vue";
 import PinButton from "./PinButton.vue";
 import TermItem from "./TermItem.vue";
 import UserItem from "./UserItem.vue";
+import AppTip from "./AppTip.vue";
 
 const props = defineProps({
     model: {
@@ -48,15 +49,12 @@ const {deck, isLoading} = useDeck(props);
                 <div class="deck-term-count">{{ deck.terms.length }} Terms</div>
             </template>
             <template v-else>
-                <div class="tip">
-                    <div class="material-symbols-rounded">info</div>
-                    <div class="tip-content">
-                        <p>This Deck is still empty! If this Deck is yours, you can edit the Deck in the Deck Master by
-                            selecting <b>Edit Deck</b> in the Context Actions menu. You may also click the folder icon
-                            on any Term to view a list of your created Decks that you can add the Term to.
-                        </p>
-                    </div>
-                </div>
+                <AppTip>
+                    <p>This Deck is still empty! If this Deck is yours, you can edit the Deck in the Deck Master by
+                        selecting <b>Edit Deck</b> in the Context Actions menu. You may also click the folder icon
+                        on any Term to view a list of your created Decks that you can add the Term to.
+                    </p>
+                </AppTip>
             </template>
         </div>
     </template>

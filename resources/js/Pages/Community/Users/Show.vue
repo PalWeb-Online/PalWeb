@@ -31,11 +31,9 @@ defineOptions({
 <template>
     <Head :title="`Pal: ${user.username}`"/>
     <div id="app-head">
-        <h1>Pal</h1>
+        <Link :href="route('users.index')"><h1>Community</h1></Link>
     </div>
     <div id="app-body">
-        <Link :href="route('users.index')"><- to Hub</Link>
-
         <AppTip v-if="user.id === UserStore.user.id && !UserStore.user.is_verified">
             <p><b>Welcome to PalWeb! In order to to access all of the site's features, you must verify your email
                 address using the link sent to your inbox. If you need, you can send yourself a new link using the

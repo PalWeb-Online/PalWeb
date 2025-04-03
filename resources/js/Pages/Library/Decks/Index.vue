@@ -34,12 +34,14 @@ function updateFilter({filter, value}) {
 <template>
     <Head title="Library: Decks"/>
     <div id="app-head">
-        <h1>Decks</h1>
-        <button v-if="UserStore.isUser" class="feature-callout" @click="router.get(route('deck-master.build'))">Build
-            Your Own!
-        </button>
+        <Link :href="route('decks.index')"><h1>Decks</h1></Link>
     </div>
     <div id="app-body">
+        <div class="nav-body">
+            <Link v-if="UserStore.isUser" :href="route('deck-master.build')">Create New</Link>
+            <div v-else>Index</div>
+            <Link :href="route('decks.random')">to Random -></Link>
+        </div>
         <div class="search-filters-wrapper">
             <SearchFilters
                 :activeModel="'decks'"

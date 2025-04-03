@@ -34,9 +34,13 @@ defineOptions({
             matched against the Arabic Term by default, with the option to match against the English Gloss (i.e.
             definition) or even the Term's Root instead; this provides greater flexibility & fine-tuning of the results
             while significantly reducing undesirable clutter, a known issue in the past.</p>
-        <p>One more thing: In the Dictionary, you can now filter by letter! Selecting a letter will return only Terms
-            whose first Root letter is that letter or — if they have no Root — that begin with that letter, further
-            emulating the experience of browsing an Arabic dictionary.</p>
+
+        <h2>Roots</h2>
+        <p>Speaking of filtering, you can now filter by letter as well! Selecting a letter in the Dictionary index page
+            will return only Terms whose first Root letter is that letter or — if they have no Root — that begin with
+            that letter, further emulating the experience of browsing an Arabic dictionary.</p>
+        <p>Roots now have their own pages in the Dictionary as well. Click on a Term's Root in the Etymology section to
+            view a page that displays all Terms belonging to that Root.</p>
 
         <h2>Dialogs</h2>
         <p>I have rebranded the "Annotated Transcripts" or "Texts" as <b>Dialogs</b>. Rather than hard-coded text,
@@ -69,8 +73,9 @@ defineOptions({
 
         <h1>What’s Next?</h1>
         <p>Let me start by saying that the Sidebar already gives you an idea of what's coming to PalWeb 2.0: In addition
-            to the <b>Dialog</b> index that is technically already available, the <b>Academy</b> will contain the <b>Quizzer</b>
-            — an application for "quizzing" Decks, Dialogs & Skills (the building blocks of the <b>Lessons</b>) — & the
+            to the <b>Dialog</b> index page that is technically already available, the <b>Academy</b> will contain the
+            <b>Quizzer</b> — an application for "quizzing" Decks, Dialogs & Skills (the building blocks of the <b>Lessons</b>)
+            — & the
             <b>My Progress</b> area to view user scores, etc. I intend to have this ready by July 1 (i.e. the PalWeb 2.0
             launch).</p>
         <p>What I cannot promise, unfortunately, is to finish the <b>Lessons</b> portal by that time. While I could have

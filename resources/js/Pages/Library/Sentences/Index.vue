@@ -6,7 +6,6 @@ import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import AppButton from "../../../components/AppButton.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 
 const UserStore = useUserStore();
@@ -35,10 +34,14 @@ function updateFilter({filter, value}) {
 <template>
     <Head title="Library: Phrasebook"/>
     <div id="app-head">
-        <h1>Phrasebook</h1>
-        <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.sentence'))"/>
+        <Link :href="route('sentences.index')"><h1>Phrasebook</h1></Link>
     </div>
     <div id="app-body">
+        <div class="nav-body">
+            <Link v-if="UserStore.isAdmin" :href="route('speech-maker.sentence')">Create New</Link>
+            <div v-else>Index</div>
+            <Link :href="route('sentences.random')">to Random -></Link>
+        </div>
         <div class="search-filters-wrapper">
             <SearchFilters
                 :activeModel="'sentences'"
