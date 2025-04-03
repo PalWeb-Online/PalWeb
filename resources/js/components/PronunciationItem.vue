@@ -1,11 +1,16 @@
 <script setup>
 import {route} from 'ziggy-js';
 import AudioItem from "./AudioItem.vue";
+import {onMounted, reactive, ref} from "vue";
 
 const props = defineProps({
     model: Object,
     audio: Object,
 });
+
+const pronunciation = reactive({});
+const showAudios = ref(false);
+const audiosFetched = ref(false);
 
 const fetchAudios = async () => {
     try {
@@ -14,12 +19,18 @@ const fetchAudios = async () => {
             !props.model.audios.some(existing => existing.id === audio.id)
         );
 
-        props.model.audios.push(...audios);
+        pronunciation.audios.push(...audios);
+        audiosFetched.value = true;
+        showAudios.value = true;
 
     } catch (error) {
         console.error('Error fetching Audios:', error);
     }
 }
+
+onMounted(() => {
+    Object.assign(pronunciation, props.model);
+});
 </script>
 
 <template>
@@ -42,10 +53,15 @@ const fetchAudios = async () => {
             <AudioItem :model="audio"/>
         </div>
         <div v-else-if="model.audios.length > 0" class="pronunciation-audios">
-            <AudioItem v-for="audio in model.audios" :model="audio"/>
+            <AudioItem v-if="showAudios" v-for="audio in model.audios" :model="audio"/>
+            <AudioItem v-else :model="model.audios[0]"/>
         </div>
 
-        <!--                todo: load / toggle -->
-        <button v-if="!audio && model.audios_count > 1" @click="fetchAudios">+</button>
+        <button v-if="!audio && model.audios_count > 1 && !audiosFetched" @click="fetchAudios">+
+        </button>
+        <button v-if="!audio && model.audios_count > 1 && audiosFetched && showAudios" @click="showAudios = false">-
+        </button>
+        <button v-if="!audio && model.audios_count > 1 && audiosFetched && !showAudios" @click="showAudios = true">+
+        </button>
     </div>
 </template>

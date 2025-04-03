@@ -104,17 +104,29 @@ class Term extends Model
 
     public function getSingleGlossSentence(): Collection
     {
-        $sentenceIds = DB::table('sentence_term')
+        $sentenceData = DB::table('sentence_term')
             ->where('sentence_term.term_id', $this->id)
-            ->groupBy('sentence_term.gloss_id')
-            ->selectRaw('MIN(sentence_term.sentence_id) AS sentence_id, gloss_id')
-            ->pluck('sentence_id', 'gloss_id');
+            ->groupBy('gloss_id')
+            ->selectRaw('gloss_id, MIN(sentence_term.sentence_id) AS sentence_id, COUNT(*) as sentences_count')
+            ->get();
 
+        $sentenceCounts = collect();
+        $sentenceIds = collect();
+
+        $sentenceData->each(function ($row) use ($sentenceCounts, $sentenceIds) {
+            $sentenceIds[$row->gloss_id] = $row->sentence_id;
+            $sentenceCounts[$row->gloss_id] = $row->sentences_count;
+        });
 
         $sentences = Sentence::whereIn('id', $sentenceIds->values())->get();
 
         return $sentences->groupBy(function ($sentence) use ($sentenceIds) {
             return $sentenceIds->flip()[$sentence->id];
+        })->map(function ($group, $glossId) use ($sentenceCounts) {
+            return [
+                'sentences' => $group,
+                'sentences_count' => $sentenceCounts[$glossId],
+            ];
         });
     }
 

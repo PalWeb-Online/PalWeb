@@ -1,5 +1,5 @@
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {route} from 'ziggy-js';
 import {useTerm} from "../composables/Term.js";
 import TermActions from "./TermActions.vue";
@@ -21,7 +21,53 @@ const props = defineProps({
     },
 });
 
-const {term, isLoading, fetchPronunciations, fetchSentences} = useTerm(props);
+const {term, isLoading} = useTerm(props);
+
+const showPronunciations = ref(false);
+const pronunciationsFetched = ref(false);
+
+const fetchPronunciations = async () => {
+    try {
+        const response = await axios.get(route('terms.get.pronunciations', {term: term.id}));
+        const pronunciations = response.data.filter(pronunciation =>
+            !term.pronunciations.some(existing => existing.id === pronunciation.id)
+        );
+
+        term.pronunciations.push(...pronunciations);
+        pronunciationsFetched.value = true;
+        showPronunciations.value = true;
+
+    } catch (error) {
+        console.error('Error fetching Pronunciations:', error);
+    }
+}
+
+// todo: evaluate per gloss
+const showSentences = ref(new Map());
+const sentencesFetched = ref(new Map());
+
+const fetchSentences = async (glossId) => {
+    try {
+        const gloss = term.glosses.find(gloss => gloss.id === glossId);
+
+        const response = await axios.get(route('terms.get.sentences', {term: term.id, gloss: glossId}));
+        const sentences = response.data.filter(sentence =>
+            !gloss.sentences.some(existing => existing.id === sentence.id)
+        );
+
+        gloss.sentences.push(...sentences);
+        sentencesFetched.value.set(glossId, true);
+        showSentences.value.set(glossId, true);
+
+    } catch (error) {
+        console.error('Error fetching Pronunciations:', error);
+    }
+}
+
+const toggleShowSentences = (glossId) => {
+    const currentState = showSentences.value.get(glossId) || false;
+    showSentences.value.set(glossId, !currentState);
+};
 
 const variants = computed(() =>
     term.relatives.filter(relative => relative.type === "variant") ?? []
@@ -134,11 +180,12 @@ const attributeLinks = {
             </div>
 
             <div class="pronunciations-list">
-                <PronunciationItem v-for="pronunciation in term.pronunciations"
-                                   :model="pronunciation"/>
+                <PronunciationItem v-if="showPronunciations" v-for="pronunciation in term.pronunciations" :model="pronunciation"/>
+                <PronunciationItem v-else :model="term.pronunciations[0]"/>
 
-                <!--                todo: load / toggle -->
-                <button v-if="term.pronunciations_count > 1" @click="fetchPronunciations">+</button>
+                <button v-if="term.pronunciations_count > 1 && !pronunciationsFetched" @click="fetchPronunciations">+</button>
+                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && showPronunciations" @click="showPronunciations = false">-</button>
+                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && !showPronunciations" @click="showPronunciations = true">+</button>
             </div>
 
             <div class="term-etymology">
@@ -237,12 +284,17 @@ const attributeLinks = {
                     </div>
 
                     <div v-if="gloss.sentences.length > 0" class="sentences-list">
-                        <!-- todo: can't tell if the dialog flag is working; Dialogger is bugging out-->
-                        <SentenceContainer v-for="sentence in gloss.sentences" :model="sentence"
+                        <SentenceContainer v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences" :model="sentence"
                                            :currentTerm="term.id" dialog/>
+                        <SentenceContainer v-else :model="gloss.sentences[0]" :currentTerm="term.id" dialog/>
 
-                        <!--                todo: load / toggle; add sentences_count -->
-                        <button class="see-all" @click="fetchSentences(gloss.id)">See All Sentences (?)</button>
+                        <button class="see-all" v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)"
+                                @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
+
+                        <button class="see-all" v-if="sentencesFetched.get(gloss.id)"
+                                @click="toggleShowSentences(gloss.id)">
+                            {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
+                        </button>
                     </div>
                 </div>
             </div>
