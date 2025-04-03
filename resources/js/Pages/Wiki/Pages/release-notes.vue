@@ -13,14 +13,14 @@ defineOptions({
         <p>Where to begin? Once again, the latest update to PalWeb is the biggest yet. By leveraging Inertia.js, I've
             turned all of PalWeb into a single-page application powered by Laravel & Vue. PalWeb 2.0 will be launched on
             July 1, 2025; what you're seeing now is the Beta version of that build, which does not include any new
-            content (namely, the <b>Academy</b>). I want the community to test out the site while I build these new
-            features. If you find anything that doesn't work or look as expected or have any other suggestions for
-            improvement, write to me using the <b>Send Feedback</b> button in the Sidebar (you must be logged in).
+            content. (Unfortunately, the existing Academy content will be unavailable during this beta phrase as well.)
+            I want the community to test out the site while I build these new features. If you find anything that
+            doesn't work or look as expected or have any other suggestions for improvement, write to me using the
+            <b>Send Feedback</b> button in the Sidebar (you must be logged in).
         </p>
         <p>In any case, PalWeb 2.0 is already all but a completely new experience. Here's a summary of what's new. (You
             can find more information on how to use the site in the
-            <Link :href="route('wiki.show', 'user-guide')">User Guide</Link>
-            .)
+            <Link :href="route('wiki.show', 'user-guide')">User Guide</Link>.)
         </p>
 
         <h2>Search</h2>

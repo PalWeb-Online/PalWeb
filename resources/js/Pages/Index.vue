@@ -1,12 +1,11 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted, ref} from "vue";
+import {nextTick, onBeforeUnmount, onMounted} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
-import SentenceContainer from "../components/SentenceContainer.vue";
 import HomepageHero from "../components/HomepageHero.vue";
-import DeckContainer from "../components/DeckContainer.vue";
+import {useNavigationStore} from "../stores/NavigationStore.js";
 
 defineProps({
     count: Object,
@@ -16,6 +15,8 @@ defineProps({
     featuredUser: Object,
     featuredDeck: Object,
 });
+
+const NavigationStore = useNavigationStore();
 
 const carousels = [];
 const numberOfDuplications = 1;
@@ -57,9 +58,6 @@ defineOptions({
         <div class="homepage-hero-wrapper">
             <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.0 Release Notes -></Link>
             <HomepageHero/>
-            <!--            <div class="hero-blurb">-->
-            <!--                Learning a language means making it yours.-->
-            <!--            </div>-->
         </div>
 
         <div class="homepage-panel-wrapper accent-light">
@@ -68,6 +66,23 @@ defineOptions({
             <div class="feature-panel-content" style="text-align: center">
                 <div class="feature-panel-title">language is a web</div>
                 <div class="feature-panel-subtitle">PalWeb is the Web of Palestinian Arabic</div>
+            </div>
+
+            <div class="feature-panel inline">
+                <div class="feature-panel-content">
+                    <div class="feature-panel-title">hypertext dictionary</div>
+                    <div class="feature-panel-subtitle">Go where your curiosity takes you.</div>
+                    <div class="feature-panel-description">Highly detailed entries are just the beginning: hear
+                        everything out loud; see all their forms & conjugations; browse synonyms & antonyms — & more!
+                        Sentences show you Terms in their context, too. Click on any Term to jump to its page in an
+                        instant!
+                    </div>
+                </div>
+                <div class="feature-panel-feature">
+                    <video autoplay muted loop>
+                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-01.mov">
+                    </video>
+                </div>
             </div>
 
             <div class="model-counter-wrapper">
@@ -85,64 +100,45 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="feature-panel inline">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">hypertext dictionary</div>
-                    <div class="feature-panel-subtitle">Build your vocabulary. Build Decks.</div>
-                    <div class="feature-panel-description">Say goodbye to the tedium of piecing together your own
-                        vocabulary
-                        sets from bits of dubious information. Use the power of the PalWeb Dictionary to build your own
-                        custom Decks in a flash. Need some inspiration? Browse the Deck Library to see all the Decks
-                        others
-                        have made — & even copy a Deck to put your own spin on someone else's idea!
-                    </div>
-                </div>
-
-                <div class="feature-panel-feature">
-                    <DeckContainer :model="featuredDeck"/>
-                </div>
-            </div>
-
             <div class="feature-panel inline reverse">
                 <div class="feature-panel-content">
-                    <div class="feature-panel-title">interactive phrasebook</div>
-                    <div class="feature-panel-subtitle">Build your vocabulary. Build Decks.</div>
-                    <div class="feature-panel-description">Say goodbye to the tedium of piecing together your own
-                        vocabulary
-                        sets from bits of dubious information. Use the power of the PalWeb Dictionary to build your own
-                        custom Decks in a flash. Need some inspiration? Browse the Deck Library to see all the Decks
-                        others
-                        have made — & even copy a Deck to put your own spin on someone else's idea!
-                    </div>
-                </div>
-
-                <div class="feature-panel-feature">
-                    <SentenceContainer :model="sentences[0]" size="l" :key="sentences[0].id"/>
-                </div>
-            </div>
-        </div>
-
-        <div class="homepage-panel-wrapper pastel-light">
-            <div class="feature-panel-content">
-                <div class="feature-panel-subtitle">hassle-free language learning is here.</div>
-            </div>
-
-            <div class="feature-panel inline">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">deck master: build</div>
-                    <div class="feature-panel-subtitle">Build your vocabulary. Build Decks.</div>
-                    <div class="feature-panel-description">Say goodbye to the tedium of piecing together your own
-                        vocabulary
-                        sets from bits of dubious information. Use the power of the PalWeb Dictionary to build your own
-                        custom Decks in a flash. Need some inspiration? Browse the Deck Library to see all the Decks
-                        others
-                        have made — & even copy a Deck to put your own spin on someone else's idea!
+                    <div class="feature-panel-title">find anything</div>
+                    <div class="feature-panel-subtitle">Just call the Search Genie.</div>
+                    <div class="feature-panel-description">Search in Arabic or English & narrow down your search with a
+                        variety of filters. Want to find a feminine noun in the Form 1 Active Participle pattern & a
+                        CaCāCic broken plural?
+                        ثواني!
                     </div>
                 </div>
 
                 <div class="feature-panel-feature">
                     <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/db-demo.mov">
+                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-02.mov">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="homepage-panel-wrapper pastel-light">
+            <div class="feature-panel-content" style="text-align: center">
+                <div class="feature-panel-title">make arabic yours</div>
+                <div class="feature-panel-subtitle">hassle-free language learning is here</div>
+            </div>
+
+            <div class="feature-panel inline">
+                <div class="feature-panel-content">
+                    <div class="feature-panel-title">build decks</div>
+                    <div class="feature-panel-subtitle">Build your vocabulary, Deck by Deck.</div>
+                    <div class="feature-panel-description">Say goodbye to the busy work of piecing together your own
+                        vocabulary sets. Use the Deck Master to build your own Decks in a flash, or browse the Deck
+                        Library to see all the Decks others have made — & even copy a Deck to put your own spin on
+                        someone else's idea!
+                    </div>
+                </div>
+
+                <div class="feature-panel-feature">
+                    <video autoplay muted loop>
+                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-03.mov">
                     </video>
                 </div>
             </div>
@@ -155,17 +151,16 @@ defineOptions({
 
             <div class="feature-panel inline reverse">
                 <div class="feature-panel-content">
-                    <div class="feature-panel-title">deck master: study</div>
-                    <div class="feature-panel-subtitle">Flashy new ways to study.</div>
+                    <div class="feature-panel-title">study decks</div>
+                    <div class="feature-panel-subtitle">Flashy new ways to practice.</div>
                     <div class="feature-panel-description">Tired of micro-managing third-party flashcard applications?
-                        Study your Deck right here with the interactive Card Viewer! The Card Viewer gives you total
-                        flexibility to adjust how you view your Deck with just one click. (Quizzes &
-                        other modes will be coming soon!)
+                        Study your Deck right here with the Deck Master, which gives you total flexibility to adjust how
+                        you view your Deck with just one click.
                     </div>
                 </div>
                 <div class="feature-panel-feature">
                     <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/cv-demo.mov">
+                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-04.mov">
                     </video>
                 </div>
             </div>
@@ -181,12 +176,6 @@ defineOptions({
             <div class="feature-panel-content" style="text-align: center">
                 <div class="feature-panel-title">we create. you learn.</div>
                 <div class="feature-panel-subtitle">everything on PalWeb is made by others like you</div>
-            </div>
-
-            <div class="carousel-wrapper">
-                <div class="carousel-track">
-                    <UserItem v-for="user in users" :user="user" :key="'user-carousel' + user.id" size="s"/>
-                </div>
             </div>
 
             <div class="model-counter-wrapper">
@@ -210,7 +199,13 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="feature-panel inline">
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <UserItem v-for="user in users" :user="user" :key="'user-carousel' + user.id" size="s"/>
+                </div>
+            </div>
+
+            <div class="feature-panel">
                 <div class="feature-panel-content">
                     <div class="feature-panel-title">building community</div>
                     <div class="feature-panel-subtitle">Connect & share with others.</div>
@@ -226,13 +221,10 @@ defineOptions({
                 <div class="feature-panel-content">
                     <div class="feature-panel-title">record wizard</div>
                     <div class="feature-panel-subtitle">Let your voice shine through.</div>
-                    <div class="feature-panel-description">Originally developed to easily source pronunciation samples
-                        from
+                    <div class="feature-panel-description">Originally developed to source pronunciation samples from
                         native speakers, the Record Wizard will be open for all to contribute audios to the site.
-                        Fluency
-                        level is indicated for each Speaker, so don't be shy — every word can have as many audios as
-                        there
-                        are Arabic speakers in the world!
+                        Fluency level is indicated for each Speaker, so don't be shy — every word can have as many
+                        audios as there are Arabic speakers in the world!
                     </div>
                 </div>
 
@@ -243,16 +235,12 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="feature-panel-content">
-                <div class="feature-panel-subtitle">& so much more ...</div>
-            </div>
-
             <div class="portal-button-wrapper">
                 <div class="portal-button-head">
                     what will you create?
                 </div>
                 <div class="portal-button-body">
-                    <Link :href="route('signup')" class="portal-button">Get Started!</Link>
+                    <button @click="NavigationStore.showSignUp = true" class="portal-button">Join PalWeb!</button>
                 </div>
             </div>
         </div>

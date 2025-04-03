@@ -449,11 +449,13 @@ body {
 
 .feature-panel {
     display: grid;
-    gap: 3.2rem 6.4rem;
+    gap: 6.4rem;
     width: 100%;
+    max-width: 96rem;
 
     &.inline {
         grid-template-columns: auto;
+        max-width: 128rem;
 
         @media (min-width: 960px) {
             grid-template-columns: repeat(2, 1fr);
@@ -477,6 +479,10 @@ body {
     .feature-panel-feature {
         width: 100%;
         justify-self: center;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
 
         & > video, & > img {
             width: 100%;

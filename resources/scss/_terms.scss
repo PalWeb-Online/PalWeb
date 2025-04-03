@@ -167,7 +167,7 @@
     padding-block-end: 3.2rem;
 
     &:not(:last-child) {
-        border-block-end: 2px dotted var(--color-pastel-dark);
+        border-block-end: 0.1rem solid var(--color-medium-primary);
     }
 
     & > a {
@@ -190,17 +190,17 @@
     margin-block-end: 0.6rem;
 
     .gloss-li-label {
-        background: white;
+        //background: white;
         font-family: $displayFont;
         font-size: 9.6rem;
         line-height: 6.4rem;
         min-width: 7.2rem;
         text-align: center;
-        color: var(--color-accent-medium);
-        border-radius: 0.8rem;
-        border: 0.1rem solid var(--color-accent-medium);
-        box-shadow: -0.6rem 0.6rem 0 0 var(--color-accent-light);
-        overflow: hidden;
+        color: var(--color-medium-secondary);
+        //border-radius: 0.8rem;
+        //border: 0.1rem solid var(--color-accent-medium);
+        //box-shadow: -0.6rem 0.6rem 0 0 var(--color-accent-light);
+        //overflow: hidden;
         transform: rotate(-6deg);
     }
 
@@ -399,35 +399,24 @@
     display: grid;
     gap: 3.2rem;
     align-items: start;
-    margin-block: 3.2rem;
+    margin-block-end: 3.2rem;
     width: 100%;
     max-width: 96rem;
-
-    // Mobile
-    grid-template-columns: 1fr;
-
-    // Tablet & Desktop
-    //@media (min-width: 720px) {
-    //    grid-template-columns: 1fr 25%;
-    //}
 }
 
 .featured-term-container {
     display: grid;
     gap: 0.2rem;
-    grid-template-columns: 2fr 1fr;
     border-radius: 1.6rem;
     overflow: hidden;
     position: relative;
     border: 0.2rem solid var(--color-dark-primary);
     background: var(--color-dark-primary);
-    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
 
     .featured-title.l {
         color: white;
-        padding: 1.6rem;
+        padding: 0.25em;
         text-transform: none;
-        grid-column: span 2;
     }
 
     img {
@@ -439,6 +428,19 @@
         border: none;
         box-shadow: none;
         border-radius: 0;
+    }
+
+    .term-container-glosses {
+        margin: 0;
+    }
+
+    @media (min-width: 960px) {
+        grid-template-columns: 2fr 1fr;
+        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+
+        .featured-title.l {
+            grid-column: span 2;
+        }
     }
 }
 

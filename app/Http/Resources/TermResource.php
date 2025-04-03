@@ -105,7 +105,7 @@ class TermResource extends JsonResource
                             ];
                         }),
                         'sentences' => SentenceResource::collection($this->gloss_sentences[$gloss->id]['sentences'] ?? []),
-                        'sentences_count' => $this->gloss_sentences[$gloss->id]['sentences_count'],
+                        'sentences_count' => $this->gloss_sentences[$gloss->id]['sentences_count'] ?? 0,
                     ];
                 }),
                 'inflections' => $this->inflections,
