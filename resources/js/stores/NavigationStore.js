@@ -9,6 +9,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
 
     const showSignIn = ref(false);
     const showSignUp = ref(false);
+    const showSendFeedback = ref(false);
 
     const toggleSidebar = () => {
         data.isOpen = !data.isOpen;
@@ -39,6 +40,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         activeTheme,
         showSignIn,
         showSignUp,
+        showSendFeedback,
         updateTheme,
         toggleSidebar,
         closeSidebar,

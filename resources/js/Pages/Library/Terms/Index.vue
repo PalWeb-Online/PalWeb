@@ -9,8 +9,10 @@ import {router} from "@inertiajs/vue3";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
+import {useNavigationStore} from "../../../stores/NavigationStore.js";
 
 const UserStore = useUserStore();
+const NavigationStore = useNavigationStore();
 
 defineOptions({
     layout: Layout
@@ -60,7 +62,7 @@ function updateFilter({filter, value}) {
             <div v-else>Index</div>
             <Link :href="route('terms.random')">to Random -></Link>
         </div>
-        <div class="terms-featured-wrapper">
+        <div class="terms-featured-wrapper" v-if="Object.values(filters).every(value => !value)">
             <TermFeatured :model="featuredTerm"/>
 
             <div class="terms-featured-latest">
@@ -85,26 +87,27 @@ function updateFilter({filter, value}) {
                 :filters="filters"
                 @updateFilter="updateFilter"
             />
-            <AppTip>
-                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
-                    Terms
-                    matching this query.</p>
-                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
-                <p v-else>No Terms matching this query. Is a term missing from the Dictionary?
-                    <Link :href="route('missing.terms.create')">Request</Link>
-                    it here!
-                </p>
-            </AppTip>
         </div>
 
-
-        <template v-if="totalCount > 0">
-            <div class="deck-container">
+        <div class="popup-window index-container">
+            <div class="window-head">
+                terms
+            </div>
+            <AppTip>
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                    Terms matching this query.</p>
+                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
+                <p v-else>No Terms matching this query. Is a term missing from the Dictionary?
+                    <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us
+                        know!</a>
+                </p>
+            </AppTip>
+            <template v-if="totalCount > 0">
                 <div class="terms-list">
                     <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
                 </div>
-            </div>
-            <Paginator :links="terms.meta.links"/>
-        </template>
+                <Paginator :links="terms.meta.links"/>
+            </template>
+        </div>
     </div>
 </template>

@@ -276,6 +276,71 @@
     }
 }
 
+.popup-window.index-container {
+    width: 100%;
+    max-width: 96rem;
+    background: white;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+
+    @media (min-width: 960px) {
+        border: 0.2rem solid var(--color-dark-primary);
+        border-radius: 0.8rem;
+        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    }
+
+    .window-head {
+        background: var(--color-dark-primary);
+        font-size: 2.4rem;
+    }
+
+    .terms-list, .sentences-list {
+        padding: 3.2rem 1.6rem 3.2rem 2.4rem;
+    }
+
+    .tip {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    #paginator .pagination {
+        gap: 0;
+        background: var(--color-dark-primary);
+
+        & > * {
+            flex-grow: 1;
+            color: white;
+            font-family: $monoFont;
+            font-weight: 700;
+            font-size: 2.0rem;
+            padding-block: 0.8rem;
+
+            &:not(.active):hover {
+                color: white;
+                background: var(--color-dark-secondary);
+            }
+
+            &.active {
+                color: var(--color-dark-primary);
+                background: var(--color-accent-medium);
+            }
+
+        }
+
+        & > *.disabled {
+            color: var(--color-medium-primary);
+
+            &:hover {
+                cursor: default;
+                color: var(--color-medium-primary);
+                background: var(--color-dark-primary);
+            }
+        }
+    }
+}
+
 .app-prompt-heading {
     padding: 1.2rem 2.4rem;
     color: white;

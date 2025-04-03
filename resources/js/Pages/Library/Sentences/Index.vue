@@ -48,21 +48,26 @@ function updateFilter({filter, value}) {
                 :filters="filters"
                 @updateFilter="updateFilter"
             />
+        </div>
+
+        <div class="popup-window index-container">
+            <div class="window-head">
+                sentences
+            </div>
             <AppTip>
-                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
+                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{
+                        totalCount
+                    }}
                     Sentences matching this query.</p>
                 <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Sentences in the Library.</p>
                 <p v-else>No Sentences matching this query.</p>
             </AppTip>
-        </div>
-
-        <template v-if="totalCount > 0">
-            <div class="deck-container">
+            <template v-if="totalCount > 0">
                 <div class="sentences-list">
                     <SentenceContainer v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
                 </div>
-            </div>
-            <Paginator :links="sentences.meta.links"/>
-        </template>
+                <Paginator :links="sentences.meta.links"/>
+            </template>
+        </div>
     </div>
 </template>

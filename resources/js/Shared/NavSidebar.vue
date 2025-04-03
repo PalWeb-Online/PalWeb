@@ -20,7 +20,6 @@ const NotificationStore = useNotificationStore();
 const carouselRef = ref(null);
 const sidebarRef = ref(null);
 
-const showSendFeedback = ref(false);
 const showSendMail = ref(false);
 
 const zIndices = ref({
@@ -248,7 +247,7 @@ onMounted(() => {
             <div v-if="UserStore.isUser" class="nav-user-menu">
                 <div class="nav-user-menu-head">getHelp</div>
                 <div class="nav-user-menu-items">
-                    <button @click="showSendFeedback = true">Send Feedback</button>
+                    <button @click="NavigationStore.showSendFeedback = true">Send Feedback</button>
                 </div>
             </div>
             <div v-if="!UserStore.isUser" class="nav-user-menu">
@@ -262,8 +261,8 @@ onMounted(() => {
         <div class="nav-overlay"></div>
     </div>
 
-    <ModalWrapper v-model="showSendFeedback">
-        <SendFeedback @close="showSendFeedback = false"/>
+    <ModalWrapper v-model="NavigationStore.showSendFeedback">
+        <SendFeedback @close="NavigationStore.showSendFeedback = false"/>
     </ModalWrapper>
     <ModalWrapper v-model="showSendMail">
         <SendMail @close="showSendMail = false"/>
