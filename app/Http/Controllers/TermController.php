@@ -222,7 +222,7 @@ class TermController extends Controller
 
             $term = Term::create($formData);
 
-            $attributes = array_map(fn ($item) => $item['attribute'], $request->attributes);
+            $attributes = array_map(fn ($item) => $item['attribute'], $request->input('attributes'));
             foreach ($attributes as $attribute) {
                 Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
             }

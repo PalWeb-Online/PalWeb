@@ -8,7 +8,7 @@ import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
 import AppButton from "../../../../components/AppButton.vue";
 import AppTip from "../../../../components/AppTip.vue";
-import {router, useForm} from "@inertiajs/vue3";
+import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -26,7 +26,7 @@ const sentence = useForm({
     sentence: props.sentence?.sentence || '',
     translit: props.sentence?.translit || '',
     trans: props.sentence?.trans || '',
-    dialog: props.sentence?.dialog || {},
+    dialog: props.sentence?.dialog || props.dialog || {},
     speaker: props.sentence?.speaker || '',
     position: props.sentence?.position || '',
     terms: props.sentence?.terms || [],
@@ -113,10 +113,6 @@ const saveSentence = async () => {
             NotificationStore.addNotification('The Sentence has been saved!');
             sentence.defaults();
             isSaving.value = false;
-
-            if (!!props.dialog) {
-                router.visit(route('speech-maker.dialog', props.dialog.id));
-            }
         },
         onError: () => {
             NotificationStore.addNotification('Oh no! The Deck could not be saved.');
