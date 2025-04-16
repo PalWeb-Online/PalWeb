@@ -80,6 +80,7 @@ class TermResource extends JsonResource
                         'term' => $relative->term,
                         'translit' => $relative->translit,
                         'type' => $relative->pivot->type,
+                        'gloss_id' => $relative->pivot->gloss_id,
                     ];
                 }),
                 'patterns' => $this->patterns->map(function ($pattern) {
@@ -95,15 +96,6 @@ class TermResource extends JsonResource
                         'id' => $gloss->id,
                         'gloss' => $gloss->gloss,
                         'attributes' => $gloss->attributes,
-                        'relatives' => $gloss->relatives->map(function ($relative) {
-                            return [
-                                'id' => $relative->id,
-                                'slug' => $relative->slug,
-                                'term' => $relative->term,
-                                'translit' => $relative->translit,
-                                'type' => $relative->pivot->type,
-                            ];
-                        }),
                         'sentences' => SentenceResource::collection($this->gloss_sentences[$gloss->id]['sentences'] ?? []),
                         'sentences_count' => $this->gloss_sentences[$gloss->id]['sentences_count'] ?? 0,
                     ];
