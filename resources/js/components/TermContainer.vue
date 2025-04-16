@@ -42,7 +42,6 @@ const fetchPronunciations = async () => {
     }
 }
 
-// todo: evaluate per gloss
 const showSentences = ref(new Map());
 const sentencesFetched = ref(new Map());
 
@@ -100,6 +99,12 @@ const constructForms = computed(() =>
 const inflections = computed(() =>
     term.inflections.filter(inflection => !['cnst', 'resp', 'genitive', 'accusative'].includes(inflection.form)) ?? []
 );
+
+const glossRelatives = (glossId, types) => {
+    return term.relatives.filter(relative => {
+        return relative.gloss_id === glossId && types.includes(relative.type);
+    });
+};
 
 const attributeLinks = {
     collective: {text: "nouns", url: route("wiki.show", "nouns")},
@@ -256,27 +261,28 @@ const attributeLinks = {
                             <div class="gloss-li-content-gloss">
                                 {{ gloss.gloss }}
                             </div>
-                            <div v-if="gloss.relatives.find(relative => relative.type === 'synonym')?.length > 0">
+                            <div v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
                                 syn.
-                                <Link v-for="synonym in gloss.relatives.find(relative => relative.type === 'synonym')"
+                                <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
                                       :href="route('terms.show', synonym.slug)">
                                     {{ synonym.term }}
                                     ({{ synonym.translit }})
                                 </Link>
                             </div>
-                            <div v-if="gloss.relatives.find(relative => relative.type === 'antonym')?.length > 0">
+                            <div v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
                                 ant.
-                                <Link v-for="antonym in gloss.relatives.find(relative => relative.type === 'antonym')"
+                                <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
                                       :href="route('terms.show', antonym.slug)">
                                     {{ antonym.term }}
                                     ({{ antonym.translit }})
                                 </Link>
                             </div>
-                            <div v-if="gloss.relatives.find(relative => ['isPatient', 'noPatient', 'hasObject'].includes(relative.type))?.length > 0"
-                                v-for="pair in gloss.relatives.find(relative => ['isPatient', 'noPatient', 'hasObject'].includes(relative.type))">
+                            <div
+                                v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
+                                v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])" :key="pair.id"
+                            >
                                 {{ pair.type }}
-                                <Link
-                                    :href="route('terms.show', pair.slug)">{{ pair.term }}
+                                <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
                                     ({{ pair.translit }})
                                 </Link>
                             </div>

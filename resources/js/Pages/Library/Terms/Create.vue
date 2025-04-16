@@ -9,6 +9,7 @@ import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useForm} from "@inertiajs/vue3";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
+import AppTip from "../../../components/AppTip.vue";
 
 const props = defineProps({
     term: Object,
@@ -43,6 +44,20 @@ const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
     return term.isDirty && !isSaving.value;
+});
+
+const confirmationMessage = computed(() => {
+    if (term.category === 'noun') {
+        const hasGender = term.attributes.some(attr =>
+            ['masculine', 'feminine', 'plural'].includes(attr.attribute)
+        )
+
+        if (!hasGender) {
+            return 'The Noun has no gender.';
+        }
+    }
+
+    return false;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -109,6 +124,8 @@ const addGloss = () => {
         attributes: [],
         relatives: [],
     });
+
+    term.category === 'verb' && addAttribute('gloss', term.glosses.length - 1);
 };
 
 const removeItem = (index, fieldType) => {
@@ -183,6 +200,10 @@ defineOptions({
             </div>
         </div>
 
+        <AppTip v-if="confirmationMessage">
+            <p>{{ confirmationMessage }}</p>
+        </AppTip>
+
         <div class="term-editor">
             <div>
                 <div class="field-block">
@@ -199,9 +220,9 @@ defineOptions({
                             </div>
                         </div>
                         <div class="field-block">
-                            <div class="field-block-head">
+                            <div class="field-block-head" @click="addSpelling()">
                                 <div>spellings</div>
-                                <div class="field-item-add" @click="addSpelling()">+</div>
+                                <div class="field-item-add">+</div>
                             </div>
                             <div class="field-block-body" v-if="term.spellings.length > 0">
                                 <div class="field-set" v-for="(spelling, index) in term.spellings" :key="index">
@@ -237,9 +258,9 @@ defineOptions({
                             </div>
                         </div>
                         <div class="field-block">
-                            <div class="field-block-head">
+                            <div class="field-block-head" @click="addAttribute('term')">
                                 <div>attributes</div>
-                                <div class="field-item-add" @click="addAttribute('term')">+</div>
+                                <div class="field-item-add">+</div>
                             </div>
                             <div class="field-block-body" v-if="term.attributes.length > 0">
                                 <div class="field-set"
@@ -270,9 +291,9 @@ defineOptions({
                 </div>
 
                 <div class="field-block">
-                    <div class="field-block-head">
+                    <div class="field-block-head" @click="addPronunciation()">
                         <div>pronunciations</div>
-                        <div class="field-item-add" @click="addPronunciation()">+</div>
+                        <div class="field-item-add">+</div>
                     </div>
                     <div class="field-block-body" v-if="term.pronunciations.length > 0">
                         <div v-for="(pronunciation, index) in term.pronunciations" :key="index"
@@ -363,9 +384,9 @@ defineOptions({
                         </div>
 
                         <div class="field-block">
-                            <div class="field-block-head">
+                            <div class="field-block-head" @click="addPattern()">
                                 <div>patterns</div>
-                                <div class="field-item-add" @click="addPattern()">+</div>
+                                <div class="field-item-add">+</div>
                             </div>
                             <div class="field-block-body" v-if="term.patterns.length > 0">
                                 <div class="field-set" v-for="(pattern, index) in term.patterns" :key="index">
@@ -529,9 +550,9 @@ defineOptions({
                     </div>
                 </div>
                 <div class="field-block">
-                    <div class="field-block-head">
+                    <div class="field-block-head" @click="addInflection()">
                         <div>inflections</div>
-                        <div class="field-item-add" @click="addInflection()">+</div>
+                        <div class="field-item-add">+</div>
                     </div>
                     <div class="field-block-body" v-if="term.inflections.length > 0">
                         <div v-for="(inflection, index) in term.inflections" :key="index"
@@ -605,31 +626,53 @@ defineOptions({
                     </div>
                     <div class="field-block-body">
                         <div class="field-block">
-                            <div class="field-block-head">
+                            <div class="field-block-head" @click="SearchStore.openSearchGenie('insert', 'terms')">
                                 <div>relatives</div>
-                                <div class="field-item-add" @click="SearchStore.openSearchGenie('insert', 'terms')">+
-                                </div>
+                                <div class="field-item-add">+</div>
                             </div>
                             <div class="field-block-body" v-if="term.relatives.length > 0">
                                 <div class="field-set" v-for="(relative, index) in term.relatives" :key="index">
                                     <img src="/img/trash.svg" alt="Delete" v-show="term.relatives.length > 0"
                                          @click="removeItem(index, term.relatives)"/>
                                     <div class="field-item">
+                                        <input :placeholder="relative.slug" disabled/>
                                         <select v-model="relative.type">
-                                            <option value="variant">variant</option>
-                                            <option value="reference">reference</option>
-                                            <option value="component">component</option>
-                                            <option value="descendant">descendant</option>
+                                            <optgroup label="Term Relative">
+                                                <option value="variant">variant</option>
+                                                <option value="reference">reference</option>
+                                                <option value="component">component</option>
+                                                <option value="descendant">descendant</option>
+                                            </optgroup>
+                                            <optgroup label="Derived Term">
+                                                <option value="AP">AP</option>
+                                                <option value="PP">PP</option>
+                                                <option value="VN">VN</option>
+                                            </optgroup>
+                                            <optgroup label="Gloss Relative">
+                                                <option value="synonym">synonym</option>
+                                                <option value="antonym">antonym</option>
+                                                <option value="isPatient">isPatient</option>
+                                                <option value="noPatient">noPatient</option>
+                                                <option value="hasObject">hasObject</option>
+                                            </optgroup>
                                         </select>
                                         <div v-if="term.errors[`relatives.${index}.type`]" class="field-error">
                                             {{ term.errors[`relatives.${index}.type`] }}
                                         </div>
-                                    </div>
-                                    <div class="field-item">
-                                        <div>{{ relative.slug }}</div>
-                                        <div v-if="term.errors[`relatives.${index}.slug`]" class="field-error">
-                                            {{ term.errors[`relatives.${index}.slug`] }}
-                                        </div>
+
+                                        <template
+                                            v-if="['synonym', 'antonym', 'isPatient', 'noPatient', 'hasObject'].includes(relative.type)">
+                                            <select v-model="relative.gloss_id">
+                                                <option value=""></option>
+                                                <option v-for="(gloss, index) in term.glosses.filter(gloss => gloss.id)"
+                                                        :key="index" :value="gloss.id">
+                                                    {{ gloss.gloss }}
+                                                </option>
+                                            </select>
+                                            <div v-if="term.errors[`relatives.${index}.type`]" class="field-error">
+                                                {{ term.errors[`relatives.${index}.type`] }}
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -647,9 +690,9 @@ defineOptions({
             </div>
             <div>
                 <div class="field-block">
-                    <div class="field-block-head">
+                    <div class="field-block-head" @click="addGloss()">
                         <div>glosses</div>
-                        <div class="field-item-add" @click="addGloss()">+</div>
+                        <div class="field-item-add">+</div>
                     </div>
                     <div class="field-block-body" v-if="term.glosses.length > 0">
                         <div v-for="(gloss, index) in term.glosses" :key="index"
@@ -666,16 +709,14 @@ defineOptions({
                             </div>
 
                             <div class="field-block">
-                                <div class="field-block-head">
+                                <div class="field-block-head" @click="addAttribute('gloss', index)">
                                     <div>attributes</div>
-                                    <div class="field-item-add" @click="addAttribute('gloss', index)">+</div>
+                                    <div class="field-item-add">+</div>
                                 </div>
                                 <div class="field-block-body" v-if="gloss.attributes.length > 0">
                                     <div class="field-set"
                                          v-for="(attribute, i) in gloss.attributes" :key="i">
-                                        <!--                                            todo: automatically add 1 to verbs & disallow deleting-->
-                                        <!--                                            <label>attribute{{ term.category === 'verb' ? ' *' : '' }}</label>-->
-                                        <img src="/img/trash.svg" alt="Delete" v-show="gloss.attributes.length > 0"
+                                        <img src="/img/trash.svg" alt="Delete" v-show="gloss.attributes.length > 1 || (term.category !== 'verb' && gloss.attributes.length > 0)"
                                              @click="removeItem(i, gloss.attributes)"/>
                                         <div class="field-item">
                                             <select v-model="attribute.attribute">
@@ -706,41 +747,6 @@ defineOptions({
                                             <div v-if="term.errors[`glosses.${index}.attributes.${i}.attribute`]"
                                                  class="field-error">
                                                 {{ term.errors[`glosses.${index}.attributes.${i}.attribute`] }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="field-block">
-                                <div class="field-block-head">
-                                    <div>relatives</div>
-                                    <div class="field-item-add" @click="addRelative('gloss', index)">+</div>
-                                </div>
-                                <div class="field-block-body" v-if="gloss.relatives.length > 0">
-                                    <div class="field-set"
-                                         v-for="(relative, i) in gloss.relatives" :key="i">
-                                        <img src="/img/trash.svg" alt="Delete" v-show="gloss.relatives.length > 0"
-                                             @click="removeItem(i, gloss.relatives)"/>
-                                        <div class="field-item">
-                                            <select v-model="relative.type" required>
-                                                <option value="synonym">synonym</option>
-                                                <option value="antonym">antonym</option>
-                                                <optgroup label="valences" v-if="term.category === 'verb'">
-                                                    <option value="isPatient">isPatient</option>
-                                                    <option value="noPatient">noPatient</option>
-                                                    <option value="hasObject">hasObject</option>
-                                                </optgroup>
-                                            </select>
-                                            <div v-if="term.errors[`glosses.${index}.relatives.${i}.type`]"
-                                                 class="field-error">
-                                                {{ term.errors[`glosses.${index}.relatives.${i}.type`] }}
-                                            </div>
-                                        </div>
-                                        <div class="field-item">
-                                            <input v-model="relative.slug"/>
-                                            <div v-if="term.errors[`glosses.${index}.relatives.${i}.slug`]"
-                                                 class="field-error">
-                                                {{ term.errors[`glosses.${index}.relatives.${i}.slug`] }}
                                             </div>
                                         </div>
                                     </div>

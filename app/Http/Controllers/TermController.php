@@ -120,12 +120,7 @@ class TermController extends Controller
                     'spellings',
                     'relatives',
                     'patterns',
-                    'glosses' => function ($query) {
-                        $query->with([
-                            'attributes',
-                            'relatives'
-                        ]);
-                    },
+                    'glosses.attributes',
                     'inflections',
                     'decks',
                 ])
@@ -190,12 +185,7 @@ class TermController extends Controller
             'spellings',
             'relatives',
             'patterns',
-            'glosses' => function ($query) {
-                $query->with([
-                    'attributes',
-                    'relatives'
-                ]);
-            },
+            'glosses.attributes',
             'inflections',
         ]);
 
@@ -242,8 +232,6 @@ class TermController extends Controller
                 foreach ($glossAttributes as $attribute) {
                     Attribute::firstWhere('attribute', $attribute)->glosses()->attach($gloss);
                 }
-
-                $this->handleRelatives($gloss, $glossData['relatives']);
             }
 
             return $term;
@@ -293,7 +281,6 @@ class TermController extends Controller
                 }
 
                 $this->handleAttributes($gloss, $glossData['attributes'], 'glosses');
-                $this->handleRelatives($gloss, $glossData['relatives']);
             }
 
             foreach ($term->glosses as $gloss) {
@@ -365,41 +352,49 @@ class TermController extends Controller
         }
     }
 
-    private function handleRelatives(object $model, array $relatives): void
+    private function handleRelatives(Term $term, array $relatives): void
     {
-        $attachedTerms = $model->relatives->pluck('slug')->toArray();
+        $attachedTerms = $term->relatives->pluck('slug')->toArray();
 
         $requestTerms = [];
         foreach ($relatives as $relative) {
-            $term = Term::firstWhere('slug', $relative['slug']);
+            $relativeTerm = Term::firstWhere('slug', $relative['slug']);
 
-            $requestTerms[] = $term->slug;
+            $requestTerms[] = $relativeTerm->slug;
 
-            if (! in_array($term->slug, $attachedTerms)) {
-                $model->relatives()->attach($term, ['type' => $relative['type']]);
+            if (! in_array($relativeTerm->slug, $attachedTerms)) {
+                $term->relatives()->attach($relativeTerm, [
+                    'type' => $relative['type'],
+                    'gloss_id' => $relative['gloss_id'] ?? null,
+                ]);
 
                 switch ($relative['type']) {
                     default:
-                        $term->relatives()->attach($model, ['type' => $relative['type']]);
+                        $relativeTerm->relatives()->attach($term, ['type' => $relative['type']]);
                         break;
                     case 'component':
-                        $term->relatives()->attach($model, ['type' => 'descendant']);
+                        $relativeTerm->relatives()->attach($term, ['type' => 'descendant']);
                         break;
                     case 'descendant':
-                        $term->relatives()->attach($model, ['type' => 'component']);
+                        $relativeTerm->relatives()->attach($term, ['type' => 'component']);
                         break;
                 }
+
+            } else {
+                $term->relatives()->updateExistingPivot($relativeTerm->id, [
+                    'type' => $relative['type'],
+                    'gloss_id' => $relative['gloss_id'] ?? null,
+                ]);
             }
         }
 
         $detachableSlugs = array_diff($attachedTerms, $requestTerms);
-        foreach ($detachableSlugs as $slug) {
-            $term = Term::firstWhere('slug', $slug);
-            $model->relatives()->detach($term);
 
-            if ($model instanceof Term) {
-                $term->relatives()->detach($model);
-            }
+        foreach ($detachableSlugs as $slug) {
+            $detachableTerm = Term::firstWhere('slug', $slug);
+
+            $term->relatives()->detach($detachableTerm);
+            $detachableTerm->relatives()->detach($term);
         }
     }
 

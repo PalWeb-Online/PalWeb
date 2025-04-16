@@ -754,13 +754,17 @@ ul.search-results {
     }
 }
 
-.field-item-add {
-    font-weight: 700;
+.field-block > .field-block-head:has(.field-item-add) {
     cursor: pointer;
-    user-select: none;
+
+    .field-item-add {
+        font-weight: 700;
+        cursor: pointer;
+        user-select: none;
+    }
 
     &:hover {
-        color: var(--color-accent-medium);
+        background: var(--color-pastel-medium);
     }
 }
 

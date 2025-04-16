@@ -205,7 +205,7 @@ class Term extends Model
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->withPivot('type');
+            ->withPivot('type', 'gloss_id');
     }
 
     public function scopeMatch($query, array $filters): void
