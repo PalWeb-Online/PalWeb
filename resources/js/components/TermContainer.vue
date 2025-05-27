@@ -76,12 +76,8 @@ const references = computed(() =>
     term.relatives.filter(relative => relative.type === "reference") ?? []
 );
 
-const components = computed(() =>
-    term.relatives.filter(relative => relative.type === "component") ?? []
-);
-
-const descendants = computed(() =>
-    term.relatives.filter(relative => relative.type === "descendant") ?? []
+const derivatives = computed(() =>
+    term.relatives.filter(relative => ['ap', 'pp', 'nv'].includes(relative.type)) ?? []
 );
 
 const hostForms = computed(() =>
@@ -112,6 +108,82 @@ const attributeLinks = {
     defect: {text: "adjectives", url: route("wiki.show", "adjectives")},
     pseudo: {text: "verbs", url: route("wiki.show", "verbs")},
 };
+
+const etymology = computed(() => {
+    const data = {};
+
+    data.origin = `<span style="text-transform: capitalize">${term.etymology.type}</span>${term.etymology.source ? ` <span style="font-style: italic">${term.etymology.source}</span>` : ''}. `;
+
+    data.singPatterns = term.patterns
+        .filter(pattern => pattern.type === 'singular')
+        .map(pattern =>
+            `In the ${pattern.form ? `<b>Form ${pattern.form}</b>` : ''} <b ${pattern.form ? `style="text-transform: uppercase"` : ''}>${pattern.pattern}</b> pattern. `
+        )
+
+    data.plurPatterns = term.patterns
+        .filter(pattern => pattern.type === 'plural')
+        .map(pattern =>
+            `Has a <b>${pattern.pattern}</b> ${['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken'} plural. `
+        )
+
+    const components = term.relatives.filter(relative => relative.type === 'component') ?? [];
+    data.components = [];
+
+    if (components.length > 0) {
+        data.components.push({type: 'text', value: 'Idiom from '});
+        components.forEach((comp, index) => {
+            data.components.push({
+                type: 'link',
+                slug: comp.slug,
+                label: `${comp.term} (${comp.translit})`,
+            });
+            data.components.push({
+                type: 'text',
+                value: index < components.length - 1 ? ', ' : '. ',
+            });
+        });
+    }
+
+    const descendants = term.relatives.filter(relative => relative.type === 'descendant') ?? [];
+    data.descendants = [];
+
+    if (descendants.length > 0) {
+        data.descendants.push({type: 'text', value: `Component of `});
+        descendants.forEach((comp, index) => {
+            data.descendants.push({
+                type: 'link',
+                slug: comp.slug,
+                label: `${comp.term} (${comp.translit})`,
+            });
+            data.descendants.push({
+                type: 'text',
+                value: index < descendants.length - 1 ? ', ' : '. ',
+            });
+        });
+    }
+
+    const derivative = term.patterns.find(pattern => pattern.type === 'singular' && pattern.form)?.pattern;
+    const derivativeMap = {
+        ap: 'Active Participle',
+        pp: 'Passive Participle',
+        vn: 'Verbal Noun',
+    };
+
+    const source = term.relatives.find(relative => relative.type === 'source');
+    data.source = [];
+
+    if (source) {
+        data.source.push({type: 'text', value: `<b>${derivativeMap[derivative]}</b> of `});
+        data.source.push({
+            type: 'link',
+            slug: source.slug,
+            label: `${source.term} (${source.translit})`,
+        });
+        data.source.push({type: 'text', value: '. '});
+    }
+
+    return data;
+});
 </script>
 
 <template>
@@ -201,47 +273,33 @@ const attributeLinks = {
                         <div class="term-root-en">({{ term.root.en }})</div>
                     </Link>
                     <div class="term-data">
-                        <span style="text-transform: capitalize">{{ term.etymology.type }}</span>
-                        <span v-if="term.etymology.source" style="font-style: italic"> {{
-                                term.etymology.source
-                            }}</span>.
+                        <!-- todo: link to Wiki page with info on Patterns -->
 
-                        <!-- todo: link to Wiki page with info on Patterns;
-                                weird spacing; plural may appear before singular (شيكل) -->
-                        <template v-for="pattern in term.patterns">
-                            <template v-if="pattern.type === 'singular'">
-                                In the
-                                <b v-if="pattern.form">Form {{ pattern.form }}</b>
-                                <b>{{ pattern.pattern }}</b>
-                                pattern.
-                            </template>
-                            <template v-if="pattern.type === 'plural'">
-                                Has a
-                                <b>{{ pattern.pattern }}</b>
-                                {{ ['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken' }}
-                                plural.
-                            </template>
-                        </template>
+                        <span v-html="etymology.origin"></span>
 
-                        <template v-if="components.length > 0">
-                            Idiom from
-                            <template v-for="(component, index) in components">
-                                <Link :href="route('terms.show', component.slug)">
-                                    {{ component.term }} ({{ component.translit }})
-                                </Link>
-                                {{ index < components.length - 1 ? ', ' : '.' }}
-                            </template>
-                        </template>
+                        <span v-for="(token, index) in etymology.source" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
 
-                        <template v-if="descendants.length > 0">
-                            Component of
-                            <template v-for="(descendant, index) in descendants">
-                                <Link :href="route('terms.show', descendant.slug)">
-                                    {{ descendant.term }} ({{ descendant.translit }})
-                                </Link>
-                                {{ index < descendants.length - 1 ? ', ' : '.' }}
-                            </template>
-                        </template>
+                        <span v-html="etymology.singPatterns"></span>
+                        <span v-html="etymology.plurPatterns"></span>
+
+                        <span v-for="(token, index) in etymology.components" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
+
+                        <span v-for="(token, index) in etymology.descendants" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -306,13 +364,14 @@ const attributeLinks = {
             </div>
 
             <ChartConjugation
-                v-if="term.category === 'verb' && !hostForms.length"
+                v-if="term.category === 'verb' && !term.attributes.map(attribute => attribute.attribute).includes('idiom') && !hostForms.length"
                 :roots="term.root.all"
                 :patterns="term.patterns"
+                :derivatives="derivatives"
             />
 
             <ChartInflection
-                v-if="['verb', 'noun', 'adjective'].includes(term.category) && inflections.length > 0"
+                v-if="['noun', 'adjective'].includes(term.category) && inflections.length > 0"
                 :term="term"
                 :inflections="inflections"
             />

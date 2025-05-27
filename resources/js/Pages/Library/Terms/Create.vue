@@ -47,17 +47,31 @@ const hasNavigationGuard = computed(() => {
 });
 
 const confirmationMessage = computed(() => {
-    if (term.category === 'noun') {
-        const hasGender = term.attributes.some(attr =>
-            ['masculine', 'feminine', 'plural'].includes(attr.attribute)
-        )
+    const messages = [];
 
-        if (!hasGender) {
-            return 'The Noun has no gender.';
+    if (term.category === 'verb') {
+        if (!term.attributes.some(attribute => attribute.attribute === 'idiom') && !term.patterns.find(pattern => pattern.type === 'verbal')) {
+            messages.push('The Verb has no pattern.');
+        }
+
+        if (term.glosses.some(gloss => !gloss.attributes.length)) {
+            messages.push('The Verb has a Gloss with no Attribute.');
         }
     }
 
-    return false;
+    if (term.category === 'noun' && term.attributes.some(attribute => ['masculine', 'feminine', 'plural'].includes(attribute.attribute))) {
+        messages.push('The Noun has no gender.');
+    }
+
+    if (term.category === 'adjective' && !term.inflections.length) {
+        messages.push('The Adjective has no Inflections.');
+    }
+
+    if (term.attributes.some(attribute => attribute.attribute === 'idiom') && !term.relatives.filter(relative => relative.type === 'component').length) {
+        messages.push('The Idiom has no components.');
+    }
+
+    return messages.length ? messages.join(' ') : false;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -383,16 +397,16 @@ defineOptions({
                             <input v-model="term.etymology.source"/>
                         </div>
 
-                        <div class="field-block">
+                        <div class="field-block"
+                             v-if="!term.attributes.some(attribute => attribute.attribute === 'idiom')">
                             <div class="field-block-head" @click="addPattern()">
                                 <div>patterns</div>
                                 <div class="field-item-add">+</div>
                             </div>
                             <div class="field-block-body" v-if="term.patterns.length > 0">
                                 <div class="field-set" v-for="(pattern, index) in term.patterns" :key="index">
-                                    <!--                               todo: I don't think it's guaranteed that if the user doesn't add a verbal pattern, it will fail-->
                                     <img src="/img/trash.svg" alt="Delete"
-                                         v-show="(term.category !== 'verb' && term.patterns.length > 0) || (term.patterns.length > 1)"
+                                         v-show="term.category !== 'verb' && term.patterns.length > 0 || term.patterns.length > 1"
                                          @click="removeItem(index, term.patterns)"/>
                                     <div class="field-item">
                                         <select v-model="pattern.type">
@@ -562,13 +576,6 @@ defineOptions({
                             <div class="field-item">
                                 <label>Form *</label>
                                 <select v-model="inflection.form" required>
-                                    <template
-                                        v-if="term.category === 'verb' && !term.attributes.map(attr => attr.attribute).includes('pseudo')">
-                                        <option value="ap">AP</option>
-                                        <option value="pp">PP</option>
-                                        <option value="nv">NV</option>
-                                    </template>
-
                                     <template v-if="term.category === 'noun'">
                                         <option
                                             v-if="term.attributes.map(attr => attr.attribute).includes('collective')"
@@ -643,10 +650,11 @@ defineOptions({
                                                 <option value="component">component</option>
                                                 <option value="descendant">descendant</option>
                                             </optgroup>
-                                            <optgroup label="Derived Term">
-                                                <option value="AP">AP</option>
-                                                <option value="PP">PP</option>
-                                                <option value="VN">VN</option>
+                                            <optgroup label="Derivative">
+                                                <option value="source">source</option>
+                                                <option value="ap">AP</option>
+                                                <option value="pp">PP</option>
+                                                <option value="vn">VN</option>
                                             </optgroup>
                                             <optgroup label="Gloss Relative">
                                                 <option value="synonym">synonym</option>

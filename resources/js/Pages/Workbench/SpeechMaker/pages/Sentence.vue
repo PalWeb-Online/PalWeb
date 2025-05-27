@@ -43,6 +43,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 const insertTerm = (term) => {
     sentence.terms.push({
         id: term.id,
+        uuid: crypto.randomUUID(),
         term: term.term,
         category: term.category,
         translit: term.translit,
@@ -63,6 +64,7 @@ const insertTerm = (term) => {
 
 const addTerm = () => {
     sentence.terms.push({
+        uuid: crypto.randomUUID(),
         sentencePivot: {
             sent_term: '',
             sent_translit: '',
@@ -136,6 +138,12 @@ onMounted(() => {
         sentence.position = props.dialog.sentences_count + 1;
     }
 
+    sentence.terms.forEach((term) => {
+        if (!term.uuid) {
+            term.uuid = crypto.randomUUID();
+        }
+    });
+
     watch(
         () => SearchStore.data.selectedModel,
         (newModel) => {
@@ -172,7 +180,7 @@ onMounted(() => {
 
     <div class="sentence-container">
         <SentenceItem :sentence="sentence" page="sentence" :inDialog="!!dialog"/>
-        <draggable :list="sentence.terms" itemKey="id"
+        <draggable :list="sentence.terms" itemKey="uuid"
                    @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
