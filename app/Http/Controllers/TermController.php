@@ -248,6 +248,9 @@ class TermController extends Controller
             if ($formData['root']['root']) {
                 $formData = array_merge($formData,
                     ['root_id' => Root::firstOrCreate(['root' => $formData['root']['root']])->id]);
+
+            } else {
+                $formData = array_merge($formData, ['root_id' => null]);
             }
 
             $term->update($formData);
@@ -377,6 +380,9 @@ class TermController extends Controller
                         break;
                     case 'descendant':
                         $relativeTerm->relatives()->attach($term, ['type' => 'component']);
+                        break;
+                    case in_array($relative['type'], ['ap', 'pp', 'vn']):
+                        $relativeTerm->relatives()->attach($term, ['type' => 'source']);
                         break;
                 }
 

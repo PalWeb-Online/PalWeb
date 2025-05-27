@@ -57,6 +57,8 @@ const confirmationMessage = computed(() => {
         }
     }
 
+    // if an adjective has no inflections
+
     return false;
 });
 
@@ -644,9 +646,10 @@ defineOptions({
                                                 <option value="descendant">descendant</option>
                                             </optgroup>
                                             <optgroup label="Derived Term">
-                                                <option value="AP">AP</option>
-                                                <option value="PP">PP</option>
-                                                <option value="VN">VN</option>
+                                                <option value="source">source</option>
+                                                <option value="ap">AP</option>
+                                                <option value="pp">PP</option>
+                                                <option value="vn">VN</option>
                                             </optgroup>
                                             <optgroup label="Gloss Relative">
                                                 <option value="synonym">synonym</option>
