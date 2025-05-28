@@ -59,7 +59,7 @@ const confirmationMessage = computed(() => {
         }
     }
 
-    if (term.category === 'noun' && term.attributes.some(attribute => ['masculine', 'feminine', 'plural'].includes(attribute.attribute))) {
+    if (term.category === 'noun' && !term.attributes.some(attribute => ['masculine', 'feminine', 'plural'].includes(attribute.attribute))) {
         messages.push('The Noun has no gender.');
     }
 
@@ -489,7 +489,7 @@ defineOptions({
                                                 <optgroup v-if="pattern.form" label="Derived Terms">
                                                     <option value="ap">AP</option>
                                                     <option value="pp">PP</option>
-                                                    <option value="nv">NV</option>
+                                                    <option value="vn">VN</option>
                                                 </optgroup>
                                                 <template v-else>
                                                     <optgroup label="Named">
