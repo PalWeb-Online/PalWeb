@@ -427,6 +427,25 @@ class TermController extends Controller
         }
 
         $existingDependents->except($requestItems)->each->delete();
+
+//        $existingDependents = $existingDependents->keyBy('id');
+//
+//        foreach ($requestDependents as $dependentData) {
+//            $id = $dependentData['id'] ?? null;
+//
+//            if ($id && $existingDependents->has($id)) {
+//                $existingDependents[$id]->update($dependentData);
+//
+//            } else {
+//                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
+//            }
+//        }
+//
+//        $existingDependents->each(function ($dependent) use ($requestDependents) {
+//            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
+//                $dependent->delete();
+//            }
+//        });
     }
 
     public function destroy(Term $term): RedirectResponse

@@ -170,7 +170,19 @@ const saveTerm = async () => {
     });
 }
 
-onMounted(() => {
+onMounted(async () => {
+    try {
+        const response = await axios.get(route('terms.get.pronunciations', {term: term.id}));
+        const pronunciations = response.data.filter(pronunciation =>
+            !term.pronunciations.some(existing => existing.id === pronunciation.id)
+        );
+
+        term.pronunciations.push(...pronunciations);
+
+    } catch (error) {
+        console.error('Error fetching Pronunciations:', error);
+    }
+
     if (!term.pronunciations.length) {
         addPronunciation();
         term.defaults();
@@ -724,7 +736,8 @@ defineOptions({
                                 <div class="field-block-body" v-if="gloss.attributes.length > 0">
                                     <div class="field-set"
                                          v-for="(attribute, i) in gloss.attributes" :key="i">
-                                        <img src="/img/trash.svg" alt="Delete" v-show="gloss.attributes.length > 1 || (term.category !== 'verb' && gloss.attributes.length > 0)"
+                                        <img src="/img/trash.svg" alt="Delete"
+                                             v-show="gloss.attributes.length > 1 || (term.category !== 'verb' && gloss.attributes.length > 0)"
                                              @click="removeItem(i, gloss.attributes)"/>
                                         <div class="field-item">
                                             <select v-model="attribute.attribute">
