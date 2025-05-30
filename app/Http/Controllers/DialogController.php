@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDialogRequest;
 use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;
+use App\Http\Resources\SentenceResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +25,14 @@ class DialogController extends Controller
     {
         return Inertia::render('Academy/Dialogs/Show', [
             'section' => 'academy',
-            'dialog' => new DialogResource($dialog->load('sentences')),
+            'dialog' => new DialogResource(
+                $dialog->load('sentences')
+                    ->setRelation('sentences',
+                        $dialog->sentences->map(function ($sentence) {
+                            return new SentenceResource($sentence)->additional(['terms' => false]);
+                        })
+                    )
+            ),
         ]);
 
 //        View::share('pageDescription',

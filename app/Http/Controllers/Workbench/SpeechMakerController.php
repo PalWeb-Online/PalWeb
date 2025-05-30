@@ -13,7 +13,13 @@ class SpeechMakerController extends Controller
 {
     public function dialog(?Dialog $dialog = null): \Inertia\Response
     {
-        $dialog?->load(['sentences']);
+        $dialog?->load(['sentences'])
+            ->setRelation(
+                'sentences',
+                $dialog->sentences->map(function ($sentence) {
+                    return new SentenceResource($sentence)->additional(['terms' => false]);
+                })
+            );
 
         return Inertia::render('Workbench/SpeechMaker/SpeechMaker', [
             'section' => 'workbench',

@@ -22,11 +22,18 @@ const props = defineProps({
                 <input v-model="sentence.speaker" class="sentence-speaker"/>
             </template>
 
-            <div v-if="sentence.terms.length > 0" class="sentence-arb">
-                <template v-for="term in sentence.terms">
-                    <div class="sentence-term">
-                        <div>{{ term.sentencePivot.sent_term }}</div>
-                        <div>{{ term.sentencePivot.sent_translit }}</div>
+            <div class="sentence-arb" style="user-select: none">
+                <template v-if="sentence.terms.length > 0">
+                    <template v-for="term in sentence.terms">
+                        <div class="sentence-term">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div>{{ term.sentencePivot.sent_translit }}</div>
+                        </div>
+                    </template>
+                </template>
+                <template v-else>
+                    <div class="sentence-term" style="background: none">
+                        <div>{{ sentence.sentence }}</div>
                     </div>
                 </template>
             </div>

@@ -67,9 +67,8 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
             </div>
         </div>
 
-        <!--        todo: terms list is collapsible -->
         <div v-if="size === 'l'" class="terms-list">
-            <TermItem v-for="term in data.sentence.terms" :key="term.id" :model="term"/>
+            <TermItem v-for="term in data.sentence.terms.filter(term => term.id)" :key="term.id" :model="term"/>
         </div>
     </template>
 </template>
