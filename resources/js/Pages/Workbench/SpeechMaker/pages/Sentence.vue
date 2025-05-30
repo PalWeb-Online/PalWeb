@@ -64,7 +64,7 @@ const insertTerm = (term) => {
         ...newTerm,
         uuid: crypto.randomUUID(),
     });
-    updatePosition();
+
     NotificationStore.addNotification(`Added ${term.term} to the Sentence!`);
 }
 
@@ -81,20 +81,10 @@ const addTerm = () => {
         ...newTerm,
         uuid: crypto.randomUUID(),
     });
-    updatePosition();
 }
 
 const removeTerm = (index) => {
     termsList.value.splice(index, 1);
-    updatePosition();
-}
-
-const updatePosition = () => {
-    termsList.value.forEach((term, index) => {
-        term.sentencePivot.position = index + 1;
-    });
-
-    sentence.terms = termsList.value.map(({ uuid, ...term }) => term);
 }
 
 const isValidRequest = computed(() => {
@@ -166,6 +156,30 @@ watch(
         }
     },
     {deep: true}
+);
+
+watch(
+    termsList,
+    (newTermsList) => {
+        newTermsList.forEach((term, index) => {
+            term.sentencePivot.position = index + 1;
+        });
+
+        while (sentence.terms.length > newTermsList.length) {
+            sentence.terms.pop();
+        }
+
+        newTermsList.forEach((term, index) => {
+            const { uuid, ...newTerm } = term;
+
+            if (sentence.terms[index]) {
+                Object.assign(sentence.terms[index], newTerm);
+            } else {
+                sentence.terms.push(newTerm);
+            }
+        });
+    },
+    { deep: true }
 );
 </script>
 

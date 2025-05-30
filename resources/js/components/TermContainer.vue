@@ -118,7 +118,7 @@ const etymology = computed(() => {
         .filter(pattern => pattern.type === 'singular')
         .map(pattern =>
             `In the ${pattern.form ? `<b>Form ${pattern.form}</b>` : ''} <b ${pattern.form ? `style="text-transform: uppercase"` : ''}>${pattern.pattern}</b> pattern. `
-        )
+        ).join('');
 
     data.plurPatterns = term.patterns
         .filter(pattern => pattern.type === 'plural')
