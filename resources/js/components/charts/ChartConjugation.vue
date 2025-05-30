@@ -51,21 +51,21 @@ const vn = computed(() =>
                 <div v-if="derivatives.length > 0" class="inflection-chart-wrapper">
                     <div class="inflection-chart">
                         <div class="inflection-chart-title" style="grid-column: span 2">Derivatives</div>
-                        <Link v-if="ap" :href="route('terms.show', ap.slug)" class="inflection-chart-item">
+                        <Link v-if="ap" :href="route('terms.show', ap.slug)" class="inflection-chart-item" style="grid-column: 1">
                             <div>AP</div>
                             <div>
                                 <div>{{ ap.term }}</div>
                                 <div>{{ ap.translit }}</div>
                             </div>
                         </Link>
-                        <Link v-if="pp" :href="route('terms.show', pp.slug)" class="inflection-chart-item">
+                        <Link v-if="pp" :href="route('terms.show', pp.slug)" class="inflection-chart-item" style="grid-column: 2">
                             <div>PP</div>
                             <div>
                                 <div>{{ pp.term }}</div>
                                 <div>{{ pp.translit }}</div>
                             </div>
                         </Link>
-                        <Link v-if="vn" :href="route('terms.show', vn.slug)" class="inflection-chart-item">
+                        <Link v-if="vn" :href="route('terms.show', vn.slug)" class="inflection-chart-item" style="grid-column: span 2">
                             <div>VN</div>
                             <div>
                                 <div>{{ vn.term }}</div>
