@@ -269,26 +269,28 @@ class TermController extends Controller
                 'slug' => $this->handleSlug($formData['category'], $formData['pronunciations'][0]['translit'], $term),
             ]);
 
-            $requestGlosses = [];
-            foreach ($formData['glosses'] as $index => $glossData) {
-                unset($glossData['id']);
-                $requestGlosses[] = $glossData['gloss'];
+            $requestGlosses = collect($formData['glosses']);
+            $existingGlosses = $term->glosses->keyBy('id');
 
-                if ($index + 1 <= count($term->glosses)) {
-                    $term->glosses[$index]->update($glossData);
-                    $gloss = $term->glosses[$index];
+            foreach ($requestGlosses as $glossData) {
+                $id = $glossData['id'] ?? null;
+
+                if ($id && $existingGlosses->has($id)) {
+                    $existingGlosses[$id]->update($glossData);
+                    $gloss = $existingGlosses[$id];
 
                 } else {
-                    $glossData = array_merge($glossData, ['term_id' => $term->id]);
-                    $gloss = Gloss::create($glossData);
+                    $gloss = Gloss::create(array_merge($glossData, ['term_id' => $term->id]));
                 }
 
                 $this->handleAttributes($gloss, $glossData['attributes'], 'glosses');
             }
 
-            foreach ($term->glosses as $gloss) {
-                ! in_array($gloss->gloss, $requestGlosses) && $gloss->delete();
-            }
+            $existingGlosses->each(function ($gloss) use ($requestGlosses) {
+                if (!$requestGlosses->pluck('id')->contains($gloss->id)) {
+                    $gloss->delete();
+                }
+            });
 
             Root::doesntHave('terms')->delete();
 
@@ -425,6 +427,25 @@ class TermController extends Controller
         }
 
         $existingDependents->except($requestItems)->each->delete();
+
+//        $existingDependents = $existingDependents->keyBy('id');
+//
+//        foreach ($requestDependents as $dependentData) {
+//            $id = $dependentData['id'] ?? null;
+//
+//            if ($id && $existingDependents->has($id)) {
+//                $existingDependents[$id]->update($dependentData);
+//
+//            } else {
+//                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
+//            }
+//        }
+//
+//        $existingDependents->each(function ($dependent) use ($requestDependents) {
+//            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
+//                $dependent->delete();
+//            }
+//        });
     }
 
     public function destroy(Term $term): RedirectResponse

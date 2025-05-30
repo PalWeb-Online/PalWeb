@@ -32,6 +32,8 @@ const sentence = useForm({
     terms: props.sentence?.terms || [],
 });
 
+const termsList = ref([]);
+
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
@@ -41,9 +43,8 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const insertTerm = (term) => {
-    sentence.terms.push({
+    const newTerm = {
         id: term.id,
-        uuid: crypto.randomUUID(),
         term: term.term,
         category: term.category,
         translit: term.translit,
@@ -57,32 +58,43 @@ const insertTerm = (term) => {
             sent_translit: term.translit,
             position: '',
         }
+    };
+
+    termsList.value.push({
+        ...newTerm,
+        uuid: crypto.randomUUID(),
     });
     updatePosition();
     NotificationStore.addNotification(`Added ${term.term} to the Sentence!`);
 }
 
 const addTerm = () => {
-    sentence.terms.push({
-        uuid: crypto.randomUUID(),
+    const newTerm = {
         sentencePivot: {
             sent_term: '',
             sent_translit: '',
             position: '',
         }
+    };
+
+    termsList.value.push({
+        ...newTerm,
+        uuid: crypto.randomUUID(),
     });
     updatePosition();
 }
 
 const removeTerm = (index) => {
-    sentence.terms.splice(index, 1);
+    termsList.value.splice(index, 1);
     updatePosition();
 }
 
 const updatePosition = () => {
-    sentence.terms.forEach((term, index) => {
+    termsList.value.forEach((term, index) => {
         term.sentencePivot.position = index + 1;
     });
+
+    sentence.terms = termsList.value.map(({ uuid, ...term }) => term);
 }
 
 const isValidRequest = computed(() => {
@@ -123,26 +135,17 @@ const saveSentence = async () => {
     });
 };
 
-watch(
-    () => props.sentence,
-    (newValue) => {
-        if (newValue) {
-            Object.assign(sentence, newValue);
-        }
-    },
-    {deep: true}
-);
-
 onMounted(() => {
+    termsList.value = (props.sentence?.terms ?? []).map((term) => {
+        return {
+            ...term,
+            uuid: crypto.randomUUID(),
+        };
+    });
+
     if (!!props.dialog) {
         sentence.position = props.dialog.sentences_count + 1;
     }
-
-    sentence.terms.forEach((term) => {
-        if (!term.uuid) {
-            term.uuid = crypto.randomUUID();
-        }
-    });
 
     watch(
         () => SearchStore.data.selectedModel,
@@ -154,6 +157,16 @@ onMounted(() => {
         }
     );
 });
+
+watch(
+    () => props.sentence,
+    (newValue) => {
+        if (newValue) {
+            Object.assign(sentence, newValue);
+        }
+    },
+    {deep: true}
+);
 </script>
 
 <template>
@@ -180,14 +193,14 @@ onMounted(() => {
 
     <div class="sentence-container">
         <SentenceItem :sentence="sentence" page="sentence" :inDialog="!!dialog"/>
-        <draggable :list="sentence.terms" itemKey="uuid"
+        <draggable :list="termsList" itemKey="uuid"
                    @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
                     <TermItem :term="element"/>
                     <img src="/img/trash.svg" class="trash" alt="Delete"
-                         v-show="sentence.terms.length > 0"
+                         v-show="termsList.length > 0"
                          @click="removeTerm(index)"/>
                 </div>
             </template>

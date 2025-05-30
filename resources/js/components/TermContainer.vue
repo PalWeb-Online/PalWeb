@@ -77,7 +77,7 @@ const references = computed(() =>
 );
 
 const derivatives = computed(() =>
-    term.relatives.filter(relative => ['ap', 'pp', 'nv'].includes(relative.type)) ?? []
+    term.relatives.filter(relative => ['ap', 'pp', 'vn'].includes(relative.type)) ?? []
 );
 
 const hostForms = computed(() =>
@@ -124,7 +124,7 @@ const etymology = computed(() => {
         .filter(pattern => pattern.type === 'plural')
         .map(pattern =>
             `Has a <b>${pattern.pattern}</b> ${['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken'} plural. `
-        )
+        ).join('');
 
     const components = term.relatives.filter(relative => relative.type === 'component') ?? [];
     data.components = [];
@@ -208,15 +208,20 @@ const etymology = computed(() => {
                                     class="attribute-link"
                                 >
                                     {{ attribute.attribute }}.
+                                    <span> </span>
                                 </a>
                             </template>
                             <template v-else-if="['idiom', 'clitic'].includes(attribute.attribute)">
                                 <span style="font-weight: 400; font-style: italic">
                                     {{ attribute.attribute }}.
+                                    <span> </span>
                                 </span>
                             </template>
                             <template v-else>
-                                <span style="font-weight: 400">{{ attribute.attribute }}.</span>
+                                <span style="font-weight: 400">
+                                    {{ attribute.attribute }}.
+                                    <span> </span>
+                                </span>
                             </template>
                         </template>
                         <template v-if="constructForms.length > 0">

@@ -61,7 +61,7 @@ const hasAttribute = computed(() => {
 
 const hasForm = computed(() => {
     const allowedCategories = ['', 'verb', 'noun', 'adjective', 'numeral'];
-    const allowedSingPatterns = ['', 'ap', 'pp', 'nv'];
+    const allowedSingPatterns = ['', 'ap', 'pp', 'vn'];
     const disallowedAttributes = ['pseudo', 'defect'];
     return (
         allowedCategories.includes(filters.value.category) &&
