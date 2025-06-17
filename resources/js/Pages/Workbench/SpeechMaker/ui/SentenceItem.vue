@@ -46,7 +46,7 @@ const props = defineProps({
             </template>
         </div>
 
-        <div v-if="page === 'sentence' && sentence.dialog.id" class="sentence-dialog">
+        <div v-if="page === 'sentence' && sentence.dialog?.id" class="sentence-dialog">
             <div>Dialog</div>
             <Link :href="route('speech-maker.dialog', sentence.dialog.id)">{{ sentence.dialog.title }}</Link>
         </div>

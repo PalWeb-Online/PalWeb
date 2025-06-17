@@ -44,7 +44,11 @@ const {deck, isLoading} = useDeck(props);
 
             <template v-if="deck.terms.length > 0">
                 <div class="terms-list">
-                    <TermItem v-for="term in deck.terms" :model="term" :glossId="term.deckPivot.gloss_id"/>
+                    <TermItem v-for="term in deck.terms"
+                              :key="term.id"
+                              :model="term"
+                              :glossId="term.deckPivot.gloss_id"
+                    />
                 </div>
                 <div class="deck-term-count">{{ deck.terms.length }} Terms</div>
             </template>
