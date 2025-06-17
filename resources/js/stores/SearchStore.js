@@ -32,6 +32,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
         sentences: {label: 'sentences', disabled: false},
     });
 
+    let cancelTokenSource = null;
+
     const openSearchGenie = (action = 'search', enabledModel = null) => {
         data.action = action;
         data.activeModel = enabledModel || 'terms';
@@ -62,12 +64,9 @@ export const useSearchStore = defineStore('SearchStore', () => {
         };
     }
 
-    const updateFilter = (key, value) => {
+    const search = async (key, value) => {
         data.filters[key] = value;
-        search();
-    };
 
-    const search = async () => {
         if (!data.filters['search'] && Object.values(data.filters).every(value => !value)) {
             data.results = {
                 terms: [],
@@ -77,11 +76,20 @@ export const useSearchStore = defineStore('SearchStore', () => {
             return;
         }
 
+        if (cancelTokenSource) {
+            cancelTokenSource.cancel("Search canceled because a new request was made.");
+        }
+
+        cancelTokenSource = axios.CancelToken.source();
+
         try {
             const response = await axios.post('/search', {
-                search: data.filters['search'] || '',
-                ...data.filters,
-            });
+                    search: data.filters['search'] || '',
+                    ...data.filters,
+                }, {
+                    cancelToken: cancelTokenSource.token,
+                }
+            );
             data.results = response.data;
 
         } catch (error) {
@@ -115,7 +123,6 @@ export const useSearchStore = defineStore('SearchStore', () => {
         tabs,
         openSearchGenie,
         resetSearchGenie,
-        updateFilter,
         search,
         setAction,
         resetAction,

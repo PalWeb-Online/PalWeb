@@ -1,5 +1,6 @@
 <script setup>
 import {computed, ref, watch} from "vue";
+import {debounce} from "lodash";
 
 const emit = defineEmits([
     'updateFilter'
@@ -33,12 +34,16 @@ const filters = ref({
 
 let previousFilters = {...filters.value};
 
+const debounceEmit = debounce((key, value) => {
+    emit("updateFilter", { filter: key, value });
+}, 250);
+
 watch(
     filters,
     (newFilters) => {
         for (const key in newFilters) {
             if (newFilters[key] !== previousFilters[key]) {
-                emit('updateFilter', {filter: key, value: newFilters[key]});
+                debounceEmit(key, newFilters[key]);
                 previousFilters[key] = newFilters[key];
             }
         }
