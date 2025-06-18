@@ -126,7 +126,7 @@ const saveSentence = async () => {
 };
 
 onMounted(() => {
-    termsList.value = (props.sentence?.terms ?? []).map((term) => {
+    termsList.value = (sentence.terms ?? []).map((term) => {
         return {
             ...term,
             uuid: crypto.randomUUID(),
@@ -173,7 +173,8 @@ watch(
             const {uuid, ...newTerm} = term;
 
             if (sentence.terms[index]) {
-                Object.assign(sentence.terms[index], newTerm);
+                sentence.terms[index] = { ...newTerm };
+
             } else {
                 sentence.terms.push(newTerm);
             }
