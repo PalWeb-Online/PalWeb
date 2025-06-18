@@ -68,7 +68,11 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
         </div>
 
         <div v-if="size === 'l'" class="terms-list">
-            <TermItem v-for="term in data.sentence.terms.filter(term => term.id)" :key="term.id" :model="term"/>
+            <TermItem v-for="term in data.sentence.terms.filter(term => term.id)"
+                      :key="term.id"
+                      :model="term"
+                      :glossId="term.sentencePivot.gloss_id"
+            />
         </div>
     </template>
 </template>

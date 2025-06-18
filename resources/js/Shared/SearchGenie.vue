@@ -160,7 +160,7 @@ watch(() => SearchStore.data.results, () => {
             ref="filtersRef"
             :activeModel="SearchStore.data.activeModel"
             :filters="SearchStore.data.filters"
-            @updateFilter="({ filter, value }) => SearchStore.updateFilter(filter, value)"
+            @updateFilter="({ filter, value }) => SearchStore.search(filter, value)"
         />
 
         <div class="sg-results">

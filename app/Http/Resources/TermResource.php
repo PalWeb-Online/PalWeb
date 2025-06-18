@@ -38,9 +38,6 @@ class TermResource extends JsonResource
                     'id' => $gloss->id,
                     'gloss' => $gloss->gloss,
                     'attributes' => [],
-                    'synonyms' => [],
-                    'antonyms' => [],
-                    'valences' => [],
                     'sentences' => [],
                 ];
             }),

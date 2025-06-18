@@ -119,14 +119,14 @@ const saveSentence = async () => {
             isSaving.value = false;
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+            NotificationStore.addNotification('Oh no! The Sentence could not be saved.');
             isSaving.value = false;
         }
     });
 };
 
 onMounted(() => {
-    termsList.value = (props.sentence?.terms ?? []).map((term) => {
+    termsList.value = (sentence.terms ?? []).map((term) => {
         return {
             ...term,
             uuid: crypto.randomUUID(),
@@ -170,16 +170,17 @@ watch(
         }
 
         newTermsList.forEach((term, index) => {
-            const { uuid, ...newTerm } = term;
+            const {uuid, ...newTerm} = term;
 
             if (sentence.terms[index]) {
-                Object.assign(sentence.terms[index], newTerm);
+                sentence.terms[index] = { ...newTerm };
+
             } else {
                 sentence.terms.push(newTerm);
             }
         });
     },
-    { deep: true }
+    {deep: true}
 );
 </script>
 
@@ -208,7 +209,6 @@ watch(
     <div class="sentence-container">
         <SentenceItem :sentence="sentence" page="sentence" :inDialog="!!dialog"/>
         <draggable :list="termsList" itemKey="uuid"
-                   @end="updatePosition()"
                    class="draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">

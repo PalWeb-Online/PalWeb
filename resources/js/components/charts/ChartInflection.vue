@@ -32,6 +32,10 @@ const feminine = computed(() =>
     props.inflections.find(inflection => inflection.form === "fem")
 );
 
+const elative = computed(() =>
+    props.inflections.find(inflection => inflection.form === "elt")
+);
+
 const plurals = computed(() =>
     props.inflections.filter(inflection => inflection.form === "plr")
 );
