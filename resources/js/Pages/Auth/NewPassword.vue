@@ -24,8 +24,8 @@ const setNewPassword = () => {
         : form.patch.bind(form);
 
     const url = !UserStore.isUser
-        ? route('password.store')
-        : route('password.update');
+        ? route('password.update')
+        : route('password.change');
 
     method(url);
 }

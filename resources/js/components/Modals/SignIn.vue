@@ -34,7 +34,6 @@ const resetLinkForm = useForm({
 const sendResetLink = () => {
     resetLinkForm.post(route('password.email'), {
         onSuccess: () => {
-            NotificationStore.addNotification('Password reset link has been sent to your email!');
             emit('close');
         }
     });
