@@ -12,7 +12,7 @@ class StoreFeedbackCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'feedback' => [
+            'comment' => [
                 'required',
                 'string',
                 'max:500',

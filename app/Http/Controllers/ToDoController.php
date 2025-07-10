@@ -54,7 +54,8 @@ class ToDoController extends Controller
     public function store(StoreFeedbackCommentRequest $request): RedirectResponse
     {
         FeedbackComment::create([
-            'translit' => $request['feedback'],
+            'comment' => $request['comment'],
+            'user_id' => auth()->id(),
         ]);
 
         return back();

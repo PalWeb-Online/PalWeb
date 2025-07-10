@@ -234,17 +234,13 @@ watch(
         </section>
     </div>
 
-    <PopupWindow ref="alertLimitReached" title="Limit Reached">
-        <template #content>
-            <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
-                Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
-                more.</p>
-        </template>
+    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" title="Limit Reached">
+        <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
+            Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
+            more.</p>
     </PopupWindow>
-    <PopupWindow ref="alertQueueCompleted" title="Queue Completed">
-        <template #content>
-            <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
-                uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
-        </template>
+    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" title="Queue Completed">
+        <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
+            uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
     </PopupWindow>
 </template>

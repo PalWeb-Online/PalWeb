@@ -8,6 +8,7 @@ import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
 import {router} from "@inertiajs/vue3";
 import AppTip from "../../../components/AppTip.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     mode: {type: String, default: 'build'},
@@ -111,9 +112,7 @@ defineOptions({
                     <p v-if="mode === 'study'">It looks like you haven't pinned any Decks yet. Watch this space.</p>
                 </AppTip>
             </div>
-            <div v-show="isLoading" class="app-loading">
-                <img src="/img/wait.svg" alt="Loading"/>
-            </div>
+            <LoadingSpinner v-show="isLoading"/>
         </div>
 
         <template v-if="mode === 'build'">

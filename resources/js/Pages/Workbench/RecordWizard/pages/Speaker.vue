@@ -156,56 +156,48 @@ onMounted(async () => {
     <div class="rw-container-head window-head">
         <h2>Speaker</h2>
 
-        <PopupWindow title="Record Wizard: Speaker">
-            <template #trigger>
-                <div class="material-symbols-rounded">help</div>
-            </template>
-            <template #content>
-                <div>What is my Speaker profile?</div>
-                <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
-                    create, so that others can know the dialect & other sociolinguistic information behind what they're
-                    hearing. Your Speaker profile is distinct from your User profile; it does not include your name,
-                    etc. By default, however, your Recordings will link to your User profile. If you would like for your
-                    Speaker profile to remain anonymous, simply return to the Dashboard & set your User profile to
-                    Private. You can change this at any time.</p>
-
-                <div>What is my Dialect?</div>
-                <p>Your Dialect is the variety of Palestinian Arabic that you speak, or that you intend to represent in
-                    your Audios. In the Record Wizard, you will only be shown Pronunciation items valid for the selected
-                    Dialect. PalWeb is an ongoing research project, so the list of Dialects is provisional. If what you
-                    consider to be your Dialect does not appear on the list, simply choose the closest one. You may see
-                    discrepancies between the items presented to you & the way you pronounce them; this is absolutely
-                    normal. Just record the items in the way that comes naturally to you. <b>Once your Speaker profile
-                        is created, your Dialect can only be changed by the site administrator.</b> Check the <b>User
-                        Guide</b> in the Wiki for more information.</p>
-
-                <div>What is my Location?</div>
-                <p>Your Location is the place where you learned Arabic, or the place that the people with whom you
-                    learned Arabic (e.g. your relatives) are from. It is up to you to decide the most
-                    appropriate choice to select. If you have lived most of your life in a given town, but your family &
-                    you have an accent characteristic of another town, then the town of your ancestry may be a more
-                    appropriate selection. Select the Location that you feel best represents your manner of
-                    speaking.</p>
-                <p><b>Note:</b> These Locations were imported from Wikidata by means of a script. There was no
-                    way to
-                    reliably distinguish Israeli towns in the 1948 Territories from Palestinian ones, so all
-                    towns
-                    currently located in the 1948 Territories — including Israeli towns — are listed. Israeli
-                    settlements in the West Bank & the Golan Heights have been discarded, however.
-                </p>
-
-                <div>What is my Fluency level?</div>
-                <p>Your Fluency level reflects how natural your pronunciation is, according to your own
-                    assessment. Only
-                    choose <b>Native</b> if you were raised speaking the language & have used it throughout your
-                    life,
-                    especially in a region where the language is spoken natively. Choose <b>Fluent</b> if your
-                    pronunciation of the language is naturalistic for any other reason. Most learners should not
-                    select
-                    anything higher than <b>Advanced</b>. Heritage speakers may fall anywhere on this spectrum.
-                    Err on
-                    the side of underestimation.</p>
-            </template>
+        <PopupWindow title="(RW) Speaker">
+            <div>What is my Speaker profile?</div>
+            <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
+                create, so that others can know the dialect & other sociolinguistic information behind what they're
+                hearing. Your Speaker profile is distinct from your User profile; it does not include your name,
+                etc. By default, however, your Recordings will link to your User profile. If you would like for your
+                Speaker profile to remain anonymous, simply return to the Dashboard & set your User profile to
+                Private. You can change this at any time.</p>
+            <div>What is my Dialect?</div>
+            <p>Your Dialect is the variety of Palestinian Arabic that you speak, or that you intend to represent in
+                your Audios. In the Record Wizard, you will only be shown Pronunciation items valid for the selected
+                Dialect. PalWeb is an ongoing research project, so the list of Dialects is provisional. If what you
+                consider to be your Dialect does not appear on the list, simply choose the closest one. You may see
+                discrepancies between the items presented to you & the way you pronounce them; this is absolutely
+                normal. Just record the items in the way that comes naturally to you. <b>Once your Speaker profile
+                    is created, your Dialect can only be changed by the site administrator.</b> Check the <b>User
+                    Guide</b> in the Wiki for more information.</p>
+            <div>What is my Location?</div>
+            <p>Your Location is the place where you learned Arabic, or the place that the people with whom you
+                learned Arabic (e.g. your relatives) are from. It is up to you to decide the most
+                appropriate choice to select. If you have lived most of your life in a given town, but your family &
+                you have an accent characteristic of another town, then the town of your ancestry may be a more
+                appropriate selection. Select the Location that you feel best represents your manner of
+                speaking.</p>
+            <p><b>Note:</b> These Locations were imported from Wikidata by means of a script. There was no
+                way to
+                reliably distinguish Israeli towns in the 1948 Territories from Palestinian ones, so all
+                towns
+                currently located in the 1948 Territories — including Israeli towns — are listed. Israeli
+                settlements in the West Bank & the Golan Heights have been discarded, however.
+            </p>
+            <div>What is my Fluency level?</div>
+            <p>Your Fluency level reflects how natural your pronunciation is, according to your own
+                assessment. Only
+                choose <b>Native</b> if you were raised speaking the language & have used it throughout your
+                life,
+                especially in a region where the language is spoken natively. Choose <b>Fluent</b> if your
+                pronunciation of the language is naturalistic for any other reason. Most learners should not
+                select
+                anything higher than <b>Advanced</b>. Heritage speakers may fall anywhere on this spectrum.
+                Err on
+                the side of underestimation.</p>
         </PopupWindow>
     </div>
 

@@ -42,32 +42,27 @@ onMounted(() => {
     <div class="rw-container-head window-head">
         <h2>Queue</h2>
 
-        <PopupWindow title="Record Wizard: Queue">
-            <template #trigger>
-                <div class="material-symbols-rounded">help</div>
-            </template>
-            <template #content>
-                <div>What is the Queue?</div>
-                <p>Terms have many Pronunciations. The <b>Queue</b> is the list of Pronunciation items you will be
-                    recording with the <b>Record Wizard</b>.</p>
-                <p><b>You may only queue up a maximum of 100 items.</b> After uploading your recordings, you
-                    may return to the Queue page to refresh the list with another 100 items.</p>
-                <p><b>You may only record any given item once — one Audio per Pronunciation per Speaker.</b> If an item
-                    that you expected to see in the Queue seems to be missing, you have probably already recorded it.
-                </p>
+        <PopupWindow title="(RW) Queue">
+            <div>What is the Queue?</div>
+            <p>Terms have many Pronunciations. The <b>Queue</b> is the list of Pronunciation items you will be
+                recording with the <b>Record Wizard</b>.</p>
+            <p><b>You may only queue up a maximum of 100 items.</b> After uploading your recordings, you
+                may return to the Queue page to refresh the list with another 100 items.</p>
+            <p><b>You may only record any given item once — one Audio per Pronunciation per Speaker.</b> If an item
+                that you expected to see in the Queue seems to be missing, you have probably already recorded it.
+            </p>
 
-                <div>How do I fill the Queue?</div>
-                <p>Click <b>Fetch Items</b> to automatically queue up the next 100 items in your Dialect available for
-                    you to record, or as many as are needed to fill the Queue to 100. If you choose to discard any item,
-                    you can click <b>Fetch Items</b> again to fill the Queue back up to 100 with the next available
-                    items. With <b>Fetch Items</b>, items are sorted by Audio count: items with no Audios are listed
-                    first, followed by those with at least one, then two & so on.</p>
-                <p>Alternatively, use the <b>Search Genie</b> to search for a Deck of your choosing. Select it to queue
-                    up any of its items that you haven't recorded yet. While you can't search for individual items to
-                    add manually to the Queue, you can create a Deck of items you'd like to record & select it here.
-                    With <b>Queue Deck</b>, items are not sorted by Audio count; they are listed in the order
-                    in which they appear in the Deck.</p>
-            </template>
+            <div>How do I fill the Queue?</div>
+            <p>Click <b>Fetch Items</b> to automatically queue up the next 100 items in your Dialect available for
+                you to record, or as many as are needed to fill the Queue to 100. If you choose to discard any item,
+                you can click <b>Fetch Items</b> again to fill the Queue back up to 100 with the next available
+                items. With <b>Fetch Items</b>, items are sorted by Audio count: items with no Audios are listed
+                first, followed by those with at least one, then two & so on.</p>
+            <p>Alternatively, use the <b>Search Genie</b> to search for a Deck of your choosing. Select it to queue
+                up any of its items that you haven't recorded yet. While you can't search for individual items to
+                add manually to the Queue, you can create a Deck of items you'd like to record & select it here.
+                With <b>Queue Deck</b>, items are not sorted by Audio count; they are listed in the order
+                in which they appear in the Deck.</p>
         </PopupWindow>
     </div>
     <AppTip>

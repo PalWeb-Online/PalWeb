@@ -3,7 +3,9 @@ import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import AppTip from "../AppTip.vue";
+import AppButton from "../AppButton.vue";
 
 const emit = defineEmits(['close', 'signUp']);
 
@@ -14,6 +16,14 @@ const signInForm = useForm({
     email: '',
     password: '',
     remember: false,
+});
+
+const isValidRequest = computed(() => {
+    if (!forgotPassword.value) {
+        return signInForm.email.includes('@') && signInForm.email.includes('.') && signInForm.password.length;
+    } else {
+        return resetLinkForm.email.includes('@') && resetLinkForm.email.includes('.');
+    }
 });
 
 const signIn = () => {
@@ -40,11 +50,19 @@ const sendResetLink = () => {
 };
 </script>
 <template>
-    <div class="modal-container-wrapper">
-        <div class="modal-heading">sign in</div>
+    <div class="window-container modal-container">
+        <div class="window-section-head">
+            <h1 v-if="!forgotPassword">sign in</h1>
+            <template v-else>
+                <h1>forgot password</h1>
+                <button @click="forgotPassword = false" class="material-symbols-rounded">undo</button>
+            </template>
+        </div>
         <template v-if="!forgotPassword">
-            <div class="modal-container form-container">
-                <button @click="emit('signUp')" style="justify-self: center">New to PalWeb? Sign Up!</button>
+            <AppTip>
+                <p>New to PalWeb? <button @click="emit('signUp')">Sign Up!</button></p>
+            </AppTip>
+            <div class="modal-container-body form-body">
                 <div class="field-item">
                     <label>Email</label>
                     <div class="field-input">
@@ -62,25 +80,24 @@ const sendResetLink = () => {
                     </div>
                     <div v-if="signInForm.errors.password" v-text="signInForm.errors.password" class="field-error"/>
                 </div>
-                <!--            <label class="checkbox">-->
-                <!--                <input type="checkbox">-->
-                <!--                <span>Remember Me</span>-->
-                <!--            </label>-->
-
-                <!--            <div class="checkbox">-->
-                <!--                <input type="checkbox" v-model="form.remember">Remember Me-->
-                <!--            </div>-->
-                <button class="app-button" @click="signIn" :disabled="signInForm.processing">
-                    Sign In
-                </button>
+                <div class="field-toggle-wrapper">
+                    <button class="field-toggle" :class="{ active: signInForm.remember }"
+                            @click="signInForm.remember = !signInForm.remember">
+                        <div class="field-toggle-slider"></div>
+                    </button>
+                    <div>remember me</div>
+                </div>
             </div>
-            <a class="featured-button" :href="route('auth.discord')">Use Discord</a>
+            <div class="window-footer">
+                <button @click="signIn" :disabled="signInForm.processing || !isValidRequest">Sign In</button>
+                <a :href="route('auth.discord')">Use Discord</a>
+            </div>
         </template>
         <template v-else>
-            <div class="modal-container form-container">
-                <button @click="forgotPassword = false"><- to Sign In</button>
-                <p>Forgot your password? Don't worry. Write down your email address & we'll send you a link to reset
-                    your password.</p>
+            <AppTip>
+                <p>No password? No problem. Write down your email address & I'll send you a reset link.</p>
+            </AppTip>
+            <div class="modal-container-body form-body">
                 <div class="field-item">
                     <label>Email</label>
                     <div class="field-input">
@@ -88,7 +105,9 @@ const sendResetLink = () => {
                     </div>
                     <div v-if="resetLinkForm.errors.email" v-text="resetLinkForm.errors.email" class="field-error"/>
                 </div>
-                <button class="app-button" @click="sendResetLink" :disabled="resetLinkForm.processing">
+            </div>
+            <div class="window-footer">
+                <button @click="sendResetLink" :disabled="resetLinkForm.processing || !isValidRequest">
                     Send Link
                 </button>
             </div>
