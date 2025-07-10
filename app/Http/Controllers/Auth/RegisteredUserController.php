@@ -33,6 +33,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('signup.message', ['user' => $request->user()->name])]);
         return to_route('users.show', $user);
     }
 }

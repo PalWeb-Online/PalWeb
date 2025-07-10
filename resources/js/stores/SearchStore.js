@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import axios from 'axios';
 
 export const useSearchStore = defineStore('SearchStore', () => {
@@ -7,12 +7,12 @@ export const useSearchStore = defineStore('SearchStore', () => {
         isOpen: false,
         action: 'search',
         activeModel: 'terms',
-        enabledModel: 'terms',
         selectedModel: null,
         filters: {
             search: '',
             match: 'term',
-            pinned: 0,
+            sort: 'latest',
+            pinned: false,
             category: '',
             attribute: '',
             form: '',
@@ -32,6 +32,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
         sentences: {label: 'sentences', disabled: false},
     });
 
+    const isLoading = ref(false);
+
     let cancelTokenSource = null;
 
     const openSearchGenie = (action = 'search', enabledModel = null) => {
@@ -50,7 +52,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
         data.filters = {
             search: '',
             match: 'term',
-            pinned: 0,
+            sort: 'latest',
+            pinned: false,
             category: '',
             attribute: '',
             form: '',
@@ -67,7 +70,10 @@ export const useSearchStore = defineStore('SearchStore', () => {
     const search = async (key, value) => {
         data.filters[key] = value;
 
-        if (!data.filters['search'] && Object.values(data.filters).every(value => !value)) {
+        const filteredKeys = Object.keys(data.filters).filter(k => !['match', 'sort'].includes(k));
+        const keysEmpty = filteredKeys.every(k => !data.filters[k]);
+
+        if (keysEmpty) {
             data.results = {
                 terms: [],
                 sentences: [],
@@ -82,6 +88,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
 
         cancelTokenSource = axios.CancelToken.source();
 
+        isLoading.value = true;
+
         try {
             const response = await axios.post('/search', {
                     search: data.filters['search'] || '',
@@ -92,6 +100,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
             );
             data.results = response.data;
 
+            isLoading.value = false;
+
         } catch (error) {
             console.error('Search error:', error);
             data.results = {
@@ -99,6 +109,8 @@ export const useSearchStore = defineStore('SearchStore', () => {
                 sentences: [],
                 decks: []
             };
+
+            isLoading.value = false;
         }
     };
 
@@ -121,6 +133,7 @@ export const useSearchStore = defineStore('SearchStore', () => {
     return {
         data,
         tabs,
+        isLoading,
         openSearchGenie,
         resetSearchGenie,
         search,

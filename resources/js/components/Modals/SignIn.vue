@@ -1,16 +1,13 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
-import AppButton from "../AppButton.vue";
 
 const emit = defineEmits(['close', 'signUp']);
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
 
 const signInForm = useForm({
     email: '',
@@ -29,7 +26,6 @@ const isValidRequest = computed(() => {
 const signIn = () => {
     signInForm.post(route('signin'), {
         onSuccess: () => {
-            NotificationStore.addNotification(`Welcome back, ${UserStore.user.name}!`);
             emit('close');
         }
     });

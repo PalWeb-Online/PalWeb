@@ -66,6 +66,8 @@ class UserController extends Controller
 
         event(new ProfileChanged($user));
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
         return to_route('users.show', $user);
     }
 

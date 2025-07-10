@@ -159,14 +159,14 @@ const saveTerm = async () => {
 
     method(url, {
         onSuccess: () => {
-            NotificationStore.addNotification('The Term has been saved!');
             term.defaults();
-            isSaving.value = false;
         },
         onError: () => {
             NotificationStore.addNotification('Oh no! The Term could not be saved.');
-            isSaving.value = false;
         },
+        onFinish: () => {
+            isSaving.value = false;
+        }
     });
 }
 

@@ -111,10 +111,6 @@ export const useQueueStore = defineStore('QueueStore', () => {
             if (response.data) {
                 queue.push(...response.data.items);
                 NotificationStore.addNotification('Added Deck to the Queue!');
-
-                if (response.data.message) {
-                    NotificationStore.addNotification(response.data.message, 'warning');
-                }
             }
         } catch (error) {
             console.error(`Error fetching deck with ID ${id}:`, error);

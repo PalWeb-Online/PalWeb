@@ -124,4 +124,15 @@ class Sentence extends Model
 
         return null;
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['sort'] === 'latest', fn ($query) => $query
+            ->orderByDesc('sentences.id')
+        );
+
+        $query->when($filters['pinned'] ?? false, fn ($query) => $query
+            ->whereHasBookmark(auth()->user())
+        );
+    }
 }

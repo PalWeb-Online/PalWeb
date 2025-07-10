@@ -44,6 +44,8 @@ class DialogController extends Controller
         $dialog = Dialog::create($request->all());
         $this->linkSentences($dialog, $request->sentences);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $dialog->title])]);
         return to_route('speech-maker.dialog', $dialog);
     }
 
@@ -52,6 +54,8 @@ class DialogController extends Controller
         $dialog->update($request->all());
         $this->linkSentences($dialog, $request->sentences);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $dialog->title])]);
         return to_route('speech-maker.dialog', $dialog);
     }
 

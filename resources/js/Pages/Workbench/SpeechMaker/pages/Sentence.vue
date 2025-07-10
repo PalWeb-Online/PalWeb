@@ -113,12 +113,12 @@ const saveSentence = async () => {
 
     method(url, {
         onSuccess: () => {
-            NotificationStore.addNotification('The Sentence has been saved!');
             sentence.defaults();
-            isSaving.value = false;
         },
         onError: () => {
             NotificationStore.addNotification('Oh no! The Sentence could not be saved.');
+        },
+        onFinish: () => {
             isSaving.value = false;
         }
     });

@@ -54,15 +54,13 @@ class TermController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only([
-            'search', 'match', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
-        ]);
+        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
+        ]));
 
-        if (! collect($filters)->except(['match', 'pinned', 'letter'])->some(fn ($value) => ! empty($value))) {
+        if (empty($filters['search'])) {
             $terms = Term::query()
                 ->with(['root', 'glosses'])
-                ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-                ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
                 ->select('terms.*')
                 ->filter($filters)
                 ->paginate(25)
@@ -237,6 +235,8 @@ class TermController extends Controller
             return $term;
         });
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $term->term])]);
         return to_route('terms.show', $term);
     }
 
@@ -297,6 +297,8 @@ class TermController extends Controller
             return $term;
         });
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $term->term])]);
         return to_route('terms.show', $term);
     }
 

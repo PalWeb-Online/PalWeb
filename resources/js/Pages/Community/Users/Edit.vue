@@ -43,12 +43,12 @@ const saveUser = async () => {
     form.patch(route('users.update', props.user.username),
         {
             onSuccess: () => {
-                NotificationStore.addNotification('The Profile has been saved!');
                 form.defaults();
-                isSaving.value = false;
             },
             onError: () => {
                 NotificationStore.addNotification('Oh no! The Profile could not be saved.');
+            },
+            onFinish: () => {
                 isSaving.value = false;
             }
         }

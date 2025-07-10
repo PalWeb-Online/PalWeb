@@ -9,30 +9,30 @@ use Illuminate\Support\Collection;
 
 class TermRepository
 {
-    public function findMatchingTerms(array $filters = []): Collection
+    public function findMatchingTerms(?string $search): Collection
     {
         return Term::query()
-            ->select('id AS term_id')
-            ->match($filters)
+            ->select('terms.id AS term_id')
+            ->match($search)
             ->get();
     }
 
-    public function findMatchingGlosses(array $filters = []): Collection
+    public function findMatchingGlosses(?string $search): Collection
     {
         return Gloss::query()
-            ->select('id AS gloss_id', 'term_id')
+            ->select('glosses.id AS gloss_id', 'term_id')
             ->where(fn ($query) => $query
-                ->whereRaw('MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)', [$filters['search']])
-                ->orWhere('gloss', 'like', $filters['search'].'%')
+                ->whereRaw('MATCH(gloss) AGAINST(? IN NATURAL LANGUAGE MODE)', [$search])
+                ->orWhere('gloss', 'like', $search.'%')
             )
             ->get();
     }
 
-    public function findMatchingRoots(array $filters = []): Collection
+    public function findMatchingRoots(?string $search): Collection
     {
         $roots = Root::query()
             ->with(['terms'])
-            ->where('root', 'like', $filters['search'].'%')
+            ->where('root', 'like', $search.'%')
             ->get();
 
         return $roots->flatMap(fn ($root) =>
@@ -44,7 +44,8 @@ class TermRepository
     {
         return Term::query()
             ->with(['root', 'glosses'])
-            ->whereIn('id', $matches->pluck('term_id'))
+            ->select('terms.*')
+            ->whereIn('terms.id', $matches->pluck('term_id'))
             ->filter($filters)
             ->get();
     }
@@ -55,7 +56,7 @@ class TermRepository
         $duplicates = Term::query()
             ->where('translit', '=', $mainTerm->translit)
             ->where('category', '=', $mainTerm->category)
-            ->where('id', '!=', $mainTerm->id)
+            ->where('terms.id', '!=', $mainTerm->id)
             ->get();
 
         // Get like terms belonging to other categories (e.g. adj كثير & adv كثير).

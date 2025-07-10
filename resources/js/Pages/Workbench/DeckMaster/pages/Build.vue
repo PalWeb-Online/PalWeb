@@ -100,12 +100,12 @@ const saveDeck = async () => {
 
     method(url, {
         onSuccess: () => {
-            NotificationStore.addNotification('The Deck has been saved!');
             deck.defaults();
-            isSaving.value = false;
         },
         onError: () => {
             NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+        },
+        onFinish: () => {
             isSaving.value = false;
         }
     });

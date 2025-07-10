@@ -6,7 +6,6 @@ import {route} from 'ziggy-js';
 import {onMounted, onUnmounted, ref} from "vue";
 import {Carousel, Slide} from "vue3-carousel";
 import NavAuth from "./NavAuth.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
 import SignIn from "../components/Modals/SignIn.vue";
 import SignUp from "../components/Modals/SignUp.vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
@@ -15,7 +14,6 @@ import SendMail from "../components/Modals/SendMail.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
-const NotificationStore = useNotificationStore();
 
 const carouselRef = ref(null);
 const sidebarRef = ref(null);
@@ -56,14 +54,6 @@ const handleClickOutside = (event) => {
         NavigationStore.closeSidebar();
     }
 };
-
-const handleSignOut = () => {
-    router.post(route('signout'), {}, {
-        onSuccess: () => {
-            NotificationStore.addNotification('See you next time!', 'bye');
-        }
-    })
-}
 
 onMounted(() => {
     const removeNavigationListener = router.on('navigate', () => {

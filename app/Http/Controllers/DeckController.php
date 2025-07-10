@@ -40,11 +40,13 @@ class DeckController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only(['search', 'match', 'pinned']);
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned'
+        ]));
 
-        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
+        if (empty($filters['search'])) {
             $decks = Deck::query()
-                ->orderByDesc('id')
+                ->filter($filters)
                 ->paginate(25)
                 ->onEachSide(1)
                 ->appends($filters);
@@ -98,6 +100,8 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
         return to_route('decks.show', $deck);
     }
 
@@ -108,6 +112,8 @@ class DeckController extends Controller
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
         return to_route('decks.show', $deck);
     }
 

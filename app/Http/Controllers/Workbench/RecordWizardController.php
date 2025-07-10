@@ -77,12 +77,11 @@ class RecordWizardController extends Controller
             $deck = Deck::firstWhere('id', $deckId)->load(['terms.pronunciations']);
             $pronunciations = [];
 
-            $message = null;
-
             foreach ($deck->terms as $term) {
                 foreach ($term->pronunciations as $pronunciation) {
                     if (count($queued) + count($pronunciations) >= 100) {
-                        $message = 'You\'ve reached the Queue max. Some items could not be added.';
+                        session()->flash('notification',
+                            ['type' => 'success', 'message' => 'You\'ve reached the Queue max. Some items could not be added.']);
                         break 2;
                     }
 
@@ -105,7 +104,6 @@ class RecordWizardController extends Controller
 
             return response()->json([
                 'items' => $pronunciations,
-                'message' => $message
             ]);
 
         } catch (\Exception $e) {

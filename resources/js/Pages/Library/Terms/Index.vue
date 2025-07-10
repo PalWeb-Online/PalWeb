@@ -50,6 +50,16 @@ function updateFilter({filter, value}) {
     const params = Object.fromEntries(searchParams.entries());
     router.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
 }
+
+const sortingMessage = computed(() => {
+    if (props.filters.sort === 'latest') {
+        return 'sorted by most recent first';
+    } else if (props.filters.sort === 'pinned') {
+        return 'in the order they were Pinned';
+    } else {
+        return 'sorted alphabetically by root';
+    }
+});
 </script>
 
 <template>
@@ -95,7 +105,7 @@ function updateFilter({filter, value}) {
             </div>
             <AppTip>
                 <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
-                    Terms matching this query.</p>
+                    Terms matching this query, {{ sortingMessage }}.</p>
                 <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
                 <p v-else>No Terms matching this query. Is a term missing from the Dictionary?
                     <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us

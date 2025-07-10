@@ -208,29 +208,48 @@ class Term extends Model
             ->withPivot('type', 'gloss_id');
     }
 
-    public function scopeMatch($query, array $filters): void
+    public function scopeMatch($query, ?string $search): void
     {
-        $query->when($filters['search'] ?? false, function ($query, $search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('term', 'like', $search.'%')
-                    ->orWhereHas('spellings', fn ($query) => $query
-                        ->where('spelling', 'like', $search.'%')
-                    )
-                    ->orWhereHas('pronunciations', fn ($query) => $query
-                        ->where('translit', 'like', $search.'%')
-                    )
-                    ->orWhereHas('inflections', fn ($query) => $query
-                        ->where('inflection', 'like', $search.'%')
-                        ->orWhere('translit', 'like', $search.'%')
-                    );
-            });
-        });
+        $query->when($search, fn ($query) => $query
+            ->where(fn ($query) => $query
+                ->where('term', 'like', $search.'%')
+                ->orWhereHas('spellings', fn ($query) => $query
+                    ->where('spelling', 'like', $search.'%')
+                )
+                ->orWhereHas('pronunciations', fn ($query) => $query
+                    ->where('translit', 'like', $search.'%')
+                )
+                ->orWhereHas('inflections', fn ($query) => $query
+                    ->where('inflection', 'like', $search.'%')
+                    ->orWhere('translit', 'like', $search.'%')
+                )
+            )
+        );
     }
 
     public function scopeFilter($query, array $filters): void
     {
+        $query->when($filters['sort'] === 'alphabetical', fn ($query) => $query
+            ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
+            ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
+        );
+
+        $query->when($filters['sort'] === 'latest', fn ($query) => $query
+            ->orderByDesc('terms.id')
+        );
+
         $query->when($filters['pinned'] ?? false, fn ($query) => $query
             ->whereHasBookmark(auth()->user())
+        );
+
+        $query->when($filters['letter'] ?? false, fn ($query, $letter) => $query
+            ->where(fn ($query) => $query
+                ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter.'%'))
+                ->orWhere(fn ($q) => $q
+                    ->whereDoesntHave('root')
+                    ->where('term', 'like', $letter.'%')
+                )
+            )
         );
 
         $query->when($filters['category'] ?? false, fn ($query, $category) => $query
@@ -251,16 +270,6 @@ class Term extends Model
 
         $query->when($filters['plural'] ?? false, fn ($query, $plural) => $query
             ->whereHas('patterns', fn ($query) => $query->where('pattern', $plural)->where('type', 'plural'))
-        );
-
-        $query->when($filters['letter'] ?? false, fn ($query, $letter) => $query
-            ->where(fn ($query) => $query
-                ->whereHas('root', fn ($q) => $q->where('root', 'like', $letter.'%'))
-                ->orWhere(fn ($q) => $q
-                    ->whereDoesntHave('root')
-                    ->where('term', 'like', $letter.'%')
-                )
-            )
         );
     }
 }

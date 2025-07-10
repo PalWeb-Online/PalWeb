@@ -35,11 +35,13 @@ class SentenceController extends Controller
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only(['search', 'match', 'pinned']);
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned'
+        ]));
 
-        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
+        if (empty($filters['search'])) {
             $sentences = Sentence::query()
-                ->orderByDesc('id')
+                ->filter($filters)
                 ->paginate(25)
                 ->onEachSide(1)
                 ->appends($filters);
@@ -93,6 +95,8 @@ class SentenceController extends Controller
         $sentence = Sentence::create($this->buildSentence($request->all()));
         $this->linkTerms($sentence, $request->terms);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $sentence->sentence])]);
         return to_route('speech-maker.sentence', $sentence);
     }
 
@@ -101,6 +105,8 @@ class SentenceController extends Controller
         $sentence->update($this->buildSentence($request->all()));
         $this->linkTerms($sentence, $request->terms);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $sentence->sentence])]);
         return to_route('speech-maker.sentence', $sentence);
     }
 

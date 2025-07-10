@@ -7,17 +7,12 @@ use App\Models\Gloss;
 use App\Models\Inflection;
 use App\Models\FeedbackComment;
 use App\Models\Term;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ToDoController extends Controller
 {
-    public function __construct(
-        protected FlasherInterface $flasher,
-    ) {}
-
     public function index(): \Inertia\Response
     {
         $termsMissingSentences = [];
@@ -58,6 +53,8 @@ class ToDoController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => 'Thank you for your feedback!']);
         return back();
     }
 
@@ -65,8 +62,8 @@ class ToDoController extends Controller
     {
         $feedbackComment->delete();
 
-        $this->flasher->addSuccess(__('deleted', ['thing' => $feedbackComment->comment]));
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $feedbackComment->comment])]);
         return to_route('missing.terms.index');
     }
 }

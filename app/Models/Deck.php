@@ -64,4 +64,26 @@ class Deck extends Model
             ->withPivot('gloss_id', 'position')
             ->orderBy('position');
     }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['sort'] === 'popular', fn ($query) => $query
+            ->leftJoin('markable_bookmarks', function ($join) {
+                $join->on('markable_bookmarks.markable_id', '=', 'decks.id')
+                    ->where('markable_bookmarks.markable_type', '=', self::class);
+            })
+            ->selectRaw('decks.*, COUNT(markable_bookmarks.id) as pins_count')
+            ->groupBy('decks.id')
+            ->orderByDesc('pins_count')
+        );
+
+
+        $query->when($filters['sort'] === 'latest', fn ($query) => $query
+            ->orderByDesc('decks.id')
+        );
+
+        $query->when($filters['pinned'] ?? false, fn ($query) => $query
+            ->whereHasBookmark(auth()->user())
+        );
+    }
 }

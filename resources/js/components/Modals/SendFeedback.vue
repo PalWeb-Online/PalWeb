@@ -1,14 +1,12 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed} from "vue";
 
 const emit = defineEmits(['close']);
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
 
 const form = useForm({
     comment: ''
@@ -21,7 +19,6 @@ const isValidRequest = computed(() => {
 const sendFeedback = () => {
     form.post(route('todo.store'), {
         onSuccess: () => {
-            NotificationStore.addNotification('Thank you for your feedback!');
             emit('close');
         }
     });

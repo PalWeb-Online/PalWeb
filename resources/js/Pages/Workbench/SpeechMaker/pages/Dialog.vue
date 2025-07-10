@@ -95,12 +95,12 @@ const saveDialog = async () => {
 
     method(url, {
         onSuccess: () => {
-            NotificationStore.addNotification('The Dialog has been saved!');
             dialog.defaults();
-            isSaving.value = false;
         },
         onError: () => {
             NotificationStore.addNotification('Oh no! The Dialog could not be saved.');
+        },
+        onFinish: () => {
             isSaving.value = false;
         }
     });
