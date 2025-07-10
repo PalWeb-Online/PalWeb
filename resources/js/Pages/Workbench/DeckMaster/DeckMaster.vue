@@ -79,9 +79,9 @@ defineOptions({
 
 <template>
     <Head title="Deck Master"/>
-    <div id="app-head">
+    <div id="app-head" v-if="step === 'select'">
         <h1>Deck Master</h1>
-        <div v-if="step === 'select'" id="app-nav">
+        <div id="app-nav">
             <div @click="toggleMode" id="app-mode-toggle" :class="mode">
                 <div class="app-mode-toggle-slider">{{ mode }}</div>
             </div>
@@ -115,15 +115,11 @@ defineOptions({
             <LoadingSpinner v-show="isLoading"/>
         </div>
 
-        <template v-if="mode === 'build'">
-            <div id="dm-build" v-if="step === 'build'">
-                <Build :deck="selectedDeck"/>
-            </div>
-        </template>
-        <template v-if="mode === 'study'">
-            <div id="dm-study" v-if="step === 'study'">
-                <Study :deck="selectedDeck" :terms="terms"/>
-            </div>
-        </template>
+        <div id="dm-build" v-if="step === 'build'">
+            <Build :deck="selectedDeck"/>
+        </div>
+        <div id="dm-study" v-if="step === 'study'">
+            <Study :deck="selectedDeck" :terms="terms"/>
+        </div>
     </div>
 </template>

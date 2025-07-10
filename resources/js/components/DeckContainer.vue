@@ -47,15 +47,17 @@ const {deck, isLoading} = useDeck(props);
             </div>
 
             <UserItem :user="deck.author" size="m" comment>
-                <div class="user-comment-content">
-                    <template v-if="deck.description">
-                        {{ deck.description }}
-                    </template>
-                    <template v-else>
-                        <i>Sadly, {{ deck.author.name }} hasn't told us anything about this Deck yet.</i>
-                    </template>
-                </div>
-                <div class="user-comment-data">Created by {{ deck.author.name }} on {{ deck.created_at }}.</div>
+                <template #comment>
+                    <div class="user-comment-content">
+                        <template v-if="deck.description">
+                            {{ deck.description }}
+                        </template>
+                        <template v-else>
+                            <i>Sadly, {{ deck.author.name }} hasn't told us anything about this Deck yet.</i>
+                        </template>
+                    </div>
+                    <div class="user-comment-data">Created by {{ deck.author.name }} on {{ deck.created_at }}.</div>
+                </template>
             </UserItem>
 
             <template v-if="deck.terms.length > 0">

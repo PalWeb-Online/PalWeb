@@ -3,10 +3,13 @@ import {reactive, ref, watch} from 'vue';
 import {useRecordWizardStore} from "./RecordWizardStore.js";
 import {useRecordStore} from './RecordStore';
 import {route} from "ziggy-js";
+import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
 export const useQueueStore = defineStore('QueueStore', () => {
     const RecordWizardStore = useRecordWizardStore();
     const RecordStore = useRecordStore();
+
+    const NotificationStore = useNotificationStore();
 
     const queue = reactive([]);
 
@@ -89,6 +92,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
             });
 
             if (response.data) {
+                console.log(`pushing ${response.data.items.length} items to queue`);
                 queue.push(...response.data.items);
             }
         } catch (error) {
@@ -106,6 +110,11 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
             if (response.data) {
                 queue.push(...response.data.items);
+                NotificationStore.addNotification('Added Deck to the Queue!');
+
+                if (response.data.message) {
+                    NotificationStore.addNotification(response.data.message, 'warning');
+                }
             }
         } catch (error) {
             console.error(`Error fetching deck with ID ${id}:`, error);

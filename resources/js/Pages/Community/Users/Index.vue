@@ -87,7 +87,7 @@ defineOptions({
             </div>
 
             <div class="users-featured">
-                <UserItem v-for="user in topUsers" :user="user" size="s"/>
+                <UserScorecard v-for="user in topUsers" :user="user"/>
             </div>
         </div>
 

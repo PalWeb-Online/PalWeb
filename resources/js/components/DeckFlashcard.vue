@@ -75,6 +75,7 @@ const {deck, blurb, isLoading} = useDeck(props);
 
             <PinButton modelType="deck" :model="deck"/>
             <DeckActions :model="deck"/>
+            <PinButton modelType="deck" :model="deck" floating/>
 
             <div class="action-buttons">
                 <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>

@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="rw-container-head">
+    <div class="window-section-head">
         <h2>Check</h2>
     </div>
     <AppTip>
@@ -54,7 +54,7 @@ onMounted(() => {
 
     <div class="rw-page__check">
         <section>
-            <div class="audios-list">
+            <div class="model-list">
                 <div v-for="(audio, index) in audios" :key="index" class="pronunciation-item-wrapper inline">
                     <div class="pronunciation-item">
                         <div class="pronunciation-item-term">{{ audio.pronunciation.term }}</div>
