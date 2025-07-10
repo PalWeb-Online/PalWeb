@@ -6,11 +6,10 @@ import TermItem from "../ui/TermItem.vue";
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
-import AppButton from "../../../../components/AppButton.vue";
 import PinButton from "../../../../components/PinButton.vue";
-import DeckActions from "../../../../components/DeckActions.vue";
+import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
-import {router, useForm} from "@inertiajs/vue3";
+import {useForm} from "@inertiajs/vue3";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import UserItem from "../../../../components/UserItem.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -103,7 +102,7 @@ const saveDeck = async () => {
             deck.defaults();
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+            NotificationStore.addNotification('Oh no! The Deck could not be saved.', 'error');
         },
         onFinish: () => {
             isSaving.value = false;
@@ -164,11 +163,16 @@ onMounted(async () => {
             <DeckActions v-if="deck.id" :model="deck"/>
         </div>
 
-        <div class="window-content-head">
-            <input class="window-content-head-title" v-model="deck.name"
-                   placeholder="Required: Deck Name"
+        <section>
+            <div class="window-content-head">
+                <input class="window-content-head-title" v-model="deck.name"
+                       placeholder="Required: Deck Name"
+                />
+            </div>
+            <div v-if="deck.errors.name" v-text="deck.errors.name" class="field-error"
+                 style="padding: 0.8rem;"
             />
-        </div>
+        </section>
 
         <UserItem :user="deck.author" size="m" comment>
             <template #comment>
@@ -178,6 +182,7 @@ onMounted(async () => {
                 <div v-if="deck.id" class="user-comment-data">Created by {{ deck.author.name }} on
                     {{ deck.created_at }}.
                 </div>
+                <div v-if="deck.errors.description" v-text="deck.errors.description" class="field-error"/>
             </template>
         </UserItem>
 

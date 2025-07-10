@@ -2,7 +2,7 @@
 import {route} from 'ziggy-js';
 import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
-import SentenceActions from "./SentenceActions.vue";
+import SentenceActions from "./Actions/SentenceActions.vue";
 import TermItem from "./TermItem.vue";
 
 const props = defineProps({

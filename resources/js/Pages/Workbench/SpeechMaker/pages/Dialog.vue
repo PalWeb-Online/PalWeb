@@ -4,12 +4,12 @@ import draggable from 'vuedraggable';
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
-import DialogActions from "../../../../components/DialogActions.vue";
+import DialogActions from "../../../../components/Actions/DialogActions.vue";
 import {route} from "ziggy-js";
 import {router, useForm} from "@inertiajs/vue3";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
-import SentenceActions from "../../../../components/SentenceActions.vue";
+import SentenceActions from "../../../../components/Actions/SentenceActions.vue";
 
 const props = defineProps({
     dialog: Object,
@@ -98,7 +98,7 @@ const saveDialog = async () => {
             dialog.defaults();
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Dialog could not be saved.');
+            NotificationStore.addNotification('Oh no! The Dialog could not be saved.', 'error');
         },
         onFinish: () => {
             isSaving.value = false;

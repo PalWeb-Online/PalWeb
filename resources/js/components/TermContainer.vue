@@ -2,7 +2,7 @@
 import {computed, ref} from "vue";
 import {route} from 'ziggy-js';
 import {useTerm} from "../composables/Term.js";
-import TermActions from "./TermActions.vue";
+import TermActions from "./Actions/TermActions.vue";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import PronunciationItem from "./PronunciationItem.vue";

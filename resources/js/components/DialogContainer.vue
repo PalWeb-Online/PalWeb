@@ -1,7 +1,7 @@
 <script setup>
 import {useDialog} from "../composables/Dialog.js";
 import SentenceItem from "./SentenceItem.vue";
-import DialogActions from "./DialogActions.vue";
+import DialogActions from "./Actions/DialogActions.vue";
 import {route} from "ziggy-js";
 
 const props = defineProps({

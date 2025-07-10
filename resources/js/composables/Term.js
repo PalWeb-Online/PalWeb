@@ -1,4 +1,4 @@
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {Howl} from "howler";
 
 export function useTerm(props) {
@@ -23,6 +23,19 @@ export function useTerm(props) {
 
         isLoading.value = false;
     });
+
+    watch(() => props.model,
+        (newTerm) => {
+            Object.assign(term, newTerm);
+
+            if (term.audio) {
+                audio.value = new Howl({
+                    src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${term.audio}`],
+                });
+            }
+        },
+        {deep: true}
+    );
 
     return {term, isLoading, playAudio};
 }

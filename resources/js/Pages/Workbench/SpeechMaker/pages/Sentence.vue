@@ -10,7 +10,7 @@ import {route} from "ziggy-js";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import PinButton from "../../../../components/PinButton.vue";
-import SentenceActions from "../../../../components/SentenceActions.vue";
+import SentenceActions from "../../../../components/Actions/SentenceActions.vue";
 
 const props = defineProps({
     dialog: Object,
@@ -116,7 +116,7 @@ const saveSentence = async () => {
             sentence.defaults();
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Sentence could not be saved.');
+            NotificationStore.addNotification('Oh no! The Sentence could not be saved.', 'error');
         },
         onFinish: () => {
             isSaving.value = false;

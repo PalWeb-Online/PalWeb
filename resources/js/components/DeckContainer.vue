@@ -1,6 +1,6 @@
 <script setup>
 import {useDeck} from "../composables/Deck.js";
-import DeckActions from "./DeckActions.vue";
+import DeckActions from "./Actions/DeckActions.vue";
 import PinButton from "./PinButton.vue";
 import TermItem from "./TermItem.vue";
 import UserItem from "./UserItem.vue";

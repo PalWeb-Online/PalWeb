@@ -1,6 +1,6 @@
 <script setup>
 import PinButton from "./PinButton.vue";
-import DeckActions from "./DeckActions.vue";
+import DeckActions from "./Actions/DeckActions.vue";
 import {useDeck} from "../composables/Deck.js";
 
 const props = defineProps({
@@ -18,7 +18,7 @@ const {deck, blurb, isLoading} = useDeck(props);
 <template>
     <template v-if="! isLoading">
         <div :class="['deck-item-wrapper', size]">
-            <DeckActions :model="deck"/>
+            <DeckActions :model="deck" icon="emoji"/>
             <div class="deck-item">
                 <div class="item-data">
                     <div style="display: flex; gap: 0.8rem; align-items: center">
