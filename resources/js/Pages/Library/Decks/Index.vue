@@ -6,7 +6,6 @@ import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import AppButton from "../../../components/AppButton.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 
 const UserStore = useUserStore();
@@ -33,16 +32,22 @@ function updateFilter({filter, value}) {
 </script>
 <template>
     <Head title="Library: Decks"/>
-    <div id="app-head">
-        <Link :href="route('decks.index')"><h1>Decks</h1></Link>
-    </div>
     <div id="app-body">
-        <div class="nav-body">
-            <Link v-if="UserStore.isUser" :href="route('deck-master.build')">Create New</Link>
-            <div v-else>Index</div>
-            <Link :href="route('decks.random')">to Random -></Link>
-        </div>
-        <div class="search-filters-wrapper">
+        <div class="window-container">
+            <div class="window-header">
+                <Link :href="route('decks.index')" class="material-symbols-rounded">home</Link>
+                <div class="window-header-url">www.palweb.app/library/decks</div>
+                <Link v-if="UserStore.isUser" :href="route('deck-master.build')" class="material-symbols-rounded">add</Link>
+                <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+            </div>
+            <div class="window-section-head">
+                <h1>deck library</h1>
+            </div>
+
+            <div class="window-section-head">
+                <h2>Index</h2>
+            </div>
+
             <SearchFilters
                 :activeModel="'decks'"
                 :filters="filters"
@@ -55,13 +60,13 @@ function updateFilter({filter, value}) {
                 <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
                 <p v-else>No Decks matching this query.</p>
             </AppTip>
-        </div>
 
-        <template v-if="totalCount > 0">
-            <div class="decks-list">
-                <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-            </div>
-            <Paginator :links="decks.meta.links"/>
-        </template>
+            <template v-if="totalCount > 0">
+                <div class="model-list index-list">
+                    <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
+                </div>
+                <Paginator :links="decks.meta.links"/>
+            </template>
+        </div>
     </div>
 </template>

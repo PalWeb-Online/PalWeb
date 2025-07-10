@@ -1,44 +1,24 @@
 <script setup>
-import AppButton from "../AppButton.vue";
-
 const props = defineProps({
-    message: { type: String, default: ''},
+    message: {type: String, default: ''},
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
 </script>
 
 <template>
-    <div class="modal-container-wrapper">
-        <div class="popup-window">
-            <div class="window-head">
-                <div class="tutorial-window-title">
-                    warning: unsaved changes
-                </div>
-            </div>
-            <div class="tutorial-window-body">
-                <img src="/img/warning.svg" alt="Warning" style="width: 9.6rem; justify-self: center;"/>
-                <p>{{ message }}</p>
-                <div class="app-alert-actions">
-                    <AppButton @click="$emit('cancel')" label="Cancel"/>
-                    <AppButton @click="$emit('confirm')" label="Confirm"/>
-                </div>
-            </div>
+    <div class="window-container modal-container help-container">
+        <div class="window-section-head">
+            <h2>warning: unsaved changes</h2>
+        </div>
+        <div class="modal-container-body">
+            <img src="/img/warning.svg" alt="Warning" style="width: 9.6rem; justify-self: center;"/>
+            <p>{{ message }}</p>
+        </div>
+        <div class="window-footer">
+            <button @click="$emit('confirm')">Confirm</button>
+            <button @click="$emit('cancel')">Cancel</button>
         </div>
     </div>
 </template>
-
-<style scoped>
-.app-alert-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-    width: 100%;
-
-    button {
-        box-shadow: none;
-    }
-}
-</style>
 

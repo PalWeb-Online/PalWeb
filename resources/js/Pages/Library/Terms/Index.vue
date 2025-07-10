@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
@@ -10,6 +10,7 @@ import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
 import {useNavigationStore} from "../../../stores/NavigationStore.js";
+import WindowSection from "../../../components/WindowSection.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -53,25 +54,35 @@ function updateFilter({filter, value}) {
 
 <template>
     <Head title="Dictionary"/>
-    <div id="app-head">
-        <Link :href="route('terms.index')"><h1>Dictionary</h1></Link>
-    </div>
     <div id="app-body">
-        <div class="nav-body">
-            <Link v-if="!UserStore.isAdmin" :href="route('terms.create')">Create New</Link>
-            <div v-else>Index</div>
-            <Link :href="route('terms.random')">to Random -></Link>
-        </div>
-        <div class="terms-featured-wrapper" v-if="Object.values(filters).every(value => !value)">
-            <TermFeatured :model="featuredTerm"/>
-
-            <div class="terms-featured-latest">
-                <div class="featured-title m" style="text-transform: none">Latest</div>
-                <TermItem v-for="term in latestTerms" :model="term"/>
+        <div class="window-container">
+            <div class="window-header">
+                <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+                <div class="window-header-url">www.palweb.app/library/terms</div>
+                <Link v-if="UserStore.isAdmin" :href="route('terms.create')" class="material-symbols-rounded">add</Link>
+                <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-        </div>
+            <div class="window-section-head">
+                <h1>dictionary</h1>
+            </div>
 
-        <div class="search-filters-wrapper">
+            <WindowSection>
+                <template #title>
+                    <h2>featured</h2>
+                </template>
+                <template #content>
+                    <TermFeatured :model="featuredTerm" :latestTerms="latestTerms"/>
+                </template>
+            </WindowSection>
+
+            <div class="window-section-head">
+                <h2>Index</h2>
+            </div>
+            <SearchFilters
+                activeModel="terms"
+                :filters="filters"
+                @updateFilter="updateFilter"
+            />
             <div class="letters-array">
                 <button
                     v-for="letter in letters"
@@ -81,17 +92,6 @@ function updateFilter({filter, value}) {
                 >
                     {{ letter }}
                 </button>
-            </div>
-            <SearchFilters
-                :activeModel="'terms'"
-                :filters="filters"
-                @updateFilter="updateFilter"
-            />
-        </div>
-
-        <div class="popup-window index-container">
-            <div class="window-head">
-                terms
             </div>
             <AppTip>
                 <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
@@ -103,7 +103,7 @@ function updateFilter({filter, value}) {
                 </p>
             </AppTip>
             <template v-if="totalCount > 0">
-                <div class="terms-list">
+                <div class="model-list index-list">
                     <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
                 </div>
                 <Paginator :links="terms.meta.links"/>

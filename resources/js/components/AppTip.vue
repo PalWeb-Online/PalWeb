@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="tip">
+    <div class="app-tip">
         <div v-if="question" class="tip-content-wrapper">
             <div class="material-symbols-rounded">help</div>
             <div class="tip-content">

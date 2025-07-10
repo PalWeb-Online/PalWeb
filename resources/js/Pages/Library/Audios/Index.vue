@@ -6,6 +6,9 @@ import AppTip from "../../../components/AppTip.vue";
 import {ref, watch} from "vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useUserStore} from "../../../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 defineOptions({
     layout: Layout
@@ -54,14 +57,20 @@ function updateFilter({filter, value}) {
 </script>
 <template>
     <Head title="Library: Audios"/>
-    <div id="app-head">
-        <Link :href="route('audios.index')"><h1>Audios</h1></Link>
-    </div>
     <div id="app-body">
-        <div class="nav-body">
-            <div>Index</div>
-        </div>
-        <div class="search-filters-wrapper">
+        <div class="window-container">
+            <div class="window-header">
+                <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
+                <div class="window-header-url">www.palweb.app/library/audios</div>
+                <Link v-if="UserStore.isUser" :href="route('record-wizard.index')" class="material-symbols-rounded">add</Link>
+            </div>
+            <div class="window-section-head">
+                <h1>audio library</h1>
+            </div>
+
+            <div class="window-section-head">
+                <h2>Index</h2>
+            </div>
             <div class="search-filters-container">
                 <div class="search-filters">
                     <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''">
@@ -94,13 +103,13 @@ function updateFilter({filter, value}) {
                 <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Library.</p>
                 <p v-else>No Audios matching this query.</p>
             </AppTip>
-        </div>
 
-        <template v-if="totalCount > 0">
-            <div class="audios-list">
-                <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
-            </div>
-            <Paginator :links="audios.meta.links"/>
-        </template>
+            <template v-if="totalCount > 0">
+                <div class="model-list index-list" style="padding: 3.2rem 1.6rem">
+                    <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
+                </div>
+                <Paginator :links="audios.meta.links"/>
+            </template>
+        </div>
     </div>
 </template>

@@ -35,7 +35,8 @@ li {
 }
 
 .material-symbols-rounded {
-    font-size: 2.4rem
+    font-size: 2.4rem;
+    font-weight: 400;
 }
 
 button {
@@ -597,20 +598,19 @@ h3 {
     }
 }
 
-.tip, .tip {
+.app-tip {
     @include box-accent-light;
-    font-family: $bodyFont;
-}
-
-.tip {
     display: grid;
     gap: 1.6rem;
     width: 100%;
     max-width: 96rem;
     padding: 1.6rem;
 
-    a {
+    a, button {
+        font-family: $bodyFont;
+        font-size: 1.6rem;
         font-weight: 700;
+        color: var(--color-dark-primary);
 
         &:hover, &:active {
             text-decoration: underline;
@@ -629,6 +629,7 @@ h3 {
     }
 
     .tip-content {
+        font-family: $bodyFont;
         display: flex;
         flex-flow: column;
         gap: 0.4rem;

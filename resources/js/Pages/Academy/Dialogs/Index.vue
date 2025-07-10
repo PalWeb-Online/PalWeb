@@ -24,8 +24,7 @@ defineProps({
         <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.dialog'))"/>
     </div>
     <div id="app-body">
-<!--        todo: v-if totalCount > 0; why decks-list & not dialogs-list?-->
-        <div class="decks-list">
+        <div class="model-list">
             <DialogItem v-for="dialog in dialogs.data" :key="dialog.id" :model="dialog"/>
         </div>
         <Paginator :links="dialogs.meta.links"/>
