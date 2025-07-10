@@ -44,7 +44,7 @@ watch(() => page.props.flash.notification, (notification) => {
     </div>
 
     <ModalWrapper v-model="SearchStore.data.isOpen">
-        <SearchGenie/>
+        <SearchGenie @close="SearchStore.data.isOpen = false"/>
     </ModalWrapper>
 
     <div class="notification-container" :class="{'visible': NotificationStore.notifications.length > 0}">

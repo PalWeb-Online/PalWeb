@@ -82,7 +82,7 @@ const saveSpeaker = async () => {
             form.defaults();
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.');
+            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.', 'error');
         },
         onFinish: () => {
             isSaving.value = false;

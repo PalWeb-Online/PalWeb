@@ -55,15 +55,33 @@ watch(
     {deep: true}
 );
 
-watch(props.filters,
-    (newFilters) => {
-        for (const key in newFilters) {
-            if (newFilters[key] !== filters.value[key]) {
-                filters.value[key] = newFilters[key];
+watch(
+    props.filters,
+    (newPropFilters) => {
+        for (const key in newPropFilters) {
+            if (newPropFilters[key] !== filters.value[key]) {
+                filters.value[key] = newPropFilters[key];
+                previousFilters[key] = newPropFilters[key];
             }
         }
     }
 );
+
+// watch(
+//     () => filters.value.pinned,
+//     (newPinned) => {
+//         if (newPinned) {
+//             if (filters.value.sort !== 'pinned') {
+//                 filters.value.sort = 'pinned';
+//             }
+//         } else {
+//             const defaultSort = props.activeModel === 'terms' ? 'alphabetical' : 'latest';
+//             if (filters.value.sort !== defaultSort) {
+//                 filters.value.sort = defaultSort;
+//             }
+//         }
+//     }
+// );
 
 const hasAttribute = computed(() => {
     const allowedCategories = ['', 'verb', 'noun', 'adjective', 'determiner'];

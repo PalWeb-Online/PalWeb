@@ -9,12 +9,15 @@ import PopupWindow from "../components/Modals/PopupWindow.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
 
 const SearchStore = useSearchStore();
+const emit = defineEmits(['close']);
 
 const activeIndex = ref(-1);
 
 const tooltip = ref(null);
 
 function handleMouseMove(event) {
+    if (!tooltip.value) return;
+
     let message = '';
 
     switch (SearchStore.data.action) {
@@ -30,6 +33,7 @@ function handleMouseMove(event) {
 }
 
 function handleMouseLeave() {
+    if (!tooltip.value) return;
     tooltip.value.hideTooltip();
 }
 
@@ -70,7 +74,12 @@ const selectModel = (model) => {
     } else if (routes[SearchStore.data.activeModel]) {
         const {route: targetRoute, idField} = routes[SearchStore.data.activeModel];
         const param = model[idField];
-        router.get(route(targetRoute, param));
+
+        router.get(route(targetRoute, param), {}, {
+            onSuccess: () => {
+                emit('close');
+            }
+        });
     }
 };
 
@@ -118,7 +127,9 @@ watch(() => SearchStore.data.results, () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1>{{ SearchStore.data.action === 'insert' ? 'Insert ' + SearchStore.data.activeModel : 'Search Genie' }}</h1>
+            <h1>{{
+                    SearchStore.data.action === 'insert' ? 'Insert ' + SearchStore.data.activeModel : 'Search Genie'
+                }}</h1>
             <PopupWindow title="Search Genie">
                 <p>Welcome to the <b>Search Genie</b>!</p>
                 <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
@@ -167,7 +178,8 @@ watch(() => SearchStore.data.results, () => {
         />
 
         <div class="sg-results">
-            <template v-if="!SearchStore.isLoading && SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
+            <template
+                v-if="!SearchStore.isLoading && SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
                 <div
                     v-for="(model, index) in SearchStore.data.results[SearchStore.data.activeModel]"
                     :key="model.id"

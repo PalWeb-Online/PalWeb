@@ -162,7 +162,7 @@ const saveTerm = async () => {
             term.defaults();
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Term could not be saved.');
+            NotificationStore.addNotification('Oh no! The Term could not be saved.', 'error');
         },
         onFinish: () => {
             isSaving.value = false;

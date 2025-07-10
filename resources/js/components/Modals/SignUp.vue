@@ -19,7 +19,7 @@ const form = useForm({
 });
 
 const isValidRequest = computed(() => {
-    return Object.values(form).every(value => value.length);
+    return Object.values(form.data()).every(value => value.length);
 });
 
 const signUp = () => {

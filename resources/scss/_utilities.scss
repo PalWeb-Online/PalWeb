@@ -204,7 +204,7 @@ h3 {
 }
 
 .popup-menu-wrapper {
-    display: flex;
+    display: grid;
     direction: ltr;
 }
 
@@ -221,7 +221,7 @@ h3 {
     z-index: 2;
 
     form {
-        display: grid;
+        display: contents;
     }
 
     a, button {
@@ -239,6 +239,13 @@ h3 {
         font-weight: 400;
         text-transform: capitalize;
         color: var(--color-dark-primary);
+
+        &:focus {
+            text-decoration: none;
+            color: var(--color-dark-primary);
+            background: var(--color-accent-light);
+            outline: none;
+        }
 
         &:hover {
             text-decoration: none;

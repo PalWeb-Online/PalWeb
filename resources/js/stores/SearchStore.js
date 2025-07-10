@@ -40,6 +40,10 @@ export const useSearchStore = defineStore('SearchStore', () => {
         data.action = action;
         data.activeModel = enabledModel || 'terms';
 
+        if (data.activeModel === 'terms') {
+            data.filters.sort = 'alphabetical';
+        }
+
         Object.values(tabs).forEach((tab) => {
             tab.disabled = enabledModel ? tab.label !== enabledModel : false;
         });

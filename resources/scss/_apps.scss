@@ -356,9 +356,12 @@
         flex-grow: 1;
         padding-inline: 1.6rem;
         font-size: 1em;
+        overflow: scroll;
+        white-space: nowrap;
     }
 
     *.material-symbols-rounded {
+        flex-shrink: 0;
         font-size: 1em;
         width: 2em;
         justify-content: center;

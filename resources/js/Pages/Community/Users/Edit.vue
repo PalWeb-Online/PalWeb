@@ -46,7 +46,7 @@ const saveUser = async () => {
                 form.defaults();
             },
             onError: () => {
-                NotificationStore.addNotification('Oh no! The Profile could not be saved.');
+                NotificationStore.addNotification('Oh no! The Profile could not be saved.', 'error');
             },
             onFinish: () => {
                 isSaving.value = false;
