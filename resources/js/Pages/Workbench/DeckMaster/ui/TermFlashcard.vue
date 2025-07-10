@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, ref, watch} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import TermItem from "../../../../components/TermItem.vue";
 
 const props = defineProps({
     model: {
@@ -17,7 +16,6 @@ const props = defineProps({
 });
 
 const flashcard = ref(null);
-const showModel = ref(false);
 
 const flipCard = () => {
     const cardElements = document.querySelectorAll(`[data-id="${props.model.id}"]`);
@@ -99,16 +97,6 @@ watch(() => props.active, (newVal) => {
                         }}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="dm-term-preview">
-            <div class="window-head">
-                <div>Term</div>
-                <div class="material-symbols-rounded" @click="showModel = !showModel">visibility</div>
-            </div>
-            <div class="window-body">
-                <div v-show="!showModel" class="overlay"></div>
-                <TermItem :model="model" :glossId="model.deckPivot.gloss_id ?? null"/>
             </div>
         </div>
     </div>

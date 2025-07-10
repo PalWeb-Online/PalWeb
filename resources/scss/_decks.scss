@@ -70,6 +70,7 @@
         align-items: start;
         align-content: start;
         gap: 1.2rem;
+        padding: 1.6rem;
         color: var(--color-dark-primary);
         background: white;
         border-radius: 1.2rem;
@@ -78,8 +79,6 @@
     }
 
     .deck-flashcard-front {
-        padding: 1.6rem;
-
         .deck-flashcard-front-head {
             display: grid;
             gap: 0.4rem;
@@ -96,29 +95,30 @@
     }
 
     .deck-flashcard-back {
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        font-weight: 700;
-        padding: 1.6rem;
-        overflow: hidden;
+        display: grid;
+        grid-template-rows: 1fr min-content;
+        font-family: $monoFont;
         text-align: center;
+        padding-block-end: 0.8rem;
+        background: var(--color-dark-primary);
         transform: rotateY(180deg);
+        overflow: hidden;
 
         .deck-flashcard-back-terms {
             flex-grow: 1;
-            font-family: $monoFont;
             direction: rtl;
             display: grid;
             align-content: start;
             width: 100%;
-            padding-inline: 1.6rem;
             row-gap: 0.4rem;
+            color: white;
             grid-template-columns: repeat(2, 1fr);
         }
 
         .deck-flashcard-back-count {
             color: var(--color-accent-medium);
+            font-size: 1.4rem;
+            font-weight: 700;
             text-transform: uppercase;
         }
     }
@@ -324,53 +324,6 @@
         font-weight: 700;
         font-size: 2.4rem;
         font-family: $headFont;
-    }
-}
-
-.dm-study-options, .dm-term-preview {
-    justify-self: center;
-    display: grid;
-    grid-template-rows: min-content;
-    align-items: start;
-    width: 100%;
-    background: white;
-    border-radius: 0.8rem;
-    border: 2px solid var(--color-dark-primary);
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
-    overflow: hidden;
-
-    .window-head {
-        background: var(--color-dark-primary);
-    }
-
-    & > div:nth-child(2) {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-        gap: 0.8rem;
-        padding: 1.6rem;
-    }
-}
-
-.dm-term-preview {
-    overflow: visible;
-    margin-block-end: 0.3rem;
-
-    div.window-body {
-        display: grid;
-        padding: 0;
-
-        & > * {
-            grid-area: 1 / 1;
-            padding: 1.6rem;
-        }
-
-        .overlay {
-            z-index: 2;
-            background: var(--color-accent-medium);
-            margin-inline: 0.8rem;
-            border-radius: 0.8rem;
-        }
     }
 }
 

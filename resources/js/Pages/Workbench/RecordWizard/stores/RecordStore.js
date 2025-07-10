@@ -106,7 +106,9 @@ export const useRecordStore = defineStore('RecordStore', () => {
             recorder.value.start();
 
             timer.value = setTimeout(() => {
-                recorder.value.stop();
+                if (recorder.value) {
+                    recorder.value.stop();
+                }
             }, 5000);
         }
     };

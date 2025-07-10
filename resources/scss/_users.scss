@@ -92,19 +92,20 @@
 
 .nav-auth-wrapper {
     display: grid;
-    gap: 0.6rem;
+    //gap: 0.6rem;
 
     .auth-role {
-        color: var(--color-medium-primary);
         font-family: $headFont;
         font-size: 2.4rem;
         font-weight: 700;
-        line-height: 0.75;
+        color: var(--color-polar-light);
+        background: var(--color-dark-primary);
+        padding: 0.8rem 1.2rem 0.4rem;
     }
 
     .auth-email {
         //border-block-start: 0.1rem solid var(--color-medium-primary);
-        background: var(--color-accent-light);
+        background: var(--color-pastel-light);
         padding: 0.8rem 1.2rem;
         display: grid;
         font-weight: 700;
@@ -138,7 +139,7 @@
 .nav-auth {
     flex-grow: 1;
     display: flex;
-    gap: 0 0.6rem;
+    //gap: 0 0.6rem;
 
     .user-avatar {
         filter: none;
@@ -148,7 +149,8 @@
 
     .user-name {
         padding: 0.4rem 1.0rem 0.8rem;
-        background-color: var(--color-pastel-light);
+        background: white;
+        //background-color: var(--color-pastel-light);
 
         .user-name-ar {
             font-size: 3.2rem;

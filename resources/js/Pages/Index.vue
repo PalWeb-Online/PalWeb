@@ -6,6 +6,7 @@ import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
+import UserScorecard from "../components/UserScorecard.vue";
 
 defineProps({
     count: Object,
@@ -19,14 +20,13 @@ defineProps({
 const NavigationStore = useNavigationStore();
 
 const carousels = [];
-const numberOfDuplications = 1;
 
 const duplicateCarouselItems = (carousel) => {
     const items = Array.from(carousel.children);
 
     if (items.length === 0) return;
 
-    for (let i = 0; i < numberOfDuplications; i++) {
+    for (let i = 0; i < 1; i++) {
         items.forEach((item) => {
             const clone = item.cloneNode(true);
             clone.setAttribute("aria-hidden", "true");
@@ -201,7 +201,7 @@ defineOptions({
 
             <div class="carousel-wrapper">
                 <div class="carousel-track">
-                    <UserItem v-for="user in users" :user="user" :key="'user-carousel' + user.id" size="s"/>
+                    <UserScorecard v-for="user in users" :user="user" :key="'user-carousel' + user.id" :scores="false"/>
                 </div>
             </div>
 
@@ -211,8 +211,16 @@ defineOptions({
                     <div class="feature-panel-subtitle">Connect & share with others.</div>
                 </div>
                 <div class="feature-panel-feature">
-                    <div class="user-container">
-                        <UserItem :user="featuredUser" size="l" comment/>
+                    <div class="window-container">
+                        <div class="window-header">
+                            <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
+                            <div class="material-symbols-rounded">public</div>
+                            <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
+                        </div>
+                        <div class="window-section-head">
+                            <h1>profile</h1>
+                        </div>
+                        <UserItem :user="featuredUser" size="l" comment tags/>
                     </div>
                 </div>
             </div>

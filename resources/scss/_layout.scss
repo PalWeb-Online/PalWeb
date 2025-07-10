@@ -7,8 +7,6 @@ body {
     hyphens: auto;
     margin: 0;
     background: var(--color-pastel-light);
-    //background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
-    //background-attachment: fixed;
 
     &.front-page {
         #hero-panel {
@@ -557,75 +555,6 @@ body {
         }
     }
 }
-
-//.page-head {
-//    display: grid;
-//    gap: 2.4rem;
-//
-//    .breadcrumbs {
-//        display: flex;
-//        gap: 0.8rem;
-//        font-family: $headFont;
-//        text-transform: lowercase;
-//        font-size: 1.6rem;
-//        font-weight: 700;
-//        user-select: none;
-//        z-index: 1;
-//
-//        & > *:first-child {
-//            color: var(--color-dark-primary);
-//            background: var(--color-accent-medium);
-//        }
-//
-//        & > * {
-//            padding: 0.6rem 1.6rem 0.4rem;
-//            border-radius: 1.6rem;
-//            color: white;
-//            background: var(--color-medium-secondary);
-//            transition: 0.1s;
-//
-//            &:hover {
-//                transform: translate(0.3rem, -0.3rem);
-//                box-shadow: -0.3rem 0.3rem 0 var(--color-pastel-dark);
-//            }
-//        }
-//
-//        .breadcrumbs__option {
-//            transform: none;
-//            box-shadow: none;
-//            flex-grow: 1;
-//            text-align: end;
-//            background: none;
-//            color: var(--color-medium-secondary);
-//
-//            & > a:hover {
-//                text-decoration: underline;
-//            }
-//        }
-//    }
-//
-//    .page-title {
-//        font-size: clamp(4.8rem, 7vw, 6.4rem);
-//        hyphens: none;
-//        text-align: start;
-//        text-transform: capitalize;
-//        font-family: $headFont;
-//        font-weight: 700;
-//        z-index: 1;
-//        margin-inline-start: 0.8rem;
-//    }
-//
-//    .page-blurb {
-//        color: var(--color-medium-secondary);
-//        font-size: 2.0rem;
-//        font-weight: 700;
-//        text-align: start;
-//        hyphens: none;
-//        line-height: 1.5;
-//        margin-block-start: -2.4rem;
-//        margin-inline-start: 0.8rem;
-//    }
-//}
 
 .footer-container {
     align-self: end;

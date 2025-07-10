@@ -15,31 +15,6 @@
             cursor: not-allowed;
         }
     }
-
-    .app-nav-steps {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-
-        div {
-            border-radius: 0.8rem;
-            padding: 0.8rem 1.6rem 0.6rem;
-            font-family: $headFont;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: var(--color-dark-primary);
-            user-select: none;
-        }
-
-        div.active {
-            color: var(--color-medium-primary);
-            background: var(--color-accent-light);
-        }
-
-        div.active ~ div {
-            color: var(--color-pastel-medium);
-        }
-    }
 }
 
 #app-mode-toggle {

@@ -13,12 +13,16 @@ const navOpen = ref(false);
 
 <template>
     <Head :title="`Wiki: ${page}`"/>
+    <div id="app-head">
+        <h1>wiki</h1>
+    </div>
     <div id="wiki-container">
-            <div class="window-head">
-                <button @click="navOpen = !navOpen" class="material-symbols-rounded menu" :class="{'active': navOpen}">menu</button>
-                <div>wiki: {{ page }}</div>
-                <button @click="router.get(route('homepage'))" class="material-symbols-rounded">close</button>
-            </div>
+        <div class="window-section-head">
+            <button @click="navOpen = !navOpen" class="material-symbols-rounded menu" :class="{'active': navOpen}">
+                menu
+            </button>
+            <h1>{{ page }}</h1>
+        </div>
         <div class="wiki-body" :class="{ 'nav-open': navOpen }">
             <NavWiki :page="page"/>
             <div class="wiki-content-wrapper">
