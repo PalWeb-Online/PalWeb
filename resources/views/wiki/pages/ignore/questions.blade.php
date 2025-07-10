@@ -60,7 +60,7 @@
   </div>
 </div>
 
-<div class="tip">
+<div class="app-tip">
   <p>FUN FACT — Originally, <b>أيش</b> is a contraction of <b>أي شي (ʔay ši “which thing”)</b>, while <b>شو</b> is a contraction of <b>أي شي هو (ʔay ši hū “which thing is it”)</b>. Because of that, I have seen some say that <b>شو</b> is in the nominative case (e.g. it would be used for the subject of a sentence), while <b>أيش</b> is in the accusative case (e.g. it would be used for the object of a sentence). Whether or not this was the case in an earlier stage of the dialect, this does not bear examination in practice today; they are actually interchangeable.</p>
 </div>
 
@@ -121,7 +121,7 @@
   </div>
 </div>
 
-<div class="tip">
+<div class="app-tip">
 <p>TIP — Some people say <b>أيه (ʔēh)</b> instead of <b>أيش (ʔēš)</b>, affecting other terms built from <b>أيش (ʔēš)</b>:</p>
 
 <div class="flex">
