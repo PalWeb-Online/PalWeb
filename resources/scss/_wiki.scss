@@ -14,6 +14,14 @@
         background: var(--color-accent-medium);
     }
 
+    & > .app-tip {
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        border: none;
+        border-block-end: 0.2rem solid var(--color-accent-medium);
+    }
+
     @media (min-width: 1280px) {
         margin-block-end: 9.6rem;
         //outline: 0.2rem solid var(--color-dark-primary);

@@ -128,13 +128,13 @@ figure {
 iframe {
     display: block;
     aspect-ratio: 16 / 9;
-    border-radius: 1.6rem;
     width: 100%;
-
-    padding: 0.2rem;
-    background: var(--color-pastel-light);
-    border: 0.3rem solid var(--color-dark-primary);
-    box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
+    border: none;
+    //border-radius: 1.6rem;
+    //padding: 0.2rem;
+    //background: var(--color-pastel-light);
+    //border: 0.3rem solid var(--color-dark-primary);
+    //box-shadow: -0.3rem 0.3rem 0 0 rgba(black, 0.25);
 }
 
 h1, h2, h3 {
@@ -204,7 +204,7 @@ h3 {
 }
 
 .popup-menu-wrapper {
-    display: grid;
+    display: flex;
     direction: ltr;
 }
 

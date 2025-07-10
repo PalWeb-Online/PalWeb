@@ -79,9 +79,7 @@ defineOptions({
                     </div>
                 </div>
                 <div class="feature-panel-feature">
-                    <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-01.mov">
-                    </video>
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front01.png" alt="Front Page 01">
                 </div>
             </div>
 
@@ -112,9 +110,7 @@ defineOptions({
                 </div>
 
                 <div class="feature-panel-feature">
-                    <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-02.mov">
-                    </video>
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front02.png" alt="Front Page 02">
                 </div>
             </div>
         </div>
@@ -137,9 +133,7 @@ defineOptions({
                 </div>
 
                 <div class="feature-panel-feature">
-                    <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-03.mov">
-                    </video>
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front03.png" alt="Front Page 03">
                 </div>
             </div>
 
@@ -159,9 +153,7 @@ defineOptions({
                     </div>
                 </div>
                 <div class="feature-panel-feature">
-                    <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/demo-04.mov">
-                    </video>
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front04.png" alt="Front Page 04">
                 </div>
             </div>
         </div>
@@ -237,9 +229,7 @@ defineOptions({
                 </div>
 
                 <div class="feature-panel-feature">
-                    <video autoplay muted loop>
-                        <source src="https://abdulbaha.fra1.digitaloceanspaces.com/videos/rw-demo.mov">
-                    </video>
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front05.png" alt="Front Page 05">
                 </div>
             </div>
 

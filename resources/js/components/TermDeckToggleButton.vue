@@ -60,24 +60,26 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
             <img ref="reference" class="term-deck-toggle"
                  :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="handleToggleMenu" alt="pin"/>
 
-            <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-                <form v-if="UserStore.decks.length > 0" ref="notificationTrigger">
-                    <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
+            <Teleport to="body">
+                <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
+                    <form v-if="UserStore.decks.length > 0" ref="notificationTrigger">
+                        <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
                     <span style="font-weight: 700; text-transform: uppercase">
                         [{{ deck.terms.some(term => term.id === model.id) ? '✓' : ' ' }}]
                     </span>
-                        {{ deck.name }}
-                    </button>
-                </form>
-                <a v-else>
-                    No Decks Available.
-                </a>
-                <Transition name="notification">
-                    <div ref="notification" :style="notificationStyles" v-if="notifVisible" class="notification">
-                        {{ notifContent }}
-                    </div>
-                </Transition>
-            </div>
+                            {{ deck.name }}
+                        </button>
+                    </form>
+                    <a v-else>
+                        No Decks Available.
+                    </a>
+                    <Transition name="notification">
+                        <div ref="notification" :style="notificationStyles" v-if="notifVisible" class="notification">
+                            {{ notifContent }}
+                        </div>
+                    </Transition>
+                </div>
+            </Teleport>
         </div>
     </template>
 </template>

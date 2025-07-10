@@ -501,9 +501,10 @@ body {
 
         & > video, & > img {
             width: 100%;
-            border-radius: 1.6rem;
-            border: 0.4rem solid var(--color-dark-primary);
-            box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+            //border-radius: 1.6rem;
+            //border: 0.4rem solid var(--color-dark-primary);
+            //box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+            box-shadow: -0.8rem 0.8rem 0 rgba(black, 0.25);
         }
     }
 
@@ -569,21 +570,13 @@ body {
     background: var(--color-medium-secondary);
     position: relative;
 
-    @media print {
-        display: none;
-    }
-
-    @media (min-width: 960px) {
-        //margin-block-start: calc(2 * 4.8rem + 2.4rem);
-    }
-
     .footer-social {
+        align-self: center;
+        justify-self: end;
         display: flex;
         gap: 0.8rem;
-        position: absolute;
-        top: -2.4rem;
-        right: 4.8rem;
         transition: 0.1s;
+        margin-block-end: -3.2rem;
 
         img {
             width: 4.8rem;
@@ -596,14 +589,12 @@ body {
     }
 
     .footer-body {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        display: grid;
         gap: 6.4rem;
     }
 
     .footer-hero {
-        display: none;
+        display: grid;
         gap: 1.6rem;
         width: 100%;
         max-width: 64rem;
@@ -622,10 +613,6 @@ body {
             font-size: 1.4rem;
             line-height: 1.75;
         }
-
-        @media (min-width: 960px) {
-            display: grid;
-        }
     }
 
     .footer-links-wrapper {
@@ -636,10 +623,6 @@ body {
         gap: 1.6rem;
         grid-template-columns: repeat(2, 1fr);
         padding-block-end: 1.6rem;
-
-        @media (min-width: 960px) {
-            flex-grow: 0;
-        }
     }
 
     .footer-links {
@@ -665,6 +648,28 @@ body {
         text-align: center;
         border-block-start: 0.3rem dotted var(--color-accent-medium);
         padding-block: 1.6rem;
+    }
+
+    @media print {
+        display: none;
+    }
+
+    @media (min-width: 1280px) {
+        .footer-social {
+            position: absolute;
+            top: -2.4rem;
+            right: 4.8rem;
+        }
+
+        .footer-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            .footer-links-wrapper {
+                flex-grow: 0;
+            }
+        }
     }
 }
 

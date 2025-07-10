@@ -1,8 +1,7 @@
 <script setup>
 import NavWiki from "./NavWiki.vue";
 import {ref} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import AppTip from "../../components/AppTip.vue";
 
 const props = defineProps({
     page: String,
@@ -23,6 +22,13 @@ const navOpen = ref(false);
             </button>
             <h1>{{ page }}</h1>
         </div>
+        <AppTip>
+            <p>The <b>Wiki</b> is an extensive repository of information about Palestinian Arabic & PalWeb. Due to time
+                constraints, these pages are not updated very often, especially those that pertain to Palestinian Arabic
+                as such. Be aware that some of this information may be outdated or incomplete. If you are interested in
+                writing or co-writing about Palestinian Arabic for PalWeb, send an email to <b>adrian@palweb.app</b>.
+            </p>
+        </AppTip>
         <div class="wiki-body" :class="{ 'nav-open': navOpen }">
             <NavWiki :page="page"/>
             <div class="wiki-content-wrapper">

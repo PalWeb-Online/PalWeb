@@ -120,9 +120,12 @@ class TermController extends Controller
                     'patterns',
                     'glosses.attributes',
                     'inflections',
-                    'decks',
+                    'decks' => function ($query) {
+                        $query->limit(10);
+                    },
                 ])
                 ->loadCount(['pronunciations']);
+//            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
 
             $model->gloss_sentences = $model->getSingleGlossSentence();
         }

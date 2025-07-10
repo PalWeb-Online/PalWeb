@@ -28,7 +28,7 @@
         <a href="https://x.com/palweb_app" style="text-decoration: none">
             <img src="{{ asset('img/twitter.png') }}" alt="Twitter"/>
         </a>
-        <a href="https://www.instagram.com/abdulbaha.xyz" style="text-decoration: none">
+        <a href="https://www.instagram.com/palweb.app" style="text-decoration: none">
             <img src="{{ asset('img/instagram.png') }}" alt="Instagram"/>
         </a>
         <a href="https://discord.gg/3Wf7Q6RCjV" style="text-decoration: none">
