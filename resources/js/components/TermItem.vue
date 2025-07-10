@@ -29,7 +29,7 @@ const {term, isLoading, playAudio} = useTerm(props);
                     <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>
                     <TermDeckToggleButton :model="term"/>
                 </div>
-                <PinButton modelType="term" :model="term"/>
+                <PinButton modelType="term" :model="term" floating/>
             </div>
             <TermActions :model="term"/>
         </div>

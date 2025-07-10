@@ -31,15 +31,24 @@ const genitiveResult = (inflection) => {
 </script>
 
 <template>
+    <div class="window-section-head">
+        <h2>cliticization</h2>
+    </div>
     <div class="inflection-carousel">
         <div v-for="(inflection, index) in inflections" v-show="activeIndex === index" class="carousel-item">
-            <div v-if="inflections.length > 1" class="carousel-item-head">
-                <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : inflections.length - 1">
-                    &larr;
+            <div v-if="inflections.length > 1" class="window-section-head">
+                <button @click="activeIndex = (activeIndex > 0) ? activeIndex - 1 : inflections.length - 1"
+                        class="material-symbols-rounded"
+                >
+                    arrow_back
                 </button>
-                Variant {{ index + 1 }}
-                <button @click="activeIndex = (activeIndex < inflections.length - 1) ? activeIndex + 1 : 0">
-                    &rarr;
+                <h3>
+                    Variant {{ index + 1 }}
+                </h3>
+                <button @click="activeIndex = (activeIndex < inflections.length - 1) ? activeIndex + 1 : 0"
+                        class="material-symbols-rounded"
+                >
+                    arrow_forward
                 </button>
             </div>
 

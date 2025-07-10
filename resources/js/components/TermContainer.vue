@@ -6,12 +6,13 @@ import TermActions from "./TermActions.vue";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import PronunciationItem from "./PronunciationItem.vue";
-import SentenceContainer from "./SentenceContainer.vue";
+import SentenceItem from "./SentenceItem.vue";
 import DeckItem from "./DeckItem.vue";
-import ChartEnclitic from "./charts/ChartEnclitic.vue";
+import ChartCliticization from "./charts/ChartCliticization.vue";
 import ChartInflection from "./charts/ChartInflection.vue";
 import ChartConjugation from "./charts/ChartConjugation.vue";
 import DialogLine from "./charts/DialogLine.vue";
+import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     model: {
@@ -44,8 +45,11 @@ const fetchPronunciations = async () => {
 
 const showSentences = ref(new Map());
 const sentencesFetched = ref(new Map());
+const loadingSentences = ref(new Map());
 
 const fetchSentences = async (glossId) => {
+    loadingSentences.value.set(glossId, true);
+
     try {
         const gloss = term.glosses.find(gloss => gloss.id === glossId);
 
@@ -57,9 +61,11 @@ const fetchSentences = async (glossId) => {
         gloss.sentences.push(...sentences);
         sentencesFetched.value.set(glossId, true);
         showSentences.value.set(glossId, true);
+        loadingSentences.value.set(glossId, false);
 
     } catch (error) {
         console.error('Error fetching Pronunciations:', error);
+        loadingSentences.value.set(glossId, false);
     }
 }
 
@@ -188,17 +194,24 @@ const etymology = computed(() => {
 
 <template>
     <template v-if="! isLoading">
-        <div class="term-container">
+        <div class="window-container">
+            <div class="window-header">
+                <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+                <div class="window-header-url">www.palweb.app/library/terms/{term}</div>
+                <TermDeckToggleButton :model="term"/>
+                <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+            </div>
+            <div class="window-section-head">
+                <h1>term</h1>
+                <PinButton modelType="term" :model="term"/>
+                <TermActions :model="term"/>
+            </div>
             <div class="term-container-head">
                 <div class="term-headword">
                     <div class="term-headword-term">
-                        <PinButton modelType="term" :model="term"/>
                         <div class="term-headword-arb">{{ term.term }}</div>
                         <div class="term-headword-eng">({{ term.translit }})</div>
-                        <TermActions :model="term"/>
-                        <TermDeckToggleButton :model="term"/>
                     </div>
-
                     <div class="term-headword-data">{{ term.category }}.
                         <template v-for="attribute in term.attributes" :key="attribute.id">
                             <template v-if="attributeLinks[attribute.attribute]">
@@ -238,78 +251,89 @@ const etymology = computed(() => {
                 </div>
                 <div class="term-references"
                      v-if="term.spellings.length + variants.length + references.length > 0">
-                    <div v-if="term.spellings.length > 0">
-                        <div>or</div>
-                        <div v-for="spelling in term.spellings" style="font-weight: 700">
-                            {{ spelling.spelling }}
-                        </div>
-                    </div>
-
-                    <div v-if="variants.length > 0">
-                        <div>alt.</div>
-                        <Link v-for="variant in variants" :href="route('terms.show', variant.slug)">
-                            {{ variant.term }} ({{ variant.translit }})
-                        </Link>
-                    </div>
-
                     <div v-if="references.length > 0">
                         <div>see:</div>
                         <Link v-for="reference in references" :href="route('terms.show', reference.slug)">
                             {{ reference.term }} ({{ reference.translit }})
                         </Link>
                     </div>
-                </div>
-            </div>
-
-            <div class="pronunciations-list">
-                <PronunciationItem v-if="showPronunciations" v-for="pronunciation in term.pronunciations" :model="pronunciation"/>
-                <PronunciationItem v-else :model="term.pronunciations[0]"/>
-
-                <button v-if="term.pronunciations_count > 1 && !pronunciationsFetched" @click="fetchPronunciations">+</button>
-                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && showPronunciations" @click="showPronunciations = false">-</button>
-                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && !showPronunciations" @click="showPronunciations = true">+</button>
-            </div>
-
-            <div class="term-etymology">
-                <div class="featured-title">etymology</div>
-                <div class="term-etymology-content">
-                    <Link class="term-root" v-if="term.root" :href="route('roots.show', term.root.id )">
-                        <div class="term-root-ar">{{ term.root.ar }}</div>
-                        <div class="term-root-en">({{ term.root.en }})</div>
-                    </Link>
-                    <div class="term-data">
-                        <!-- todo: link to Wiki page with info on Patterns -->
-
-                        <span v-html="etymology.origin"></span>
-
-                        <span v-for="(token, index) in etymology.source" :key="index">
-                            <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
-                              {{ token.label }}
-                            </Link>
-                        </span>
-
-                        <span v-html="etymology.singPatterns"></span>
-                        <span v-html="etymology.plurPatterns"></span>
-
-                        <span v-for="(token, index) in etymology.components" :key="index">
-                            <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
-                              {{ token.label }}
-                            </Link>
-                        </span>
-
-                        <span v-for="(token, index) in etymology.descendants" :key="index">
-                            <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
-                              {{ token.label }}
-                            </Link>
-                        </span>
+                    <div v-if="variants.length > 0">
+                        <div>alt.</div>
+                        <Link v-for="variant in variants" :href="route('terms.show', variant.slug)">
+                            {{ variant.term }} ({{ variant.translit }})
+                        </Link>
+                    </div>
+                    <div v-if="term.spellings.length > 0">
+                        <div>or</div>
+                        <div v-for="spelling in term.spellings" style="font-weight: 700">
+                            {{ spelling.spelling }}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="term-container-glosses">
+            <div class="window-section-head">
+                <h2>info</h2>
+            </div>
+            <div class="term-etymology">
+                <Link class="term-root" v-if="term.root" :href="route('roots.show', term.root.id )">
+                    <div class="term-root-ar">{{ term.root.ar }}</div>
+                    <div class="term-root-en">({{ term.root.en }})</div>
+                </Link>
+                <div class="term-data">
+                    <!-- todo: link to Wiki page with info on Patterns -->
+
+                    <span v-html="etymology.origin"></span>
+
+                    <span v-for="(token, index) in etymology.source" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
+
+                    <span v-html="etymology.singPatterns"></span>
+                    <span v-html="etymology.plurPatterns"></span>
+
+                    <span v-for="(token, index) in etymology.components" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
+
+                    <span v-for="(token, index) in etymology.descendants" :key="index">
+                            <span v-if="token.type === 'text'" v-html="token.value"></span>
+                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                              {{ token.label }}
+                            </Link>
+                        </span>
+                </div>
+            </div>
+            <div class="term-pronunciation">
+                <div class="model-list">
+                    <PronunciationItem v-if="showPronunciations" v-for="pronunciation in term.pronunciations"
+                                       :model="pronunciation"/>
+                    <PronunciationItem v-else :model="term.pronunciations[0]"/>
+                </div>
+                <button v-if="term.pronunciations_count > 1 && !pronunciationsFetched"
+                        @click="fetchPronunciations" class="material-symbols-rounded">
+                    keyboard_arrow_down
+                </button>
+                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && showPronunciations"
+                        @click="showPronunciations = false" class="material-symbols-rounded">
+                    keyboard_arrow_up
+                </button>
+                <button v-else-if="term.pronunciations_count > 1 && pronunciationsFetched && !showPronunciations"
+                        @click="showPronunciations = true" class="material-symbols-rounded">
+                    keyboard_arrow_down
+                </button>
+            </div>
+
+            <div class="window-section-head">
+                <h2>glosses</h2>
+            </div>
+            <div class="term-glosses">
                 <div v-for="(gloss, index) in term.glosses" class="gloss-li-container">
                     <div class="gloss-li">
                         <div class="gloss-li-label">
@@ -342,7 +366,8 @@ const etymology = computed(() => {
                             </div>
                             <div
                                 v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
-                                v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])" :key="pair.id"
+                                v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])"
+                                :key="pair.id"
                             >
                                 {{ pair.type }}
                                 <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
@@ -352,18 +377,23 @@ const etymology = computed(() => {
                         </div>
                     </div>
 
-                    <div v-if="gloss.sentences.length > 0" class="sentences-list">
-                        <SentenceContainer v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences" :model="sentence"
-                                           :currentTerm="term.id" dialog/>
-                        <SentenceContainer v-else :model="gloss.sentences[0]" :currentTerm="term.id" dialog/>
+                    <div v-if="gloss.sentences.length > 0" class="model-list">
+                        <SentenceItem v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences"
+                                      :model="sentence"
+                                      :currentTerm="term.id" dialog/>
+                        <SentenceItem v-else :model="gloss.sentences[0]" :currentTerm="term.id" dialog/>
 
-                        <button class="see-all" v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)"
-                                @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
+                        <div class="model-list-toggle-expand"
+                             v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)">
+                            <button @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
+                            <LoadingSpinner v-show="loadingSentences.get(gloss.id)"/>
+                        </div>
 
-                        <button class="see-all" v-if="sentencesFetched.get(gloss.id)"
-                                @click="toggleShowSentences(gloss.id)">
-                            {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
-                        </button>
+                        <div class="model-list-toggle-expand" v-if="sentencesFetched.get(gloss.id)">
+                            <button @click="toggleShowSentences(gloss.id)">
+                                {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -380,7 +410,7 @@ const etymology = computed(() => {
                 :term="term"
                 :inflections="inflections"
             />
-            <ChartEnclitic
+            <ChartCliticization
                 v-if="hostForms.length > 0"
                 :inflections="hostForms"
             />
@@ -391,10 +421,6 @@ const etymology = computed(() => {
                             :ar="response.inflection"
                             :en="response.translit"/>
             </div>
-
-            <figure v-if="term.image" class="term-image">
-                <img alt="Term Image" :src="term.image">
-            </figure>
 
             <!--            note that my user is hard-coded -->
             <div v-if="term.usage" class="user-item m">
@@ -419,9 +445,13 @@ const etymology = computed(() => {
                 </div>
             </div>
 
+            <div class="term-image">
+                <img v-if="term.image" :src="term.image" alt="Term Image">
+            </div>
+
             <div v-if="term.decks.length > 0" class="term-container-decks">
-                <div class="featured-title s">Featured In</div>
-                <div class="decks-list">
+                <div class="featured-title m">Featured In</div>
+                <div class="model-list index-list">
                     <DeckItem v-for="deck in term.decks" :model="deck"/>
                 </div>
             </div>

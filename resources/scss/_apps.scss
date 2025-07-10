@@ -563,6 +563,10 @@
 }
 
 .app-tooltip {
+    height: auto;
+    text-transform: none;
+    font-weight: 400;
+    direction: ltr;
     position: fixed;
     color: var(--color-dark-primary);
     background-color: white;

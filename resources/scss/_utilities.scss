@@ -50,27 +50,27 @@ label {
     text-transform: capitalize;
 }
 
-label.checkbox {
-    display: flex;
-    column-gap: 0.8rem;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    font-size: 1.4rem;
-    margin-bottom: 0;
-
-    & > input {
-        display: inline-flex;
-        align-items: center;
-        width: 1.6rem;
-        accent-color: var(--color-medium-primary);
-        margin: 0;
-    }
-
-    span {
-        padding-block-start: 0.2rem;
-    }
-}
+//label.checkbox {
+//    display: flex;
+//    column-gap: 0.8rem;
+//    flex-direction: row;
+//    align-items: center;
+//    justify-content: flex-start;
+//    font-size: 1.4rem;
+//    margin-bottom: 0;
+//
+//    & > input {
+//        display: inline-flex;
+//        align-items: center;
+//        width: 1.6rem;
+//        accent-color: var(--color-medium-primary);
+//        margin: 0;
+//    }
+//
+//    span {
+//        padding-block-start: 0.2rem;
+//    }
+//}
 
 input, textarea, select {
     font-size: 1.2rem;
@@ -155,10 +155,6 @@ h1, h2, h3,
     overflow-wrap: break-word;
 }
 
-iframe + h1 {
-    margin-top: 0;
-}
-
 h1 {
     font-size: 2.8rem;
 }
@@ -183,7 +179,7 @@ h3 {
     }
 
     &.m {
-        font-size: clamp(2.8rem, 6vw, 4.8rem);
+        font-size: clamp(2.8rem, 8vw, 4.8rem);
         line-height: 0.75;
         padding-block-end: 0.125em;
     }
@@ -271,22 +267,18 @@ h3 {
     position: absolute;
     top: -0.8rem;
     left: -1.6rem;
-    transform: rotate(-35deg);
+    transform: rotate(-40deg);
     transition: 0.05s;
 
     &:hover {
-        filter: brightness(1.5) saturate(1);
         opacity: 50%;
     }
 
     &.unpinned {
-        transform: translate(-0.2rem, -0.2rem) rotate(-35deg);
         filter: brightness(1.5) saturate(0);
-        opacity: 20%;
+        opacity: 25%;
 
         &:hover {
-            transform: translate(-0.2rem, -0.2rem) rotate(-35deg);
-            filter: brightness(1.5) saturate(1);
             opacity: 50%;
         }
     }

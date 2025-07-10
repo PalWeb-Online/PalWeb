@@ -103,26 +103,26 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-pastel-medium: hsl(255, 80%, 92%);
     --color-pastel-light: hsl(260, 90%, 97%);
     --color-transparent: hsla(255, 80%, 92%, 0.75);
-    --color-accent-dark: hsl(28, 85%, 48%);
+    --color-accent-dark: var(--color-dark-primary);
     --color-accent-medium: hsl(42, 95%, 58%);
     --color-accent-light: hsl(42, 95%, 90%);
 }
 
-//.theme-watermelon {
-//    --color-polar-dark: hsl(0, 0%, 0%);
-//    --color-polar-light: hsl(0, 0%, 100%);
-//    --color-dark-secondary: hsl(170, 80%, 12%);
-//    --color-dark-primary: hsl(170, 88%, 15%);
-//    --color-medium-secondary: hsl(165, 80%, 28%);
-//    --color-medium-primary: hsl(160, 55%, 45%);
-//    --color-pastel-dark: hsl(165, 40%, 77%);
-//    --color-pastel-medium: hsl(165, 35%, 85%);
-//    --color-pastel-light: hsl(165, 32%, 94%);
-//    --color-transparent: hsla(165, 35%, 85%, 0.75);
-//    --color-accent-dark: #cc2944;
-//    --color-accent-medium: hsl(0, 80%, 75%);
-//    --color-accent-light: hsl(0, 93%, 97%);
-//}
+.theme-watermelon {
+    --color-polar-dark: hsl(0, 0%, 0%);
+    --color-polar-light: hsl(0, 0%, 100%);
+    --color-dark-secondary: hsl(170, 80%, 12%);
+    --color-dark-primary: hsl(170, 100%, 16%);
+    --color-medium-secondary: hsl(165, 80%, 22%);
+    --color-medium-primary: hsl(160, 80%, 35%);
+    --color-pastel-dark: hsl(165, 40%, 77%);
+    --color-pastel-medium: hsl(165, 35%, 85%);
+    --color-pastel-light: hsl(165, 32%, 94%);
+    --color-transparent: hsla(165, 35%, 85%, 0.75);
+    --color-accent-dark: hsl(355, 60%, 45%);
+    --color-accent-medium: hsl(355, 100%, 82%);
+    --color-accent-light: hsl(355, 100%, 96%);
+}
 //
 //.theme-jerusalem {
 //    --color-polar-dark: hsl(0, 0%, 0%);
@@ -202,107 +202,24 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     align-items: center;
     justify-content: space-between;
     gap: 1.6rem;
-    background: white;
-    padding: 1.2rem;
-    border-radius: 3.2rem;
     user-select: none;
 
-    .theme-name {
-        font-family: $headFont;
-        font-weight: 700;
-        font-size: 2.0rem;
-        color: var(--color-dark-primary);
-        padding-inline-start: 1.2rem;
-        padding-block-start: 0.2rem;
-    }
-
-    .theme-preview {
-        display: flex;
-        gap: 0.4rem;
-    }
-
-    .theme-preview > * {
-        width: 3.6rem;
-        height: 3.6rem;
-        border-radius: 50%;
-    }
-
-    .theme-preview.palweb {
-        div:nth-child(1) {
-            background: hsl(265, 95%, 35%);
-        }
-
-        div:nth-child(2) {
-            background: hsl(255, 80%, 60%)
-        }
-
-        div:nth-child(3) {
-            background: hsl(42, 95%, 58%);
-        }
-    }
-
-    //.theme-preview.watermelon {
-    //    div:nth-child(1) {
-    //        background: hsl(170, 90%, 15%);
-    //    }
-    //
-    //    div:nth-child(2) {
-    //        background: #36b389;
-    //    }
-    //
-    //    div:nth-child(3) {
-    //        background: hsl(0, 95%, 80%);
-    //    }
-    //}
-    //
-    //.theme-preview.jerusalem {
-    //    div:nth-child(1) {
-    //        background: hsl(250, 90%, 35%);
-    //    }
-    //
-    //    div:nth-child(2) {
-    //        background: hsl(170, 95%, 38%);
-    //    }
-    //
-    //    div:nth-child(3) {
-    //        background: hsl(38, 65%, 65%);
-    //    }
-    //}
-    //
-    //.theme-preview.zaatar {
-    //    div:nth-child(1) {
-    //        background: hsl(100, 80%, 16%);
-    //    }
-    //
-    //    div:nth-child(2) {
-    //        background: hsl(80, 45%, 45%);
-    //    }
-    //
-    //    div:nth-child(3) {
-    //        background: hsl(48, 90%, 55%);
-    //    }
-    //}
-    //
-    //.theme-preview.jericho {
-    //    div:nth-child(1) {
-    //        background: hsl(20, 50%, 22%);
-    //    }
-    //
-    //    div:nth-child(2) {
-    //        background: hsl(30, 70%, 60%);
-    //    }
-    //
-    //    div:nth-child(3) {
-    //        background: hsl(180, 45%, 70%);
-    //    }
-    //}
-
-    &:hover {
-        box-shadow: 0 0 0 0.3rem var(--color-accent-medium);
-    }
+    font-family: $displayFont;
+    font-size: 4.8rem;
+    text-transform: uppercase;
+    color: var(--color-dark-primary);
+    padding: 1.2rem 2.4rem 1.6rem;
 
     &.active {
-        box-shadow: 0 0 0 0.3rem var(--color-medium-primary);
+        background: var(--color-accent-medium);
+    }
+
+    &:not(.active):hover {
+        background: var(--color-accent-light);
+    }
+
+    &:not(:first-child) {
+        border-block-start: 1px solid var(--color-dark-secondary);
     }
 }
 
