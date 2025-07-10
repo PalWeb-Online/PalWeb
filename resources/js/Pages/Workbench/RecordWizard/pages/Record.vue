@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
 import {useRecordStore} from '../stores/RecordStore';
 import {useQueueStore} from '../stores/QueueStore.js';
@@ -17,24 +17,6 @@ const originalQueueLength = QueueStore.queue.length;
 const alertLimitReached = ref(null);
 const alertQueueCompleted = ref(null);
 
-const audioParams = reactive({
-    startThreshold: 0.1,
-    stopThreshold: 0.05,
-    saturationThreshold: 0.99,
-    stopDuration: 0.3,
-    marginBefore: 0.25,
-    marginAfter: 0.25,
-});
-
-onMounted(() => {
-    RecordStore.openRecorder(audioParams);
-    QueueStore.initSelection();
-});
-
-onUnmounted(() => {
-    RecordStore.closeRecorder();
-});
-
 const canRecord = computed(() => {
     return RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done < 500;
 });
@@ -45,8 +27,9 @@ watch(
         if (recorded >= 500 && RecordStore.recorder) {
             RecordStore.closeRecorder();
             alertLimitReached.value?.openDialog();
+
         } else if (recorded < 500 && !RecordStore.recorder) {
-            RecordStore.openRecorder(audioParams);
+            RecordStore.openRecorder(RecordStore.audioParams);
         }
     }
 );
@@ -60,37 +43,33 @@ watch(
     }
 );
 
-// watch(audioParams, (newParams) => {
-//     if (recorder) {
-//         recorder.setConfig(newParams);
-//     }
-// }, {deep: true});
+onMounted(() => {
+    QueueStore.initSelection();
+});
 </script>
 
 <template>
-    <div class="rw-container-head">
+    <div class="window-section-head">
         <h2>Record</h2>
     </div>
-
     <AppTip v-if="RecordWizardStore.data.errorMessage">
         <p>{{ RecordWizardStore.data.errorMessage }}</p>
     </AppTip>
 
-    <div class="rw-page__record mwe-rws-audio" :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
-        <section>
-            <div class="rw-record-queue">
-                <div
-                    v-for="(pronunciation, index) in QueueStore.queue"
-                    :key="pronunciation.id"
-                    :class="{
+    <div class="rw-page__record mwe-rws-audio"
+         :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
+        <section class="rw-record-queue">
+            <div
+                v-for="(pronunciation, index) in QueueStore.queue"
+                :key="pronunciation.id"
+                :class="{
                         'selected': QueueStore.selected === index,
                         'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
                         [RecordStore.data.status[pronunciation.id]]: !!RecordStore.data.status[pronunciation.id]
                     }"
-                    @click="QueueStore.selectItem(index)"
-                >
-                    {{ pronunciation.term }}
-                </div>
+                @click="QueueStore.selectItem(index)"
+            >
+                {{ pronunciation.term }}
             </div>
         </section>
 

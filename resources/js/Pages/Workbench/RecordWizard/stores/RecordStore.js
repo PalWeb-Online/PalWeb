@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {reactive, ref} from 'vue';
+import {reactive, ref, watch} from 'vue';
 import {useRecordWizardStore} from "./RecordWizardStore.js";
 import {useQueueStore} from "./QueueStore.js";
 import Record from "../../../../utils/Record.js";
@@ -26,14 +26,31 @@ export const useRecordStore = defineStore('RecordStore', () => {
     });
 
     const recorder = ref(null);
+    const timer = ref(null);
     const vumeter = ref(0);
     const saturated = ref(false);
+
+    const audioParams = reactive({
+        startThreshold: 0.1,
+        stopThreshold: 0.05,
+        saturationThreshold: 0.99,
+        stopDuration: 0.3,
+        marginBefore: 0.25,
+        marginAfter: 0.25,
+    });
+
+    watch(audioParams, (newParams) => {
+        if (recorder) {
+            recorder.setConfig(newParams);
+        }
+    }, {deep: true});
+
     const RecordWizardStore = useRecordWizardStore();
     const QueueStore = useQueueStore();
     const requestQueue = new RequestQueue();
 
     const openRecorder = (audioParams) => {
-        if (recorder.value) return;
+        closeRecorder();
 
         recorder.value = new LinguaRecorder({
             autoStart: true,
@@ -45,8 +62,10 @@ export const useRecordStore = defineStore('RecordStore', () => {
             marginBefore: audioParams.marginBefore,
             marginAfter: audioParams.marginAfter,
         });
+        console.log('Recorder has been created!');
 
         recorder.value.on('ready', () => {
+            RecordWizardStore.data.hasPermission = true;
             console.log('Recorder is ready to go!');
         });
 
@@ -58,7 +77,11 @@ export const useRecordStore = defineStore('RecordStore', () => {
         });
 
         recorder.value.on('stopped', (record) => {
-            onDataAvailable(record);
+            if (RecordWizardStore.data.step === 'speaker') {
+                testPlay(record);
+            } else {
+                onDataAvailable(record);
+            }
         });
 
         recorder.value.on('saturated', () => {
@@ -73,7 +96,31 @@ export const useRecordStore = defineStore('RecordStore', () => {
         recorder.value.close();
         recorder.value = null;
 
-        console.log('Recorder has been shut off!');
+        RecordWizardStore.data.hasPermission = false;
+        console.log('Recorder has been destroyed!');
+    };
+
+    const testRecord = () => {
+        if (RecordWizardStore.data.testState === 'ready') {
+            RecordWizardStore.data.testState = 'speak';
+            recorder.value.start();
+
+            timer.value = setTimeout(() => {
+                recorder.value.stop();
+            }, 5000);
+        }
+    };
+
+    const testPlay = (record) => {
+        RecordWizardStore.data.testState = 'check';
+        clearTimeout(timer.value);
+
+        const audioNode = record.getAudioElement();
+        audioNode.play();
+
+        setTimeout(() => {
+            RecordWizardStore.data.testState = 'ready';
+        }, record.getDuration() * 1000 + 300);
     };
 
     const startRecording = () => {
@@ -102,17 +149,21 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     };
 
-    const showError = (error) => {
-        const errorMessageAssociation = {
-            AbortError: 'Technical issue with the microphone.',
-            NotAllowedError: 'Microphone access was not allowed.',
-            NotFoundError: 'Microphone not found.',
-            NotReadableError: 'Technical issue with the microphone.',
-            OverconstrainedError: 'Microphone not found.',
-            SecurityError: 'Technical issue with the microphone.',
-        };
+    const errorMessageAssociation = reactive({
+        AbortError: 'Technical issue with the microphone.',
+        NotAllowedError: 'Microphone access was not allowed.',
+        NotFoundError: 'Microphone not found.',
+        NotReadableError: 'Technical issue with the microphone.',
+        OverconstrainedError: 'Microphone not found.',
+        SecurityError: 'Technical issue with the microphone.',
+    });
 
-        alert(errorMessageAssociation[error.name] || 'An unknown error occurred.');
+    const showError = (error) => {
+        let message = errorMessageAssociation[error.name] || 'An unknown microphone error occurred.';
+
+        RecordWizardStore.data.errorMessage = message;
+        console.error('Microphone Error:', error);
+        alert(message);
     };
 
     const onDataAvailable = async (record) => {
@@ -331,9 +382,12 @@ export const useRecordStore = defineStore('RecordStore', () => {
         vumeter,
         recorder,
         saturated,
+        audioParams,
         openRecorder,
         closeRecorder,
         toggleRecording,
+        testRecord,
+        testPlay,
         startRecording,
         stopRecording,
         setStatus,
