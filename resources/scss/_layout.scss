@@ -600,7 +600,7 @@ body {
         max-width: 64rem;
 
         .footer-hero-title {
-            font-size: 12.8rem;
+            font-size: clamp(8.0rem, 20vw, 12.8rem);
             font-weight: 700;
             font-family: $logoFont;
             text-transform: lowercase;
