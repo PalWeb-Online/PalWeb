@@ -1,6 +1,96 @@
+.window-container > .sentence-item-wrapper {
+    margin: 3.2rem 1.6rem 3.2rem 2.4rem;
+}
+
+.sentence-container-body {
+    .sentence-dialog-data {
+        display: flex;
+        flex-flow: row wrap;
+        background: var(--color-pastel-light);
+
+        & > * {
+            flex: 1 0 50%;
+            gap: 1.6rem;
+            background: none;
+            font-family: $monoFont;
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0.6rem 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--color-dark-primary);
+            border-radius: 0;
+            border: none;
+            text-transform: uppercase;
+
+            & > *:first-child {
+                font-size: 1.4rem;
+            }
+
+            & > *:last-child {
+                flex-grow: 1;
+                direction: rtl;
+            }
+        }
+
+        & > *:first-child {
+            border-inline-end: 0.1rem solid var(--color-dark-primary);
+        }
+
+        a:hover {
+            background: var(--color-pastel-medium);
+        }
+
+        input {
+            font-family: $monoFont;
+            font-size: 1.6rem;
+            font-weight: 700;
+            border-radius: 0;
+        }
+    }
+
+    .sentence-arb {
+        .sentence-term {
+            padding-block: 1.2rem;
+            gap: 0.4rem;
+        }
+    }
+
+    .sentence-eng {
+        font-family: $bodyFont;
+        font-size: 1.6rem;
+        text-align: center;
+        color: var(--color-dark-primary);
+        background: var(--color-accent-light);
+        padding: 1.6rem;
+        width: 100%;
+        border-radius: 0;
+        border: none !important;
+    }
+}
+
+
+.sentence-speaker {
+    width: 100%;
+    color: var(--color-dark-primary);
+    background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent-medium));
+    padding: 0.2rem 1.6rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: $ar_bodyFont;
+    border-radius: 0;
+    direction: rtl;
+    text-align: start;
+
+    .play {
+        display: none;
+    }
+}
+
 .sentence-item-wrapper {
-    position: relative;
-    margin: 0 !important;
+    justify-content: start;
+    scroll-margin-top: 12rem;
 
     &.l {
         .sentence-item {
@@ -66,34 +156,32 @@
         align-self: center;
     }
 
-    & + .terms-list {
-        margin-block: 3.2rem;
+    &.highlighted {
+        background: var(--color-accent-light);
+        animation: flash-bg 1s ease-out;
+    }
+}
+
+@keyframes flash-bg {
+    33% {
+        background: var(--color-accent-medium);
+    }
+    100% {
+        background: var(--color-accent-light);
     }
 }
 
 .sentence-item {
     grid-column: 2;
     display: grid;
+    margin: 0 0 0.3rem 0.3rem;
     background: var(--color-accent-light);
     border: 0.1rem solid var(--color-accent-medium);
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.1);
     border-radius: 0.8rem;
     overflow: hidden;
+    position: relative;
 
-    .sentence-speaker {
-        color: var(--color-dark-primary);
-        background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent-medium));
-        padding: 0.2rem 1.6rem;
-        font-size: 1.6rem;
-        font-weight: 700;
-        font-family: $ar_bodyFont;
-        border-radius: 0;
-        text-align: start;
-
-        .play {
-            display: none;
-        }
-    }
 
     &.coming-soon {
         border: 0.1rem solid var(--color-accent-medium);
@@ -115,28 +203,6 @@
         }
     }
 
-    .sentence-arb {
-        background: white;
-        display: flex;
-        direction: rtl;
-        flex-flow: row wrap;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        padding: 0 2.4rem;
-
-        & + .sentence-eng {
-            border-block-start: 0.1rem solid var(--color-pastel-medium);
-        }
-    }
-
-    .sentence-eng {
-        direction: ltr;
-        font-size: 1.6rem;
-        font-family: $bodyFont;
-        text-align: center;
-    }
-
     input.sentence-eng {
         padding: 0;
         background: 0;
@@ -146,6 +212,22 @@
             outline: none;
             background: var(--color-pastel-medium);
         }
+    }
+
+}
+
+.sentence-arb {
+    background: white;
+    display: flex;
+    direction: rtl;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 2.4rem;
+
+    & + .sentence-eng {
+        border-block-start: 0.1rem solid var(--color-pastel-medium);
     }
 
     .sentence-term {
@@ -182,6 +264,13 @@
         cursor: pointer;
         font-weight: 400;
     }
+}
+
+.sentence-eng {
+    direction: ltr;
+    font-size: 1.6rem;
+    font-family: $bodyFont;
+    text-align: center;
 }
 
 .sentence-dialog {
@@ -227,46 +316,24 @@
 
         .item-description {
             font-size: 1.4rem;
+            direction: ltr;
         }
     }
 }
 
-.dialog-container {
-    direction: rtl;
-}
-
-.dialog-container-head {
-    .dialog-container-head-title {
-        font-size: 3.2rem;
-    }
-
-    input.dialog-container-head-title {
-        font-size: 2.8rem;
-    }
-}
-
-.dialog-description {
-    color: var(--color-dark-primary);
-    font-family: $bodyFont;
-    font-size: 2.0rem;
-    font-weight: 700;
-}
-
-textarea.dialog-description {
-    font-size: 1.8rem;
-    padding: 1.2rem;
-}
-
 .dialog-body {
     display: grid;
-    gap: 1.6rem;
-    justify-items: start;
     text-align: start;
-    //background: $accent-yellow-pastel;
-    //border-radius: 1.2rem;
-    //padding: 1.6rem;
     margin-block: 3.2rem;
     direction: rtl;
+
+    .sentence-item-wrapper {
+        padding: 0.8rem 1.6rem;
+    }
+
+    .draggable, .draggable-item {
+        gap: 0;
+    }
 }
 
 .dialog-line-wrapper {
@@ -288,6 +355,7 @@ textarea.dialog-description {
     text-align: center;
     background: white;
     border: 0.1rem solid var(--color-accent-medium);
+    box-shadow: -0.3rem 0.3rem 0 rgba(0, 0, 0, 0.1);
     font-size: 2.0rem;
     font-family: $ar_bodyFont;
 

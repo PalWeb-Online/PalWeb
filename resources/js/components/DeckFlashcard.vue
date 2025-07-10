@@ -3,7 +3,7 @@ import {onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 import {useDeck} from "../composables/Deck.js";
 import PinButton from "./PinButton.vue";
-import DeckActions from "./DeckActions.vue";
+import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
 
 const props = defineProps({
@@ -73,8 +73,8 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
             </div>
 
-            <PinButton modelType="deck" :model="deck"/>
-            <DeckActions :model="deck"/>
+            <PinButton modelType="deck" :model="deck" floating/>
+            <DeckActions :model="deck" icon="emoji"/>
 
             <div class="action-buttons">
                 <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>

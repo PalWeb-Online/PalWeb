@@ -1,10 +1,9 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {useForm} from "@inertiajs/vue3";
+import {Link, useForm} from "@inertiajs/vue3";
 import {computed, onMounted, ref} from "vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import {route} from "ziggy-js";
-import AppButton from "../../../components/AppButton.vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
@@ -44,12 +43,12 @@ const saveUser = async () => {
     form.patch(route('users.update', props.user.username),
         {
             onSuccess: () => {
-                NotificationStore.addNotification('The Profile has been saved!');
                 form.defaults();
-                isSaving.value = false;
             },
             onError: () => {
-                NotificationStore.addNotification('Oh no! The Profile could not be saved.');
+                NotificationStore.addNotification('Oh no! The Profile could not be saved.', 'error');
+            },
+            onFinish: () => {
                 isSaving.value = false;
             }
         }
@@ -174,68 +173,71 @@ function generateArabicName() {
 
 <template>
     <Head title="Edit Profile"/>
-    <div id="app-head">
-        <Link :href="route('users.index')"><h1>Community</h1></Link>
-    </div>
     <div id="app-body">
-        <div class="app-nav-interact">
-            <div class="app-nav-interact-buttons">
-                <AppButton :disabled="isSaving || !hasNavigationGuard || !isValidRequest" label="Save"
-                           @click="saveUser"
-                />
-                <AppButton :disabled="isSaving || !hasNavigationGuard" label="Reset"
-                           @click="form.reset()"
-                />
-            </div>
-        </div>
-
-        <div class="user-container">
+        <div class="window-container">
             <div class="action-buttons">
-                <img class="toggle" :class="['lock', { public: !form.private }]"
-                     :src="`/img/${form.private ? 'lock.svg' : 'lock-open.svg'}`"
-                     @click="form.private = !form.private"
-                     alt="Privacy"/>
+            </div>
+            <div class="window-header">
+                <Link class="material-symbols-rounded" :href="route('users.show', user.username)">arrow_back</Link>
+                <button @click="form.private = !form.private" class="material-symbols-rounded">
+                    {{ form.private ? 'lock' : 'public' }}
+                </button>
+                <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
+                <button :disabled="isSaving || !hasNavigationGuard || !isValidRequest" @click="saveUser"
+                        class="material-symbols-rounded">
+                    save
+                </button>
+                <button :disabled="isSaving || !hasNavigationGuard" @click="form.reset()"
+                        class="material-symbols-rounded">
+                    undo
+                </button>
+            </div>
+            <div class="window-section-head">
+                <h1>profile</h1>
+                <Link :href="route('users.show', user.username)" class="material-symbols-rounded">visibility</Link>
             </div>
             <div class="user-item l">
                 <button class="user-avatar">
                     <img :src="`/img/avatars/${form.avatar}`" @click="showAvatarPicker = true" alt="Avatar"/>
                 </button>
                 <div class="user-data-wrapper">
-                    <div class="field-item">
-                        <label>Name</label>
-                        <div class="field-input">
-                            <input type="text" v-model="form.name" placeholder="Rafiq" required>
-                            <div class="field-chars"
-                                 :class="{'invalid': form.name.length > 50}"
-                                 v-text="50 - form.name.length"
-                            />
+                    <div class="form-body">
+                        <div class="field-item">
+                            <label>Name</label>
+                            <div class="field-input">
+                                <input type="text" v-model="form.name" placeholder="Rafiq" required>
+                                <div class="field-chars"
+                                     :class="{'invalid': form.name.length > 50}"
+                                     v-text="50 - form.name.length"
+                                />
+                            </div>
+                            <div v-if="form.errors.name" v-text="form.errors.name" class="field-error"/>
                         </div>
-                        <div v-if="form.errors.name" v-text="form.errors.name" class="field-error"/>
-                    </div>
-                    <div class="field-item">
-                        <label>Username</label>
-                        <div class="field-input">
-                            <input type="text" v-model="form.username" placeholder="permanent.intifada" required>
-                            <div class="field-chars"
-                                 :class="{'invalid': form.username.length > 50}"
-                                 v-text="50 - form.username.length"
-                            />
+                        <div class="field-item">
+                            <label>Username</label>
+                            <div class="field-input">
+                                <input type="text" v-model="form.username" placeholder="permanent.intifada" required>
+                                <div class="field-chars"
+                                     :class="{'invalid': form.username.length > 50}"
+                                     v-text="50 - form.username.length"
+                                />
+                            </div>
+                            <div v-if="form.errors.username" v-text="form.errors.username" class="field-error"/>
                         </div>
-                        <div v-if="form.errors.username" v-text="form.errors.username" class="field-error"/>
-                    </div>
-                    <div class="field-item">
-                        <div style="display: flex; align-items: center; gap: 3.2rem;">
-                            <label>Arabic Name</label>
-                            <button @click="form.ar_name = generateArabicName()">Randomize</button>
+                        <div class="field-item">
+                            <div style="display: flex; align-items: center; gap: 3.2rem;">
+                                <label>Arabic Name</label>
+                                <button @click="form.ar_name = generateArabicName()">Randomize</button>
+                            </div>
+                            <div class="field-input">
+                                <input type="text" v-model="form.ar_name" placeholder="رفيق" required>
+                                <div class="field-chars"
+                                     :class="{'invalid': form.ar_name.length > 50}"
+                                     v-text="50 - form.ar_name.length"
+                                />
+                            </div>
+                            <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
                         </div>
-                        <div class="field-input">
-                            <input type="text" v-model="form.ar_name" placeholder="رفيق" required>
-                            <div class="field-chars"
-                                 :class="{'invalid': form.ar_name.length > 50}"
-                                 v-text="50 - form.ar_name.length"
-                            />
-                        </div>
-                        <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
                     </div>
                     <div class="user-comment">
                         <textarea class="user-comment-content" v-model="form.bio"
@@ -272,9 +274,11 @@ function generateArabicName() {
     </div>
 
     <ModalWrapper v-model="showAvatarPicker">
-        <div class="theme-picker-wrapper">
-            <div class="modal-heading">avatar</div>
-            <div class="modal-container">
+        <div class="window-container modal-container">
+            <div class="window-section-head">
+                <h1>avatar</h1>
+            </div>
+            <div class="modal-container-body">
                 <div class="avatar-grid">
                     <img v-for="avatar in avatars"
                          :src="`/img/avatars/${avatar}`"

@@ -6,14 +6,18 @@ import {route} from 'ziggy-js';
 import AppTooltip from "../components/AppTooltip.vue";
 import SearchFilters from "./SearchFilters.vue";
 import PopupWindow from "../components/Modals/PopupWindow.vue";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 const SearchStore = useSearchStore();
+const emit = defineEmits(['close']);
 
 const activeIndex = ref(-1);
 
 const tooltip = ref(null);
 
 function handleMouseMove(event) {
+    if (!tooltip.value) return;
+
     let message = '';
 
     switch (SearchStore.data.action) {
@@ -29,6 +33,7 @@ function handleMouseMove(event) {
 }
 
 function handleMouseLeave() {
+    if (!tooltip.value) return;
     tooltip.value.hideTooltip();
 }
 
@@ -47,6 +52,13 @@ const scrollToActiveItem = () => {
 const setActiveModel = (model) => {
     activeIndex.value = -1;
     SearchStore.data.activeModel = model;
+
+    if (model === 'terms') {
+        SearchStore.data.filters.sort = 'alphabetical';
+
+    } else {
+        SearchStore.data.filters.sort = 'latest';
+    }
 };
 
 const selectModel = (model) => {
@@ -62,7 +74,12 @@ const selectModel = (model) => {
     } else if (routes[SearchStore.data.activeModel]) {
         const {route: targetRoute, idField} = routes[SearchStore.data.activeModel];
         const param = model[idField];
-        router.get(route(targetRoute, param));
+
+        router.get(route(targetRoute, param), {}, {
+            onSuccess: () => {
+                emit('close');
+            }
+        });
     }
 };
 
@@ -108,38 +125,35 @@ watch(() => SearchStore.data.results, () => {
 </script>
 
 <template>
-    <div class="sg-container">
-        <div class="window-head">
-            <div>Search Genie</div>
+    <div class="window-container modal-container">
+        <div class="window-section-head">
+            <h1>{{
+                    SearchStore.data.action === 'insert' ? 'Insert ' + SearchStore.data.activeModel : 'Search Genie'
+                }}</h1>
             <PopupWindow title="Search Genie">
-                <template #trigger>
-                    <div class="material-symbols-rounded">help</div>
-                </template>
-                <template #content>
-                    <p>Welcome to the <b>Search Genie</b>!</p>
-                    <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
-                        so by matching your search with a variety of attributes on the items you are searching for.</p>
-                    <div>Terms are found if ...</div>
-                    <ul>
-                        <li>
-                            (typing in Arabic script) the search string matches the Arabic term or any of its
-                            alternative spellings, or the default spelling of any of its listed inflections;
-                        </li>
-                        <li>(typing in Latin script) the search string matches the transliteration of any of its
-                            pronunciations, or the default transliteration of any of its listed inflections — or any
-                            word in any of its definitions.
-                        </li>
-                    </ul>
-                    <div>Sentences are found if ...</div>
-                    <ul>
-                        <li>the Sentence contains a Term matching the search, based on the above criteria.</li>
-                    </ul>
-                    <div>Decks are found if ...</div>
-                    <ul>
-                        <li>the search string matches the Deck's title, or</li>
-                        <li>the Deck contains a Term matching the search, based on the above criteria.</li>
-                    </ul>
-                </template>
+                <p>Welcome to the <b>Search Genie</b>!</p>
+                <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
+                    so by matching your search with a variety of attributes on the items you are searching for.</p>
+                <div>Terms are found if ...</div>
+                <ul>
+                    <li>
+                        (typing in Arabic script) the search string matches the Arabic term or any of its
+                        alternative spellings, or the default spelling of any of its listed inflections;
+                    </li>
+                    <li>(typing in Latin script) the search string matches the transliteration of any of its
+                        pronunciations, or the default transliteration of any of its listed inflections — or any
+                        word in any of its definitions.
+                    </li>
+                </ul>
+                <div>Sentences are found if ...</div>
+                <ul>
+                    <li>the Sentence contains a Term matching the search, based on the above criteria.</li>
+                </ul>
+                <div>Decks are found if ...</div>
+                <ul>
+                    <li>the search string matches the Deck's title, or</li>
+                    <li>the Deck contains a Term matching the search, based on the above criteria.</li>
+                </ul>
             </PopupWindow>
         </div>
 
@@ -164,7 +178,8 @@ watch(() => SearchStore.data.results, () => {
         />
 
         <div class="sg-results">
-            <template v-if="SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
+            <template
+                v-if="!SearchStore.isLoading && SearchStore.data.results[SearchStore.data.activeModel]?.length > 0">
                 <div
                     v-for="(model, index) in SearchStore.data.results[SearchStore.data.activeModel]"
                     :key="model.id"
@@ -186,10 +201,10 @@ watch(() => SearchStore.data.results, () => {
                     </template>
                 </div>
             </template>
-
-            <div v-else class="sg-empty">
+            <div v-else-if="!SearchStore.isLoading" class="sg-empty">
                 Nothing yet.
             </div>
+            <LoadingSpinner v-show="SearchStore.isLoading"/>
         </div>
 
         <div class="sg-all-results"
@@ -231,7 +246,8 @@ watch(() => SearchStore.data.results, () => {
         <div class="sg-footer">
             <div><b>Enter</b> selects</div>
             <div><b>Up/Dwn</b> navigates</div>
-            <div><b>Ctrl+K</b> toggles Search Genie</div>
+            <div v-if="SearchStore.data.action === 'search'"><b>Ctrl+K</b> toggles Search Genie</div>
+            <div v-else><b>Esc</b> exits</div>
         </div>
     </div>
 

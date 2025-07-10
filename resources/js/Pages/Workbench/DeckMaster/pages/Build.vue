@@ -6,11 +6,10 @@ import TermItem from "../ui/TermItem.vue";
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
-import AppButton from "../../../../components/AppButton.vue";
 import PinButton from "../../../../components/PinButton.vue";
-import DeckActions from "../../../../components/DeckActions.vue";
+import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
-import {router, useForm} from "@inertiajs/vue3";
+import {useForm} from "@inertiajs/vue3";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import UserItem from "../../../../components/UserItem.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -28,8 +27,6 @@ const deck = useForm({
     name: props.deck?.name || '',
     description: props.deck?.description || '',
     private: props.deck?.private || false,
-    isPinned: props.deck?.isPinned || false,
-    pinCount: props.deck?.pinCount || 0,
     created_at: props.deck?.created_at || null,
     author: {
         id: UserStore.user.id,
@@ -102,12 +99,12 @@ const saveDeck = async () => {
 
     method(url, {
         onSuccess: () => {
-            NotificationStore.addNotification('The Deck has been saved!');
             deck.defaults();
-            isSaving.value = false;
         },
         onError: () => {
-            NotificationStore.addNotification('Oh no! The Deck could not be saved.');
+            NotificationStore.addNotification('Oh no! The Deck could not be saved.', 'error');
+        },
+        onFinish: () => {
             isSaving.value = false;
         }
     });
@@ -138,49 +135,60 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="app-nav-interact">
-        <img src="/img/finger-back.svg" @click="router.get(route('deck-master.index', {mode: 'build'}))" alt="Back"/>
-        <div class="app-nav-interact-buttons">
-            <AppButton :disabled="deck.processing || !hasNavigationGuard || !isValidRequest" label="Save"
-                       @click="saveDeck"
-            />
-            <AppButton :disabled="deck.processing || !hasNavigationGuard" label="Reset"
-                       @click="deck.reset()"
-            />
-            <AppButton @click="SearchStore.openSearchGenie('insert', 'terms')"
-                       label="Insert Term"
-            />
+    <div class="window-container">
+        <div class="window-header">
+            <Link :href="route('deck-master.index', {mode: 'build'})" class="material-symbols-rounded">
+                arrow_back
+            </Link>
+            <button @click="deck.private = !deck.private" class="material-symbols-rounded">
+                {{ deck.private ? 'lock' : 'public' }}
+            </button>
+            <div class="window-header-url">www.palweb.app/library/decks/{deck}</div>
+            <button @click="SearchStore.openSearchGenie('insert', 'terms')"
+                    class="material-symbols-rounded">
+                place_item
+            </button>
+            <button :disabled="deck.processing || !hasNavigationGuard || !isValidRequest" @click="saveDeck"
+                    class="material-symbols-rounded">
+                save
+            </button>
+            <button :disabled="deck.processing || !hasNavigationGuard" @click="deck.reset()"
+                    class="material-symbols-rounded">
+                undo
+            </button>
         </div>
-    </div>
-
-    <div class="deck-container">
-        <div class="deck-container-head">
-            <PinButton v-if="deck.id" modelType="deck"
-                       :model="deck"/>
-            <input class="deck-container-head-title" v-model="deck.name"
-                   placeholder="Required: Deck Name"
-            />
+        <div class="window-section-head">
+            <h1>deck</h1>
+            <PinButton v-if="deck.id" modelType="deck" :model="props.deck"/>
             <DeckActions v-if="deck.id" :model="deck"/>
-            <div class="action-buttons">
-                <img class="toggle" :class="['lock', { public: !deck.private }]"
-                     :src="`/img/${deck.private ? 'lock.svg' : 'lock-open.svg'}`"
-                     @click="deck.private = !deck.private"
-                     alt="lock"/>
-            </div>
         </div>
+
+        <section>
+            <div class="window-content-head">
+                <input class="window-content-head-title" v-model="deck.name"
+                       placeholder="Required: Deck Name"
+                />
+            </div>
+            <div v-if="deck.errors.name" v-text="deck.errors.name" class="field-error"
+                 style="padding: 0.8rem;"
+            />
+        </section>
 
         <UserItem :user="deck.author" size="m" comment>
-            <textarea class="user-comment-content" v-model="deck.description"
-                      :placeholder="`Sadly, ${deck.author.name} hasn't told us anything about this Deck yet.`"
-            />
-            <div v-if="deck.id" class="user-comment-data">Created by {{ deck.author.name }} on
-                {{ deck.created_at }}.
-            </div>
+            <template #comment>
+                <textarea class="user-comment-content" v-model="deck.description"
+                          :placeholder="`Sadly, ${deck.author.name} hasn't told us anything about this Deck yet.`"
+                />
+                <div v-if="deck.id" class="user-comment-data">Created by {{ deck.author.name }} on
+                    {{ deck.created_at }}.
+                </div>
+                <div v-if="deck.errors.description" v-text="deck.errors.description" class="field-error"/>
+            </template>
         </UserItem>
 
         <draggable :list="deck.terms" itemKey="id"
                    @end="updatePosition()"
-                   class="draggable">
+                   class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
                     <TermItem :term="element"/>
@@ -191,7 +199,7 @@ onMounted(async () => {
             </template>
         </draggable>
 
-        <div class="deck-term-count">{{ deck.terms.length }} Terms</div>
+        <div class="terms-count">{{ deck.terms.length }} Terms</div>
     </div>
 
     <ModalWrapper v-model="showAlert">

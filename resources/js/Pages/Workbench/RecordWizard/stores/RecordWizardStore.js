@@ -43,7 +43,7 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
             backStep: null,
             nextStep: 'queue',
             canMoveBack: () => false,
-            canMoveNext: () => data.hasPermission,
+            canMoveNext: () => speaker.id,
         },
         queue: {
             backStep: null,
@@ -120,10 +120,6 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
         }
     };
 
-    function setPermission(isReady) {
-        data.hasPermission = isReady;
-    }
-
     function freeze() {
         data.isFrozen = true;
     }
@@ -142,6 +138,5 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
         nextDisabled,
         back,
         next,
-        setPermission,
     };
 });

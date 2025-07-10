@@ -2,6 +2,7 @@
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
+import {computed} from "vue";
 
 const emit = defineEmits(['close']);
 
@@ -10,6 +11,10 @@ const UserStore = useUserStore();
 const form = useForm({
     subject: '',
     body: '',
+});
+
+const isValidRequest = computed(() => {
+    return form.subject.length && form.body.length;
 });
 
 const sendMail = () => {
@@ -21,9 +26,11 @@ const sendMail = () => {
 }
 </script>
 <template>
-    <div class="modal-container-wrapper">
-        <div class="modal-heading">mail</div>
-        <div class="modal-container form-container">
+    <div class="window-container modal-container">
+        <div class="window-section-head">
+            <h1>send mail</h1>
+        </div>
+        <div class="modal-container-body form-body">
             <div class="field-item">
                 <label>Subject</label>
                 <div class="field-input">
@@ -32,9 +39,9 @@ const sendMail = () => {
                 <div v-if="form.errors.subject" v-text="form.errors.subject" class="field-error"/>
             </div>
             <div class="user-item m">
-                <button class="user-avatar" style="cursor: default">
+                <div class="user-avatar">
                     <img :src="`/img/avatars/${UserStore.user.avatar}`" alt="Avatar"/>
-                </button>
+                </div>
                 <div class="user-data-wrapper">
                     <div class="user-comment">
                         <textarea class="user-comment-content" v-model="form.body"
@@ -47,7 +54,9 @@ const sendMail = () => {
                     </div>
                 </div>
             </div>
-            <button class="app-button" @click="sendMail" :disabled="form.processing">
+        </div>
+        <div class="window-footer">
+            <button @click="sendMail" :disabled="form.processing || !isValidRequest">
                 Send
             </button>
         </div>

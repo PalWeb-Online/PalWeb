@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onBeforeUnmount, onMounted} from "vue";
+import {computed, onBeforeUnmount, onMounted, watch} from "vue";
 import {merge} from "lodash";
 import Layout from "../../../Shared/Layout.vue";
 import {useRecordWizardStore} from "./stores/RecordWizardStore.js";
@@ -31,49 +31,65 @@ const hasNavigationGuard = computed(() => {
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
+watch(
+    () => props.speaker,
+    (newValue) => {
+        if (newValue) {
+            Object.assign(RecordWizardStore.speaker, newValue);
+        }
+    },
+    {deep: true}
+);
+
 onMounted(() => {
-    RecordWizardStore.speaker = merge(RecordWizardStore.speaker, props.speaker);
+    if (props.speaker) {
+        merge(RecordWizardStore.speaker, props.speaker);
+    }
 });
 
 onBeforeUnmount(() => {
     RecordWizardStore.data.step = 'speaker';
     QueueStore.queue = [];
-});
 
+    if (RecordStore.recorder) {
+        RecordStore.closeRecorder();
+    }
+});
 </script>
 
 <template>
     <Head title="Record Wizard"/>
-    <div id="app-head">
-        <h1>Record Wizard</h1>
-
-        <div id="app-nav">
-            <img :class="RecordWizardStore.backDisabled ? 'disabled' : ''" alt="Back" src="/img/finger-back.svg"
-                 @click="RecordWizardStore.back"/>
-            <div class="app-nav-steps">
-                <div v-if="RecordWizardStore.data.step === 'speaker'"
-                     :class="{ active: RecordWizardStore.data.step === 'speaker' }">
-                    Speaker
-                </div>
-                <template v-else>
-                    <div :class="{ active: RecordWizardStore.data.step === 'queue' }">Queue</div>
-                    <div :class="{ active: RecordWizardStore.data.step === 'record' }">Record</div>
-                    <div :class="{ active: RecordWizardStore.data.step === 'check' }">Check</div>
-                </template>
-            </div>
-            <img :class="RecordWizardStore.nextDisabled ? 'disabled' : ''" alt="Next" src="/img/finger-next.svg"
-                 @click="RecordWizardStore.next"/>
-        </div>
-    </div>
-
     <div id="app-body">
-        <div class="rw-container">
-            <div class="rw-page-content">
-                <Speaker v-if="RecordWizardStore.data.step === 'speaker'"/>
-                <Queue v-if="RecordWizardStore.data.step === 'queue'"/>
-                <Record v-if="RecordWizardStore.data.step === 'record'"/>
-                <Check v-if="RecordWizardStore.data.step === 'check'"/>
+        <div class="rw-container window-container">
+            <div class="window-section-head">
+                <h1>Record Wizard</h1>
             </div>
+            <div class="window-page-nav">
+                <button class="material-symbols-rounded" :disabled="RecordWizardStore.backDisabled"
+                        @click="RecordWizardStore.back">arrow_back
+                </button>
+                <div class="material-symbols-rounded"
+                     :class="{ active: RecordWizardStore.data.step === 'speaker', disabled: RecordWizardStore.data.step !== 'speaker' }">
+                    voice_selection
+                </div>
+                <div class="material-symbols-rounded" :class="{ active: RecordWizardStore.data.step === 'queue' }">
+                    list
+                </div>
+                <div class="material-symbols-rounded" :class="{ active: RecordWizardStore.data.step === 'record' }">
+                    mic
+                </div>
+                <div class="material-symbols-rounded" :class="{ active: RecordWizardStore.data.step === 'check' }">
+                    checklist
+                </div>
+                <button class="material-symbols-rounded" :disabled="RecordWizardStore.nextDisabled"
+                        @click="RecordWizardStore.next">arrow_forward
+                </button>
+            </div>
+            <Speaker v-if="RecordWizardStore.data.step === 'speaker'"/>
+            <Queue v-if="RecordWizardStore.data.step === 'queue'"/>
+            <Record v-if="RecordWizardStore.data.step === 'record'"/>
+            <Check v-if="RecordWizardStore.data.step === 'check'"/>
+
             <!--            <div v-if="!RecordWizardStore.data.isContentVisible" class="rw-page-loading">-->
             <!--                <img class="loading" src="/img/wait.svg" alt="Loading"/>-->
             <!--            </div>-->

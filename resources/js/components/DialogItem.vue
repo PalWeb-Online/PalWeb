@@ -1,6 +1,6 @@
 <script setup>
 import {useDialog} from "../composables/Dialog.js";
-import DialogActions from "./DialogActions.vue";
+import DialogActions from "./Actions/DialogActions.vue";
 
 const props = defineProps({
     model: {
@@ -18,7 +18,7 @@ const { data } = useDialog(props);
 <template>
     <template v-if="! data.isLoading">
         <div class="deck-item-wrapper">
-            <DialogActions :model="data.dialog"/>
+            <DialogActions :model="data.dialog" icon="emoji"/>
             <div class="dialog-item">
                 <div class="item-data">
                     <div class="item-title">

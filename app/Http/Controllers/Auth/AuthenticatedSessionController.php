@@ -15,22 +15,27 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            session()->flash('notification',
+                ['type' => 'success', 'message' => __('signin.message', ['user' => auth()->user()->name])]);
             return back();
         }
 
-        return redirect()->back()->withErrors([
+        return back()->withErrors([
             'email' => __('auth.failed'),
         ]);
     }
 
     public function destroy(Request $request): RedirectResponse
     {
+        $name = auth()->user()->name;
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('signout.message', ['user' => $name])]);
         return to_route('homepage');
     }
 }

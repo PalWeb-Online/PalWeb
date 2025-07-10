@@ -2,7 +2,7 @@
 import {useTerm} from "../composables/Term.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
-import TermActions from "./TermActions.vue";
+import TermActions from "./Actions/TermActions.vue";
 
 const props = defineProps({
     model: {
@@ -29,9 +29,9 @@ const {term, isLoading, playAudio} = useTerm(props);
                     <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>
                     <TermDeckToggleButton :model="term"/>
                 </div>
-                <PinButton modelType="term" :model="term"/>
+                <PinButton modelType="term" :model="term" floating/>
             </div>
-            <TermActions :model="term"/>
+            <TermActions :model="term" icon="emoji"/>
         </div>
     </template>
 </template>

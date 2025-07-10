@@ -21,9 +21,9 @@ class AudioController extends Controller
 
     public function index(Request $request): \Inertia\Response
     {
-        $filters = array_merge([
-            'sort' => 'latest'
-        ], $request->only(['location', 'dialect', 'gender', 'sort']));
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'location', 'dialect', 'gender', 'sort'
+        ]));
 
         $query = Audio::query()
             ->with([

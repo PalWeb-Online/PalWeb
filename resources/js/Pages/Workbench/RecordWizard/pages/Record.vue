@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
 import {useRecordStore} from '../stores/RecordStore';
 import {useQueueStore} from '../stores/QueueStore.js';
@@ -17,24 +17,6 @@ const originalQueueLength = QueueStore.queue.length;
 const alertLimitReached = ref(null);
 const alertQueueCompleted = ref(null);
 
-const audioParams = reactive({
-    startThreshold: 0.1,
-    stopThreshold: 0.05,
-    saturationThreshold: 0.99,
-    stopDuration: 0.3,
-    marginBefore: 0.25,
-    marginAfter: 0.25,
-});
-
-onMounted(() => {
-    RecordStore.openRecorder(audioParams);
-    QueueStore.initSelection();
-});
-
-onUnmounted(() => {
-    RecordStore.closeRecorder();
-});
-
 const canRecord = computed(() => {
     return RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done < 500;
 });
@@ -45,8 +27,9 @@ watch(
         if (recorded >= 500 && RecordStore.recorder) {
             RecordStore.closeRecorder();
             alertLimitReached.value?.openDialog();
+
         } else if (recorded < 500 && !RecordStore.recorder) {
-            RecordStore.openRecorder(audioParams);
+            RecordStore.openRecorder(RecordStore.audioParams);
         }
     }
 );
@@ -60,37 +43,33 @@ watch(
     }
 );
 
-// watch(audioParams, (newParams) => {
-//     if (recorder) {
-//         recorder.setConfig(newParams);
-//     }
-// }, {deep: true});
+onMounted(() => {
+    QueueStore.initSelection();
+});
 </script>
 
 <template>
-    <div class="rw-container-head">
+    <div class="window-section-head">
         <h2>Record</h2>
     </div>
-
     <AppTip v-if="RecordWizardStore.data.errorMessage">
         <p>{{ RecordWizardStore.data.errorMessage }}</p>
     </AppTip>
 
-    <div class="rw-page__record mwe-rws-audio" :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
-        <section>
-            <div class="rw-record-queue">
-                <div
-                    v-for="(pronunciation, index) in QueueStore.queue"
-                    :key="pronunciation.id"
-                    :class="{
+    <div class="rw-page__record mwe-rws-audio"
+         :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
+        <section class="rw-record-queue">
+            <div
+                v-for="(pronunciation, index) in QueueStore.queue"
+                :key="pronunciation.id"
+                :class="{
                         'selected': QueueStore.selected === index,
                         'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
                         [RecordStore.data.status[pronunciation.id]]: !!RecordStore.data.status[pronunciation.id]
                     }"
-                    @click="QueueStore.selectItem(index)"
-                >
-                    {{ pronunciation.term }}
-                </div>
+                @click="QueueStore.selectItem(index)"
+            >
+                {{ pronunciation.term }}
             </div>
         </section>
 
@@ -234,17 +213,13 @@ watch(
         </section>
     </div>
 
-    <PopupWindow ref="alertLimitReached" title="Limit Reached">
-        <template #content>
-            <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
-                Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
-                more.</p>
-        </template>
+    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" title="Limit Reached">
+        <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
+            Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
+            more.</p>
     </PopupWindow>
-    <PopupWindow ref="alertQueueCompleted" title="Queue Completed">
-        <template #content>
-            <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
-                uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
-        </template>
+    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" title="Queue Completed">
+        <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
+            uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
     </PopupWindow>
 </template>

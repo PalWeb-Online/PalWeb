@@ -1,6 +1,9 @@
 <script setup>
 import {computed, ref, watch} from "vue";
 import {debounce} from "lodash";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const emit = defineEmits([
     'updateFilter'
@@ -24,7 +27,8 @@ defineExpose({
 const filters = ref({
     search: props.filters.search || '',
     match: props.filters.match || 'term',
-    pinned: props.filters.pinned || 0,
+    sort: props.filters.sort || '',
+    pinned: props.filters.pinned || false,
     category: props.filters.category || '',
     attribute: props.filters.attribute || '',
     form: props.filters.form || '',
@@ -35,7 +39,7 @@ const filters = ref({
 let previousFilters = {...filters.value};
 
 const debounceEmit = debounce((key, value) => {
-    emit("updateFilter", { filter: key, value });
+    emit("updateFilter", {filter: key, value});
 }, 250);
 
 watch(
@@ -51,13 +55,33 @@ watch(
     {deep: true}
 );
 
-// const updateCategory = (value) => {
-//     SearchStore.updateFilter('category', value);
-//     SearchStore.updateFilter('attribute', '');
-//     SearchStore.updateFilter('form', '');
-//     SearchStore.updateFilter('singular', '');
-//     SearchStore.updateFilter('plural', '');
-// };
+watch(
+    props.filters,
+    (newPropFilters) => {
+        for (const key in newPropFilters) {
+            if (newPropFilters[key] !== filters.value[key]) {
+                filters.value[key] = newPropFilters[key];
+                previousFilters[key] = newPropFilters[key];
+            }
+        }
+    }
+);
+
+// watch(
+//     () => filters.value.pinned,
+//     (newPinned) => {
+//         if (newPinned) {
+//             if (filters.value.sort !== 'pinned') {
+//                 filters.value.sort = 'pinned';
+//             }
+//         } else {
+//             const defaultSort = props.activeModel === 'terms' ? 'alphabetical' : 'latest';
+//             if (filters.value.sort !== defaultSort) {
+//                 filters.value.sort = defaultSort;
+//             }
+//         }
+//     }
+// );
 
 const hasAttribute = computed(() => {
     const allowedCategories = ['', 'verb', 'noun', 'adjective', 'determiner'];
@@ -108,17 +132,28 @@ const isCCC = computed(() => {
             <option value="gloss">Match Gloss</option>
         </select>
 
-        <input
-            v-if="activeModel !== 'audios'"
-            ref="searchInput"
-            v-model="filters.search"
-            type="text"
-            placeholder="دوّر"
-        />
+        <div class="search-bar">
+            <input
+                ref="searchInput"
+                v-model="filters.search"
+                :class="{'persisting': filters.search.length}"
+                type="text"
+                placeholder="دوّر"
+            />
 
-        <select v-model="filters.pinned" :class="filters.pinned === '1' ? 'persisting' : ''">
-            <option value="0">All</option>
-            <option value="1">Pinned</option>
+            <button v-if="UserStore.isUser" @click="filters.pinned = !filters.pinned"
+                    :class="{'unpinned': !filters.pinned}">
+                <img src="/img/pin.svg" alt="Pin"/>
+            </button>
+        </div>
+
+        <select v-model="filters.sort"
+                :class="((activeModel === 'terms' && filters.sort !== 'alphabetical') || (activeModel !== 'terms' && filters.sort !== 'latest')) ? 'persisting' : ''"
+                v-if="['terms', 'decks'].includes(activeModel)">
+            <option value="alphabetical" v-if="activeModel === 'terms'">Alphabetical by Root</option>
+            <option value="latest">by Latest</option>
+            <option value="popular" v-if="activeModel === 'decks'">by Popularity</option>
+            <option value="pinned" v-if="filters.pinned">by Pinned</option>
         </select>
 
         <div class="search-filters" v-if="activeModel === 'terms'">

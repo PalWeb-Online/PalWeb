@@ -8,6 +8,7 @@ import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
 import {router} from "@inertiajs/vue3";
 import AppTip from "../../../components/AppTip.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     mode: {type: String, default: 'build'},
@@ -78,9 +79,9 @@ defineOptions({
 
 <template>
     <Head title="Deck Master"/>
-    <div id="app-head">
+    <div id="app-head" v-if="step === 'select'">
         <h1>Deck Master</h1>
-        <div v-if="step === 'select'" id="app-nav">
+        <div id="app-nav">
             <div @click="toggleMode" id="app-mode-toggle" :class="mode">
                 <div class="app-mode-toggle-slider">{{ mode }}</div>
             </div>
@@ -111,20 +112,14 @@ defineOptions({
                     <p v-if="mode === 'study'">It looks like you haven't pinned any Decks yet. Watch this space.</p>
                 </AppTip>
             </div>
-            <div v-show="isLoading" class="app-loading">
-                <img src="/img/wait.svg" alt="Loading"/>
-            </div>
+            <LoadingSpinner v-show="isLoading"/>
         </div>
 
-        <template v-if="mode === 'build'">
-            <div id="dm-build" v-if="step === 'build'">
-                <Build :deck="selectedDeck"/>
-            </div>
-        </template>
-        <template v-if="mode === 'study'">
-            <div id="dm-study" v-if="step === 'study'">
-                <Study :deck="selectedDeck" :terms="terms"/>
-            </div>
-        </template>
+        <div id="dm-build" v-if="step === 'build'">
+            <Build :deck="selectedDeck"/>
+        </div>
+        <div id="dm-study" v-if="step === 'study'">
+            <Study :deck="selectedDeck" :terms="terms"/>
+        </div>
     </div>
 </template>

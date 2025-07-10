@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class SentenceRepository
 {
-    public function searchSentences($matches, array $filters = []): Collection
+    public function searchSentences(?Collection $matches, array $filters = []): Collection
     {
         $terms = $matches->unique('term_id')->pluck('term_id');
         $glosses = $matches->pluck('gloss_id')->filter();
@@ -28,9 +28,7 @@ class SentenceRepository
                     )
                 )
             )
-            ->when($filters['pinned'] ?? false, fn ($query) => $query
-                ->whereHasBookmark(auth()->user())
-            )
+            ->filter($filters)
             ->get()
             ->unique('id');
     }

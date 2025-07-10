@@ -8,10 +8,10 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/auth/discord')->controller(OAuthController::class)->group(function () {
+Route::prefix('auth/discord')->controller(OAuthController::class)->group(function () {
     Route::get('/', 'redirect')->name('auth.discord');
-    Route::get('/callback', 'callback')->name('auth.discord.callback');
-    Route::post('/revoke', 'revoke')->name('auth.discord.revoke');
+    Route::get('callback', 'callback')->name('auth.discord.callback');
+    Route::post('revoke', 'revoke')->name('auth.discord.revoke');
 });
 
 Route::middleware('guest')->group(function () {
@@ -22,17 +22,17 @@ Route::middleware('guest')->group(function () {
 
 Route::controller(NewPasswordController::class)->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('/reset-password/{token}', 'show')
-            ->name('password.create');
-        Route::post('/reset-password', 'store')
-            ->name('password.store');
+        Route::get('reset-password/{token}', 'show')
+            ->name('password.reset');
+        Route::post('reset-password', 'store')
+            ->name('password.update');
     });
 
     Route::middleware('auth')->group(function () {
-        Route::get('/change-password', 'show')
+        Route::get('change-password', 'show')
             ->name('password.edit');
-        Route::patch('/change-password', 'update')
-            ->name('password.update');
+        Route::patch('change-password', 'update')
+            ->name('password.change');
     });
 });
 

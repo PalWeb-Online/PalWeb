@@ -13,7 +13,7 @@ class SearchGenieController extends Controller
 {
     public function getResults(Request $request, SearchService $searchService): JsonResponse
     {
-        $filters = $request->only(['search', 'match', 'pinned', 'category', 'attribute', 'form', 'singular', 'plural']);
+        $filters = $request->only(['search', 'match', 'sort', 'pinned', 'category', 'attribute', 'form', 'singular', 'plural']);
 
         $results = [
             'terms' => collect(),

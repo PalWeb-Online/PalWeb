@@ -1,6 +1,6 @@
 <script setup>
 import PinButton from "./PinButton.vue";
-import DeckActions from "./DeckActions.vue";
+import DeckActions from "./Actions/DeckActions.vue";
 import {useDeck} from "../composables/Deck.js";
 
 const props = defineProps({
@@ -18,14 +18,14 @@ const {deck, blurb, isLoading} = useDeck(props);
 <template>
     <template v-if="! isLoading">
         <div :class="['deck-item-wrapper', size]">
-            <DeckActions :model="deck"/>
+            <DeckActions :model="deck" icon="emoji"/>
             <div class="deck-item">
                 <div class="item-data">
                     <div style="display: flex; gap: 0.8rem; align-items: center">
                         <div class="item-title">
                             {{ deck.name }}
                         </div>
-                        <div class="deck-term-count">
+                        <div class="item-count">
                             ({{ deck.terms_count }})
                         </div>
                     </div>
@@ -37,14 +37,14 @@ const {deck, blurb, isLoading} = useDeck(props);
                 <div class="deck-author">
                     <template v-if="!deck.author.private">
                         <div class="deck-author-name">by {{ deck.author.name }}</div>
-                        <img class="deck-author-avatar" alt="Profile Picture"
+                        <img class="deck-author-avatar" alt="Avatar"
                              :src="`/img/avatars/${deck.author.avatar}`"/>
                     </template>
                     <template v-else>
                         <div class="deck-author-name" style="padding-inline-end: 0.8rem">by Anonymous</div>
                     </template>
                 </div>
-                <PinButton modelType="deck" :model="deck"/>
+                <PinButton modelType="deck" :model="deck" floating/>
 
                 <div class="action-buttons">
                     <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>

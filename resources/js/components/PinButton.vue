@@ -1,29 +1,22 @@
 <script setup>
 import {ref} from "vue";
-import {flip, offset, shift, useFloating} from "@floating-ui/vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import {router} from "@inertiajs/vue3";
+import AppTooltip from "./AppTooltip.vue";
 
 const UserStore = useUserStore();
+
+const tooltip = ref(null);
 
 const props = defineProps({
     model: Object,
     modelType: String,
+    floating: {type: Boolean, default: false},
 });
 
 let pinCount = ref(props.model.pinCount);
 let isPinned = ref(props.model.isPinned);
-
-const notifVisible = ref(false);
-const notifContent = ref('');
-
-const reference = ref(null);
-const floating = ref(null);
-const {floatingStyles} = useFloating(reference, floating, {
-    placement: 'top',
-    middleware: [offset(-4), flip(), shift()]
-});
 
 const pin = async () => {
     try {
@@ -35,35 +28,50 @@ const pin = async () => {
 
         isPinned.value = !isPinned.value;
 
-        notifContent.value = response.data.message;
-        notifVisible.value = true;
-        setTimeout(() => notifVisible.value = false, 1000);
-
     } catch (error) {
         console.error('Pin Failed', error);
-
-        notifContent.value = 'An error occurred.';
-        notifVisible.value = true;
-        setTimeout(() => notifVisible.value = false, 1000);
     }
 
+    console.log('pinning succeeded', isPinned.value);
     router.reload();
 };
 </script>
 
 <template>
     <template v-if="UserStore.isUser">
-        <img ref="reference" :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
-        <div v-if="pinCount > 1" class="pin-counter">
-            <img src="/img/heart.svg" alt="heart"/>
-            <div>{{ pinCount }}</div>
-        </div>
-
-        <Transition name="notification">
-            <div ref="floating" :style="floatingStyles" v-if="notifVisible" class="notification">
-                {{ notifContent }}
-            </div>
-        </Transition>
+        <template v-if="floating">
+            <template v-if="UserStore.user.is_verified">
+                <img :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
+                <div v-if="pinCount > 1" class="pin-counter">
+                    <img src="/img/heart.svg" alt="heart"/>
+                    <div>{{ pinCount }}</div>
+                </div>
+            </template>
+            <template v-else>
+                <img class="pin unpinned" src="/img/pin.svg" alt="pin"
+                     @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
+                     @mouseleave="tooltip.hideTooltip()"/>
+            </template>
+        </template>
+        <template v-else>
+            <template v-if="UserStore.user.is_verified">
+                <button class="material-symbols-rounded" :class="{ pinned: isPinned }" style="position: relative;" @click="pin">
+                    {{ isPinned ? 'keep' : 'keep_off' }}
+                    <div v-if="pinCount > 1" class="pin-counter" style="top: auto; left: -3.6rem;">
+                        <img src="/img/heart.svg" alt="heart"/>
+                        <div>{{ pinCount }}</div>
+                    </div>
+                </button>
+            </template>
+            <template v-else>
+                <button class="material-symbols-rounded"
+                        @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
+                        @mouseleave="tooltip.hideTooltip()">
+                    keep_off
+                </button>
+            </template>
+        </template>
+        <AppTooltip ref="tooltip"/>
     </template>
 </template>
 

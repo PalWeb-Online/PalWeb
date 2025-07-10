@@ -121,6 +121,43 @@ export function conjugate(root, pattern) {
                 amr2Ptr: `ʔu${en1}${en2}u${en3}u`,
             }),
 
+            "A1h": () => ({
+                imp1S: `با${ar2}${ar3}`,
+                imp1Str: `bā${en2}u${en3}`,
+                imp1P: `منا${ar2}${ar3}`,
+                imp1Ptr: `mnā${en2}u${en3}`,
+                imp2F: `بتا${ar2}${ar3}ي`,
+                imp2Ftr: `btā${en2}u${en3}i`,
+                imp2P: `بتا${ar2}${ar3}و`,
+                imp2Ptr: `btā${en2}u${en3}u`,
+                imp3M: `با${ar2}${ar3}`,
+                imp3Mtr: `bā${en2}u${en3}`,
+                imp3F: `بتا${ar2}${ar3}`,
+                imp3Ftr: `btā${en2}u${en3}`,
+                imp3P: `با${ar2}${ar3}و`,
+                imp3Ptr: `bā${en2}u${en3}u`,
+                past1S: `${ar1}${ar2}${ar3}ت`,
+                past1Str: `${en1}a${en2}a${en3}t`,
+                past1P: `${ar1}${ar2}${ar3}نا`,
+                past1Ptr: `${en1}a${en2}a${en3}na`,
+                past2F: `${ar1}${ar2}${ar3}تي`,
+                past2Ftr: `${en1}a${en2}a${en3}ti`,
+                past2P: `${ar1}${ar2}${ar3}تو`,
+                past2Ptr: `${en1}a${en2}a${en3}tu`,
+                past3M: `${ar1}${ar2}${ar3}`,
+                past3Mtr: `${en1}a${en2}a${en3}`,
+                past3F: `${ar1}${ar2}${ar3}ت`,
+                past3Ftr: `${en1}a${en2}${en3}at`,
+                past3P: `${ar1}${ar2}${ar3}و`,
+                past3Ptr: `${en1}a${en2}a${en3}u`,
+                amr2M: `${ar2}${ar3}`,
+                amr2Mtr: `${en2}u${en3}`,
+                amr2F: `${ar2}${ar3}ي`,
+                amr2Ftr: `${en2}u${en3}i`,
+                amr2P: `${ar2}${ar3}و`,
+                amr2Ptr: `${en2}u${en3}u`,
+            }),
+
             "A2": () => ({
                 imp1S: `ب${ar1}${ar2}${ar3}`,
                 imp1Str: `ba${en1}${en2}a${en3}`,
@@ -341,6 +378,43 @@ export function conjugate(root, pattern) {
                 amr2Ftr: `ʔi${en1}${en2}i`,
                 amr2P: `إ${ar1}${ar2}و`,
                 amr2Ptr: `ʔi${en1}${en2}u`,
+            }),
+
+            "ʔaža": () => ({
+                imp1S: `با${ar2}ي`,
+                imp1Str: `bā${en2}i`,
+                imp1P: `مني${ar2}ي`,
+                imp1Ptr: `mnī${en2}i`,
+                imp2F: `بتي${ar2}ي`,
+                imp2Ftr: `btī${en2}i`,
+                imp2P: `بتي${ar2}و`,
+                imp2Ptr: `btī${en2}u`,
+                imp3M: `بي${ar2}ي`,
+                imp3Mtr: `bī${en2}i`,
+                imp3F: `بتي${ar2}ي`,
+                imp3Ftr: `btī${en2}i`,
+                imp3P: `بي${ar2}و`,
+                imp3Ptr: `bī${en2}u`,
+                past1S: `${ar2}يت`,
+                past1Str: `${en2}īt`,
+                past1P: `${ar2}ينا`,
+                past1Ptr: `${en2}īna`,
+                past2F: `${ar2}يتي`,
+                past2Ftr: `${en2}īti`,
+                past2P: `${ar2}يتو`,
+                past2Ptr: `${en2}ītu`,
+                past3M: `${ar1}${ar2}ى`,
+                past3Mtr: `${en1}a${en2}a`,
+                past3F: `${ar1}${ar2}ت`,
+                past3Ftr: `${en1}a${en2}at`,
+                past3P: `${ar1}${ar2}و`,
+                past3Ptr: `${en1}a${en2}u`,
+                amr2M: `تعال`,
+                amr2Mtr: `taʕāl`,
+                amr2F: `تعالي`,
+                amr2Ftr: `taʕāli`,
+                amr2P: `تعالو`,
+                amr2Ptr: `taʕālu`,
             }),
 
             "Ci": () => ({
@@ -1289,6 +1363,43 @@ export function conjugate(root, pattern) {
                 amr2P: `إست${ar1}${ar2}${ar3}و`,
                 amr2Ptr: `ʔista${en1}ī${en3}u`,
             }),
+
+            "istanna": () => ({
+                imp1S: `بست${ar1}${ar2}ى`,
+                imp1Str: `basta${en1}${en2}a`,
+                imp1P: `منست${ar1}${ar2}ى`,
+                imp1Ptr: `mnista${en1}${en2}a`,
+                imp2F: `بتست${ar1}${ar2}ي`,
+                imp2Ftr: `btista${en1}${en2}i`,
+                imp2P: `بتست${ar1}${ar2}و`,
+                imp2Ptr: `btista${en1}${en2}u`,
+                imp3M: `بست${ar1}${ar2}ى`,
+                imp3Mtr: `bista${en1}${en2}a`,
+                imp3F: `بتست${ar1}${ar2}ى`,
+                imp3Ftr: `btista${en1}${en2}a`,
+                imp3P: `بست${ar1}${ar2}و`,
+                imp3Ptr: `bista${en1}${en2}u`,
+                past1S: `است${ar1}${ar2}يت`,
+                past1Str: `ista${en1}${en2}ēt`,
+                past1P: `است${ar1}${ar2}ينا`,
+                past1Ptr: `ista${en1}${en2}ēna`,
+                past2F: `است${ar1}${ar2}يتي`,
+                past2Ftr: `ista${en1}${en2}ēti`,
+                past2P: `است${ar1}${ar2}يتو`,
+                past2Ptr: `ista${en1}${en2}ētu`,
+                past3M: `است${ar1}${ar2}ى`,
+                past3Mtr: `ista${en1}${en2}a`,
+                past3F: `است${ar1}${ar2}ت`,
+                past3Ftr: `ista${en1}${en2}at`,
+                past3P: `است${ar1}${ar2}و`,
+                past3Ptr: `ista${en1}${en2}u`,
+                amr2M: `إست${ar1}${ar2}ى`,
+                amr2Mtr: `ʔista${en1}${en2}a`,
+                amr2F: `إست${ar1}${ar2}ي`,
+                amr2Ftr: `ʔista${en1}${en2}i`,
+                amr2P: `إست${ar1}${ar2}و`,
+                amr2Ptr: `ʔista${en1}${en2}u`,
+            }),
         },
 
         "8": {
@@ -1519,6 +1630,40 @@ export function conjugate(root, pattern) {
 
         "X": {
             "A": () => ({
+                imp1S: `ب${ar1}${ar2}${ar3}`,
+                imp1Str: `ba${en1}${en2}i${en3}`,
+                imp1P: `من${ar1}${ar2}${ar3}`,
+                imp1Ptr: `mni${en1}${en2}i${en3}`,
+                imp2F: `بت${ar1}${ar2}${ar3}ي`,
+                imp2Ftr: `bti${en1}${en2}i${en3}i`,
+                imp2P: `بت${ar1}${ar2}${ar3}و`,
+                imp2Ptr: `bti${en1}${en2}i${en3}u`,
+                imp3M: `ب${ar1}${ar2}${ar3}`,
+                imp3Mtr: `bi${en1}${en2}i${en3}`,
+                imp3F: `بت${ar1}${ar2}${ar3}`,
+                imp3Ftr: `bti${en1}${en2}i${en3}`,
+                imp3P: `ب${ar1}${ar2}${ar3}و`,
+                imp3Ptr: `bi${en1}${en2}i${en3}u`,
+                past1S: `أ${ar1}${ar2}${ar3}ت`,
+                past1Str: `ʔa${en1}${en2}a${en3}t`,
+                past1P: `أ${ar1}${ar2}${ar3}نا`,
+                past1Ptr: `ʔa${en1}${en2}a${en3}na`,
+                past2F: `أ${ar1}${ar2}${ar3}تي`,
+                past2Ftr: `ʔa${en1}${en2}a${en3}ti`,
+                past2P: `أ${ar1}${ar2}${ar3}تو`,
+                past2Ptr: `ʔa${en1}${en2}a${en3}tu`,
+                past3M: `أ${ar1}${ar2}${ar3}`,
+                past3Mtr: `ʔa${en1}${en2}a${en3}`,
+                past3F: `أ${ar1}${ar2}${ar3}ت`,
+                past3Ftr: `ʔa${en1}${en2}${en3}at`,
+                past3P: `أ${ar1}${ar2}${ar3}و`,
+                past3Ptr: `ʔa${en1}${en2}a${en3}u`,
+                amr2M: `إ${ar1}${ar2}${ar3}`,
+                amr2Mtr: `ʔi${en1}${en2}i${en3}`,
+                amr2F: `إ${ar1}${ar2}${ar3}ي`,
+                amr2Ftr: `ʔi${en1}${en2}i${en3}i`,
+                amr2P: `إ${ar1}${ar2}${ar3}و`,
+                amr2Ptr: `ʔi${en1}${en2}i${en3}u`,
             }),
 
             "B": () => ({
@@ -1600,11 +1745,35 @@ export function conjugate(root, pattern) {
         },
     }
 
+    let conjugationResult;
+
     const formCases = forms[pattern.form];
     if (!formCases) return {};
 
     const conjugations = formCases[pattern.pattern];
     if (!conjugations) return {};
 
-    return conjugations();
+    conjugationResult = conjugations();
+
+    for (const key in conjugationResult) {
+        if (typeof conjugationResult[key] === 'string') {
+            conjugationResult[key] = conjugationResult[key].replace(/أا/g, 'آ');
+        }
+    }
+
+    if (['و', 'ي'].includes(ar1) && ['A1', 'A2i', 'A1a', 'A2'].includes(pattern.pattern)) {
+        const fieldsToProcess = [
+            'imp1Ptr', 'imp2Ftr', 'imp2Ptr', 'imp3Mtr', 'imp3Ftr', 'imp3Ptr',
+            'amr2Mtr', 'amr2Ftr', 'amr2Ptr'
+        ];
+
+        for (const field of fieldsToProcess) {
+            if (typeof conjugationResult[field] === 'string') {
+                conjugationResult[field] = conjugationResult[field].replace(/iw/g, 'ū');
+                conjugationResult[field] = conjugationResult[field].replace(/iy/g, 'ī');
+            }
+        }
+    }
+
+    return conjugationResult;
 }

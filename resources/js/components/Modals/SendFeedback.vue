@@ -1,48 +1,55 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
+import {computed} from "vue";
 
 const emit = defineEmits(['close']);
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
 
 const form = useForm({
-    feedback: ''
+    comment: ''
+});
+
+const isValidRequest = computed(() => {
+    return form.comment.length;
 });
 
 const sendFeedback = () => {
     form.post(route('todo.store'), {
         onSuccess: () => {
-            NotificationStore.addNotification('Thank you for your feedback!');
             emit('close');
         }
     });
 }
 </script>
 <template>
-    <div class="modal-container-wrapper">
-        <div class="modal-heading">feedback</div>
-        <div class="modal-container form-container">
+    <div class="window-container modal-container">
+        <div class="window-section-head">
+            <h1>send feedback</h1>
+        </div>
+        <div class="modal-container-body form-body">
+
             <div class="user-item m">
-                <button class="user-avatar" style="cursor: default">
+                <div class="user-avatar">
                     <img :src="`/img/avatars/${UserStore.user.avatar}`" alt="Avatar"/>
-                </button>
+                </div>
                 <div class="user-data-wrapper">
                     <div class="user-comment">
-                        <textarea class="user-comment-content" v-model="form.feedback"
+                        <textarea class="user-comment-content" v-model="form.comment"
                                   placeholder="Is something broken? Is a word missing from the Dictionary? Let us know!"
                         />
                         <div class="user-comment-data">
                             — {{ UserStore.user.name }} ({{ UserStore.user.username }})
                         </div>
-                        <div v-if="form.errors.feedback" v-text="form.errors.feedback" class="field-error"/>
+                        <div v-if="form.errors.comment" v-text="form.errors.comment" class="field-error"/>
                     </div>
                 </div>
             </div>
-            <button class="app-button" @click="sendFeedback" :disabled="form.processing">
+        </div>
+        <div class="window-footer">
+            <button @click="sendFeedback" :disabled="form.processing || !isValidRequest">
                 Submit
             </button>
         </div>

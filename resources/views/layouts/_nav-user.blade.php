@@ -47,7 +47,7 @@
                     <div class="nav-user-options-row-title">{{ __('create') }}</div>
                     <div class="nav-user-options-row-content">
                         <a href="{{ route('deck-master.build') }}">Build Deck</a>
-                        <a href="{{ route('audios.record') }}">Record Audios</a>
+                        <a href="{{ route('record-wizard.index') }}">Record Audios</a>
                     </div>
                 </div>
 

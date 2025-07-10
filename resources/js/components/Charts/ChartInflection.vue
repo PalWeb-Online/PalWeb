@@ -44,6 +44,9 @@ const plurals = computed(() =>
 
 <template>
     <!--    todo: Inflections may have Audios-->
+    <div class="window-section-head">
+        <h2>inflections</h2>
+    </div>
     <div class="inflection-carousel">
         <div class="carousel-item">
             <div class="inflection-chart-wrapper">

@@ -27,10 +27,10 @@ class NewPasswordController extends Controller
     public function store(StorePasswordRequest $request): RedirectResponse
     {
         $status = Password::reset(
-            $request->only('email', 'token') + ['password' => $request->password_new],
+            $request->only('email', 'token') + ['password' => $request->password],
             function ($user) use ($request) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password_new),
+                    'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
 

@@ -27,6 +27,7 @@ onMounted(() => {
 
         if ((isMac && event.metaKey && event.key === 'k') || (!isMac && event.ctrlKey && event.key === 'k')) {
             event.preventDefault();
+
             if (SearchStore.data.isOpen && SearchStore.data.action === 'search') {
                 SearchStore.data.isOpen = false;
 
@@ -34,6 +35,12 @@ onMounted(() => {
                 SearchStore.openSearchGenie('search');
             }
         }
+
+        if (((isMac && event.metaKey) || (!isMac && event.ctrlKey)) && event.key === 'm') {
+            event.preventDefault();
+            NavigationStore.toggleSidebar();
+        }
+
     };
 
     window.addEventListener('keydown', globalListener);
@@ -47,7 +54,7 @@ onMounted(() => {
     <div class="nav-sticky">
         <div class="nav-sticky-info">
             <div>JER {{ time.toLocaleTimeString('en-US', { hour12: false }) }} (UTC +2)</div>
-            <Link :href="route('homepage')">PalWeb 2.0 (BETA)</Link>
+            <Link :href="route('homepage')">PalWeb 2.0 (Watermelon)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button class="material-symbols-rounded" @click.stop="NavigationStore.toggleSidebar">

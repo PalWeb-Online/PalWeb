@@ -1,9 +1,6 @@
 <script setup>
 import {useTerm} from "../composables/Term.js";
-import PinButton from "./PinButton.vue";
-import TermDeckToggleButton from "./TermDeckToggleButton.vue";
-import TermActions from "./TermActions.vue";
-import {route} from "ziggy-js";
+import TermActions from "./Actions/TermActions.vue";
 
 const props = defineProps({
     model: {
@@ -11,6 +8,7 @@ const props = defineProps({
         required: false,
         default: null,
     },
+    latestTerms: Object,
 });
 
 const {term, isLoading, playAudio} = useTerm(props);
@@ -18,9 +16,9 @@ const {term, isLoading, playAudio} = useTerm(props);
 
 <template>
     <template v-if="! isLoading">
-        <div class="featured-term-container">
-            <div class="featured-title l">Word of the Day</div>
-            <div class="term-container">
+        <section class="featured-term">
+            <img alt="Term Image" :src="term.image">
+            <div>
                 <div class="term-container-head">
                     <div class="term-headword">
                         <div class="term-headword-term">
@@ -43,7 +41,7 @@ const {term, isLoading, playAudio} = useTerm(props);
                         </div>
                     </div>
                 </div>
-                <div class="term-container-glosses">
+                <div class="term-glosses">
                     <div v-for="(gloss, index) in term.glosses" class="gloss-li-container">
                         <div class="gloss-li">
                             <div class="gloss-li-label">
@@ -76,9 +74,6 @@ const {term, isLoading, playAudio} = useTerm(props);
                 <!--            </div>-->
                 <!--            <TermActions :model="term"/>-->
             </div>
-            <div>
-                <img alt="Term Image" :src="term.image">
-            </div>
-        </div>
+        </section>
     </template>
 </template>

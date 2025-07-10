@@ -46,6 +46,6 @@ import {route} from "ziggy-js";
             </div>
         </div>
 
-        <div class="footer-bottom">by R. Adrian · adrian@abdulbaha.xyz</div>
+        <div class="footer-bottom">by R. Adrian · adrian@palweb.app</div>
     </div>
 </template>

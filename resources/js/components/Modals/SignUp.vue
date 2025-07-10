@@ -1,13 +1,13 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
+import {computed} from "vue";
+import AppTip from "../AppTip.vue";
 
 const emit = defineEmits(['close', 'signIn']);
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
 
 const form = useForm({
     name: '',
@@ -18,10 +18,13 @@ const form = useForm({
     password_confirmation: '',
 });
 
+const isValidRequest = computed(() => {
+    return Object.values(form.data()).every(value => value.length);
+});
+
 const signUp = () => {
     form.post(route('signup'), {
         onSuccess: () => {
-            NotificationStore.addNotification(`Glad to have you join us, ${UserStore.user.name}!`);
             emit('close');
         }
     });
@@ -130,10 +133,16 @@ function generateArabicName() {
 }
 </script>
 <template>
-    <div class="modal-container-wrapper">
-        <div class="modal-heading">sign up</div>
-        <div class="modal-container form-container">
-            <button @click="emit('signIn')" style="justify-self: center">Already have an account? Sign In!</button>
+    <div class="window-container modal-container">
+        <div class="window-section-head">
+            <h1>sign up</h1>
+        </div>
+        <AppTip>
+            <p>Already have an account?
+                <button @click="emit('signIn')">Sign In!</button>
+            </p>
+        </AppTip>
+        <div class="modal-container-body form-body">
             <div class="field-item">
                 <label>Name</label>
                 <div class="field-input">
@@ -170,8 +179,6 @@ function generateArabicName() {
                 </div>
                 <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
             </div>
-
-
             <div class="field-item">
                 <label>Email</label>
                 <div class="field-input">
@@ -204,8 +211,9 @@ function generateArabicName() {
                     />
                 </div>
             </div>
-
-            <button class="app-button" @click="signUp" :disabled="form.processing">
+        </div>
+        <div class="window-footer">
+            <button @click="signUp" :disabled="form.processing || !isValidRequest">
                 Sign Up
             </button>
         </div>

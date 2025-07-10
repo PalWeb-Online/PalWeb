@@ -24,8 +24,8 @@ const setNewPassword = () => {
         : form.patch.bind(form);
 
     const url = !UserStore.isUser
-        ? route('password.store')
-        : route('password.update');
+        ? route('password.update')
+        : route('password.change');
 
     method(url);
 }
@@ -36,35 +36,37 @@ defineOptions({
 </script>
 <template>
     <Head title="New Password"/>
-    <div id="app-head">
-        <h1>New Password</h1>
-    </div>
     <div id="app-body">
-        <div class="modal-container form-container">
-            <div class="field-item">
-                <label>Password</label>
-                <div class="field-input">
-                    <input type="password" v-model="form.password" placeholder="Lenin1917!" required>
-                    <div class="field-chars"
-                         :class="{'invalid': form.password.length < 8}"
-                         v-text="form.password.length + `/8`"
-                    />
-                </div>
-                <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
+        <div class="window-container">
+            <div class="window-section-head">
+                <h1>new password</h1>
             </div>
-            <div class="field-item">
-                <label>Confirm Password</label>
-                <div class="field-input">
-                    <input type="password" v-model="form.password_confirmation" placeholder="Lenin1917!" required>
-                    <div class="field-chars"
-                         :class="{'invalid': form.password_confirmation.length < 8}"
-                         v-text="form.password_confirmation.length + `/8`"
-                    />
+            <div class="form-body">
+                <div class="field-item">
+                    <label>Password</label>
+                    <div class="field-input">
+                        <input type="password" v-model="form.password" placeholder="Lenin1917!" required>
+                        <div class="field-chars"
+                             :class="{'invalid': form.password.length < 8}"
+                             v-text="form.password.length + `/8`"
+                        />
+                    </div>
+                    <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
                 </div>
+                <div class="field-item">
+                    <label>Confirm Password</label>
+                    <div class="field-input">
+                        <input type="password" v-model="form.password_confirmation" placeholder="Lenin1917!" required>
+                        <div class="field-chars"
+                             :class="{'invalid': form.password_confirmation.length < 8}"
+                             v-text="form.password_confirmation.length + `/8`"
+                        />
+                    </div>
+                </div>
+                <button class="app-button" @click="setNewPassword" :disabled="form.processing">
+                    Set Password
+                </button>
             </div>
-            <button class="app-button" @click="setNewPassword" :disabled="form.processing">
-                Set Password
-            </button>
         </div>
     </div>
 </template>

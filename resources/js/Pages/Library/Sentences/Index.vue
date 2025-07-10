@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import SentenceContainer from "../../../components/SentenceContainer.vue";
+import SentenceItem from "../../../components/SentenceItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
@@ -33,27 +33,26 @@ function updateFilter({filter, value}) {
 
 <template>
     <Head title="Library: Phrasebook"/>
-    <div id="app-head">
-        <Link :href="route('sentences.index')"><h1>Phrasebook</h1></Link>
-    </div>
     <div id="app-body">
-        <div class="nav-body">
-            <Link v-if="UserStore.isAdmin" :href="route('speech-maker.sentence')">Create New</Link>
-            <div v-else>Index</div>
-            <Link :href="route('sentences.random')">to Random -></Link>
-        </div>
-        <div class="search-filters-wrapper">
+        <div class="window-container">
+            <div class="window-header">
+                <Link :href="route('sentences.index')" class="material-symbols-rounded">home</Link>
+                <div class="window-header-url">www.palweb.app/library/sentences</div>
+                <Link v-if="UserStore.isAdmin" :href="route('speech-maker.sentence')" class="material-symbols-rounded">add</Link>
+                <Link :href="route('sentences.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+            </div>
+            <div class="window-section-head">
+                <h1>phrasebook</h1>
+            </div>
+
+            <div class="window-section-head">
+                <h2>Index</h2>
+            </div>
             <SearchFilters
                 :activeModel="'sentences'"
                 :filters="filters"
                 @updateFilter="updateFilter"
             />
-        </div>
-
-        <div class="popup-window index-container">
-            <div class="window-head">
-                sentences
-            </div>
             <AppTip>
                 <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{
                         totalCount
@@ -63,8 +62,8 @@ function updateFilter({filter, value}) {
                 <p v-else>No Sentences matching this query.</p>
             </AppTip>
             <template v-if="totalCount > 0">
-                <div class="sentences-list">
-                    <SentenceContainer v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
+                <div class="model-list index-list">
+                    <SentenceItem v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
                 </div>
                 <Paginator :links="sentences.meta.links"/>
             </template>

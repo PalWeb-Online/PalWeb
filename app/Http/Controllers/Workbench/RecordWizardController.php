@@ -79,6 +79,12 @@ class RecordWizardController extends Controller
 
             foreach ($deck->terms as $term) {
                 foreach ($term->pronunciations as $pronunciation) {
+                    if (count($queued) + count($pronunciations) >= 100) {
+                        session()->flash('notification',
+                            ['type' => 'success', 'message' => 'You\'ve reached the Queue max. Some items could not be added.']);
+                        break 2;
+                    }
+
                     if (
                         in_array($pronunciation->dialect_id, $dialectIds) &&
                         ! $queuedIds->contains($pronunciation->id)
@@ -91,17 +97,12 @@ class RecordWizardController extends Controller
                             $item = $pronunciation->toArray();
                             $item['term'] = $pronunciation->term->term;
                             $pronunciations[] = $item;
-
-                            if (count($queued) + count($pronunciations) >= 100) {
-                                break 2;
-                            }
                         }
                     }
                 }
             }
 
             return response()->json([
-                'deck' => $deck,
                 'items' => $pronunciations,
             ]);
 

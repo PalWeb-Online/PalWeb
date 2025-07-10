@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://www.abdulbaha.xyz/sitemap.xml
+Sitemap: https://www.palweb.app/sitemap.xml

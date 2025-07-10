@@ -17,7 +17,7 @@ defineOptions({
             project.
             If you're a developer with knowledge of Javascript & PHP, especially in the use of the Vue & Laravel
             frameworks,
-            please get in touch (<b>adrian@abdulbaha.xyz</b>) if you'd like to contribute to the project. You can get
+            please get in touch (<b>adrian@palweb.app</b>) if you'd like to contribute to the project. You can get
             started right away by cloning the public repository on GitHub.
         </p>
         <p>Another thing I haven't investigated too much but will probably need help with is the porting of the
@@ -36,7 +36,7 @@ defineOptions({
     <div class="wiki-content-block">
         <h1>Everyone Else</h1>
         <p>I'm primarily looking for people who would be willing to volunteer to record audio samples of terms &
-            sentences for the Dictionary, so please get in touch (<b>adrian@abdulbaha.xyz</b>) if that sounds like you.
+            sentences for the Dictionary, so please get in touch (<b>adrian@palweb.app</b>) if that sounds like you.
         </p>
         <p>Even if you're not a developer or an Arabic speaker, there's plenty you can do to contribute to the project.
             Just by using the site, you help to build it!

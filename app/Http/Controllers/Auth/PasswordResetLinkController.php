@@ -15,8 +15,11 @@ class PasswordResetLinkController extends Controller
             $request->only('email')
         );
 
-        if ($status !== Password::RESET_LINK_SENT) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to send password reset link.']);
+        if ($status === Password::RESET_LINK_SENT) {
+            session()->flash('notification', ['type' => 'success', 'message' => __($status)]);
+
+        } else {
+            session()->flash('notification', ['type' => 'error', 'message' => __($status)]);
         }
 
         return back();

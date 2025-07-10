@@ -29,22 +29,24 @@ class DeckController extends Controller
 
         $deck->isPinned() && event(new ModelPinned($user));
 
+        $message = $deck->isPinned() ? __('pin.added', ['thing' => $deck->name]) : __('pin.removed', ['thing' => $deck->name]);
+        session()->flash('notification', ['type' => 'success', 'message' => $message]);
+
         return response()->json([
             'pinCount' => Bookmark::count($deck),
             'isPinned' => $deck->isPinned(),
-            'message' => $deck->isPinned()
-                ? __('pin.added', ['thing' => $deck->name])
-                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only(['search', 'match', 'pinned']);
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned'
+        ]));
 
-        if (! collect($filters)->some(fn ($value) => ! empty($value))) {
+        if (empty($filters['search'])) {
             $decks = Deck::query()
-                ->orderByDesc('id')
+                ->filter($filters)
                 ->paginate(25)
                 ->onEachSide(1)
                 ->appends($filters);
@@ -98,6 +100,8 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
         return to_route('decks.show', $deck);
     }
 
@@ -108,6 +112,8 @@ class DeckController extends Controller
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
         return to_route('decks.show', $deck);
     }
 
@@ -138,7 +144,8 @@ class DeckController extends Controller
         $this->authorize('modify', $deck);
 
         $deck->delete();
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
         return to_route('decks.index');
     }
 
@@ -185,8 +192,8 @@ class DeckController extends Controller
             $newDeck->terms()->attach($id, ['position' => $index + 1]);
         }
 
-        session()->flash('notification', ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
         return to_route('decks.show', $newDeck->id);
     }
 

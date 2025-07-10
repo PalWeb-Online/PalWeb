@@ -30,9 +30,9 @@ class SearchService
         $filters['match'] ??= 'term';
 
         $matches = match ($filters['match']) {
-            'root' => $this->termRepository->findMatchingRoots($filters),
-            default => $this->termRepository->findMatchingTerms($filters),
-            'gloss' => $this->termRepository->findMatchingGlosses($filters),
+            'root' => $this->termRepository->findMatchingRoots($filters['search']),
+            default => $this->termRepository->findMatchingTerms($filters['search']),
+            'gloss' => $this->termRepository->findMatchingGlosses($filters['search']),
         };
 
         $results = [

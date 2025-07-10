@@ -44,25 +44,23 @@ class TermController extends Controller
 
         $term->isPinned() && event(new ModelPinned($user));
 
+        $message = $term->isPinned() ? __('pin.added', ['thing' => $term->term]) : __('pin.removed', ['thing' => $term->term]);
+        session()->flash('notification', ['type' => 'success', 'message' => $message]);
+
         return response()->json([
             'isPinned' => $term->isPinned(),
-            'message' => $term->isPinned()
-                ? __('pin.added', ['thing' => $term->term])
-                : __('pin.removed', ['thing' => $term->term]),
         ]);
     }
 
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
-        $filters = $request->only([
-            'search', 'match', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
-        ]);
+        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
+        ]));
 
-        if (! collect($filters)->except(['match', 'pinned', 'letter'])->some(fn ($value) => ! empty($value))) {
+        if (empty($filters['search'])) {
             $terms = Term::query()
                 ->with(['root', 'glosses'])
-                ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
-                ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
                 ->select('terms.*')
                 ->filter($filters)
                 ->paginate(25)
@@ -122,9 +120,12 @@ class TermController extends Controller
                     'patterns',
                     'glosses.attributes',
                     'inflections',
-                    'decks',
+                    'decks' => function ($query) {
+                        $query->limit(10);
+                    },
                 ])
                 ->loadCount(['pronunciations']);
+//            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
 
             $model->gloss_sentences = $model->getSingleGlossSentence();
         }
@@ -237,6 +238,8 @@ class TermController extends Controller
             return $term;
         });
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('created', ['thing' => $term->term])]);
         return to_route('terms.show', $term);
     }
 
@@ -287,7 +290,7 @@ class TermController extends Controller
             }
 
             $existingGlosses->each(function ($gloss) use ($requestGlosses) {
-                if (!$requestGlosses->pluck('id')->contains($gloss->id)) {
+                if (! $requestGlosses->pluck('id')->contains($gloss->id)) {
                     $gloss->delete();
                 }
             });
@@ -297,6 +300,8 @@ class TermController extends Controller
             return $term;
         });
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('updated', ['thing' => $term->term])]);
         return to_route('terms.show', $term);
     }
 
@@ -470,6 +475,8 @@ class TermController extends Controller
             }
         }
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $term->term])]);
         return to_route('terms.index');
     }
 }

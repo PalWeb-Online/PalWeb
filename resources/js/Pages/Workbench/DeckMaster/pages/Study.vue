@@ -1,13 +1,13 @@
 <script setup>
 import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import 'vue3-carousel/dist/carousel.css';
 import TermFlashcard from "../ui/TermFlashcard.vue";
 import DeckItem from "../../../../components/DeckItem.vue";
-import AppButton from "../../../../components/AppButton.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
+import WindowSection from "../../../../components/WindowSection.vue";
+import TermItem from "../../../../components/TermItem.vue";
 
 const props = defineProps({
     deck: Object,
@@ -89,57 +89,94 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="app-nav-interact">
-        <img src="/img/finger-back.svg" @click="router.get(route('deck-master.index', {mode: 'study'}))" alt="Back"/>
-    </div>
-    <div class="dm-study-options">
-        <div class="window-head">
-            <div>Options</div>
+    <div class="window-container">
+        <div class="window-header">
+            <Link :href="route('deck-master.index', {mode: 'study'})" class="material-symbols-rounded">
+                arrow_back
+            </Link>
+            <div class="window-header-url">www.palweb.app/workbench/deck-master/study/{deck}</div>
+            <button class="material-symbols-rounded" @click="shuffleCards">shuffle</button>
+            <button class="material-symbols-rounded" @click="resetCards">undo</button>
+        </div>
+        <div class="window-section-head">
+            <h1>Options</h1>
             <PopupWindow title="Deck Master">
-                <template #trigger>
-                    <div class="material-symbols-rounded">help</div>
-                </template>
-                <template #content>
-                    <div>Settings</div>
-                    <ul>
-                        <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
-                        <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>
-                        <li><b>Default Side Toggle</b> — Toggles the default face of Cards in the Deck. Cards that have
-                            already been flipped will be unaffected.
-                        </li>
-                        <li><b>Show Inflections Toggle</b> — Toggles whether Inflections are shown on the Term side or on
-                            the Gloss side of the Card.
-                        </li>
-                        <li><b>Show Transcription</b> — Show the default transcription of the Term & its Inflections.</li>
-                        <li><b>Show Term</b> — Show the Term on the Gloss side of the Card.</li>
-                    </ul>
-
-                    <div>Keyboard Controls</div>
-                    <ul>
-                        <li><b>Left</b> / <b>A</b> — Previous Card</li>
-                        <li><b>Right</b> / <b>D</b> — Next Card</li>
-                        <li><b>Down</b> / <b>S</b> — Flip Card</li>
-                        <li><b>Space</b> — Toggle Default Side</li>
-                    </ul>
-                </template>
+                <div>Settings</div>
+                <ul>
+                    <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
+                    <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>
+                    <li><b>Default Side Toggle</b> — Toggles the default face of Cards in the Deck. Cards that have
+                        already been flipped will be unaffected.
+                    </li>
+                    <li><b>Show Inflections Toggle</b> — Toggles whether Inflections are shown on the Term side or on
+                        the Gloss side of the Card.
+                    </li>
+                    <li><b>Show Transcription</b> — Show the default transcription of the Term & its Inflections.</li>
+                    <li><b>Show Term</b> — Show the Term on the Gloss side of the Card.</li>
+                </ul>
+                <div>Keyboard Controls</div>
+                <ul>
+                    <li><b>Left</b> / <b>A</b> — Previous Card</li>
+                    <li><b>Right</b> / <b>D</b> — Next Card</li>
+                    <li><b>Down</b> / <b>S</b> — Flip Card</li>
+                    <li><b>Space</b> — Toggle Default Side</li>
+                </ul>
             </PopupWindow>
         </div>
-        <div>
-            <AppButton @click="resetCards" label="Reset"/>
-            <AppButton @click="shuffleCards" label="Shuffle"/>
-            <AppButton @click="flipDefault = !flipDefault" :label="`${flipDefault ? 'Gloss' : 'Term'} First`"/>
-            <AppButton @click="flipDefaultInflections = !flipDefaultInflections" :label="`Inflections: ${ flipDefaultInflections ? 'Front' : 'Back' }`"/>
-            <label class="checkbox">
-                <input type="checkbox" value=1 v-model="showTranslit">
-                <span>Show Transcription</span>
-            </label>
-            <label class="checkbox">
-                <input type="checkbox" value=1 v-model="showTerm">
-                <span>Show Term (Back Side)</span>
-            </label>
+        <div
+            style="padding: 1.6rem; display: flex; flex-flow: row wrap; justify-content: space-between; align-items: center; gap: 1.6rem;">
+            <div class="field-compound-toggle-wrapper">
+                <div class="field-toggle-title">initial face</div>
+                <div class="field-toggle-wrapper">
+                    <div :class="!flipDefault ? 'active' : ''">term</div>
+                    <button class="field-toggle" :class="{ active: flipDefault }"
+                            @click="flipDefault = !flipDefault">
+                        <div class="field-toggle-slider"></div>
+                    </button>
+                    <div :class="flipDefault ? 'active' : ''">gloss</div>
+                </div>
+            </div>
+            <div class="field-compound-toggle-wrapper">
+                <div class="field-toggle-title">inflections</div>
+                <div class="field-toggle-wrapper">
+                    <div :class="!flipDefaultInflections ? 'active' : ''">back</div>
+                    <button class="field-toggle" :class="{ active: flipDefaultInflections }"
+                            @click="flipDefaultInflections = !flipDefaultInflections">
+                        <div class="field-toggle-slider"></div>
+                    </button>
+                    <div :class="flipDefaultInflections ? 'active' : ''">front</div>
+                </div>
+            </div>
+            <div class="field-toggle-wrapper">
+                <button class="field-toggle" :class="{ active: showTranslit }"
+                        @click="showTranslit = !showTranslit">
+                    <div class="field-toggle-slider"></div>
+                </button>
+                <div>Show Transcription</div>
+            </div>
+            <div class="field-toggle-wrapper">
+                <button class="field-toggle" :class="{ active: showTerm }"
+                        @click="showTerm = !showTerm">
+                    <div class="field-toggle-slider"></div>
+                </button>
+                <div>Show Term (Back)</div>
+            </div>
         </div>
+        <div class="model-list index-list">
+            <DeckItem :model="deck"/>
+        </div>
+        <WindowSection :visible="false">
+            <template #title>
+                <h2>term</h2>
+            </template>
+            <template #content>
+                <div class="model-list index-list">
+                    <TermItem :model="cards[currentSlideIndex]"
+                              :glossId="cards[currentSlideIndex].deckPivot.gloss_id ?? null"/>
+                </div>
+            </template>
+        </WindowSection>
     </div>
-    <DeckItem :model="deck"/>
 
     <Carousel
         :items-to-show="1"

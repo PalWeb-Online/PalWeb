@@ -82,7 +82,7 @@ defineOptions({
             interactive portal for learning Palestinian Arabic that could overcome the limitations of traditional materials;
             the result was the <b>Learn Palestinian Arabic</b> site, officially launched in May 2023. In 2024, <b>PalWeb</b>
             as such was born.</p>
-        <p>If you'd like to get in touch, you can email me at <b>adrian@abdulbaha.xyz</b> or send a message to
+        <p>If you'd like to get in touch, you can email me at <b>adrian@palweb.app</b> or send a message to
             <b>rfi.adrian</b> on Discord. Or, if you just want to confirm that I'm a Real Person, you can follow <a
                 href="https://twitter.com/rafi2_ab" target="_blank">my very unprofessional Twitter.</a>
         </p>

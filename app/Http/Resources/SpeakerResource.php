@@ -19,6 +19,7 @@ class SpeakerResource extends JsonResource
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
+                'ar_name' => $this->user->ar_name,
                 'username' => $this->user->username,
                 'avatar' => $this->user->avatar,
                 'private' => $this->user->private
