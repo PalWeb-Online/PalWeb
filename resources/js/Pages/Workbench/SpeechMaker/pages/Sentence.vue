@@ -1,17 +1,16 @@
 <script setup>
 import {computed, onMounted, ref, watch} from "vue";
 import draggable from 'vuedraggable';
-import SentenceItem from "../ui/SentenceItem.vue";
-import TermItem from "../ui/TermItem.vue";
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
-import AppButton from "../../../../components/AppButton.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
+import PinButton from "../../../../components/PinButton.vue";
+import SentenceActions from "../../../../components/SentenceActions.vue";
 
 const props = defineProps({
     dialog: Object,
@@ -173,7 +172,7 @@ watch(
             const {uuid, ...newTerm} = term;
 
             if (sentence.terms[index]) {
-                sentence.terms[index] = { ...newTerm };
+                sentence.terms[index] = {...newTerm};
 
             } else {
                 sentence.terms.push(newTerm);
@@ -185,40 +184,91 @@ watch(
 </script>
 
 <template>
-    <div class="app-nav-interact">
-        <div class="app-nav-interact-buttons">
-            <AppButton :disabled="sentence.processing || !hasNavigationGuard || !isValidRequest" label="Save"
-                       @click="saveSentence"
-            />
-            <AppButton :disabled="sentence.processing || !hasNavigationGuard" label="Reset"
-                       @click="sentence.reset()"
-            />
-            <AppButton @click="SearchStore.openSearchGenie('insert', 'terms')"
-                       label="Insert Term"
-            />
-            <AppButton @click="addTerm" label="Blank Term"/>
-        </div>
-    </div>
-
     <AppTip v-if="!!dialog">
         <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
             & added to the Dialog on Save.
         </p>
     </AppTip>
 
-    <div class="sentence-container">
-        <SentenceItem :sentence="sentence" page="sentence" :inDialog="!!dialog"/>
+    <div class="window-container">
+        <div class="window-header">
+            <Link :href="route('speech-maker.index')" class="material-symbols-rounded">arrow_back</Link>
+            <div class="window-header-url">www.palweb.app/library/sentences/{sentence}</div>
+            <button class="material-symbols-rounded" @click="addTerm">
+                add
+            </button>
+            <button class="material-symbols-rounded" @click="SearchStore.openSearchGenie('insert', 'terms')">
+                place_item
+            </button>
+            <button :disabled="sentence.processing || !hasNavigationGuard || !isValidRequest"
+                    class="material-symbols-rounded" @click="saveSentence">
+                save
+            </button>
+            <button :disabled="sentence.processing || !hasNavigationGuard"
+                    class="material-symbols-rounded" @click="() => {sentence.reset(); termsList = [];}">
+                undo
+            </button>
+        </div>
+        <div class="window-section-head">
+            <h1>sentence</h1>
+            <PinButton v-if="sentence.id" modelType="sentence" :model="props.sentence"/>
+            <SentenceActions :model="sentence"/>
+        </div>
+        <div class="sentence-container-body">
+            <div class="sentence-dialog-data">
+                <Link v-if="sentence.dialog" :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
+                    <div>Dialog</div>
+                    <div>{{ sentence.dialog.title }}</div>
+                </Link>
+                <div>
+                    <div>speaker</div>
+                    <input v-model="sentence.speaker"/>
+                </div>
+            </div>
+            <div class="sentence-arb">
+                <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
+                    <div class="sentence-term">
+                        <div>{{ term.sentencePivot.sent_term }}</div>
+                        <div>{{ term.sentencePivot.sent_translit }}</div>
+                    </div>
+                </template>
+            </div>
+            <input class="sentence-eng" v-model="sentence.trans"/>
+        </div>
+
+        <div class="window-section-head">
+            <h2>terms</h2>
+        </div>
         <draggable :list="termsList" itemKey="uuid"
-                   class="draggable">
+                   class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
-                    <TermItem :term="element"/>
+                    <div class="term-item-wrapper">
+                        <div class="term-item">
+                            <div class="term-item-head">
+                                <input class="arb" v-model="element.sentencePivot.sent_term"/>
+                                <input class="translit" v-model="element.sentencePivot.sent_translit"/>
+                            </div>
+                            <div class="term-item-body">
+                                <template v-if="element.glosses">
+                                    <select class="eng" v-model="element.sentencePivot.gloss_id">
+                                        <option v-for="gloss in element.glosses" :value="gloss.id">
+                                            {{
+                                                gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
+                                            }}
+                                        </option>
+                                    </select>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
                     <img src="/img/trash.svg" class="trash" alt="Delete"
                          v-show="termsList.length > 0"
                          @click="removeTerm(index)"/>
                 </div>
             </template>
         </draggable>
+        <div class="terms-count">{{ termsList.filter(term => term.id).length }} Terms</div>
     </div>
 
     <ModalWrapper v-model="showAlert">

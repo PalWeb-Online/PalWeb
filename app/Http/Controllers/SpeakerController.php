@@ -48,7 +48,8 @@ class SpeakerController extends Controller
         );
         $user->update(['speaker_id' => $speaker->id]);
 
-        return back()->with(['id' => $speaker->id]);
+        session()->flash('notification',
+            ['type' => 'success', 'message' => 'Your Speaker profile has been saved!']);
         return to_route('record-wizard.index');
     }
 

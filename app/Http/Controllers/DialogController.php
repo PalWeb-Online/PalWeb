@@ -79,7 +79,8 @@ class DialogController extends Controller
     public function destroy(Dialog $dialog): RedirectResponse
     {
         $dialog->delete();
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $dialog->title])]);
         return to_route('dialogs.index');
     }
 }

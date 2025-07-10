@@ -25,11 +25,11 @@ class SentenceController extends Controller
 
         $sentence->isPinned() && event(new ModelPinned($user));
 
+        $message = $sentence->isPinned() ? __('pin.added', ['thing' => $sentence->sentence]) : __('pin.removed', ['thing' => $sentence->sentence]);
+        session()->flash('notification', ['type' => 'success', 'message' => $message]);
+
         return response()->json([
             'isPinned' => $sentence->isPinned(),
-            'message' => $sentence->isPinned()
-                ? __('pin.added', ['thing' => $sentence->sentence])
-                : __('pin.removed', ['thing' => $sentence->sentence]),
         ]);
     }
 
@@ -143,7 +143,8 @@ class SentenceController extends Controller
     public function destroy(Sentence $sentence): RedirectResponse
     {
         $sentence->delete();
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $sentence->sentence])]);
         return to_route('sentences.index');
     }
 }

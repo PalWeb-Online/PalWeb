@@ -29,12 +29,12 @@ class DeckController extends Controller
 
         $deck->isPinned() && event(new ModelPinned($user));
 
+        $message = $deck->isPinned() ? __('pin.added', ['thing' => $deck->name]) : __('pin.removed', ['thing' => $deck->name]);
+        session()->flash('notification', ['type' => 'success', 'message' => $message]);
+
         return response()->json([
             'pinCount' => Bookmark::count($deck),
             'isPinned' => $deck->isPinned(),
-            'message' => $deck->isPinned()
-                ? __('pin.added', ['thing' => $deck->name])
-                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
@@ -138,7 +138,8 @@ class DeckController extends Controller
         $this->authorize('modify', $deck);
 
         $deck->delete();
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
         return to_route('decks.index');
     }
 
@@ -185,8 +186,8 @@ class DeckController extends Controller
             $newDeck->terms()->attach($id, ['position' => $index + 1]);
         }
 
-        session()->flash('notification', ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
-
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
         return to_route('decks.show', $newDeck->id);
     }
 

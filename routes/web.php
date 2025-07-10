@@ -239,6 +239,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('/workbench')->group(function () {
         Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
+            Route::get('/', 'index')->name('speech-maker.index');
             Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
             Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
             Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');

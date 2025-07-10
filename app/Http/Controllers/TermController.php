@@ -44,11 +44,11 @@ class TermController extends Controller
 
         $term->isPinned() && event(new ModelPinned($user));
 
+        $message = $term->isPinned() ? __('pin.added', ['thing' => $term->term]) : __('pin.removed', ['thing' => $term->term]);
+        session()->flash('notification', ['type' => 'success', 'message' => $message]);
+
         return response()->json([
             'isPinned' => $term->isPinned(),
-            'message' => $term->isPinned()
-                ? __('pin.added', ['thing' => $term->term])
-                : __('pin.removed', ['thing' => $term->term]),
         ]);
     }
 
@@ -287,7 +287,7 @@ class TermController extends Controller
             }
 
             $existingGlosses->each(function ($gloss) use ($requestGlosses) {
-                if (!$requestGlosses->pluck('id')->contains($gloss->id)) {
+                if (! $requestGlosses->pluck('id')->contains($gloss->id)) {
                     $gloss->delete();
                 }
             });
@@ -470,6 +470,8 @@ class TermController extends Controller
             }
         }
 
+        session()->flash('notification',
+            ['type' => 'success', 'message' => __('deleted', ['thing' => $term->term])]);
         return to_route('terms.index');
     }
 }

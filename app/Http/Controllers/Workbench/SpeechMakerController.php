@@ -11,6 +11,15 @@ use Inertia\Inertia;
 
 class SpeechMakerController extends Controller
 {
+    public function index(): \Inertia\Response
+    {
+        return Inertia::render('Workbench/SpeechMaker/SpeechMaker', [
+            'section' => 'workbench',
+            'step' => 'select',
+            'collection' => DialogResource::collection(Dialog::orderByDesc('id')->take(10)->get()),
+        ]);
+    }
+
     public function dialog(?Dialog $dialog = null): \Inertia\Response
     {
         $dialog?->load(['sentences'])
@@ -23,8 +32,8 @@ class SpeechMakerController extends Controller
 
         return Inertia::render('Workbench/SpeechMaker/SpeechMaker', [
             'section' => 'workbench',
+            'step' => 'build',
             'mode' => 'dialog',
-            'model' => 'dialog',
             'dialog' => $dialog ? new DialogResource($dialog) : null,
         ]);
     }
@@ -35,8 +44,8 @@ class SpeechMakerController extends Controller
 
         return Inertia::render('Workbench/SpeechMaker/SpeechMaker', [
             'section' => 'workbench',
-            'mode' => 'dialog',
-            'model' => 'sentence',
+            'step' => 'build',
+            'mode' => 'sentence',
             'dialog' => new DialogResource($dialog),
         ]);
     }
@@ -47,8 +56,8 @@ class SpeechMakerController extends Controller
 
         return Inertia::render('Workbench/SpeechMaker/SpeechMaker', [
             'section' => 'workbench',
+            'step' => 'build',
             'mode' => 'sentence',
-            'model' => 'sentence',
             'sentence' => $sentence ? new SentenceResource($sentence) : null,
         ]);
     }
