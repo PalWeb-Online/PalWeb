@@ -8,10 +8,10 @@ import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import PronunciationItem from "./PronunciationItem.vue";
 import SentenceItem from "./SentenceItem.vue";
 import DeckItem from "./DeckItem.vue";
-import ChartCliticization from "./charts/ChartCliticization.vue";
-import ChartInflection from "./charts/ChartInflection.vue";
-import ChartConjugation from "./charts/ChartConjugation.vue";
-import DialogLine from "./charts/DialogLine.vue";
+import ChartCliticization from "./Charts/ChartCliticization.vue";
+import ChartInflection from "./Charts/ChartInflection.vue";
+import ChartConjugation from "./Charts/ChartConjugation.vue";
+import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
