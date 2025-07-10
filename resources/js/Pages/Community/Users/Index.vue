@@ -66,7 +66,7 @@ defineOptions({
                 </div>
             </div>
             <!--            <a href="{{ route('audios.index') }}" class="portal-button">Browse</a>-->
-            <!--            <a href="{{ route('audios.record') }}" class="portal-button">Create</a>-->
+            <!--            <a href="{{ route('record-wizard.index') }}" class="portal-button">Create</a>-->
 
             <div v-if="latestAudios.length > 0" class="audios-list">
                 <div class="featured-title m" style="text-transform: none">Latest</div>

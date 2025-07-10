@@ -46,11 +46,10 @@ class SpeakerController extends Controller
                 'gender' => $request->input('gender'),
             ]
         );
-
         $user->update(['speaker_id' => $speaker->id]);
-        $user->refresh();
 
         return back()->with(['id' => $speaker->id]);
+        return to_route('record-wizard.index');
     }
 
     public function getSpeakerOptions(): JsonResponse

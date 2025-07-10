@@ -211,6 +211,7 @@ onMounted(() => {
                         </div>
                     </Slide>
                 </Carousel>
+                                <Link :href="route('record-wizard.index')"
 
                 <div class="nav-portal-wrapper">
                     <Link :href="route('users.index')" class="nav-portal">

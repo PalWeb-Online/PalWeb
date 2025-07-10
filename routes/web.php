@@ -60,7 +60,7 @@ Route::get('/', function () {
         'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
         'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
         'sentences' => SentenceResource::collection(Sentence::find([255, 256, 257])->all()),
-        'featuredUser' => new UserResource(User::find(1)),
+        'featuredUser' => new UserResource(User::find(1)->load(['dialect'])),
         'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms.pronunciations'])),
     ]);
 })->name('homepage');
@@ -256,7 +256,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/record-wizard')->group(function () {
             Route::controller(RecordWizardController::class)->group(function () {
-                Route::get('/', 'index')->name('audios.record');
+                Route::get('/', 'index')->name('record-wizard.index');
                 Route::post('/pronunciations', 'getAutoItems')->name('record-wizard.get.auto');
                 Route::post('/decks/{deck}', 'getDeckItems')->name('record-wizard.get.deck');
             });
