@@ -125,9 +125,9 @@ onMounted(() => {
                                     <div>dialogs</div>
                                     <div>natural language input</div>
                                 </Link>
-                                <Link :href="route('coming-soon')"
+                                <Link :href="route('quizzer.index')"
                                       class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
+                                      :class="{ 'active': ['Academy/Quizzer/Index', 'Academy/Quizzer/Show'].includes($page.component) }"
                                       :disabled="!['student', 'admin'].includes(UserStore.highestRole)"
                                 >
                                     <div>quizzer</div>

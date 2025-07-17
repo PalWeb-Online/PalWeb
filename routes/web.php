@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Academy\QuizzerController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
@@ -193,6 +194,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Dialog::with(['sentences'])->findOrFail($dialog->id)
                 );
             })->name('dialogs.get');
+        });
+
+        Route::prefix('/quizzer')->controller(QuizzerController::class)->group(function () {
+            Route::get('/', 'index')->name('quizzer.index');
+            Route::get('/deck/{deck}', 'deck')->name('quizzer.deck');
+            Route::get('/deck/{deck}/quiz', 'generateQuiz')->name('quizzer.deck.quiz');
         });
 
         Route::middleware('admin')->group(function () {
