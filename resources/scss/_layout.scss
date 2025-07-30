@@ -43,7 +43,16 @@ body {
         background: var(--color-medium-primary);
     }
 
-    &.admin {
+    &.account {
+        background: var(--color-pastel-light);
+
+        @media (max-width: 959px) {
+            #app-body > .app-tip {
+                border-radius: 0;
+                border: none;
+                box-shadow: 0 0.2rem 0 rgba(black, 0.1);
+            }
+        }
     }
 
     &.wiki {
@@ -78,7 +87,7 @@ body {
         text-align: center;
         font-family: $displayFont;
         font-weight: 400;
-        font-size: clamp(4.8rem, 7vw, 6.4rem);
+        font-size: clamp(4.8rem, 10vw, 6.4rem);
         line-height: 1.2em;
         margin: 0;
         padding-block-end: 0.8rem;
@@ -88,9 +97,7 @@ body {
 
 #app-body {
     display: grid;
-    gap: 3.2rem;
     grid-auto-rows: min-content;
-
     align-items: start;
     justify-items: center;
     height: 100%;
@@ -98,56 +105,12 @@ body {
     position: relative;
 
     @media (min-width: 960px) {
+        gap: 3.2rem;
         padding: 3.2rem;
     }
-}
 
-#page-body {
-    position: relative;
-    flex-grow: 1;
-    display: grid;
-    align-items: start;
-
-    // Mobile
-    margin-block-start: 2.4rem;
-    margin-inline: 1.6rem;
-
-    @media (min-width: 960px) {
-        margin-block-start: 0;
-        margin-inline: 4.8rem;
-
-        grid-auto-columns: minmax(auto, 96rem);
-        justify-content: center;
-
-        &:has(.breadcrumbs) {
-            margin-block-start: 6.4rem;
-        }
-
-        &:has(.nav-wiki) {
-            gap: 6.4rem;
-            grid-template-columns: min-content 96rem;
-            justify-content: start;
-
-            #page-content {
-                grid-column: 2;
-            }
-        }
-    }
-
-    html[lang="ar"] & {
-        flex-flow: row-reverse;
-    }
-}
-
-#page-content {
-    background: none;
-    display: grid;
-    grid-auto-rows: min-content;
-    align-items: start;
-    gap: 2.4rem;
-
-    @media (min-width: 960px) {
-        gap: 3.2rem;
+    & > .app-tip {
+        margin-inline: 0.8rem;
     }
 }
 
@@ -206,11 +169,10 @@ body {
 
 .homepage-section {
     width: 100%;
-    //margin-inline: -3.2rem;
     display: grid;
     gap: 6.4rem;
     justify-items: center;
-    padding: 4.8rem 3.2rem 6.4rem;
+    padding: 6.4rem 3.2rem;
     position: relative;
 
     & > .popout {
@@ -259,46 +221,10 @@ body {
     }
 }
 
-.feature-panel-content {
+.homepage-panel-wrapper {
+    width: min(100%, 128rem);
     display: grid;
-    gap: 0.8rem;
-    align-content: start;
-    position: relative;
-    direction: ltr;
-
-    .feature-panel-title {
-        color: var(--color-dark-primary);
-        font-family: $displayFont;
-        font-size: 6.4rem;
-        text-transform: uppercase;
-        line-height: 1;
-        padding-block-end: 0.4rem;
-        hyphens: none;
-    }
-
-    .feature-panel-subtitle {
-        font-family: $headFont;
-        font-size: 3.2rem;
-        font-weight: 700;
-        line-height: 1.25;
-        color: var(--color-medium-primary);
-        padding-block-start: 0.3rem;
-        hyphens: none;
-    }
-
-    .feature-panel-description {
-        font-family: $bodyFont;
-        font-size: 1.8rem;
-        line-height: 1.75;
-        margin-block-start: 0.8rem;
-    }
-}
-
-.feature-panel {
-    display: grid;
-    gap: 6.4rem;
-    width: 100%;
-    max-width: 96rem;
+    gap: 4.8rem 6.4rem;
 
     &.inline {
         grid-template-columns: auto;
@@ -313,35 +239,97 @@ body {
         direction: rtl;
     }
 
-    .feature-panel-content {
-        .feature-panel-title {
-            font-size: 4.8rem;
-        }
-
-        .feature-panel-subtitle {
-            font-size: 2.4rem;
-        }
-    }
-
-    .feature-panel-feature {
+    .homepage-panel-content {
         width: 100%;
-        justify-self: center;
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
+        text-align: start;
+        font-size: clamp(3.6rem, 8vw, 4.8rem);
 
         & > video, & > img {
             width: 100%;
-            //border-radius: 1.6rem;
-            //border: 0.4rem solid var(--color-dark-primary);
-            //box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
-            box-shadow: -0.8rem 0.8rem 0 rgba(black, 0.25);
+            border-radius: 0.25em;
+        }
+    }
+}
+
+.homepage-panel-content {
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+    text-align: center;
+    position: relative;
+    direction: ltr;
+    font-size: clamp(4.8rem, 10vw, 6.4rem);
+
+    .feature-panel-title {
+        color: var(--color-dark-primary);
+        font-family: $displayFont;
+        font-size: 1em;
+        line-height: 1em;
+        text-transform: uppercase;
+        padding-block-end: 0.0625em;
+        hyphens: none;
+    }
+
+    .feature-panel-subtitle {
+        font-family: $headFont;
+        font-size: 0.5em;
+        font-weight: 700;
+        line-height: 1.2em;
+        color: var(--color-medium-primary);
+        padding-block-start: 0.125em;
+        hyphens: none;
+    }
+
+    .feature-panel-description {
+        font-family: $bodyFont;
+        font-size: 0.35em;
+        line-height: 1.75;
+        margin-block-start: 0.5em;
+    }
+
+    .feature-preview {
+        display: none;
+    }
+
+    @media (min-width: 960px) {
+        .feature-preview {
+            display: block;
         }
     }
 
-    iframe {
-        border: 0.4rem solid var(--color-pastel-dark);
+    .app-button {
+        font-size: 2.4rem;
+    }
+}
+
+.homepage-section:has(.faq-panel) {
+    padding: 0;
+}
+
+.faq-panel {
+    margin-block-start: -12.8rem;
+    width: min(100%, 96rem);
+    background: white;
+    text-align: start;
+    padding: 6.4rem 6.4rem 9.6rem;
+
+    .feature-panel-title {
+        text-align: center;
+    }
+
+    .feature-panel-subtitle {
+        font-size: 0.4em;
+        margin-block-start: 2em;
+    }
+
+    .feature-panel-description {
+        font-family: $bodyFont;
+        font-size: 0.3em;
+    }
+
+    @media (min-width: 960px) {
+        border-radius: 1.6rem;
+        padding: 6.4rem 9.6rem 12.8rem;
     }
 }
 
@@ -507,11 +495,5 @@ body {
                 flex-grow: 0;
             }
         }
-    }
-}
-
-@media (min-width: 960px) {
-    #page-body > .nav-wiki {
-        display: grid;
     }
 }

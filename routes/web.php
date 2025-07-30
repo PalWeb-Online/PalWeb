@@ -59,9 +59,32 @@ Route::get('/', function () {
         ],
         'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
         'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
-        'sentences' => SentenceResource::collection(Sentence::find([255, 256, 257])->all()),
+        'sentences' => SentenceResource::collection(Sentence::orderByDesc('id')->find([256, 66, 54])->all()),
+        'testimonials' => [
+            [
+                'user' => new UserResource(User::find(243)),
+                'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.'
+            ],
+            [
+                'user' => new UserResource(User::find(1317)),
+                'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.'
+            ],
+            [
+                'user' => new UserResource(User::find(16)),
+                'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.'
+            ],
+            [
+                'user' => new UserResource(User::find(18)),
+                'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.'
+            ],
+            [
+                'user' => new UserResource(User::find(3)),
+                'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!'
+            ],
+        ],
+        'featuredTerm' => new TermResource(Term::find(662))->additional(['detail' => true]),
         'featuredUser' => new UserResource(User::find(1)->load(['dialect'])),
-        'featuredDeck' => new DeckResource(Deck::find(56)->load(['terms.pronunciations'])),
+        'featuredDeck' => new DeckResource(Deck::find(2)->load(['terms'])),
     ]);
 })->name('homepage');
 

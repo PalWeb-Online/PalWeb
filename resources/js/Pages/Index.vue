@@ -1,23 +1,36 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import UserScorecard from "../components/UserScorecard.vue";
+import Testimonial from "../components/Testimonial.vue";
+import RotatingWordColumn from "../components/RotatingWordColumn.vue";
+import TermFlashcard from "./Workbench/DeckMaster/ui/TermFlashcard.vue";
+import ToggleSingle from "../components/ToggleSingle.vue";
+import {useSearchStore} from "../stores/SearchStore.js";
+import SentenceItem from "../components/SentenceItem.vue";
+import AppButton from "../components/AppButton.vue";
 
 defineProps({
     count: Object,
     users: Array,
     decks: Array,
     sentences: Array,
+    testimonials: Array,
+    featuredTerm: Object,
     featuredUser: Object,
     featuredDeck: Object,
 });
 
 const NavigationStore = useNavigationStore();
+const SearchStore = useSearchStore();
+
+const showTranslit = ref(false);
+const flipDefault = ref(false);
 
 const carousels = [];
 
@@ -35,17 +48,25 @@ const duplicateCarouselItems = (carousel) => {
     }
 };
 
+let intervalId = null;
+
 onMounted(async () => {
     await nextTick();
     carousels.length = 0;
     carousels.push(...document.querySelectorAll(".carousel-track"));
     carousels.forEach((carousel) => duplicateCarouselItems(carousel));
+
+    intervalId = setInterval(() => {
+        flipDefault.value = !flipDefault.value;
+    }, 2000);
 });
 
 onBeforeUnmount(() => {
     carousels.forEach((carousel) => {
         carousel.innerHTML = "";
     });
+
+    clearInterval(intervalId);
 });
 
 defineOptions({
@@ -60,79 +81,214 @@ defineOptions({
             <HomepageHero/>
         </div>
 
-        <div class="homepage-panel-wrapper accent-light">
-            <img class="popout" src="/img/watermelon.svg" alt="watermelon"/>
-
-            <div class="feature-panel-content" style="text-align: center">
-                <div class="feature-panel-title">language is a web</div>
-                <div class="feature-panel-subtitle">PalWeb is the Web of Palestinian Arabic</div>
+        <div class="homepage-section accent-light" style="padding-block-end: 25.6rem">
+            <div class="homepage-panel-content">
+                <div class="feature-panel-subtitle"
+                     style="margin-block: 3.2rem; display: flex; flex-flow: row wrap; align-items: center; justify-content: center; gap: 1.2rem 2.4rem">
+                    so, you’re
+                    <div style="display: flex; flex-flow: row wrap; gap: 1.6rem">
+                        <RotatingWordColumn :words="['learning', 'teaching', 'researching']"/>
+                        <RotatingWordColumn :words="['Spoken', 'Levantine', 'Palestinian', 'Jordanian']"/>
+                    </div>
+                    Arabic
+                </div>
+                <div class="feature-panel-title">PalWeb is your hub</div>
             </div>
 
-            <div class="feature-panel inline">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">hypertext dictionary</div>
-                    <div class="feature-panel-subtitle">Go where your curiosity takes you.</div>
-                    <div class="feature-panel-description">Highly detailed entries are just the beginning: hear
-                        everything out loud; see all their forms & conjugations; browse synonyms & antonyms — & more!
-                        Sentences show you Terms in their context, too. Click on any Term to jump to its page in an
-                        instant!
-                    </div>
-                </div>
-                <div class="feature-panel-feature">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front01.png" alt="Front Page 01">
-                </div>
-            </div>
-
-            <div class="model-counter-wrapper">
-                <div class="model-counter">
-                    <div class="model-counter-count">{{ count.terms }}</div>
-                    <div class="model-counter-body">
-                        <span class="model-counter-model">Terms</span>
-                    </div>
-                </div>
-                <div class="model-counter">
-                    <div class="model-counter-count">{{ count.sentences }}</div>
-                    <div class="model-counter-body">
-                        <span class="model-counter-model">Sentences</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="feature-panel inline reverse">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">find anything</div>
-                    <div class="feature-panel-subtitle">Just call the Search Genie.</div>
-                    <div class="feature-panel-description">Search in Arabic or English & narrow down your search with a
-                        variety of filters. Want to find a feminine noun in the Form 1 Active Participle pattern & a
-                        CaCāCic broken plural?
-                        ثواني!
-                    </div>
-                </div>
-
-                <div class="feature-panel-feature">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front02.png" alt="Front Page 02">
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <UserScorecard v-for="user in users" :user="user" :key="'user-carousel' + user.id" :scores="false"/>
                 </div>
             </div>
         </div>
 
-        <div class="homepage-panel-wrapper pastel-light">
-            <div class="feature-panel-content" style="text-align: center">
+        <div class="homepage-section pastel-light">
+            <div class="homepage-panel-content faq-panel" style="padding-block-end: 3.2rem;">
+                <div class="feature-panel-title">everyone get in</div>
+                <div class="feature-panel-subtitle">We’re bringing learners, educators & speakers together.</div>
+                <div class="feature-panel-description">Whether you're just starting to learn Arabic or you're a
+                    native speaker interested in language preservation, PalWeb's suite of database-powered learning
+                    & documentation tools bring everyone together to celebrate Palestinian Arabic.
+                </div>
+
+                <div class="portal-button-wrapper" style="margin-block: 9.6rem 6.4rem">
+                    <div class="portal-button-head">
+                        keep the convo going
+                    </div>
+                    <div class="portal-button-body">
+                        <a class="portal-button" href="https://discord.gg/3Wf7Q6RCjV" target="_blank">Join Our
+                            Discord!</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--            <div-->
+            <!--                style="display: flex; flex-flow: row wrap; align-items: flex-start; justify-content: center; gap: 1.6rem 6.4rem">-->
+            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
+            <!--                    <div class="homepage-panel-content">-->
+            <!--                        <div class="feature-panel-title">Learn</div>-->
+            <!--                        <div class="feature-panel-subtitle">Arabic, easier than you think.</div>-->
+            <!--                        <div class="feature-panel-description">-->
+            <!--                            (A suite of reference & study tools.)-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
+            <!--                    <div class="homepage-panel-content">-->
+            <!--                        <div class="feature-panel-title">Teach</div>-->
+            <!--                        <div class="feature-panel-subtitle">Resources at your fingertips.</div>-->
+            <!--                        <div class="feature-panel-description">-->
+            <!--                            (A suite of reference & study tools.)-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
+            <!--                    <div class="homepage-panel-content">-->
+            <!--                        <div class="feature-panel-title">Research</div>-->
+            <!--                        <div class="feature-panel-subtitle">Open-source documentation tools.</div>-->
+            <!--                        <div class="feature-panel-description">-->
+            <!--                            (A suite of reference & study tools.)-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+
+        <div class="homepage-section pastel-light" style="padding-block-end: 25.6rem">
+            <div>
+                <img class="world" src="/img/watermelon.svg" alt="watermelon"/>
+            </div>
+
+            <div class="homepage-panel-content">
+                <div class="feature-panel-title">language is a web</div>
+                <div class="feature-panel-subtitle">PalWeb is the Web of Palestinian Arabic</div>
+            </div>
+
+            <div class="homepage-panel-wrapper inline">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">hypertext dictionary</div>
+                    <div class="feature-panel-subtitle">Go where your curiosity takes you.</div>
+                    <div class="feature-panel-description">Highly detailed entries are just the beginning: hear
+                        everything out loud; jump between synonyms & antonyms; browse Sentences to see Terms in their
+                        context — & more!
+                    </div>
+                    <div class="feature-preview" style="margin-block-start: 6.4rem">
+                        <div class="model-list">
+                            <SentenceItem v-for="sentence in sentences" :model="sentence" :key="sentence.id"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="homepage-panel-content">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front01.png" alt="Front Page 01">
+                </div>
+            </div>
+
+            <div class="homepage-panel-wrapper inline reverse">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">find anything</div>
+                    <div class="feature-panel-subtitle">Just call the Search Genie.</div>
+                    <div class="feature-panel-description">Search in Arabic or English & narrow down your search with a
+                        variety of filters tailored for the Arabic root-pattern system. Pin things to find easily later!
+                    </div>
+                    <div class="feature-preview" style="margin-block: 3.2rem; justify-self: center">
+                        <AppButton label="Try Me" @click="SearchStore.openSearchGenie"/>
+                    </div>
+                    <div class="model-counter-wrapper" style="margin-block-start: 3.2rem">
+                        <div class="model-counter">
+                            <div class="model-counter-count">{{ count.terms }}</div>
+                            <div class="model-counter-body">
+                                <span class="model-counter-model">Terms</span>
+                            </div>
+                        </div>
+                        <div class="model-counter">
+                            <div class="model-counter-count">{{ count.sentences }}</div>
+                            <div class="model-counter-body">
+                                <span class="model-counter-model">Sentences</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="homepage-panel-content">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front02.png" alt="Front Page 02">
+                </div>
+            </div>
+
+            <!--            <div class="homepage-panel-wrapper inline">-->
+            <!--                <div class="homepage-panel-content">-->
+            <!--                    <div class="feature-panel-title">wiki & docs</div>-->
+            <!--                    <div class="feature-panel-subtitle">PalWeb, the free encyclopedia.</div>-->
+            <!--                    <div class="feature-panel-description">The PalWeb Wiki includes a descriptive grammar of Spoken-->
+            <!--                        Palestinian Arabic. Are you an Arabic philologist or dialectologist? Help us fill it out!-->
+            <!--                    </div>-->
+            <!--                </div>-->
+
+            <!--                <div class="homepage-panel-content">-->
+            <!--                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front05.png" alt="Front Page 05">-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <div class="homepage-panel-wrapper inline">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">record wizard</div>
+                    <div class="feature-panel-subtitle">Let your voice shine through.</div>
+                    <div class="feature-panel-description">Breathe life into language by recording pronunciation samples
+                        of everything in your dialect — & represent the diversity of Palestinian Arabic.
+                    </div>
+                </div>
+
+                <div class="homepage-panel-content">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front05.png" alt="Front Page 05">
+                </div>
+            </div>
+        </div>
+
+        <div class="homepage-section accent-light">
+            <div class="homepage-panel-content faq-panel">
+                <div class="feature-panel-title">stairway to Arabic</div>
+                <div class="feature-panel-subtitle">Why Spoken Arabic?</div>
+                <div class="feature-panel-description"><b>If you really want to learn Arabic, start with Spoken
+                    Arabic.</b> Standard Arabic is hard, even for native Arabic speakers. Learning Spoken Arabic
+                    first mirrors how native speakers acquire language — socially & contextually — & makes
+                    transitioning to Standard Arabic not only easier but more meaningful, as you’ll already have an
+                    intuitive feel for structure, sound, and flow.
+                </div>
+                <div class="feature-panel-subtitle">Why Palestinian Arabic?</div>
+                <div class="feature-panel-description">Palestinian Arabic is a form of Levantine Arabic, one of the
+                    most widely understood dialect families in the Arab world, <b>spoken by up to 40 million
+                        people</b> in Palestine, Jordan, Lebanon, Syria & beyond. It’s one of the more conservative
+                    dialects of Spoken Arabic, with strong similarities to Standard Arabic (up to 80% lexical
+                    overlap!), making it <b>a perfect starting point</b> for learners to build a solid foundation in
+                    Arabic vocabulary & grammar.
+                </div>
+            </div>
+        </div>
+
+        <div class="homepage-section accent-light">
+            <div>
+                <img class="world" src="/img/key.svg" alt="Key"/>
+            </div>
+
+            <div class="homepage-panel-content">
                 <div class="feature-panel-title">make arabic yours</div>
                 <div class="feature-panel-subtitle">hassle-free language learning is here</div>
             </div>
 
-            <div class="feature-panel inline">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">build decks</div>
+            <div class="homepage-panel-wrapper inline reverse">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">deck master</div>
                     <div class="feature-panel-subtitle">Build your vocabulary, Deck by Deck.</div>
                     <div class="feature-panel-description">Say goodbye to the busy work of piecing together your own
-                        vocabulary sets. Use the Deck Master to build your own Decks in a flash, or browse the Deck
-                        Library to see all the Decks others have made — & even copy a Deck to put your own spin on
-                        someone else's idea!
+                        vocabulary sets. Use the Deck Master to build your own Decks in a flash, or browse the Library
+                        to see all the Decks others have made!
+                    </div>
+                    <div class="feature-preview" style="margin-block: 6.4rem; justify-self: center">
+                        <DeckFlashcard :model="featuredDeck"/>
                     </div>
                 </div>
 
-                <div class="feature-panel-feature">
+                <div class="homepage-panel-content">
                     <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front03.png" alt="Front Page 03">
                 </div>
             </div>
@@ -143,29 +299,34 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="feature-panel inline reverse">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">study decks</div>
+            <div class="homepage-panel-wrapper inline">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">flashcards</div>
                     <div class="feature-panel-subtitle">Flashy new ways to practice.</div>
                     <div class="feature-panel-description">Tired of micro-managing third-party flashcard applications?
-                        Study your Deck right here with the Deck Master, which gives you total flexibility to adjust how
-                        you view your Deck with just one click.
+                        Study your Deck right here in the Deck Master, with total flexibility to adjust how you view
+                        the cards with just one click.
                     </div>
                 </div>
-                <div class="feature-panel-feature">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front04.png" alt="Front Page 04">
+                <div class="homepage-panel-content">
+                    <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+                    <TermFlashcard
+                        :model="featuredTerm.data"
+                        :showTranslit="showTranslit"
+                        :flipDefault="flipDefault"
+                    />
                 </div>
             </div>
         </div>
 
-        <div class="homepage-panel-wrapper accent-light">
+        <div class="homepage-section pastel-light">
             <div>
                 <img src="/img/globe-america.svg" class="world" alt="America"/>
                 <img src="/img/globe-africa.svg" class="world" alt="Africa"/>
                 <img src="/img/globe-asia.svg" class="world" alt="Asia"/>
             </div>
 
-            <div class="feature-panel-content" style="text-align: center">
+            <div class="homepage-panel-content" style="text-align: center">
                 <div class="feature-panel-title">we create. you learn.</div>
                 <div class="feature-panel-subtitle">everything on PalWeb is made by others like you</div>
             </div>
@@ -192,53 +353,35 @@ defineOptions({
             </div>
 
             <div class="carousel-wrapper">
-                <div class="carousel-track">
-                    <UserScorecard v-for="user in users" :user="user" :key="'user-carousel' + user.id" :scores="false"/>
+                <div class="carousel-track" style="animation: carousel-scroll 60s linear infinite">
+                    <Testimonial v-for="(testimonial, index) in testimonials" :testimonial="testimonial" :key="index"/>
                 </div>
             </div>
 
-            <div class="feature-panel">
-                <div class="feature-panel-content">
+            <div class="homepage-panel-wrapper" style="max-width: 96rem">
+                <div class="homepage-panel-content">
                     <div class="feature-panel-title">building community</div>
                     <div class="feature-panel-subtitle">Connect & share with others.</div>
                 </div>
-                <div class="feature-panel-feature">
-                    <div class="window-container">
-                        <div class="window-header">
-                            <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
-                            <div class="material-symbols-rounded">public</div>
-                            <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
-                        </div>
-                        <div class="window-section-head">
-                            <h1>profile</h1>
-                        </div>
-                        <UserItem :user="featuredUser" size="l" comment tags/>
+                <div class="window-container">
+                    <div class="window-header">
+                        <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
+                        <div class="material-symbols-rounded">public</div>
+                        <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
                     </div>
-                </div>
-            </div>
-
-            <div class="feature-panel inline reverse">
-                <div class="feature-panel-content">
-                    <div class="feature-panel-title">record wizard</div>
-                    <div class="feature-panel-subtitle">Let your voice shine through.</div>
-                    <div class="feature-panel-description">Originally developed to source pronunciation samples from
-                        native speakers, the Record Wizard will be open for all to contribute audios to the site.
-                        Fluency level is indicated for each Speaker, so don't be shy — every word can have as many
-                        audios as there are Arabic speakers in the world!
+                    <div class="window-section-head">
+                        <h1>profile</h1>
                     </div>
-                </div>
-
-                <div class="feature-panel-feature">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front05.png" alt="Front Page 05">
+                    <UserItem :user="featuredUser" size="l" comment tags/>
                 </div>
             </div>
 
             <div class="portal-button-wrapper">
                 <div class="portal-button-head">
-                    what will you create?
+                    what are you waiting for?
                 </div>
                 <div class="portal-button-body">
-                    <button @click="NavigationStore.showSignUp = true" class="portal-button">Join PalWeb!</button>
+                    <button @click="NavigationStore.showSignUp = true" class="portal-button">Sign Me Up!</button>
                 </div>
             </div>
         </div>
