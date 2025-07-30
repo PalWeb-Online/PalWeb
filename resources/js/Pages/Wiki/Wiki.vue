@@ -22,7 +22,7 @@ const navOpen = ref(false);
             </button>
             <h1>{{ page }}</h1>
         </div>
-        <AppTip>
+        <AppTip dismissable>
             <p>The <b>Wiki</b> is an extensive repository of information about Palestinian Arabic & PalWeb. Due to time
                 constraints, these pages are not updated very often, especially those that pertain to Palestinian Arabic
                 as such. Be aware that some of this information may be outdated or incomplete. If you are interested in
