@@ -14,6 +14,8 @@ import ToggleSingle from "../components/ToggleSingle.vue";
 import {useSearchStore} from "../stores/SearchStore.js";
 import SentenceItem from "../components/SentenceItem.vue";
 import AppButton from "../components/AppButton.vue";
+import {useUserStore} from "../stores/UserStore.js";
+import {useNotificationStore} from "../stores/NotificationStore.js";
 
 defineProps({
     count: Object,
@@ -26,8 +28,19 @@ defineProps({
     featuredDeck: Object,
 });
 
+const NotificationStore = useNotificationStore();
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
+const UserStore = useUserStore();
+
+const showSignUp = () => {
+    if (!UserStore.user) {
+        NavigationStore.showSignUp = true
+
+    } else {
+        NotificationStore.addNotification('You\'re already signed in!', 'info')
+    }
+}
 
 const showTranslit = ref(false);
 const flipDefault = ref(false);
@@ -381,7 +394,7 @@ defineOptions({
                     what are you waiting for?
                 </div>
                 <div class="portal-button-body">
-                    <button @click="NavigationStore.showSignUp = true" class="portal-button">Sign Me Up!</button>
+                    <button @click="showSignUp" class="portal-button">Sign Me Up!</button>
                 </div>
             </div>
         </div>
