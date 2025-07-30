@@ -30,35 +30,37 @@ const sendMail = () => {
         <div class="window-section-head">
             <h1>send mail</h1>
         </div>
-        <div class="modal-container-body form-body">
-            <div class="field-item">
-                <label>Subject</label>
-                <div class="field-input">
-                    <input v-model="form.subject" placeholder="Subject" required>
+        <form @submit.prevent="sendMail">
+            <div class="modal-container-body form-body">
+                <div class="field-item">
+                    <label>Subject</label>
+                    <div class="field-input">
+                        <input v-model="form.subject" placeholder="Subject" required>
+                    </div>
+                    <div v-if="form.errors.subject" v-text="form.errors.subject" class="field-error"/>
                 </div>
-                <div v-if="form.errors.subject" v-text="form.errors.subject" class="field-error"/>
-            </div>
-            <div class="user-item m">
-                <div class="user-avatar">
-                    <img :src="`/img/avatars/${UserStore.user.avatar}`" alt="Avatar"/>
-                </div>
-                <div class="user-data-wrapper">
-                    <div class="user-comment">
-                        <textarea class="user-comment-content" v-model="form.body"
-                                  placeholder="What would you like to say?"
-                        />
-                        <div class="user-comment-data">
-                            — {{ UserStore.user.name }} ({{ UserStore.user.username }})
+                <div class="user-item m">
+                    <div class="user-avatar">
+                        <img :src="`/img/avatars/${UserStore.user.avatar}`" alt="Avatar"/>
+                    </div>
+                    <div class="user-data-wrapper">
+                        <div class="user-comment">
+                            <textarea class="user-comment-content" v-model="form.body"
+                                      placeholder="What would you like to say?"
+                            />
+                            <div class="user-comment-data">
+                                — {{ UserStore.user.name }} ({{ UserStore.user.username }})
+                            </div>
+                            <div v-if="form.errors.body" v-text="form.errors.body" class="field-error"/>
                         </div>
-                        <div v-if="form.errors.body" v-text="form.errors.body" class="field-error"/>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="window-footer">
-            <button @click="sendMail" :disabled="form.processing || !isValidRequest">
-                Send
-            </button>
-        </div>
+            <div class="window-footer">
+                <button type="submit" :disabled="form.processing || !isValidRequest">
+                    Send
+                </button>
+            </div>
+        </form>
     </div>
 </template>

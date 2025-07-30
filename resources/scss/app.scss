@@ -289,30 +289,41 @@ figure.data-box {
 
 // Subscriptions
 
-.tiers-array {
+.subscription-tiers {
     width: 100%;
-    max-width: 96rem;
-    display: grid;
-    align-items: start;
-    gap: 1.6rem;
-    grid-template-columns: repeat(1, 1fr);
+    max-width: 128rem;
+    margin: 3.2rem 6.4rem;
+    padding-inline: 3.2rem;
+    gap: 3.2rem;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
 
-    @media (min-width: 960px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    //display: grid;
+    //align-items: start;
+    //justify-content: center;
+    //justify-items: center;
+    //grid-template-columns: repeat(1, 1fr);
+    //
+    //@media (min-width: 960px) {
+    //    grid-template-columns: repeat(2, 1fr);
+    //}
 }
 
 .tier-item-wrapper {
-    display: grid;
-    gap: 1.6rem;
-
-    .tier-name {
-        color: var(--color-medium-secondary);
-        text-align: center;
-        font-family: $headFont;
-        font-size: 3.6rem;
-        font-weight: 700;
-    }
+    //width: 100%;
+    //max-width: 48rem;
+    //display: grid;
+    //gap: 1.6rem;
+    //
+    //.tier-name {
+    //    color: var(--color-medium-secondary);
+    //    text-align: center;
+    //    font-family: $headFont;
+    //    font-size: 3.6rem;
+    //    font-weight: 700;
+    //}
 
     .current-tier {
         background: var(--color-accent-medium);
@@ -326,33 +337,37 @@ figure.data-box {
 }
 
 .tier-item {
-    overflow: hidden;
-    background: white;
-    border-radius: 1.6rem;
+    border-radius: 0.8rem;
     border: 0.2rem solid var(--color-dark-primary);
     box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
-
-    &:hover {
-        border: 0.2rem solid var(--color-accent-medium);
-    }
+    max-width: 36rem;
 
     .tier-body {
         display: grid;
         text-align: left;
-        padding: 0.6rem 1.2rem;
         color: var(--color-dark-primary);
+        //padding: 0.6rem 1.2rem;
+        //background: gray;
 
         & > * {
-            padding: 1.2rem 0.6rem;
-            border-block-end: 0.2rem dotted var(--color-pastel-dark);
+            //padding: 1.2rem 0.6rem;
+            //border-block-end: 0.2rem dotted var(--color-pastel-dark);
+            padding: 1.2rem;
+            //background: red;
+        }
+
+        & > *:not(:first-child) {
+            border-block-start: 0.1rem solid var(--color-pastel-dark);
         }
 
         & > *:last-child {
             border-block-end: none;
         }
 
-        & > *.disabled {
-            color: var(--color-pastel-dark);
+        & > *.highlighted {
+            background: var(--color-pastel-light);
+            //border-block-start: 0.1rem solid var(--color-accent-medium);
+            //color: var(--color-medium-primary);
         }
     }
 
@@ -795,7 +810,7 @@ ul.search-results {
     }
 }
 
-.field-compound-toggle-wrapper {
+.toggle-double-wrapper {
     display: grid;
     gap: 0.4rem;
     justify-items: center;
@@ -803,7 +818,7 @@ ul.search-results {
     padding: 0.8rem 1.6rem 1.2rem;
     border-radius: 0.8rem;
 
-    .field-toggle-title {
+    .toggle-double-label {
         color: var(--color-dark-primary);
         font-family: $monoFont;
         font-weight: 700;
@@ -811,7 +826,7 @@ ul.search-results {
         text-transform: uppercase;
     }
 
-    .field-toggle-wrapper > div {
+    .toggle-button-wrapper > div {
         font-size: 1.2rem;
         text-transform: uppercase;
         color: var(--color-pastel-dark);
@@ -821,16 +836,16 @@ ul.search-results {
         }
     }
 
-    button.field-toggle {
+    button.toggle-button {
         background: var(--color-medium-primary) !important;
 
-        .field-toggle-slider {
+        .toggle-button-slider {
             //background: var(--color-accent-medium);
         }
     }
 }
 
-.field-toggle-wrapper {
+.toggle-button-wrapper {
     display: flex;
     align-items: center;
     gap: 1.6rem;
@@ -841,7 +856,7 @@ ul.search-results {
     text-transform: capitalize;
 }
 
-button.field-toggle {
+button.toggle-button {
     height: 3.2rem;
     width: 5.6rem;
     border-radius: 1.6rem;
@@ -854,7 +869,7 @@ button.field-toggle {
         outline: 0.2rem solid var(--color-dark-primary);
     }
 
-    .field-toggle-slider {
+    .toggle-button-slider {
         height: 100%;
         width: 50%;
         border-radius: 1.2rem;
@@ -873,7 +888,7 @@ button.field-toggle {
     &.active {
         background: var(--color-accent-medium);
 
-        .field-toggle-slider {
+        .toggle-button-slider {
             transform: translateX(100%);
         }
     }
@@ -903,6 +918,10 @@ button.field-toggle {
             color: var(--color-accent-dark);
         }
     }
+}
+
+.model-list.draggable {
+    padding-inline: 1.6rem;
 }
 
 .draggable {

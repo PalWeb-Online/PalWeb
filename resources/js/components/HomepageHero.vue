@@ -1,7 +1,7 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from "vue";
 
-const fullText = ref("database-powered Palestinian Arabic learning tools!");
+const fullText = ref("the Web of Palestinian Arabic!");
 const displayedText = ref("");
 const cursorOpacity = ref(1);
 
@@ -61,8 +61,6 @@ onBeforeUnmount(() => {
             <span class="typing-cursor"
                   :style="{ opacity: cursorOpacity }"
             >|</span>
-
-            <img class="popout" src="/img/orange.svg" alt="Orange"/>
         </h1>
     </div>
 </template>

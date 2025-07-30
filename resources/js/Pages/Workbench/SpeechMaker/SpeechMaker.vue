@@ -23,23 +23,22 @@ defineOptions({
 <template>
     <Head title="Speech Maker"/>
 
-    <template v-if="step === 'select'">
-        <div id="app-head">
-            <h1>Speech Maker</h1>
-            <div id="app-nav">
-                <div class="app-mode-buttons">
-                    <AppButton @click="router.get(route('speech-maker.dialog'))" label="dialog"/>
-                    <AppButton @click="router.get(route('speech-maker.sentence'))" label="sentence"/>
-                </div>
+    <div id="app-head" v-if="step === 'select'">
+        <h1>Speech Maker</h1>
+        <div id="app-nav">
+            <div class="app-mode-buttons">
+                <AppButton @click="router.get(route('speech-maker.dialog'))" label="dialog"/>
+                <AppButton @click="router.get(route('speech-maker.sentence'))" label="sentence"/>
             </div>
         </div>
-        <div id="app-body">
+    </div>
+
+    <div id="app-body">
+        <div id="sm-select" v-if="step === 'select'">
             <div class="model-list">
                 <DialogItem v-for="dialog in collection" :model="dialog"/>
             </div>
         </div>
-    </template>
-    <div id="app-body" v-else>
         <template v-if="step === 'build'">
             <Dialog v-if="mode === 'dialog'"
                     :dialog="dialog"

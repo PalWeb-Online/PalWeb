@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 ->format('Y-m-d H:i:s'),
             'flash' => [
                 'notification' => fn () => $request->session()->get('notification'),
+                'denied' => fn () => $request->session()->get('denied')
             ],
         ]);
     }

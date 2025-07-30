@@ -126,7 +126,7 @@
     h1, h2, h3 {
         color: var(--color-dark-primary);
         font-family: $headFont;
-        text-transform: capitalize;
+        text-transform: none;
         font-weight: 700;
         font-size: 3.2rem;
     }

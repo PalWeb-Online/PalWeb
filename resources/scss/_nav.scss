@@ -8,67 +8,6 @@ nav {
     font-weight: 700;
 }
 
-.nav-header {
-    display: none;
-    grid-template-columns: 24rem 1fr;
-    column-gap: 3.2rem;
-    margin: 4.8rem 6.4rem 3.2rem;
-    position: relative;
-    z-index: 2;
-
-    .logo {
-        width: 24rem;
-        position: absolute;
-        bottom: -5.2rem;
-        filter: drop-shadow(-0.4rem 0.4rem 0 var(--color-medium-secondary));
-        @include pop-on-hover;
-    }
-
-    .nav-header-body {
-        grid-column: 2;
-        display: flex;
-        flex-flow: row wrap;
-        gap: 1.6rem 3.2rem;
-    }
-
-    .nav-menu {
-        gap: 1.6rem;
-        flex-grow: 1;
-        font-size: min(1.6rem, 4vw);
-        justify-content: flex-start;
-
-        & > a, & > * > a {
-            color: var(--color-dark-primary);
-            background: white;
-            border: 0.2rem solid var(--color-dark-primary);
-            box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
-            border-radius: 6.4rem;
-            transition: 0.05s;
-
-            &:hover {
-                box-shadow: none;
-                transform: translate(-0.3rem, 0.3rem);
-            }
-        }
-
-        .active {
-            background: var(--color-accent-light);
-            border-color: var(--color-accent-medium);
-        }
-    }
-
-    .nav-menu .dropdown-container:hover {
-        & > a, & > * > a {
-            box-shadow: none;
-            transform: translate(-0.3rem, 0.3rem);
-        }
-    }
-
-    @media (min-width: 960px) {
-        display: grid;
-    }
-}
-
 .nav-sticky {
     position: sticky;
     top: 0;
@@ -124,61 +63,6 @@ nav {
         &:hover {
             color: var(--color-dark-primary);
             background: var(--color-accent-medium);
-        }
-    }
-}
-
-.nav-menu {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: $headFont;
-
-    & > a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    & > a, & > * > a {
-        display: inline-block;
-        padding: 0.8rem 2.4rem;
-        min-width: 9.6rem;
-        height: 100%;
-        hyphens: none;
-    }
-
-    .material-symbols-rounded {
-        font-size: min(2.0rem, 4vw);
-        min-width: auto;
-    }
-
-    .popup-menu {
-        gap: 0.2rem;
-        margin: 0.8rem 0.3rem 0 0;
-        padding: 0.8rem 1.2rem 1.2rem;
-        border-radius: 0.8rem;
-        border: 0.2rem solid var(--color-dark-primary);
-        animation: slideIn 0.2s;
-
-        a, button {
-            font-family: $bodyFont;
-            padding-inline-end: 2.4rem;
-            font-size: 1.4rem;
-        }
-
-        .dropdown-section-title {
-            color: var(--color-dark-primary);
-            font-family: $headFont;
-            font-size: 1.6rem;
-            font-weight: 700;
-            padding-inline: 0.8rem 2.4rem;
-            padding-block: 0.8rem 0.2rem;
-
-            &:not(:first-child) {
-                margin-block-start: 0.4rem;
-            }
         }
     }
 }
@@ -343,7 +227,7 @@ nav {
             line-height: 1.25;
         }
 
-        &[disabled='true'] {
+        &[disabled='true'], &.disabled {
             opacity: 50%;
             cursor: not-allowed;
             filter: grayscale(100%);
@@ -384,6 +268,7 @@ nav {
         justify-items: center;
         align-items: center;
         grid-template-areas: 1fr / 1fr;
+        cursor: pointer;
 
         & > * {
             grid-area: 1 / 1;

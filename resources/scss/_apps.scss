@@ -160,8 +160,7 @@
 }
 
 .window-container {
-    width: 100%;
-    max-width: 96rem;
+    width: min(100%, 96rem);
     color: black;
     background: white;
     position: relative;
@@ -476,6 +475,10 @@
         flex-shrink: 0;
         background: var(--color-accent-dark);
 
+        &:not(:first-child) {
+            border-block-start: 0.1rem solid var(--color-accent-dark);
+        }
+
         & > *:not(:last-child) {
             border-inline-end: 0.1rem solid var(--color-accent-dark);
         }
@@ -560,21 +563,21 @@
 }
 
 .app-button {
+    font-size: 1.6rem;
     justify-self: center;
     background: white;
-    border-radius: 0.8rem;
+    border-radius: 0.5em;
     color: var(--color-dark-primary);
-    border: 0.2rem solid var(--color-dark-primary);
-    box-shadow: -0.2rem 0.2rem 0 var(--color-dark-primary);
+    border: 0.125em solid var(--color-dark-primary);
+    box-shadow: -0.125em 0.125em 0 var(--color-dark-primary);
     font-family: $monoFont;
-    padding: 0.4rem 1.6rem;
+    padding: 0.25em 1em;
     font-weight: 700;
-    font-size: 1.6rem;
     text-transform: uppercase;
 
     &:active, &.active {
         box-shadow: none;
-        translate: -0.2rem 0.2rem;
+        translate: -0.125em 0.125em;
     }
 
     &[disabled] {
