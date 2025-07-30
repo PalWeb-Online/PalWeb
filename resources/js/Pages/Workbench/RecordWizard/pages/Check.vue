@@ -47,7 +47,7 @@ onMounted(() => {
     </div>
     <AppTip>
         <p>Check the Audios you have just published. Only the Audios published in this session of the Record Wizard
-            are shown here. Go to <a :href="`/community/audios/${ RecordWizardStore.speaker.id }`" target="_blank">
+            are shown here. Go to <a :href="route('speaker.show', RecordWizardStore.speaker.id)" target="_blank">
                 your Speaker profile</a> to see a full list of all the Audios you have ever published. If you would like
             to continue recording more, simply return to the <b>Queue</b> step to add more items — rinse & repeat!</p>
     </AppTip>

@@ -1,13 +1,11 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useUserStore} from "../../stores/UserStore.js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
+import ToggleSingle from "../ToggleSingle.vue";
 
 const emit = defineEmits(['close', 'signUp']);
-
-const UserStore = useUserStore();
 
 const signInForm = useForm({
     email: '',
@@ -58,55 +56,53 @@ const sendResetLink = () => {
             <AppTip>
                 <p>New to PalWeb? <button @click="emit('signUp')">Sign Up!</button></p>
             </AppTip>
-            <div class="modal-container-body form-body">
-                <div class="field-item">
-                    <label>Email</label>
-                    <div class="field-input">
-                        <input type="text" v-model="signInForm.email" placeholder="free@palestine.com" required>
+            <form @submit.prevent="signIn">
+                <div class="modal-container-body form-body">
+                    <div class="field-item">
+                        <label>Email</label>
+                        <div class="field-input">
+                            <input type="text" v-model="signInForm.email" placeholder="free@palestine.com" required>
+                        </div>
+                        <div v-if="signInForm.errors.email" v-text="signInForm.errors.email" class="field-error"/>
                     </div>
-                    <div v-if="signInForm.errors.email" v-text="signInForm.errors.email" class="field-error"/>
-                </div>
-                <div class="field-item">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <label>Password</label>
-                        <button @click="forgotPassword = true">Forgot?</button>
+                    <div class="field-item">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <label>Password</label>
+                            <button type="button" @click="forgotPassword = true">Forgot?</button>
+                        </div>
+                        <div class="field-input">
+                            <input type="password" v-model="signInForm.password" placeholder="Lenin1917!" required>
+                        </div>
+                        <div v-if="signInForm.errors.password" v-text="signInForm.errors.password" class="field-error"/>
                     </div>
-                    <div class="field-input">
-                        <input type="password" v-model="signInForm.password" placeholder="Lenin1917!" required>
-                    </div>
-                    <div v-if="signInForm.errors.password" v-text="signInForm.errors.password" class="field-error"/>
+                    <ToggleSingle v-model="signInForm.remember" label="Remember Me"/>
                 </div>
-                <div class="field-toggle-wrapper">
-                    <button class="field-toggle" :class="{ active: signInForm.remember }"
-                            @click="signInForm.remember = !signInForm.remember">
-                        <div class="field-toggle-slider"></div>
-                    </button>
-                    <div>remember me</div>
+                <div class="window-footer">
+                    <button type="submit" :disabled="signInForm.processing || !isValidRequest">Sign In</button>
+                    <a :href="route('auth.discord')">Use Discord</a>
                 </div>
-            </div>
-            <div class="window-footer">
-                <button @click="signIn" :disabled="signInForm.processing || !isValidRequest">Sign In</button>
-                <a :href="route('auth.discord')">Use Discord</a>
-            </div>
+            </form>
         </template>
         <template v-else>
             <AppTip>
                 <p>No password? No problem. Write down your email address & I'll send you a reset link.</p>
             </AppTip>
-            <div class="modal-container-body form-body">
-                <div class="field-item">
-                    <label>Email</label>
-                    <div class="field-input">
-                        <input type="text" v-model="resetLinkForm.email" placeholder="free@palestine.com" required>
+            <form @submit.prevent="sendResetLink">
+                <div class="modal-container-body form-body">
+                    <div class="field-item">
+                        <label>Email</label>
+                        <div class="field-input">
+                            <input type="text" v-model="resetLinkForm.email" placeholder="free@palestine.com" required>
+                        </div>
+                        <div v-if="resetLinkForm.errors.email" v-text="resetLinkForm.errors.email" class="field-error"/>
                     </div>
-                    <div v-if="resetLinkForm.errors.email" v-text="resetLinkForm.errors.email" class="field-error"/>
                 </div>
-            </div>
-            <div class="window-footer">
-                <button @click="sendResetLink" :disabled="resetLinkForm.processing || !isValidRequest">
-                    Send Link
-                </button>
-            </div>
+                <div class="window-footer">
+                    <button type="submit" :disabled="resetLinkForm.processing || !isValidRequest">
+                        Send Link
+                    </button>
+                </div>
+            </form>
         </template>
     </div>
 </template>

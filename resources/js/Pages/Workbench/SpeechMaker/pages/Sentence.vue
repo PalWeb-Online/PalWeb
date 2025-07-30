@@ -184,11 +184,6 @@ watch(
 </script>
 
 <template>
-    <AppTip v-if="!!dialog">
-        <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
-            & added to the Dialog on Save.
-        </p>
-    </AppTip>
 
     <div class="window-container">
         <div class="window-header">
@@ -214,6 +209,11 @@ watch(
             <PinButton v-if="sentence.id" modelType="sentence" :model="props.sentence"/>
             <SentenceActions :model="sentence"/>
         </div>
+        <AppTip dismissable v-if="!!dialog">
+            <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
+                & added to the Dialog on Save.
+            </p>
+        </AppTip>
         <div class="sentence-container-body">
             <div class="sentence-dialog-data">
                 <Link v-if="sentence.dialog" :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
