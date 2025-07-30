@@ -512,9 +512,10 @@ h3 {
     .carousel-track {
         transform: translateX(0%);
         display: flex;
+        flex-flow: row nowrap;
+        align-items: flex-start;
         gap: 3.2rem;
         width: max-content;
-        flex-flow: row nowrap;
         animation: carousel-scroll 20s linear infinite;
     }
 }

@@ -3,53 +3,6 @@
 }
 
 .sentence-container-body {
-    .sentence-dialog-data {
-        display: flex;
-        flex-flow: row wrap;
-        background: var(--color-pastel-light);
-
-        & > * {
-            flex: 1 0 50%;
-            gap: 1.6rem;
-            background: none;
-            font-family: $monoFont;
-            font-size: 1.6rem;
-            font-weight: 700;
-            padding: 0.6rem 1.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: var(--color-dark-primary);
-            border-radius: 0;
-            border: none;
-            text-transform: uppercase;
-
-            & > *:first-child {
-                font-size: 1.4rem;
-            }
-
-            & > *:last-child {
-                flex-grow: 1;
-                direction: rtl;
-            }
-        }
-
-        & > *:first-child {
-            border-inline-end: 0.1rem solid var(--color-dark-primary);
-        }
-
-        a:hover {
-            background: var(--color-pastel-medium);
-        }
-
-        input {
-            font-family: $monoFont;
-            font-size: 1.6rem;
-            font-weight: 700;
-            border-radius: 0;
-        }
-    }
-
     .sentence-arb {
         .sentence-term {
             padding-block: 1.2rem;
@@ -70,6 +23,57 @@
     }
 }
 
+.sentence-dialog-data {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+    background: var(--color-dark-primary);
+
+    & > * {
+        gap: 1.6rem;
+        background: none;
+        font-family: $monoFont;
+        font-size: 1.6rem;
+        font-weight: 700;
+        padding: 0.6rem 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--color-dark-primary);
+        background: var(--color-pastel-light);
+        border-radius: 0;
+        border: none;
+        text-transform: uppercase;
+
+        &:has(input) {
+            padding: 0 0.8rem 0 1.6rem;
+        }
+
+        & > *:first-child {
+            font-size: 1.4rem;
+        }
+
+        & > *:last-child {
+            flex-grow: 1;
+            direction: rtl;
+        }
+    }
+
+    a:hover {
+        background: var(--color-pastel-medium);
+    }
+
+    input {
+        font-family: $monoFont;
+        font-size: 1.6rem;
+        font-weight: 700;
+        border-radius: 0;
+    }
+
+    @media (min-width: 720px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
 
 .sentence-speaker {
     width: 100%;
