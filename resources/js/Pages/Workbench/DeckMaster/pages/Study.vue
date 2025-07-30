@@ -8,6 +8,8 @@ import DeckItem from "../../../../components/DeckItem.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import TermItem from "../../../../components/TermItem.vue";
+import ToggleSingle from "../../../../components/ToggleSingle.vue";
+import ToggleDouble from "../../../../components/ToggleDouble.vue";
 
 const props = defineProps({
     deck: Object,
@@ -125,42 +127,10 @@ onUnmounted(() => {
         </div>
         <div
             style="padding: 1.6rem; display: flex; flex-flow: row wrap; justify-content: space-between; align-items: center; gap: 1.6rem;">
-            <div class="field-compound-toggle-wrapper">
-                <div class="field-toggle-title">initial face</div>
-                <div class="field-toggle-wrapper">
-                    <div :class="!flipDefault ? 'active' : ''">term</div>
-                    <button class="field-toggle" :class="{ active: flipDefault }"
-                            @click="flipDefault = !flipDefault">
-                        <div class="field-toggle-slider"></div>
-                    </button>
-                    <div :class="flipDefault ? 'active' : ''">gloss</div>
-                </div>
-            </div>
-            <div class="field-compound-toggle-wrapper">
-                <div class="field-toggle-title">inflections</div>
-                <div class="field-toggle-wrapper">
-                    <div :class="!flipDefaultInflections ? 'active' : ''">back</div>
-                    <button class="field-toggle" :class="{ active: flipDefaultInflections }"
-                            @click="flipDefaultInflections = !flipDefaultInflections">
-                        <div class="field-toggle-slider"></div>
-                    </button>
-                    <div :class="flipDefaultInflections ? 'active' : ''">front</div>
-                </div>
-            </div>
-            <div class="field-toggle-wrapper">
-                <button class="field-toggle" :class="{ active: showTranslit }"
-                        @click="showTranslit = !showTranslit">
-                    <div class="field-toggle-slider"></div>
-                </button>
-                <div>Show Transcription</div>
-            </div>
-            <div class="field-toggle-wrapper">
-                <button class="field-toggle" :class="{ active: showTerm }"
-                        @click="showTerm = !showTerm">
-                    <div class="field-toggle-slider"></div>
-                </button>
-                <div>Show Term (Back)</div>
-            </div>
+            <ToggleDouble v-model="flipDefault" label="Initial Face" option-a="Term" option-b="Gloss"/>
+            <ToggleDouble v-model="flipDefaultInflections" label="Inflections" option-a="Back" option-b="Front"/>
+            <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+            <ToggleSingle v-model="showTerm" label="Show Term (Back)"/>
         </div>
         <div class="model-list index-list">
             <DeckItem :model="deck"/>
