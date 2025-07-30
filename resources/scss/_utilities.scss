@@ -591,13 +591,14 @@ h3 {
     display: flex;
     align-items: center;
     gap: 1.6rem;
-    color: var(--color-accent-medium);
 
     .handle {
+        color: var(--color-accent-medium);
         cursor: grab;
     }
 
     .delete {
+        color: var(--color-accent-medium);
         cursor: pointer;
     }
 

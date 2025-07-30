@@ -160,8 +160,7 @@
 }
 
 .window-container {
-    width: 100%;
-    max-width: 96rem;
+    width: min(100%, 96rem);
     color: black;
     background: white;
     position: relative;
@@ -475,6 +474,10 @@
     .window-section-head {
         flex-shrink: 0;
         background: var(--color-accent-dark);
+
+        &:not(:first-child) {
+            border-block-start: 0.1rem solid var(--color-accent-dark);
+        }
 
         & > *:not(:last-child) {
             border-inline-end: 0.1rem solid var(--color-accent-dark);

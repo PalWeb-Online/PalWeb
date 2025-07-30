@@ -181,13 +181,13 @@
     column-count: 1;
     list-style: none;
 
-    li {
+    li.draggable-item {
+        direction: ltr;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-        border-radius: 0.8rem;
-        padding: 0.8rem 0.8rem;
+        justify-content: flex-start;
+        gap: 0.8rem;
+        padding-block: 1.0rem;
         font-size: 1.2rem;
         font-family: $monoFont;
 
@@ -198,30 +198,15 @@
         }
 
         & > div {
+            direction: rtl;
             display: flex;
             align-items: center;
             gap: 0.8rem;
-
+            flex-grow: 1;
         }
 
-        .audio {
-            cursor: pointer;
-            width: 2.4rem;
-        }
-
-        .trash {
-            cursor: pointer;
-            width: 1.6rem;
-            opacity: 0.25;
-
-        }
-
-        &:hover {
-            background: var(--color-accent-light);
-
-            .trash {
-                opacity: 1;
-            }
+        .material-symbols-rounded {
+            font-size: 1.25em;
         }
     }
 
