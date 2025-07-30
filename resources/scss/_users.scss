@@ -21,8 +21,6 @@
     }
 
     .user-avatar {
-        //border: 0.2rem solid var(--color-pastel-light);
-        //outline: 0.3rem solid var(--color-dark-primary);
         flex-grow: 0;
         filter: drop-shadow(-1em 1em 0 var(--color-pastel-medium));
         margin-inline-start: 0.5em;
@@ -469,7 +467,6 @@
         }
     }
 }
-
 
 .workbench-options {
     display: flex;

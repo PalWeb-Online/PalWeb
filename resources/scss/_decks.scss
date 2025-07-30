@@ -110,6 +110,7 @@
             display: grid;
             align-content: start;
             width: 100%;
+            font-size: 1.6rem;
             row-gap: 0.4rem;
             color: white;
             grid-template-columns: repeat(2, 1fr);
@@ -145,6 +146,7 @@
 
     .item-title {
         font-weight: 700;
+        font-size: 1.6rem;
     }
 
     .item-description {

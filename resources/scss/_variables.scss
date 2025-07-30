@@ -92,7 +92,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
 //var(--color-accent-medium): #ffc32c;
 //var(--color-accent-light): #fff0ca;
 
-:root, .theme-palweb {
+:root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
     --color-dark-secondary: hsl(265, 95%, 28%);
@@ -108,7 +108,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-light: hsl(42, 95%, 90%);
 }
 
-.theme-watermelon {
+.theme-Watermelon {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
     --color-dark-secondary: hsl(170, 80%, 12%);
@@ -123,23 +123,60 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-medium: hsl(355, 100%, 82%);
     --color-accent-light: hsl(355, 100%, 96%);
 }
+
+//.theme-Nabatean {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(5, 25%, 20%);
+//    --color-dark-primary: hsl(2, 25%, 25%);
+//    --color-medium-secondary: hsl(2, 55%, 45%);
+//    --color-medium-primary: hsl(2, 58%, 54%);
+//    --color-pastel-dark: hsl(195, 50%, 76%);
+//    --color-pastel-medium: hsl(195, 40%, 84%);
+//    --color-pastel-light: hsl(195, 30%, 95%);
+//    --color-transparent: hsla(195, 40%, 84%, 0.75);
+//    --color-accent-dark: hsl(195, 60%, 30%);
+//    --color-accent-medium: hsl(36, 85%, 65%);
+//    --color-accent-light: hsl(35, 80%, 92%);
+//    //--color-pastel-dark: hsl(35, 90%, 76%);
+//    //--color-pastel-medium: hsl(35, 95%, 84%);
+//    //--color-accent-medium: hsl(195, 40%, 70%);
+//}
 //
-//.theme-jerusalem {
+//.theme-Jerusalem {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
 //    --color-dark-secondary: #050566;
-//    --color-dark-primary: hsl(250, 90%, 35%);
+//    --color-dark-primary: hsl(250, 90%, 30%);
 //    --color-medium-secondary: hsl(215, 90%, 45%);
 //    --color-medium-primary: hsl(170, 95%, 38%);
 //    --color-pastel-dark: hsl(200, 75%, 80%);
 //    --color-pastel-medium: hsl(200, 90%, 92%);
 //    --color-pastel-light: hsl(170, 50%, 94%);
 //    --color-transparent: hsla(38, 90%, 88%, 0.75);
-//    --color-accent-dark: hsl(30, 60%, 40%);
-//    --color-accent-medium: hsl(34, 65%, 65%);
-//    --color-accent-light: hsl(34, 90%, 94%);
+//    //--color-accent-dark: hsl(170, 80%, 25%);
+//    --color-accent-dark: hsl(28, 60%, 32%);
+//    //--color-accent-medium: hsl(46, 95%, 50%);
+//    --color-accent-medium: hsl(34, 65%, 60%);
+//    --color-accent-light: hsl(35, 90%, 94%);
 //}
 //
+//.theme-Jaffa {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(220, 80%, 12%);
+//    --color-dark-primary: hsl(220, 100%, 25%);
+//    --color-medium-secondary: hsl(200, 95%, 38%);
+//    --color-medium-primary: hsl(190, 100%, 40%);
+//    --color-pastel-dark: hsl(160, 60%, 80%);
+//    --color-pastel-medium: hsl(160, 60%, 84%);
+//    --color-pastel-light: hsl(160, 60%, 95%);
+//    --color-transparent: hsla(65, 60%, 84%, 0.75);
+//    --color-accent-dark: hsl(25, 80%, 40%);
+//    --color-accent-medium: hsl(37, 100%, 60%);
+//    --color-accent-light: hsl(32, 100%, 92%);
+//}
+
 //.theme-zaatar {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
@@ -155,7 +192,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
 //    --color-accent-medium: hsl(48, 90%, 55%);
 //    --color-accent-light: hsl(45, 90%, 92%);
 //}
-//
+
 //.theme-jericho {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
@@ -170,22 +207,6 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
 //    --color-accent-dark: hsl(190, 50%, 35%);
 //    --color-accent-medium: hsl(190, 50%, 70%);
 //    --color-accent-light: hsl(190, 50%, 95%);
-//}
-//
-//.theme-jericho {
-//    --color-polar-dark: hsl(0, 0%, 0%);
-//    --color-polar-light: hsl(0, 0%, 100%);
-//    --color-dark-secondary: #533734;
-//    --color-dark-primary: #553835;
-//    --color-medium-secondary: #993636;
-//    --color-medium-primary: #c84847;
-//    --color-pastel-dark: #a0b9c0;
-//    --color-pastel-medium: #ffdf92;
-//    --color-pastel-light: #f7ebba;
-//    --color-transparent: hsla(255, 80%, 92%, 0.75);
-//    --color-accent-dark: hsl(28, 85%, 48%);
-//    --color-accent-medium: #ffdf92;
-//    --color-accent-light: #f7ebba;
 //}
 
 .theme-picker-wrapper {
@@ -204,11 +225,15 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     gap: 1.6rem;
     user-select: none;
 
-    font-family: $displayFont;
-    font-size: 4.8rem;
-    text-transform: uppercase;
+    font-family: $headFont;
+    font-weight: 700;
+    font-size: 3.6rem;
     color: var(--color-dark-primary);
-    padding: 1.2rem 2.4rem 1.6rem;
+    padding: 2.0rem 2.4rem 1.6rem;
+
+    &:not(:first-child) {
+        border-block-start: 1px solid var(--color-dark-secondary);
+    }
 
     &.active {
         background: var(--color-accent-medium);
@@ -217,9 +242,55 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     &:not(.active):hover {
         background: var(--color-accent-light);
     }
+}
 
-    &:not(:first-child) {
-        border-block-start: 1px solid var(--color-dark-secondary);
+.theme-preview {
+    display: grid;
+    gap: 3.2rem;
+    padding: 3.2rem;
+    justify-items: center;
+
+    p {
+        width: min(100%, 48rem);
+        margin: 0;
+        text-align: center;
+        font-family: $monoFont;
+        font-size: 1.4rem;
+        hyphens: none;
+    }
+}
+
+.theme-preview-colors {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 3.2rem;
+
+    & > * {
+        height: 4.8rem;
+        width: 4.8rem;
+        border-radius: 50%;
+    }
+
+    & > *:nth-child(1) {
+        background: var(--color-dark-primary);
+    }
+
+    & > *:nth-child(2) {
+        background: var(--color-medium-primary);
+    }
+
+    & > *:nth-child(3) {
+        background: var(--color-pastel-medium);
+    }
+
+    & > *:nth-child(4) {
+        background: var(--color-accent-medium);
+    }
+
+    & > *:nth-child(5) {
+        background: var(--color-accent-light);
     }
 }
 
