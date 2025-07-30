@@ -492,6 +492,10 @@
         flex-grow: 1;
         overflow: scroll;
     }
+
+    form {
+        display: contents;
+    }
 }
 
 .window-container.modal-container.help-container {
