@@ -32,6 +32,15 @@ const toSection = async (section, key) => {
     carouselRef.value?.slideTo(key);
 }
 
+const navigateOrPrompt = (page) => {
+    if (UserStore.isUser) {
+        router.get(route(page));
+
+    } else {
+        NavigationStore.showSignIn = true;
+    }
+}
+
 const onSlideStart = () => {
     if (NavigationStore.data.section !== 'home') {
         Object.keys(zIndices.value).forEach((sectionKey) => {
@@ -109,38 +118,46 @@ onMounted(() => {
                         </Slide>
                         <Slide class="nav-carousel-slide" key="1">
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.academy }">
-                                <Link :href="route('coming-soon')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
-                                      :disabled="!['student', 'admin'].includes(UserStore.highestRole)"
+                                <div @click="navigateOrPrompt('coming-soon')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                        'active': $page.component === 'Workbench/Index',
+                                        'disabled': !['student', 'admin'].includes(UserStore.highestRole)
+                                     }"
                                 >
                                     <div>lessons</div>
                                     <div>learn Palestinian Arabic</div>
-                                </Link>
-                                <Link :href="route('dialogs.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Academy/Dialogs/Index', 'Academy/Dialogs/Show'].includes($page.component) }"
-                                      :disabled="!['student', 'admin'].includes(UserStore.highestRole)"
+                                </div>
+                                <div @click="navigateOrPrompt('dialogs.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': ['Academy/Dialogs/Index', 'Academy/Dialogs/Show'].includes($page.component),
+                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
+                                     }"
                                 >
                                     <div>dialogs</div>
                                     <div>natural language input</div>
-                                </Link>
-                                <Link :href="route('coming-soon')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
-                                      :disabled="!['student', 'admin'].includes(UserStore.highestRole)"
+                                </div>
+                                <div @click="navigateOrPrompt('coming-soon')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': $page.component === 'Workbench/Index',
+                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
+                                     }"
                                 >
                                     <div>quizzer</div>
                                     <div>quiz Decks, Skills & Dialogs</div>
-                                </Link>
-                                <Link :href="route('coming-soon')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/Index' }"
-                                      :disabled="!['student', 'admin'].includes(UserStore.highestRole)"
+                                </div>
+                                <div @click="navigateOrPrompt('coming-soon')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': $page.component === 'Workbench/Index',
+                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
+                                     }"
                                 >
                                     <div>myProgress</div>
                                     <div>check progress & Score history</div>
-                                </Link>
+                                </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
                                 <Link :href="route('terms.index')"
@@ -157,57 +174,65 @@ onMounted(() => {
                                     <div>phrasebook</div>
                                     <div>Sentence::with('terms')->all()</div>
                                 </Link>
-                                <Link :href="route('decks.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Decks/Index', 'Library/Decks/Show'].includes($page.component) }"
-                                      :disabled="!UserStore.isUser"
+                                <div @click="navigateOrPrompt('decks.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': ['Library/Decks/Index', 'Library/Decks/Show'].includes($page.component),
+                                         'disabled': !UserStore.isUser
+                                     }"
                                 >
                                     <div>decks</div>
                                     <div>Deck::where('private', false)->all()</div>
-                                </Link>
-                                <Link :href="route('audios.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Audios/Index', 'Library/Audios/Speaker'].includes($page.component) }"
-                                      :disabled="!UserStore.isUser"
+                                </div>
+                                <div @click="navigateOrPrompt('audios.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': ['Library/Audios/Index', 'Library/Audios/Speaker'].includes($page.component),
+                                         'disabled': !UserStore.isUser
+                                     }"
                                 >
                                     <div>audios</div>
                                     <div>Audio::with('speaker')->all()</div>
-                                </Link>
+                                </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.workbench }">
-                                <Link :href="route('deck-master.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/DeckMaster/DeckMaster' }"
-                                      :disabled="!UserStore.isUser"
+                                <div @click="navigateOrPrompt('deck-master.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': $page.component === 'Workbench/DeckMaster/DeckMaster',
+                                         'disabled': !UserStore.isUser
+                                     }"
                                 >
                                     <div>deckMaster</div>
                                     <div>build & study Decks</div>
-                                </Link>
-                                <Link :href="route('speech-maker.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/SpeechMaker/SpeechMaker' }"
-                                      :disabled="!['admin'].includes(UserStore.highestRole)"
+                                </div>
+                                <div v-if="['admin'].includes(UserStore.highestRole)"
+                                     @click="navigateOrPrompt('speech-maker.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{ 'active': $page.component === 'Workbench/SpeechMaker/SpeechMaker' }"
                                 >
                                     <div>speechMaker</div>
                                     <div>create Sentences & Dialogs</div>
-                                </Link>
-                                <Link :href="route('record-wizard.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': $page.component === 'Workbench/RecordWizard/RecordWizard' }"
-                                      :disabled="!UserStore.isUser"
+                                </div>
+                                <div @click="navigateOrPrompt('record-wizard.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': $page.component === 'Workbench/RecordWizard/RecordWizard',
+                                         'disabled': !UserStore.isUser
+                                     }"
                                 >
                                     <div>recordWizard</div>
                                     <div>immortalize Palestinian Arabic</div>
-                                </Link>
+                                </div>
                             </div>
                         </Slide>
                     </Carousel>
 
                     <div class="nav-portal-wrapper">
-                        <Link :href="route('users.index')" class="nav-portal">
+                        <div @click="navigateOrPrompt('users.index')" class="nav-portal">
                             <img src="/img/globe-africa.svg" alt="Hub"/>
                             <div>hub</div>
-                        </Link>
+                        </div>
                         <Link :href="route('wiki.show', 'about')" class="nav-portal">
                             <img src="/img/globe-america.svg" alt="Wiki"/>
                             <div>wiki</div>

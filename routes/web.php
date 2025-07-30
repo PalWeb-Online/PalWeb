@@ -84,11 +84,11 @@ Route::get('/coming-soon', function () {
     return Inertia::render('ComingSoon');
 })->name('coming-soon');
 
-Route::get('/denied', function () {
+Route::get('/subscription', function () {
     return Inertia::render('Auth/Subscription', [
-        'denied' => true,
+        'section' => 'account',
     ]);
-})->middleware('guest')->name('denied');
+})->name('subscription.index');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -184,6 +184,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{unit}', 'unit')->name('academy.unit');
             Route::get('/{unit}/{lesson}', 'lesson')->name('academy.lesson');
         });
+
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
             Route::get('/', 'index')->name('dialogs.index');
             Route::get('/{dialog}', 'show')->name('dialogs.show');
@@ -194,7 +195,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 );
             })->name('dialogs.get');
         });
-
         Route::middleware('admin')->group(function () {
             Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         });
@@ -238,15 +238,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/workbench')->group(function () {
-        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
-            Route::get('/', 'index')->name('speech-maker.index');
-            Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
-            Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
-            Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
-            Route::get('/get-terms/{id}', function (string $sentenceId) {
-                return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
-            })->name('speech-maker.get-terms');
-        })->middleware(['admin']);
+        Route::prefix('/speech-maker')->middleware(['admin'])->controller(SpeechMakerController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('speech-maker.index');
+                Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
+                Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
+                Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
+                Route::get('/get-terms/{id}', function (string $sentenceId) {
+                    return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
+                })->name('speech-maker.get-terms');
+            });
 
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/', 'index')->name('deck-master.index');
@@ -268,13 +269,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
         });
     });
-
-    Route::get('/subscription', function () {
-        return Inertia::render('Auth/Subscription', [
-            'section' => 'account',
-            'user' => auth()->user(),
-        ]);
-    })->name('subscription.index');
 
     Route::prefix('/todo')->controller(ToDoController::class)->group(function () {
         Route::post('/', 'store')

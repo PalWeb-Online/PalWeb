@@ -19,6 +19,7 @@ class NewPasswordController extends Controller
     public function show(Request $request, $token = null): \Inertia\Response
     {
         return Inertia::render('Auth/NewPassword', [
+            'section' => 'account',
             'token' => $token ?? '',
             'email' => $token ? $request->email : '',
         ]);
