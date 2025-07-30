@@ -207,7 +207,7 @@ watch(
         <div class="window-section-head">
             <h1>sentence</h1>
             <PinButton v-if="sentence.id" modelType="sentence" :model="props.sentence"/>
-            <SentenceActions :model="sentence"/>
+            <SentenceActions v-if="sentence.id" :model="sentence"/>
         </div>
         <AppTip dismissable v-if="!!dialog">
             <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
@@ -215,8 +215,8 @@ watch(
             </p>
         </AppTip>
         <div class="sentence-container-body">
-            <div class="sentence-dialog-data">
-                <Link v-if="sentence.dialog" :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
+            <div v-if="sentence.dialog.id" class="sentence-dialog-data">
+                <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
                     <div>Dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
                 </Link>
@@ -264,8 +264,8 @@ watch(
                         </div>
                     </div>
                     <span class="delete material-symbols-rounded"
-                         v-show="termsList.length > 0"
-                         @click="removeTerm(index)">delete</span>
+                          v-show="termsList.length > 0"
+                          @click="removeTerm(index)">delete</span>
                 </div>
             </template>
         </draggable>

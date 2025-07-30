@@ -32,7 +32,7 @@
     }
 
     .window-section-head:has(h1) {
-        font-size: 4.8rem;
+        font-size: clamp(3.6rem, 8vw, 4.8rem);
         height: 1.75em;
         justify-content: center;
 
