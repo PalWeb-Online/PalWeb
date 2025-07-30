@@ -25,8 +25,7 @@ import {route} from "ziggy-js";
             <div class="footer-hero">
                 <div class="footer-hero-title">PalWeb!</div>
                 <div class="footer-hero-subtitle">PalWeb, the Web of Palestinian Arabic, is an open-source
-                    language-learning
-                    web app providing database-powered Palestinian Arabic learning tools.
+                    language-learning web app providing database-powered learning & documentation tools.
                 </div>
             </div>
 
