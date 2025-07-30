@@ -239,10 +239,11 @@ watch(
         <div class="window-section-head">
             <h2>terms</h2>
         </div>
-        <draggable :list="termsList" itemKey="uuid"
+        <draggable :list="termsList" itemKey="uuid" handle=".handle"
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
+                    <span class="handle material-symbols-rounded">menu</span>
                     <div class="term-item-wrapper">
                         <div class="term-item">
                             <div class="term-item-head">
@@ -262,9 +263,9 @@ watch(
                             </div>
                         </div>
                     </div>
-                    <img src="/img/trash.svg" class="trash" alt="Delete"
+                    <span class="delete material-symbols-rounded"
                          v-show="termsList.length > 0"
-                         @click="removeTerm(index)"/>
+                         @click="removeTerm(index)">delete</span>
                 </div>
             </template>
         </draggable>

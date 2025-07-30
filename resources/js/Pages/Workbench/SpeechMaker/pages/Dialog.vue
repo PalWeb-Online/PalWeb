@@ -171,11 +171,12 @@ onMounted(() => {
             <h2>transcript</h2>
         </div>
         <div class="dialog-body">
-            <draggable :list="dialog.sentences" itemKey="id"
+            <draggable :list="dialog.sentences" itemKey="id" handle=".handle"
                        @end="updatePosition()"
-                       class="draggable">
+                       class="draggable" style="padding-inline: 1.6rem">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
+                        <span class="handle material-symbols-rounded">menu</span>
                         <div class="sentence-item-wrapper m">
                             <SentenceActions v-if="element.id" :model="element" icon="emoji"/>
                             <div class="sentence-item">
@@ -188,10 +189,9 @@ onMounted(() => {
                                 <div class="sentence-eng">{{ element.trans }}</div>
                             </div>
                         </div>
-
-                        <img src="/img/trash.svg" class="trash" alt="Delete"
-                             v-show="dialog.sentences.length > 0"
-                             @click="removeSentence(index)"/>
+                        <span class="delete material-symbols-rounded"
+                              v-show="dialog.sentences.length > 0"
+                              @click="removeSentence(index)">delete</span>
                     </div>
                 </template>
             </draggable>

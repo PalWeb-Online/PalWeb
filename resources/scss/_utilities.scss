@@ -587,9 +587,23 @@ h3 {
 }
 
 .draggable-item {
+    direction: rtl;
     display: flex;
     align-items: center;
     gap: 1.6rem;
+    color: var(--color-accent-medium);
+
+    .handle {
+        cursor: grab;
+    }
+
+    .delete {
+        cursor: pointer;
+    }
+
+    .term-item-wrapper {
+        grid-template-columns: 1fr
+    }
 
     .trash {
         cursor: pointer;

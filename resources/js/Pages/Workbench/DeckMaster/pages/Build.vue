@@ -186,15 +186,16 @@ onMounted(async () => {
             </template>
         </UserItem>
 
-        <draggable :list="deck.terms" itemKey="id"
+        <draggable :list="deck.terms" itemKey="id" handle=".handle"
                    @end="updatePosition()"
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
+                    <span class="handle material-symbols-rounded">menu</span>
                     <TermItem :term="element"/>
-                    <img src="/img/trash.svg" class="trash" alt="Delete"
-                         v-show="deck.terms.length > 0"
-                         @click="removeTerm(index)"/>
+                    <span class="delete material-symbols-rounded"
+                          v-show="deck.terms.length > 0"
+                          @click="removeTerm(index)">delete</span>
                 </div>
             </template>
         </draggable>
