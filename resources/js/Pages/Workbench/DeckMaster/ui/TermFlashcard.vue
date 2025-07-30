@@ -8,11 +8,11 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    active: Boolean,
-    flipDefault: Boolean,
-    flipDefaultInflections: Boolean,
-    showTerm: Boolean,
-    showTranslit: Boolean,
+    active: {type: Boolean, default: false},
+    flipDefault: {type: Boolean, default: false},
+    flipDefaultInflections: {type: Boolean, default: false},
+    showTerm: {type: Boolean, default: true},
+    showTranslit: {type: Boolean, default: false},
 });
 
 const flashcard = ref(null);
@@ -81,7 +81,6 @@ watch(() => props.active, (newVal) => {
                         <div>{{ model.term }}</div>
                         <div v-show="showTranslit">({{ model.translit }})</div>
                     </div>
-
                     <div v-show="!flipDefaultInflections && model.inflections.length > 0"
                          class="term-flashcard-inflections">
                         <div v-for="inflection in model.inflections" class="term-flashcard-inflection-item">

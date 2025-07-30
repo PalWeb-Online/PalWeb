@@ -32,37 +32,15 @@ defineOptions({
             itself. What's good is that the highly stable state of PalWeb 2.0 at this time will allow me to focus
             exclusively on what's new & not get bogged down by issues in areas previously considered complete.</p>
         <p>I won't go over the new features of PalWeb 2.0 again, which were covered in the 2.0 Beta Release Notes.
-            Instead, check the
-            <Link :href="route('wiki.show', 'user-guide')">User Guide</Link>
-            for more information on how to use the various features of the site. Remember, if you find anything that
-            doesn't work or look as expected or have any other suggestions for improvement, write to me using the <b>Send
-                Feedback</b> button in the Sidebar (you must be logged in).
+            Instead, check the <Link :href="route('wiki.show', 'user-guide')">User Guide</Link> for more information on
+            how to use the various features of the site. Remember, if you find anything that doesn't work or look as
+            expected or have any other suggestions for improvement, write to me using the <b>Send Feedback</b> button
+            in the Sidebar (you must be logged in).
         </p>
 
         <h2>Roadmap</h2>
-        <p>PalWeb is a multidisciplinary project that began in Summer 2022 & to this day is run by a single person.
-            There are two main reasons for this:</p>
-        <p>Firstly, from Summer 2022 to Summer 2025, I taught myself everything I know about web development from
-            scratch. I spent about half of that time becoming competent at PHP & the second half becoming competent at
-            Javascript, in addition to learning many lessons pertaining to web design, server management, etc. All of
-            this came together for PalWeb 2.0 — a single-page application (SPA) that brings these two languages together
-            & thus marks a huge milestone for the project & for myself as a person. While we are never really done
-            learning, building the application from here on out will no longer be the uphill battle of learning by
-            doing. While that struggle was absolutely necessary, it meant a relatively low productivity of work over a
-            long period of time. I essentially had to dedicate 100% of my time & energy into coding & learning with
-            little to no time dedicated to developing the project more broadly, like doing outreach & bringing more
-            people on board. After all, how could I lead a team if I myself hardly knew what I was doing?</p>
-        <p>Secondly & on a related note, I have done virtually no promotion of the project. Most people who know me from
-            the YouTube videos I was making prior to starting PalWeb don't seem to even know the project exists. In
-            part, it didn't make sense to promote an unfinished project. But, as a result, I have been financially
-            constrained during this entire period & to this day I simply cannot afford to pay to bring anyone else on
-            board & build a team — not even a little bit.</p>
-        <p>But, as I've said, PalWeb 2.0 marks a turning point for the project. I'm now much faster at what I do, so I
-            have more time to develop the project more broadly. I'm also better at estimating the time needed to build
-            new features & reach certain milestones, since I already have a high-level idea of how I will approach the
-            work. Therefore, I have more or less planned out the next two years of what will ultimately be a five-year
-            project. Over the next year, I will be rolling out new features incrementally, giving myself
-            time both for coding & for outreach. Here's what I will be working on:</p>
+        <p>Refer to the <Link :href="route('wiki.show', 'about')">About</Link> page for some history about the project
+            that puts these milestones into context.</p>
         <ul>
             <li>August 2025</li>
             <ul>

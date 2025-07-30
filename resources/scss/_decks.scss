@@ -261,6 +261,7 @@
     justify-items: center;
     grid-auto-rows: min-content;
     overflow: hidden;
+    padding: 3.2rem;
 
     .deck-item-grid {
         display: flex;
@@ -273,6 +274,10 @@
     .deck-item-grid .deck-flashcard-wrapper:not(.active).slide-out {
         transform: translateY(100vh);
         transition: transform 0.75s ease-in-out;
+    }
+
+    @media (min-width: 960px) {
+        padding: 0 1.6rem;
     }
 }
 
@@ -374,145 +379,6 @@
     cursor: pointer;
     user-select: none;
 
-    .term-flashcard-front, .term-flashcard-back {
-        position: absolute;
-        display: grid;
-        width: 100%;
-        height: 100%;
-        line-height: normal;
-        font-family: $monoFont;
-        border-radius: 1.2rem;
-        border: 0.2rem solid var(--color-dark-primary);
-        backface-visibility: hidden;
-        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
-        transition: transform 0.3s cubic-bezier(.25, .46, .45, .94);
-    }
-
-    .term-flashcard-front {
-        align-content: center;
-        justify-items: center;
-        gap: 3.2rem;
-
-        padding: 3.2rem 1.6rem;
-        background: var(--color-dark-primary);
-        color: white;
-        font-weight: 700;
-
-        .term-flashcard-term {
-            display: grid;
-            justify-items: center;
-            text-align: center;
-
-            & > div:nth-child(1) {
-                font-size: 4.8rem;
-            }
-
-            & > div:nth-child(2) {
-                font-size: 2.0rem;
-            }
-        }
-
-        .term-flashcard-inflections {
-            gap: 3.2rem;
-
-            .term-flashcard-inflection-item {
-                display: grid;
-                justify-items: center;
-                gap: 0;
-
-                & > *:nth-child(1) {
-                    font-size: 2.4rem;
-                }
-            }
-        }
-
-        @media (min-width: 720px) {
-            .term-flashcard-term > div:nth-child(1) {
-                font-size: 6.4rem;
-            }
-
-            .term-flashcard-term > div:nth-child(2) {
-                font-size: 2.4rem;
-            }
-        }
-    }
-
-    .term-flashcard-back {
-        align-content: start;
-        gap: 3.2rem;
-        padding: 3.2rem;
-        background: white;
-        color: var(--color-dark-primary);
-        font-family: $bodyFont;
-        transform: rotateX(-180deg);
-
-        .term-flashcard-head {
-            display: grid;
-            gap: 0.8rem;
-            padding-block-end: 1.6rem;
-            border-block-end: 2px dotted var(--color-accent-medium);
-        }
-
-        .term-flashcard-headword {
-            font-family: $monoFont;
-            display: flex;
-            align-items: center;
-            gap: 0 0.8rem;
-            font-weight: 700;
-            font-size: 1.6rem;
-            flex-flow: row wrap;
-            white-space: nowrap;
-
-            & > *:nth-child(1) {
-                font-size: 2.4rem;
-            }
-
-            & > *:nth-child(2) {
-                font-size: 1.6rem;
-            }
-        }
-
-        .term-flashcard-glosses {
-            display: grid;
-            gap: 1.6rem;
-            overflow: scroll;
-
-            & > *:nth-child(1) {
-                font-family: $headFont;
-                font-weight: 700;
-                font-size: 1.6rem;
-            }
-        }
-
-        .term-flashcard-inflections {
-            margin-inline-start: 1.6rem;
-            gap: 0 1.6rem;
-        }
-    }
-
-    .term-flashcard-inflections {
-        font-family: $monoFont;
-        display: flex;
-        align-items: center;
-        font-weight: 700;
-        flex-flow: row wrap;
-        white-space: nowrap;
-
-        .term-flashcard-inflection-item {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-
-            & > *:nth-child(1) {
-                font-size: 1.6rem;
-            }
-
-            & > *:nth-child(2) {
-                font-size: 1.2rem;
-            }
-        }
-    }
-
     &.flipped {
         .term-flashcard-front {
             transform: rotateX(180deg);
@@ -520,6 +386,140 @@
 
         .term-flashcard-back {
             transform: rotateX(0);
+        }
+    }
+}
+
+.term-flashcard-front, .term-flashcard-back {
+    position: absolute;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    line-height: normal;
+    border-radius: 1.2rem;
+    border: 0.2rem solid var(--color-dark-primary);
+    backface-visibility: hidden;
+    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    transition: transform 0.3s cubic-bezier(.25, .46, .45, .94);
+    font-family: $monoFont;
+    font-size: 1.2rem;
+
+    @media (min-width: 960px) {
+        font-size: 1.6rem;
+    }
+}
+
+.term-flashcard-front {
+    align-content: center;
+    justify-items: center;
+    gap: 2em;
+    padding: 2em 1em;
+    background: var(--color-dark-primary);
+    color: white;
+    font-weight: 700;
+
+    .term-flashcard-term {
+        display: grid;
+        justify-items: center;
+        text-align: center;
+
+        & > div:nth-child(1) {
+            font-size: 3em;
+        }
+
+        & > div:nth-child(2) {
+            font-size: 1.5em;
+        }
+    }
+
+    .term-flashcard-inflections {
+        gap: 2em;
+
+        .term-flashcard-inflection-item {
+            display: grid;
+            justify-items: center;
+            gap: 0;
+
+            & > *:nth-child(1) {
+                font-size: 1.5em;
+            }
+        }
+    }
+}
+
+.term-flashcard-back {
+    align-content: start;
+    background: white;
+    color: var(--color-dark-primary);
+    font-family: $bodyFont;
+    transform: rotateX(-180deg);
+    overflow: hidden;
+
+    .term-flashcard-head {
+        display: flex;
+        direction: rtl;
+        flex-flow: row wrap;
+        gap: 0 1em;
+        padding: 0.75em 1em;
+        background: var(--color-pastel-light);
+    }
+
+    .term-flashcard-headword {
+        font-family: $monoFont;
+        display: flex;
+        align-items: center;
+        gap: 0 0.5em;
+        font-weight: 700;
+        font-size: 1em;
+        white-space: nowrap;
+
+        & > *:nth-child(1) {
+            font-size: 1.5em;
+        }
+
+        & > *:nth-child(2) {
+            font-size: 1em;
+        }
+    }
+
+    .term-flashcard-inflections {
+        gap: 0 1em;
+    }
+
+    .term-flashcard-glosses {
+        direction: ltr;
+        display: grid;
+        gap: 1em;
+        padding: 1.5em;
+        font-size: 1em;
+        overflow: scroll;
+
+        & > *:nth-child(1) {
+            font-family: $headFont;
+            font-weight: 700;
+        }
+    }
+}
+
+.term-flashcard-inflections {
+    font-family: $monoFont;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    flex-flow: row wrap;
+    white-space: nowrap;
+
+    .term-flashcard-inflection-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+
+        & > *:nth-child(1) {
+            font-size: 1em;
+        }
+
+        & > *:nth-child(2) {
+            font-size: 0.75em;
         }
     }
 }
