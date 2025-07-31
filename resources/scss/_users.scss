@@ -21,8 +21,6 @@
     }
 
     .user-avatar {
-        //border: 0.2rem solid var(--color-pastel-light);
-        //outline: 0.3rem solid var(--color-dark-primary);
         flex-grow: 0;
         filter: drop-shadow(-1em 1em 0 var(--color-pastel-medium));
         margin-inline-start: 0.5em;
@@ -174,16 +172,17 @@
     display: grid;
     gap: 0.8rem;
     background: white;
+    font-size: 1.2rem;
     font-weight: 700;
     padding: 0.6rem 0.6rem 1.2rem;
     border-radius: 1.6rem;
     border: 0.2rem solid var(--color-dark-primary);
-    filter: drop-shadow(-0.4rem 0.4rem 0 rgba(black, 0.25));
+    filter: drop-shadow(-0.25em 0.25em 0 rgba(black, 0.25));
     z-index: 2;
 
     .user-avatar {
-        width: 19.2rem;
-        height: 19.2rem;
+        width: 16em;
+        height: 16em;
         border-radius: 1.2rem;
     }
 
@@ -469,7 +468,6 @@
         }
     }
 }
-
 
 .workbench-options {
     display: flex;

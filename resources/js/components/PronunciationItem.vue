@@ -39,14 +39,16 @@ onMounted(() => {
             <Link v-if="audio" class="pronunciation-item-term"
                   :href="route('terms.show', model.term.slug)">{{ model.term.term }}
             </Link>
-            <div class="pronunciation-item-phonology">
-                {{ model.borrowed === true ? '(Borrowed)' : '' }}
-                {{ model.translit }}
-                —
-                {{ model.phonemic }}
-                {{ model.phonetic }}
+            <div class="pronunciation-item-data">
+                <div class="pronunciation-item-dialect">{{ model.dialect.name }}</div>
+                <div class="pronunciation-item-phonology">
+                    {{ model.borrowed === true ? '(Borrowed)' : '' }}
+                    {{ model.translit }}
+                    —
+                    {{ model.phonemic }}
+                    {{ model.phonetic }}
+                </div>
             </div>
-            <div class="pronunciation-item-dialect">{{ model.dialect.name }}</div>
         </div>
 
         <div v-if="audio" class="pronunciation-audios">

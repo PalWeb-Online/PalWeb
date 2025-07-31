@@ -184,11 +184,6 @@ watch(
 </script>
 
 <template>
-    <AppTip v-if="!!dialog">
-        <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
-            & added to the Dialog on Save.
-        </p>
-    </AppTip>
 
     <div class="window-container">
         <div class="window-header">
@@ -212,11 +207,16 @@ watch(
         <div class="window-section-head">
             <h1>sentence</h1>
             <PinButton v-if="sentence.id" modelType="sentence" :model="props.sentence"/>
-            <SentenceActions :model="sentence"/>
+            <SentenceActions v-if="sentence.id" :model="sentence"/>
         </div>
+        <AppTip dismissable v-if="!!dialog">
+            <p>Creating a Sentence within the Dialog (<b>{{ dialog.title }}</b>). It will be created
+                & added to the Dialog on Save.
+            </p>
+        </AppTip>
         <div class="sentence-container-body">
-            <div class="sentence-dialog-data">
-                <Link v-if="sentence.dialog" :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
+            <div v-if="sentence.dialog.id" class="sentence-dialog-data">
+                <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
                     <div>Dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
                 </Link>
@@ -239,10 +239,11 @@ watch(
         <div class="window-section-head">
             <h2>terms</h2>
         </div>
-        <draggable :list="termsList" itemKey="uuid"
+        <draggable :list="termsList" itemKey="uuid" handle=".handle"
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
+                    <span class="handle material-symbols-rounded">menu</span>
                     <div class="term-item-wrapper">
                         <div class="term-item">
                             <div class="term-item-head">
@@ -262,9 +263,9 @@ watch(
                             </div>
                         </div>
                     </div>
-                    <img src="/img/trash.svg" class="trash" alt="Delete"
-                         v-show="termsList.length > 0"
-                         @click="removeTerm(index)"/>
+                    <span class="delete material-symbols-rounded"
+                          v-show="termsList.length > 0"
+                          @click="removeTerm(index)">delete</span>
                 </div>
             </template>
         </draggable>

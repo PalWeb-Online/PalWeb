@@ -18,7 +18,8 @@ class MustBeStudent
     {
         if (! $request->user()->isAdmin() && ! $request->user()->isStudent()) {
             event(new UserDeniedAccess);
-            return to_route('denied');
+            session()->flash('denied');
+            return to_route('subscription.index');
         }
 
         return $next($request);

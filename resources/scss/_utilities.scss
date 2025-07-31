@@ -512,9 +512,10 @@ h3 {
     .carousel-track {
         transform: translateX(0%);
         display: flex;
+        flex-flow: row nowrap;
+        align-items: flex-start;
         gap: 3.2rem;
         width: max-content;
-        flex-flow: row nowrap;
         animation: carousel-scroll 20s linear infinite;
     }
 }
@@ -587,9 +588,24 @@ h3 {
 }
 
 .draggable-item {
+    direction: rtl;
     display: flex;
     align-items: center;
     gap: 1.6rem;
+
+    .handle {
+        color: var(--color-accent-medium);
+        cursor: grab;
+    }
+
+    .delete {
+        color: var(--color-accent-medium);
+        cursor: pointer;
+    }
+
+    .term-item-wrapper {
+        grid-template-columns: 1fr
+    }
 
     .trash {
         cursor: pointer;
@@ -599,21 +615,22 @@ h3 {
 
 .app-tip {
     @include box-accent-light;
-    display: grid;
-    gap: 1.6rem;
     width: 100%;
     max-width: 96rem;
-    padding: 1.6rem;
 
-    a, button {
-        font-family: $bodyFont;
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: var(--color-dark-primary);
+    .tip-head {
+        display: grid;
 
-        &:hover, &:active {
-            text-decoration: underline;
+        button {
+            justify-self: end;
+            color: var(--color-dark-primary);
         }
+    }
+
+    .tip-body {
+        display: grid;
+        gap: 1.6rem;
+        padding: 1.6rem;
     }
 
     .tip-content-wrapper {
@@ -636,6 +653,17 @@ h3 {
         p {
             margin: 0;
             font-size: 1.6rem;
+        }
+
+        a, button {
+            font-family: $bodyFont;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-dark-primary);
+
+            &:hover, &:active {
+                text-decoration: underline;
+            }
         }
     }
 }

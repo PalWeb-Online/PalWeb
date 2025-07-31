@@ -44,23 +44,22 @@ onMounted(() => {
             </p>
 
             <div>How do I fill the Queue?</div>
-            <p>Click <b>Fetch Items</b> to automatically queue up the next 100 items in your Dialect available for
+            <p>Select <b>Fetch Items</b> to automatically queue up the next 100 items in your Dialect available for
                 you to record, or as many as are needed to fill the Queue to 100. If you choose to discard any item,
                 you can click <b>Fetch Items</b> again to fill the Queue back up to 100 with the next available
                 items. With <b>Fetch Items</b>, items are sorted by Audio count: items with no Audios are listed
                 first, followed by those with at least one, then two & so on.</p>
-            <p>Alternatively, use the <b>Search Genie</b> to search for a Deck of your choosing. Select it to queue
-                up any of its items that you haven't recorded yet. While you can't search for individual items to
-                add manually to the Queue, you can create a Deck of items you'd like to record & select it here.
-                With <b>Queue Deck</b>, items are not sorted by Audio count; they are listed in the order
-                in which they appear in the Deck.</p>
+            <p>Alternatively, select <b>Load Deck</b> to pull up the <b>Search Genie</b> & search for a Deck of your
+                choosing. Select it to queue up any of its items that you haven't recorded yet. While you can't search
+                for individual items to add manually to the Queue, you can create a Deck of items you'd like to record &
+                select it here. With this option, items are not sorted by Audio count; they are listed in the
+                order in which they appear in the Deck.</p>
         </PopupWindow>
     </div>
     <AppTip>
-        <p>Automatically generate a list of items to record, or use the <b>Search Genie</b> to fill the Queue with
-            any
-            valid items in the Deck of your choosing. You may manually reorder the Queue or remove any items that
-            you do not wish to record. Once you are satisfied with the Queue, proceed to the next step to
+        <p>Use <b>Fetch Items</b> to automatically generate a list of items to record, or <b>Load Deck</b> to fill the
+            Queue with any valid items in a Deck of your choosing. You may manually reorder the Queue or remove any
+            items that you do not wish to record. Once you are satisfied with the Queue, proceed to the next step to
             record.</p>
     </AppTip>
 
@@ -68,16 +67,15 @@ onMounted(() => {
         <div class="rw-queue-body"
              v-if="QueueStore.queue.length > 0">
             <draggable v-if="QueueStore.queue.length > 0"
-                       :list="QueueStore.queue" itemKey="id"
+                       :list="QueueStore.queue" itemKey="id" handle=".handle"
                        id="rw-item-queue">
                 <template #item="{ element, index }">
-                    <li>
-                        <div>
-                            <div>
-                                {{ index + 1 }}. <span>{{ element.term }}</span> ({{ element.translit }})
-                            </div>
-                        </div>
-                        <img class="trash" src="/img/trash.svg" alt="Delete" @click="remove(index)"/>
+                    <li class="draggable-item">
+                        <span class="delete material-symbols-rounded" style="cursor: pointer"
+                              @click="remove(index)">delete</span>
+                        <span>{{ index + 1 }}.</span>
+                        <div><span>{{ element.term }}</span> ({{ element.translit }})</div>
+                        <span class="handle material-symbols-rounded">menu</span>
                     </li>
                 </template>
             </draggable>

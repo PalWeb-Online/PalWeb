@@ -16,25 +16,25 @@ defineOptions({
         </AppTip>
 
         <AppTip question="Do I need to pay to access the content on the site?">
-            <p>Some areas of the site are locked to users with a free account or to subscribed users. Refer to the
-                <Link
-                    :href="route('subscription.index')">Subscription
-                </Link>
-                Portal for more details on the perks of
-                each
-                tier.
+            <p>Only for the <b>Academy</b> section, though some other areas & features of the site require you to at
+                least create a free account. Refer to the
+                <Link :href="route('subscription.index')">Subscription</Link>
+                page for more information about access privileges.
             </p>
         </AppTip>
 
         <AppTip question="How can I preview the content of the Academy section to know if I want to pay for that?">
-            <p>I give a general tour of the site in the <a href="https://www.youtube.com/watch?v=lJGDKswxg4w"
-                                                           target="_blank">May
-                Day 2023 Launch</a> video. Note that the site has changed significantly in the time since, so I will be
-                creating another tour in the near future. Unfortunately, there is no free trial at this time.</p>
+            <p>Unfortunately, there is no free trial at this time. However, you can follow PalWeb on social media to see
+                more discussion of the Academy features. On
+                <a href="https://www.youtube.com/@PalWebTV" target="_blank">YouTube</a>,
+                for instance, I have posted walkthrough videos of many of the Dialogs.</p>
         </AppTip>
 
         <AppTip question="I'm subscribed, but some of the content says Coming Soon. Define Soon.">
-            <p>Please refer to the <Link :href="route('wiki.show', 'release-notes')">Release Notes</Link> for a timeline of upcoming updates.</p>
+            <p>Please refer to the
+                <Link :href="route('wiki.show', 'release-notes')">Release Notes</Link>
+                for a timeline of upcoming updates.
+            </p>
         </AppTip>
 
         <AppTip question="I've subscribed on Patreon. Why can't I access the content on PalWeb?">
