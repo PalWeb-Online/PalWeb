@@ -2,6 +2,7 @@
 import {useQuizzerStore} from "../Stores/QuizzerStore.js";
 import {computed} from "vue";
 import QuestionItem from "../UI/QuestionItem.vue";
+import AppTip from "../../../../components/AppTip.vue";
 
 const QuizzerStore = useQuizzerStore();
 
@@ -10,10 +11,15 @@ const isValidRequest = computed(() => {
 });
 </script>
 <template>
+    <div class="window-section-head">
+        <h2>Quiz</h2>
+    </div>
     <div class="quiz-container" style="background: white">
-        <div class="quiz-instructions">
-            This Quiz has {{QuizzerStore.quiz.length}} questions. The type of Quiz is {{QuizzerStore.data.quizType}}. Select the meaning of the Arabic term in English.
-        </div>
+        <AppTip>
+            <p>
+                This Quiz has {{ QuizzerStore.quiz.length }} questions. Select the meaning of the Arabic term in English.
+            </p>
+        </AppTip>
         <QuestionItem v-for="(question, index) in QuizzerStore.quiz" :key="index"
                       :question="question" :index="index"/>
     </div>

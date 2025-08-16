@@ -11,11 +11,11 @@ use Inertia\Inertia;
 
 class QuizzerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Academy/Quizzer/Index', [
             'section' => 'academy',
-            'latest' => DeckResource::collection(Deck::inRandomOrder()->with(['terms'])->take(5)->get()),
+            'decks' => DeckResource::collection(Deck::whereHasBookmark($request->user())->with(['terms'])->get()),
         ]);
     }
 
@@ -37,8 +37,8 @@ class QuizzerController extends Controller
         $quiz = [];
 
         foreach ($deck->terms as $index => $term) {
-//            todo: don't take a random gloss but rather the one indicated in the pivot table
-            $answer = $term->glosses->random();
+            $glossId = $term->pivot->gloss_id;
+            $answer = $glossId ? $term->glosses->firstWhere('id', $glossId) : $term->glosses->first();
 
             $decoysQuery = $settings['allGlosses'] === true
                 ? Gloss::query()
@@ -46,6 +46,7 @@ class QuizzerController extends Controller
 
             $decoys = $decoysQuery
                 ->whereNot('id', $answer->id)
+                ->whereNot('term_id', $answer->term_id)
                 ->inRandomOrder()
                 ->take(2)
                 ->get();

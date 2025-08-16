@@ -19,6 +19,7 @@ const props = defineProps({
 const QuizzerStore = useQuizzerStore();
 
 onMounted(() => {
+    QuizzerStore.reset();
     QuizzerStore.data.quizType = props.quizType;
     QuizzerStore.data.model = props.model;
 });
@@ -34,7 +35,7 @@ onMounted(() => {
             <div class="window-section-head">
                 <h1>Quizzer</h1>
             </div>
-            <div class="window-page-nav">
+            <div class="window-page-nav" style="grid-template-columns: min-content 1fr 1fr 1fr min-content">
                 <button class="material-symbols-rounded">arrow_back</button>
                 <div class="material-symbols-rounded" :class="{ active: QuizzerStore.data.step === 'setup' }">
                     settings
