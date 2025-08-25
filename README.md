@@ -61,6 +61,12 @@ composer install
 npm install
 ```
 
+Prepare your environment by copying the `.env.example` file to `.env`
+
+```bash
+cp .env.example .env
+```
+
 Now, install & run the Docker container. (Make sure you have Docker Desktop on your machine.) Sail will ask which
 services you want to enable; select MySQL.
 
@@ -75,6 +81,12 @@ Start the app with the `up` command. (Use the `-d` option to run it in the backg
 
 ```bash
 sail up -d
+```
+
+Generate a new application key for local use. This command will automatically update the `APP_KEY` value in your `.env` file.
+
+```bash
+sail artisan key:generate
 ```
 
 You will now need to run the database migrations & the seeders that will populate the database with dummy data. You will
