@@ -18,20 +18,25 @@ const {
 
 const utcOffsetHours = utcOffsetMinutes / 60;
 
-const time = ref(Date.now());
+const displayedTime = ref(Date.now());
 
-const updateTime = () => {
-    const newTime = Date.now();
+let animationFrameId = null;
+let previousAnimationTime = 0;
 
-    if (time.value !== newTime) {
-        time.value = newTime;
+const updateDisplayedTime = (currentAnimationTime) => {
+    const elapsed = currentAnimationTime - previousAnimationTime;
 
-        requestAnimationFrame(updateTime);
+    if (elapsed >= 1000) {
+        displayedTime.value = Date.now();
+
+        previousAnimationTime = currentAnimationTime;
     }
+
+    animationFrameId = requestAnimationFrame(updateDisplayedTime);
 };
 
 onMounted(() => {
-    updateTime();
+    animationFrameId = requestAnimationFrame(updateDisplayedTime);
 
     const globalListener = (event) => {
         const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
@@ -61,10 +66,29 @@ onMounted(() => {
         }
     };
 
+    const handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+            displayedTime.value = Date.now();
+
+            // animation loop isn't running, start it up again
+            if (animationFrameId === null) {
+                animationFrameId = requestAnimationFrame(updateDisplayedTime);
+            }
+        } else {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    };
+
     window.addEventListener("keydown", globalListener);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     onBeforeUnmount(() => {
         window.removeEventListener("keydown", globalListener);
+        document.removeEventListener(
+            "visibilitychange",
+            handleVisibilityChange,
+        );
     });
 });
 </script>
@@ -74,7 +98,7 @@ onMounted(() => {
             <div>
                 JER
                 {{
-                    new Date(time).toLocaleTimeString("en-US", {
+                    new Date(displayedTime).toLocaleTimeString("en-US", {
                         timeZone: "Asia/Jerusalem",
                         hour12: false,
                     })
