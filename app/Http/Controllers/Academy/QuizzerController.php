@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
+use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Models\Gloss;
 use Illuminate\Http\Request;
@@ -71,9 +72,7 @@ class QuizzerController extends Controller
             $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
 
             $quiz[$index] = [
-                'id' => $term->id,
-                'slug' => $term->slug,
-                'prompt' => $term->term,
+                'term' => new TermResource($term)->additional(['detail' => true]),
                 'answer' => $answer->id,
                 'options' => $options,
                 'selection' => null,

@@ -187,6 +187,12 @@
         background: $red;
     }
 
+    & > p {
+        margin: 1.6rem 2.4rem;
+        color: var(--color-dark-primary);
+        font-weight: 700;
+    }
+
     .action-buttons {
         position: absolute;
         top: -1.6rem;
@@ -572,8 +578,8 @@
     background: white;
     border-radius: 0.5em;
     color: var(--color-dark-primary);
-    border: 0.125em solid var(--color-dark-primary);
-    box-shadow: -0.125em 0.125em 0 var(--color-dark-primary);
+    border: 0.125em solid currentColor;
+    box-shadow: -0.125em 0.125em 0 currentColor;
     font-family: $monoFont;
     padding: 0.25em 1em;
     font-weight: 700;

@@ -334,45 +334,8 @@
     }
 }
 
-.term-flashcard-wrapper {
-    display: grid;
-    width: 100%;
-    max-width: 96rem;
-    gap: 3.2rem;
-    grid-template-rows: auto auto;
-    justify-items: center;
-    position: relative;
-    border-radius: 1.2rem;
-    padding-block: 3.2rem 0;
-
-    &.active .deck-flashcard {
-        outline: 0.8rem solid white;
-    }
-
-    .pin, .pin-counter, .lock {
-        z-index: 1;
-    }
-
-    .pin {
-        width: 3.6rem;
-    }
-
-    .pin-counter {
-        top: 2.4rem;
-    }
-
-    .lock {
-        top: -1.2rem;
-        right: 0.8rem;
-        width: 2.4rem;
-    }
-
-    .popup-menu-wrapper {
-        width: 2.4rem;
-    }
-}
-
 .term-flashcard {
+    margin-block: 3.2rem;
     width: min(100%, 64rem);
     aspect-ratio: 16/9;
     perspective: 120rem;

@@ -58,43 +58,40 @@ watch(() => props.active, (newVal) => {
 </script>
 
 <template>
-    <div class="term-flashcard-wrapper">
-        <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="model.id" ref="flashcard"
-             @click="flipCard">
-            <div class="term-flashcard-front">
-                <div class="term-flashcard-term">
-                    <div>{{ model.term }}</div>
-                    <div v-show="showTranslit">{{ model.translit }}</div>
+    <div :class="['term-flashcard', flipDefault ? 'flipped' : '']" :data-id="model.id" ref="flashcard"
+         @click="flipCard">
+        <div class="term-flashcard-front">
+            <div class="term-flashcard-term">
+                <div>{{ model.term }}</div>
+                <div v-show="showTranslit">{{ model.translit }}</div>
+            </div>
+            <div v-show="flipDefaultInflections && model.inflections.length > 0"
+                 class="term-flashcard-inflections">
+                <div v-for="inflection in model.inflections" class="term-flashcard-inflection-item">
+                    <div>{{ inflection.inflection }}</div>
+                    <div v-show="showTranslit">{{ inflection.translit }}</div>
                 </div>
-
-                <div v-show="flipDefaultInflections && model.inflections.length > 0"
+            </div>
+        </div>
+        <div class="term-flashcard-back">
+            <div class="term-flashcard-head" v-show="showTerm">
+                <div class="term-flashcard-headword">
+                    <div>{{ model.term }}</div>
+                    <div v-show="showTranslit">({{ model.translit }})</div>
+                </div>
+                <div v-show="!flipDefaultInflections && model.inflections.length > 0"
                      class="term-flashcard-inflections">
                     <div v-for="inflection in model.inflections" class="term-flashcard-inflection-item">
                         <div>{{ inflection.inflection }}</div>
-                        <div v-show="showTranslit">{{ inflection.translit }}</div>
+                        <div v-show="showTranslit">({{ inflection.translit }})</div>
                     </div>
                 </div>
             </div>
-            <div class="term-flashcard-back">
-                <div class="term-flashcard-head" v-show="showTerm">
-                    <div class="term-flashcard-headword">
-                        <div>{{ model.term }}</div>
-                        <div v-show="showTranslit">({{ model.translit }})</div>
-                    </div>
-                    <div v-show="!flipDefaultInflections && model.inflections.length > 0"
-                         class="term-flashcard-inflections">
-                        <div v-for="inflection in model.inflections" class="term-flashcard-inflection-item">
-                            <div>{{ inflection.inflection }}</div>
-                            <div v-show="showTranslit">({{ inflection.translit }})</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="term-flashcard-glosses">
-                    <div>{{ model.category }}.</div>
-                    <div v-for="(gloss, index) in model.glosses" class="eng">{{ index + 1 }}. {{
-                            gloss.gloss
-                        }}
-                    </div>
+            <div class="term-flashcard-glosses">
+                <div>{{ model.category }}.</div>
+                <div v-for="(gloss, index) in model.glosses" class="eng">{{ index + 1 }}. {{
+                        gloss.gloss
+                    }}
                 </div>
             </div>
         </div>

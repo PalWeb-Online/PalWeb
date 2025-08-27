@@ -17,6 +17,10 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         generateQuiz(quizSettings).then(() => {
             data.step = 'quiz';
         });
+
+        nextTick(() => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
     };
 
     const generateQuiz = async (quizSettings) => {
@@ -61,13 +65,6 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         data.isSaved = true;
     };
 
-    const startOver = () => {
-        data.step = 'setup';
-        data.isSaved = false;
-        quiz.value = [];
-        score.value = 0;
-    };
-
     const reset = () => {
         data.step = 'setup';
         data.quizType = '';
@@ -85,7 +82,6 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         submitQuiz,
         scoreQuiz,
         saveScore,
-        startOver,
         reset
     };
 });

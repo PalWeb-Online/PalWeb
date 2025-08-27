@@ -24,7 +24,7 @@ const toggleTerm = async () => {
     try {
         const response = await axios.post(route('decks.term.toggle', {
             deck: QuizzerStore.data.model.id,
-            term: props.question.id
+            term: props.question.term.id
         }));
 
         isPresent.value = response.data.isPresent;
@@ -45,7 +45,7 @@ const recalculate = () => {
     <div class="quiz-answer-wrapper">
         <div class="quiz-answer" :class="{'incorrect': !isCorrect}">
             <div class="quiz-answer-correct">
-                <div>{{ question.prompt }}</div>
+                <div>{{ question.term.term }}</div>
                 <div>{{ question.options[QuizzerStore.quiz[index].answer] }}</div>
             </div>
             <div class="quiz-answer-incorrect" v-if="!isCorrect">
@@ -55,7 +55,7 @@ const recalculate = () => {
             </div>
         </div>
         <div class="quiz-answer-options">
-            <a :href="route('terms.show', question.slug)" target="_blank">See in Dictionary</a>
+            <a :href="route('terms.show', question.term.slug)" target="_blank">See in Dictionary</a>
             <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">
                 <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
             </template>
