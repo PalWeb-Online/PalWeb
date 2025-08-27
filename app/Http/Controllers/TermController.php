@@ -45,10 +45,10 @@ class TermController extends Controller
         $term->isPinned() && event(new ModelPinned($user));
 
         $message = $term->isPinned() ? __('pin.added', ['thing' => $term->term]) : __('pin.removed', ['thing' => $term->term]);
-        session()->flash('notification', ['type' => 'success', 'message' => $message]);
 
         return response()->json([
             'isPinned' => $term->isPinned(),
+            'message' => $message,
         ]);
     }
 

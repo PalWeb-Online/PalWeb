@@ -23,26 +23,43 @@ class QuizzerController extends Controller
     {
         $deck?->load(['terms']);
 
-        return Inertia::render('Academy/Quizzer/Show', [
-            'section' => 'academy',
-            'quizType' => 'deck',
-            'model' => new DeckResource($deck)
-        ]);
+        if ($deck->terms->isEmpty()) {
+            session()->flash('notification',
+                ['type' => 'success', 'message' => __('You can\'t Quiz an empty Deck!')]);
+
+            return to_route('quizzer.index');
+
+        } else {
+            return Inertia::render('Academy/Quizzer/Show', [
+                'section' => 'academy',
+                'quizType' => 'deck',
+                'model' => new DeckResource($deck)
+            ]);
+        }
     }
 
     public function generateQuiz(Request $request, Deck $deck)
     {
-        $settings = $request->query('settings');
+        $allGlosses = $request->boolean('settings.allGlosses');
+        $anyGloss = $request->boolean('settings.anyGloss');
 
         $quiz = [];
 
         foreach ($deck->terms as $index => $term) {
             $glossId = $term->pivot->gloss_id;
-            $answer = $glossId ? $term->glosses->firstWhere('id', $glossId) : $term->glosses->first();
 
-            $decoysQuery = $settings['allGlosses'] === true
-                ? Gloss::query()
-                : Gloss::whereIn('id', $deck->terms->pluck('glosses')->flatten()->pluck('id'));
+            $answer = $anyGloss || ! $glossId
+                ? $term->glosses->first()
+                : $term->glosses->firstWhere('id', $glossId);
+
+            $decoysQuery = Gloss::query();
+
+            if (!$allGlosses) {
+                $decoyGlossIds = $anyGloss
+                    ? $deck->terms->pluck('glosses')->flatten()->pluck('id')
+                    : $deck->terms->pluck('pivot.gloss_id')->filter();
+                $decoysQuery->whereIn('id', $decoyGlossIds);
+            }
 
             $decoys = $decoysQuery
                 ->whereNot('id', $answer->id)
@@ -51,9 +68,11 @@ class QuizzerController extends Controller
                 ->take(2)
                 ->get();
 
-            $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn($g) => $g->gloss)->toArray();
+            $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
 
             $quiz[$index] = [
+                'id' => $term->id,
+                'slug' => $term->slug,
                 'prompt' => $term->term,
                 'answer' => $answer->id,
                 'options' => $options,

@@ -14,12 +14,12 @@ const isValidRequest = computed(() => {
     <div class="window-section-head">
         <h2>Quiz</h2>
     </div>
-    <div class="quiz-container" style="background: white">
-        <AppTip>
-            <p>
-                This Quiz has {{ QuizzerStore.quiz.length }} questions. Select the meaning of the Arabic term in English.
-            </p>
-        </AppTip>
+    <AppTip>
+        <p>
+            Select the meaning of the Arabic term in English.
+        </p>
+    </AppTip>
+    <div class="quiz-container">
         <QuestionItem v-for="(question, index) in QuizzerStore.quiz" :key="index"
                       :question="question" :index="index"/>
     </div>
