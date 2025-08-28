@@ -293,11 +293,17 @@ defineOptions({
                     <div class="feature-panel-title">deck master</div>
                     <div class="feature-panel-subtitle">Build your vocabulary, Deck by Deck.</div>
                     <div class="feature-panel-description">Say goodbye to the busy work of piecing together your own
-                        vocabulary sets. Use the Deck Master to build your own Decks in a flash, or browse the Library
-                        to see all the Decks others have made!
+                        vocabulary sets & micro-managing flashcard applications. Use the Deck Master to build your own
+                        Decks in a flash, then study them with total flexibility to adjust how you view them with just
+                        one click. Browse the Library to see Decks others have made!
                     </div>
-                    <div class="feature-preview" style="margin-block: 6.4rem; justify-self: center">
-                        <DeckFlashcard :model="featuredDeck"/>
+                    <div class="feature-preview" style="margin-block: 3.2rem">
+                        <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+                        <TermFlashcard
+                            :model="featuredTerm.data"
+                            :showTranslit="showTranslit"
+                            :flipDefault="flipDefault"
+                        />
                     </div>
                 </div>
 
@@ -312,22 +318,21 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="homepage-panel-wrapper inline">
-                <div class="homepage-panel-content">
-                    <div class="feature-panel-title">flashcards</div>
-                    <div class="feature-panel-subtitle">Flashy new ways to practice.</div>
-                    <div class="feature-panel-description">Tired of micro-managing third-party flashcard applications?
-                        Study your Deck right here in the Deck Master, with total flexibility to adjust how you view
-                        the cards with just one click.
+            <div class="homepage-panel-wrapper">
+                <div class="homepage-panel-content" style="max-width: 96rem; justify-self: center">
+                    <div class="feature-panel-title">quizzer</div>
+                    <div class="feature-panel-subtitle">Test your might.</div>
+                    <div class="feature-panel-description">Drill your flashcard Decks with customizable Quizzes that
+                        will put
+                        your knowledge of Arabic vocabulary & inflection patterns to the test. Save your Scores & see
+                        how your learning journey evolves over time!
                     </div>
                 </div>
-                <div class="homepage-panel-content">
-                    <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-                    <TermFlashcard
-                        :model="featuredTerm.data"
-                        :showTranslit="showTranslit"
-                        :flipDefault="flipDefault"
-                    />
+                <div class="homepage-panel-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer01.png"
+                         alt="Quizzer 01">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer02.png"
+                         alt="Quizzer 02">
                 </div>
             </div>
         </div>
