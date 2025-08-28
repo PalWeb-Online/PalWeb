@@ -30,11 +30,11 @@ class DeckController extends Controller
         $deck->isPinned() && event(new ModelPinned($user));
 
         $message = $deck->isPinned() ? __('pin.added', ['thing' => $deck->name]) : __('pin.removed', ['thing' => $deck->name]);
-        session()->flash('notification', ['type' => 'success', 'message' => $message]);
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
             'isPinned' => $deck->isPinned(),
+            'message' => $message,
         ]);
     }
 
@@ -155,17 +155,37 @@ class DeckController extends Controller
 
         if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
-            $deck->terms()->attach($term->id, ['position' => $position]);
+            $deck->terms()->attach($term->id, [
+                'position' => $position,
+                'gloss_id' => $term->glosses->first()->id,
+            ]);
 
         } else {
             $deck->terms()->detach($term->id);
+
+            $terms = $deck->terms()
+                ->orderBy('pivot_position')
+                ->get();
+
+            $newPosition = 1;
+            foreach ($terms as $t) {
+                $deck->terms()->updateExistingPivot($t->id, [
+                    'position' => $newPosition,
+                ]);
+                $newPosition++;
+            }
         }
 
+        $deck->load('terms');
+        $isPresent = $deck->terms->contains($term->id);
+
+        $message = $isPresent
+            ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
+            : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]);
+
         return response()->json([
-            'isPresent' => ! $deck->terms->contains($term->id),
-            'message' => ! $deck->terms->contains($term->id)
-                ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
-                : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]),
+            'isPresent' => $isPresent,
+            'message' => $message,
         ]);
     }
 

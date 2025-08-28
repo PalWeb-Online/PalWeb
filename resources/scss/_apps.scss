@@ -177,14 +177,26 @@
     }
 
     .app-tip {
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
+        width: auto;
+        margin: 2.4rem;
     }
 
     .app-tip.error {
         color: white;
         background: $red;
+    }
+
+    .window-section-head + .app-tip {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
+    }
+
+    & > p {
+        margin: 1.6rem 2.4rem;
+        color: var(--color-dark-primary);
+        font-weight: 700;
     }
 
     .action-buttons {
@@ -461,6 +473,14 @@
     }
 }
 
+.window-body-heading {
+    font-family: $headFont;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-medium-primary);
+    margin: 1.2rem 2.4rem;
+}
+
 .window-container.modal-container {
     width: 90%;
     max-width: 72rem;
@@ -518,6 +538,15 @@
             font-weight: 700;
         }
 
+        div.h1 {
+            font-family: $headFont;
+            font-size: 2.0rem;
+        }
+
+        div.h2 {
+            font-size: 1.6rem;
+        }
+
         p {
             margin-block: 0;
             font-size: 1.6rem;
@@ -572,8 +601,8 @@
     background: white;
     border-radius: 0.5em;
     color: var(--color-dark-primary);
-    border: 0.125em solid var(--color-dark-primary);
-    box-shadow: -0.125em 0.125em 0 var(--color-dark-primary);
+    border: 0.125em solid currentColor;
+    box-shadow: -0.125em 0.125em 0 currentColor;
     font-family: $monoFont;
     padding: 0.25em 1em;
     font-weight: 700;

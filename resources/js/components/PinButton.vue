@@ -2,10 +2,11 @@
 import {ref} from "vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
-import {router} from "@inertiajs/vue3";
 import AppTooltip from "./AppTooltip.vue";
+import {useNotificationStore} from "../stores/NotificationStore.js";
 
 const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
 
 const tooltip = ref(null);
 
@@ -27,13 +28,11 @@ const pin = async () => {
         }
 
         isPinned.value = !isPinned.value;
+        NotificationStore.addNotification(response.data.message);
 
     } catch (error) {
         console.error('Pin Failed', error);
     }
-
-    console.log('pinning succeeded', isPinned.value);
-    router.reload();
 };
 </script>
 
