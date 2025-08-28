@@ -6,9 +6,6 @@ import TermItem from "./TermItem.vue";
 import UserItem from "./UserItem.vue";
 import AppTip from "./AppTip.vue";
 import {route} from "ziggy-js";
-import {useUserStore} from "../stores/UserStore.js";
-
-const UserStore = useUserStore();
 
 const props = defineProps({
     model: {

@@ -79,9 +79,9 @@ input, textarea, select {
     accent-color: var(--color-dark-primary);
     background: var(--color-pastel-light);
     border: none;
-    border-radius: 0.4rem;
-    padding: 0.4rem 0.8rem;
-    min-height: 2.8rem;
+    border-radius: 0.5em;
+    padding: 0.5em 0.75em;
+    min-height: 2em;
 
     &[disabled] {
         opacity: 33%;
@@ -171,23 +171,19 @@ h3 {
     color: var(--color-dark-primary);
     font-family: $displayFont;
     text-transform: uppercase;
+    line-height: 0.75;
+    padding-block-end: 0.125em;
 
     &.l {
         font-size: clamp(3.2rem, 9vw, 6.4rem);
-        line-height: 0.75;
-        padding-block-end: 0.125em;
     }
 
     &.m {
         font-size: clamp(2.8rem, 8vw, 4.8rem);
-        line-height: 0.75;
-        padding-block-end: 0.125em;
     }
 
     &.s {
         font-size: clamp(2.4rem, 4vw, 3.6rem);
-        line-height: 0.75;
-        padding-block-end: 0.125em;
     }
 }
 
@@ -257,7 +253,6 @@ h3 {
     .disabled {
         filter: opacity(0.5) grayscale(1);
         cursor: auto;
-        user-select: none;
     }
 
     .action-divider {

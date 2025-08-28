@@ -1,4 +1,5 @@
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
+import {Howl} from "howler";
 
 export function useDeck(props) {
 
@@ -17,6 +18,13 @@ export function useDeck(props) {
 
         isLoading.value = false;
     });
+
+    watch(() => props.model,
+        (newDeck) => {
+            Object.assign(deck, newDeck);
+        },
+        {deep: true}
+    );
 
     return {deck, blurb, isLoading};
 }

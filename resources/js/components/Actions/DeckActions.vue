@@ -1,9 +1,10 @@
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {route} from 'ziggy-js';
 import {router} from '@inertiajs/vue3'
 import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
+import AppTooltip from "../AppTooltip.vue";
 
 const props = defineProps({
     model: Object,
@@ -39,6 +40,8 @@ const copyLink = (event) => {
         alert('Could not copy text: ', err);
     });
 };
+
+const tooltip = ref(null);
 </script>
 
 <template>
@@ -57,6 +60,20 @@ const copyLink = (event) => {
         </template>
 
         <template v-if="UserStore.isUser">
+            <Link :href="model.terms_count > 0 ? route('deck-master.study', model.id) : '#'" role="menuitem" tabindex="-1"
+                  :class="{'disabled': model.terms_count < 1}"
+                  @mousemove="model.terms_count < 1 && tooltip.showTooltip('The Deck is empty.', $event);"
+                  @mouseleave="model.terms_count < 1 && tooltip.hideTooltip()"
+            >
+                Study Deck
+            </Link>
+            <Link :href="model.terms_count > 0 ? route('quizzer.deck', model.id) : '#'" role="menuitem" tabindex="-1"
+                  :class="{'disabled': model.terms_count < 1}"
+                  @mousemove="model.terms_count < 1 && tooltip.showTooltip('The Deck is empty.', $event);"
+                  @mouseleave="model.terms_count < 1 && tooltip.hideTooltip()"
+            >
+                Quiz Deck
+            </Link>
             <Link :href="route('users.show', model.author.username)" role="menuitem" tabindex="-1">
                 View Creator
             </Link>
@@ -74,4 +91,5 @@ const copyLink = (event) => {
             </form>
         </template>
     </ContextActions>
+    <AppTooltip ref="tooltip"/>
 </template>

@@ -26,10 +26,10 @@ class SentenceController extends Controller
         $sentence->isPinned() && event(new ModelPinned($user));
 
         $message = $sentence->isPinned() ? __('pin.added', ['thing' => $sentence->sentence]) : __('pin.removed', ['thing' => $sentence->sentence]);
-        session()->flash('notification', ['type' => 'success', 'message' => $message]);
 
         return response()->json([
             'isPinned' => $sentence->isPinned(),
+            'message' => $message,
         ]);
     }
 

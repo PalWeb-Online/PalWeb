@@ -138,7 +138,7 @@ onMounted(() => {
                                     <div>dialogs</div>
                                     <div>natural language input</div>
                                 </div>
-                                <div @click="navigateOrPrompt('coming-soon')"
+                                <div @click="navigateOrPrompt('quizzer.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
                                          'active': $page.component === 'Workbench/Index',
