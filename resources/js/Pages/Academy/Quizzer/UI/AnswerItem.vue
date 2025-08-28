@@ -15,7 +15,12 @@ const props = defineProps({
 })
 
 const isCorrect = computed(() => {
-    return QuizzerStore.quiz[props.index].selection === QuizzerStore.quiz[props.index].answer;
+    if (QuizzerStore.quiz.type === 'select') {
+        return props.question.selection === props.question.answer;
+
+    } else if (QuizzerStore.quiz.type === 'input') {
+        return props.question.answer.includes(props.question.input);
+    }
 })
 
 const isPresent = ref(true);
@@ -36,7 +41,13 @@ const toggleTerm = async () => {
 };
 
 const recalculate = () => {
-    QuizzerStore.quiz[props.index].selection = QuizzerStore.quiz[props.index].answer;
+    if (QuizzerStore.quiz.type === 'select') {
+        QuizzerStore.quiz.questions[props.index].selection = QuizzerStore.quiz.questions[props.index].answer;
+
+    } else if (QuizzerStore.quiz.type === 'input') {
+        QuizzerStore.quiz.questions[props.index].input = QuizzerStore.quiz.questions[props.index].answer[0];
+    }
+
     QuizzerStore.scoreQuiz();
     QuizzerStore.data.isSaved = false;
 }
@@ -45,12 +56,25 @@ const recalculate = () => {
     <div class="quiz-answer-wrapper">
         <div class="quiz-answer" :class="{'incorrect': !isCorrect}">
             <div class="quiz-answer-correct">
-                <div>{{ question.term.term }}</div>
-                <div>{{ question.options[QuizzerStore.quiz[index].answer] }}</div>
+                <div>
+                    {{ question.term.term }}
+                </div>
+                <div v-if="QuizzerStore.quiz.type === 'select'">
+                    {{ question.options[question.answer] }}
+                </div>
+                <div v-else-if="QuizzerStore.quiz.type === 'input'">
+                    <span style="font-size: 1.4rem">{{ question.prompt }}.</span>
+                    <span v-for="ans in question.answer">{{ ans }}</span>
+                </div>
             </div>
-            <div class="quiz-answer-incorrect" v-if="!isCorrect">
-                <div>you said: <span
-                    style="font-weight: 700">{{ question.options[QuizzerStore.quiz[index].selection] }}</span>
+            <div class="quiz-answer-user" v-if="!isCorrect || QuizzerStore.quiz.type === 'input'">
+                <div>you said:
+                    <span style="font-weight: 700" v-if="QuizzerStore.quiz.type === 'select'">
+                        {{ question.options[question.selection] }}
+                    </span>
+                    <span style="font-weight: 700" v-else-if="QuizzerStore.quiz.type === 'input'">
+                        {{ question.input }}
+                    </span>
                 </div>
             </div>
         </div>

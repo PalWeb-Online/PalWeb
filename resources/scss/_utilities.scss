@@ -79,9 +79,9 @@ input, textarea, select {
     accent-color: var(--color-dark-primary);
     background: var(--color-pastel-light);
     border: none;
-    border-radius: 0.4rem;
-    padding: 0.4rem 0.8rem;
-    min-height: 2.8rem;
+    border-radius: 0.5em;
+    padding: 0.5em 0.75em;
+    min-height: 2em;
 
     &[disabled] {
         opacity: 33%;

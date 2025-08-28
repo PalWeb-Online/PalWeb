@@ -5,11 +5,9 @@ import {computed} from "vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import PinButton from "../../../../components/PinButton.vue";
-import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
+import AppTip from "../../../../components/AppTip.vue";
+import QuizzerWindow from "../UI/QuizzerWindow.vue";
 
 const QuizzerStore = useQuizzerStore();
 
@@ -19,7 +17,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 });
 
 const rawScore = computed(() => {
-    return QuizzerStore.score / QuizzerStore.quiz.length;
+    return QuizzerStore.score / QuizzerStore.quiz.questions.length;
 });
 
 const formattedScore = computed(() => {
@@ -49,41 +47,47 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 <template>
-    <div class="window-container">
-        <div class="window-header">
-            <button @click="router.get(route(`quizzer.${QuizzerStore.data.quizType}`, QuizzerStore.data.model.id))"
-                    class="material-symbols-rounded">arrow_back
-            </button>
-            <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.data.quizType }}/{deck}</div>
-        </div>
-        <div class="window-section-head">
-            <h1>Deck</h1>
-            <PinButton modelType="deck" :model="QuizzerStore.data.model"/>
-            <DeckActions :model="QuizzerStore.data.model"/>
-        </div>
-        <div class="window-content-head">
-            <div class="window-content-head-title">{{ QuizzerStore.data.model?.name }}</div>
-        </div>
+    <QuizzerWindow>
         <div class="window-section-head">
             <h2>Results</h2>
             <PopupWindow title="Quizzer">
-                <p>Because the application automatically generates decoy choices by randomly pulling from the
-                    Glosses of
-                    other Terms in the Deck or Dictionary, it's possible for a valid answer to the question to
-                    appear as
-                    a decoy (i.e. incorrect answer); this is normally rare, but is possible for exactly synonymous
-                    Terms, especially if they are placed in the same Deck & decoys are pulled from the Deck. If you
-                    think one of your answers should have been accepted for this or any other reason, you can
-                    override the result. Remember that your score will not be saved unless you choose to do so.</p>
+                <div class="h1">Results</div>
+                <p>Sometimes humans are smarter than machines. The Quizzer automatically generates Quizzes & grades them
+                    through a simple matching operation, so it's possible in certain cases for an answer that should
+                    have been accepted to be marked as incorrect. That's why I've provided a <b>Mark as Correct</b>
+                    option, so that you can be a part of the grading process. After comparing your answer to the one
+                    expected by the application, you can override the result if you think it should have been accepted.
+                </p>
+                <p>Remember that your Score is not saved automatically, so you can adjust the results as needed before
+                    saving your Score manually. You can also exit the Results page without saving if you want to discard
+                    the Score.</p>
+                <div class="h2">Use Cases</div>
+                <p>In a <b>Glosses Quiz</b>, it's possible for synonymous Glosses to be offered as options
+                    for the same Term, making the question confusing or even impossible to answer reliably. You might
+                    select a Gloss that is valid for that Term, but not be the selection expected by the application.
+                    You can use the Dictionary to verify the validity of your response.</p>
+                <p>In an <b>Inflections Quiz</b>, your response will be compared exactly to the expected answer, with no
+                    orthographic flexibility. But Palestinian Arabic has no formal orthography, so it would be unfair to
+                    mark a response as incorrect for not having the formally correct spelling of the hamze, for example.
+                    Generally speaking, PalWeb follows Standard Arabic orthography, adjusted to reflect the phonology of
+                    Palestinian Arabic (see the <b>Wiki</b>), so you may actually want to test yourself against this.
+                    How strictly you are graded is up to you to decide on the basis of your learning goals.
+                </p>
             </PopupWindow>
         </div>
+        <AppTip>
+            <p>If you think one of your answers should have been accepted, feel free to <b>Mark as Correct</b> (see <b>Help</b>).
+            </p>
+        </AppTip>
         <div class="quiz-results">
-            <div class="quiz-results-callout featured-title">new record!</div>
-            <div class="score-figure featured-title">{{ formattedScore }}</div>
+            <div class="score-figure featured-title">
+                <div>{{ formattedScore }}</div>
+                <div class="quiz-results-callout">new record!</div>
+            </div>
             <div class="score-feedback">
                 <div>{{ scoreMessage }}</div>
                 <div style="font-weight: 700">You answered {{ QuizzerStore.score }} out of {{
-                        QuizzerStore.quiz.length
+                        QuizzerStore.quiz.questions.length
                     }}
                     questions correctly.
                 </div>
@@ -91,13 +95,13 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             </div>
         </div>
         <div class="quiz-answer-array">
-            <AnswerItem v-for="(question, index) in QuizzerStore.quiz" :key="index"
+            <AnswerItem v-for="(question, index) in QuizzerStore.quiz.questions" :key="index"
                         :question="question" :index="index"/>
         </div>
         <div class="window-footer">
             <button @click="QuizzerStore.saveScore" :disabled="QuizzerStore.data.isSaved">save results</button>
         </div>
-    </div>
+    </QuizzerWindow>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard

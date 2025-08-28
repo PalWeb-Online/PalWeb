@@ -1,38 +1,25 @@
 <script setup>
 import {useQuizzerStore} from "../Stores/QuizzerStore.js";
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import TermItem from "../../../../components/TermItem.vue";
-import PinButton from "../../../../components/PinButton.vue";
-import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
+import QuizzerWindow from "../UI/QuizzerWindow.vue";
 
 const QuizzerStore = useQuizzerStore();
 
 const quizSettings = ref({
+    typeInput: false,
     allGlosses: false,
     anyGloss: false
 });
 </script>
 <template>
-    <div v-if="QuizzerStore.data.quizType === 'deck'" class="window-container">
-        <div class="window-header">
-            <Link :href="route('quizzer.index')" class="material-symbols-rounded">arrow_back</Link>
-            <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.data.quizType }}/{deck}</div>
-        </div>
-        <div class="window-section-head">
-            <h1>Deck</h1>
-            <PinButton modelType="deck" :model="QuizzerStore.data.model"/>
-            <DeckActions :model="QuizzerStore.data.model"/>
-        </div>
-        <div class="window-content-head">
-            <div class="window-content-head-title">{{ QuizzerStore.data.model?.name }}</div>
-        </div>
+    <QuizzerWindow>
         <ScoreStats :model="false"/>
-        <p>Here are the Terms you will be quizzed on. The Quiz will have {{ QuizzerStore.data.model?.terms_count }} questions.</p>
+        <p>Here are the Terms you will be quizzed on.</p>
         <div class="model-list index-list" style="padding-block-start: 0.8rem">
             <TermItem v-for="term in QuizzerStore.data.model?.terms" :model="term"
                       :glossId="term.deckPivot.gloss_id"/>
@@ -40,12 +27,13 @@ const quizSettings = ref({
         <div class="window-section-head">
             <h2>Setup</h2>
             <PopupWindow title="Quizzer">
-                <div>Setup</div>
+                <div class="h1">Setup</div>
                 <p>Welcome to the Quizzer, where you can dynamically generate Quizzes for different models on PalWeb.
-                    When
-                    Quizzing a Deck, the format of the questions is multiple-choice & you may toggle between the
-                    following
-                    options:</p>
+                    When Quizzing a Deck, you may choose between two different types of Quizzes: <b>Glosses</b> & <b>Inflections</b>.
+                </p>
+                <div class="h2">Glosses Quiz</div>
+                <p>In this type of Quiz, the format of the questions is multiple-choice. You may toggle between the
+                    following options:</p>
                 <ul>
                     <li><b>Decoy Source</b></li>
                     <ul>
@@ -65,8 +53,8 @@ const quizSettings = ref({
                         </li>
                     </ul>
                 </ul>
-                <p>As a rule of thumb, try to use Decks with at
-                    least 10 Terms to ensure the Quiz is sufficiently challenging & to avoid unintended results.</p>
+                <p>As a rule of thumb, try to use Decks with at least 10 Terms to ensure the Quiz is sufficiently
+                    challenging & to avoid unintended results.</p>
                 <p>Because these quizzes are generated automatically by the application, certain unexpected results are
                     possible in fringe cases, especially with small Decks:</p>
                 <ul>
@@ -86,19 +74,37 @@ const quizSettings = ref({
                         happening is infinitesimal.
                     </li>
                 </ul>
+                <div class="h2">Inflections Quiz</div>
+                <p>In this type of Quiz, the format of the questions is fill-in-the-blank.</p>
             </PopupWindow>
         </div>
         <AppTip>
-            <p>Adjust how you'd like the Quiz to be generated.</p>
-            <p v-if="QuizzerStore.data.model?.terms_count <= 5"><b>This Deck has 5 or fewer Terms.</b> You should select
-                "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
+            <p>Select the type of Quiz & adjust how you'd like for it to be generated.</p>
         </AppTip>
-        <div class="quiz-settings-wrapper">
-            <ToggleDouble v-model="quizSettings.allGlosses" label="decoy source" option-a="deck" option-b="all"/>
-            <ToggleDouble v-model="quizSettings.anyGloss" label="any gloss" option-a="no" option-b="yes"/>
+        <div class="quiz-settings-type" :class="{ 'selected': !quizSettings.typeInput }"
+             @click="quizSettings.typeInput = false">
+            <div>Glosses</div>
+            <p>Test your knowledge of Arabic vocabulary with a multiple-choice Quiz, where the right answer is shuffled
+                with the meanings of other Terms in the Deck or Dictionary.</p>
+            <AppTip v-if="QuizzerStore.data.model?.terms_count <= 5">
+                <p><b>This Deck has 5 or fewer Terms.</b> You should select
+                    "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
+            </AppTip>
+            <div class="quiz-settings-wrapper">
+                <ToggleDouble v-model="quizSettings.allGlosses" label="decoy source" option-a="deck" option-b="all"/>
+                <ToggleDouble v-model="quizSettings.anyGloss" label="any gloss" option-a="no" option-b="yes"/>
+            </div>
+        </div>
+        <div class="quiz-settings-type" :class="{ 'selected': quizSettings.typeInput }"
+             @click="quizSettings.typeInput = true">
+            <div>Inflections</div>
+            <p>Do you know your broken plurals & other forms of the Terms you've learned? Test yourself with a fill-in
+                Quiz, where you have to give the correct form of the indicated Term.</p>
+            <p>(You will only be quizzed on Terms with Inflections, so the Quiz may have fewer questions than
+                there are Terms.)</p>
         </div>
         <div class="window-footer">
             <button @click="QuizzerStore.startQuiz(quizSettings)">Start Quiz</button>
         </div>
-    </div>
+    </QuizzerWindow>
 </template>

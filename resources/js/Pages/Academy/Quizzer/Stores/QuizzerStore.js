@@ -5,12 +5,12 @@ import {shuffle} from "lodash";
 export const useQuizzerStore = defineStore('QuizzerStore', () => {
     const data = reactive({
         step: 'setup',
-        quizType: '',
+        quizType: 'deck',
         model: null,
         isSaved: false,
     });
 
-    const quiz = ref([]);
+    const quiz = ref({});
     const score = ref(0);
 
     const startQuiz = (quizSettings) => {
@@ -31,11 +31,11 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
 
             quiz.value = response.data.quiz;
 
-            quiz.value.forEach(question => {
-                shuffle(Object.entries(question.options));
+            quiz.value.questions.forEach(question => {
+                shuffle(question.options);
             });
 
-            quiz.value = shuffle(quiz.value);
+            quiz.value.questions = shuffle(quiz.value.questions);
 
         } catch (error) {
             console.error('Failed to generate quiz', error);
@@ -47,21 +47,28 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         data.step = 'results';
 
         nextTick(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         });
     };
 
     const scoreQuiz = () => {
         score.value = 0;
-        quiz.value.forEach(item => {
-            if (item.selection === item.answer) {
-                score.value += 1;
+        quiz.value.questions.forEach(item => {
+            if (quiz.value.type === 'select') {
+                if (item.selection === item.answer) {
+                    score.value += 1;
+                }
+
+            } else if (quiz.value.type === 'input') {
+                if (item.answer.includes(item.input)) {
+                    score.value += 1;
+                }
             }
         });
     };
 
     const saveScore = () => {
-        console.log(JSON.stringify({ quiz: quiz.value }));
+        console.log(JSON.stringify({quiz: quiz.value}));
         data.isSaved = true;
     };
 

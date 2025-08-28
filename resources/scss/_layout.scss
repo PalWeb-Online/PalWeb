@@ -19,7 +19,7 @@ body {
         background: var(--color-accent-medium);
     }
 
-    &.library, &.community, &.wiki, &.academy:has(.quiz-container) {
+    &.library, &.community, &.wiki {
         background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
         background-attachment: fixed;
 

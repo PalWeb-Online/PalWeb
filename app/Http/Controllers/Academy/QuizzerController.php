@@ -43,40 +43,59 @@ class QuizzerController extends Controller
     {
         $allGlosses = $request->boolean('settings.allGlosses');
         $anyGloss = $request->boolean('settings.anyGloss');
+        $typeInput = $request->boolean('settings.typeInput');
 
-        $quiz = [];
+        $quiz = [
+            'type' => $typeInput ? 'input' : 'select',
+            'questions' => [],
+        ];
 
-        foreach ($deck->terms as $index => $term) {
-            $glossId = $term->pivot->gloss_id;
+        foreach ($deck->terms as $term) {
+            if ($typeInput) {
+                $term->load(['inflections']);
+                if ($term->inflections->isEmpty()) continue;
 
-            $answer = $anyGloss || ! $glossId
-                ? $term->glosses->first()
-                : $term->glosses->firstWhere('id', $glossId);
+                $inflection = $term->inflections->random();
 
-            $decoysQuery = Gloss::query();
+                $quiz['questions'][] = [
+                    'term' => new TermResource($term)->additional(['detail' => true]),
+                    'answer' => $term->inflections->where('form', $inflection->form)->pluck('inflection')->toArray(),
+                    'prompt' => $inflection->form,
+                    'input' => null,
+                ];
 
-            if (!$allGlosses) {
-                $decoyGlossIds = $anyGloss
-                    ? $deck->terms->pluck('glosses')->flatten()->pluck('id')
-                    : $deck->terms->pluck('pivot.gloss_id')->filter();
-                $decoysQuery->whereIn('id', $decoyGlossIds);
+            } else {
+                $glossId = $term->pivot->gloss_id;
+
+                $answer = $anyGloss || ! $glossId
+                    ? $term->glosses->first()
+                    : $term->glosses->firstWhere('id', $glossId);
+
+                $decoysQuery = Gloss::query();
+
+                if (! $allGlosses) {
+                    $decoyGlossIds = $anyGloss
+                        ? $deck->terms->pluck('glosses')->flatten()->pluck('id')
+                        : $deck->terms->pluck('pivot.gloss_id')->filter();
+                    $decoysQuery->whereIn('id', $decoyGlossIds);
+                }
+
+                $decoys = $decoysQuery
+                    ->whereNot('id', $answer->id)
+                    ->whereNot('term_id', $answer->term_id)
+                    ->inRandomOrder()
+                    ->take(2)
+                    ->get();
+
+                $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
+
+                $quiz['questions'][] = [
+                    'term' => new TermResource($term)->additional(['detail' => true]),
+                    'answer' => $answer->id,
+                    'options' => $options,
+                    'selection' => null,
+                ];
             }
-
-            $decoys = $decoysQuery
-                ->whereNot('id', $answer->id)
-                ->whereNot('term_id', $answer->term_id)
-                ->inRandomOrder()
-                ->take(2)
-                ->get();
-
-            $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
-
-            $quiz[$index] = [
-                'term' => new TermResource($term)->additional(['detail' => true]),
-                'answer' => $answer->id,
-                'options' => $options,
-                'selection' => null,
-            ];
         }
 
         return response()->json(['quiz' => $quiz]);
