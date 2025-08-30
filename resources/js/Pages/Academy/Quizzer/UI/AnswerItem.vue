@@ -15,12 +15,7 @@ const props = defineProps({
 })
 
 const isCorrect = computed(() => {
-    if (QuizzerStore.quiz.type === 'select') {
-        return props.question.selection === props.question.answer;
-
-    } else if (QuizzerStore.quiz.type === 'input') {
-        return props.question.answer.includes(props.question.input);
-    }
+    return props.question.correct;
 })
 
 const isPresent = ref(true);
@@ -41,13 +36,7 @@ const toggleTerm = async () => {
 };
 
 const recalculate = () => {
-    if (QuizzerStore.quiz.type === 'select') {
-        QuizzerStore.quiz.questions[props.index].selection = QuizzerStore.quiz.questions[props.index].answer;
-
-    } else if (QuizzerStore.quiz.type === 'input') {
-        QuizzerStore.quiz.questions[props.index].input = QuizzerStore.quiz.questions[props.index].answer[0];
-    }
-
+    QuizzerStore.results[props.index].correct = true;
     QuizzerStore.scoreQuiz();
     QuizzerStore.data.isSaved = false;
 }
@@ -59,31 +48,25 @@ const recalculate = () => {
                 <div>
                     {{ question.term.term }}
                 </div>
-                <div v-if="QuizzerStore.quiz.type === 'select'">
-                    {{ question.options[question.answer] }}
-                </div>
-                <div v-else-if="QuizzerStore.quiz.type === 'input'">
-                    <span style="font-size: 1.4rem">{{ question.prompt }}.</span>
+                <div>
+                    <span v-if="question.prompt" style="font-size: 1.4rem">{{ question.prompt }}.</span>
                     <span v-for="ans in question.answer">{{ ans }}</span>
                 </div>
             </div>
-            <div class="quiz-answer-user" v-if="!isCorrect || QuizzerStore.quiz.type === 'input'">
+            <div class="quiz-answer-user">
                 <div>you said:
-                    <span style="font-weight: 700" v-if="QuizzerStore.quiz.type === 'select'">
-                        {{ question.options[question.selection] }}
-                    </span>
-                    <span style="font-weight: 700" v-else-if="QuizzerStore.quiz.type === 'input'">
-                        {{ question.input }}
-                    </span>
+                    <span style="font-weight: 700">{{ question.response }}</span>
                 </div>
             </div>
         </div>
         <div class="quiz-answer-options">
             <a :href="route('terms.show', question.term.slug)" target="_blank">See in Dictionary</a>
-            <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">
-                <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
-            </template>
-            <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>
+<!--            <template v-if="isQuizzer">-->
+<!--                <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">-->
+<!--                    <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>-->
+<!--                </template>-->
+<!--                <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>-->
+<!--            </template>-->
         </div>
     </div>
 </template>

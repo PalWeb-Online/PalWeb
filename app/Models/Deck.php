@@ -65,6 +65,27 @@ class Deck extends Model
             ->orderBy('position');
     }
 
+    public function scores(): MorphMany
+    {
+        return $this->morphMany(Score::class, 'scorable');
+    }
+
+    public function getScoreStatsAttribute()
+    {
+        $latest = $this->scores()->latest()->first();
+        $highest = $this->scores()->max('score');
+        $average = $this->scores()->avg('score');
+        $count = $this->scores()->count();
+
+        return [
+            'latest' => optional($latest)->score,
+            'latest_date' => optional($latest)->created_at?->format('j F Y'),
+            'highest' => $highest,
+            'average' => round($average, 2),
+            'count' => $count,
+        ];
+    }
+
     public function scopeFilter($query, array $filters): void
     {
         $query->when($filters['sort'] === 'popular', fn ($query) => $query

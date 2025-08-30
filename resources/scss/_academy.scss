@@ -933,3 +933,31 @@ div.activity-image .image-card {
     }
 }
 
+.score-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin: 1.6rem;
+}
+
+.score-item {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    background: var(--color-pastel-light);
+    color: var(--color-dark-primary);
+    border-radius: 0.8rem;
+    padding: 1.2rem 2.4rem;
+    font-family: $bodyFont;
+    font-weight: 700;
+    font-size: 1.6rem;
+
+    &:hover {
+        background: var(--color-pastel-medium);
+    }
+
+    & > *:last-child {
+        justify-self: end;
+    }
+}
