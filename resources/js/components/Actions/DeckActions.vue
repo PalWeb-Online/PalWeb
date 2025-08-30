@@ -74,6 +74,7 @@ const tooltip = ref(null);
             >
                 Quiz Deck
             </Link>
+            <Link v-if="UserStore.isStudent" :href="route('scores.history.deck', model.id)">View Scores</Link>
             <Link :href="route('users.show', model.author.username)" role="menuitem" tabindex="-1">
                 View Creator
             </Link>

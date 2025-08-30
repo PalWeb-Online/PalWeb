@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Academy\QuizzerController;
+use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
@@ -9,12 +10,12 @@ use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Workbench\DeckMasterController;
@@ -225,6 +226,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/deck/{deck}', 'deck')->name('quizzer.deck');
             Route::get('/deck/{deck}/quiz', 'generateQuiz')->name('quizzer.deck.quiz');
         });
+
+        Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
+            Route::get('/', 'index')->name('scores.index');
+            Route::post('/', 'store')->name('scores.store');
+            Route::delete('/{score}', 'destroy')->name('scores.destroy');
+            Route::get('/{score}', 'show')->name('scores.show');
+
+            Route::prefix('/history')->group(function () {
+                Route::get('/decks/{deck}', 'historyDeck')
+                    ->name('scores.history.deck');
+//                Route::get('/dialogs/{dialog}', 'historyDialog')
+//                    ->name('scores.history.dialog');
+//                Route::get('/skills/{skill}', 'historySkill')
+//                    ->name('scores.history.skill');
+            });
+        });
+
 
         Route::middleware('admin')->group(function () {
             Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);

@@ -33,6 +33,10 @@ class DeckResource extends JsonResource
                 return TermResource::collection($this->terms->sortBy('position')->values());
             }),
             'terms_count' => $this->terms_count ?? 0,
+            'scores' => ScoreResource::collection($this->whenLoaded('scores')),
+            'stats' => $this->whenLoaded('scores', function () {
+                return $this->score_stats;
+            }),
         ];
     }
 }

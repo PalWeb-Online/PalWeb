@@ -1,6 +1,5 @@
 <script setup>
 import {useQuizzerStore} from "../Stores/QuizzerStore.js";
-import AnswerItem from "../UI/AnswerItem.vue";
 import {computed} from "vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -8,37 +7,10 @@ import {useNavGuard} from "../../../../composables/NavGuard.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
+import ScoreStats from "../../../../components/ScoreStats.vue";
+import QuizResults from "../../../../components/QuizResults.vue";
 
 const QuizzerStore = useQuizzerStore();
-
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-});
-
-const rawScore = computed(() => {
-    return QuizzerStore.score / QuizzerStore.quiz.questions.length;
-});
-
-const formattedScore = computed(() => {
-    return formatter.format(rawScore.value);
-});
-
-const scoreMessage = computed(() => {
-    if (rawScore.value === 1) {
-        return "Flawless!";
-    }
-    if (rawScore.value >= 0.85) {
-        return "Impressive!";
-    }
-    if (rawScore.value >= 0.7) {
-        return "You’re getting there!";
-    }
-    if (rawScore.value >= 0.5) {
-        return "Off to a great start!";
-    }
-    return "Better keep practicing!";
-});
 
 const hasNavigationGuard = computed(() => {
     return !QuizzerStore.data.isSaved;
@@ -48,6 +20,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 </script>
 <template>
     <QuizzerWindow>
+        <ScoreStats :model="QuizzerStore.data.model"/>
         <div class="window-section-head">
             <h2>Results</h2>
             <PopupWindow title="Quizzer">
@@ -79,25 +52,9 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             <p>If you think one of your answers should have been accepted, feel free to <b>Mark as Correct</b> (see <b>Help</b>).
             </p>
         </AppTip>
-        <div class="quiz-results">
-            <div class="score-figure featured-title">
-                <div>{{ formattedScore }}</div>
-                <div class="quiz-results-callout">new record!</div>
-            </div>
-            <div class="score-feedback">
-                <div>{{ scoreMessage }}</div>
-                <div style="font-weight: 700">You answered {{ QuizzerStore.score }} out of {{
-                        QuizzerStore.quiz.questions.length
-                    }}
-                    questions correctly.
-                </div>
-                <div>Review your answers below.</div>
-            </div>
-        </div>
-        <div class="quiz-answer-array">
-            <AnswerItem v-for="(question, index) in QuizzerStore.quiz.questions" :key="index"
-                        :question="question" :index="index"/>
-        </div>
+
+        <QuizResults :settings="QuizzerStore.settings" :score="QuizzerStore.score" :results="QuizzerStore.results"/>
+
         <div class="window-footer">
             <button @click="QuizzerStore.saveScore" :disabled="QuizzerStore.data.isSaved">save results</button>
         </div>
