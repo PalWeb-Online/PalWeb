@@ -4,17 +4,27 @@ import {shuffle} from "lodash";
 
 export const useQuizzerStore = defineStore('QuizzerStore', () => {
     const data = reactive({
-        step: 'setup',
-        quizType: 'deck',
+        step: 'settings',
         model: null,
         isSaved: false,
     });
 
-    const quiz = ref({});
-    const score = ref(0);
+    const settings = reactive({
+        modelType: null,
+        typeInput: false,
+        options: {
+            allGlosses: false,
+            anyGloss: false,
+        }
+    });
 
-    const startQuiz = (quizSettings) => {
-        generateQuiz(quizSettings).then(() => {
+    const score = ref(0);
+    const results = ref({});
+
+    const quiz = ref({});
+
+    const startQuiz = () => {
+        generateQuiz().then(() => {
             data.step = 'quiz';
         });
 
@@ -23,19 +33,21 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         });
     };
 
-    const generateQuiz = async (quizSettings) => {
+    const generateQuiz = async () => {
         try {
             const response = await axios.get(route('quizzer.deck.quiz', data.model), {
-                params: {settings: quizSettings}
+                params: {settings: settings}
             });
 
             quiz.value = response.data.quiz;
 
-            quiz.value.questions.forEach(question => {
-                shuffle(question.options);
-            });
+            if (!settings.typeInput) {
+                quiz.value.forEach(question => {
+                    shuffle(Object.entries(question.options));
+                });
+            }
 
-            quiz.value.questions = shuffle(quiz.value.questions);
+            quiz.value = shuffle(quiz.value);
 
         } catch (error) {
             console.error('Failed to generate quiz', error);
@@ -43,6 +55,31 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     };
 
     const submitQuiz = () => {
+        results.value = quiz.value;
+
+        if (!settings.typeInput) {
+            results.value = results.value.map(q => ({
+                term: {
+                    term: q.term.term,
+                    slug: q.term.slug
+                },
+                answer: [q.options[q.answer]],
+                response: q.options[q.response],
+                correct: q.answer === q.response,
+            }))
+
+        } else {
+            results.value = quiz.value.map(q => ({
+                term: {
+                    term: q.term.term,
+                    slug: q.term.slug
+                },
+                answer: q.answer,
+                response: q.response,
+                correct: q.answer.includes(q.response),
+            }))
+        }
+
         scoreQuiz();
         data.step = 'results';
 
@@ -52,39 +89,42 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     };
 
     const scoreQuiz = () => {
-        score.value = 0;
-        quiz.value.questions.forEach(item => {
-            if (quiz.value.type === 'select') {
-                if (item.selection === item.answer) {
-                    score.value += 1;
-                }
-
-            } else if (quiz.value.type === 'input') {
-                if (item.answer.includes(item.input)) {
-                    score.value += 1;
-                }
-            }
-        });
+        score.value = results.value.filter(q => q.correct).length / quiz.value.length;
     };
 
-    const saveScore = () => {
-        console.log(JSON.stringify({quiz: quiz.value}));
+    const saveScore = async () => {
+        await axios.post(route('scores.store'), {
+            scorable_id: data.model.id,
+            settings: settings,
+            score: score.value,
+            results: results.value,
+        })
+
         data.isSaved = true;
     };
 
     const reset = () => {
-        data.step = 'setup';
-        data.quizType = '';
+        data.step = 'settings';
         data.model = null;
         data.isSaved = false;
-        quiz.value = [];
+
+        settings.modelType = null;
+        settings.typeInput = false;
+        settings.options = {
+            allGlosses: false,
+            anyGloss: false,
+        }
+
         score.value = 0;
+        quiz.value = [];
     };
 
     return {
         data,
-        quiz,
+        settings,
         score,
+        results,
+        quiz,
         startQuiz,
         submitQuiz,
         scoreQuiz,

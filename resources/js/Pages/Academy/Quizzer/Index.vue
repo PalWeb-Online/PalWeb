@@ -18,14 +18,14 @@ const props = defineProps({
     decks: Array
 });
 
-const selectModel = (quizType, index) => {
+const selectModel = (modelType, index) => {
     if (QuizzerStore.data.model?.id === props.decks[index].id) {
-        QuizzerStore.data.quizType = null;
         QuizzerStore.data.model = null;
+        QuizzerStore.settings.modelType = null;
 
     } else {
-        QuizzerStore.data.quizType = quizType;
         QuizzerStore.data.model = props.decks[index];
+        QuizzerStore.settings.modelType = modelType;
     }
 };
 
@@ -37,11 +37,11 @@ onMounted(() => {
 <template>
     <Head title="Academy: Quizzer"/>
     <div id="app-body">
+        <div class="quizzer-title featured-title l">Quizzer</div>
         <QuizzerWindow>
-            <p>(Score saving & history will be available by the end of September 2025.)</p>
-            <ScoreStats :model="false"/>
+            <ScoreStats :model="QuizzerStore.data.model"/>
             <div v-if="QuizzerStore.data.model" class="window-footer">
-                <button @click="router.get(route(`quizzer.${QuizzerStore.data.quizType}`, QuizzerStore.data.model.id))">Select Deck</button>
+                <button @click="router.get(route(`quizzer.${QuizzerStore.settings.modelType}`, QuizzerStore.data.model.id))">Select Deck</button>
             </div>
         </QuizzerWindow>
 

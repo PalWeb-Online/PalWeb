@@ -9,23 +9,17 @@ import ScoreStats from "../../../../components/ScoreStats.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
 
 const QuizzerStore = useQuizzerStore();
-
-const quizSettings = ref({
-    typeInput: false,
-    allGlosses: false,
-    anyGloss: false
-});
 </script>
 <template>
     <QuizzerWindow>
-        <ScoreStats :model="false"/>
+        <ScoreStats :model="QuizzerStore.data.model"/>
         <p>Here are the Terms you will be quizzed on.</p>
         <div class="model-list index-list" style="padding-block-start: 0.8rem">
             <TermItem v-for="term in QuizzerStore.data.model?.terms" :model="term"
                       :glossId="term.deckPivot.gloss_id"/>
         </div>
         <div class="window-section-head">
-            <h2>Setup</h2>
+            <h2>Settings</h2>
             <PopupWindow title="Quizzer">
                 <div class="h1">Setup</div>
                 <p>Welcome to the Quizzer, where you can dynamically generate Quizzes for different models on PalWeb.
@@ -81,8 +75,8 @@ const quizSettings = ref({
         <AppTip>
             <p>Select the type of Quiz & adjust how you'd like for it to be generated.</p>
         </AppTip>
-        <div class="quiz-settings-type" :class="{ 'selected': !quizSettings.typeInput }"
-             @click="quizSettings.typeInput = false">
+        <div class="quiz-settings-type" :class="{ 'selected': !QuizzerStore.settings.typeInput }"
+             @click="QuizzerStore.settings.typeInput = false">
             <div>Glosses</div>
             <p>Test your knowledge of Arabic vocabulary with a multiple-choice Quiz, where the right answer is shuffled
                 with the meanings of other Terms in the Deck or Dictionary.</p>
@@ -91,12 +85,12 @@ const quizSettings = ref({
                     "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
             </AppTip>
             <div class="quiz-settings-wrapper">
-                <ToggleDouble v-model="quizSettings.allGlosses" label="decoy source" option-a="deck" option-b="all"/>
-                <ToggleDouble v-model="quizSettings.anyGloss" label="any gloss" option-a="no" option-b="yes"/>
+                <ToggleDouble v-model="QuizzerStore.settings.options.allGlosses" label="decoy source" option-a="deck" option-b="all"/>
+                <ToggleDouble v-model="QuizzerStore.settings.options.anyGloss" label="any gloss" option-a="no" option-b="yes"/>
             </div>
         </div>
-        <div class="quiz-settings-type" :class="{ 'selected': quizSettings.typeInput }"
-             @click="quizSettings.typeInput = true">
+        <div class="quiz-settings-type" :class="{ 'selected': QuizzerStore.settings.typeInput }"
+             @click="QuizzerStore.settings.typeInput = true">
             <div>Inflections</div>
             <p>Do you know your broken plurals & other forms of the Terms you've learned? Test yourself with a fill-in
                 Quiz, where you have to give the correct form of the indicated Term.</p>
@@ -104,7 +98,7 @@ const quizSettings = ref({
                 there are Terms.)</p>
         </div>
         <div class="window-footer">
-            <button @click="QuizzerStore.startQuiz(quizSettings)">Start Quiz</button>
+            <button @click="QuizzerStore.startQuiz">Start Quiz</button>
         </div>
     </QuizzerWindow>
 </template>

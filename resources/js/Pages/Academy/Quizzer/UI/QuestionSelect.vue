@@ -12,10 +12,10 @@ const props = defineProps({
 })
 
 const toggleSelection = (index) => {
-    if (QuizzerStore.quiz.questions[props.index].selection === Number(index)) {
-        QuizzerStore.quiz.questions[props.index].selection = null;
+    if (QuizzerStore.quiz[props.index].response === Number(index)) {
+        QuizzerStore.quiz[props.index].response = null;
     } else {
-        QuizzerStore.quiz.questions[props.index].selection = Number(index);
+        QuizzerStore.quiz[props.index].response = Number(index);
     }
 }
 </script>
@@ -40,7 +40,7 @@ const toggleSelection = (index) => {
 
         <div class="quiz-question-options">
             <AppButton v-for="(option, i) in question.options"
-                    :class="{'selected': question.selection === Number(i)}"
+                    :class="{'selected': question.response === Number(i)}"
                     @click="toggleSelection(i)" :label="option"/>
         </div>
     </div>

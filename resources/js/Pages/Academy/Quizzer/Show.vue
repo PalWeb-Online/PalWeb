@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import {useQuizzerStore} from "./Stores/QuizzerStore.js";
-import Setup from "./Pages/Setup.vue";
+import Settings from "./Pages/Settings.vue";
 import Quiz from "./Pages/Quiz.vue";
 import Results from "./Pages/Results.vue";
 import {onMounted} from "vue";
@@ -11,22 +11,23 @@ defineOptions({
 });
 
 const props = defineProps({
-    quizType: String,
     model: Object,
+    modelType: String,
 });
 
 const QuizzerStore = useQuizzerStore();
 
 onMounted(() => {
     QuizzerStore.reset();
-    QuizzerStore.data.quizType = props.quizType;
     QuizzerStore.data.model = props.model;
+    QuizzerStore.settings.modelType = props.modelType;
 });
 </script>
 <template>
-    <Head :title="`Academy: Quizzer (${quizType})`"/>
+    <Head :title="`Academy: Quizzer (${modelType})`"/>
     <div id="app-body">
-        <Setup v-if="QuizzerStore.data.step ==='setup'"/>
+        <div class="quizzer-title featured-title l">Quizzer</div>
+        <Settings v-if="QuizzerStore.data.step ==='settings'"/>
         <Quiz v-if="QuizzerStore.data.step ==='quiz'"/>
         <Results v-if="QuizzerStore.data.step ==='results'"/>
     </div>

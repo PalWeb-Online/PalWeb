@@ -7,22 +7,24 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Models\Gloss;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class QuizzerController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         return Inertia::render('Academy/Quizzer/Index', [
             'section' => 'academy',
-            'decks' => DeckResource::collection(Deck::whereHasBookmark($request->user())->with(['terms'])->get()),
+            'decks' => DeckResource::collection(Deck::whereHasBookmark($request->user())->with(['terms', 'scores'])->get()),
         ]);
     }
 
-    public function deck(Deck $deck)
+    public function deck(Deck $deck): \Inertia\Response | RedirectResponse
     {
-        $deck?->load(['terms']);
+        $deck?->load(['terms', 'scores']);
 
         if ($deck->terms->isEmpty()) {
             session()->flash('notification',
@@ -33,22 +35,19 @@ class QuizzerController extends Controller
         } else {
             return Inertia::render('Academy/Quizzer/Show', [
                 'section' => 'academy',
-                'quizType' => 'deck',
-                'model' => new DeckResource($deck)
+                'model' => new DeckResource($deck),
+                'modelType' => 'deck',
             ]);
         }
     }
 
-    public function generateQuiz(Request $request, Deck $deck)
+    public function generateQuiz(Request $request, Deck $deck): JsonResponse
     {
-        $allGlosses = $request->boolean('settings.allGlosses');
-        $anyGloss = $request->boolean('settings.anyGloss');
         $typeInput = $request->boolean('settings.typeInput');
+        $allGlosses = $request->boolean('settings.options.allGlosses');
+        $anyGloss = $request->boolean('settings.options.anyGloss');
 
-        $quiz = [
-            'type' => $typeInput ? 'input' : 'select',
-            'questions' => [],
-        ];
+        $quiz = [];
 
         foreach ($deck->terms as $term) {
             if ($typeInput) {
@@ -57,11 +56,12 @@ class QuizzerController extends Controller
 
                 $inflection = $term->inflections->random();
 
-                $quiz['questions'][] = [
+                $quiz[] = [
                     'term' => new TermResource($term)->additional(['detail' => true]),
                     'answer' => $term->inflections->where('form', $inflection->form)->pluck('inflection')->toArray(),
                     'prompt' => $inflection->form,
-                    'input' => null,
+                    'response' => null,
+                    'correct' => false,
                 ];
 
             } else {
@@ -89,11 +89,12 @@ class QuizzerController extends Controller
 
                 $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
 
-                $quiz['questions'][] = [
+                $quiz[] = [
                     'term' => new TermResource($term)->additional(['detail' => true]),
                     'answer' => $answer->id,
                     'options' => $options,
-                    'selection' => null,
+                    'response' => null,
+                    'correct' => false,
                 ];
             }
         }

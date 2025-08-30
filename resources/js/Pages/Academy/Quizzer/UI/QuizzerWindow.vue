@@ -7,17 +7,16 @@ import {useQuizzerStore} from "../Stores/QuizzerStore.js";
 const QuizzerStore = useQuizzerStore();
 </script>
 <template>
-    <div class="quizzer-title featured-title l">Quizzer</div>
     <div id="quizzer-container" class="window-container">
         <div class="window-header">
             <template v-if="QuizzerStore.data.step !== 'select'">
-                <Link v-if="QuizzerStore.data.step === 'setup'" :href="route('quizzer.index')"
+                <Link v-if="QuizzerStore.data.step === 'settings'" :href="route('quizzer.index')"
                       class="material-symbols-rounded">close
                 </Link>
                 <Link v-else :href="route('quizzer.deck', QuizzerStore.data.model.id)" class="material-symbols-rounded">
                     arrow_back
                 </Link>
-                <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.data.quizType }}/{deck}
+                <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.settings.modelType }}/{deck}
                 </div>
             </template>
             <template v-else>

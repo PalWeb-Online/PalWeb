@@ -39,7 +39,7 @@ const prompt = computed(() => {
 
         <div class="quiz-question-input">
             <div>{{ prompt }}</div>
-            <input v-model="question.input"/>
+            <input v-model="question.response"/>
         </div>
     </div>
 </template>
