@@ -23,7 +23,7 @@ const deleteTerm = () => {
         <Link :href="route('terms.show', model.slug)" role="menuitem" tabindex="-1">
             View Term
         </Link>
-        <Link :href="route('roots.show', model.id)" role="menuitem" tabindex="-1">
+        <Link v-if="model.root" :href="route('roots.show', model.root.id)" role="menuitem" tabindex="-1">
             View Root
         </Link>
 
