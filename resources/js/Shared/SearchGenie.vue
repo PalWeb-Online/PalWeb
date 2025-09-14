@@ -15,6 +15,8 @@ const activeIndex = ref(-1);
 
 const tooltip = ref(null);
 
+const modifierKeyPrefix = navigator.platform.startsWith("Mac") ? "Cmd" : "Ctrl";
+
 function handleMouseMove(event) {
     if (!tooltip.value) return;
 
@@ -245,8 +247,10 @@ watch(() => SearchStore.data.results, () => {
 
         <div class="sg-footer">
             <div><b>Enter</b> selects</div>
-            <div><b>Up/Dwn</b> navigates</div>
-            <div v-if="SearchStore.data.action === 'search'"><b>Ctrl+K</b> toggles Search Genie</div>
+            <div><b>Up/Down</b> navigates</div>
+            <div v-if="SearchStore.data.action === 'search'">
+                <b>{{ modifierKeyPrefix }}+K</b> toggles Search Genie
+            </div>
             <div v-else><b>Esc</b> exits</div>
         </div>
     </div>
