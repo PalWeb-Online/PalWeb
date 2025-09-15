@@ -21,7 +21,7 @@ const deleteScore = () => {
         <Link class="score-item" :href="route('scores.show', score.id)">
 <!--            <div>{{ score.scorable_type }}</div>-->
             <div>{{ score.settings.typeInput ? 'Inflections' : 'Glosses' }}</div>
-            <div>{{ formatter.format(score.score) }} of {{ score.results.length }} Questions</div>
+            <div>{{ formatter.format(score.score) }} ({{ score.results.filter(q => q.correct).length }}/{{ score.results.length }})</div>
             <div style="font-size: 1.2rem">{{ score.created_at }}</div>
         </Link>
         <button @click="deleteScore" class="material-symbols-rounded">delete</button>

@@ -48,19 +48,22 @@ defineOptions({
             </ul>
             <li>September 2025</li>
             <ul>
-                <li>myProgress: Saving user scores & interface to visualize score history per model & globally.</li>
+                <li>myProgress: Saving user scores. Interface to visualize score history per model & results summary per score. "Latest" section of Index page.</li>
+                <li>Quizzer: Ability to Quiz Dialogs.</li>
             </ul>
-            <li>October 2025</li>
+            <li>October 2025 (Nabatean)</li>
             <ul>
-                <li>Lessons: Navigation interface; reinstate Unit 1 content without Skills & Dialogs.</li>
+                <li>Quizzer: Ability to Quiz Skills.</li>
+                <li>Lessons: (Interface to create Skills?) Create / Revise Unit 1 Skills.</li>
             </ul>
             <li>November 2025</li>
             <ul>
-                <li>Quizzer: Ability to Quiz Dialogs. Create Unit 1 Dialogs.</li>
+                <li>myProgress: "Lesson" section of Index page.</li>
+                <li>Lessons: Navigation & Inventory.</li>
             </ul>
             <li>December 2025</li>
             <ul>
-                <li>Quizzer: Ability to Quiz various types of Skills. Create Unit 1 Skills.</li>
+                <li>Lessons: Roll out Unit 1.</li>
             </ul>
             <li>January-February 2026</li>
             <ul>

@@ -32,6 +32,7 @@ class ScoreFactory extends Factory
             ],
             'score' => 0,
             'results' => [],
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
