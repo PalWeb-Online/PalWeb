@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
-use App\Http\Resources\TermResource;
+use App\Http\Resources\DialogResource;
 use App\Models\Deck;
-use App\Models\Gloss;
+use App\Models\Dialog;
+use App\Services\QuizService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +16,10 @@ use Inertia\Inertia;
 
 class QuizzerController extends Controller
 {
+    public function __construct(private readonly QuizService $quizService)
+    {
+    }
+
     public function index(Request $request): \Inertia\Response
     {
         return Inertia::render('Academy/Quizzer/Index', [
@@ -22,83 +28,46 @@ class QuizzerController extends Controller
         ]);
     }
 
-    public function deck(Deck $deck): \Inertia\Response | RedirectResponse
+    public function show(string $scorable_type, int $scorable_id): \Inertia\Response|RedirectResponse
     {
-        $deck?->load(['terms', 'scores']);
+        $model = $this->getModel($scorable_type, $scorable_id);
 
-        if ($deck->terms->isEmpty()) {
+        $model->load($scorable_type === 'deck' ? ['terms', 'scores'] : ['sentences']);
+
+        $isEmpty = $scorable_type === 'deck' ? $model->terms->isEmpty() : $model->sentences->isEmpty();
+
+        if ($isEmpty) {
             session()->flash('notification',
-                ['type' => 'success', 'message' => __('You can\'t Quiz an empty Deck!')]);
+                ['type' => 'warning', 'message' => __("You can't Quiz an empty :type!", ['type' => ucfirst($scorable_type)])]);
 
             return to_route('quizzer.index');
-
-        } else {
-            return Inertia::render('Academy/Quizzer/Show', [
-                'section' => 'academy',
-                'model' => new DeckResource($deck),
-                'modelType' => 'deck',
-            ]);
         }
+
+        return Inertia::render('Academy/Quizzer/Show', [
+            'section' => 'academy',
+            'model' => $scorable_type === 'deck' ? new DeckResource($model) : new DialogResource($model),
+            'scorable_type' => $scorable_type,
+        ]);
     }
 
-    public function generateQuiz(Request $request, Deck $deck): JsonResponse
+    public function generate(Request $request, string $scorable_type, int $scorable_id): JsonResponse
     {
-        $typeInput = $request->boolean('settings.typeInput');
-        $allGlosses = $request->boolean('settings.options.allGlosses');
-        $anyGloss = $request->boolean('settings.options.anyGloss');
+        $model = $this->getModel($scorable_type, $scorable_id);
+        $settings = $request->get('settings', []);
 
-        $quiz = [];
-
-        foreach ($deck->terms as $term) {
-            if ($typeInput) {
-                $term->load(['inflections']);
-                if ($term->inflections->isEmpty()) continue;
-
-                $inflection = $term->inflections->random();
-
-                $quiz[] = [
-                    'term' => new TermResource($term)->additional(['detail' => true]),
-                    'answer' => $term->inflections->where('form', $inflection->form)->pluck('inflection')->toArray(),
-                    'prompt' => $inflection->form,
-                    'response' => null,
-                    'correct' => false,
-                ];
-
-            } else {
-                $glossId = $term->pivot->gloss_id;
-
-                $answer = $anyGloss || ! $glossId
-                    ? $term->glosses->first()
-                    : $term->glosses->firstWhere('id', $glossId);
-
-                $decoysQuery = Gloss::query();
-
-                if (! $allGlosses) {
-                    $decoyGlossIds = $anyGloss
-                        ? $deck->terms->pluck('glosses')->flatten()->pluck('id')
-                        : $deck->terms->pluck('pivot.gloss_id')->filter();
-                    $decoysQuery->whereIn('id', $decoyGlossIds);
-                }
-
-                $decoys = $decoysQuery
-                    ->whereNot('id', $answer->id)
-                    ->whereNot('term_id', $answer->term_id)
-                    ->inRandomOrder()
-                    ->take(2)
-                    ->get();
-
-                $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
-
-                $quiz[] = [
-                    'term' => new TermResource($term)->additional(['detail' => true]),
-                    'answer' => $answer->id,
-                    'options' => $options,
-                    'response' => null,
-                    'correct' => false,
-                ];
-            }
-        }
+        $quiz = $this->quizService->generateQuiz($model, $settings);
 
         return response()->json(['quiz' => $quiz]);
+    }
+
+    private function getModel(string $type, int $id): Model
+    {
+        $class = match ($type) {
+            'deck' => Deck::class,
+            'dialog' => Dialog::class,
+            default => abort(404),
+        };
+
+        return $class::findOrFail($id);
     }
 }

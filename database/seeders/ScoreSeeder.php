@@ -13,14 +13,19 @@ class ScoreSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::find(1);
+        $users = User::find([1, 2]);
 
-        foreach ($user->decks as $deck) {
-            Score::factory(10)->create([
-                'user_id' => $user->id,
-                'scorable_id' => $deck->id,
-                'scorable_type' => get_class($deck),
-            ]);
+        foreach ($users as $user) {
+            foreach ($users[0]->decks as $deck) {
+                if ($deck->terms->isEmpty()) {
+                    continue;
+                }
+
+                Score::factory(10)->create([
+                    'user_id' => $user->id,
+                    'scorable_id' => $deck->id,
+                ]);
+            }
         }
     }
 }

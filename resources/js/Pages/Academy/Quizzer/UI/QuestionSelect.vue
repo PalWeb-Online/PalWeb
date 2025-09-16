@@ -21,7 +21,7 @@ const toggleSelection = (index) => {
 </script>
 <template>
     <div class="quiz-question">
-        <div class="term-flashcard">
+        <div class="term-flashcard" style="cursor: default">
             <div class="term-flashcard-front">
                 <div class="term-flashcard-term">
                     <div>{{ question.term.term }}</div>

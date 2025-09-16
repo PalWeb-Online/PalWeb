@@ -6,6 +6,8 @@ import ScoreItem from "../../../components/ScoreItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import PinButton from "../../../components/PinButton.vue";
 import DeckActions from "../../../components/Actions/DeckActions.vue";
+import WindowSection from "../../../components/WindowSection.vue";
+import Paginator from "../../../Shared/Paginator.vue";
 
 defineOptions({
     layout: Layout
@@ -13,12 +15,16 @@ defineOptions({
 
 const props = defineProps({
     model: Object,
+    scorable_type: String,
+    scores: Array,
+    totalCount: Number,
 })
 </script>
 <template>
     <Head :title="`Academy: Score History for ${model.id}`"/>
     <div id="app-head">
-        <Link :href="route('scores.history.deck', model.id)"><h1>my Progress</h1></Link>
+        <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })"><h1>my Progress</h1>
+        </Link>
     </div>
     <div id="app-body">
         <div id="quizzer-container" class="window-container">
@@ -28,26 +34,41 @@ const props = defineProps({
             </div>
             <div class="window-section-head">
                 <h1>Deck</h1>
-                <PinButton modelType="deck" :model="model"/>
+                <PinButton :modelType="scorable_type" :model="model"/>
                 <DeckActions :model="model"/>
             </div>
             <div class="window-content-head">
                 <div class="window-content-head-title">{{ model.name }}</div>
             </div>
-            <ScoreStats :model="model"/>
+            <WindowSection>
+                <template #title>
+                    <h2>stats</h2>
+                </template>
+                <template #content>
+                    <ScoreStats :model="model"/>
+                </template>
+            </WindowSection>
 
-<!--            -->
+            <!--            -->
             <div class="window-section-head">
-                <h2>Score History</h2>
+                <h2>History</h2>
             </div>
-            <ScoreItem v-if="model.scores.length" v-for="score in model.scores" :score="score" :key="score.id"/>
-            <AppTip v-else>
-                <p>You have not Quizzed this Deck yet. When you do, you will see a history of your Scores here.
-                    <Link :href="route('quizzer.deck', model.id)">Go to the Quizzer.</Link>
+            <AppTip>
+                <p v-if="totalCount > 0">Displaying all {{ totalCount }} Scores for this
+                    <span style="text-transform: capitalize">{{ scorable_type }}</span>,
+                    from most to least recent.</p>
+                <p v-else>You have not Quizzed this <span style="text-transform: capitalize">{{ scorable_type }}</span>
+                    yet. When you do, you will see a history of your Scores here.
+                    <Link :href="route('quizzer.show', { scorable_type: scorable_type, scorable_id: model.id })">Go to
+                        the Quizzer.
+                    </Link>
                 </p>
             </AppTip>
-            <!--            todo: paginate -->
-<!--            -->
+            <template v-if="totalCount > 0">
+                <ScoreItem v-for="score in scores.data" :score="score" :key="score.id"/>
+                <Paginator :links="scores.meta.links"/>
+            </template>
+            <!--            -->
         </div>
     </div>
 </template>

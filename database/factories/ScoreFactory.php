@@ -20,10 +20,9 @@ class ScoreFactory extends Factory
     {
         return [
             'user_id' => null,
-            'scorable_type' => null,
+            'scorable_type' => 'deck',
             'scorable_id' => null,
             'settings' => [
-                'modelType' => 'deck',
                 'typeInput' => false,
                 'options' => [
                     'allGlosses' => false,

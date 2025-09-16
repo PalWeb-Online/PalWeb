@@ -1,16 +1,17 @@
 import {defineStore} from 'pinia';
 import {nextTick, reactive, ref} from 'vue';
 import {shuffle} from "lodash";
+import {router} from "@inertiajs/vue3";
 
 export const useQuizzerStore = defineStore('QuizzerStore', () => {
     const data = reactive({
         step: 'settings',
         model: null,
+        scorable_type: null,
         isSaved: false,
     });
 
     const settings = reactive({
-        modelType: null,
         typeInput: false,
         options: {
             allGlosses: false,
@@ -18,8 +19,11 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         }
     });
 
-    const score = ref(0);
-    const results = ref({});
+    const score = reactive({
+        settings: {},
+        score: 0,
+        results: {},
+    });
 
     const quiz = ref({});
 
@@ -35,7 +39,10 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
 
     const generateQuiz = async () => {
         try {
-            const response = await axios.get(route('quizzer.deck.quiz', data.model), {
+            const response = await axios.post(route('quizzer.generate', {
+                scorable_type: data.scorable_type,
+                scorable_id: data.model.id
+            }), {
                 params: {settings: settings}
             });
 
@@ -55,10 +62,11 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     };
 
     const submitQuiz = () => {
-        results.value = quiz.value;
+        score.settings = settings;
+        score.results = quiz.value;
 
         if (!settings.typeInput) {
-            results.value = results.value.map(q => ({
+            score.results = score.results.map(q => ({
                 term: {
                     term: q.term.term,
                     slug: q.term.slug
@@ -69,7 +77,7 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
             }))
 
         } else {
-            results.value = quiz.value.map(q => ({
+            score.results = quiz.value.map(q => ({
                 term: {
                     term: q.term.term,
                     slug: q.term.slug
@@ -89,33 +97,41 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     };
 
     const scoreQuiz = () => {
-        score.value = results.value.filter(q => q.correct).length / quiz.value.length;
+        score.score = score.results.filter(q => q.correct).length / quiz.value.length;
     };
 
     const saveScore = async () => {
-        await axios.post(route('scores.store'), {
-            scorable_id: data.model.id,
-            settings: settings,
-            score: score.value,
-            results: results.value,
-        })
-
         data.isSaved = true;
+
+        router.post(route('scores.store'), {
+            scorable_type: data.scorable_type,
+            scorable_id: data.model.id,
+            settings: score.settings,
+            score: score.score,
+            results: score.results,
+        }, {
+            onError: (errors) => {
+                data.isSaved = false;
+                console.error('Error saving score:', errors);
+            }
+        });
     };
 
     const reset = () => {
         data.step = 'settings';
         data.model = null;
+        data.scorable_type = null;
         data.isSaved = false;
 
-        settings.modelType = null;
         settings.typeInput = false;
         settings.options = {
             allGlosses: false,
             anyGloss: false,
         }
 
-        score.value = 0;
+        score.score = 0;
+        score.results = {};
+
         quiz.value = [];
     };
 
@@ -123,7 +139,6 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         data,
         settings,
         score,
-        results,
         quiz,
         startQuiz,
         submitQuiz,

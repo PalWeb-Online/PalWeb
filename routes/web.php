@@ -223,8 +223,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/quizzer')->controller(QuizzerController::class)->group(function () {
             Route::get('/', 'index')->name('quizzer.index');
-            Route::get('/deck/{deck}', 'deck')->name('quizzer.deck');
-            Route::get('/deck/{deck}/quiz', 'generateQuiz')->name('quizzer.deck.quiz');
+            Route::get('/{scorable_type}/{scorable_id}', 'show')->name('quizzer.show');
+            Route::post('/{scorable_type}/{scorable_id}/quiz', 'generate')->name('quizzer.generate');
         });
 
         Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
@@ -232,17 +232,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', 'store')->name('scores.store');
             Route::delete('/{score}', 'destroy')->name('scores.destroy');
             Route::get('/{score}', 'show')->name('scores.show');
-
-            Route::prefix('/history')->group(function () {
-                Route::get('/decks/{deck}', 'historyDeck')
-                    ->name('scores.history.deck');
-//                Route::get('/dialogs/{dialog}', 'historyDialog')
-//                    ->name('scores.history.dialog');
-//                Route::get('/skills/{skill}', 'historySkill')
-//                    ->name('scores.history.skill');
-            });
+            Route::get('/history/{scorable_type}/{scorable_id}', 'history')->name('scores.history');
         });
-
 
         Route::middleware('admin')->group(function () {
             Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);

@@ -36,7 +36,7 @@ const toggleTerm = async () => {
 };
 
 const recalculate = () => {
-    QuizzerStore.results[props.index].correct = true;
+    QuizzerStore.score.results[props.index].correct = true;
     QuizzerStore.scoreQuiz();
     QuizzerStore.data.isSaved = false;
 }
@@ -61,12 +61,12 @@ const recalculate = () => {
         </div>
         <div class="quiz-answer-options">
             <a :href="route('terms.show', question.term.slug)" target="_blank">See in Dictionary</a>
-<!--            <template v-if="isQuizzer">-->
-<!--                <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">-->
-<!--                    <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>-->
-<!--                </template>-->
-<!--                <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>-->
-<!--            </template>-->
+
+            <!--            todo: only in Results -->
+            <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">
+                <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
+            </template>
+            <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>
         </div>
     </div>
 </template>

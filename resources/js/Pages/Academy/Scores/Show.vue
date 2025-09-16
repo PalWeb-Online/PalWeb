@@ -4,7 +4,8 @@ import {route} from "ziggy-js";
 import PinButton from "../../../components/PinButton.vue";
 import ScoreStats from "../../../components/ScoreStats.vue";
 import DeckActions from "../../../components/Actions/DeckActions.vue";
-import QuizResults from "../../../components/QuizResults.vue";
+import ScoreDetail from "../../../components/ScoreDetail.vue";
+import WindowSection from "../../../components/WindowSection.vue";
 
 defineOptions({
     layout: Layout
@@ -28,21 +29,32 @@ const props = defineProps({
             </div>
             <div class="window-section-head">
                 <h1>Deck</h1>
-                <PinButton modelType="deck" :model="model"/>
+                <PinButton :modelType="score.scorable_type" :model="model"/>
                 <DeckActions :model="model"/>
             </div>
             <div class="window-content-head">
                 <div class="window-content-head-title">{{ model.name }}</div>
             </div>
-            <ScoreStats :model="model"/>
+            <WindowSection :visible="false">
+                <template #title>
+                    <h2>stats</h2>
+                </template>
+                <template #content>
+                    <ScoreStats :model="model"/>
+                </template>
+            </WindowSection>
 
-<!--            -->
+            <!--            -->
             <div class="window-section-head">
-                <Link :href="route('scores.history.deck', score.scorable_id)" class="material-symbols-rounded">arrow_back</Link>
                 <h2>Detail</h2>
+                <Link
+                    :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id })"
+                    class="material-symbols-rounded">
+                    close
+                </Link>
             </div>
-            <QuizResults :settings="score.settings" :score="score.score" :results="score.results"/>
-<!--            -->
+            <ScoreDetail :score="score"/>
+            <!--            -->
         </div>
     </div>
 </template>

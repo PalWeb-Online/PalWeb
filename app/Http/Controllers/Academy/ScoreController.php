@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreScoreRequest;
 use App\Http\Resources\DeckResource;
+use App\Http\Resources\DialogResource;
 use App\Http\Resources\ScoreResource;
 use App\Models\Deck;
+use App\Models\Dialog;
 use App\Models\Score;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ScoreController extends Controller
@@ -26,18 +30,19 @@ class ScoreController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreScoreRequest $request): RedirectResponse
     {
-        Score::create([
+        Score::create(array_merge($request->all(), [
             'user_id' => $request->user()->id,
-            'scorable_type' => Deck::class,
-            'scorable_id' => $request->input('scorable_id'),
-            'settings' => $request->input('settings'),
-            'score' => $request->input('score'),
-            'results' => $request->input('results'),
-        ]);
+        ]));
 
-        return redirect()->back();
+        session()->flash('notification',
+            ['type' => 'success', 'message' => 'Your Score for this Quiz has been saved!']);
+
+        return to_route('quizzer.show', [
+            'scorable_type' => $request->scorable_type,
+            'scorable_id'   => $request->scorable_id,
+        ]);
     }
 
     /**
@@ -45,52 +50,54 @@ class ScoreController extends Controller
      */
     public function show(Score $score): \Inertia\Response
     {
-        $deck = $score->scorable->load(['scores']);
+        $scorable = $score->scorable->load(['scores']);
+
+        $modelResource = $scorable instanceof Deck
+            ? new DeckResource($scorable)
+            : new DialogResource($scorable);
 
         return Inertia::render('Academy/Scores/Show', [
             'section' => 'academy',
-            'model' => new DeckResource($deck),
+            'model' => $modelResource,
             'score' => new ScoreResource($score)
         ]);
     }
 
-    public function historyDeck(Deck $deck): \Inertia\Response
+    public function history(string $scorable_type, int $scorable_id): \Inertia\Response
     {
-        $deck->load(['scores']);
+        $modelClass = match ($scorable_type) {
+            'deck' => Deck::class,
+            'dialog' => Dialog::class,
+            default => abort(404),
+        };
+
+        $model = $modelClass::findOrFail($scorable_id);
+        $model->load(['scores']);
+
+        $scores = $model->scores()->paginate(10)->onEachSide(1);
+        $totalCount = $scores->total();
 
         return Inertia::render('Academy/Scores/History', [
             'section' => 'academy',
-            'model' => new DeckResource($deck),
+            'model' => $scorable_type === 'deck' ? new DeckResource($model) : new DialogResource($model),
+            'scorable_type' => $scorable_type,
+            'scores' => ScoreResource::collection($scores),
+            'totalCount' => $totalCount,
         ]);
     }
-
-//    public function historyDialog(Dialog $dialog): \Inertia\Response
-//    {
-//        return Inertia::render('Academy/Scores/History', [
-//            'section' => 'academy',
-//            'model' => new DialogResource($dialog),
-//        ]);
-//    }
-//
-//    public function historySkill(Skill $skill): \Inertia\Response
-//    {
-//        return Inertia::render('Academy/Scores/History', [
-//            'section' => 'academy',
-//            'model' => new SkillResource($skill),
-//        ]);
-//    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Score $score): RedirectResponse
     {
-//        $this->authorize('modify', $deck);
-
         $score->delete();
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => 'Score'])]);
 
-        return redirect()->back();
+        return to_route('scores.history', [
+            'scorable_type' => $score->scorable_type,
+            'scorable_id'   => $score->scorable_id,
+        ]);
     }
 }

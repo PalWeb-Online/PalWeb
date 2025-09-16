@@ -13,10 +13,10 @@ const QuizzerStore = useQuizzerStore();
                 <Link v-if="QuizzerStore.data.step === 'settings'" :href="route('quizzer.index')"
                       class="material-symbols-rounded">close
                 </Link>
-                <Link v-else :href="route('quizzer.deck', QuizzerStore.data.model.id)" class="material-symbols-rounded">
+                <Link v-else :href="route('quizzer.show', { scorable_type: 'deck', scorable_id:  QuizzerStore.data.model.id })" class="material-symbols-rounded">
                     arrow_back
                 </Link>
-                <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.settings.modelType }}/{deck}
+                <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.data.scorable_type }}/{{'{'+QuizzerStore.data.scorable_type+'}'}}
                 </div>
             </template>
             <template v-else>
@@ -25,14 +25,14 @@ const QuizzerStore = useQuizzerStore();
             </template>
         </div>
         <div class="window-section-head">
-            <h1>Deck</h1>
+            <h1>{{ QuizzerStore.data.scorable_type }}</h1>
             <template v-if="QuizzerStore.data.model">
-                <PinButton modelType="deck" :model="QuizzerStore.data.model"/>
+                <PinButton :modelType="QuizzerStore.data.scorable_type" :model="QuizzerStore.data.model"/>
                 <DeckActions :model="QuizzerStore.data.model"/>
             </template>
         </div>
         <div class="window-content-head">
-            <div class="window-content-head-title">{{ QuizzerStore.data.model?.name }}</div>
+            <div class="window-content-head-title">{{ QuizzerStore.data.scorable_type === 'deck' ? QuizzerStore.data.model?.name : QuizzerStore.data.model?.title }}</div>
         </div>
         <slot/>
     </div>

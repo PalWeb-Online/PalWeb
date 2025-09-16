@@ -8,7 +8,7 @@ import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
-import QuizResults from "../../../../components/QuizResults.vue";
+import ScoreDetail from "../../../../components/ScoreDetail.vue";
 
 const QuizzerStore = useQuizzerStore();
 
@@ -53,10 +53,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             </p>
         </AppTip>
 
-        <QuizResults :settings="QuizzerStore.settings" :score="QuizzerStore.score" :results="QuizzerStore.results"/>
+        <ScoreDetail :score="QuizzerStore.score"/>
 
         <div class="window-footer">
-            <button @click="QuizzerStore.saveScore" :disabled="QuizzerStore.data.isSaved">save results</button>
+            <button @click="QuizzerStore.saveScore" :disabled="QuizzerStore.data.isSaved">save & quit</button>
         </div>
     </QuizzerWindow>
 

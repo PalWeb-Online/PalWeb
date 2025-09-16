@@ -21,11 +21,11 @@ const props = defineProps({
 const selectModel = (modelType, index) => {
     if (QuizzerStore.data.model?.id === props.decks[index].id) {
         QuizzerStore.data.model = null;
-        QuizzerStore.settings.modelType = null;
+        QuizzerStore.data.scorable_type = null;
 
     } else {
         QuizzerStore.data.model = props.decks[index];
-        QuizzerStore.settings.modelType = modelType;
+        QuizzerStore.data.scorable_type = modelType;
     }
 };
 
@@ -41,7 +41,7 @@ onMounted(() => {
         <QuizzerWindow>
             <ScoreStats :model="QuizzerStore.data.model"/>
             <div v-if="QuizzerStore.data.model" class="window-footer">
-                <button @click="router.get(route(`quizzer.${QuizzerStore.settings.modelType}`, QuizzerStore.data.model.id))">Select Deck</button>
+                <button @click="router.get(route('quizzer.show', { scorable_type: 'deck', scorable_id: QuizzerStore.data.model.id }))">Select Deck</button>
             </div>
         </QuizzerWindow>
 
