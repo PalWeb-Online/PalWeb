@@ -62,11 +62,12 @@ const recalculate = () => {
         <div class="quiz-answer-options">
             <a :href="route('terms.show', question.term.slug)" target="_blank">See in Dictionary</a>
 
-            <!--            todo: only in Results -->
-            <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">
-                <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
+            <template v-if="QuizzerStore.data.model">
+                <template v-if="UserStore.user.id === QuizzerStore.data.model.author.id">
+                    <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
+                </template>
+                <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>
             </template>
-            <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>
         </div>
     </div>
 </template>

@@ -4,7 +4,7 @@ import {useQuizzerStore} from "./Stores/QuizzerStore.js";
 import Settings from "./Pages/Settings.vue";
 import Quiz from "./Pages/Quiz.vue";
 import Results from "./Pages/Results.vue";
-import {onMounted, watch} from "vue";
+import {onBeforeUnmount, onMounted, watch} from "vue";
 
 defineOptions({
     layout: Layout
@@ -21,6 +21,10 @@ onMounted(() => {
     QuizzerStore.reset();
     QuizzerStore.data.model = props.model;
     QuizzerStore.data.scorable_type = props.scorable_type;
+});
+
+onBeforeUnmount(() => {
+    QuizzerStore.reset();
 });
 
 watch(() => props.model, (newModel) => {

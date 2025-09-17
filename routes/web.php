@@ -230,9 +230,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
             Route::get('/', 'index')->name('scores.index');
             Route::post('/', 'store')->name('scores.store');
+            Route::get('/{scorable_type}/{scorable_id}', 'history')->name('scores.history');
+            Route::post('/purge', 'purge')->name('scores.purge');
             Route::delete('/{score}', 'destroy')->name('scores.destroy');
-            Route::get('/{score}', 'show')->name('scores.show');
-            Route::get('/history/{scorable_type}/{scorable_id}', 'history')->name('scores.history');
         });
 
         Route::middleware('admin')->group(function () {

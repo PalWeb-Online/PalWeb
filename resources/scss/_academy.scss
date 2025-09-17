@@ -1067,10 +1067,11 @@ div.activity-image .image-card {
 .score-item-wrapper {
     display: flex;
     align-items: center;
-    gap: 1.6rem;
+    gap: 1.2rem;
     margin: 1.6rem;
 
     .material-symbols-rounded {
+        font-size: 2.0rem;
         color: var(--color-dark-primary);
     }
 }
@@ -1095,4 +1096,8 @@ div.activity-image .image-card {
     & > *:last-child {
         justify-self: end;
     }
+}
+
+#score-detail {
+    scroll-margin-block-start: 3.6rem;
 }

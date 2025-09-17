@@ -119,9 +119,10 @@ const polylinePoints = computed(() => {
                     <div class="score-stats-graph-item" v-for="(s, i) in graphScores" :key="i"
                          :style="{ height: `${s.score * 100}%` }"
                     >
-                        <Link :href="route('scores.show', s.id)" class="interact-button"
+                        <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id, score: s.id })" class="interact-button"
                               @mousemove="showTooltip(s, $event)"
                               @mouseleave="hideTooltip()"
+                              preserve-scroll preserve-state
                         ></Link>
                     </div>
 

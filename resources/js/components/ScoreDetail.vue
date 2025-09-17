@@ -1,8 +1,9 @@
 <script setup>
 import AnswerItem from "../Pages/Academy/Quizzer/UI/AnswerItem.vue";
 import {computed} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useQuizzerStore} from "../Pages/Academy/Quizzer/Stores/QuizzerStore.js";
+
+const QuizzerStore = useQuizzerStore();
 
 const props = defineProps({
     score: Object,
@@ -28,12 +29,6 @@ const scoreMessage = computed(() => {
     }
     return "Better keep practicing!";
 });
-
-const deleteScore = () => {
-    if (!confirm('Are you sure you want to delete this Score?')) return;
-
-    router.delete(route('scores.destroy', props.score.id));
-};
 </script>
 <template>
     <div class="score-metadata">
@@ -45,16 +40,12 @@ const deleteScore = () => {
             <div>{{ key }}</div>
             <div>{{ option }}</div>
         </div>
-        <!--        todo: only in Show -->
-        <div style="font-size: 1.4rem; font-style: italic; text-align: right">Quizzed on {{ score.created_at }}.</div>
+        <div v-if="score.id" style="font-size: 1.4rem; font-style: italic; text-align: right">Quizzed on {{ score.created_at }}.</div>
     </div>
-    <!--        todo: only in Show -->
-    <button @click="deleteScore">Delete Score</button>
     <div class="quiz-results">
         <div class="score-figure featured-title">
             <div>{{ formatter.format(score.score) }}</div>
-            <!--            todo: only in Results -->
-            <div v-if="QuizzerStore.score > QuizzerStore.data.model.stats.highest"
+            <div v-if="!score.id && QuizzerStore.score.score > QuizzerStore.data.model?.stats.highest"
                  class="quiz-results-callout">new record!
             </div>
         </div>

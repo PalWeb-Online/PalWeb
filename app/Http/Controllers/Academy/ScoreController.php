@@ -12,6 +12,7 @@ use App\Models\Dialog;
 use App\Models\Score;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -45,26 +46,12 @@ class ScoreController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Score $score): \Inertia\Response
+    public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
     {
-        $scorable = $score->scorable->load(['scores']);
-
-        $modelResource = $scorable instanceof Deck
-            ? new DeckResource($scorable)
-            : new DialogResource($scorable);
-
-        return Inertia::render('Academy/Scores/Show', [
-            'section' => 'academy',
-            'model' => $modelResource,
-            'score' => new ScoreResource($score)
+        $request->validate([
+            'score' => ['nullable', 'integer', 'exists:scores,id']
         ]);
-    }
 
-    public function history(string $scorable_type, int $scorable_id): \Inertia\Response
-    {
         $modelClass = match ($scorable_type) {
             'deck' => Deck::class,
             'dialog' => Dialog::class,
@@ -77,12 +64,74 @@ class ScoreController extends Controller
         $scores = $model->scores()->paginate(10)->onEachSide(1);
         $totalCount = $scores->total();
 
+        $selectedScore = null;
+        if ($request->filled('score')) {
+            $selectedScore = Score::with('scorable')->findOrFail($request->input('score'));
+        }
+
         return Inertia::render('Academy/Scores/History', [
             'section' => 'academy',
             'model' => $scorable_type === 'deck' ? new DeckResource($model) : new DialogResource($model),
             'scorable_type' => $scorable_type,
             'scores' => ScoreResource::collection($scores),
             'totalCount' => $totalCount,
+            'selectedScore' => $selectedScore ? new ScoreResource($selectedScore) : null,
+        ]);
+    }
+
+    public function purge(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'scorable_type' => ['required', Rule::in(['deck', 'dialog'])],
+            'scorable_id'   => ['required', 'integer'],
+            'older_than'    => ['nullable', Rule::in(['day', 'week', 'month', 'year'])],
+            'except'        => ['nullable', 'array'],
+            'except.*'      => ['string', Rule::in(['highest', 'latest'])],
+        ]);
+
+        $modelClass = match ($validated['scorable_type']) {
+            'deck' => Deck::class,
+            'dialog' => Dialog::class,
+        };
+        $model = $modelClass::findOrFail($validated['scorable_id']);
+
+        $query = $model->scores()->where('user_id', $request->user()->id);
+
+        if ($request->filled('older_than')) {
+            $date = match ($validated['older_than']) {
+                'day'   => Carbon::now()->subDay(),
+                'week'  => Carbon::now()->subWeek(),
+                'month' => Carbon::now()->subMonth(),
+                'year'  => Carbon::now()->subYear(),
+            };
+            $query->where('created_at', '<', $date);
+        }
+
+        $exceptions = [];
+        if ($request->filled('except')) {
+            if (in_array('latest', $validated['except'])) {
+                $latestScore = $model->scores()->where('user_id', $request->user()->id)->first();
+                if ($latestScore) $exceptions[] = $latestScore->id;
+            }
+            if (in_array('highest', $validated['except'])) {
+                $highestScore = $model->scores()->where('user_id', $request->user()->id)->reorder()->orderByDesc('score')->first();
+                if ($highestScore) $exceptions[] = $highestScore->id;
+            }
+        }
+
+        if (!empty($exceptions)) {
+            $query->whereNotIn('id', array_unique($exceptions));
+        }
+
+        $count = $query->count();
+        $query->delete();
+
+        session()->flash('notification',
+            ['type' => 'success', 'message' => "Successfully purged {$count} Scores."]);
+
+        return to_route('scores.history', [
+            'scorable_type' => $validated['scorable_type'],
+            'scorable_id'   => $validated['scorable_id'],
         ]);
     }
 
