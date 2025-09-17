@@ -151,7 +151,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Academy/Scores/Index', 'Academy/Scores/Show', 'Academy/Scores/History'].includes($page.component),
+                                         'active': ['Academy/Scores/Index', 'Academy/Scores/History'].includes($page.component),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >

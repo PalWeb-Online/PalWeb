@@ -44,22 +44,22 @@ defineOptions({
         <ul>
             <li>August 2025</li>
             <ul>
-                <li>Quizzer: Ability to Quiz a Deck & receive a score; the score is not saved for the user.</li>
+                <li>Quizzer: Ability to Quiz a Deck & receive a Score; the Score is not yet saved for the user.</li>
             </ul>
             <li>September 2025</li>
             <ul>
-                <li>myProgress: Saving user scores. Interface to visualize score history per model & results summary per score. "Latest" section of Index page.</li>
+                <li>myProgress: Saving user Scores. Score History page & results summary per Score.</li>
                 <li>Quizzer: Ability to Quiz Dialogs.</li>
             </ul>
             <li>October 2025 (Nabatean)</li>
             <ul>
-                <li>Quizzer: Ability to Quiz Skills.</li>
-                <li>Lessons: (Interface to create Skills?) Create / Revise Unit 1 Skills.</li>
+                <li>Lessons: MVC; Eloquent. Navigation & Inventory.</li>
+                <li>myProgress: "Latest" & "Lesson" section of Index page.</li>
             </ul>
             <li>November 2025</li>
             <ul>
-                <li>myProgress: "Lesson" section of Index page.</li>
-                <li>Lessons: Navigation & Inventory.</li>
+                <li>Quizzer: Ability to Quiz Skills.</li>
+                <li>Lessons: (Interface to create Skills?) Create / Revise Unit 1 Skills.</li>
             </ul>
             <li>December 2025</li>
             <ul>
