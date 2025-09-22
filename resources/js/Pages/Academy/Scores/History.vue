@@ -61,22 +61,22 @@ watch(() => props.selectedScore, (newVal) => {
 <template>
     <Head :title="`Academy: Score History for ${model.id}`"/>
     <div id="app-head">
-        <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })"><h1>my Progress</h1>
+        <Link :href="route('scores.history', { scorable_type: scorable_type, scorable_id: model.id })"><h1>my Progress</h1>
         </Link>
     </div>
     <div id="app-body">
         <div id="quizzer-container" class="window-container">
             <div class="window-header">
                 <Link :href="route('scores.index')" class="material-symbols-rounded">home</Link>
-                <div class="window-header-url">www.palweb.app/academy/scores/history/{deck}</div>
+                <div class="window-header-url">www.palweb.app/academy/scores/history/{{ '{'+scorable_type+'}'}}</div>
             </div>
             <div class="window-section-head">
-                <h1>Deck</h1>
+                <h1>{{ scorable_type }}</h1>
                 <PinButton :modelType="scorable_type" :model="model"/>
-                <DeckActions :model="model"/>
+                <DeckActions v-if="scorable_type === 'deck'" :model="model"/>
             </div>
             <div class="window-content-head">
-                <div class="window-content-head-title">{{ model.name }}</div>
+                <div class="window-content-head-title">{{ scorable_type === 'deck' ? model.name : model.title }}</div>
             </div>
             <WindowSection>
                 <template #title>

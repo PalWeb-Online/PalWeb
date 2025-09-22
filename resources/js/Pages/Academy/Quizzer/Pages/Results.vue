@@ -9,6 +9,7 @@ import AppTip from "../../../../components/AppTip.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
+import WindowSection from "../../../../components/WindowSection.vue";
 
 const QuizzerStore = useQuizzerStore();
 
@@ -20,7 +21,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 </script>
 <template>
     <QuizzerWindow>
-        <ScoreStats :model="QuizzerStore.data.model"/>
+        <WindowSection>
+            <template #title>
+                <h2>stats</h2>
+            </template>
+            <template #content>
+                <ScoreStats :model="QuizzerStore.data.model"/>
+            </template>
+        </WindowSection>
+
         <div class="window-section-head">
             <h2>Results</h2>
             <PopupWindow title="Quizzer">

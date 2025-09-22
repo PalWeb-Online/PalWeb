@@ -740,6 +740,10 @@ div.activity-image .image-card {
             font-size: 1.4rem;
         }
     }
+
+    .sentence-term.missing {
+            color: var(--color-medium-primary);
+    }
 }
 
 .score-metadata {
@@ -870,6 +874,18 @@ div.activity-image .image-card {
             gap: 1.2rem;
             font-family: $bodyFont;
             font-size: 1.8rem;
+        }
+    }
+
+    .quiz-answer-correct.sentence {
+        & > *:first-child {
+            font-size: 1.6rem;
+        }
+
+        & > *:last-child {
+            font-size: 1.4rem;
+            justify-self: end;
+            font-family: $monoFont;
         }
     }
 

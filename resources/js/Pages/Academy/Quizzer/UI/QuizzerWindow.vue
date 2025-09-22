@@ -13,7 +13,7 @@ const QuizzerStore = useQuizzerStore();
                 <Link v-if="QuizzerStore.data.step === 'settings'" :href="route('quizzer.index')"
                       class="material-symbols-rounded">close
                 </Link>
-                <Link v-else :href="route('quizzer.show', { scorable_type: 'deck', scorable_id:  QuizzerStore.data.model.id })" class="material-symbols-rounded">
+                <Link v-else :href="route('quizzer.show', { scorable_type: QuizzerStore.data.scorable_type, scorable_id:  QuizzerStore.data.model.id })" class="material-symbols-rounded">
                     arrow_back
                 </Link>
                 <div class="window-header-url">www.palweb.app/academy/quizzer/{{ QuizzerStore.data.scorable_type }}/{{'{'+QuizzerStore.data.scorable_type+'}'}}
@@ -28,7 +28,7 @@ const QuizzerStore = useQuizzerStore();
             <h1>{{ QuizzerStore.data.scorable_type }}</h1>
             <template v-if="QuizzerStore.data.model">
                 <PinButton :modelType="QuizzerStore.data.scorable_type" :model="QuizzerStore.data.model"/>
-                <DeckActions :model="QuizzerStore.data.model"/>
+                <DeckActions v-if="QuizzerStore.data.scorable_type === 'deck'" :model="QuizzerStore.data.model"/>
             </template>
         </div>
         <div class="window-content-head">
