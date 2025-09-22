@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Academy;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
+use App\Http\Resources\SentenceResource;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Services\QuizService;
@@ -24,7 +25,9 @@ class QuizzerController extends Controller
     {
         return Inertia::render('Academy/Quizzer/Index', [
             'section' => 'academy',
-            'decks' => DeckResource::collection(Deck::whereHasBookmark($request->user())->with(['terms', 'scores'])->get()),
+            'decks' => DeckResource::collection(
+                Deck::whereHasBookmark($request->user())->with(['terms', 'scores'])->get()
+            ),
         ]);
     }
 
@@ -32,20 +35,25 @@ class QuizzerController extends Controller
     {
         $model = $this->getModel($scorable_type, $scorable_id);
 
-        $model->load($scorable_type === 'deck' ? ['terms', 'scores'] : ['sentences']);
+        if ($scorable_type === 'deck') {
+            $model->load(['terms', 'scores']);
+        }
 
-        $isEmpty = $scorable_type === 'deck' ? $model->terms->isEmpty() : $model->sentences->isEmpty();
+        $isEmpty = $scorable_type === 'deck' && $model->terms->isEmpty();
 
         if ($isEmpty) {
             session()->flash('notification',
-                ['type' => 'warning', 'message' => __("You can't Quiz an empty :type!", ['type' => ucfirst($scorable_type)])]);
+                [
+                    'type' => 'warning',
+                    'message' => __("You can't Quiz an empty :type!", ['type' => ucfirst($scorable_type)])
+                ]);
 
             return to_route('quizzer.index');
         }
 
         return Inertia::render('Academy/Quizzer/Show', [
             'section' => 'academy',
-            'model' => $scorable_type === 'deck' ? new DeckResource($model) : new DialogResource($model),
+            'model' => $scorable_type === 'deck' ? new DeckResource($model) : [],
             'scorable_type' => $scorable_type,
         ]);
     }
@@ -64,7 +72,6 @@ class QuizzerController extends Controller
     {
         $class = match ($type) {
             'deck' => Deck::class,
-            'dialog' => Dialog::class,
             default => abort(404),
         };
 

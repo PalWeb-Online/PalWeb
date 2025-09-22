@@ -9,13 +9,15 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         model: null,
         scorable_type: null,
         isSaved: false,
+        isLoading: false,
     });
 
     const settings = reactive({
-        typeInput: false,
+        quizType: '',
         options: {
             allGlosses: false,
             anyGloss: false,
+            withPrompt: true,
         }
     });
 
@@ -28,12 +30,15 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     const quiz = ref({});
 
     const startQuiz = () => {
-        generateQuiz().then(() => {
-            data.step = 'quiz';
-        });
+        data.step = 'quiz';
+        data.isLoading = true;
 
         nextTick(() => {
             window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        generateQuiz().then(() => {
+            data.isLoading = false;
         });
     };
 
@@ -43,12 +48,12 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
                 scorable_type: data.scorable_type,
                 scorable_id: data.model.id
             }), {
-                params: {settings: settings}
+                settings: settings
             });
 
             quiz.value = response.data.quiz;
 
-            if (!settings.typeInput) {
+            if (settings.quizType === 'term-gloss') {
                 quiz.value.forEach(question => {
                     shuffle(Object.entries(question.options));
                 });
@@ -65,7 +70,7 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         score.settings = settings;
         score.results = quiz.value;
 
-        if (!settings.typeInput) {
+        if (settings.quizType === 'term-gloss') {
             score.results = score.results.map(q => ({
                 term: {
                     term: q.term.term,
@@ -76,15 +81,32 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
                 correct: q.answer === q.response,
             }))
 
-        } else {
+        } else if (settings.quizType === 'term-inflection') {
             score.results = quiz.value.map(q => ({
                 term: {
                     term: q.term.term,
                     slug: q.term.slug
                 },
+                prompt: q.prompt,
                 answer: q.answer,
                 response: q.response,
                 correct: q.answer.includes(q.response),
+            }))
+
+        } else if (settings.quizType === 'sentence-term') {
+            score.results = quiz.value.map(q => ({
+                term: {
+                    term: q.term.term,
+                    slug: q.term.slug
+                },
+                sentence: {
+                    id: q.sentence.id,
+                    sentence: q.sentence.sentence,
+                },
+                prompt: q.prompt,
+                answer: [q.options[q.answer]['term']],
+                response: q.options[q.response]['term'],
+                correct: q.answer === q.response,
             }))
         }
 
@@ -123,10 +145,11 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         data.scorable_type = null;
         data.isSaved = false;
 
-        settings.typeInput = false;
+        settings.quizType = null;
         settings.options = {
             allGlosses: false,
             anyGloss: false,
+            withPrompt: true,
         }
 
         score.score = 0;

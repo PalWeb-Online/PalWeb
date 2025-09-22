@@ -23,10 +23,11 @@ class ScoreFactory extends Factory
             'scorable_type' => 'deck',
             'scorable_id' => null,
             'settings' => [
-                'typeInput' => false,
+                'quizType' => 'term-gloss',
                 'options' => [
                     'allGlosses' => false,
-                    'anyGloss' => false
+                    'anyGloss' => false,
+                    'withPrompt' => false,
                 ]
             ],
             'score' => 0,
