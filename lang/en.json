@@ -341,7 +341,7 @@
     "terms.random": "random term",
     "missing.terms.create": "request term",
     "missing.terms.created": "Your request has been logged. Thank you!",
-    "phrasebook": "phrasebook",
+    "corpus": "corpus",
     "sentences.new": "new sentence",
     "sentences.edit": "edit sentence",
     "deck-builder": "deck builder",

@@ -11,7 +11,7 @@ defineProps({
 });
 </script>
 <template>
-    <Head :title="`Library: Phrasebook: ${sentence.sentence}`"/>
+    <Head :title="`Library: Corpus: ${sentence.sentence}`"/>
     <div id="app-body">
         <SentenceContainer :model="sentence"/>
     </div>

@@ -45,7 +45,7 @@ const navigate = () => {
                 <div class="tier-body">
                     <div>Access to <b>Wiki</b></div>
                     <div>Access to <b>Library: Dictionary</b></div>
-                    <div>Access to <b>Library: Phrasebook</b></div>
+                    <div>Access to <b>Library: Corpus</b></div>
                 </div>
                 <div class="window-footer">
                     <div style="background: var(--color-accent-dark); color: white;">you are here</div>
@@ -56,14 +56,15 @@ const navigate = () => {
                     <h1>Pal</h1>
                 </div>
                 <div class="tier-body">
-                    <div class="highlighted">Access to <b>Wiki</b></div>
-                    <div class="highlighted">Access to <b>Library: Dictionary</b></div>
-                    <div class="highlighted">Access to <b>Library: Phrasebook</b></div>
+                    <div>Access to <b>Wiki</b></div>
+                    <div>Access to <b>Library: Dictionary</b></div>
+                    <div>Access to <b>Library: Corpus</b></div>
                     <div>Access to <b>Library: Decks</b></div>
                     <div>Access to <b>Library: Audios</b></div>
-                    <div><b>Pin</b> Terms, Sentences & Decks</div>
-                    <div>Access to <b>Workbench: Deck Master</b></div>
                     <div>Access to <b>Workbench: Record Wizard</b></div>
+                    <div><b>Pin</b> Terms, Sentences & Decks</div>
+                    <div><b>Deck Master</b>: Build Decks</div>
+                    <div><b>Deck Master</b>: Study Decks (<b>Practice</b> only)</div>
                 </div>
                 <div class="window-footer">
                     <div v-if="UserStore.highestRole === 'pal'"
@@ -76,18 +77,18 @@ const navigate = () => {
                     <h1>Student</h1>
                 </div>
                 <div class="tier-body">
-                    <div class="highlighted">Access to <b>Wiki</b></div>
-                    <div class="highlighted">Access to <b>Library: Dictionary</b></div>
-                    <div class="highlighted">Access to <b>Library: Phrasebook</b></div>
-                    <div class="highlighted">Access to <b>Library: Decks</b></div>
-                    <div class="highlighted">Access to <b>Library: Audios</b></div>
-                    <div class="highlighted"><b>Pin</b> Terms, Sentences & Decks</div>
-                    <div class="highlighted">Access to <b>Workbench: Deck Master</b></div>
-                    <div class="highlighted">Access to <b>Workbench: Record Wizard</b></div>
+                    <div>Access to <b>Wiki</b></div>
+                    <div>Access to <b>Library: Dictionary</b></div>
+                    <div>Access to <b>Library: Corpus</b></div>
+                    <div>Access to <b>Library: Decks</b></div>
+                    <div>Access to <b>Library: Audios</b></div>
+                    <div>Access to <b>Workbench: Record Wizard</b></div>
+                    <div><b>Pin</b> Terms, Sentences & Decks</div>
+                    <div><b>Deck Master</b>: Build Decks</div>
+                    <div><b>Deck Master</b>: Study Decks (<b>Practice</b> & <b>Quiz</b>)</div>
+                    <div>Save your Quiz & Activity <b>Scores</b></div>
                     <div>Access to <b>Academy: Lessons</b></div>
                     <div>Access to <b>Academy: Dialogs</b></div>
-                    <div>Access to <b>Academy: Quizzer</b></div>
-                    <div>Access to <b>Academy: myProgress</b></div>
                     <div><b>Support</b> the Project</div>
                 </div>
                 <div class="window-footer">

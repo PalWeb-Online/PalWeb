@@ -138,7 +138,7 @@ defineOptions({
             will differ depending on the site context. (The <b>Search Genie</b> informs of you the action it will take
             by
             way of a tooltip.)</p>
-        <p>By default, selecting a result will take you to its page in the Dictionary, Phrasebook or Deck Library. In
+        <p>By default, selecting a result will take you to its page in the Dictionary, Corpus or Deck Library. In
             the
             <b>Deck Builder</b>, the <b>Search Genie</b> is used to add Terms to a Deck. In the <b>Card Viewer</b>, it
             is

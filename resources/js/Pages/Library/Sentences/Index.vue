@@ -32,7 +32,7 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Library: Phrasebook"/>
+    <Head title="Library: Corpus"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
@@ -42,7 +42,7 @@ function updateFilter({filter, value}) {
                 <Link :href="route('sentences.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
             <div class="window-section-head">
-                <h1>phrasebook</h1>
+                <h1>corpus</h1>
             </div>
 
             <div class="window-section-head">

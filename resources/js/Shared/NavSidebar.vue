@@ -161,7 +161,7 @@ onMounted(() => {
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
                                 >
-                                    <div>phrasebook</div>
+                                    <div>corpus</div>
                                     <div>Sentence::with('terms')->all()</div>
                                 </Link>
                                 <div @click="navigateOrPrompt('decks.index')"

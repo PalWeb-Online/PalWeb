@@ -76,7 +76,7 @@ class SentenceController extends Controller
         ]);
 
 //        View::share('pageDescription',
-//            'Discover the Phrasebook, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+//            'Discover the Corpus, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
     }
 
     public function show(Sentence $sentence): \Inertia\Response

@@ -363,12 +363,6 @@ figure.data-box {
         & > *:last-child {
             border-block-end: none;
         }
-
-        & > *.highlighted {
-            background: var(--color-pastel-light);
-            //border-block-start: 0.1rem solid var(--color-accent-medium);
-            //color: var(--color-medium-primary);
-        }
     }
 
     .tiers-pricing {
