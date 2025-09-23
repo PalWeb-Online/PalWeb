@@ -1,12 +1,12 @@
 <script setup>
-import {useQuizzerStore} from "../Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
 const UserStore = useUserStore();
-const QuizzerStore = useQuizzerStore();
+const DeckStudyStore = useDeckStudyStore();
 const NotificationStore = useNotificationStore();
 
 const props = defineProps({
@@ -23,7 +23,7 @@ const isPresent = ref(true);
 const toggleTerm = async () => {
     try {
         const response = await axios.post(route('decks.term.toggle', {
-            deck: QuizzerStore.data.model.id,
+            deck: DeckStudyStore.data.deck.id,
             term: props.question.term.id
         }));
 
@@ -36,9 +36,9 @@ const toggleTerm = async () => {
 };
 
 const recalculate = () => {
-    QuizzerStore.score.results[props.index].correct = true;
-    QuizzerStore.scoreQuiz();
-    QuizzerStore.data.isSaved = false;
+    DeckStudyStore.score.results[props.index].correct = true;
+    DeckStudyStore.scoreQuiz();
+    DeckStudyStore.data.isSaved = false;
 }
 </script>
 <template>
@@ -68,8 +68,8 @@ const recalculate = () => {
         </div>
         <div class="quiz-answer-options">
             <a :href="route('terms.show', question.term.slug)" target="_blank">See in Dictionary</a>
-            <template v-if="QuizzerStore.data.model">
-                <template v-if="QuizzerStore.data.scorable_type === 'deck' && UserStore.user.id === QuizzerStore.data.model.author.id">
+            <template v-if="DeckStudyStore.data.deck">
+                <template v-if="UserStore.user.id === DeckStudyStore.data.deck.author.id">
                     <button @click="toggleTerm">{{ isPresent ? 'Remove from' : 'Add to' }} Deck</button>
                 </template>
                 <button v-if="!isCorrect" type="button" @click="recalculate">Mark as Correct</button>

@@ -138,16 +138,6 @@ onMounted(() => {
                                     <div>dialogs</div>
                                     <div>natural language input</div>
                                 </div>
-                                <div @click="navigateOrPrompt('quizzer.index')"
-                                     class="nav-carousel-page-item"
-                                     :class="{
-                                         'active': ['Academy/Quizzer/Index', 'Academy/Quizzer/Show'].includes($page.component),
-                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
-                                     }"
-                                >
-                                    <div>quizzer</div>
-                                    <div>quiz Decks, Skills & Dialogs</div>
-                                </div>
                                 <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
                                      :class="{

@@ -1,9 +1,9 @@
 <script setup>
-import AnswerItem from "../Pages/Academy/Quizzer/UI/AnswerItem.vue";
+import AnswerItem from "../Pages/Workbench/DeckMaster/UI/AnswerItem.vue";
 import {computed} from "vue";
-import {useQuizzerStore} from "../Pages/Academy/Quizzer/Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Pages/Workbench/DeckMaster/Stores/DeckStudyStore.js";
 
-const QuizzerStore = useQuizzerStore();
+const DeckStudyStore = useDeckStudyStore();
 
 const props = defineProps({
     score: Object,
@@ -58,7 +58,7 @@ const quizType = computed(() => {
     <div class="quiz-results">
         <div class="score-figure featured-title">
             <div>{{ formatter.format(score.score) }}</div>
-            <div v-if="!score.id && QuizzerStore.score.score > QuizzerStore.data.model?.stats.highest"
+            <div v-if="!score.id && DeckStudyStore.score.score > DeckStudyStore.data.model?.stats.highest"
                  class="quiz-results-callout">new record!
             </div>
         </div>

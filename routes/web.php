@@ -221,12 +221,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             })->name('dialogs.get');
         });
 
-        Route::prefix('/quizzer')->controller(QuizzerController::class)->group(function () {
-            Route::get('/', 'index')->name('quizzer.index');
-            Route::get('/{scorable_type}/{scorable_id}', 'show')->name('quizzer.show');
-            Route::post('/{scorable_type}/{scorable_id}/quiz', 'generate')->name('quizzer.generate');
-        });
-
         Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
             Route::get('/', 'index')->name('scores.index');
             Route::post('/', 'store')->name('scores.store');
@@ -294,6 +288,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
             Route::get('/build/{deck?}', 'build')->name('deck-master.build');
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
+            Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
+            Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
         Route::prefix('/record-wizard')->group(function () {

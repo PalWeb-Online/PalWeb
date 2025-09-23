@@ -69,14 +69,6 @@ const tooltip = ref(null);
                 Study Deck
             </Link>
             <template v-if="UserStore.isStudent">
-                <Link :href="model.terms_count > 0 ? route('quizzer.show', { scorable_type: 'deck', scorable_id: model.id }) : '#'" role="menuitem"
-                      tabindex="-1"
-                      :class="{'disabled': model.terms_count < 1}"
-                      @mousemove="model.terms_count < 1 && tooltip.showTooltip('The Deck is empty.', $event);"
-                      @mouseleave="model.terms_count < 1 && tooltip.hideTooltip()"
-                >
-                    Quiz Deck
-                </Link>
                 <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })" role="menuitem" tabindex="-1">
                     View Scores
                 </Link>

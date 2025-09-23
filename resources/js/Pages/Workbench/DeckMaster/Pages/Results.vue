@@ -1,5 +1,5 @@
 <script setup>
-import {useQuizzerStore} from "../Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import {computed} from "vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -11,10 +11,10 @@ import ScoreStats from "../../../../components/ScoreStats.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 
-const QuizzerStore = useQuizzerStore();
+const DeckStudyStore = useDeckStudyStore();
 
 const hasNavigationGuard = computed(() => {
-    return !QuizzerStore.data.isSaved;
+    return !DeckStudyStore.data.isSaved;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -26,7 +26,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 <h2>stats</h2>
             </template>
             <template #content>
-                <ScoreStats :model="QuizzerStore.data.model"/>
+                <ScoreStats :model="DeckStudyStore.data.deck"/>
             </template>
         </WindowSection>
 
@@ -62,10 +62,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             </p>
         </AppTip>
 
-        <ScoreDetail :score="QuizzerStore.score"/>
+        <ScoreDetail :score="DeckStudyStore.score"/>
 
         <div class="window-footer">
-            <button @click="QuizzerStore.saveScore" :disabled="QuizzerStore.data.isSaved">save & quit</button>
+            <button @click="DeckStudyStore.saveScore" :disabled="DeckStudyStore.data.isSaved">save & quit</button>
         </div>
     </QuizzerWindow>
 

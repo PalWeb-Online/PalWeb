@@ -40,10 +40,7 @@ class ScoreController extends Controller
         session()->flash('notification',
             ['type' => 'success', 'message' => 'Your Score for this Quiz has been saved!']);
 
-        return to_route('quizzer.show', [
-            'scorable_type' => $request->scorable_type,
-            'scorable_id'   => $request->scorable_id,
-        ]);
+        return to_route('deck-master.study', $request->scorable_id);
     }
 
     public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response

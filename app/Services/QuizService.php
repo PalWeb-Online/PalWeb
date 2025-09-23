@@ -6,27 +6,21 @@ use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Models\Gloss;
 use App\Models\Term;
-use Illuminate\Database\Eloquent\Model;
-use InvalidArgumentException;
 
 class QuizService
 {
-    public function generateQuiz(Model $model, array $settings): array
+    public function generateQuiz(Deck $deck, array $settings): array
     {
-        if ($model instanceof Deck) {
-            switch ($settings['quizType']) {
-                case 'term-gloss':
-                    return $this->generateGlossSelectQuiz($model, $settings);
+        switch ($settings['quizType']) {
+            case 'term-gloss':
+                return $this->generateGlossSelectQuiz($deck, $settings);
 
-                case 'term-inflection':
-                    return $this->generateInflectionInputQuiz($model, $settings);
+            case 'term-inflection':
+                return $this->generateInflectionInputQuiz($deck, $settings);
 
-                case 'sentence-term':
-                    return $this->generateTermSelectQuiz($model, $settings);
-            }
+            case 'sentence-term':
+                return $this->generateTermSelectQuiz($deck, $settings);
         }
-
-        throw new InvalidArgumentException("Unsupported model type for quiz generation.");
     }
 
     private function generateGlossSelectQuiz(Deck $deck, array $settings): array

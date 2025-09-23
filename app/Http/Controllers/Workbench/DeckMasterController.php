@@ -6,17 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
+use App\Services\QuizService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DeckMasterController extends Controller
 {
+    public function __construct(private readonly QuizService $quizService)
+    {
+    }
+
     public function index(Request $request): \Inertia\Response
     {
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
+        return Inertia::render('Workbench/DeckMaster/Index', [
             'section' => 'workbench',
             'mode' => $request->query('mode', 'build'),
-            'step' => 'select'
         ]);
     }
 
@@ -27,43 +33,70 @@ class DeckMasterController extends Controller
             $deck->load(['terms.pronunciations']);
         }
 
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
+        return Inertia::render('Workbench/DeckMaster/Build', [
             'section' => 'workbench',
-            'mode' => 'build',
-            'step' => 'build',
             'deck' => $deck ? new DeckResource($deck) : null,
         ]);
     }
 
-    public function study(Deck $deck): \Inertia\Response
+    public function study(Deck $deck): \Inertia\Response|RedirectResponse
     {
-        $this->authorize('interact', $deck);
+        $deck->load(['terms', 'scores']);
+        $isEmpty = $deck->terms->isEmpty();
 
-        return Inertia::render('Workbench/DeckMaster/DeckMaster', [
+        if ($isEmpty) {
+            session()->flash('notification',
+                [
+                    'type' => 'warning',
+                    'message' => __("You can't Quiz an empty Deck!")
+                ]);
+
+            return to_route('deck-master.index', ['mode' => 'study']);
+        }
+
+        return Inertia::render('Workbench/DeckMaster/Study', [
             'section' => 'academy',
-            'mode' => 'study',
-            'step' => 'study',
             'deck' => new DeckResource($deck),
-            'terms' => TermResource::collection(
-                $deck->terms->load(['pronunciations'])->map(function ($term) {
-                    return new TermResource($term)->additional(['detail' => true]);
-                })
-            )
         ]);
     }
 
-    public function getDecks(Request $request): \Illuminate\Http\JsonResponse
+    public function getQuiz(Request $request, Deck $deck): JsonResponse
+    {
+        $settings = $request->get('settings', []);
+
+        $quiz = $this->quizService->generateQuiz($deck, $settings);
+
+        return response()->json([
+            'quiz' => $quiz
+        ]);
+    }
+
+    public function getDecks(Request $request): JsonResponse
     {
         $mode = $request->query('mode', 'build');
 
         if ($mode === 'study') {
-            $decks = Deck::whereHasBookmark($request->user())->with(['terms'])->get();
+            $decks = Deck::whereHasBookmark($request->user())->with(['terms', 'scores'])->get();
+
         } else {
             $decks = $request->user()->decks->load(['terms']);
         }
 
         return response()->json([
             'decks' => DeckResource::collection($decks),
+        ]);
+    }
+
+    public function getCards(Deck $deck): JsonResponse
+    {
+        $this->authorize('interact', $deck);
+
+        return response()->json([
+            'terms' => TermResource::collection(
+                $deck->terms->load(['pronunciations'])->map(function ($term) {
+                    return new TermResource($term)->additional(['detail' => true]);
+                })
+            )
         ]);
     }
 }

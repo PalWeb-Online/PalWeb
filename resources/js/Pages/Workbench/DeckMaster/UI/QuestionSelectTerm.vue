@@ -1,8 +1,8 @@
 <script setup>
-import {useQuizzerStore} from "../Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import AppButton from "../../../../components/AppButton.vue";
 
-const QuizzerStore = useQuizzerStore();
+const DeckStudyStore = useDeckStudyStore();
 
 const props = defineProps({
     question: Object,
@@ -11,10 +11,10 @@ const props = defineProps({
 })
 
 const toggleSelection = (index) => {
-    if (QuizzerStore.quiz[props.index].response === Number(index)) {
-        QuizzerStore.quiz[props.index].response = null;
+    if (DeckStudyStore.quiz[props.index].response === Number(index)) {
+        DeckStudyStore.quiz[props.index].response = null;
     } else {
-        QuizzerStore.quiz[props.index].response = Number(index);
+        DeckStudyStore.quiz[props.index].response = Number(index);
     }
 }
 </script>
@@ -29,13 +29,13 @@ const toggleSelection = (index) => {
                             <div v-if="showTranslit">{{ term.sentencePivot.sent_translit }}</div>
                         </div>
                         <div v-else class="sentence-term missing">
-                            <div>{{ question.options[QuizzerStore.quiz[props.index].response]?.term ?? 'ــــــــ' }}</div>
-                            <div v-if="showTranslit">{{ question.options[QuizzerStore.quiz[props.index].response]?.translit ?? '[]'}}</div>
+                            <div>{{ question.options[DeckStudyStore.quiz[props.index].response]?.term ?? 'ــــــــ' }}</div>
+                            <div v-if="showTranslit">{{ question.options[DeckStudyStore.quiz[props.index].response]?.translit ?? '[]'}}</div>
                         </div>
                     </template>
                 </div>
 
-                <div class="sentence-eng" v-if="QuizzerStore.settings.options.withPrompt">
+                <div class="sentence-eng" v-if="DeckStudyStore.settings.options.withPrompt">
                     {{ question.sentence.trans }}
                 </div>
             </div>

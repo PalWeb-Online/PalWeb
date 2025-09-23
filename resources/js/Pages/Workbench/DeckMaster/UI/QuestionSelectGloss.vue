@@ -1,8 +1,8 @@
 <script setup>
-import {useQuizzerStore} from "../Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import AppButton from "../../../../components/AppButton.vue";
 
-const QuizzerStore = useQuizzerStore();
+const DeckStudyStore = useDeckStudyStore();
 
 const props = defineProps({
     question: Object,
@@ -12,10 +12,10 @@ const props = defineProps({
 })
 
 const toggleSelection = (index) => {
-    if (QuizzerStore.quiz[props.index].response === Number(index)) {
-        QuizzerStore.quiz[props.index].response = null;
+    if (DeckStudyStore.quiz[props.index].response === Number(index)) {
+        DeckStudyStore.quiz[props.index].response = null;
     } else {
-        QuizzerStore.quiz[props.index].response = Number(index);
+        DeckStudyStore.quiz[props.index].response = Number(index);
     }
 }
 </script>

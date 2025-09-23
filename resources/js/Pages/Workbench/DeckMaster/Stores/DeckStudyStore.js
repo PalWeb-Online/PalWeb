@@ -3,17 +3,17 @@ import {nextTick, reactive, ref} from 'vue';
 import {shuffle} from "lodash";
 import {router} from "@inertiajs/vue3";
 
-export const useQuizzerStore = defineStore('QuizzerStore', () => {
+export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     const data = reactive({
         step: 'settings',
-        model: null,
-        scorable_type: null,
+        deck: null,
+        terms: [],
         isSaved: false,
         isLoading: false,
     });
 
     const settings = reactive({
-        quizType: '',
+        quizType: 'practice',
         options: {
             allGlosses: false,
             anyGloss: false,
@@ -28,6 +28,20 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
     });
 
     const quiz = ref({});
+
+    const startPractice = async () => {
+        data.step = 'practice';
+        data.isLoading = true;
+
+        nextTick(() => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        const response = await axios.get(route('deck-master.get-cards', data.deck.id));
+        data.terms = response.data.terms;
+
+        data.isLoading = false;
+    }
 
     const startQuiz = () => {
         data.step = 'quiz';
@@ -44,10 +58,7 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
 
     const generateQuiz = async () => {
         try {
-            const response = await axios.post(route('quizzer.generate', {
-                scorable_type: data.scorable_type,
-                scorable_id: data.model.id
-            }), {
+            const response = await axios.post(route('deck-master.get-quiz', data.deck.id), {
                 settings: settings
             });
 
@@ -126,8 +137,8 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         data.isSaved = true;
 
         router.post(route('scores.store'), {
-            scorable_type: data.scorable_type,
-            scorable_id: data.model.id,
+            scorable_type: 'deck',
+            scorable_id: data.deck.id,
             settings: score.settings,
             score: score.score,
             results: score.results,
@@ -141,11 +152,10 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
 
     const reset = () => {
         data.step = 'settings';
-        data.model = null;
-        data.scorable_type = null;
+        data.deck = null;
         data.isSaved = false;
 
-        settings.quizType = null;
+        settings.quizType = 'practice';
         settings.options = {
             allGlosses: false,
             anyGloss: false,
@@ -163,6 +173,7 @@ export const useQuizzerStore = defineStore('QuizzerStore', () => {
         settings,
         score,
         quiz,
+        startPractice,
         startQuiz,
         submitQuiz,
         scoreQuiz,

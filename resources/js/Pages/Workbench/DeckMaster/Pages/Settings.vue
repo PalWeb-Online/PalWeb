@@ -1,27 +1,39 @@
 <script setup>
-import {useQuizzerStore} from "../Stores/QuizzerStore.js";
+import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
+import {useUserStore} from "../../../../stores/UserStore.js";
+import {watch} from "vue";
+import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
-const QuizzerStore = useQuizzerStore();
+const UserStore = useUserStore();
+const DeckStudyStore = useDeckStudyStore();
+const NotificationStore = useNotificationStore();
+
+watch(() => DeckStudyStore.settings.quizType, (newVal) => {
+    if (newVal !== 'practice' && !UserStore.isStudent) {
+        DeckStudyStore.settings.quizType = 'practice';
+        NotificationStore.addNotification('You must be a Student to Quiz a Deck.');
+    }
+})
 </script>
 <template>
     <QuizzerWindow>
-        <WindowSection>
+        <WindowSection :visible="false">
             <template #title>
                 <h2>stats</h2>
             </template>
             <template #content>
-                <ScoreStats :model="QuizzerStore.data.model"/>
+                <ScoreStats :model="DeckStudyStore.data.deck"/>
             </template>
         </WindowSection>
         <!--        <p>Here are the Terms you will be quizzed on.</p>-->
         <!--        <div class="model-list index-list" style="padding-block-start: 0.8rem">-->
-        <!--            <TermItem v-for="term in QuizzerStore.data.model?.terms" :model="term"-->
+        <!--            <TermItem v-for="term in DeckStudyStore.data.deck?.terms" :model="term"-->
         <!--                      :glossId="term.deckPivot.gloss_id"/>-->
         <!--        </div>-->
 
@@ -121,51 +133,70 @@ const QuizzerStore = useQuizzerStore();
         <AppTip>
             <p>Select the type of Quiz & adjust how you'd like for it to be generated.</p>
         </AppTip>
-        <template v-if="QuizzerStore.data.scorable_type === 'deck'">
-            <div class="quiz-settings-type" :class="{ 'selected': QuizzerStore.settings.quizType === 'term-gloss' }"
-                 @click="QuizzerStore.settings.quizType = 'term-gloss'">
-                <div>Glosses</div>
-                <p><b>(Easy)</b> Test your knowledge of Arabic vocabulary with a multiple-choice Quiz, where the right
-                    answer is
-                    shuffled
-                    with the meanings of other Terms in the Deck or Dictionary.</p>
-                <AppTip v-if="QuizzerStore.data.model?.terms_count <= 5">
-                    <p><b>This Deck has 5 or fewer Terms.</b> You should select
-                        "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
-                </AppTip>
-                <div class="quiz-settings-wrapper">
-                    <ToggleDouble v-model="QuizzerStore.settings.options.allGlosses" label="decoy source"
-                                  option-a="deck" option-b="all"/>
-                    <ToggleDouble v-model="QuizzerStore.settings.options.anyGloss" label="any gloss" option-a="no"
-                                  option-b="yes"/>
-                </div>
+        <div class="quiz-settings-type" :class="{
+                'selected': DeckStudyStore.settings.quizType === 'practice'
+            }"
+             @click="DeckStudyStore.settings.quizType = 'practice'">
+            <div>Practice</div>
+            <p>View your Decks as flashcards, without receiving a Score.</p>
+        </div>
+
+        <div class="quiz-settings-type" :class="{
+                'selected': DeckStudyStore.settings.quizType === 'term-gloss',
+                'disabled': !UserStore.isStudent
+            }"
+             @click="DeckStudyStore.settings.quizType = 'term-gloss'">
+            <div>Glosses</div>
+            <p><b>(Easy)</b> Test your knowledge of Arabic vocabulary with a multiple-choice Quiz, where the right
+                answer is
+                shuffled
+                with the meanings of other Terms in the Deck or Dictionary.</p>
+            <AppTip v-if="DeckStudyStore.data.deck?.terms_count <= 5">
+                <p><b>This Deck has 5 or fewer Terms.</b> You should select
+                    "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
+            </AppTip>
+            <div class="quiz-settings-wrapper">
+                <ToggleDouble v-model="DeckStudyStore.settings.options.allGlosses" label="decoy source"
+                              option-a="deck" option-b="all"/>
+                <ToggleDouble v-model="DeckStudyStore.settings.options.anyGloss" label="any gloss" option-a="no"
+                              option-b="yes"/>
             </div>
-            <div class="quiz-settings-type"
-                 :class="{ 'selected': QuizzerStore.settings.quizType === 'term-inflection' }"
-                 @click="QuizzerStore.settings.quizType = 'term-inflection'">
-                <div>Inflections</div>
-                <p><b>(Medium)</b> Do you know your broken plurals & other forms of the Terms you've learned? Test
-                    yourself with a
-                    fill-in Quiz, where you have to give the correct form of the indicated Term.</p>
-                <p>(You will only be quizzed on Terms with Inflections, so the Quiz may have fewer questions than
-                    there are Terms.)</p>
+        </div>
+        <div class="quiz-settings-type" :class="{
+                'selected': DeckStudyStore.settings.quizType === 'term-inflection',
+                'disabled': !UserStore.isStudent
+            }"
+             @click="DeckStudyStore.settings.quizType = 'term-inflection'">
+            <div>Inflections</div>
+            <p><b>(Medium)</b> Do you know your broken plurals & other forms of the Terms you've learned? Test
+                yourself with a
+                fill-in Quiz, where you have to give the correct form of the indicated Term.</p>
+            <p>(You will only be quizzed on Terms with Inflections, so the Quiz may have fewer questions than
+                there are Terms.)</p>
+        </div>
+        <div class="quiz-settings-type" :class="{
+                'selected': DeckStudyStore.settings.quizType === 'sentence-term',
+                'disabled': !UserStore.isStudent
+            }"
+             @click="DeckStudyStore.settings.quizType = 'sentence-term'">
+            <div>Sentences</div>
+            <p><b>(Medium/Hard)</b> Can you find the right word to express yourself? Test yourself with a
+                multiple-choice Quiz, where you
+                have to choose the right Term to complete the Sentence.</p>
+            <div class="quiz-settings-wrapper">
+                <ToggleDouble v-model="DeckStudyStore.settings.options.withPrompt" label="translation"
+                              option-a="off" option-b="on"/>
+                <ToggleDouble v-model="DeckStudyStore.settings.options.anyGloss" label="any gloss" option-a="no"
+                              option-b="yes"/>
             </div>
-            <div class="quiz-settings-type" :class="{ 'selected': QuizzerStore.settings.quizType === 'sentence-term' }"
-                 @click="QuizzerStore.settings.quizType = 'sentence-term'">
-                <div>Sentences</div>
-                <p><b>(Medium/Hard)</b> Can you find the right word to express yourself? Test yourself with a
-                    multiple-choice Quiz, where you
-                    have to choose the right Term to complete the Sentence.</p>
-                <div class="quiz-settings-wrapper">
-                    <ToggleDouble v-model="QuizzerStore.settings.options.withPrompt" label="translation"
-                                  option-a="off" option-b="on"/>
-                    <ToggleDouble v-model="QuizzerStore.settings.options.anyGloss" label="any gloss" option-a="no"
-                                  option-b="yes"/>
-                </div>
-            </div>
-        </template>
+        </div>
         <div class="window-footer">
-            <button @click="QuizzerStore.startQuiz" :disabled="!QuizzerStore.settings.quizType">Start Quiz</button>
+            <button v-if="DeckStudyStore.settings.quizType === 'practice'" @click="DeckStudyStore.startPractice">
+                Start Practice
+            </button>
+            <button v-else @click="DeckStudyStore.startQuiz" :disabled="!DeckStudyStore.settings.quizType">
+                Start Quiz
+            </button>
         </div>
     </QuizzerWindow>
 </template>
