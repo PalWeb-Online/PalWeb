@@ -23,6 +23,7 @@ const selectedDeck = ref(null);
 
 const toggleMode = async () => {
     selectedDeck.value = null;
+    DeckStudyStore.reset();
     mode.value = mode.value === 'build' ? 'study' : 'build';
     await fetchDecks(mode.value);
 }
@@ -31,6 +32,7 @@ const isLoading = ref(false);
 
 const fetchDecks = async (mode) => {
     isLoading.value = true;
+    decks.value = [];
 
     try {
         const response = await axios.get(route('deck-master.get-decks'), {
@@ -47,20 +49,18 @@ const fetchDecks = async (mode) => {
 };
 
 const toggleSelectDeck = (index) => {
-    if (selectedDeck.value?.id === decks.value[index].id) {
-        selectedDeck.value = null;
-
+    if (mode.value === 'build') {
+        selectedDeck.value =
+            selectedDeck.value?.id === decks.value[index].id
+                ? null
+                : decks.value[index];
     } else {
-        selectedDeck.value = decks.value[index];
+        DeckStudyStore.data.deck =
+            DeckStudyStore.data.deck?.id === decks.value[index].id
+                ? null
+                : decks.value[index];
     }
-
-    if (DeckStudyStore.data.deck?.id === decks.value[index].id) {
-        DeckStudyStore.data.deck = null;
-
-    } else {
-        DeckStudyStore.data.deck = decks.value[index];
-    }
-}
+};
 
 const toBuild = () => {
     selectedDeck.value?.id
@@ -122,7 +122,7 @@ defineOptions({
             <div v-if="!isLoading && decks.length" class="deck-item-grid">
                 <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
                                :disabled="mode === 'study' && !deck.terms.length"
-                               :active="selectedDeck?.id === deck.id || selectedDeck?.id === deck.id"
+                               :active="selectedDeck?.id === deck.id || DeckStudyStore.data.deck?.id === deck.id"
                                @flip="toggleSelectDeck(index)"
                 />
             </div>

@@ -12,6 +12,7 @@ import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import Layout from "../../../../Shared/Layout.vue";
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
+import AppButton from "../../../../components/AppButton.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -100,25 +101,6 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
 
 <template>
     <div id="dm-study">
-        <!--    <div class="window-container">-->
-        <!--        <div class="window-header">-->
-        <!--            <Link :href="route('deck-master.index', {mode: 'study'})" class="material-symbols-rounded">-->
-        <!--                arrow_back-->
-        <!--            </Link>-->
-        <!--            <div class="window-header-url">www.palweb.app/workbench/deck-master/study/{deck}</div>-->
-        <!--            <button class="material-symbols-rounded" @click="shuffleCards">shuffle</button>-->
-        <!--            <button class="material-symbols-rounded" @click="resetCards">undo</button>-->
-        <!--        </div>-->
-
-        <!--        <div class="window-section-head">-->
-        <!--            <h1>deck</h1>-->
-        <!--            <PinButton modelType="deck" :model="deck"/>-->
-        <!--            <DeckActions :model="deck"/>-->
-        <!--        </div>-->
-        <!--        <div class="window-content-head">-->
-        <!--            <div class="window-content-head-title">{{ deck.name }}</div>-->
-        <!--        </div>-->
-        <!--    </div>-->
         <QuizzerWindow>
             <div class="window-section-head">
                 <h2>Options</h2>
@@ -156,6 +138,8 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
                               option-b="Front"/>
                 <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
                 <ToggleSingle v-model="showTerm" label="Show Term (Back)"/>
+                <AppButton @click="shuffleCards" label="shuffle"/>
+                <AppButton @click="resetCards" label="reset"/>
             </div>
             <WindowSection :visible="false">
                 <template #title>

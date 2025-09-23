@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import AppTooltip from "./AppTooltip.vue";
@@ -34,6 +34,13 @@ const pin = async () => {
         console.error('Pin Failed', error);
     }
 };
+
+watch(() => props.model, (newModel) => {
+    pinCount.value = newModel.pinCount;
+    isPinned.value = newModel.isPinned;
+}, {
+    deep: true
+});
 </script>
 
 <template>
