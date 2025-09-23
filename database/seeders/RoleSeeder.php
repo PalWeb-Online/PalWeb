@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Permissions\ExplorePermissions;
-use Database\Seeders\Permissions\LessonPermissions;
-use Database\Seeders\Permissions\TextPermissions;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -37,7 +35,5 @@ class RoleSeeder extends Seeder
 
         // Create the various permissions the system needs
         (new ExplorePermissions)->run();
-        (new LessonPermissions)->run();
-        (new TextPermissions)->run();
     }
 }

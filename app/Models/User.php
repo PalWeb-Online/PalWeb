@@ -132,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Badge::class);
     }
 
-    public function speaker(): hasOne
+    public function speaker(): HasOne
     {
         return $this->hasOne(Speaker::class);
     }
