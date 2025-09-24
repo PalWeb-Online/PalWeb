@@ -5,6 +5,8 @@ import {useDeck} from "../composables/Deck.js";
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     model: {
@@ -46,23 +48,20 @@ const {deck, blurb, isLoading} = useDeck(props);
              @mouseleave="disabled && tooltip.hideTooltip()"
         >
             <div :class="['deck-flashcard', { flipped: active }, { disabled: disabled }]" ref="flashcard"
-                 @click="flipCard">
+                 @click="flipCard"
+            >
                 <div class="deck-flashcard-front">
                     <div class="deck-flashcard-front-head">
-                        <div class="item-title">{{ deck.name }}</div>
-                        <div class="deck-author" style="align-self: flex-end">
-                            <template v-if="!deck.author.private">
-                                <div class="deck-author-name">by {{ deck.author.name }}</div>
-                                <img class="deck-author-avatar" alt="Profile Picture"
-                                     :src="`/img/avatars/${deck.author.avatar}`"/>
-                            </template>
-                            <template v-else>
-                                <div class="deck-author-name">by Anonymous</div>
-                            </template>
+                        <div class="model-item-title">{{ deck.name }}</div>
+                        <div class="deck-author-name">
+                            by {{ !deck.author.private ? deck.author.name : 'Anonymous' }}
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body">
-                        <div v-if="blurb" class="item-description">{{ blurb }}</div>
+                        <div v-if="blurb" class="item-description"
+                             :style="`font-style: ${ deck.description ? 'normal' : 'italic' }`">
+                            {{ blurb }}
+                        </div>
                     </div>
                 </div>
                 <div class="deck-flashcard-back">
@@ -73,11 +72,25 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
             </div>
 
-            <PinButton modelType="deck" :model="deck" floating/>
-            <DeckActions :model="deck" icon="emoji"/>
+            <div class="deck-flashcard-controls">
+                <div class="deck-item-container">
+                    <div class="deck-item">
+                        <PinButton modelType="deck" :model="deck"/>
+                    </div>
+                </div>
 
-            <div class="action-buttons">
-                <img v-if="deck.private" src="/img/lock.svg" class="lock" alt="Privacy"/>
+                <div v-if="deck.private" class="lock">
+                    <div class="material-symbols-rounded">lock</div>
+                </div>
+
+                <div class="deck-item-container">
+                    <div class="deck-item">
+                        <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
+                             class="deck-author-avatar" alt="Avatar"
+                             :src="`/img/avatars/${deck.author.avatar}`"/>
+                        <DeckActions :model="deck"/>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -1,7 +1,6 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
-import AppButton from "../../../components/AppButton.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
 import {router} from "@inertiajs/vue3";
@@ -20,6 +19,7 @@ const props = defineProps({
 const mode = ref(props.mode);
 const decks = ref([]);
 const selectedDeck = ref(null);
+const collapsed = ref(true);
 
 const toggleMode = async () => {
     selectedDeck.value = null;
@@ -104,6 +104,37 @@ defineOptions({
 
     <div id="app-body" :class="{ 'dm-mode-study': mode === 'study' }">
         <div id="dm-select">
+            <div class="deck-item-grid-wrapper">
+                <button v-if="mode === 'build'" class="material-symbols-rounded" @click="toBuild">
+                    {{ selectedDeck ? 'edit' : 'add' }}
+                </button>
+                <button v-else-if="mode === 'study'" class="material-symbols-rounded" @click="collapsed = !collapsed">
+                    {{ !collapsed ? 'collapse_all' : 'expand_all' }}
+                </button>
+
+                <div v-if="!isLoading && decks.length" class="deck-item-grid"
+                     :class="{ collapsed: mode === 'study' && collapsed }">
+                    <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
+                                   :disabled="mode === 'study' && !deck.terms.length"
+                                   :active="selectedDeck?.id === deck.id || DeckStudyStore.data.deck?.id === deck.id"
+                                   @flip="toggleSelectDeck(index)"
+                    />
+                </div>
+                <div v-else-if="!isLoading && !decks.length" class="deck-item-grid">
+                    <AppTip>
+                        <p v-if="mode === 'build'">
+                            It looks like you haven't created any Decks yet. Click <b>New</b> to get started!
+                        </p>
+                        <p v-if="mode === 'study'">
+                            It looks like you haven't pinned any Decks yet. Watch this space.
+                        </p>
+                    </AppTip>
+                </div>
+                <div v-show="isLoading" class="deck-item-grid">
+                    <LoadingSpinner/>
+                </div>
+            </div>
+
             <QuizzerWindow v-if="mode === 'study'">
                 <ScoreStats :model="DeckStudyStore.data.deck"/>
                 <div v-if="DeckStudyStore.data.deck" class="window-footer">
@@ -112,28 +143,6 @@ defineOptions({
                     </button>
                 </div>
             </QuizzerWindow>
-
-            <div class="app-nav-interact" v-if="mode === 'build'">
-                <div class="app-nav-interact-buttons">
-                    <AppButton @click="toBuild" :label="selectedDeck ? 'Edit' : 'New'"/>
-                </div>
-            </div>
-
-            <div v-if="!isLoading && decks.length" class="deck-item-grid">
-                <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
-                               :disabled="mode === 'study' && !deck.terms.length"
-                               :active="selectedDeck?.id === deck.id || DeckStudyStore.data.deck?.id === deck.id"
-                               @flip="toggleSelectDeck(index)"
-                />
-            </div>
-            <div v-else-if="!isLoading && !decks.length" class="deck-item-grid">
-                <AppTip>
-                    <p v-if="mode === 'build'">It looks like you haven't created any Decks yet. Click <b>New</b> to get
-                        started!</p>
-                    <p v-if="mode === 'study'">It looks like you haven't pinned any Decks yet. Watch this space.</p>
-                </AppTip>
-            </div>
-            <LoadingSpinner v-show="isLoading"/>
         </div>
     </div>
 </template>

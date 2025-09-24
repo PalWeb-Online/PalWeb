@@ -26,7 +26,7 @@ defineOptions({
     </div>
 
     <div id="app-body">
-        <div class="community-portal">
+        <div class="app-body-section">
             <div class="community-portal-head">
                 <div class="community-portal-title">
                     <img src="/img/tomato.svg" alt="Icon"/>
@@ -40,9 +40,7 @@ defineOptions({
             <!--            <a href="{{ route('decks.create') }}" class="portal-button">Create</a>-->
 
             <div class="decks-featured">
-                <div class="deck-flashcard-grid">
-                    <DeckFlashcard :model="featuredDeck"/>
-                </div>
+                <DeckFlashcard :model="featuredDeck"/>
                 <div class="model-list">
                     <div class="featured-title m" style="text-transform: none">Latest</div>
                     <DeckItem v-for="deck in latestDecks" :model="deck" size="s"/>
@@ -52,10 +50,7 @@ defineOptions({
                     <DeckItem v-for="deck in popularDecks" :model="deck" size="l"/>
                 </div>
             </div>
-        </div>
 
-
-        <div class="community-portal">
             <div class="community-portal-head">
                 <div class="community-portal-title">
                     <img src="/img/olive.svg" alt="Icon"/>
@@ -72,10 +67,7 @@ defineOptions({
                 <div class="featured-title m" style="text-transform: none">Latest</div>
                 <PronunciationItem v-for="audio in latestAudios" :model="audio.pronunciation" :audio="audio"/>
             </div>
-        </div>
 
-
-        <div class="community-portal">
             <div class="community-portal-head">
                 <div class="community-portal-title">
                     <img src="/img/orange.svg" alt="Icon"/>
@@ -90,6 +82,5 @@ defineOptions({
                 <UserScorecard v-for="user in topUsers" :user="user"/>
             </div>
         </div>
-
     </div>
 </template>

@@ -13,7 +13,7 @@ defineExpose({
 </script>
 
 <template>
-    <div class="popup-menu-wrapper">
+    <div class="popup-menu-wrapper" :class="{ active: isOpen, has_symbol: icon === 'symbol' }">
         <img v-if="icon === 'emoji'" ref="reference" @click="toggleMenu()" class="gear"
              src="/img/gear.svg" alt="Options"
              role="button" tabindex="0" @keydown.enter.prevent="toggleMenu(true)"

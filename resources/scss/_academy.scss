@@ -760,10 +760,14 @@ div.activity-image .image-card {
 
     .score-metadata-row {
         display: flex;
-        gap: 0.4rem;
+        gap: 1.6rem;
 
-        & > *:first-child {
-            flex-basis: 25%;
+        & > div {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        & > div > *:first-child {
             font-weight: 700;
         }
     }

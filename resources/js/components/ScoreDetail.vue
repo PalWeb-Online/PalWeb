@@ -44,12 +44,14 @@ const quizType = computed(() => {
 <template>
     <div class="score-metadata">
         <div class="score-metadata-row">
-            <div style="font-weight: 700">Quiz Type</div>
-            <div>{{ quizType }}</div>
-        </div>
-        <div class="score-metadata-row" v-for="(option, key) in score.settings.options">
-            <div>{{ key }}</div>
-            <div>{{ option }}</div>
+            <div>
+                <span style="font-weight: 700">Quiz Type</span>
+                <span>{{ quizType }}</span>
+            </div>
+            <div v-for="(option, key) in score.settings.options">
+                <span>{{ key }}</span>
+                <span>{{ option }}</span>
+            </div>
         </div>
         <div v-if="score.id" style="font-size: 1.4rem; font-style: italic; text-align: right">
             Quizzed on {{ score.created_at }}.

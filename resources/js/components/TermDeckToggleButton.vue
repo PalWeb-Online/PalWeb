@@ -43,8 +43,9 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 <template>
     <template v-if="UserStore.isUser">
         <div class="popup-menu-wrapper">
-            <img ref="reference" class="term-deck-toggle"
-                 :src="`/img/${isOpen ? 'folder-open.svg' : 'folder-closed.svg'}`" @click="handleToggleMenu" alt="pin"/>
+            <button class="material-symbols-rounded term-deck-toggle" ref="reference" @click="handleToggleMenu">
+                {{ isOpen ? 'folder_open' : 'folder' }}
+            </button>
 
             <Teleport to="body">
                 <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
