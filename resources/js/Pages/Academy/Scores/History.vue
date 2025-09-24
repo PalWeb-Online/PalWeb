@@ -61,8 +61,7 @@ watch(() => props.selectedScore, (newVal) => {
 <template>
     <Head :title="`Academy: Score History for ${model.id}`"/>
     <div id="app-head">
-        <Link :href="route('scores.history', { scorable_type: scorable_type, scorable_id: model.id })"><h1>my Progress</h1>
-        </Link>
+        <Link :href="route('scores.index')"><h1>my Progress</h1></Link>
     </div>
     <div id="app-body">
         <div id="quizzer-container" class="window-container">

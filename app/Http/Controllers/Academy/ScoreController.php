@@ -21,10 +21,30 @@ class ScoreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Inertia\Response
+    public function index(Request $request): \Inertia\Response
     {
+        $latestScores = Score::query()
+            ->whereIn('id', function ($query) use ($request) {
+                $query->selectRaw('max(id)')
+                    ->from((new Score)->getTable())
+                    ->where('user_id', $request->user()->id)
+                    ->groupBy('scorable_type', 'scorable_id');
+            })
+            ->with('scorable')
+            ->latest()
+            ->get();
+
+        $latestScoredDecks = [];
+
+        foreach ($latestScores as $score) {
+            $scorable = $score->scorable;
+            $scorable->load('scores');
+            $latestScoredDecks[] = $scorable;
+        }
+
         return Inertia::render('Academy/Scores/Index', [
             'section' => 'academy',
+            'decks' => DeckResource::collection($latestScoredDecks)
         ]);
     }
 
@@ -80,10 +100,10 @@ class ScoreController extends Controller
     {
         $validated = $request->validate([
             'scorable_type' => ['required', Rule::in(['deck', 'dialog'])],
-            'scorable_id'   => ['required', 'integer'],
-            'older_than'    => ['nullable', Rule::in(['day', 'week', 'month', 'year'])],
-            'except'        => ['nullable', 'array'],
-            'except.*'      => ['string', Rule::in(['highest', 'latest'])],
+            'scorable_id' => ['required', 'integer'],
+            'older_than' => ['nullable', Rule::in(['day', 'week', 'month', 'year'])],
+            'except' => ['nullable', 'array'],
+            'except.*' => ['string', Rule::in(['highest', 'latest'])],
         ]);
 
         $modelClass = match ($validated['scorable_type']) {
@@ -96,10 +116,10 @@ class ScoreController extends Controller
 
         if ($request->filled('older_than')) {
             $date = match ($validated['older_than']) {
-                'day'   => Carbon::now()->subDay(),
-                'week'  => Carbon::now()->subWeek(),
+                'day' => Carbon::now()->subDay(),
+                'week' => Carbon::now()->subWeek(),
                 'month' => Carbon::now()->subMonth(),
-                'year'  => Carbon::now()->subYear(),
+                'year' => Carbon::now()->subYear(),
             };
             $query->where('created_at', '<', $date);
         }
@@ -108,15 +128,20 @@ class ScoreController extends Controller
         if ($request->filled('except')) {
             if (in_array('latest', $validated['except'])) {
                 $latestScore = $model->scores()->where('user_id', $request->user()->id)->first();
-                if ($latestScore) $exceptions[] = $latestScore->id;
+                if ($latestScore) {
+                    $exceptions[] = $latestScore->id;
+                }
             }
             if (in_array('highest', $validated['except'])) {
-                $highestScore = $model->scores()->where('user_id', $request->user()->id)->reorder()->orderByDesc('score')->first();
-                if ($highestScore) $exceptions[] = $highestScore->id;
+                $highestScore = $model->scores()->where('user_id',
+                    $request->user()->id)->reorder()->orderByDesc('score')->first();
+                if ($highestScore) {
+                    $exceptions[] = $highestScore->id;
+                }
             }
         }
 
-        if (!empty($exceptions)) {
+        if (! empty($exceptions)) {
             $query->whereNotIn('id', array_unique($exceptions));
         }
 
@@ -128,7 +153,7 @@ class ScoreController extends Controller
 
         return to_route('scores.history', [
             'scorable_type' => $validated['scorable_type'],
-            'scorable_id'   => $validated['scorable_id'],
+            'scorable_id' => $validated['scorable_id'],
         ]);
     }
 
@@ -143,7 +168,7 @@ class ScoreController extends Controller
 
         return to_route('scores.history', [
             'scorable_type' => $score->scorable_type,
-            'scorable_id'   => $score->scorable_id,
+            'scorable_id' => $score->scorable_id,
         ]);
     }
 }

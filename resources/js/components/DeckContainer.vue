@@ -6,6 +6,8 @@ import TermItem from "./TermItem.vue";
 import UserItem from "./UserItem.vue";
 import AppTip from "./AppTip.vue";
 import {route} from "ziggy-js";
+import ScoreStats from "./ScoreStats.vue";
+import WindowSection from "./WindowSection.vue";
 
 const props = defineProps({
     model: {
@@ -57,6 +59,18 @@ const {deck, isLoading} = useDeck(props);
                 </template>
             </UserItem>
 
+            <WindowSection :visible="false">
+                <template #title>
+                    <h2>stats</h2>
+                </template>
+                <template #content>
+                    <ScoreStats :model="deck"/>
+                </template>
+            </WindowSection>
+
+            <div class="window-section-head">
+                <h2>terms</h2>
+            </div>
             <template v-if="deck.terms.length > 0">
                 <div class="model-list index-list">
                     <TermItem v-for="term in deck.terms"

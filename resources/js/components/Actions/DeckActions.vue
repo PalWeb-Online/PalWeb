@@ -73,9 +73,6 @@ const tooltip = ref(null);
                     View Scores
                 </Link>
             </template>
-            <Link :href="route('users.show', model.author.username)" role="menuitem" tabindex="-1">
-                View Creator
-            </Link>
             <button @click="copyDeck" role="menuitem" tabindex="-1">
                 Copy Deck
             </button>
