@@ -32,15 +32,20 @@ defineOptions({
             itself. What's good is that the highly stable state of PalWeb 2.0 at this time will allow me to focus
             exclusively on what's new & not get bogged down by issues in areas previously considered complete.</p>
         <p>I won't go over the new features of PalWeb 2.0 again, which were covered in the 2.0 Beta Release Notes.
-            Instead, check the <Link :href="route('wiki.show', 'user-guide')">User Guide</Link> for more information on
+            Instead, check the
+            <Link :href="route('wiki.show', 'user-guide')">User Guide</Link>
+            for more information on
             how to use the various features of the site. Remember, if you find anything that doesn't work or look as
             expected or have any other suggestions for improvement, write to me using the <b>Send Feedback</b> button
             in the Sidebar (you must be logged in).
         </p>
 
         <h2>Roadmap</h2>
-        <p>Refer to the <Link :href="route('wiki.show', 'about')">About</Link> page for some history about the project
-            that puts these milestones into context.</p>
+        <p>Refer to the
+            <Link :href="route('wiki.show', 'about')">About</Link>
+            page for some history about the project
+            that puts these milestones into context.
+        </p>
         <ul>
             <li>August 2025</li>
             <ul>
@@ -49,31 +54,45 @@ defineOptions({
             <li>September 2025</li>
             <ul>
                 <li>myProgress: Saving user Scores. Score History page & results summary per Score.</li>
-                <li>Quizzer: Ability to Quiz Dialogs.</li>
+                <li>DeckMaster: Merge the Quizzer into the DeckMaster Study page.</li>
             </ul>
             <li>October 2025 (Nabatean)</li>
             <ul>
-                <li>Lessons: MVC; Eloquent. Navigation & Inventory.</li>
-                <li>myProgress: "Latest" & "Lesson" section of Index page.</li>
+                <li>Lessons: Create Lesson models in the backend. Create an interface for navigating through &
+                    visualizing Lessons. Set up progression & unlock system for Lessons & individual Lesson content.
+                </li>
             </ul>
             <li>November 2025</li>
             <ul>
-                <li>Quizzer: Ability to Quiz Skills.</li>
-                <li>Lessons: (Interface to create Skills?) Create / Revise Unit 1 Skills.</li>
+                <li>Lessons: Design Activities & Exercises in the backend & frontend. Create Unit 1
+                    Activities.
+                </li>
             </ul>
             <li>December 2025</li>
             <ul>
                 <li>Lessons: Roll out Unit 1.</li>
             </ul>
-            <li>January-February 2026</li>
+            <li>January 2026</li>
             <ul>
                 <li>Lessons: Roll out Unit 2.</li>
             </ul>
-            <li>March-April 2026</li>
+            <li>February 2026</li>
             <ul>
                 <li>Lessons: Roll out Unit 3.</li>
             </ul>
-            <li>May-June 2026</li>
+            <li>March 2026</li>
+            <ul>
+                <li>Lessons: Roll out Unit 4.</li>
+            </ul>
+            <li>April 2026</li>
+            <ul>
+                <li>Lessons: Roll out Unit 5.</li>
+            </ul>
+            <li>May 2026</li>
+            <ul>
+                <li>Lessons: Roll out Unit 6.</li>
+            </ul>
+            <li>June 2026</li>
             <ul>
                 <li>Enabling PalWeb to function as a progressive web app (PWA) downloadable to mobile devices for
                     offline use.

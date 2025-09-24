@@ -32,13 +32,14 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
         <div class="window-section-head">
             <h2>Results</h2>
-            <PopupWindow title="Quizzer">
+            <PopupWindow title="DM (Results)">
                 <div class="h1">Results</div>
-                <p>Sometimes humans are smarter than machines. The Quizzer automatically generates Quizzes & grades them
-                    through a simple matching operation, so it's possible in certain cases for an answer that should
-                    have been accepted to be marked as incorrect. That's why I've provided a <b>Mark as Correct</b>
-                    option, so that you can be a part of the grading process. After comparing your answer to the one
-                    expected by the application, you can override the result if you think it should have been accepted.
+                <p>Sometimes humans are smarter than machines. The Deck Master automatically generates Quizzes & grades
+                    them through a simple matching operation, so it's possible in certain cases for an answer that
+                    should have been accepted to be marked as incorrect. That's why I've provided a <b>Mark as
+                        Correct</b> option, so that you can be a part of the grading process. After comparing your
+                    answer to the one expected by the application, you can override the result if you think it should
+                    have been accepted.
                 </p>
                 <p>Remember that your Score is not saved automatically, so you can adjust the results as needed before
                     saving your Score manually. You can also exit the Results page without saving if you want to discard

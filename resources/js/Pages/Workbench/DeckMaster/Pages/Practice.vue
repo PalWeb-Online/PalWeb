@@ -104,8 +104,8 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
         <QuizzerWindow>
             <div class="window-section-head">
                 <h2>Options</h2>
-                <PopupWindow title="Deck Master">
-                    <div>Options</div>
+                <PopupWindow title="DM (Practice)">
+                    <div class="h1">Options</div>
                     <ul>
                         <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
                         <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>

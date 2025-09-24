@@ -12,6 +12,7 @@ use App\Models\Dialog;
 use App\Models\Score;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -42,9 +43,23 @@ class ScoreController extends Controller
             $latestScoredDecks[] = $scorable;
         }
 
+        $totalCount = count($latestScoredDecks);
+        $perPage = 10;
+        $currentPage = $request->input('page', 1);
+        $decks = collect($latestScoredDecks)->forPage($currentPage, $perPage);
+
+        $decks = new LengthAwarePaginator(
+            $decks,
+            $totalCount,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
         return Inertia::render('Academy/Scores/Index', [
             'section' => 'academy',
-            'decks' => DeckResource::collection($latestScoredDecks)
+            'decks' => DeckResource::collection($decks),
+            'totalCount' => $totalCount,
         ]);
     }
 

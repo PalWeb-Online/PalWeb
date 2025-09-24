@@ -111,7 +111,6 @@ watch(() => props.selectedScore, (newVal) => {
                             scorable_type
                         }}</span>
                         yet. When you do, you will see a history of your Scores here.
-                        <Link :href="route('deck-master.study', model.id)">Go to the Quizzer.</Link>
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">

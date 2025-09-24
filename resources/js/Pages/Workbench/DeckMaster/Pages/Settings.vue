@@ -9,6 +9,7 @@ import WindowSection from "../../../../components/WindowSection.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {watch} from "vue";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import TermItem from "../../../../components/TermItem.vue";
 
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
@@ -31,18 +32,26 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 <ScoreStats :model="DeckStudyStore.data.deck"/>
             </template>
         </WindowSection>
-        <!--        <p>Here are the Terms you will be quizzed on.</p>-->
-        <!--        <div class="model-list index-list" style="padding-block-start: 0.8rem">-->
-        <!--            <TermItem v-for="term in DeckStudyStore.data.deck?.terms" :model="term"-->
-        <!--                      :glossId="term.deckPivot.gloss_id"/>-->
-        <!--        </div>-->
+        <WindowSection :visible="false">
+            <template #title>
+                <h2>terms</h2>
+            </template>
+            <template #content>
+                <div class="model-list index-list">
+                    <TermItem v-for="term in DeckStudyStore.data.deck?.terms" :model="term"
+                              :glossId="term.deckPivot.gloss_id"/>
+                </div>
+                <div class="terms-count">{{ DeckStudyStore.data.deck?.terms.length }} Terms</div>
+            </template>
+        </WindowSection>
 
         <div class="window-section-head">
             <h2>Settings</h2>
-            <PopupWindow title="Quizzer">
-                <div class="h1">Setup</div>
-                <p>Welcome to the Quizzer, where you can dynamically generate Quizzes for Decks. You may choose to
-                    generate three different types of Quizzes: <b>Glosses</b>, <b>Inflections</b> & <b>Sentences</b>.
+            <PopupWindow title="DM (Study)">
+                <div class="h1">Study</div>
+                <p>Welcome to the Deck Master <b>Study</b> page, where you can study Decks in a variety of modes. Use
+                    <b>Practice</b> mode to view your Decks as flashcards, or dynamically generate three different types
+                    of scored Quizzes: <b>Glosses</b>, <b>Inflections</b> & <b>Sentences</b>.
                 </p>
                 <p>Quizzes may have up to 50 (<b>Glosses</b> & <b>Inflections</b>) or 25 (<b>Sentences</b>) items. If
                     the Deck has more than that many valid Terms, a random selection of that many valid Terms will be

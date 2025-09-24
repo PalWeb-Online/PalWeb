@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Academy\QuizzerController;
 use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;

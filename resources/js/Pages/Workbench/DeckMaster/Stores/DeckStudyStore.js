@@ -2,8 +2,11 @@ import {defineStore} from 'pinia';
 import {nextTick, reactive, ref} from 'vue';
 import {shuffle} from "lodash";
 import {router} from "@inertiajs/vue3";
+import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
 export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
+    const NotificationStore = useNotificationStore();
+
     const data = reactive({
         step: 'settings',
         deck: null,
@@ -27,7 +30,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         results: {},
     });
 
-    const quiz = ref({});
+    const quiz = ref([]);
 
     const startPractice = async () => {
         data.step = 'practice';
@@ -52,8 +55,13 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         });
 
         generateQuiz().then(() => {
-            data.isLoading = false;
+            if (!quiz.value.length) {
+                NotificationStore.addNotification('No Terms in the Deck could be used to generate the Quiz.', 'error');
+                data.step = 'settings';
+            }
         });
+
+        data.isLoading = false;
     };
 
     const generateQuiz = async () => {
@@ -84,6 +92,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         if (settings.quizType === 'term-gloss') {
             score.results = score.results.map(q => ({
                 term: {
+                    id: q.term.id,
                     term: q.term.term,
                     slug: q.term.slug
                 },
@@ -95,6 +104,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         } else if (settings.quizType === 'term-inflection') {
             score.results = quiz.value.map(q => ({
                 term: {
+                    id: q.term.id,
                     term: q.term.term,
                     slug: q.term.slug
                 },
@@ -107,6 +117,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         } else if (settings.quizType === 'sentence-term') {
             score.results = quiz.value.map(q => ({
                 term: {
+                    id: q.term.id,
                     term: q.term.term,
                     slug: q.term.slug
                 },
@@ -143,6 +154,13 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             score: score.score,
             results: score.results,
         }, {
+            onSuccess: () => {
+                data.step = 'settings';
+                score.score = 0;
+                score.results = {};
+                quiz.value = [];
+                data.isSaved = false;
+            },
             onError: (errors) => {
                 data.isSaved = false;
                 console.error('Error saving score:', errors);
