@@ -7,6 +7,9 @@ import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -72,7 +75,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
             </div>
 
-            <div class="deck-flashcard-controls">
+            <div v-if="UserStore.isUser" class="deck-flashcard-controls">
                 <div class="deck-item-container">
                     <div class="deck-item">
                         <PinButton modelType="deck" :model="deck"/>
