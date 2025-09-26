@@ -25,36 +25,36 @@ const showTranslit = ref(false);
             <h2>Quiz</h2>
         </div>
         <AppTip>
-            <p v-if="DeckStudyStore.settings.quizType === 'term-gloss'">
+            <p v-if="DeckStudyStore.settings.quizType === 'glosses'">
                 Select the meaning of the Arabic term in English.</p>
-            <p v-else-if="DeckStudyStore.settings.quizType === 'term-inflection'">
+            <p v-else-if="DeckStudyStore.settings.quizType === 'inflections'">
                 Write the indicated inflection of the Term in Arabic.</p>
-            <p v-else-if="DeckStudyStore.settings.quizType === 'sentence-term'">
+            <p v-else-if="DeckStudyStore.settings.quizType === 'sentences'">
                 Select the Term that best fits the blank in the Sentence. <b>Terms are listed in their Dictionary form,
                 not necessarily as they would be expected to appear in the Sentence.</b></p>
         </AppTip>
         <div class="quiz-settings-wrapper" style="justify-content: space-around">
             <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-            <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'term-gloss'"
+            <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'glosses'"
                           v-model="showInflections" label="Show Inflections"/>
         </div>
     </QuizzerWindow>
 
     <div class="quiz-container" v-if="!DeckStudyStore.data.isLoading">
-        <QuestionSelectGloss v-if="DeckStudyStore.settings.quizType === 'term-gloss'"
+        <QuestionSelectGloss v-if="DeckStudyStore.settings.quizType === 'glosses'"
                              v-for="(question, index) in DeckStudyStore.quiz"
                              :question="question"
                              :index="index"
                              :showTranslit="showTranslit"
                              :showInflections="showInflections"
         />
-        <QuestionInputInflection v-if="DeckStudyStore.settings.quizType === 'term-inflection'"
+        <QuestionInputInflection v-if="DeckStudyStore.settings.quizType === 'inflections'"
                                  v-for="(question, index) in DeckStudyStore.quiz"
                                  :question="question"
                                  :index="index"
                                  :showTranslit="showTranslit"
         />
-        <QuestionSelectTerm v-if="DeckStudyStore.settings.quizType === 'sentence-term'"
+        <QuestionSelectTerm v-if="DeckStudyStore.settings.quizType === 'sentences'"
                             v-for="(question, index) in DeckStudyStore.quiz"
                             :question="question" :index="index"
                             :showTranslit="showTranslit"

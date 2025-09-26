@@ -35,7 +35,7 @@ const toggleSelection = (index) => {
                     </template>
                 </div>
 
-                <div class="sentence-eng" v-if="DeckStudyStore.settings.options.withPrompt">
+                <div class="sentence-eng" v-if="DeckStudyStore.settings.options.withTranslation">
                     {{ question.sentence.trans }}
                 </div>
             </div>

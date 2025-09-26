@@ -117,7 +117,7 @@ watch(() => props.selectedScore, (newVal) => {
                     <div class="score-item-wrapper" v-for="score in scores.data">
                         <Link :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
                               class="score-item" preserve-scroll preserve-state>
-                            <div>{{ score.settings.typeInput ? 'Inflections' : 'Glosses' }}</div>
+                            <div style="text-transform: capitalize">{{ score.settings.quizType }}</div>
                             <div>{{ formatter.format(score.score) }} ({{
                                     score.results.filter(q => q.correct).length
                                 }}/{{ score.results.length }})

@@ -29,29 +29,28 @@ const scoreMessage = computed(() => {
     }
     return "Better keep practicing!";
 });
-
-const quizType = computed(() => {
-    switch (props.score.settings.quizType) {
-        case 'term-gloss':
-            return 'Glosses';
-        case 'term-inflection':
-            return 'Inflections';
-        case 'sentence-term':
-            return 'Sentences';
-    }
-})
 </script>
 <template>
     <div class="score-metadata">
         <div class="score-metadata-row">
             <div>
                 <span style="font-weight: 700">Quiz Type</span>
-                <span>{{ quizType }}</span>
+                <span style="text-transform: capitalize">{{ score.settings.quizType }}</span>
             </div>
-            <div v-for="(option, key) in score.settings.options">
-                <span>{{ key }}</span>
-                <span>{{ option }}</span>
-            </div>
+            <template v-for="(option, key) in score.settings.options">
+                <div v-if="key === 'strictTerms' && score.settings.quizType === 'glosses'">
+                    <span>{{ key }}</span>
+                    <span>{{ option }}</span>
+                </div>
+                <div v-if="key === 'strictGloss' && ['glosses', 'sentences'].includes(score.settings.quizType)">
+                    <span>{{ key }}</span>
+                    <span>{{ option }}</span>
+                </div>
+                <div v-if="key === 'withTranslation' && score.settings.quizType === 'sentences'">
+                    <span>{{ key }}</span>
+                    <span>{{ option }}</span>
+                </div>
+            </template>
         </div>
         <div v-if="score.id" style="font-size: 1.4rem; font-style: italic; text-align: right">
             Quizzed on {{ score.created_at }}.

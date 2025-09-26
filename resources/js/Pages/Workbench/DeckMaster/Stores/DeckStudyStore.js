@@ -18,9 +18,9 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     const settings = reactive({
         quizType: 'practice',
         options: {
-            allGlosses: false,
-            anyGloss: false,
-            withPrompt: true,
+            strictTerms: true,
+            strictGloss: true,
+            withTranslation: true,
         }
     });
 
@@ -72,7 +72,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
 
             quiz.value = response.data.quiz;
 
-            if (settings.quizType === 'term-gloss') {
+            if (settings.quizType === 'glosses') {
                 quiz.value.forEach(question => {
                     shuffle(Object.entries(question.options));
                 });
@@ -89,7 +89,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         score.settings = settings;
         score.results = quiz.value;
 
-        if (settings.quizType === 'term-gloss') {
+        if (settings.quizType === 'glosses') {
             score.results = score.results.map(q => ({
                 term: {
                     id: q.term.id,
@@ -101,7 +101,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
                 correct: q.answer === q.response,
             }))
 
-        } else if (settings.quizType === 'term-inflection') {
+        } else if (settings.quizType === 'inflections') {
             score.results = quiz.value.map(q => ({
                 term: {
                     id: q.term.id,
@@ -114,7 +114,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
                 correct: q.answer.includes(q.response),
             }))
 
-        } else if (settings.quizType === 'sentence-term') {
+        } else if (settings.quizType === 'sentences') {
             score.results = quiz.value.map(q => ({
                 term: {
                     id: q.term.id,
@@ -175,9 +175,9 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
 
         settings.quizType = 'practice';
         settings.options = {
-            allGlosses: false,
-            anyGloss: false,
-            withPrompt: true,
+            strictTerms: true,
+            strictGloss: true,
+            withTranslation: true,
         }
 
         score.score = 0;

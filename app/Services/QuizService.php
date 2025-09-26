@@ -12,37 +12,37 @@ class QuizService
     public function generateQuiz(Deck $deck, array $settings): array
     {
         switch ($settings['quizType']) {
-            case 'term-gloss':
-                return $this->generateGlossSelectQuiz($deck, $settings);
+            case 'glosses':
+                return $this->generateGlossesQuiz($deck, $settings);
 
-            case 'term-inflection':
-                return $this->generateInflectionInputQuiz($deck, $settings);
+            case 'inflections':
+                return $this->generateInflectionsQuiz($deck, $settings);
 
-            case 'sentence-term':
-                return $this->generateTermSelectQuiz($deck, $settings);
+            case 'sentences':
+                return $this->generateSentencesQuiz($deck, $settings);
         }
     }
 
-    private function generateGlossSelectQuiz(Deck $deck, array $settings): array
+    private function generateGlossesQuiz(Deck $deck, array $settings): array
     {
-        $allGlosses = $settings['options']['allGlosses'] ?? false;
-        $anyGloss = $settings['options']['anyGloss'] ?? false;
+        $strictTerms = $settings['options']['strictTerms'] ?? true;
+        $strictGloss = $settings['options']['strictGloss'] ?? true;
 
         $quiz = [];
 
         foreach ($deck->terms->shuffle()->take(50) as $term) {
             $glossId = $term->pivot->gloss_id;
 
-            $answer = $anyGloss || ! $glossId
-                ? $term->glosses->first()
-                : $term->glosses->firstWhere('id', $glossId);
+            $answer = $strictGloss && $glossId
+                ? $term->glosses->firstWhere('id', $glossId)
+                : $term->glosses->random();
 
             $decoysQuery = Gloss::query();
 
-            if (! $allGlosses) {
-                $decoyGlossIds = $anyGloss
-                    ? $deck->terms->pluck('glosses')->flatten()->pluck('id')
-                    : $deck->terms->pluck('pivot.gloss_id')->filter();
+            if ($strictTerms) {
+                $decoyGlossIds = $strictGloss
+                    ? $deck->terms->pluck('pivot.gloss_id')->filter()
+                    : $deck->terms->pluck('glosses')->flatten()->pluck('id');
                 $decoysQuery->whereIn('id', $decoyGlossIds);
             }
 
@@ -67,7 +67,7 @@ class QuizService
         return $quiz;
     }
 
-    private function generateInflectionInputQuiz(Deck $deck, array $settings): array
+    private function generateInflectionsQuiz(Deck $deck, array $settings): array
     {
         $quiz = [];
 
@@ -92,10 +92,10 @@ class QuizService
         return $quiz;
     }
 
-    private function generateTermSelectQuiz(Deck $deck, array $settings): array
+    private function generateSentencesQuiz(Deck $deck, array $settings): array
     {
-        $anyGloss = $settings['options']['anyGloss'] ?? false;
-        $withPrompt = $settings['options']['withPrompt'] ?? true;
+        $strictGloss = $settings['options']['strictGloss'] ?? true;
+        $withTranslation = $settings['options']['withTranslation'] ?? true;
 
         $quiz = [];
 
@@ -105,9 +105,9 @@ class QuizService
                 break;
             }
 
-            $sentences = $anyGloss
-                ? $term->sentences
-                : $term->sentences->filter(fn ($s) => $s->pivot?->gloss_id === $term->pivot?->gloss_id);
+            $sentences = $strictGloss
+                ? $term->sentences->filter(fn ($s) => $s->pivot?->gloss_id === $term->pivot?->gloss_id)
+                : $term->sentences;
 
             if ($sentences->isEmpty()) {
                 continue;
@@ -126,7 +126,7 @@ class QuizService
                 ->push($term->id);
 
 
-            if ($withPrompt) {
+            if ($withTranslation) {
                 $decoys = $deck->terms
                     ->whereNotIn('id', $excludedDecoys)
                     ->shuffle()

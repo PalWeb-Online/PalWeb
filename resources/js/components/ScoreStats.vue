@@ -136,7 +136,7 @@ const polylinePoints = computed(() => {
                         </div>
 
                         <div v-if="visible" :style="tooltipStyle" ref="tooltip" class="score-stats-graph-data">
-                            <div>{{ scoreData.settings.typeInput ? 'Inflections' : 'Glosses' }}</div>
+                            <div style="text-transform: capitalize">{{ scoreData.settings.quizType }}</div>
                             <div>{{ formatter.format(scoreData.score) }}
                                 <span style="font-size: 1.2rem">({{
                                         scoreData.results.filter(q => q.correct).length
