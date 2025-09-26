@@ -266,6 +266,8 @@
         button {
             font-size: 1.5em;
             color: white;
+            width: 100%;
+            height: 100%;
         }
     }
 
@@ -322,7 +324,6 @@
     height: 100%;
     justify-items: center;
     grid-auto-rows: min-content;
-    overflow: hidden;
     padding: 1.6rem 0;
 
     .deck-item-grid-wrapper {

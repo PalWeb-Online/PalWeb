@@ -74,7 +74,7 @@ defineOptions({
             & thus marks a huge milestone for the project & for myself as a person. While we are never really done
             learning, building the application from here on out will no longer be the uphill battle of learning by
             doing. While that struggle was absolutely necessary, it meant a relatively low productivity of work over a
-            long period of time. I essentially had to dedicate 100% of my time & energy into coding & learning with
+            long period of time. I essentially had to dedicate 100% of my time & energy to coding & learning, with
             little to no time dedicated to developing the project more broadly, like doing outreach & bringing more
             people on board. After all, how could I lead a team if I myself hardly knew what I was doing?</p>
         <p>Secondly & on a related note, I have done virtually no promotion of the project. Most people who know me from
