@@ -372,15 +372,20 @@
 
 #dm-study {
     display: grid;
-    gap: 2.4rem;
-    width: 100%;
-    max-width: 96rem;
+    width: min(100%, 96rem);
+    justify-items: center;
+
+    .carousel {
+        width: 100%;
+        margin-block: 3.2rem;
+    }
 
     .carousel__pagination {
         align-items: center;
         margin-block: 0 !important;
         gap: 0.4rem;
         flex-wrap: wrap;
+        margin-inline: 1.6rem;
     }
 
     .carousel__pagination-item {
@@ -412,6 +417,21 @@
         font-size: 2.4rem;
         font-family: $headFont;
     }
+
+    & > button {
+        width: 6.4rem;
+        height: 6.4rem;
+        font-size: 4.8rem;
+        border-radius: 50%;
+        color: white;
+        background: var(--color-medium-secondary);
+        margin-block: 6.4rem;
+
+        &[disabled] {
+            opacity: 50%;
+            cursor: not-allowed;
+        }
+    }
 }
 
 .term-flashcard {
@@ -429,6 +449,43 @@
 
         .term-flashcard-back {
             transform: rotateX(0);
+        }
+    }
+
+    &.quiz-glosses, &.quiz-inflections {
+        aspect-ratio: initial;
+
+        .term-flashcard-back {
+            display: flex;
+            flex-flow: column;
+            position: static;
+
+            .term-flashcard-glosses {
+                flex-grow: 1;
+                min-height: 9.6rem;
+                align-content: end;
+                gap: 0.5em;
+
+                input {
+                    direction: rtl;
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    &.quiz-glosses {
+        .term-flashcard-back {
+            .term-flashcard-glosses {
+                color: var(--color-medium-primary);
+                font-size: 1.8rem;
+                font-weight: 700;
+
+                & > *:nth-child(2) {
+                    border-block-end: 0.2rem dotted currentColor;
+                }
+            }
         }
     }
 }
@@ -537,7 +594,7 @@
         font-size: 1em;
         overflow: scroll;
 
-        & > *:nth-child(1) {
+        .term-flashcard-category {
             font-family: $headFont;
             font-weight: 700;
         }

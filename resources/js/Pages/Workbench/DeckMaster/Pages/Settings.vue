@@ -140,7 +140,8 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             </PopupWindow>
         </div>
         <AppTip>
-            <p>Select the type of Quiz & adjust how you'd like for it to be generated.</p>
+            <p v-if="UserStore.isStudent">Select the type of Quiz & adjust how you'd like for it to be generated.</p>
+            <p v-else><b>You must be a Student to enable Quizzes.</b></p>
         </AppTip>
         <div class="quiz-settings-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'practice'

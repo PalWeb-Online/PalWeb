@@ -28,18 +28,19 @@ const prompt = computed(() => {
 </script>
 <template>
     <div class="quiz-question">
-        <div class="term-flashcard" style="cursor: default">
-            <div class="term-flashcard-front">
-                <div class="term-flashcard-term">
-                    <div>{{ question.term.term }}</div>
-                    <div v-show="showTranslit">{{ question.term.translit }}</div>
+        <div class="term-flashcard quiz-inflections flipped" style="cursor: default">
+            <div class="term-flashcard-back">
+                <div class="term-flashcard-head">
+                    <div class="term-flashcard-headword">
+                        <div>{{ question.term.term }}</div>
+                        <div v-show="showTranslit">({{ question.term.translit }})</div>
+                    </div>
+                </div>
+                <div class="term-flashcard-glosses">
+                    <div class="term-flashcard-category">{{ prompt }}</div>
+                    <input v-model="question.response"/>
                 </div>
             </div>
-        </div>
-
-        <div class="quiz-question-input">
-            <div>{{ prompt }}</div>
-            <input v-model="question.response"/>
         </div>
     </div>
 </template>

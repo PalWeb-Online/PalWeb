@@ -63,14 +63,6 @@
     }
 }
 
-.sentence-item-wrapper {
-    display: grid;
-    grid-template-columns: 2.4rem auto;
-    gap: 0.4rem 0.8rem;
-    direction: rtl;
-    align-items: center;
-}
-
 .group-horizontal, div.array {
     display: flex;
     flex-flow: row-reverse wrap;

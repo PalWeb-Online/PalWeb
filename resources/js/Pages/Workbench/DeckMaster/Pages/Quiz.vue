@@ -62,6 +62,5 @@ const showTranslit = ref(false);
     </div>
     <LoadingSpinner v-else/>
 
-    <AppButton :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz" label="Submit"
-               style="margin-block-end: 3.2rem"/>
+    <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">check</button>
 </template>

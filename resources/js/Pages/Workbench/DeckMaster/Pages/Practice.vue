@@ -100,85 +100,83 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
 </script>
 
 <template>
-    <div id="dm-study">
-        <QuizzerWindow>
-            <div class="window-section-head">
-                <h2>Options</h2>
-                <PopupWindow title="DM (Practice)">
-                    <div class="h1">Options</div>
-                    <ul>
-                        <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
-                        <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>
-                        <li><b>Default Side Toggle</b> — Toggles the default face of Cards in the Deck. Cards that
-                            have
-                            already been flipped will be unaffected.
-                        </li>
-                        <li><b>Show Inflections Toggle</b> — Toggles whether Inflections are shown on the Term side
-                            or
-                            on
-                            the Gloss side of the Card.
-                        </li>
-                        <li><b>Show Transcription</b> — Show the default transcription of the Term & its
-                            Inflections.
-                        </li>
-                        <li><b>Show Term</b> — Show the Term on the Gloss side of the Card.</li>
-                    </ul>
-                    <div>Keyboard Controls</div>
-                    <ul>
-                        <li><b>Left</b> / <b>A</b> — Previous Card</li>
-                        <li><b>Right</b> / <b>D</b> — Next Card</li>
-                        <li><b>Down</b> / <b>S</b> — Flip Card</li>
-                        <li><b>Space</b> — Toggle Default Side</li>
-                    </ul>
-                </PopupWindow>
-            </div>
-            <div class="quiz-settings-wrapper">
-                <ToggleDouble v-model="flipDefault" label="Initial Face" option-a="Term" option-b="Gloss"/>
-                <ToggleDouble v-model="flipDefaultInflections" label="Inflections" option-a="Back"
-                              option-b="Front"/>
-                <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-                <ToggleSingle v-model="showTerm" label="Show Term (Back)"/>
-                <AppButton @click="shuffleCards" label="shuffle"/>
-                <AppButton @click="resetCards" label="reset"/>
-            </div>
-            <WindowSection :visible="false">
-                <template #title>
-                    <h2>term</h2>
-                </template>
-                <template #content>
-                    <div class="model-list index-list">
-                        <TermItem :model="cards[currentSlideIndex]"
-                                  :glossId="cards[currentSlideIndex].deckPivot.gloss_id ?? null"/>
-                    </div>
-                </template>
-            </WindowSection>
-        </QuizzerWindow>
+    <QuizzerWindow>
+        <div class="window-section-head">
+            <h2>Options</h2>
+            <PopupWindow title="DM (Practice)">
+                <div class="h1">Options</div>
+                <ul>
+                    <li><b>Reset</b> — Restores the Cards in the Deck to their original order.</li>
+                    <li><b>Shuffle</b> — Shuffles the Cards in the Deck.</li>
+                    <li><b>Default Side Toggle</b> — Toggles the default face of Cards in the Deck. Cards that
+                        have
+                        already been flipped will be unaffected.
+                    </li>
+                    <li><b>Show Inflections Toggle</b> — Toggles whether Inflections are shown on the Term side
+                        or
+                        on
+                        the Gloss side of the Card.
+                    </li>
+                    <li><b>Show Transcription</b> — Show the default transcription of the Term & its
+                        Inflections.
+                    </li>
+                    <li><b>Show Term</b> — Show the Term on the Gloss side of the Card.</li>
+                </ul>
+                <div>Keyboard Controls</div>
+                <ul>
+                    <li><b>Left</b> / <b>A</b> — Previous Card</li>
+                    <li><b>Right</b> / <b>D</b> — Next Card</li>
+                    <li><b>Down</b> / <b>S</b> — Flip Card</li>
+                    <li><b>Space</b> — Toggle Default Side</li>
+                </ul>
+            </PopupWindow>
+        </div>
+        <div class="quiz-settings-wrapper">
+            <ToggleDouble v-model="flipDefault" label="Initial Face" option-a="Term" option-b="Gloss"/>
+            <ToggleDouble v-model="flipDefaultInflections" label="Inflections" option-a="Back"
+                          option-b="Front"/>
+            <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+            <ToggleSingle v-model="showTerm" label="Show Term (Back)"/>
+            <AppButton @click="shuffleCards" label="shuffle"/>
+            <AppButton @click="resetCards" label="reset"/>
+        </div>
+        <WindowSection :visible="false">
+            <template #title>
+                <h2>term</h2>
+            </template>
+            <template #content>
+                <div class="model-list index-list">
+                    <TermItem :model="cards[currentSlideIndex]"
+                              :glossId="cards[currentSlideIndex].deckPivot.gloss_id ?? null"/>
+                </div>
+            </template>
+        </WindowSection>
+    </QuizzerWindow>
 
-        <Carousel
-            v-if="!DeckStudyStore.data.isLoading"
-            :items-to-show="1"
-            :wrap-around="true"
-            ref="carouselRef"
-            @slide-start="handleSlideStart"
-            @slide-end="handleSlideEnd"
-        >
-            <template #slides>
-                <Slide v-for="(term, index) in cards" :key="term.id">
-                    <TermFlashcard
-                        :model="term"
-                        :active="index === currentSlideIndex && !isSliding"
-                        :flipDefault="flipDefault"
-                        :showTerm="showTerm"
-                        :showTranslit="showTranslit"
-                        :flipDefaultInflections="flipDefaultInflections"
-                    />
-                </Slide>
-            </template>
-            <template #addons>
-                <Pagination/>
-                <div class="carousel-index">{{ currentSlideIndex + 1 }} out of {{ cards.length }}</div>
-            </template>
-        </Carousel>
-        <LoadingSpinner v-else/>
-    </div>
+    <Carousel
+        v-if="!DeckStudyStore.data.isLoading"
+        :items-to-show="1"
+        :wrap-around="true"
+        ref="carouselRef"
+        @slide-start="handleSlideStart"
+        @slide-end="handleSlideEnd"
+    >
+        <template #slides>
+            <Slide v-for="(term, index) in cards" :key="term.id">
+                <TermFlashcard
+                    :model="term"
+                    :active="index === currentSlideIndex && !isSliding"
+                    :flipDefault="flipDefault"
+                    :showTerm="showTerm"
+                    :showTranslit="showTranslit"
+                    :flipDefaultInflections="flipDefaultInflections"
+                />
+            </Slide>
+        </template>
+        <template #addons>
+            <Pagination/>
+            <div class="carousel-index">{{ currentSlideIndex + 1 }} out of {{ cards.length }}</div>
+        </template>
+    </Carousel>
+    <LoadingSpinner v-else/>
 </template>

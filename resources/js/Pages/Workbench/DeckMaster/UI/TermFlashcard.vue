@@ -88,7 +88,7 @@ watch(() => props.active, (newVal) => {
                 </div>
             </div>
             <div class="term-flashcard-glosses">
-                <div>{{ model.category }}.</div>
+                <div class="term-flashcard-category">{{ model.category }}.</div>
                 <div v-for="(gloss, index) in model.glosses" class="eng">{{ index + 1 }}. {{
                         gloss.gloss
                     }}

@@ -20,7 +20,7 @@ const DeckStudyStore = useDeckStudyStore();
             </template>
             <template v-else>
                 <div class="material-symbols-rounded">home</div>
-                <div class="window-header-url">www.palweb.app/workbench/deck-master</div>
+                <div class="window-header-url">www.palweb.app/workbench/deck-master?mode=study</div>
             </template>
         </div>
         <div class="window-section-head">

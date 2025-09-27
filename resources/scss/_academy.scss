@@ -679,8 +679,8 @@ div.activity-image .image-card {
 .quiz-container {
     width: min(100%, 96rem);
     display: grid;
-    padding: 2.4rem 1.6rem 4.8rem;
-    gap: 4.8rem;
+    padding: 12.8rem 1.6rem 6.4rem;
+    gap: 9.6rem;
 
     & > button {
         color: var(--color-dark-primary);
@@ -699,7 +699,11 @@ div.activity-image .image-card {
     display: flex;
     flex-flow: column;
     align-items: center;
-    border-radius: 1.6rem;
+    gap: 3.2rem;
+
+    .term-flashcard {
+        margin: 0;
+    }
 
     .quiz-question-options {
         display: flex;
@@ -714,40 +718,18 @@ div.activity-image .image-card {
             padding: 0.25em 1em 0.33em;
 
             &.selected {
-                background: var(--color-pastel-dark);
-                //color: var(--color-accent-medium);
+                color: var(--color-medium-primary);
             }
         }
     }
 
-    .quiz-question-input {
-        width: min(100%, 64rem);
-        display: flex;
-        flex-flow: row wrap;
-        align-content: center;
-        justify-content: space-between;
-        background: white;
-        padding: 0.4rem;
-        border-radius: 0.8rem;
+    .sentence-item {
+        border: none;
+        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
 
-        div {
-            display: flex;
-            align-items: center;
-            font-family: $bodyFont;
-            font-weight: 700;
-            color: var(--color-dark-primary);
-            text-transform: capitalize;
-            padding-inline: 1.2rem;
-        }
-
-        input {
-            direction: rtl;
-            font-size: 1.4rem;
-        }
-    }
-
-    .sentence-term.missing {
+        .sentence-term.missing {
             color: var(--color-medium-primary);
+        }
     }
 }
 
@@ -952,7 +934,7 @@ div.activity-image .image-card {
     }
 
     .score-stats-graph-item {
-        background: rgba(0,0,0,0.1);
+        background: rgba(black, 0.1);
         //border-radius: 0.8rem;
         height: 0;
         transition: height 0.3s ease;
