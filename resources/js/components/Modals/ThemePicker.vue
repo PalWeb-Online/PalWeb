@@ -10,8 +10,8 @@ const description = computed(() => {
             return 'PalWeb\'s original theme. Modern & playful; for those who remember when the Internet used to be fun.';
         case 'Watermelon':
             return 'Juicy like its namesake. Refreshment for the eyes; a perfect counterbalance to hot summer days.';
-        // case 'Nabatean':
-        //     return 'Ancient stones the color of rust, sand as far as the eyes can see; an oasis in the distance.';
+        case 'Nabatean':
+            return 'Ancient stones the color of rust, sand as far as the eyes can see; an oasis in the distance.';
     }
 })
 </script>

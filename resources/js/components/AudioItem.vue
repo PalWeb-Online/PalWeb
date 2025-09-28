@@ -64,7 +64,7 @@ watch(() => props.model, loadAudio, {immediate: true});
             {{ model.created_at }}
         </div>
 
-        <template v-if="UserStore.user?.id === model.speaker.user.id">
+        <template v-if="UserStore.user?.id === model.speaker.user.id || UserStore.isAdmin">
             <img class="trash" src="/img/trash.svg" @click="deleteAudio" alt="Delete"/>
         </template>
     </div>

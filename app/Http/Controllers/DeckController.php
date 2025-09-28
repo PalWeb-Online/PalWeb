@@ -81,7 +81,7 @@ class DeckController extends Controller
     {
         $this->authorize('interact', $deck);
 
-        $deck->load(['terms.pronunciations']);
+        $deck->load(['terms.pronunciations', 'scores']);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',

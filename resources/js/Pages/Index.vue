@@ -290,7 +290,7 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline reverse">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">deck master</div>
+                    <div class="feature-panel-title">deck builder</div>
                     <div class="feature-panel-subtitle">Build your vocabulary, Deck by Deck.</div>
                     <div class="feature-panel-description">Say goodbye to the busy work of piecing together your own
                         vocabulary sets & micro-managing flashcard applications. Use the Deck Master to build your own
@@ -320,12 +320,11 @@ defineOptions({
 
             <div class="homepage-panel-wrapper">
                 <div class="homepage-panel-content" style="max-width: 96rem; justify-self: center">
-                    <div class="feature-panel-title">quizzer</div>
-                    <div class="feature-panel-subtitle">Test your might.</div>
+                    <div class="feature-panel-title">quiz & score</div>
+                    <div class="feature-panel-subtitle">Test yourself. Best yourself.</div>
                     <div class="feature-panel-description">Drill your flashcard Decks with customizable Quizzes that
-                        will put
-                        your knowledge of Arabic vocabulary & inflection patterns to the test. Save your Scores & see
-                        how your learning journey evolves over time!
+                        will put your knowledge of Arabic vocabulary to the test. Save your Scores & see how your
+                        learning journey evolves over time!
                     </div>
                 </div>
                 <div class="homepage-panel-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem">
@@ -333,6 +332,10 @@ defineOptions({
                          alt="Quizzer 01">
                     <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer02.png"
                          alt="Quizzer 02">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer03.png"
+                         alt="Quizzer 03">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer04.png"
+                         alt="Quizzer 04">
                 </div>
             </div>
         </div>

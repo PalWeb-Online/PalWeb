@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
@@ -36,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('vendor.pagination.default');
         JsonResource::withoutWrapping();
+
+        Relation::morphMap([
+            'term' => \App\Models\Term::class,
+            'sentence' => \App\Models\Sentence::class,
+            'deck' => \App\Models\Deck::class,
+            'dialog' => \App\Models\Dialog::class,
+        ]);
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);

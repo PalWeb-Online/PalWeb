@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\DeckScope;
+use App\Models\Traits\HasScoreStats;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ use Maize\Markable\Models\Bookmark;
 
 class Deck extends Model
 {
+    use HasScoreStats;
     use HasFactory;
     use Markable;
 
@@ -63,6 +65,11 @@ class Deck extends Model
         return $this->belongsToMany(Term::class)
             ->withPivot('gloss_id', 'position')
             ->orderBy('position');
+    }
+
+    public function scores(): MorphMany
+    {
+        return $this->morphMany(Score::class, 'scorable')->orderByDesc('created_at');
     }
 
     public function scopeFilter($query, array $filters): void

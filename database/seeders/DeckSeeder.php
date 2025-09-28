@@ -16,18 +16,21 @@ class DeckSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        $terms = Term::pluck('id');
+        $terms = Term::all();
 
         foreach ($users as $user) {
             Deck::factory(3)->create(['user_id' => $user->id])->each(function ($deck) use ($user, $terms) {
                 $randomTerms = $terms->random(rand(10, 20))->values();
 
-                $termsWithPosition = [];
-                foreach ($randomTerms as $index => $termId) {
-                    $termsWithPosition[$termId] = ['position' => $index + 1];
+                $termsWithPivot = [];
+                foreach ($randomTerms as $index => $term) {
+                    $termsWithPivot[$term->id] = [
+                        'position' => $index + 1,
+                        'gloss_id' => $term->glosses->first()->id
+                    ];
                 }
 
-                $deck->terms()->attach($termsWithPosition);
+                $deck->terms()->attach($termsWithPivot);
 
                 Bookmark::add($deck, $user);
             });

@@ -135,7 +135,7 @@
         gap: 0.4rem;
         justify-items: start;
         padding: 0.4rem 0.8rem;
-        border-block-start: 0.1rem solid var(--color-pastel-medium);
+        //border-block-start: 0.1rem solid var(--color-pastel-medium);
         border-inline-start: none;
     }
 
@@ -161,7 +161,7 @@
 
         .pronunciation-audios {
             border-block-start: none;
-            border-inline-start: 0.1rem solid var(--color-pastel-medium);
+            //border-inline-start: 0.1rem solid var(--color-pastel-medium);
         }
     }
 }

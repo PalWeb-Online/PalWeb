@@ -8,9 +8,9 @@ const props = defineProps({
 const sectionVisible = ref(props.visible);
 </script>
 <template>
-    <div class="window-section-head">
+    <div class="window-section-head" @click="sectionVisible = !sectionVisible">
         <slot name="title"/>
-        <button class="window-section-toggle material-symbols-rounded" @click="sectionVisible = !sectionVisible">
+        <button class="window-section-toggle material-symbols-rounded">
             {{ sectionVisible ? 'collapse_all' : 'expand_all' }}
         </button>
     </div>

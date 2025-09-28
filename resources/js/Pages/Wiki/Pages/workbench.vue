@@ -25,40 +25,23 @@ defineOptions({
 
     <div class="wiki-content-block" id="deck-master">
         <h1>Deck Master</h1>
-        <p>The <b>Deck Builder</b> is a tool to create Decks by grouping Terms from the PalWeb Dictionary. Once created,
-            you
-            can study these Decks in the <b>Card Viewer</b> & share them with others. The <b>Deck Builder</b> is divided
-            into two pages:</p>
+        <p>The <b>Deck Master</b> is a tool for building & studying Decks made up of Terms from the PalWeb Dictionary.
+            The <b>Deck Master</b> has two modes: <b>Build</b> Mode & <b>Study</b> Mode.</p>
+        <!--        Once created, you can study these Decks in the <b>Card Viewer</b> & share them with others.-->
 
-        <p>On the <b>Select</b> page, you will see an array of all the Decks you've created. (If this is your first time
-            creating a Deck, it will be empty.) If you would like to <b>edit a Deck</b>, click on any of the available
-            Decks
-            to select it, then use the navigation bar to move to the next step. If you would like to <b>create a
-                Deck</b>,
-            simply use the navigation bar to move to the next step; the Deck Builder will stage an empty Deck for you.
-        </p>
-        <p>If you access the <b>Deck Builder</b> by interacting with a Deck & selecting "Edit Deck" from the Context
-            Actions
-            menu, you will be sent directly to the <b>Build</b> page with the Deck staged. You can always return to the
-            <b>Select</b> page from the <b>Build</b> page at any point to choose a different Deck to work on.</p>
-
-        <p>On the <b>Select</b> page, you will see an array of all your pinned Decks. Click on any of the available
-            Decks
-            to select it, then use the navigation bar to move to the next step. If you'd like to study something else,
-            use
-            the
-            <Link :href="route('wiki.show', 'user-guide') + '#search-genie'">Search Genie</Link>
-            to browse for other
-            options. Select the Deck you would like to study from the results to pin it; it will then be available among
-            your pinned Decks for you to select.
-        </p>
-
-        <h2>Build</h2>
+        <h2>Build Mode</h2>
+        <p>When entering the Deck Master in this mode, on the <b>Select</b> page you will see an array of all the Decks
+            you've created. (If this is your first time creating a Deck, the array will be empty.) If you would like to
+            <b>create a Deck</b>, simply click the Create button to proceed to the <b>Build</b> page; the Deck Master
+            will stage an empty Deck for you. Alternatively, if you would like to <b>edit a Deck</b>, click on any of
+            the available Decks in the array to select it; the Create button will turn into an Edit button that you will
+            click to proceed.</p>
+        <p>If you access the Deck Master by selecting "Edit Deck" from a Deck's Context Actions menu, you will be sent
+            directly to the <b>Build</b> page with the Deck staged. You can always return to the <b>Select</b> page from
+            the <b>Build</b> page at any point to choose a different Deck to work on.</p>
         <p>On the <b>Build</b> page, you will see a mockup of the Deck you've selected in the previous step, or of an
-            empty
-            Deck if you're creating a new one. Aside from the Terms they contain, Decks only have two fillable fields:
-            the
-            Deck's name — which is required — & an optional description.</p>
+            empty Deck if you're creating a new one. Aside from the Terms they contain, Decks only have two fillable
+            fields: the Deck's name — which is required — & an optional description.</p>
         <p>After filling out these fields, use the
             <Link :href="route('wiki.show', 'user-guide') + '#search-genie'">Search
                 Genie
@@ -89,25 +72,26 @@ defineOptions({
             another one, return to the <b>Select</b> page to deselect the Deck you've just created, then navigate to the
             <b>Build</b> page again.)</p>
         <p>If you would like to delete the staged Deck, simply click the "Delete" button. You can also delete any Deck
-            you've created from outside the <b>Deck Builder</b> simply by interacting with it & selecting "Delete Deck"
+            you've created from outside the <b>Deck Master</b> simply by interacting with it & selecting "Delete Deck"
             from
             the Context Actions menu.</p>
         <p>By default, every Deck you create goes into the Deck Library, where others may view it, pin it, study it,
             export
             it, etc. If you would like to publish your Deck as private, so that only you may view & interact with it,
             click
-            the Lock button on the top-right corner of the Deck in the <b>Deck Builder</b>. You may change the Deck's
+            the Lock button on the top-right corner of the Deck in the <b>Deck Master</b>. You may change the Deck's
             privacy status at any time by clicking this button anywhere else on PalWeb where your Deck appears.</p>
 
-        <h2>Study</h2>
-        <p>On the <b>Study</b> page, you will be presented with the Terms in the Deck as a carousel of Cards that you
-            can
-            swipe through. You can also use the keyboard to control the application. Use the Options panel to change how
-            you view the Cards. Experiment with the different options to find the settings most suitable for you! (Refer
-            to
-            the information dialog in the Options panel for more information about each setting & a full list of
-            keyboard
-            controls.)
+        <h2>Study Mode</h2>
+        <p>When entering the Deck Master in this mode, on the <b>Select</b> page you will see an array of all your
+            Pinned Decks & a window that displays a preview of your Score history for a Deck. Click on any of the
+            available Decks to select it, then click the "Select Deck" button at the bottom of the Score history window
+            to proceed to the <b>Study</b> page.</p>
+        <p>In <b>Practice</b> mode, you will be presented with the Terms in the Deck as a carousel of Cards that you
+            can swipe through. You can also use the keyboard to control the application. Use the Options panel to change
+            how you view the Cards. Experiment with the different options to find the settings most suitable for you!
+            (Refer to the information dialog in the Options panel for more information about each setting & a full list
+            of keyboard controls.)
         </p>
     </div>
     <div class="wiki-content-block" id="record-wizard">

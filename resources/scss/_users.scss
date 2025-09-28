@@ -544,59 +544,52 @@
     }
 }
 
-.community-portal {
-    width: 100%;
-    max-width: 96rem;
+.community-portal-head {
     display: grid;
-    gap: 3.2rem;
+    margin-block-end: 4.8rem;
 
-    .community-portal-head {
+    .community-portal-title {
         display: grid;
+        align-items: end;
+        grid-template-areas: 'overlap';
+        font-size: clamp(4.8rem, 12vw, 9.6rem);
 
-        .community-portal-title {
-            flex-grow: 1;
-            display: grid;
-            align-items: end;
-            grid-template-areas: 'overlap';
-            font-size: clamp(4.8rem, 12vw, 9.6rem);
-
-            & > * {
-                grid-area: overlap;
-            }
-
-            img {
-                width: 2em;
-                justify-self: end;
-                transform: translateY(0.5em);
-            }
-
-            div {
-                justify-self: start;
-                font-family: $displayFont;
-                padding-inline: 0.33em;
-                text-transform: uppercase;
-                color: var(--color-dark-primary);
-                background: var(--color-polar-light);
-            }
+        & > * {
+            grid-area: overlap;
         }
 
-        .community-portal-blurb {
-            text-align: start;
-            background: var(--color-dark-primary);
-            color: var(--color-polar-light);
-            font-size: clamp(1.4rem, 3vw, 2.0rem);
-            padding: 0.5em 1em;
-            margin-block-start: -0.25em;
-            font-weight: 700;
-            z-index: 1;
-            filter: drop-shadow(-0.4rem 0.4rem 0 var(--color-accent-medium));
+        img {
+            width: 2em;
+            justify-self: end;
+            transform: translateY(0.5em);
         }
+
+        div {
+            justify-self: start;
+            font-family: $displayFont;
+            padding-inline: 0.33em;
+            text-transform: uppercase;
+            color: var(--color-dark-primary);
+            background: var(--color-polar-light);
+        }
+    }
+
+    .community-portal-blurb {
+        text-align: start;
+        background: var(--color-dark-primary);
+        color: var(--color-polar-light);
+        font-size: clamp(1.4rem, 3vw, 2.0rem);
+        padding: 0.5em 1em;
+        margin-block-start: -0.25em;
+        font-weight: 700;
+        z-index: 1;
+        filter: drop-shadow(-0.4rem 0.4rem 0 var(--color-accent-medium));
     }
 }
 
 .decks-featured {
     display: grid;
-    gap: 3.2rem;
+    gap: 4.8rem;
     grid-template-columns: auto;
     align-items: start;
     margin-block-end: 3.2rem;
@@ -606,7 +599,7 @@
     }
 
     @media (min-width: 960px) {
-        grid-template-columns: 30% auto;
+        grid-template-columns: min-content auto;
 
         .popular {
             grid-row: 2;

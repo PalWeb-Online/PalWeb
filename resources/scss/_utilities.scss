@@ -202,6 +202,14 @@ h3 {
 .popup-menu-wrapper {
     display: flex;
     direction: ltr;
+
+    &.has_symbol.active {
+        background: var(--color-accent-medium);
+
+        & > button {
+            color: var(--color-dark-primary);
+        }
+    }
 }
 
 .popup-menu {
@@ -283,6 +291,30 @@ h3 {
         &:hover {
             opacity: 50%;
         }
+    }
+}
+
+.pin-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .pin-counter {
+        font-size: 0.8rem;
+        width: 2em;
+        height: 2em;
+        color: var(--color-medium-secondary);
+        background: var(--color-pastel-medium);
+        border-radius: 50%;
+        font-family: $monoFont;
+        position: absolute;
+        top: 1em;
+        left: initial;
+        right: -1em;
+        bottom: initial;
+        justify-self: start;
+        align-self: start;
     }
 }
 
@@ -670,10 +702,6 @@ h3 {
     width: 100%;
     max-width: 96rem;
 
-    .item-count {
-        font-size: 1.6rem;
-    }
-
     .pagination {
         display: flex;
         flex-flow: row wrap;
@@ -692,7 +720,6 @@ h3 {
             display: flex;
             align-items: center;
             justify-content: center;
-
             color: var(--color-medium-primary);
 
             &:not(.active):hover {
@@ -702,7 +729,6 @@ h3 {
             &.active {
                 color: var(--color-accent-medium);
             }
-
         }
 
         & > *.disabled {

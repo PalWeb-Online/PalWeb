@@ -36,19 +36,6 @@
             font-size: 1.8rem;
             font-family: $monoFont;
         }
-
-        .pin {
-            width: 4.8rem;
-            top: -0.8rem;
-            left: -2.6rem
-        }
-
-        .term-deck-toggle {
-            position: absolute;
-            width: 4.8rem;
-            top: -2.4rem;
-            left: 1.6rem;
-        }
     }
 }
 
@@ -233,7 +220,7 @@
 
     .featured-title {
         color: white;
-        padding: 3.6rem 2.4rem;
+        padding: 3.6rem 2.4rem 1.2rem;
     }
 }
 
@@ -403,7 +390,8 @@
     }
 
     .term-deck-toggle {
-        width: 2.4rem;
+        font-size: 2.0rem;
+        color: var(--color-medium-primary);
     }
 
     .popup-menu {

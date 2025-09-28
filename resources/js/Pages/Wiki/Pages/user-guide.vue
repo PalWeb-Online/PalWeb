@@ -57,15 +57,8 @@ defineOptions({
 
             <li><Link :href="route('wiki.show', 'workbench')">Workbench</Link></li>
             <ul>
-                <li>
-                    <Link :href="route('wiki.show', 'workbench') + '#deck-builder'">Deck Builder</Link>
-                </li>
-                <li>
-                    <Link :href="route('wiki.show', 'workbench') + '#card-viewer'">Card Viewer</Link>
-                </li>
-                <li>
-                    <Link :href="route('wiki.show', 'workbench') + '#record-wizard'">Record Wizard</Link>
-                </li>
+                <li><Link :href="route('wiki.show', 'workbench') + '#deck-master'">Deck Master</Link></li>
+                <li><Link :href="route('wiki.show', 'workbench') + '#record-wizard'">Record Wizard</Link></li>
             </ul>
 
             <li><Link :href="route('wiki.show', 'contributing')">Contributing</Link></li>
@@ -134,19 +127,12 @@ defineOptions({
             can search for Decks with a specific Term in it, or get all Sentences with a pseudo-verb.</p>
 
         <h2>Contextual Behavior</h2>
-        <p>The <b>Search Genie</b> is context-aware, meaning that the action taken on selecting one of the results
-            will differ depending on the site context. (The <b>Search Genie</b> informs of you the action it will take
-            by
+        <p>The <b>Search Genie</b> is context-aware, meaning that the action taken on selecting one of the results will
+            differ depending on the site context. (The <b>Search Genie</b> informs of you the action it will take by
             way of a tooltip.)</p>
-        <p>By default, selecting a result will take you to its page in the Dictionary, Phrasebook or Deck Library. In
-            the
-            <b>Deck Builder</b>, the <b>Search Genie</b> is used to add Terms to a Deck. In the <b>Card Viewer</b>, it
-            is
-            used to pin new Decks for studying. In the <b>Record Wizard</b>, it is used to add all Terms in a given Deck
-            to
-            the Queue of items to record.</p>
-        <p>Use the <b>Search Genie</b> wherever you see the button prompt to see what you can do with
-            it!</p>
+        <p>By default, selecting a result will take you to its page in the Dictionary, Corpus or Deck Library. In the
+            <b>Deck Master</b>, the <b>Search Genie</b> is used to add Terms to a Deck. In the <b>Record Wizard</b>, it
+            is used to add all Terms in a given Deck to the Queue of items to record.</p>
 
         <h2>Limitations</h2>
         <p>Unfortunately, there are some limitations to the functionality of the <b>Search Genie</b> that are inherent

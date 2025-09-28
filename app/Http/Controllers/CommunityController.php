@@ -24,7 +24,7 @@ class CommunityController extends Controller
         $popularDecks = Deck::query()
             ->join('markable_bookmarks', function ($join) {
                 $join->on('decks.id', '=', 'markable_bookmarks.markable_id')
-                    ->where('markable_bookmarks.markable_type', Deck::class);
+                    ->where('markable_bookmarks.markable_type', 'deck');
             })
             ->select('decks.*', DB::raw('COUNT(markable_bookmarks.user_id) as users_count'))
             ->groupBy('decks.id')

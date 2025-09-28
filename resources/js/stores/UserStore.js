@@ -24,7 +24,7 @@ export const useUserStore = defineStore('UserStore', () => {
     };
 
     const isUser = computed(() => !!user.value);
-    const isStudent = computed(() => user.value?.roles?.includes('student'));
+    const isStudent = computed(() => user.value?.roles?.includes('student') || user.value?.roles?.includes('admin'));
     const isAdmin = computed(() => user.value?.roles?.includes('admin'));
 
     const highestRole = computed(() => {

@@ -156,20 +156,20 @@ onMounted(async () => {
     </template>
 
     <template v-else>
+        <AppTip>
+            <p v-if="!RecordWizardStore.speaker.id">It looks like you don't have a Speaker profile yet.
+                Let's get you set up: fill out this form & click Create to get started. Refer to the Info
+                box in
+                the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
+                    profile is created, your Dialect can only be changed by the site administrator.</b></p>
+            <p v-else>Check your Speaker profile & test your mic before proceeding. (If you need help configuring
+                your mic, visit <a href="https://lingualibre.org/wiki/Help:Configure_your_microphone"
+                                   target="_blank">this page</a>.)</p>
+            <p>If you'd like for your Speaker profile to remain anonymous & not link to your user account, set your
+                Profile to Private; others will still be able to interact with any Audios you have recorded. You may
+                change this setting at any time.</p>
+        </AppTip>
         <div class="rw-page__speaker">
-            <AppTip>
-                <p v-if="!RecordWizardStore.speaker.id">It looks like you don't have a Speaker profile yet.
-                    Let's get you set up: fill out this form & click Create to get started. Refer to the Info
-                    box in
-                    the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
-                        profile is created, your Dialect can only be changed by the site administrator.</b></p>
-                <p v-else>Check your Speaker profile & test your mic before proceeding. (If you need help configuring
-                    your mic, visit <a href="https://lingualibre.org/wiki/Help:Configure_your_microphone"
-                                       target="_blank">this page</a>.)</p>
-                <p>If you'd like for your Speaker profile to remain anonymous & not link to your user account, set your
-                    Profile to Private; others will still be able to interact with any Audios you have recorded. You may
-                    change this setting at any time.</p>
-            </AppTip>
             <div class="user-item l">
                 <div class="rw-test-booth">
                     <Link :disabled="!!RecordStore.recorder"

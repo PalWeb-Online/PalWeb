@@ -138,20 +138,10 @@ onMounted(() => {
                                     <div>dialogs</div>
                                     <div>natural language input</div>
                                 </div>
-                                <div @click="navigateOrPrompt('quizzer.index')"
+                                <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': $page.component === 'Workbench/Index',
-                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
-                                     }"
-                                >
-                                    <div>quizzer</div>
-                                    <div>quiz Decks, Skills & Dialogs</div>
-                                </div>
-                                <div @click="navigateOrPrompt('coming-soon')"
-                                     class="nav-carousel-page-item"
-                                     :class="{
-                                         'active': $page.component === 'Workbench/Index',
+                                         'active': ['Academy/Scores/Index', 'Academy/Scores/History'].includes($page.component),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -171,7 +161,7 @@ onMounted(() => {
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
                                 >
-                                    <div>phrasebook</div>
+                                    <div>corpus</div>
                                     <div>Sentence::with('terms')->all()</div>
                                 </Link>
                                 <div @click="navigateOrPrompt('decks.index')"

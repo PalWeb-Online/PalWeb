@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Academy\QuizzerController;
+use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
@@ -9,12 +9,12 @@ use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Workbench\DeckMasterController;
@@ -220,10 +220,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             })->name('dialogs.get');
         });
 
-        Route::prefix('/quizzer')->controller(QuizzerController::class)->group(function () {
-            Route::get('/', 'index')->name('quizzer.index');
-            Route::get('/deck/{deck}', 'deck')->name('quizzer.deck');
-            Route::get('/deck/{deck}/quiz', 'generateQuiz')->name('quizzer.deck.quiz');
+        Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
+            Route::get('/', 'index')->name('scores.index');
+            Route::post('/', 'store')->name('scores.store');
+            Route::get('/{scorable_type}/{scorable_id}', 'history')->name('scores.history');
+            Route::post('/purge', 'purge')->name('scores.purge');
+            Route::delete('/{score}', 'destroy')->name('scores.destroy');
         });
 
         Route::middleware('admin')->group(function () {
@@ -285,6 +287,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
             Route::get('/build/{deck?}', 'build')->name('deck-master.build');
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
+            Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
+            Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
         Route::prefix('/record-wizard')->group(function () {

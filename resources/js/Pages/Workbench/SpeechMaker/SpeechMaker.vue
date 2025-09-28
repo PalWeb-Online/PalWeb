@@ -36,7 +36,7 @@ defineOptions({
     <div id="app-body">
         <div id="sm-select" v-if="step === 'select'">
             <div class="model-list">
-                <DialogItem v-for="dialog in collection" :model="dialog"/>
+                <DialogItem v-for="dialog in collection" :model="dialog" target="workbench"/>
             </div>
         </div>
         <template v-if="step === 'build'">

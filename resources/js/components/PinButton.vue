@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import AppTooltip from "./AppTooltip.vue";
@@ -34,6 +34,13 @@ const pin = async () => {
         console.error('Pin Failed', error);
     }
 };
+
+watch(() => props.model, (newModel) => {
+    pinCount.value = newModel.pinCount;
+    isPinned.value = newModel.isPinned;
+}, {
+    deep: true
+});
 </script>
 
 <template>
@@ -54,20 +61,17 @@ const pin = async () => {
         </template>
         <template v-else>
             <template v-if="UserStore.user.is_verified">
-                <button class="material-symbols-rounded" :class="{ pinned: isPinned }" style="position: relative;" @click="pin">
-                    {{ isPinned ? 'keep' : 'keep_off' }}
-                    <div v-if="pinCount > 1" class="pin-counter" style="top: auto; left: -3.6rem;">
-                        <img src="/img/heart.svg" alt="heart"/>
-                        <div>{{ pinCount }}</div>
-                    </div>
-                </button>
+                <div class="pin-button-wrapper" :class="{ pinned: isPinned }" @click="pin">
+                    <button class="material-symbols-rounded pin-button">{{ isPinned ? 'keep' : 'keep_off' }}</button>
+                    <div class="pin-counter" v-if="pinCount > 1">{{ pinCount }}</div>
+                </div>
             </template>
             <template v-else>
-                <button class="material-symbols-rounded"
+                <div class="pin-button-wrapper"
                         @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
                         @mouseleave="tooltip.hideTooltip()">
-                    keep_off
-                </button>
+                    <button class="material-symbols-rounded pin-button">keep_off</button>
+                </div>
             </template>
         </template>
         <AppTooltip ref="tooltip"/>

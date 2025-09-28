@@ -24,9 +24,11 @@ defineProps({
         <AppButton v-if="UserStore.isAdmin" label="Create New" @click="router.get(route('speech-maker.dialog'))"/>
     </div>
     <div id="app-body">
-        <div class="model-list">
-            <DialogItem v-for="dialog in dialogs.data" :key="dialog.id" :model="dialog"/>
+        <div class="app-body-section">
+            <div class="model-list">
+                <DialogItem v-for="dialog in dialogs.data" :key="dialog.id" :model="dialog"/>
+            </div>
+            <Paginator :links="dialogs.meta.links"/>
         </div>
-        <Paginator :links="dialogs.meta.links"/>
     </div>
 </template>
