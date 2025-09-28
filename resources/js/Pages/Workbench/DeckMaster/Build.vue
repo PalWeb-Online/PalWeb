@@ -2,7 +2,7 @@
 import {computed, onMounted, ref, watch} from "vue";
 import {route} from "ziggy-js";
 import draggable from 'vuedraggable';
-import TermItem from "./ui/TermItem.vue";
+import TermItem from "./UI/TermItem.vue";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
