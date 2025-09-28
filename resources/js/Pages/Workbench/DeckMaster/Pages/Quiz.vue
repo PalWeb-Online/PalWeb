@@ -3,7 +3,6 @@ import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import {computed, ref} from "vue";
 import QuestionSelectGloss from "../UI/QuestionSelectGloss.vue";
 import AppTip from "../../../../components/AppTip.vue";
-import AppButton from "../../../../components/AppButton.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import QuestionInputInflection from "../UI/QuestionInputInflection.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";

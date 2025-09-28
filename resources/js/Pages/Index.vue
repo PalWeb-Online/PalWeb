@@ -9,7 +9,7 @@ import {useNavigationStore} from "../stores/NavigationStore.js";
 import UserScorecard from "../components/UserScorecard.vue";
 import Testimonial from "../components/Testimonial.vue";
 import RotatingWordColumn from "../components/RotatingWordColumn.vue";
-import TermFlashcard from "./Workbench/DeckMaster/ui/TermFlashcard.vue";
+import TermFlashcard from "./Workbench/DeckMaster/UI/TermFlashcard.vue";
 import ToggleSingle from "../components/ToggleSingle.vue";
 import {useSearchStore} from "../stores/SearchStore.js";
 import SentenceItem from "../components/SentenceItem.vue";
