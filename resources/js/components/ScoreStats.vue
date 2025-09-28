@@ -69,6 +69,30 @@ const polylinePoints = computed(() => {
         })
         .join(" ");
 });
+
+const trendLinePoints = computed(() => {
+    if (!props.model?.scores?.length) return "";
+
+    const scores = graphScores?.map(s => s.score);
+    const n = scores.length;
+    if (n < 2) return "";
+
+    const xs = scores.map((_, i) => (i / (n - 1)) * 100);
+    const ys = scores.map(s => 100 - s * 100);
+
+    const xMean = xs.reduce((a, b) => a + b, 0) / n;
+    const yMean = ys.reduce((a, b) => a + b, 0) / n;
+
+    const num = xs.reduce((sum, x, i) => sum + (x - xMean) * (ys[i] - yMean), 0);
+    const den = xs.reduce((sum, x) => sum + (x - xMean) ** 2, 0);
+    const a = num / den;
+    const b = yMean - a * xMean;
+
+    const y0 = a * 0 + b;
+    const y1 = a * 100 + b;
+
+    return `0,${y0} 100,${y1}`;
+});
 </script>
 <template>
     <div class="score-stats-wrapper">
@@ -120,6 +144,7 @@ const polylinePoints = computed(() => {
                     <div class="score-stats-graph">
                         <svg class="line-overlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
                              preserveAspectRatio="none">
+                            <polyline class="trendline" :points="trendLinePoints"/>
                             <polyline :points="polylinePoints"/>
                         </svg>
 

@@ -21,7 +21,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 </script>
 <template>
     <QuizzerWindow>
-        <WindowSection>
+        <WindowSection :visible="false">
             <template #title>
                 <h2>stats</h2>
             </template>
