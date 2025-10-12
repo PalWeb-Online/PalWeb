@@ -1,16 +1,25 @@
 services:
+    caddy:
+        image: 'caddy:2'
+        restart: unless-stopped
+        ports:
+            - '80:80'
+            - '443:443'
+        volumes:
+            - './Caddyfile:/etc/caddy/Caddyfile'
+            - 'sail-caddy:/data'
+            - 'sail-caddy-config:/config'
+        networks:
+            - sail
     laravel.test:
         build:
             context: ./vendor/laravel/sail/runtimes/8.4
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
+        image: sail-8.4/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -52,4 +61,10 @@ networks:
         driver: bridge
 volumes:
     sail-mysql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-caddy:
+        driver: local
+    sail-caddy-config:
         driver: local
