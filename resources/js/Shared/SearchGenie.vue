@@ -211,7 +211,7 @@ watch(() => SearchStore.data.results, () => {
 
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'terms' && SearchStore.data.results.terms?.length > 0">
-            <Link class="sg-all-results" :href="route('terms.index', {
+            <Link class="sg-all-results" @click="() => emit('close')" :href="route('terms.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned,
@@ -226,7 +226,7 @@ watch(() => SearchStore.data.results, () => {
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'sentences' && SearchStore.data.results.sentences?.length > 0">
-            <Link class="sg-all-results" :href="route('sentences.index', {
+            <Link class="sg-all-results" @click="() => emit('close')" :href="route('sentences.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
@@ -236,7 +236,7 @@ watch(() => SearchStore.data.results, () => {
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'decks' && SearchStore.data.results.decks?.length > 0">
-            <Link class="sg-all-results" :href="route('decks.index', {
+            <Link class="sg-all-results" @click="() => emit('close')" :href="route('decks.index', {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
