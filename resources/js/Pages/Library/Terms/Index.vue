@@ -76,7 +76,7 @@ const sortingMessage = computed(() => {
                 <h1>dictionary</h1>
             </div>
 
-            <WindowSection>
+            <WindowSection :visible="route().params['search'] === undefined">
                 <template #title>
                     <h2>featured</h2>
                 </template>
