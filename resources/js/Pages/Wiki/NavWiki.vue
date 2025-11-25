@@ -26,23 +26,22 @@ const props = defineProps({
         </div>
 
         <div class="nav-wiki-section">
-            <Link :href="route('wiki.show', 'phonology')" :class="{ active: page === 'phonology' }">AJP: Phonology</Link>
+            <Link :href="route('wiki.show', 'phonology')" :class="{ active: page === 'phonology' }">Phonology</Link>
             <Link :href="route('wiki.show', 'vowels')" :class="{ active: page === 'vowels' }">Vowels</Link>
             <Link :href="route('wiki.show', 'consonants')" :class="{ active: page === 'consonants' }">Consonants</Link>
-            <a>Syllables & Stress</a>
+            <a>Syllables</a>
             <a>Phonotactics</a>
         </div>
 
         <div class="nav-wiki-section">
-            <a>AJP: Morphology</a>
+            <a>Morphology</a>
             <Link :href="route('wiki.show', 'roots')" :class="{ active: page === 'roots' }">Roots</Link>
             <Link :href="route('wiki.show', 'patterns')" :class="{ active: page === 'patterns' }">Patterns</Link>
-            <Link :href="route('wiki.show', 'verb-forms')" :class="{ active: page === 'verb-forms' }">Verb Forms</Link>
-            <Link :href="route('wiki.show', 'affixes')" :class="{ active: page === 'affixes' }">Affixes</Link>
+            <Link :href="route('wiki.show', 'inflections')" :class="{ active: page === 'affixes' }">Inflections</Link>
         </div>
 
         <div class="nav-wiki-section">
-            <Link :href="route('wiki.show', 'syntax')" :class="{ active: page === 'syntax' }">AJP: Syntax</Link>
+            <Link :href="route('wiki.show', 'syntax')" :class="{ active: page === 'syntax' }">Syntax</Link>
             <Link :href="route('wiki.show', 'verbs')" :class="{ active: page === 'verbs' }">Verbs</Link>
             <Link :href="route('wiki.show', 'nouns')" :class="{ active: page === 'nouns' }">Nouns</Link>
             <Link :href="route('wiki.show', 'adjectives')" :class="{ active: page === 'adjectives' }">Adjectives</Link>

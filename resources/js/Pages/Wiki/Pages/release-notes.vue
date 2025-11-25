@@ -20,7 +20,7 @@ defineOptions({
             Quizzes & fill-in-the-blank Sentence Quizzes. The Quizzer generates each Quiz on the spot using the Terms in
             the Deck, so each Quiz is unique. Drill your vocabulary to your heart's content!</p>
         <p>But what's the point of Quizzes if you can't see your progress? After doing the Quiz, you can now save your
-            Score, which is visible in the My Progress section of the Academy, as well as in the Deck Master. See your
+            Score, which is visible in the Scores section of the Academy, as well as in the Deck Master. See your
             Score history for any Deck as an interactive line graph, with quick statistics that tell you how your
             knowledge has evolved over time. You can view any previously-taken Quiz to see the exact questions &
             responses provided, so you can review what you got wrong & adjust your Decks as needed.</p>

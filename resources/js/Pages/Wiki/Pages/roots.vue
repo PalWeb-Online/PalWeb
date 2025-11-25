@@ -45,6 +45,18 @@ defineOptions({
             do include it, the section indicates the term's root alongside a list of all other terms
             with
             the same root.</p>
+
+        <h2>Weak Roots</h2>
+        <p>Some roots may interact with word patterns in particular ways if they contain a semivowel (i.e. <b>و
+                (w)</b> or <b>ي (y)</b>) or feature two of the same consonant. We will call these <b>Weak Roots</b>,
+            which we can categorize as follows:</p>
+        <ul>
+            <li>Type A: three different consonants; e.g. <b>ك ت ب (k-t-b)</b></li>
+            <li>Type B: the final consonant is a semivowel; e.g. <b>م ش ي (m-š-y)</b></li>
+            <li>Type C: the final two consonants are the same; e.g. <b>ح ب ب (ħ-b-b)</b></li>
+            <li>Type D: the second consonant is a semivowel; e.g. <b>ر و ح (r-w-ħ)</b></li>
+            <li>Type E: the first consonant is a semivowel; e.g. <b>و ص ل (w-ṣ-l)</b></li>
+        </ul>
     </div>
 </template>
 
