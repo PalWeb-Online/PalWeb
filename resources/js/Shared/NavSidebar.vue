@@ -81,12 +81,22 @@ onMounted(() => {
 <template>
     <div class="nav-sidebar-container" :class="{ 'show': NavigationStore.data.isOpen }">
         <div class="nav-sidebar" ref="sidebarRef">
-            <div class="window-header">
-                <div class="window-header-url">&lt;NavSidebar&gt;</div>
+            <div class="nav-sidebar-head">
+                <div>
+                    {{ UserStore.user ? UserStore.highestRole : 'Guest' }}
+                    <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">Manage</Link>
+                </div>
+                <template v-if="UserStore.isUser">
+                    <button class="material-symbols-rounded" @click="router.post(route('signout'))">logout</button>
+                </template>
+                <template v-else>
+                    <button class="material-symbols-rounded" @click="NavigationStore.showSignUp = true">person_add</button>
+                    <button class="material-symbols-rounded" @click="NavigationStore.showSignIn = true">login</button>
+                </template>
                 <button class="material-symbols-rounded" @click="NavigationStore.closeSidebar">close</button>
             </div>
+            <NavAuth v-if="UserStore.user"/>
             <div class="nav-sidebar-body">
-                <NavAuth/>
                 <div class="nav-carousel-wrapper">
                     <div class="nav-carousel-head">
                         <button v-if="NavigationStore.data.section !== 'home'" @click.stop="toSection('home', 0)"><-
@@ -145,8 +155,8 @@ onMounted(() => {
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
-                                    <div>myProgress</div>
-                                    <div>check progress & Score history</div>
+                                    <div>scores</div>
+                                    <div>view your Score history</div>
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
@@ -248,20 +258,12 @@ onMounted(() => {
                             from Discord
                         </button>
                         <a v-else :href="route('auth.discord')">Link to Discord</a>
-                        <button @click="router.post(route('signout'))">Sign Out</button>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">
                     <div class="nav-user-menu-head">getHelp</div>
                     <div class="nav-user-menu-items">
                         <button @click="NavigationStore.showSendFeedback = true">Send Feedback</button>
-                    </div>
-                </div>
-                <div v-if="!UserStore.isUser" class="nav-user-menu">
-                    <div class="nav-user-menu-head">myAccount</div>
-                    <div class="nav-user-menu-items">
-                        <button @click="NavigationStore.showSignIn = true">Sign In</button>
-                        <button @click="NavigationStore.showSignUp = true">Sign Up</button>
                     </div>
                 </div>
             </div>

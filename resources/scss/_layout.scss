@@ -289,7 +289,7 @@ body {
     text-align: center;
     position: relative;
     direction: ltr;
-    font-size: clamp(4.8rem, 10vw, 6.4rem);
+    font-size: clamp(5.6rem, 10vw, 6.4rem);
 
     .feature-panel-title {
         color: var(--color-dark-primary);
@@ -313,7 +313,7 @@ body {
 
     .feature-panel-description {
         font-family: $bodyFont;
-        font-size: 0.35em;
+        font-size: 0.4em;
         line-height: 1.75;
         margin-block-start: 0.5em;
     }

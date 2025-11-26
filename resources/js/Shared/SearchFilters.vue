@@ -232,82 +232,71 @@ const isCCC = computed(() => {
                 </optgroup>
                 <template v-if="filters.category !== 'numeral'">
                     <optgroup label="Derived Terms">
-                        <option value="ap">Act. Part.</option>
-                        <option value="pp">Pas. Part.</option>
-                        <option value="nv">Verbal Noun</option>
+                        <option value="ap">AP</option>
+                        <option value="pp">PP</option>
+                        <option value="vn">VN</option>
                     </optgroup>
                     <optgroup label="Named Patterns">
                         <option value="relative">Relative Adj.</option>
                         <option value="ia">Intensive Adj.</option>
                         <option value="na">Nominalized Adj.</option>
                     </optgroup>
-                    <optgroup label="CCC">
-                        <option value="CLC">CLC(e)</option>
-                        <option value="CvCC">CvCC</option>
-                        <option value="CvCCe">CvCCe</option>
-                        <option value="CvCvC">CvCvC(e)</option>
+                    <optgroup label="Length 3">
+                        <option value="CLC">CLC</option>
+                        <option value="CVCC">CVCC</option>
+                        <option value="CVCCe">CVCCe</option>
+                        <option value="CVCVC">CVCVC</option>
                         <option value="CiCiC">CiCiC</option>
                     </optgroup>
-                    <optgroup label="CCLC">
+                    <optgroup label="Length 4">
                         <option value="CCāC">CCāC</option>
-                        <option value="CCāCe">CCāCe</option>
-                        <option value="CCīC">CCīC(e)</option>
-                        <option value="CCūC">CCūC(e)</option>
+                        <option value="CCīC">CCīC</option>
+                        <option value="CCūC">CCūC</option>
+                        <option value="CVCCVC">CVCCVC</option>
+                        <option value="maCCVC">maCCVC</option>
                     </optgroup>
-                    <optgroup label="CCCC">
-                        <option value="CvCCvC">CvCCvC(e)</option>
-                        <option value="maCCvC">maCCvC(e)</option>
-                    </optgroup>
-                    <optgroup label="CCCLC">
-                        <option value="CvCCLC">CvCCLC(e)</option>
-                        <option value="Ca22āC">Ca22āC(e)</option>
-                        <option value="Ca22īC">Ca22īC</option>
-                        <option value="Ca22ūC">Ca22ūC(e)</option>
+                    <optgroup label="Length 5">
+                        <option value="CVCCLC">CVCCLC</option>
+                        <option value="CaC:āC">CaC:āC</option>
+                        <option value="CaC:īC">CaC:īC</option>
+                        <option value="CaC:ūC">CaC:ūC</option>
                     </optgroup>
                 </template>
             </select>
             <select v-model="filters.plural" :class="filters.plural ? 'persisting' : ''">
                 <option value="">Plural</option>
-                <optgroup v-if="filters.singular === '' || isRegular" label="sound">
+                <optgroup v-if="filters.singular === '' || isRegular" label="Sound">
                     <option value="-īn">-īn</option>
                     <option value="-āt">-āt</option>
                 </optgroup>
-                <optgroup label="CCC">
+                <optgroup label="Length 3">
                     <template v-if="filters.singular === '' || isCCC">
-                        <option value="CCāC">CCāC</option>
                         <option value="CCūC">CCūC</option>
                         <option value="ʔaCCāC">ʔaCCāC</option>
-                        <option v-if="filters.singular === 'CvCCe'" value="CvCaC">CvCaC</option>
+                        <option value="CVCaC">CVCaC</option>
                     </template>
+                </optgroup>
+                <optgroup v-if="!isRegular" label="Length 3 / 4">
+                    <option value="CCāC">CCāC</option>
+                    <option value="CVCCān">CVCCān</option>
                 </optgroup>
                 <optgroup
                     v-if="filters.singular === '' || (filters.singular === 'CCāC' || filters.singular === 'CCīC')"
-                    label="CCLC">
+                    label="Length 4">
+                    <option v-if="!isRegular" value="CaCāCiC">CaCāCiC</option>
+                    <option value="CuC:āC" v-if="filters.singular === '' || filters.singular === 'ap'">CuC:āC</option>
+                    <option value="CuCuC">CuCuC</option>
                     <template v-if="filters.singular !== 'CCīC'">
                         <option value="ʔaCCiCe">ʔaCCiCe</option>
                         <option value="CCīC">CCīC</option>
                     </template>
-                    <template v-if="filters.singular !== 'CCāC'">
-                        <option value="CCāC">CCāC</option>
-                        <option value="CuCaCa">CuCaCa</option>
-                    </template>
-                    <option value="CuCuC">CuCuC</option>
-                </optgroup>
-                <optgroup v-if="!isRegular" label="CCCC">
-                    <option value="CaCāCiC">CaCāCiC</option>
+                    <option value="CuCaCa" v-if="filters.singular !== 'CCāC'">CuCaCa</option>
                 </optgroup>
                 <optgroup
-                    v-if="filters.singular === '' || filters.singular === 'CvCCLC' || filters.singular === 'relative'"
-                    label="CCCLC">
+                    v-if="filters.singular === '' || filters.singular === 'CVCCLC' || filters.singular === 'relative'"
+                    label="Length 5">
                     <option v-if="filters.singular !== 'relative'" value="CaCāCīC">CaCāCīC</option>
                     <option value="CaCāCCe">CaCāCCe</option>
-                </optgroup>
-                <optgroup v-if="filters.singular === '' || filters.singular === 'ap'" label="CLCC">
-                    <option value="Cu22āC">Cu22āC</option>
-                    <option value="CCāC">CCāC</option>
-                </optgroup>
-                <optgroup v-if="!isRegular" label="Other">
-                    <option value="CvCCān">CvCCān</option>
                 </optgroup>
             </select>
         </div>
