@@ -37,6 +37,11 @@ li {
 .material-symbols-rounded {
     font-size: 2.4rem;
     font-weight: 400;
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
 }
 
 button {
