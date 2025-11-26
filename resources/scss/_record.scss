@@ -317,17 +317,17 @@
         background-position: center;
         background-repeat: no-repeat;
 
-        &.mwe-rwp-play {
-            top: 4px;
-            right: 8px;
-            background-image: url('../icons/play.svg');
-        }
-
-        &.mwe-rws-again {
-            top: 4px;
-            right: 8px;
-            background-image: url('../icons/status-replay.svg');
-        }
+        //&.mwe-rwp-play {
+        //    top: 4px;
+        //    right: 8px;
+        //    background-image: url('../icons/play.svg');
+        //}
+        //
+        //&.mwe-rws-again {
+        //    top: 4px;
+        //    right: 8px;
+        //    background-image: url('../icons/status-replay.svg');
+        //}
     }
 }
 
@@ -436,34 +436,34 @@
     }
 }
 
-.rw-record-queue li.mwe-rws-stashing::before,
-.rw-record-queue li.mwe-rwp-uploading::before,
-.rw-record-queue li.mwe-rwp-finalizing::before,
-.mwe-rw-progresscounter i {
-    width: 14px;
-    height: 14px;
-    background-size: 14px 14px;
-    background-image: url('../icons/spinner.svg');
-    animation: spinner 1s infinite steps(8);
-}
-
-.rw-record-queue li.mwe-rws-stashed::before,
-.rw-record-queue li.mwe-rwp-done::before {
-    background-image: url('../icons/download-done.svg');
-}
-
-.rw-record-queue li.mwe-rw-error::before,
-.mwe-rw-errorcounter i {
-    width: 16px;
-    height: 16px;
-    background-image: url('../icons/error.svg');
-    background-size: 16px 16px;
-}
-
-.mwe-rws-recording .rw-record-queue li.mwe-rw-selected::before,
-#mwe-rwp-list li.mwe-rw-selected:not(.mwe-rwp-uploading):not(.mwe-rwp-finalizing)::before {
-    background-image: url('../icons/play.svg');
-}
+//.rw-record-queue li.mwe-rws-stashing::before,
+//.rw-record-queue li.mwe-rwp-uploading::before,
+//.rw-record-queue li.mwe-rwp-finalizing::before,
+//.mwe-rw-progresscounter i {
+//    width: 14px;
+//    height: 14px;
+//    background-size: 14px 14px;
+//    background-image: url('../icons/spinner.svg');
+//    animation: spinner 1s infinite steps(8);
+//}
+//
+//.rw-record-queue li.mwe-rws-stashed::before,
+//.rw-record-queue li.mwe-rwp-done::before {
+//    background-image: url('../icons/download-done.svg');
+//}
+//
+//.rw-record-queue li.mwe-rw-error::before,
+//.mwe-rw-errorcounter i {
+//    width: 16px;
+//    height: 16px;
+//    background-image: url('../icons/error.svg');
+//    background-size: 16px 16px;
+//}
+//
+//.mwe-rws-recording .rw-record-queue li.mwe-rw-selected::before,
+//#mwe-rwp-list li.mwe-rw-selected:not(.mwe-rwp-uploading):not(.mwe-rwp-finalizing)::before {
+//    background-image: url('../icons/play.svg');
+//}
 
 /* action icons */
 
@@ -487,17 +487,17 @@
     color: #c99d18;
 }
 
-.mwe-rw-warning::before {
-    content: '';
-
-    width: 20px;
-    height: 20px;
-    background-image: url('../icons/error.svg');
-    background-size: 20px 20px;
-
-    position: absolute;
-    left: 16px;
-}
+//.mwe-rw-warning::before {
+//    content: '';
+//
+//    width: 20px;
+//    height: 20px;
+//    background-image: url('../icons/error.svg');
+//    background-size: 20px 20px;
+//
+//    position: absolute;
+//    left: 16px;
+//}
 
 .wizard-select {
     display: flex;
@@ -574,17 +574,17 @@
     column-count: 1;
 }
 
-.oo-ui-icon-ll-list {
-    background-image: url('../icons/ll-mini.svg');
-}
-
-.oo-ui-icon-ll-nearby {
-    background-image: url('../icons/explore.svg');
-}
-
-.oo-ui-icon-ll-wmcategory {
-    background-image: url('../icons/wikipedia.svg');
-}
+//.oo-ui-icon-ll-list {
+//    background-image: url('../icons/ll-mini.svg');
+//}
+//
+//.oo-ui-icon-ll-nearby {
+//    background-image: url('../icons/explore.svg');
+//}
+//
+//.oo-ui-icon-ll-wmcategory {
+//    background-image: url('../icons/wikipedia.svg');
+//}
 
 /* PUBLISH */
 .rw-record-item {
@@ -682,16 +682,16 @@
     background-repeat: no-repeat;
 }
 
-#mwe-rws-settings {
-    background-image: url('../icons/settings.svg');
-    background-size: 30px 30px;
-    margin-right: 10px;
-}
-
-#mwe-rws-shortcuts {
-    background-image: url('../icons/keyboard.svg');
-    background-size: 35px 35px;
-}
+//#mwe-rws-settings {
+//    background-image: url('../icons/settings.svg');
+//    background-size: 30px 30px;
+//    margin-right: 10px;
+//}
+//
+//#mwe-rws-shortcuts {
+//    background-image: url('../icons/keyboard.svg');
+//    background-size: 35px 35px;
+//}
 
 /* Shortcuts dialog box */
 #mwe-rws-shortcuts-content {
@@ -773,9 +773,9 @@
     background-size: 35px 35px;
 }
 
-#mwe-rws-info-audio i {
-    background-image: url('../icons/mic-blue.svg');
-}
+//#mwe-rws-info-audio i {
+//    background-image: url('../icons/mic-blue.svg');
+//}
 
 #mwe-rw-tutorial img,
 #mwe-rwt-reopenpopup {
@@ -791,19 +791,19 @@
     width: 85%;
 }
 
-#mwe-rwt-info::before {
-    display: block;
-    content: '';
-
-    position: absolute;
-    top: -5px;
-    left: -44px;
-
-    width: 35px;
-    height: 35px;
-    background-image: url('../icons/warning.svg');
-    background-size: 35px 35px;
-}
+//#mwe-rwt-info::before {
+//    display: block;
+//    content: '';
+//
+//    position: absolute;
+//    top: -5px;
+//    left: -44px;
+//
+//    width: 35px;
+//    height: 35px;
+//    background-image: url('../icons/warning.svg');
+//    background-size: 35px 35px;
+//}
 
 .mwe-rw-error {
     color: red;

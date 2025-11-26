@@ -3,7 +3,7 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { InertiaProgress } from '@inertiajs/progress'
 import { createPinia } from 'pinia';
 import axios from 'axios';
-import Alpine from 'alpinejs';
+// import Alpine from 'alpinejs';
 import {Head, Link} from '@inertiajs/vue3'
 
 const pinia = createPinia();
@@ -29,7 +29,7 @@ window.Echo = new Echo({
 
 createInertiaApp({
     resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        const pages = import.meta.glob('./Pages/**/*.vue')
         return pages[`./Pages/${name}.vue`]
     },
     setup({ el, App, props, plugin }) {
