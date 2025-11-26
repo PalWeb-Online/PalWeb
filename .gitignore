@@ -8,7 +8,6 @@
 .env
 .env.backup
 .phpunit.result.cache
-package-lock.json
 Homestead.json
 Homestead.yaml
 auth.json
