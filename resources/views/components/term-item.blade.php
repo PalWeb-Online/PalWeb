@@ -20,7 +20,7 @@
 
 @elseif($arb)
     <div class="term-item-container">
-        <div class="term-item-wrapper">
+        <div class="term-item-container">
             <div class="term-item">
                 <div class="arb">{{ $arb }}</div>
                 <div class="eng">{{ $eng }}</div>

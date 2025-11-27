@@ -243,29 +243,31 @@ watch(
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
-                    <span class="handle material-symbols-rounded">menu</span>
-                    <div class="term-item-wrapper">
-                        <div class="term-item">
-                            <div class="term-item-head">
-                                <input class="arb" v-model="element.sentencePivot.sent_term"/>
-                                <input class="translit" v-model="element.sentencePivot.sent_translit"/>
-                            </div>
-                            <div class="term-item-body">
-                                <template v-if="element.glosses">
-                                    <select class="eng" v-model="element.sentencePivot.gloss_id">
-                                        <option v-for="gloss in element.glosses" :value="gloss.id">
-                                            {{
-                                                gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
-                                            }}
-                                        </option>
-                                    </select>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
                     <span class="delete material-symbols-rounded"
                           v-show="termsList.length > 0"
                           @click="removeTerm(index)">delete</span>
+                    <div class="term-item-container">
+                        <div class="term-item">
+                            <div class="model-item-content">
+                                <div class="term-item-gloss">
+                                    <template v-if="element.glosses">
+                                        <select v-model="element.sentencePivot.gloss_id">
+                                            <option v-for="gloss in element.glosses" :value="gloss.id">
+                                                {{
+                                                    gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
+                                                }}
+                                            </option>
+                                        </select>
+                                    </template>
+                                </div>
+                                <div class="term-item-term">
+                                    <input class="arb" v-model="element.sentencePivot.sent_term"/>
+                                    <input class="translit" v-model="element.sentencePivot.sent_translit"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="handle material-symbols-rounded">menu</span>
                 </div>
             </template>
         </draggable>

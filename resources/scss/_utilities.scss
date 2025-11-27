@@ -323,6 +323,27 @@ h3 {
     }
 }
 
+.pin-counter {
+    position: absolute;
+    left: -1.6rem;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: $headFont;
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    & > * {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    img {
+        width: 3.6rem;
+    }
+}
+
 .lock.toggle {
     &:hover {
         filter: brightness(1.25) saturate(1);
@@ -620,7 +641,6 @@ h3 {
 }
 
 .draggable-item {
-    direction: rtl;
     display: flex;
     align-items: center;
     gap: 1.6rem;
@@ -635,7 +655,7 @@ h3 {
         cursor: pointer;
     }
 
-    .term-item-wrapper {
+    .term-item-container {
         grid-template-columns: 1fr
     }
 

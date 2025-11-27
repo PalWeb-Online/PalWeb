@@ -172,87 +172,31 @@
     padding: 3.2rem 1.6rem;
 }
 
-.deck-item-container {
+.deck-item-container, .term-item-container {
     color: var(--color-dark-primary);
     background: white;
     font-size: 0.8rem;
     border: 0.25em solid var(--color-dark-primary);
     box-shadow: -0.25em 0.25em 0 0 rgba(black, 0.25);
     border-radius: 1em;
-    font-family: $headFont;
     overflow: hidden;
-    position: relative;
+}
+
+.deck-item-container {
+    font-family: $headFont;
 
     .model-item-description {
         padding: 0.6rem 1.2rem;
     }
 }
 
-.model-item-stats, .model-item-description {
-    border-block-start: 0.1rem solid var(--color-dark-primary);
-    display: flex;
-    gap: 0.8rem;
-    font-family: $bodyFont;
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
-    color: var(--color-dark-primary);
-    background: var(--color-pastel-light);
-}
-
-.deck-item, .dialog-item {
-    display: flex;
-    flex-flow: row;
+.deck-item, .dialog-item, .term-item {
     height: 5.25em;
+    display: flex;
+    overflow: scroll;
 
-    .model-item-content {
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 1em;
-        padding-inline: 2em;
-        cursor: pointer;
-        overflow: scroll;
-        border-inline-end: 0.1rem solid var(--color-dark-primary);
-
-        .model-item-title {
-            display: flex;
-            align-items: center;
-            gap: 1em;
-            font-size: 1.75em;
-            font-weight: 700;
-            white-space: nowrap;
-            flex-grow: 1;
-            overflow: scroll;
-            height: 100%;
-        }
-
-        .deck-item-terms-count {
-            color: var(--color-accent-medium);
-            font-size: 1em;
-            font-weight: 700;
-        }
-    }
-
-    .deck-author-name {
-        font-family: $bodyFont;
-        font-size: 1.5em;
-        white-space: nowrap;
-    }
-
-    .deck-author-avatar {
-        width: 5.25em;
-        height: auto;
-        border-radius: 0;
-        cursor: pointer;
-    }
-
-    .lock {
-        color: var(--color-accent-medium);
-        font-size: 1.5em;
-    }
-
-    .pin-button-wrapper, .popup-menu-wrapper {
+    .pin-button-wrapper, .popup-menu-wrapper,
+    & > button.material-symbols-rounded {
         flex-shrink: 0;
         font-size: 1.75em;
         width: 3em;
@@ -286,28 +230,76 @@
             background: var(--color-accent-light);
         }
     }
+
+    .popup-menu-wrapper:has(.term-deck-toggle) {
+        background: var(--color-medium-primary);
+    }
 }
 
-.pin-counter {
-    position: absolute;
-    left: -1.6rem;
-    display: grid;
+.deck-item, .dialog-item {
+    cursor: pointer;
+
+    .model-item-content {
+        border-inline-end: 0.1rem solid var(--color-dark-primary);
+        cursor: pointer;
+    }
+
+    .deck-author-name {
+        font-family: $bodyFont;
+        font-size: 1.5em;
+        white-space: nowrap;
+    }
+
+    .deck-author-avatar {
+        width: 5.25em;
+        height: auto;
+        border-radius: 0;
+        cursor: pointer;
+    }
+
+    .deck-item-terms-count {
+        color: var(--color-accent-medium);
+        font-size: 1em;
+        font-weight: 700;
+    }
+
+    .lock {
+        color: var(--color-accent-medium);
+        font-size: 1.5em;
+    }
+}
+
+.model-item-content {
+    flex-grow: 1;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: $headFont;
+    justify-content: flex-end;
+    overflow: scroll;
+    gap: 1em;
+    padding-inline: 2em;
+
+    .model-item-title {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        font-size: 1.75em;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-grow: 1;
+        overflow: scroll;
+        height: 100%;
+    }
+}
+
+.model-item-stats, .model-item-description {
+    border-block-start: 0.1rem solid var(--color-dark-primary);
+    display: flex;
+    gap: 0.8rem;
+    font-family: $bodyFont;
     font-size: 1.2rem;
-    font-weight: 700;
-    color: black;
-
-    & > * {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    img {
-        width: 3.6rem;
-    }
+    padding: 0.4rem 0.8rem;
+    color: var(--color-dark-primary);
+    background: var(--color-pastel-light);
 }
 
 .dm-mode-study #dm-select .deck-item-grid-wrapper {

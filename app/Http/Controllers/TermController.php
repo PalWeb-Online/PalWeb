@@ -60,7 +60,7 @@ class TermController extends Controller
 
         if (empty($filters['search'])) {
             $terms = Term::query()
-                ->with(['root', 'glosses'])
+                ->with(['root', 'glosses', 'pronunciations'])
                 ->select('terms.*')
                 ->filter($filters)
                 ->paginate(25)
