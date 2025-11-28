@@ -35,7 +35,7 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
 
 <template>
     <template v-if="! data.isLoading">
-        <div class="sentence-item-container">
+        <div class="model-item-container sentence-item-container">
             <div class="sentence-dialog-data" v-if="(dialog && data.sentence.dialog) || speaker">
                 <Link v-if="dialog && data.sentence.dialog"
                       :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
@@ -49,7 +49,7 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                     <!--                    <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>-->
                 </div>
             </div>
-            <div class="sentence-item">
+            <div class="model-item sentence-item">
                 <PinButton modelType="sentence" :model="data.sentence"/>
                 <div class="model-item-content" v-if="data.sentence.terms.length > 0">
                     <template v-for="term in data.sentence.terms">

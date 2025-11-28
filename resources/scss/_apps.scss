@@ -30,12 +30,6 @@
         background: var(--color-accent-medium);
         transform: translateX(100%);
     }
-
-    &.sentence .app-mode-toggle-slider {
-        color: var(--color-dark-primary);
-        background: var(--color-accent-medium);
-        transform: translateX(100%);
-    }
 }
 
 .app-nav-interact {
@@ -144,12 +138,6 @@
         margin: 1.6rem 2.4rem;
         color: var(--color-dark-primary);
         font-weight: 700;
-    }
-
-    .action-buttons {
-        position: absolute;
-        top: -1.6rem;
-        right: 1.6rem;
     }
 
     #paginator .pagination {

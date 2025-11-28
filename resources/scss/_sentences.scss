@@ -1,4 +1,4 @@
-.model-list:has(.sentence-item-container) {
+.model-list.index-list:has(.sentence-item-container) {
     justify-items: end;
 }
 
@@ -9,7 +9,6 @@
     .model-item-description {
         justify-content: center;
         font-size: 1.4rem;
-        padding: 0.6rem 1.2rem;
     }
 
     &.highlighted {

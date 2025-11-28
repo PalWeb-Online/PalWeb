@@ -214,7 +214,7 @@ watch(
                 & added to the Dialog on Save.
             </p>
         </AppTip>
-        <div class="sentence-item-container l">
+        <div class="model-item-container sentence-item-container l">
             <div v-if="sentence.dialog.id" class="sentence-dialog-data">
                 <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
                     <div>dialog</div>
@@ -225,7 +225,7 @@ watch(
                     <input v-model="sentence.speaker"/>
                 </div>
             </div>
-            <div class="sentence-item">
+            <div class="model-item sentence-item">
                 <div class="model-item-content">
                     <div v-if="sentence.terms.length > 0" class="sentence-term" v-for="term in sentence.terms">
                         <div>{{ term.sentencePivot.sent_term }}</div>
@@ -246,8 +246,8 @@ watch(
                     <span class="delete material-symbols-rounded"
                           v-show="termsList.length > 0"
                           @click="removeTerm(index)">delete</span>
-                    <div class="term-item-container">
-                        <div class="term-item">
+                    <div class="model-item-container term-item-container">
+                        <div class="model-item term-item">
                             <div class="model-item-content">
                                 <div class="term-item-gloss">
                                     <template v-if="element.glosses">

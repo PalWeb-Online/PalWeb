@@ -5,8 +5,8 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="term-item-container">
-        <div class="term-item">
+    <div class="model-item-container term-item-container">
+        <div class="model-item term-item">
             <div class="model-item-content">
                 <div class="term-item-gloss">
                     <select v-model="term.deckPivot.gloss_id">

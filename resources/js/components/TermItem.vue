@@ -20,8 +20,8 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
 
 <template>
     <template v-if="! isLoading">
-        <div class="term-item-container">
-            <div class="term-item">
+        <div class="model-item-container term-item-container">
+            <div class="model-item term-item">
                 <PinButton modelType="term" :model="term"/>
                 <div class="model-item-content">
                     <div class="term-item-gloss">

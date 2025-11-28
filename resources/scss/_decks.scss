@@ -168,81 +168,13 @@
     }
 }
 
-.model-list.index-list:has(.deck-item-container) {
-    padding: 3.2rem 1.6rem;
-}
-
-.deck-item-container, .term-item-container,
-.sentence-item-container {
-    color: var(--color-dark-primary);
-    background: white;
-    font-size: 0.8rem;
-    border: 0.25em solid var(--color-dark-primary);
-    box-shadow: -0.25em 0.25em 0 0 rgba(black, 0.25);
-    border-radius: 1em;
-    overflow: hidden;
-}
-
 .deck-item-container {
     font-family: $headFont;
-
-    .model-item-description {
-        padding: 0.6rem 1.2rem;
-    }
 }
 
-.deck-item, .dialog-item, .term-item, .sentence-item {
-    height: 5.25em;
-    display: flex;
-    overflow: scroll;
-
-    .pin-button-wrapper, .popup-menu-wrapper,
-    & > button.material-symbols-rounded {
-        flex-shrink: 0;
-        font-size: 1.75em;
-        width: 3em;
-        justify-content: center;
-        user-select: none;
-        cursor: pointer;
-        font-weight: 400;
-        color: white;
-        background: var(--color-dark-primary);
-
-        button {
-            font-size: 1.5em;
-            color: white;
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    .pin-button-wrapper {
-        &.pinned {
-            background: var(--color-accent-medium);
-
-            button {
-                color: var(--color-dark-primary);
-            }
-        }
-
-        .pin-counter {
-            top: 1.5em;
-            color: var(--color-medium-secondary);
-            background: var(--color-accent-light);
-        }
-    }
-
-    .popup-menu-wrapper:has(.term-deck-toggle) {
-        background: var(--color-medium-primary);
-    }
-}
-
-.deck-item, .dialog-item {
-    cursor: pointer;
-
+.deck-item {
     .model-item-content {
         border-inline-end: 0.1rem solid var(--color-dark-primary);
-        cursor: pointer;
     }
 
     .deck-author-name {
@@ -268,39 +200,6 @@
         color: var(--color-accent-medium);
         font-size: 1.5em;
     }
-}
-
-.model-item-content {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    overflow: scroll;
-    gap: 1em;
-    padding-inline: 2em;
-
-    .model-item-title {
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        font-size: 1.75em;
-        font-weight: 700;
-        white-space: nowrap;
-        flex-grow: 1;
-        overflow: scroll;
-        height: 100%;
-    }
-}
-
-.model-item-stats, .model-item-description {
-    border-block-start: 0.1rem solid var(--color-dark-primary);
-    display: flex;
-    gap: 0.8rem;
-    font-family: $bodyFont;
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
-    color: var(--color-dark-primary);
-    background: var(--color-pastel-light);
 }
 
 .dm-mode-study #dm-select .deck-item-grid-wrapper {

@@ -176,14 +176,14 @@ onMounted(() => {
                 <template #item="{ element, index }">
                     <div class="draggable-item">
                         <span class="handle material-symbols-rounded">menu</span>
-                        <div class="sentence-item-container">
+                        <div class="model-item-container sentence-item-container">
                             <div class="sentence-dialog-data">
                                 <div>
                                     <div>speaker</div>
                                     <input v-model="element.speaker" placeholder="ناطق"/>
                                 </div>
                             </div>
-                            <div class="sentence-item">
+                            <div class="model-item sentence-item">
                                 <div class="model-item-content">
                                     <div class="sentence-term" style="background: none">
                                         <div>{{ element.sentence }}</div>

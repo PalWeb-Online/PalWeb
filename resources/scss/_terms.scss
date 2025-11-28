@@ -386,12 +386,6 @@
         object-fit: cover;
     }
 
-    .term-container {
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
-    }
-
     @media (min-width: 960px) {
         grid-template-columns: 1fr 2fr;
     }

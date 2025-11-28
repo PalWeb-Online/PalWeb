@@ -20,8 +20,8 @@ const toggleSelection = (index) => {
 </script>
 <template>
     <div class="quiz-question">
-        <div class="sentence-item-container">
-            <div class="sentence-item">
+        <div class="model-item-container sentence-item-container">
+            <div class="model-item sentence-item">
                 <div class="model-item-content">
                     <template v-if="question.sentence.terms.length > 0" v-for="term in question.sentence.terms">
                         <div v-if="term.sentencePivot.sent_term" class="sentence-term">

@@ -30,7 +30,7 @@ const {data, playAudio} = useSentence(props);
                 <PinButton modelType="sentence" :model="data.sentence"/>
                 <SentenceActions :model="data.sentence"/>
             </div>
-            <div class="sentence-item-container l">
+            <div class="model-item-container sentence-item-container l">
                 <div v-if="data.sentence.dialog" class="sentence-dialog-data">
                     <Link :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
                           target="_blank">
@@ -42,7 +42,7 @@ const {data, playAudio} = useSentence(props);
                         <div>{{ data.sentence.speaker }}</div>
                     </div>
                 </div>
-                <div class="sentence-item">
+                <div class="model-item sentence-item">
                     <div class="model-item-content">
                         <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
                             <template v-if="term.id">
