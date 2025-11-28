@@ -171,22 +171,28 @@ onMounted(() => {
             <h2>transcript</h2>
         </div>
         <div class="dialog-body">
-            <draggable :list="dialog.sentences" itemKey="id" handle=".handle"
-                       @end="updatePosition()"
-                       class="draggable" style="padding-inline: 1.6rem">
+            <draggable class="draggable" :list="dialog.sentences" itemKey="id" handle=".handle"
+                       @end="updatePosition()">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
                         <span class="handle material-symbols-rounded">menu</span>
-                        <div class="sentence-item-wrapper m">
-                            <SentenceActions v-if="element.id" :model="element" icon="emoji"/>
+                        <div class="sentence-item-container">
+                            <div class="sentence-dialog-data">
+                                <div>
+                                    <div>speaker</div>
+                                    <input v-model="element.speaker" placeholder="ناطق"/>
+                                </div>
+                            </div>
                             <div class="sentence-item">
-                                <input v-model="element.speaker" class="sentence-speaker"/>
-                                <div class="sentence-arb" style="user-select: none">
+                                <div class="model-item-content">
                                     <div class="sentence-term" style="background: none">
                                         <div>{{ element.sentence }}</div>
                                     </div>
                                 </div>
-                                <div class="sentence-eng">{{ element.trans }}</div>
+                                <SentenceActions v-if="element.id" :model="element"/>
+                            </div>
+                            <div class="model-item-description">
+                                {{ element.trans }}
                             </div>
                         </div>
                         <span class="delete material-symbols-rounded"

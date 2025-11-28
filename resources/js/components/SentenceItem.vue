@@ -1,9 +1,9 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     model: {
@@ -11,7 +11,6 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    size: {type: String, default: 'm'},
     currentTerm: Number,
     speaker: Boolean,
     dialog: Boolean,
@@ -36,48 +35,44 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
 
 <template>
     <template v-if="! data.isLoading">
-        <div :class="['sentence-item-wrapper', size]">
-            <SentenceActions :model="data.sentence" icon="emoji"/>
-            <div class="sentence-item">
-                <PinButton modelType="sentence" :model="data.sentence" floating/>
-                <div v-if="speaker" class="sentence-speaker">
-                    {{ data.sentence.speaker }}
-                    <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>
+        <div class="sentence-item-container">
+            <div class="sentence-dialog-data" v-if="(dialog && data.sentence.dialog) || speaker">
+                <Link v-if="dialog && data.sentence.dialog"
+                      :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
+                      target="_blank">
+                    <div>dialog</div>
+                    <div>{{ data.sentence.dialog.title }}</div>
+                </Link>
+                <div v-if="speaker">
+                    <div>speaker</div>
+                    <div>{{ data.sentence.speaker }}</div>
+                    <!--                    <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>-->
                 </div>
-                <div class="sentence-arb">
-                    <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
-                        <template v-if="term.id">
-                            <Link :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
-                                  :target="isCurrentTerm(term) ? '' : '_blank'"
-                                  :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div>{{ term.sentencePivot.sent_translit }}</div>
-                            </Link>
-                        </template>
-                        <template v-else>
-                            <div class="sentence-term">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div>{{ term.sentencePivot.sent_translit }}</div>
-                            </div>
-                        </template>
-                    </template>
-                    <template v-else>
-                        <div class="sentence-term" style="background: none">
-                            <div>{{ data.sentence.sentence }}</div>
+            </div>
+            <div class="sentence-item">
+                <PinButton modelType="sentence" :model="data.sentence"/>
+                <div class="model-item-content" v-if="data.sentence.terms.length > 0">
+                    <template v-for="term in data.sentence.terms">
+                        <Link v-if="term.id"
+                              :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                              :target="isCurrentTerm(term) ? '' : '_blank'"
+                              :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
+                        </Link>
+                        <div v-else class="sentence-term">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
                         </div>
                     </template>
                 </div>
-
-                <div class="sentence-eng">
-                    {{ data.sentence.trans }}
-                </div>
-            </div>
-            <div v-if="dialog && data.sentence.dialog" class="sentence-dialog">
-                <div>Dialog</div>
-                <Link :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
-                      target="_blank">
-                    {{ data.sentence.dialog.title }}
+                <Link v-else class="model-item-content" :href="route('sentences.show', data.sentence.id)">
+                    <div class="sentence-term" style="background: none">
+                        <div>{{ data.sentence.sentence }}</div>
+                    </div>
                 </Link>
+                <SentenceActions :model="data.sentence"/>
+            </div>
+            <div class="model-item-description">
+                {{ data.sentence.trans }}
             </div>
         </div>
     </template>

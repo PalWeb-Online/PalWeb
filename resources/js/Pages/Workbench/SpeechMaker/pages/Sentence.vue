@@ -214,10 +214,10 @@ watch(
                 & added to the Dialog on Save.
             </p>
         </AppTip>
-        <div class="sentence-container-body">
+        <div class="sentence-item-container l">
             <div v-if="sentence.dialog.id" class="sentence-dialog-data">
                 <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
-                    <div>Dialog</div>
+                    <div>dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
                 </Link>
                 <div>
@@ -225,15 +225,15 @@ watch(
                     <input v-model="sentence.speaker"/>
                 </div>
             </div>
-            <div class="sentence-arb">
-                <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
-                    <div class="sentence-term">
+            <div class="sentence-item">
+                <div class="model-item-content">
+                    <div v-if="sentence.terms.length > 0" class="sentence-term" v-for="term in sentence.terms">
                         <div>{{ term.sentencePivot.sent_term }}</div>
                         <div>{{ term.sentencePivot.sent_translit }}</div>
                     </div>
-                </template>
+                </div>
             </div>
-            <input class="sentence-eng" v-model="sentence.trans"/>
+            <input class="model-item-description" v-model="sentence.trans"/>
         </div>
 
         <div class="window-section-head">

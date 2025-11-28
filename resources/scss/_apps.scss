@@ -394,6 +394,10 @@
         background: white;
     }
 
+    input, textarea {
+        border-radius: 0;
+    }
+
     textarea.dialog-description {
         font-size: 1.8rem;
         padding: 1.2rem;

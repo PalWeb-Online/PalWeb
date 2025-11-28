@@ -348,7 +348,7 @@ const etymology = computed(() => {
                             <div class="gloss-li-content-gloss">
                                 {{ gloss.gloss }}
                             </div>
-                            <div v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
+                            <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
                                 syn.
                                 <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
                                       :href="route('terms.show', synonym.slug)">
@@ -356,7 +356,7 @@ const etymology = computed(() => {
                                     ({{ synonym.translit }})
                                 </Link>
                             </div>
-                            <div v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
+                            <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
                                 ant.
                                 <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
                                       :href="route('terms.show', antonym.slug)">
@@ -364,7 +364,7 @@ const etymology = computed(() => {
                                     ({{ antonym.translit }})
                                 </Link>
                             </div>
-                            <div
+                            <div class="gloss-item-relatives"
                                 v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
                                 v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])"
                                 :key="pair.id"

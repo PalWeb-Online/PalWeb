@@ -172,7 +172,8 @@
     padding: 3.2rem 1.6rem;
 }
 
-.deck-item-container, .term-item-container {
+.deck-item-container, .term-item-container,
+.sentence-item-container {
     color: var(--color-dark-primary);
     background: white;
     font-size: 0.8rem;
@@ -190,7 +191,7 @@
     }
 }
 
-.deck-item, .dialog-item, .term-item {
+.deck-item, .dialog-item, .term-item, .sentence-item {
     height: 5.25em;
     display: flex;
     overflow: scroll;
