@@ -133,6 +133,12 @@ const isCCC = computed(() => {
         </select>
 
         <div class="search-bar">
+            <div v-if="UserStore.isUser"
+                 class="pin-button-wrapper" :class="{ pinned: filters.pinned }">
+                <button class="material-symbols-rounded pin-button" @click="filters.pinned = !filters.pinned">
+                    {{ filters.pinned ? 'keep' : 'keep_off' }}
+                </button>
+            </div>
             <input
                 ref="searchInput"
                 v-model="filters.search"
@@ -140,11 +146,6 @@ const isCCC = computed(() => {
                 type="text"
                 placeholder="دوّر"
             />
-
-            <button v-if="UserStore.isUser" @click="filters.pinned = !filters.pinned"
-                    :class="{'unpinned': !filters.pinned}">
-                <img src="/img/pin.svg" alt="Pin"/>
-            </button>
         </div>
 
         <select v-model="filters.sort"

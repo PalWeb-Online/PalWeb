@@ -13,7 +13,6 @@ const tooltip = ref(null);
 const props = defineProps({
     model: Object,
     modelType: String,
-    floating: {type: Boolean, default: false},
 });
 
 let pinCount = ref(props.model.pinCount);
@@ -45,35 +44,17 @@ watch(() => props.model, (newModel) => {
 
 <template>
     <template v-if="UserStore.isUser">
-        <template v-if="floating">
-            <template v-if="UserStore.user.is_verified">
-                <img :class="['pin', { unpinned: !isPinned }]" src="/img/pin.svg" @click="pin" alt="pin"/>
-                <div v-if="pinCount > 1" class="pin-counter">
-                    <img src="/img/heart.svg" alt="heart"/>
-                    <div>{{ pinCount }}</div>
-                </div>
-            </template>
-            <template v-else>
-                <img class="pin unpinned" src="/img/pin.svg" alt="pin"
-                     @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
-                     @mouseleave="tooltip.hideTooltip()"/>
-            </template>
-        </template>
-        <template v-else>
-            <template v-if="UserStore.user.is_verified">
-                <div class="pin-button-wrapper" :class="{ pinned: isPinned }" @click="pin">
-                    <button class="material-symbols-rounded pin-button">{{ isPinned ? 'keep' : 'keep_off' }}</button>
-                    <div class="pin-counter" v-if="pinCount > 1">{{ pinCount }}</div>
-                </div>
-            </template>
-            <template v-else>
-                <div class="pin-button-wrapper"
-                        @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
-                        @mouseleave="tooltip.hideTooltip()">
-                    <button class="material-symbols-rounded pin-button">keep_off</button>
-                </div>
-            </template>
-        </template>
+        <div v-if="UserStore.user.is_verified"
+             class="pin-button-wrapper" :class="{ pinned: isPinned }" @click="pin">
+            <button class="material-symbols-rounded pin-button">{{ isPinned ? 'keep' : 'keep_off' }}</button>
+            <div class="pin-counter" v-if="pinCount > 1">{{ pinCount }}</div>
+        </div>
+        <div v-else
+             class="pin-button-wrapper"
+             @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
+             @mouseleave="tooltip.hideTooltip()">
+            <button class="material-symbols-rounded pin-button">keep_off</button>
+        </div>
         <AppTooltip ref="tooltip"/>
     </template>
 </template>

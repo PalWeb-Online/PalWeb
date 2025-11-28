@@ -22,6 +22,11 @@
     box-shadow: none;
     border: none;
 
+    .sentence-item {
+        height: auto;
+        min-height: 5.25em;
+    }
+
     .model-item-content .sentence-term {
         padding-block: 1.2rem;
         padding-inline: 0.8rem;
@@ -124,56 +129,51 @@
     }
 }
 
-.sentence-item {
-    height: auto;
-    min-height: 5.25em;
+.sentence-item .model-item-content {
+    background: white;
+    display: flex;
+    direction: rtl;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
 
-    .model-item-content {
-        background: white;
-        display: flex;
-        direction: rtl;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 0;
+    .sentence-term {
+        height: 100%;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        padding-block: 0.8rem;
+        padding-inline: 0.4rem;
+        gap: 0.2rem;
+        color: black;
+        white-space: nowrap;
 
-        .sentence-term {
-            height: 100%;
-            display: grid;
-            align-content: center;
-            justify-items: center;
-            padding-block: 0.8rem;
-            padding-inline: 0.4rem;
-            gap: 0.2rem;
-            color: black;
-            white-space: nowrap;
-
-            &:hover {
-                background-color: var(--color-pastel-light);
-                text-decoration: none;
-            }
-
-            & > div:nth-child(1) {
-                font-family: $ar_bodyFont;
-                font-size: 1.8rem;
-                font-weight: 700;
-            }
-
-            & > div:nth-child(2) {
-                direction: ltr;
-                font-family: $monoFont, $ar_headFont;
-                font-size: 1.2rem;
-            }
-
-            &.active {
-                background: var(--color-pastel-medium);
-            }
+        &:hover {
+            background-color: var(--color-pastel-light);
+            text-decoration: none;
         }
 
-        a:link.sentence-term, a:visited.sentence-term {
-            cursor: pointer;
-            font-weight: 400;
+        & > div:nth-child(1) {
+            font-family: $ar_bodyFont;
+            font-size: 1.8rem;
+            font-weight: 700;
         }
+
+        & > div:nth-child(2) {
+            direction: ltr;
+            font-family: $monoFont, $ar_headFont;
+            font-size: 1.2rem;
+        }
+
+        &.active {
+            background: var(--color-pastel-medium);
+        }
+    }
+
+    a:link.sentence-term, a:visited.sentence-term {
+        cursor: pointer;
+        font-weight: 400;
     }
 }
 

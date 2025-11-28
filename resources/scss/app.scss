@@ -47,7 +47,6 @@
         justify-content: center;
         user-select: none;
         cursor: pointer;
-        font-weight: 400;
         color: white;
         background: var(--color-dark-primary);
 
@@ -428,57 +427,62 @@ Search Tools
 
     .search-bar {
         display: flex;
-
-        button {
-            rotate: 45deg;
-            flex-grow: 0;
-            width: 4.8rem;
-
-            &:hover {
-                opacity: 50%;
-            }
-        }
-
-        button.unpinned {
-            filter: brightness(1.5) saturate(0);
-            opacity: 25%;
-
-            &:hover {
-                opacity: 50%;
-            }
-        }
-    }
-
-    input {
-        flex-grow: 1;
-        height: 4.8rem;
-        font-family: $monoFont;
-        font-weight: 700;
-        text-align: center;
-        color: var(--color-dark-primary);
-        background: white;
-
-        min-height: 4.8rem;
-        padding: 0.8rem 1.6rem;
+        align-items: center;
+        border-radius: 0.8rem;
         font-size: 1.6rem;
-        border: 0.1rem solid;
-        outline: 0;
+        gap: 0.8rem;
 
-        &:focus {
-            outline: none;
-            border: 0.2rem solid;
+        & > * {
+            height: 4.8rem;
         }
 
-        &.persisting {
-            border-color: var(--color-accent-medium) !important;
+        .pin-button-wrapper {
+            font-size: 1em;
+            width: 4.8rem;
+            border-radius: 0.8rem;
+            justify-content: center;
+            user-select: none;
+            cursor: pointer;
+            color: white;
+            background: var(--color-dark-primary);
+
+            button {
+                font-size: 1.5em;
+                color: white;
+                width: 100%;
+                height: 100%;
+            }
+
+            &.pinned {
+                background: var(--color-accent-medium);
+
+                button {
+                    color: var(--color-dark-primary);
+                }
+            }
         }
-    }
 
-    select {
-        flex-grow: 1;
+        input {
+            flex-grow: 1;
+            font-family: $monoFont;
+            font-weight: 700;
+            text-align: center;
+            color: var(--color-dark-primary);
+            background: var(--color-pastel-light);
 
-        &.persisting {
-            background: var(--color-accent-light);
+            min-height: 4.8rem;
+            padding: 0.8rem 1.6rem;
+            font-size: 1.6rem;
+            outline: 0;
+
+            &:focus {
+                outline: none;
+                background: var(--color-accent-light);
+            }
+
+            &.persisting {
+                background: var(--color-accent-light);
+            }
         }
     }
 
@@ -487,42 +491,23 @@ Search Tools
         flex-flow: row wrap;
         justify-content: center;
         gap: 0.8rem;
+
+        select {
+            flex-grow: 1;
+
+            &.persisting {
+                background: var(--color-accent-light);
+            }
+        }
+    }
+
+    & + .app-tip {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
     }
 }
-
-
-//.search-filters {
-//    display: flex;
-//    gap: 0.8rem;
-//
-//    & > * {
-//        flex-grow: 1;
-//    }
-//
-//    .filter-container {
-//        display: grid;
-//        grid-template-columns: 1fr;
-//        background: white;
-//        border-radius: 0.8rem;
-//        padding: 0.4rem;
-//        gap: 0.4rem;
-//        text-align: center;
-//        font-family: $monoFont;
-//        font-weight: 700;
-//
-//        .filter-name {
-//            color: $purple-deep;
-//            padding: 0.4rem 0;
-//            text-transform: uppercase;
-//        }
-//
-//        select {
-//            font-weight: 700;
-//            font-size: 1.4rem;
-//            border-radius: 0.6rem;
-//        }
-//    }
-//}
 
 .search-buttons {
     display: flex;

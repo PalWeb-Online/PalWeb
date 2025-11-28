@@ -1,6 +1,7 @@
 <script setup>
 import {useTerm} from "../composables/Term.js";
 import TermActions from "./Actions/TermActions.vue";
+import PinButton from "./PinButton.vue";
 
 const props = defineProps({
     model: {
@@ -11,11 +12,16 @@ const props = defineProps({
     latestTerms: Object,
 });
 
-const {term, isLoading, playAudio} = useTerm(props);
+const {term, isLoading} = useTerm(props);
 </script>
 
 <template>
     <template v-if="! isLoading">
+        <div class="window-section-head">
+            <h2>featured</h2>
+            <PinButton modelType="term" :model="term"/>
+            <TermActions :model="term"/>
+        </div>
         <section class="featured-term">
             <img alt="Term Image" :src="term.image">
             <div>
@@ -24,7 +30,6 @@ const {term, isLoading, playAudio} = useTerm(props);
                         <div class="term-headword-term">
                             <div class="term-headword-arb">{{ term.term }}</div>
                             <div class="term-headword-eng">({{ term.translit }})</div>
-                            <TermActions :model="term"/>
                         </div>
 
                         <div class="term-headword-data">{{ term.category }}.

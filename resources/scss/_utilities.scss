@@ -207,14 +207,6 @@ h3 {
 .popup-menu-wrapper {
     display: flex;
     direction: ltr;
-
-    &.has_symbol.active {
-        background: var(--color-accent-medium);
-
-        & > button {
-            color: var(--color-dark-primary);
-        }
-    }
 }
 
 .popup-menu {

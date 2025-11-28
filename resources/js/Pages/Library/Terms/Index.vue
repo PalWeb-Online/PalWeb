@@ -75,24 +75,10 @@ const sortingMessage = computed(() => {
             <div class="window-section-head">
                 <h1>dictionary</h1>
             </div>
-
-            <WindowSection>
-                <template #title>
-                    <h2>featured</h2>
-                </template>
-                <template #content>
-                    <TermFeatured :model="featuredTerm" :latestTerms="latestTerms"/>
-                </template>
-            </WindowSection>
-
+            <TermFeatured :model="featuredTerm" :latestTerms="latestTerms"/>
             <div class="window-section-head">
-                <h2>Index</h2>
+                <h2>index</h2>
             </div>
-            <SearchFilters
-                activeModel="terms"
-                :filters="filters"
-                @updateFilter="updateFilter"
-            />
             <div class="letters-array">
                 <button
                     v-for="letter in letters"
@@ -103,6 +89,11 @@ const sortingMessage = computed(() => {
                     {{ letter }}
                 </button>
             </div>
+            <SearchFilters
+                activeModel="terms"
+                :filters="filters"
+                @updateFilter="updateFilter"
+            />
             <AppTip>
                 <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
                     Terms matching this query, {{ sortingMessage }}.</p>

@@ -8,7 +8,6 @@ import AppTooltip from "../AppTooltip.vue";
 
 const props = defineProps({
     model: Object,
-    icon: {type: String, default: 'symbol'},
 });
 
 const UserStore = useUserStore();
@@ -45,7 +44,7 @@ const tooltip = ref(null);
 </script>
 
 <template>
-    <ContextActions :icon="icon" v-slot="{ closeMenu }">
+    <ContextActions v-slot="{ closeMenu }">
         <Link :href="route('decks.show', model.id)" role="menuitem" tabindex="-1">
             View Deck
         </Link>
