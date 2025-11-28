@@ -67,6 +67,7 @@
     align-items: flex-end;
     gap: 1.2rem;
     font-weight: 700;
+    line-break: anywhere;
     color: var(--color-dark-primary);
 
     .user-name-ar {
@@ -89,18 +90,20 @@
 }
 
 .nav-auth {
-    flex-grow: 1;
-    display: flex;
+    display: grid;
+    grid-template-columns: 9.6rem 1fr;
+    background: var(--color-pastel-light);
 
     .user-avatar {
-        filter: none;
         font-size: 0.6rem;
-        border-radius: 0;
+        border-radius: 0 0 1.6rem 0;
     }
 
     .user-name {
-        padding: 0.4rem 1.0rem 0.8rem;
         background: white;
+        padding: 0.4rem 1.2rem 0.8rem;
+        border-radius: 0 0 0 1.6rem;
+        z-index: 1;
 
         .user-name-ar {
             font-size: 3.2rem;

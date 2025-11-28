@@ -6,7 +6,6 @@ import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
     model: Object,
-    icon: {type: String, default: 'symbol'},
 });
 
 const UserStore = useUserStore();
@@ -19,7 +18,7 @@ const deleteSentence = () => {
 </script>
 
 <template>
-    <ContextActions :icon="icon" v-slot="{ closeMenu }">
+    <ContextActions v-slot="{ closeMenu }">
         <Link :href="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
             View Sentence
         </Link>

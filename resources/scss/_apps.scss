@@ -446,10 +446,6 @@
     &:has(h1) {
         font-size: 2.4rem;
         background: var(--color-dark-primary);
-
-        & > *:not(:last-child) {
-            border-inline-end: 0.1rem solid var(--color-dark-primary);
-        }
     }
 
     &:has(h2) {
@@ -548,14 +544,6 @@
 
         &:not(:first-child) {
             border-block-start: 0.1rem solid var(--color-accent-dark);
-        }
-
-        & > *:not(:last-child) {
-            border-inline-end: 0.1rem solid var(--color-accent-dark);
-        }
-
-        & > a:hover, & > button:hover {
-            color: var(--color-accent-dark);
         }
     }
 
