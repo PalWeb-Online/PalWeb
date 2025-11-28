@@ -20,9 +20,9 @@ const toggleSelection = (index) => {
 </script>
 <template>
     <div class="quiz-question">
-        <div class="sentence-item-wrapper l">
-            <div class="sentence-item">
-                <div class="sentence-arb">
+        <div class="model-item-container sentence-item-container">
+            <div class="model-item sentence-item">
+                <div class="model-item-content">
                     <template v-if="question.sentence.terms.length > 0" v-for="term in question.sentence.terms">
                         <div v-if="term.sentencePivot.sent_term" class="sentence-term">
                             <div>{{ term.sentencePivot.sent_term }}</div>
@@ -34,10 +34,9 @@ const toggleSelection = (index) => {
                         </div>
                     </template>
                 </div>
-
-                <div class="sentence-eng" v-if="DeckStudyStore.settings.options.withTranslation">
-                    {{ question.sentence.trans }}
-                </div>
+            </div>
+            <div class="model-item-description" v-if="DeckStudyStore.settings.options.withTranslation">
+                {{ question.sentence.trans }}
             </div>
         </div>
 

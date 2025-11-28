@@ -26,8 +26,8 @@ const {data} = useDialog(props);
 
 <template>
     <template v-if="! data.isLoading">
-        <div class="deck-item-container">
-            <div class="dialog-item">
+        <div class="model-item-container dialog-item-container">
+            <div class="model-item dialog-item">
                 <div class="model-item-content" @click="router.get(requestTarget)">
                     <div class="model-item-title">
                         {{ data.dialog.title }}

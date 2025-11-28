@@ -214,10 +214,10 @@ watch(
                 & added to the Dialog on Save.
             </p>
         </AppTip>
-        <div class="sentence-container-body">
+        <div class="model-item-container sentence-item-container l">
             <div v-if="sentence.dialog.id" class="sentence-dialog-data">
                 <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
-                    <div>Dialog</div>
+                    <div>dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
                 </Link>
                 <div>
@@ -225,15 +225,15 @@ watch(
                     <input v-model="sentence.speaker"/>
                 </div>
             </div>
-            <div class="sentence-arb">
-                <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
-                    <div class="sentence-term">
+            <div class="model-item sentence-item">
+                <div class="model-item-content">
+                    <div v-if="sentence.terms.length > 0" class="sentence-term" v-for="term in sentence.terms">
                         <div>{{ term.sentencePivot.sent_term }}</div>
                         <div>{{ term.sentencePivot.sent_translit }}</div>
                     </div>
-                </template>
+                </div>
             </div>
-            <input class="sentence-eng" v-model="sentence.trans"/>
+            <input class="model-item-description" v-model="sentence.trans"/>
         </div>
 
         <div class="window-section-head">
@@ -243,29 +243,31 @@ watch(
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
-                    <span class="handle material-symbols-rounded">menu</span>
-                    <div class="term-item-wrapper">
-                        <div class="term-item">
-                            <div class="term-item-head">
-                                <input class="arb" v-model="element.sentencePivot.sent_term"/>
-                                <input class="translit" v-model="element.sentencePivot.sent_translit"/>
-                            </div>
-                            <div class="term-item-body">
-                                <template v-if="element.glosses">
-                                    <select class="eng" v-model="element.sentencePivot.gloss_id">
-                                        <option v-for="gloss in element.glosses" :value="gloss.id">
-                                            {{
-                                                gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
-                                            }}
-                                        </option>
-                                    </select>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
                     <span class="delete material-symbols-rounded"
                           v-show="termsList.length > 0"
                           @click="removeTerm(index)">delete</span>
+                    <div class="model-item-container term-item-container">
+                        <div class="model-item term-item">
+                            <div class="model-item-content">
+                                <div class="term-item-gloss">
+                                    <template v-if="element.glosses">
+                                        <select v-model="element.sentencePivot.gloss_id">
+                                            <option v-for="gloss in element.glosses" :value="gloss.id">
+                                                {{
+                                                    gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
+                                                }}
+                                            </option>
+                                        </select>
+                                    </template>
+                                </div>
+                                <div class="term-item-term">
+                                    <input class="arb" v-model="element.sentencePivot.sent_term"/>
+                                    <input class="translit" v-model="element.sentencePivot.sent_translit"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="handle material-symbols-rounded">menu</span>
                 </div>
             </template>
         </draggable>

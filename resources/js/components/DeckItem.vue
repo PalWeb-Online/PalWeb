@@ -35,8 +35,8 @@ const {deck, blurb, isLoading} = useDeck(props);
 
 <template>
     <template v-if="! isLoading">
-        <div class="deck-item-container">
-            <div :class="['deck-item', size]">
+        <div class="model-item-container deck-item-container">
+            <div :class="['model-item', 'deck-item', size]">
                 <PinButton modelType="deck" :model="deck"/>
                 <div class="model-item-content" @click="router.get(requestTarget)">
                     <div class="model-item-title">

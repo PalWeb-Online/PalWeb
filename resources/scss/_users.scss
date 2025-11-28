@@ -273,21 +273,6 @@
     }
 }
 
-.user-container {
-    .user-item {
-        flex-flow: column;
-
-        .user-data-wrapper {
-            align-self: stretch;
-            margin-block-start: 3.2rem;
-        }
-
-        @media (min-width: 720px) {
-            flex-flow: row;
-        }
-    }
-}
-
 .badges-container {
     width: 100%;
     max-width: 96rem;

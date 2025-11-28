@@ -8,9 +8,9 @@
     <x-vue.sentence component="SentenceItem" :size="$size" :sentence="$sentence" />
 
 @elseif($eng)
-    <div class="sentence-item-wrapper" style="justify-self: center">
+    <div class="sentence-item-container" style="justify-self: center">
         <div class="sentence-item {{ $size }}">
-            <div class="sentence-arb">
+            <div class="model-item-content">
                 {{ $slot }}
             </div>
             <div class="sentence-eng">

@@ -199,11 +199,11 @@ onMounted(async () => {
                            class="model-list index-list draggable">
                     <template #item="{ element, index }">
                         <div class="draggable-item">
-                            <span class="handle material-symbols-rounded">menu</span>
-                            <TermItem :term="element"/>
                             <span class="delete material-symbols-rounded"
                                   v-show="deck.terms.length > 0"
                                   @click="removeTerm(index)">delete</span>
+                            <TermItem :term="element"/>
+                            <span class="handle material-symbols-rounded">menu</span>
                         </div>
                     </template>
                 </draggable>

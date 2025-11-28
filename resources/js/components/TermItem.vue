@@ -3,6 +3,8 @@ import {useTerm} from "../composables/Term.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     model: {
@@ -13,25 +15,37 @@ const props = defineProps({
     glossId: {type: Number, default: null},
 });
 
-const {term, isLoading, playAudio} = useTerm(props);
+const {term, isLoading, isPlaying, playAudio} = useTerm(props);
 </script>
 
 <template>
     <template v-if="! isLoading">
-        <div class="term-item-wrapper">
-            <div class="term-item">
-                <div class="term-item-head">
-                    <div class="arb">{{ term.term }}</div>
-                    <img class="play" v-if="term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>
-                    <div class="translit">{{ term.translit }}</div>
+        <div class="model-item-container term-item-container">
+            <div class="model-item term-item">
+                <PinButton modelType="term" :model="term"/>
+                <div class="model-item-content">
+                    <div class="term-item-gloss">
+                        {{
+                            glossId
+                                ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss
+                                : term.glosses[0].gloss
+                        }}
+                    </div>
+                    <div class="term-item-term">
+                        <Link style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
+                             :href="route('terms.show', term.slug)">
+                            <span class="arb">{{ term.term }}</span>
+                            <span class="translit">({{ term.translit }})</span>
+                        </Link>
+                        <button v-if="term.audio" @click="playAudio"
+                                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
+                            music_note
+                        </button>
+                    </div>
                 </div>
-                <div class="term-item-body">
-                    <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>
-                    <TermDeckToggleButton :model="term"/>
-                </div>
-                <PinButton modelType="term" :model="term" floating/>
+                <TermDeckToggleButton :model="term"/>
+                <TermActions :model="term"/>
             </div>
-            <TermActions :model="term" icon="emoji"/>
         </div>
     </template>
 </template>

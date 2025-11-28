@@ -5,18 +5,22 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="term-item-wrapper">
-        <div class="term-item">
-            <div class="term-item-head">
-                <div class="arb">{{ term.term }}</div>
-                <div class="translit">{{ term.translit }}</div>
-            </div>
-            <div class="term-item-body">
-                <select class="eng" v-model="term.deckPivot.gloss_id">
-                    <option v-for="gloss in term.glosses" :value="gloss.id">
-                        {{ gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss }}
-                    </option>
-                </select>
+    <div class="model-item-container term-item-container">
+        <div class="model-item term-item">
+            <div class="model-item-content">
+                <div class="term-item-gloss">
+                    <select v-model="term.deckPivot.gloss_id">
+                        <option v-for="gloss in term.glosses" :value="gloss.id">
+                            {{ gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss }}
+                        </option>
+                    </select>
+                </div>
+                <div class="term-item-term">
+                    <div style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;">
+                        <span class="arb">{{ term.term }}</span>
+                        <span class="translit">{{ term.translit }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

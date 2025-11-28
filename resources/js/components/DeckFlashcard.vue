@@ -76,8 +76,8 @@ const {deck, blurb, isLoading} = useDeck(props);
             </div>
 
             <div v-if="UserStore.isUser" class="deck-flashcard-controls">
-                <div class="deck-item-container">
-                    <div class="deck-item">
+                <div class="model-item-container deck-item-container">
+                    <div class="model-item deck-item">
                         <PinButton modelType="deck" :model="deck"/>
                     </div>
                 </div>
@@ -86,8 +86,8 @@ const {deck, blurb, isLoading} = useDeck(props);
                     <div class="material-symbols-rounded">lock</div>
                 </div>
 
-                <div class="deck-item-container">
-                    <div class="deck-item">
+                <div class="model-item-container deck-item-container">
+                    <div class="model-item deck-item">
                         <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
                              class="deck-author-avatar" alt="Avatar"
                              :src="`/img/avatars/${deck.author.avatar}`"/>

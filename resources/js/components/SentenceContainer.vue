@@ -30,7 +30,7 @@ const {data, playAudio} = useSentence(props);
                 <PinButton modelType="sentence" :model="data.sentence"/>
                 <SentenceActions :model="data.sentence"/>
             </div>
-            <div class="sentence-container-body">
+            <div class="model-item-container sentence-item-container l">
                 <div v-if="data.sentence.dialog" class="sentence-dialog-data">
                     <Link :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
                           target="_blank">
@@ -42,28 +42,30 @@ const {data, playAudio} = useSentence(props);
                         <div>{{ data.sentence.speaker }}</div>
                     </div>
                 </div>
-                <div class="sentence-arb">
-                    <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
-                        <template v-if="term.id">
-                            <Link class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div>{{ term.sentencePivot.sent_translit }}</div>
-                            </Link>
+                <div class="model-item sentence-item">
+                    <div class="model-item-content">
+                        <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
+                            <template v-if="term.id">
+                                <Link class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
+                                    <div>{{ term.sentencePivot.sent_term }}</div>
+                                    <div>{{ term.sentencePivot.sent_translit }}</div>
+                                </Link>
+                            </template>
+                            <template v-else>
+                                <div class="sentence-term">
+                                    <div>{{ term.sentencePivot.sent_term }}</div>
+                                    <div>{{ term.sentencePivot.sent_translit }}</div>
+                                </div>
+                            </template>
                         </template>
                         <template v-else>
-                            <div class="sentence-term">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div>{{ term.sentencePivot.sent_translit }}</div>
+                            <div class="sentence-term" style="background: none">
+                                <div>{{ data.sentence.sentence }}</div>
                             </div>
                         </template>
-                    </template>
-                    <template v-else>
-                        <div class="sentence-term" style="background: none">
-                            <div>{{ data.sentence.sentence }}</div>
-                        </div>
-                    </template>
+                    </div>
                 </div>
-                <div class="sentence-eng">
+                <div class="model-item-description">
                     {{ data.sentence.trans }}
                 </div>
             </div>

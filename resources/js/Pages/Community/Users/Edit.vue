@@ -175,8 +175,6 @@ function generateArabicName() {
     <Head title="Edit Profile"/>
     <div id="app-body">
         <div class="window-container">
-            <div class="action-buttons">
-            </div>
             <div class="window-header">
                 <Link class="material-symbols-rounded" :href="route('users.show', user.username)">arrow_back</Link>
                 <button @click="form.private = !form.private" class="material-symbols-rounded">

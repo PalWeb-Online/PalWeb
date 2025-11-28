@@ -168,70 +168,13 @@
     }
 }
 
-.model-list.index-list:has(.deck-item-container) {
-    padding: 3.2rem 1.6rem;
-}
-
 .deck-item-container {
-    color: var(--color-dark-primary);
-    background: white;
-    font-size: 0.8rem;
-    border: 0.25em solid var(--color-dark-primary);
-    box-shadow: -0.25em 0.25em 0 0 rgba(black, 0.25);
-    border-radius: 1em;
     font-family: $headFont;
-    overflow: hidden;
-    position: relative;
-
-    .model-item-description {
-        padding: 0.6rem 1.2rem;
-    }
 }
 
-.model-item-stats, .model-item-description {
-    border-block-start: 0.1rem solid var(--color-dark-primary);
-    display: flex;
-    gap: 0.8rem;
-    font-family: $bodyFont;
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
-    color: var(--color-dark-primary);
-    background: var(--color-pastel-light);
-}
-
-.deck-item, .dialog-item {
-    display: flex;
-    flex-flow: row;
-    height: 5.25em;
-
+.deck-item {
     .model-item-content {
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 1em;
-        padding-inline: 2em;
-        cursor: pointer;
-        overflow: scroll;
         border-inline-end: 0.1rem solid var(--color-dark-primary);
-
-        .model-item-title {
-            display: flex;
-            align-items: center;
-            gap: 1em;
-            font-size: 1.75em;
-            font-weight: 700;
-            white-space: nowrap;
-            flex-grow: 1;
-            overflow: scroll;
-            height: 100%;
-        }
-
-        .deck-item-terms-count {
-            color: var(--color-accent-medium);
-            font-size: 1em;
-            font-weight: 700;
-        }
     }
 
     .deck-author-name {
@@ -247,66 +190,15 @@
         cursor: pointer;
     }
 
+    .deck-item-terms-count {
+        color: var(--color-accent-medium);
+        font-size: 1em;
+        font-weight: 700;
+    }
+
     .lock {
         color: var(--color-accent-medium);
         font-size: 1.5em;
-    }
-
-    .pin-button-wrapper, .popup-menu-wrapper {
-        flex-shrink: 0;
-        font-size: 1.75em;
-        width: 3em;
-        justify-content: center;
-        user-select: none;
-        cursor: pointer;
-        font-weight: 400;
-        color: white;
-        background: var(--color-dark-primary);
-
-        button {
-            font-size: 1.5em;
-            color: white;
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    .pin-button-wrapper {
-        &.pinned {
-            background: var(--color-accent-medium);
-
-            button {
-                color: var(--color-dark-primary);
-            }
-        }
-
-        .pin-counter {
-            top: 1.5em;
-            color: var(--color-medium-secondary);
-            background: var(--color-accent-light);
-        }
-    }
-}
-
-.pin-counter {
-    position: absolute;
-    left: -1.6rem;
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: $headFont;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: black;
-
-    & > * {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    img {
-        width: 3.6rem;
     }
 }
 
