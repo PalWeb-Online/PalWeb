@@ -266,8 +266,12 @@
         background: var(--color-accent-light);
         padding-inline: 1.6rem;
         position: relative;
-        cursor: pointer;
         height: 100%;
+
+        a:hover {
+            color: var(--color-medium-primary);
+            cursor: pointer;
+        }
 
         .arb {
             font-family: $ar_bodyFont;

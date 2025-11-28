@@ -32,11 +32,11 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                         }}
                     </div>
                     <div class="term-item-term">
-                        <div style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
-                             @click="router.get(route('terms.show', term.slug))">
+                        <Link style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
+                             :href="route('terms.show', term.slug)">
                             <span class="arb">{{ term.term }}</span>
                             <span class="translit">({{ term.translit }})</span>
-                        </div>
+                        </Link>
                         <button v-if="term.audio" @click="playAudio"
                                 class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
                             music_note
