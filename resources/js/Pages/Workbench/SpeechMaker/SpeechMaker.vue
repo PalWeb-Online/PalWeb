@@ -25,16 +25,17 @@ defineOptions({
 
     <div id="app-head" v-if="step === 'select'">
         <h1>Speech Maker</h1>
-        <div id="app-nav">
-            <div class="app-mode-buttons">
-                <AppButton @click="router.get(route('speech-maker.dialog'))" label="dialog"/>
-                <AppButton @click="router.get(route('speech-maker.sentence'))" label="sentence"/>
-            </div>
-        </div>
     </div>
 
     <div id="app-body">
         <div id="sm-select" v-if="step === 'select'">
+            <div class="app-nav-interact">
+                <div class="app-nav-interact-buttons">
+                    <AppButton @click="router.get(route('speech-maker.dialog'))" label="+ dialog"/>
+                    <AppButton @click="router.get(route('speech-maker.sentence'))" label="+ sentence"/>
+                </div>
+            </div>
+
             <div class="model-list">
                 <DialogItem v-for="dialog in collection" :model="dialog" target="workbench"/>
             </div>

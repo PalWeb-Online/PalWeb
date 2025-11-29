@@ -95,10 +95,8 @@ defineOptions({
     <Head title="Deck Master"/>
     <div id="app-head">
         <h1>Deck Master</h1>
-        <div id="app-nav">
-            <div @click="toggleMode" id="app-mode-toggle" :class="mode">
-                <div class="app-mode-toggle-slider">{{ mode }}</div>
-            </div>
+        <div @click="toggleMode" id="app-mode-toggle" :class="mode">
+            <div class="app-mode-toggle-slider">{{ mode }}</div>
         </div>
     </div>
 

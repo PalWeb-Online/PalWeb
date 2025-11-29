@@ -66,61 +66,59 @@ class PatternSeeder extends Seeder
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '1', 'pattern' => 'pp']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '2', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '2', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '2', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '2', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '2Q', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '2Q', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '2Q', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '2Q', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '3', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '3', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '3', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '3', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '4', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '4', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '4', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '4', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '5', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '5', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '5', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '5', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '5Q', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '5Q', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '5Q', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '5Q', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '6', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '6', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '6', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '6', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '7', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '7', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '7', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '7', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '8', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '8', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '8', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '8', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '9', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => '9', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => '9', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => '9', 'pattern' => 'vn']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => 'X', 'pattern' => 'ap']);
         DB::table('patterns')->insert(['type' => 'singular', 'form' => 'X', 'pattern' => 'pp']);
-        DB::table('patterns')->insert(['type' => 'singular', 'form' => 'X', 'pattern' => 'nv']);
+        DB::table('patterns')->insert(['type' => 'singular', 'form' => 'X', 'pattern' => 'vn']);
 
         // Named Patterns
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'ia']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'na']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'relative']);
-        // CCC
+        // Length 3
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CLC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CvCC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CvCCe']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CvCvC']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CVCC']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CVCCe']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CVCVC']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CiCiC']);
-        // CCLC
+        // Length 4
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CCāC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CCāCe']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CCīC']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CCūC']);
-        // CCCC
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CvCCvC']);
         DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'maCCvC']);
-        // CCCLC
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CvCCLC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'Ca22āC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'Ca22īC']);
-        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'Ca22ūC']);
+        // Length 5
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CVCCLC']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CaC:āC']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CaC:īC']);
+        DB::table('patterns')->insert(['type' => 'singular', 'pattern' => 'CaC:ūC']);
 
         // Sound
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => '-īn']);
@@ -131,13 +129,13 @@ class PatternSeeder extends Seeder
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CCūC']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'ʔaCCāC']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CuCaCa']);
-        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CvCaC']);
+        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CVCaC']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'ʔaCCiCe']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CaCāCiC']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CaCāCCe']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CaCāCīC']);
-        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'Cu22āC']);
+        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CuC:āC']);
         DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CuCuC']);
-        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CvCCān']);
+        DB::table('patterns')->insert(['type' => 'plural', 'pattern' => 'CVCCān']);
     }
 }

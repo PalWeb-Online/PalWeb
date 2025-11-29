@@ -101,7 +101,10 @@
         }
 
         .deck-flashcard-front-body {
+            height: 100%;
             padding: 1.2rem;
+            font-family: $bodyFont;
+            font-size: 1.4rem;
         }
     }
 
@@ -160,11 +163,6 @@
     .model-item-title {
         font-weight: 700;
         font-size: 1.6rem;
-    }
-
-    .item-description {
-        font-family: $bodyFont;
-        font-size: 1.2rem;
     }
 }
 

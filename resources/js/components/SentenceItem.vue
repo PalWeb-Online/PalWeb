@@ -30,29 +30,29 @@ onMounted(() => {
     }
 });
 
-const {data, isCurrentTerm, playAudio} = useSentence(props);
+const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="! isLoading">
         <div class="model-item-container sentence-item-container">
-            <div class="sentence-dialog-data" v-if="(dialog && data.sentence.dialog) || speaker">
-                <Link v-if="dialog && data.sentence.dialog"
-                      :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
+            <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
+                <Link v-if="dialog && sentence.dialog"
+                      :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
                       target="_blank">
                     <div>dialog</div>
-                    <div>{{ data.sentence.dialog.title }}</div>
+                    <div>{{ sentence.dialog.title }}</div>
                 </Link>
                 <div v-if="speaker">
                     <div>speaker</div>
-                    <div>{{ data.sentence.speaker }}</div>
+                    <div>{{ sentence.speaker }}</div>
                     <!--                    <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>-->
                 </div>
             </div>
             <div class="model-item sentence-item">
-                <PinButton modelType="sentence" :model="data.sentence"/>
-                <div class="model-item-content" v-if="data.sentence.terms.length > 0">
-                    <template v-for="term in data.sentence.terms">
+                <PinButton modelType="sentence" :model="sentence"/>
+                <div class="model-item-content" v-if="sentence.terms.length > 0">
+                    <template v-for="term in sentence.terms">
                         <Link v-if="term.id"
                               :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                               :target="isCurrentTerm(term) ? '' : '_blank'"
@@ -64,15 +64,15 @@ const {data, isCurrentTerm, playAudio} = useSentence(props);
                         </div>
                     </template>
                 </div>
-                <Link v-else class="model-item-content" :href="route('sentences.show', data.sentence.id)">
+                <Link v-else class="model-item-content" :href="route('sentences.show', sentence.id)">
                     <div class="sentence-term" style="background: none">
-                        <div>{{ data.sentence.sentence }}</div>
+                        <div>{{ sentence.sentence }}</div>
                     </div>
                 </Link>
-                <SentenceActions :model="data.sentence"/>
+                <SentenceActions :model="sentence"/>
             </div>
             <div class="model-item-description">
-                {{ data.sentence.trans }}
+                {{ sentence.trans }}
             </div>
         </div>
     </template>

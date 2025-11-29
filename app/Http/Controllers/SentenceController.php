@@ -33,6 +33,18 @@ class SentenceController extends Controller
         ]);
     }
 
+    public function getMany(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'integer',
+        ]);
+
+        $sentences = Sentence::whereIn('id', $request->input('ids'))->get();
+
+        return SentenceResource::collection($sentences)->keyBy('id');
+    }
+
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'latest'], $request->only([

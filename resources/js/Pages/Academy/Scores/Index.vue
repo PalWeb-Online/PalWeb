@@ -15,9 +15,9 @@ const props = defineProps({
 })
 </script>
 <template>
-    <Head title="Academy: myProgress"/>
+    <Head title="Academy: Scores"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>my Progress</h1></Link>
+        <Link :href="route('scores.index')"><h1>Scores</h1></Link>
     </div>
     <div id="app-body">
         <div class="app-body-section">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academy;
 
+use App\Events\ScoreCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreScoreRequest;
 use App\Http\Resources\DeckResource;
@@ -68,12 +69,14 @@ class ScoreController extends Controller
      */
     public function store(StoreScoreRequest $request): RedirectResponse
     {
-        Score::create(array_merge($request->all(), [
+        $score = Score::create(array_merge($request->all(), [
             'user_id' => $request->user()->id,
         ]));
 
+        ScoreCreated::dispatch($score);
+
         session()->flash('notification',
-            ['type' => 'success', 'message' => 'Your Score for this Quiz has been saved!']);
+            ['type' => 'success', 'message' => 'Your Score for this model has been saved!']);
 
         return to_route('deck-master.study', $request->scorable_id);
     }

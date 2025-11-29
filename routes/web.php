@@ -162,13 +162,7 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
         Route::get('/', 'index')->name('sentences.index');
         Route::get('/{sentence}', 'show')->name('sentences.show');
         Route::post('/{sentence}/pin', 'pin')->middleware(['auth', 'verified'])->name('sentences.pin');
-
-        Route::get('/{sentence}/get', function (Sentence $sentence) {
-            return new SentenceResource(
-                Sentence::with(['dialog'])->findOrFail($sentence->id)
-            );
-        })->name('sentences.get');
-
+        Route::post('/get-many', 'getMany')->name('sentences.get-many');
     });
 
     Route::prefix('/random')->group(function () {

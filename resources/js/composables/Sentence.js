@@ -1,22 +1,11 @@
-import {onMounted, reactive, ref} from "vue";
-import {route} from "ziggy-js";
+import {onMounted, reactive, ref, watch} from "vue";
 import {Howl} from "howler";
 
 export function useSentence(props) {
-    const data = reactive({
-        sentence: {},
-        isLoading: true
-    });
-
+    const sentence = reactive({});
     const audio = ref(null);
-
-    const loadAudio = () => {
-        if (data.sentence.audio) {
-            audio.value = new Howl({
-                src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${data.sentence.audio}`],
-            });
-        }
-    }
+    const isLoading = ref(true);
+    const isPlaying = ref(false);
 
     const playAudio = () => {
         if (audio.value) {
@@ -24,29 +13,42 @@ export function useSentence(props) {
         }
     }
 
-    const fetchSentence = async () => {
-        if (props.model) {
-            data.sentence = props.model;
-
-        } else {
-            try {
-                const response = await axios.get(route('sentences.get', props.id));
-                data.sentence = response.data.data;
-
-            } catch (error) {
-                console.error("Error fetching Sentence:", error);
-            }
+    const createHowlInstance = (newSentence) => {
+        if (audio.value) {
+            audio.value.unload();
         }
 
-        loadAudio();
-        data.isLoading = false;
+        if (newSentence.audio) {
+            audio.value = new Howl({
+                src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${newSentence.audio}`],
+                onplay: () => isPlaying.value = true,
+                onend: () => isPlaying.value = false,
+                onstop: () => isPlaying.value = false,
+                onpause: () => isPlaying.value = false,
+            });
+
+        } else {
+            audio.value = null;
+        }
     }
 
     const isCurrentTerm = (term) => {
         return term.id === props.currentTerm;
     }
 
-    onMounted(fetchSentence);
+    onMounted(() => {
+        Object.assign(sentence, props.model);
+        createHowlInstance(sentence);
+        isLoading.value = false;
+    });
 
-    return {data, isCurrentTerm, playAudio};
+    watch(() => props.model,
+        (newSentence) => {
+            Object.assign(sentence, newSentence);
+            createHowlInstance(sentence);
+        },
+        {deep: true}
+    );
+
+    return {sentence, isLoading, isPlaying, isCurrentTerm, playAudio};
 }

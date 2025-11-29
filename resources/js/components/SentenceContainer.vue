@@ -13,11 +13,11 @@ const props = defineProps({
     },
 });
 
-const {data, playAudio} = useSentence(props);
+const {sentence, isLoading, isPlaying, playAudio} = useSentence(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="! isLoading">
         <div class="window-container">
             <div class="window-header">
                 <Link :href="route('sentences.index')" class="material-symbols-rounded">home</Link>
@@ -27,24 +27,24 @@ const {data, playAudio} = useSentence(props);
             </div>
             <div class="window-section-head">
                 <h1>sentence</h1>
-                <PinButton modelType="sentence" :model="data.sentence"/>
-                <SentenceActions :model="data.sentence"/>
+                <PinButton modelType="sentence" :model="sentence"/>
+                <SentenceActions :model="sentence"/>
             </div>
             <div class="model-item-container sentence-item-container l">
-                <div v-if="data.sentence.dialog" class="sentence-dialog-data">
-                    <Link :href="route('dialogs.show', data.sentence.dialog.id) + '#position-' + data.sentence.position"
+                <div v-if="sentence.dialog" class="sentence-dialog-data">
+                    <Link :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
                           target="_blank">
                         <div>dialog</div>
-                        <div>{{ data.sentence.dialog.title }}</div>
+                        <div>{{ sentence.dialog.title }}</div>
                     </Link>
                     <div>
                         <div>speaker</div>
-                        <div>{{ data.sentence.speaker }}</div>
+                        <div>{{ sentence.speaker }}</div>
                     </div>
                 </div>
                 <div class="model-item sentence-item">
                     <div class="model-item-content">
-                        <template v-if="data.sentence.terms.length > 0" v-for="term in data.sentence.terms">
+                        <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
                             <template v-if="term.id">
                                 <Link class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
                                     <div>{{ term.sentencePivot.sent_term }}</div>
@@ -60,26 +60,26 @@ const {data, playAudio} = useSentence(props);
                         </template>
                         <template v-else>
                             <div class="sentence-term" style="background: none">
-                                <div>{{ data.sentence.sentence }}</div>
+                                <div>{{ sentence.sentence }}</div>
                             </div>
                         </template>
                     </div>
                 </div>
                 <div class="model-item-description">
-                    {{ data.sentence.trans }}
+                    {{ sentence.trans }}
                 </div>
             </div>
             <div class="window-section-head">
                 <h2>terms</h2>
             </div>
             <div class="model-list index-list">
-                <TermItem v-for="term in data.sentence.terms.filter(term => term.id)"
+                <TermItem v-for="term in sentence.terms.filter(term => term.id)"
                           :key="term.id"
                           :model="term"
                           :glossId="term.sentencePivot.gloss_id"
                 />
             </div>
-            <div class="terms-count">{{ data.sentence.terms.filter(term => term.id).length }} Terms</div>
+            <div class="terms-count">{{ sentence.terms.filter(term => term.id).length }} Terms</div>
         </div>
     </template>
 </template>
