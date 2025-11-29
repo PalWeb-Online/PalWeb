@@ -1,10 +1,10 @@
 <script setup>
-import {computed, onMounted} from 'vue';
+import {computed} from 'vue';
 import {useRecordStore} from "../stores/RecordStore.js";
 import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import AppTip from "../../../../components/AppTip.vue";
+import PronunciationItem from "../../../../components/PronunciationItem.vue";
 
 const RecordStore = useRecordStore();
 const RecordWizardStore = useRecordWizardStore();
@@ -14,31 +14,6 @@ const audios = computed(() =>
         .filter(([id, status]) => status === 'done')
         .map(([id]) => RecordStore.data.records[id])
 );
-
-const playAudio = (url) => {
-    const audio = new Audio(url);
-    audio.play();
-};
-
-const deleteAudio = async (audio) => {
-    if (confirm('Are you sure you want to delete this audio?')) {
-        try {
-            delete RecordStore.data.records[audio.pronunciation.id];
-            delete RecordStore.data.status[audio.pronunciation.id];
-            delete RecordStore.data.errors[audio.pronunciation.id];
-            RecordStore.data.statusCount.done--;
-
-            router.delete(route('audios.destroy', audio.id), {preserveScroll: true});
-
-        } catch (error) {
-            console.error(`Error deleting audio ${audio.id}:`, error);
-            alert('Failed to delete the audio.');
-        }
-    }
-};
-
-onMounted(() => {
-});
 </script>
 
 <template>
@@ -54,28 +29,8 @@ onMounted(() => {
 
     <div class="rw-page__check">
         <section>
-            <div class="model-list">
-                <div v-for="(audio, index) in audios" :key="index" class="pronunciation-item-wrapper inline">
-                    <div class="pronunciation-item">
-                        <div class="pronunciation-item-term">{{ audio.pronunciation.term }}</div>
-                        <div class="pronunciation-item-phonology">
-                            {{ audio.pronunciation.borrowed === true ? '(Borrowed)' : '' }}
-                            {{ audio.pronunciation.translit }}
-                            —
-                            {{ audio.pronunciation.phonemic }}
-                            {{ audio.pronunciation.phonetic }}
-                        </div>
-                    </div>
-
-                    <div class="pronunciation-audios">
-                        <div class="audio-item">
-                            <img class="play" src="/img/audio.svg" alt="Play"
-                                 @click="playAudio(audio.url)"/>
-                            <img class="trash" src="/img/trash.svg" alt="Delete"
-                                 @click="deleteAudio(audio)"/>
-                        </div>
-                    </div>
-                </div>
+            <div class="model-list index-list">
+                <PronunciationItem v-for="audio in audios" :model="audio.pronunciation" :audio="audio"/>
             </div>
         </section>
     </div>

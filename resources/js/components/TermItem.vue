@@ -3,7 +3,6 @@ import {useTerm} from "../composables/Term.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 
 const props = defineProps({

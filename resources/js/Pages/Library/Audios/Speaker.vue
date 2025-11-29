@@ -45,7 +45,7 @@ defineOptions({
                 <h2>audios</h2>
             </div>
             <template v-if="audios.data.length > 0">
-                <div class="model-list index-list" style="padding: 3.2rem 1.6rem">
+                <div class="model-list index-list">
                     <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
                 </div>
                 <Paginator :links="audios.meta.links"/>

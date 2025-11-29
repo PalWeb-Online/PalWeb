@@ -18,7 +18,8 @@ class AudioService
     public function __construct(
         protected AudioDirectoryRepository $audioDirectory,
         protected UploadAudioFileRepository $audioUploader,
-    ) {}
+    ) {
+    }
 
     public function uploadAudio(string $wavPath, string $filename): void
     {
@@ -27,11 +28,17 @@ class AudioService
         try {
             $this->convertToMp3($wavPath, $mp3Path);
 
-            Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
+            if (! app()->environment(['local', 'testing'])) {
+                Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
+
+            } else {
+                Log::info('Simulating audio file upload to s3: '.$filename);
+            }
 
         } catch (\Exception $e) {
             Log::error('Failed to upload audio file: '.$e->getMessage());
             throw $e;
+
         } finally {
             File::delete($mp3Path);
         }
@@ -50,7 +57,8 @@ class AudioService
         exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: ".implode("\n", $output));
+            throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: ".implode("\n",
+                    $output));
         }
     }
 
@@ -64,11 +72,17 @@ class AudioService
                 throw new \Exception("File not found: {$currentPath}");
             }
 
-            Storage::disk('s3')->copy($currentPath, $newPath);
-            Storage::disk('s3')->delete($currentPath);
+            if (! app()->environment(['local', 'testing'])) {
+                Storage::disk('s3')->copy($currentPath, $newPath);
+                Storage::disk('s3')->delete($currentPath);
+
+            } else {
+                Log::info('Simulating audio file rename from '.$currentFilename.' to '.$newFilename);
+            }
 
         } catch (\Exception $e) {
-            throw new \Exception("Failed to rename file from {$currentFilename} to {$newFilename}: ".$e->getMessage(), 0, $e);
+            throw new \Exception("Failed to rename file from {$currentFilename} to {$newFilename}: ".$e->getMessage(),
+                0, $e);
         }
     }
 
@@ -77,11 +91,16 @@ class AudioService
         $filePath = 'audios/'.$filename;
 
         try {
-            if (! Storage::disk('s3')->exists($filePath)) {
-                throw new \Exception("File not found: {$filePath}");
-            }
+            if (! app()->environment(['local', 'testing'])) {
+                if (! Storage::disk('s3')->exists($filePath)) {
+                    throw new \Exception("File not found: {$filePath}");
+                }
 
-            Storage::disk('s3')->delete($filePath);
+                Storage::disk('s3')->delete($filePath);
+
+            } else {
+                Log::info('Simulating audio file deletion from s3: '.$filename);
+            }
 
         } catch (\Exception $e) {
             throw new \Exception("Failed to delete file: {$filePath}. Error: ".$e->getMessage(), 0, $e);

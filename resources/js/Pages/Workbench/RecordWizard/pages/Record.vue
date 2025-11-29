@@ -69,7 +69,7 @@ onMounted(() => {
                     }"
                 @click="QueueStore.selectItem(index)"
             >
-                {{ pronunciation.term }}
+                {{ pronunciation.term.term }}
             </div>
         </section>
 
@@ -86,7 +86,7 @@ onMounted(() => {
                 />
                 <div class="rw-record-item">
                     <div>
-                        {{ QueueStore.queue[QueueStore.selected]?.term || '' }}
+                        {{ QueueStore.queue[QueueStore.selected]?.term.term || '' }}
                     </div>
                     <div>
                         {{ QueueStore.queue[QueueStore.selected]?.translit || '' }}

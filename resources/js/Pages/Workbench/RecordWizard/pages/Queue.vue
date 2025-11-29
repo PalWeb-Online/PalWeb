@@ -74,7 +74,7 @@ onMounted(() => {
                         <span class="delete material-symbols-rounded" style="cursor: pointer"
                               @click="remove(index)">delete</span>
                         <span>{{ index + 1 }}.</span>
-                        <div><span>{{ element.term }}</span> ({{ element.translit }})</div>
+                        <div><span>{{ element.term.term }}</span> ({{ element.translit }})</div>
                         <span class="handle material-symbols-rounded">menu</span>
                     </li>
                 </template>
