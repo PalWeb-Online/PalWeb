@@ -26,6 +26,7 @@ export function useTerm(props) {
                 onstop: () => isPlaying.value = false,
                 onpause: () => isPlaying.value = false,
             });
+
         } else {
             audio.value = null;
         }

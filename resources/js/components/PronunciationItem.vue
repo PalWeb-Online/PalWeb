@@ -34,11 +34,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="pronunciation-item-wrapper">
+    <div class="model-item-container pronunciation-item-container">
         <div class="pronunciation-item">
-            <Link v-if="audio" class="pronunciation-item-term"
-                  :href="route('terms.show', model.term.slug)">{{ model.term.term }}
-            </Link>
             <div class="pronunciation-item-data">
                 <div class="pronunciation-item-dialect">{{ model.dialect.name }}</div>
                 <div class="pronunciation-item-phonology">
@@ -49,6 +46,9 @@ onMounted(() => {
                     {{ model.phonetic }}
                 </div>
             </div>
+            <Link v-if="audio" class="pronunciation-item-term"
+                  :href="route('terms.show', model.term.slug)">{{ model.term.term }}
+            </Link>
         </div>
 
         <div v-if="audio" class="pronunciation-audios">

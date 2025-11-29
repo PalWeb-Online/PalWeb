@@ -4,7 +4,7 @@
 ])
 
 @if($pronunciation)
-    <div class="pronunciation-item-wrapper">
+    <div class="pronunciation-item-container">
         <div class="pronunciation-item">
             @if($audio)
                 <a class="pronunciation-item-term"

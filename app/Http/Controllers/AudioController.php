@@ -52,11 +52,6 @@ class AudioController extends Controller
             'totalCount' => $totalCount,
             'filters' => $filters,
         ]);
-
-//        return view('community.audios.index', [
-//            'audios' => $audios,
-//            'currentSort' => $sort,
-//        ]);
     }
 
     public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse

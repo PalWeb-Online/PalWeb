@@ -12,6 +12,10 @@ const description = computed(() => {
             return 'Juicy like its namesake. Refreshment for the eyes; a perfect counterbalance to hot summer days.';
         case 'Nabatean':
             return 'Ancient stones the color of rust, sand as far as the eyes can see; an oasis in the distance.';
+        // case 'Jerusalem':
+        //     return 'Intricate tilework, lapis lazuli & the stonework of its namesake.';
+        // case 'Summac':
+        //     return 'Chicken, spices & caramelized onion.';
     }
 })
 </script>

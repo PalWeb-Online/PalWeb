@@ -74,7 +74,7 @@
             text-transform: uppercase;
         }
 
-        & > a {
+        & > a, & > button {
             color: var(--color-dark-primary);
             width: 4.8rem;
 
@@ -119,36 +119,31 @@
     }
 }
 
-
-.pronunciation-item-wrapper {
+.pronunciation-item-container {
     display: grid;
-    background: white;
-    border-radius: 0.8rem;
-    border: 0.1rem solid var(--color-accent-medium);
-    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
-    margin: 0 0 0.2rem 0.2rem;
-    overflow: hidden;
 
     .pronunciation-audios {
         flex-shrink: 0;
         display: grid;
-        gap: 0.4rem;
         justify-items: start;
-        padding: 0.4rem 0.8rem;
-        //border-block-start: 0.1rem solid var(--color-pastel-medium);
         border-inline-start: none;
+        background: var(--color-pastel-light);
+        border-block-start: 0.1rem solid var(--color-dark-primary);
+
+        & > *:not(:last-child) {
+            border-block-end: 0.1rem solid var(--color-pastel-dark);
+        }
     }
 
     & > button {
         text-align: center;
-        background: var(--color-pastel-light);
-        border-block-start: 0.1rem solid var(--color-pastel-medium);
+        background: var(--color-pastel-medium);
         padding-block-end: 0.2rem;
         @include link-primary;
 
         &:hover {
             text-decoration: none;
-            background: var(--color-pastel-medium);
+            background: var(--color-pastel-dark);
         }
     }
 
@@ -161,37 +156,44 @@
 
         .pronunciation-audios {
             border-block-start: none;
-            //border-inline-start: 0.1rem solid var(--color-pastel-medium);
         }
     }
 }
 
 .pronunciation-item {
-    display: flex;
-    align-items: center;
-    flex-flow: row wrap;
-    direction: rtl;
-    padding: 0.4rem 1.6rem;
-    gap: 1.6rem;
-    background: var(--color-accent-light);
+    display: grid;
+    grid-template-columns: 1fr 20%;
+    white-space: nowrap;
+    height: 3.6rem;
+
+    .pronunciation-item-term,
+    .pronunciation-item-data {
+        padding-inline: 1.2rem;
+        overflow: scroll;
+    }
 
     .pronunciation-item-term {
-        flex-basis: 15%;
         padding-block-start: 0.1rem;
         font-family: $ar_bodyFont;
+        font-size: 1.8rem;
         font-weight: 700;
         white-space: nowrap;
-        padding-inline-end: 1.6rem;
-        border-inline-end: 0.1rem solid var(--color-accent-medium);
+        background: var(--color-accent-light);
+        display: flex;
+        align-items: center;
+        direction: rtl;
+
+        &:hover {
+            color: var(--color-medium-primary);
+        }
     }
 
     .pronunciation-item-data {
         flex-grow: 1;
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: row nowrap;
         align-items: center;
         column-gap: 1.6rem;
-        direction: ltr;
     }
 
     .pronunciation-item-dialect {
@@ -199,7 +201,6 @@
         font-family: $bodyFont;
         font-weight: 700;
         font-size: 1.4rem;
-        white-space: nowrap;
     }
 
     .pronunciation-item-phonology {
@@ -211,29 +212,27 @@
     .play {
         width: 2.8rem;
     }
-
-    a {
-        @include link-purple-deep;
-    }
 }
 
 .audio-item {
     width: 100%;
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: 3.6rem 1fr 3.6rem;
+    white-space: nowrap;
     align-items: center;
     gap: 0.2rem 0.8rem;
     font-size: 1.4rem;
+    height: 3.6rem;
 
-    .audio-item-phonology {
-        font-family: $monoFont;
-        font-size: 1.2rem;
-        padding-inline-end: 0.8rem;
-        border-inline-end: 0.1rem solid var(--color-accent-medium)
-    }
+    .audio-item-data {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        overflow: scroll;
 
-    .audio-item-info {
-        flex-grow: 1;
+        & > * {
+            flex-shrink: 0;
+        }
     }
 
     .audio-item-date {
@@ -242,18 +241,32 @@
         font-style: italic;
     }
 
-    .play {
-        width: 2.4rem;
+    button {
+        color: white;
+        background: var(--color-medium-primary);
+        font-size: 2.0rem;
+        height: 3.6rem;
+        width: 3.6rem;
     }
 
-    .trash {
-        width: 1.6rem;
-        cursor: pointer;
-    }
-
-    @media (min-width: 760px) {
+    @media (min-width: 720px) {
         .audio-item-date {
             display: block;
         }
+    }
+}
+
+button.audio-button {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 700;
+    color: white;
+    background: var(--color-medium-primary);
+
+    &.active {
+        color: var(--color-dark-primary);
+        background: var(--color-accent-medium);
     }
 }

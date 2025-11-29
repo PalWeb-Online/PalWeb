@@ -12,10 +12,15 @@ const props = defineProps({
 });
 
 const audio = ref(null);
+const isPlaying = ref(false);
 
 function loadAudio() {
     audio.value = new Howl({
         src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${props.model.filename}`],
+        onplay: () => isPlaying.value = true,
+        onend: () => isPlaying.value = false,
+        onstop: () => isPlaying.value = false,
+        onpause: () => isPlaying.value = false,
     });
 }
 
@@ -36,36 +41,40 @@ watch(() => props.model, loadAudio, {immediate: true});
 
 <template>
     <div class="audio-item">
-        <img class="play" src="/img/audio.svg" alt="Play"
-             @click="playAudio"/>
+        <button @click="playAudio"
+                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
+            music_note
+        </button>
 
-        <div class="mini-user-profile">
-            <template v-if="model.speaker.user.private">
-                <div>by
-                    <Link :href="route('speaker.show', model.speaker)">Speaker #{{ model.speaker.id }}</Link>
-                </div>
-            </template>
-            <template v-else>
-                <div>by
-                    <Link :href="route('speaker.show', model.speaker)">{{ model.speaker.user.name }}</Link>
-                </div>
-                <img class="avatar" alt="User Avatar" :src="`/img/avatars/${model.speaker.user.avatar}`"/>
-            </template>
+        <div class="audio-item-data">
+            <div class="mini-user-profile">
+                <template v-if="model.speaker.user.private">
+                    <div>by
+                        <Link :href="route('speaker.show', model.speaker)">Speaker #{{ model.speaker.id }}</Link>
+                    </div>
+                </template>
+                <template v-else>
+                    <div>by
+                        <Link :href="route('speaker.show', model.speaker)">{{ model.speaker.user.name }}</Link>
+                    </div>
+                    <img class="avatar" alt="User Avatar" :src="`/img/avatars/${model.speaker.user.avatar}`"/>
+                </template>
+            </div>
+
+            <div class="audio-item-info">
+                {{ model.speaker.fluency_alias }}
+                <span style="text-transform: capitalize">{{
+                        model.speaker.gender !== 'other' ? model.speaker.gender : ''
+                    }}</span>
+                Speaker from {{ model.speaker.location.name_ar }} ({{ model.speaker.location.name_en }})
+            </div>
+            <div class="audio-item-date">
+                {{ model.created_at }}
+            </div>
         </div>
 
-        <div class="audio-item-info">
-            {{ model.speaker.fluency_alias }}
-            <span style="text-transform: capitalize">{{
-                    model.speaker.gender !== 'other' ? model.speaker.gender : ''
-                }}</span>
-            Speaker from {{ model.speaker.location.name_ar }} ({{ model.speaker.location.name_en }})
-        </div>
-        <div class="audio-item-date">
-            {{ model.created_at }}
-        </div>
-
-        <template v-if="UserStore.user?.id === model.speaker.user.id || UserStore.isAdmin">
-            <img class="trash" src="/img/trash.svg" @click="deleteAudio" alt="Delete"/>
-        </template>
+        <button v-if="UserStore.user?.id === model.speaker.user.id || UserStore.isAdmin"
+                @click="deleteAudio" class="material-symbols-rounded">delete
+        </button>
     </div>
 </template>

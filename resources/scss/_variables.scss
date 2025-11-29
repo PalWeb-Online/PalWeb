@@ -81,31 +81,20 @@ $bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
 $ar_headFont: 'ibm-plex-arabic', sans-serif;
 $ar_bodyFont: 'Vazirmatn', sans-serif;
 
-//var(--color-dark-secondary): #360f88;
-//var(--color-dark-primary): #4313aa;
-//var(--color-medium-secondary): #5435B0;
-//var(--color-medium-primary): #7047eb;
-//var(--color-pastel-dark): #c6b5f7;
-//var(--color-pastel-medium): #e2dafb;
-//var(--color-pastel-light): #f1edfd;
-//// one more yellow
-//var(--color-accent-medium): #ffc32c;
-//var(--color-accent-light): #fff0ca;
-
 :root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(265, 95%, 28%);
-    --color-dark-primary: hsl(265, 95%, 35%);
-    --color-medium-secondary: hsl(260, 65%, 45%);
-    --color-medium-primary: hsl(255, 80%, 60%);
+    --color-dark-secondary: hsl(265, 90%, 30%);
+    --color-dark-primary: hsl(265, 85%, 35%);
+    --color-medium-secondary: hsl(260, 64%, 48%);
+    --color-medium-primary: hsl(255, 82%, 62%);
     --color-pastel-dark: hsl(255, 75%, 83%);
     --color-pastel-medium: hsl(255, 80%, 92%);
     --color-pastel-light: hsl(260, 90%, 97%);
     --color-transparent: hsla(255, 80%, 92%, 0.75);
     --color-accent-dark: var(--color-dark-primary);
-    --color-accent-medium: hsl(42, 95%, 58%);
-    --color-accent-light: hsl(42, 95%, 90%);
+    --color-accent-medium: hsl(40, 92%, 60%);
+    --color-accent-light: hsl(40, 92%, 90%);
 }
 
 .theme-Watermelon {
@@ -137,33 +126,24 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-transparent: hsla(195, 40%, 84%, 0.75);
     --color-accent-dark: hsl(195, 60%, 30%);
     --color-accent-medium: hsl(36, 85%, 65%);
-    --color-accent-light: hsl(35, 80%, 92%);
-    //--color-pastel-dark: hsl(35, 90%, 76%);
-    //--color-pastel-medium: hsl(35, 95%, 84%);
-    //--color-accent-medium: hsl(195, 40%, 70%);
+    --color-accent-light: hsl(36, 80%, 92%);
 }
 
 //.theme-Jerusalem {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
 //    --color-dark-secondary: #050566;
-//    --color-dark-primary: hsl(250, 90%, 30%);
+//    --color-dark-primary: hsl(240, 80%, 30%);
 //    --color-medium-secondary: hsl(215, 90%, 45%);
-//    --color-medium-primary: hsl(170, 95%, 38%);
+//    --color-medium-primary: hsl(172, 97%, 34%);
 //    --color-pastel-dark: hsl(200, 75%, 80%);
 //    --color-pastel-medium: hsl(200, 90%, 92%);
-//    --color-pastel-light: hsl(170, 50%, 94%);
+//    --color-pastel-light: hsl(172, 50%, 94%);
 //    --color-transparent: hsla(38, 90%, 88%, 0.75);
-//    //--color-accent-dark: hsl(170, 80%, 25%);
-//    --color-accent-dark: hsl(28, 60%, 32%);
-//    //--color-accent-medium: hsl(46, 95%, 50%);
-//    --color-accent-medium: hsl(34, 65%, 60%);
-//    --color-accent-light: hsl(35, 90%, 94%);
-//}
+//    --color-accent-dark: hsl(16, 35%, 30%);
+//    --color-accent-medium: hsl(46, 80%, 55%);
+//    --color-accent-light: hsl(46, 85%, 92%);
 //
-//.theme-Jaffa {
-//    --color-polar-dark: hsl(0, 0%, 0%);
-//    --color-polar-light: hsl(0, 0%, 100%);
 //    --color-dark-secondary: hsl(220, 80%, 12%);
 //    --color-dark-primary: hsl(220, 100%, 25%);
 //    --color-medium-secondary: hsl(200, 95%, 38%);
@@ -172,41 +152,24 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
 //    --color-pastel-medium: hsl(160, 60%, 84%);
 //    --color-pastel-light: hsl(160, 60%, 95%);
 //    --color-transparent: hsla(65, 60%, 84%, 0.75);
-//    --color-accent-dark: hsl(25, 80%, 40%);
-//    --color-accent-medium: hsl(37, 100%, 60%);
+//    --color-accent-medium: hsl(355, 60%, 55%);
 //    --color-accent-light: hsl(32, 100%, 92%);
 //}
 
-//.theme-zaatar {
+//.theme-Summac {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
-//    --color-dark-secondary: hsl(100, 80%, 12%);
-//    --color-dark-primary: hsl(100, 80%, 16%);
-//    --color-medium-secondary: hsl(80, 45%, 35%);
-//    --color-medium-primary: hsl(80, 45%, 45%);
-//    --color-pastel-dark: hsl(65, 60%, 80%);
-//    --color-pastel-medium: hsl(65, 60%, 84%);
-//    --color-pastel-light: hsl(65, 60%, 92%);
-//    --color-transparent: hsla(65, 60%, 84%, 0.75);
-//    --color-accent-dark: hsl(42, 70%, 35%);
-//    --color-accent-medium: hsl(48, 90%, 55%);
-//    --color-accent-light: hsl(45, 90%, 92%);
-//}
-
-//.theme-jericho {
-//    --color-polar-dark: hsl(0, 0%, 0%);
-//    --color-polar-light: hsl(0, 0%, 100%);
-//    --color-dark-secondary: hsl(10, 50%, 15%);
-//    --color-dark-primary: hsl(10, 50%, 22%);
-//    --color-medium-secondary: hsl(30, 80%, 40%);
-//    --color-medium-primary: hsl(30, 70%, 60%);
-//    --color-pastel-dark: hsl(40, 75%, 83%);
-//    --color-pastel-medium: hsl(40, 75%, 88%);
-//    --color-pastel-light: hsl(40, 75%, 97%);
-//    --color-transparent: hsla(40, 75%, 88%, 0.75);
-//    --color-accent-dark: hsl(190, 50%, 35%);
-//    --color-accent-medium: hsl(190, 50%, 70%);
-//    --color-accent-light: hsl(190, 50%, 95%);
+//    --color-dark-secondary: hsl(300, 28%, 16%);
+//    --color-dark-primary: hsl(300, 35%, 22%);
+//    --color-medium-secondary: hsl(340, 40%, 35%);
+//    --color-medium-primary: hsl(340, 40%, 45%);
+//    --color-pastel-dark: hsl(340, 50%, 80%);
+//    --color-pastel-medium: hsl(340, 50%, 92%);
+//    --color-pastel-light: hsl(340, 50%, 97%);
+//    --color-transparent: hsla(195, 40%, 84%, 0.75);
+//    --color-accent-dark: hsl(12, 30%, 30%);
+//    --color-accent-medium: hsl(28, 50%, 62%);
+//    --color-accent-light: hsl(28, 50%, 92%);
 //}
 
 .theme-picker-wrapper {

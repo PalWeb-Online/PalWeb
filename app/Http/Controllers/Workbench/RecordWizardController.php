@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Workbench;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PronunciationResource;
 use App\Http\Resources\SpeakerResource;
 use App\Models\Deck;
 use App\Models\Dialect;
@@ -53,14 +54,9 @@ class RecordWizardController extends Controller
             ->orderBy('id');
 
         $limit = max(0, 100 - count($queued));
-        $pronunciations = $query->take($limit)->get()->map(function ($pronunciation) {
-            return array_merge($pronunciation->toArray(), [
-                'term' => $pronunciation->term->term,
-            ]);
-        });
 
         return response()->json([
-            'items' => $pronunciations,
+            'items' => PronunciationResource::collection($query->take($limit)->get()),
         ]);
     }
 

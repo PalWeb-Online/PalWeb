@@ -202,6 +202,7 @@
             align-items: center;
             gap: 0.8rem;
             flex-grow: 1;
+            text-align: start;
         }
 
         .material-symbols-rounded {
@@ -565,7 +566,6 @@
 }
 
 .rw-page__check {
-    padding: 3.2rem;
     background: white;
 }
 
