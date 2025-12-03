@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         (new DialogSeeder)->run();
 
         (new ScoreSeeder)->run();
+        (new UnitSeeder)->run();
     }
 }

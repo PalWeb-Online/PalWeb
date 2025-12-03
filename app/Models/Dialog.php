@@ -6,6 +6,7 @@ use App\Models\Scopes\DialogScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Dialog extends Model
 {
@@ -22,6 +23,11 @@ class Dialog extends Model
         parent::boot();
 
         static::addGlobalScope(new DialogScope);
+    }
+
+    public function lesson(): HasOne
+    {
+        return $this->hasOne(Lesson::class);
     }
 
     public function sentences(): HasMany
