@@ -168,8 +168,6 @@ class TermController extends Controller
 
     public function create(): \Inertia\Response
     {
-        View::share('pageTitle', 'Create Term');
-
         return Inertia::render('Library/Terms/Create', [
             'section' => 'library',
         ]);
@@ -177,8 +175,6 @@ class TermController extends Controller
 
     public function edit(Term $term): \Inertia\Response
     {
-        View::share('pageTitle', 'Edit Term');
-
         $term->load([
             'root',
             'pronunciations',

@@ -54,7 +54,7 @@ Route::get('/', function () {
             'terms' => Term::count(),
             'sentences' => Sentence::count(),
             'users' => User::count(),
-            'decks' => Deck::count(),
+            'decks' => Deck::where('private', false)->count(),
             'dialogs' => Dialog::count(),
             'audios' => Audio::count(),
         ],
@@ -140,6 +140,11 @@ Route::post('/email', [EmailAnnouncementController::class, 'store'])
     ->middleware('admin')->name('email.store');
 
 Route::prefix('/library')->controller(TermController::class)->group(function () {
+    Route::middleware('admin')->group(function () {
+        Route::resource('/terms', TermController::class)->except(['index', 'show']);
+        Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
+    });
+
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
@@ -148,7 +153,6 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
         Route::get('/{term}/get', function (Term $term) {
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
-
 
 //        todo: should these be API routes?
         Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
@@ -255,13 +259,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/random/deck', function () {
             return to_route('decks.show', Deck::inRandomOrder()->first());
         })->name('decks.random');
-
-        Route::middleware('admin')->group(function () {
-            Route::resource('/terms', TermController::class)->except(['index', 'show', 'create']);
-            Route::get('/create/terms', [TermController::class, 'create'])->name('terms.create');
-
-            Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
-        });
     });
 
     Route::prefix('/workbench')->group(function () {

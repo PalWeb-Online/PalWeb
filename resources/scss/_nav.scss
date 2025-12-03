@@ -21,7 +21,6 @@ nav {
     z-index: 999;
     user-select: none;
 
-
     .nav-sticky-buttons {
         display: flex;
         justify-content: flex-end;
@@ -49,11 +48,12 @@ nav {
 
     & > * {
         align-items: center;
-        padding-inline: 1.6rem;
     }
 
-    & > *:first-child {
-        background: var(--color-dark-primary);
+    & > *:nth-child(1) {
+        background: var(--color-dark-secondary);
+        padding-inline: 1.6rem;
+
         display: none;
 
         @media (min-width: 960px) {
@@ -61,12 +61,25 @@ nav {
         }
     }
 
-    & > *:last-child {
+    .connection-status {
         display: flex;
+        color: var(--color-medium-primary);
+        background: var(--color-dark-primary);
+        padding-inline: 1.2rem;
+        font-size: 2.0rem;
 
-        &:hover {
-            text-decoration: 0.1rem solid underline;
+        @media (min-width: 960px) {
+            font-size: 1.6rem;
         }
+    }
+
+    a {
+        display: flex;
+        padding-inline: 1.6rem;
+    }
+
+    a:hover {
+        text-decoration: 0.1rem solid underline;
     }
 }
 
@@ -83,7 +96,7 @@ nav {
     .nav-sidebar {
         grid-area: 1 / 1;
         display: grid;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto auto auto 1fr;
         max-height: 100vh;
         transition: transform 0.3s ease-in-out;
         z-index: 999;

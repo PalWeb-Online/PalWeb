@@ -3,6 +3,7 @@ import Layout from "../../Shared/Layout.vue";
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
+import {computed} from "vue";
 
 const UserStore = useUserStore();
 
@@ -29,6 +30,10 @@ const setNewPassword = () => {
 
     method(url);
 }
+
+const isValidRequest = computed(() => {
+    return form.password.length >= 8 && form.password_confirmation;
+});
 
 defineOptions({
     layout: Layout
@@ -63,9 +68,9 @@ defineOptions({
                         />
                     </div>
                 </div>
-                <button class="app-button" @click="setNewPassword" :disabled="form.processing">
-                    Set Password
-                </button>
+            </div>
+            <div class="window-footer">
+                <button @click="setNewPassword" :disabled="form.processing || !isValidRequest">Set Password</button>
             </div>
         </div>
     </div>

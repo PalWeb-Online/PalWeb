@@ -659,8 +659,7 @@ h3 {
 
 .app-tip {
     @include box-accent-light;
-    width: 100%;
-    max-width: 96rem;
+    width: min(96rem, 100%);
 
     .tip-head {
         display: grid;

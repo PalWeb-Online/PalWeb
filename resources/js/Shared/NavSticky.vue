@@ -1,11 +1,14 @@
 <script setup>
-import { route } from "ziggy-js";
-import { useNavigationStore } from "../stores/NavigationStore.js";
-import { useSearchStore } from "../stores/SearchStore.js";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import {route} from "ziggy-js";
+import {useNavigationStore} from "../stores/NavigationStore.js";
+import {useSearchStore} from "../stores/SearchStore.js";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import ThemePicker from "../components/Modals/ThemePicker.vue";
-import { usePage } from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
+import { useConnectionStatus } from '../composables/useConnectionStatus.js';
+
+const { status } = useConnectionStatus(Echo);
 
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
@@ -13,7 +16,7 @@ const SearchStore = useSearchStore();
 const showThemePicker = ref(false);
 
 const {
-    props: { utcOffsetMinutes },
+    props: {utcOffsetMinutes},
 } = usePage();
 
 const utcOffsetHours = utcOffsetMinutes / 60;
@@ -70,7 +73,6 @@ onMounted(() => {
         if (document.visibilityState === "visible") {
             displayedTime.value = Date.now();
 
-            // animation loop isn't running, start it up again
             if (animationFrameId === null) {
                 animationFrameId = requestAnimationFrame(updateDisplayedTime);
             }
@@ -104,6 +106,11 @@ onMounted(() => {
                     })
                 }}
                 (UTC +{{ utcOffsetHours }})
+            </div>
+            <div class="material-symbols-rounded connection-status">
+                <span v-if="status === 'online'" style="color: var(--color-accent-medium)">wifi</span>
+                <span v-else-if="status === 'connecting'" >wifi_find</span>
+                <span v-else>wifi_off</span>
             </div>
             <Link :href="route('homepage')">PalWeb 2.1 (Nabatean)</Link>
         </div>
@@ -152,6 +159,6 @@ onMounted(() => {
     <!--    </x-dropdown>-->
 
     <ModalWrapper v-model="showThemePicker">
-        <ThemePicker />
+        <ThemePicker/>
     </ModalWrapper>
 </template>
