@@ -69,7 +69,7 @@ const sortingMessage = computed(() => {
             <div class="window-header">
                 <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
                 <div class="window-header-url">www.palweb.app/library/terms</div>
-                <Link v-if="UserStore.isAdmin" :href="route('terms.create')" class="material-symbols-rounded">add</Link>
+                <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add</Link>
                 <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
             <div class="window-section-head">

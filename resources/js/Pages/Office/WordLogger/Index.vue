@@ -1,6 +1,6 @@
 <script setup>
 import {route} from "ziggy-js";
-import Layout from "../../Shared/Layout.vue";
+import Layout from "../../../Shared/Layout.vue";
 
 defineProps({
     feedbackComments: Array,
@@ -16,9 +16,10 @@ defineOptions({
 <template>
     <Head title="to-Do List"/>
     <div id="app-head">
-        <h1>To-Do</h1>
+        <h1>Word Logger</h1>
     </div>
     <div id="app-body">
+        <Link :href="route('word-logger.term')">+ Term</Link>
         <h1>From Sentences</h1>
         <div class="missing-terms">
             <div v-for="term in fromSentences">
@@ -60,16 +61,5 @@ defineOptions({
                 <!--                    </form>-->
             </div>
         </div>
-
-        <h1>Terms Missing Sentences</h1>
-        <ul>
-            <li v-for="term in termsMissingSentences">
-                <Link :href="route('terms.show', term.slug)">
-                    {{ term.term }}
-                    ({{ term.translit }})
-                    "{{ term.gloss }}"
-                </Link>
-            </li>
-        </ul>
     </div>
 </template>

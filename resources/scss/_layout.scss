@@ -43,6 +43,10 @@ body {
         background: var(--color-medium-primary);
     }
 
+    &.office {
+        background: var(--color-accent-light);
+    }
+
     &.account {
         background: var(--color-pastel-light);
 

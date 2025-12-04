@@ -14,11 +14,7 @@ class UnitScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
-            ->when(! auth()->user()->isAdmin(), fn ($q) => $q
-                ->where('units.published', true)
-            );
-
-        $builder
-            ->with(['lessons']);
+            ->with(['lessons'])
+            ->orderBy('position');
     }
 }

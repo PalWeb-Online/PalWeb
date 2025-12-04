@@ -20,10 +20,12 @@ class UnitResource extends JsonResource
             'title' => $this->title,
             'lessons' => $this->lessons->map(fn ($lesson) => [
                 'id' => $lesson->id,
+                'position' => $lesson->position,
                 'slug' => $lesson->slug,
                 'title' => $lesson->title,
                 'unlocked' => $lesson->isUnlockedFor($request->user()),
                 'completed' => $lesson->getProgressFor($request->user())['completed'],
+                'published' => $lesson->published,
             ]),
             'published' => $this->published
         ];

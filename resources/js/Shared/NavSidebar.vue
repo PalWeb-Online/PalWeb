@@ -90,8 +90,10 @@ onMounted(() => {
                     <button class="material-symbols-rounded" @click="router.post(route('signout'))">logout</button>
                 </template>
                 <template v-else>
-                    <button class="material-symbols-rounded" @click="NavigationStore.showSignUp = true">person_add</button>
-                    <button class="material-symbols-rounded" @click="NavigationStore.showSignIn = true">login</button>
+                    <button class="material-symbols-rounded" @click="NavigationStore.showSignUp = true">person_add
+                    </button>
+                    <button class="material-symbols-rounded" @click="NavigationStore.showSignIn = true">login
+                    </button>
                 </template>
                 <button class="material-symbols-rounded" @click="NavigationStore.closeSidebar">close</button>
             </div>
@@ -123,7 +125,13 @@ onMounted(() => {
                             <div @click="toSection('workbench', 1)" class="nav-carousel-page-item"
                                  :class="{ 'active': NavigationStore.data.section === 'workbench' }">
                                 <div>workbench</div>
-                                <div>database-powered learning tools</div>
+                                <div>database-powered tools</div>
+                            </div>
+                            <div v-if="['admin'].includes(UserStore.highestRole)"
+                                 @click="toSection('office', 1)" class="nav-carousel-page-item"
+                                 :class="{ 'active': NavigationStore.data.section === 'office' }">
+                                <div>office</div>
+                                <div>for Teachers only</div>
                             </div>
                         </Slide>
                         <Slide class="nav-carousel-slide" key="1">
@@ -206,14 +214,6 @@ onMounted(() => {
                                     <div>deckMaster</div>
                                     <div>build & study Decks</div>
                                 </div>
-                                <div v-if="['admin'].includes(UserStore.highestRole)"
-                                     @click="navigateOrPrompt('speech-maker.index')"
-                                     class="nav-carousel-page-item"
-                                     :class="{ 'active': $page.component === 'Workbench/SpeechMaker/SpeechMaker' }"
-                                >
-                                    <div>speechMaker</div>
-                                    <div>create Sentences & Dialogs</div>
-                                </div>
                                 <div @click="navigateOrPrompt('record-wizard.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
@@ -223,6 +223,32 @@ onMounted(() => {
                                 >
                                     <div>recordWizard</div>
                                     <div>immortalize Palestinian Arabic</div>
+                                </div>
+                            </div>
+                            <div class="nav-carousel-section" :style="{ zIndex: zIndices.office }">
+                                <div
+                                    @click="navigateOrPrompt('word-logger.index')"
+                                    class="nav-carousel-page-item"
+                                    :class="{ 'active': $page.component === 'Office/WordLogger/Index' }"
+                                >
+                                    <div>wordLogger</div>
+                                    <div>manage Dictionary entries</div>
+                                </div>
+                                <div
+                                    @click="navigateOrPrompt('speech-maker.index')"
+                                    class="nav-carousel-page-item"
+                                    :class="{ 'active': $page.component === 'Office/SpeechMaker/SpeechMaker' }"
+                                >
+                                    <div>speechMaker</div>
+                                    <div>create Sentences & Dialogs</div>
+                                </div>
+                                <div
+                                    @click="navigateOrPrompt('lesson-planner.index')"
+                                    class="nav-carousel-page-item"
+                                    :class="{ 'active': $page.component === 'Office/LessonPlanner/Course' }"
+                                >
+                                    <div>lessonPlanner</div>
+                                    <div>create Lessons & Activities</div>
                                 </div>
                             </div>
                         </Slide>
@@ -243,9 +269,7 @@ onMounted(() => {
                 <div v-if="UserStore.isAdmin" class="nav-user-menu">
                     <div class="nav-user-menu-head">myAdmin</div>
                     <div class="nav-user-menu-items">
-                        <Link :href="route('terms.create')">New Term</Link>
                         <button @click="showSendMail = true">Send Mail</button>
-                        <Link :href="route('todo.index')">to-Do List</Link>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">

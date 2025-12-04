@@ -166,32 +166,6 @@ class TermController extends Controller
         return SentenceResource::collection($sentences);
     }
 
-    public function create(): \Inertia\Response
-    {
-        return Inertia::render('Library/Terms/Create', [
-            'section' => 'library',
-        ]);
-    }
-
-    public function edit(Term $term): \Inertia\Response
-    {
-        $term->load([
-            'root',
-            'pronunciations',
-            'attributes',
-            'spellings',
-            'relatives',
-            'patterns',
-            'glosses.attributes',
-            'inflections',
-        ]);
-
-        return Inertia::render('Library/Terms/Create', [
-            'section' => 'library',
-            'term' => new TermResource($term)->additional(['detail' => true]),
-        ]);
-    }
-
     public function store(StoreTermRequest $request): RedirectResponse
     {
         $term = DB::transaction(function () use ($request) {

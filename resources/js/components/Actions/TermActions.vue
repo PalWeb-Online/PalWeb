@@ -24,7 +24,7 @@ const deleteTerm = () => {
         </Link>
 
         <template v-if="UserStore.isAdmin">
-            <Link :href="route('terms.edit', model.id)" role="menuitem" tabindex="-1">
+            <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
                 Edit Term
             </Link>
             <button @click="deleteTerm" role="menuitem" tabindex="-1">

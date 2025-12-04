@@ -171,16 +171,18 @@ const saveTerm = async () => {
 }
 
 onMounted(async () => {
-    try {
-        const response = await axios.get(route('terms.get.pronunciations', {term: term.id}));
-        const pronunciations = response.data.filter(pronunciation =>
-            !term.pronunciations.some(existing => existing.id === pronunciation.id)
-        );
+    if (term.id) {
+        try {
+            const response = await axios.get(route('terms.get.pronunciations', {term: term.id}));
+            const pronunciations = response.data.filter(pronunciation =>
+                !term.pronunciations.some(existing => existing.id === pronunciation.id)
+            );
 
-        term.pronunciations.push(...pronunciations);
+            term.pronunciations.push(...pronunciations);
 
-    } catch (error) {
-        console.error('Error fetching Pronunciations:', error);
+        } catch (error) {
+            console.error('Error fetching Pronunciations:', error);
+        }
     }
 
     if (!term.pronunciations.length) {
@@ -212,7 +214,7 @@ defineOptions({
 <template>
     <Head title="Dictionary: Build Term"/>
     <div id="app-head">
-        <Link :href="route('terms.index')"><h1>Dictionary</h1></Link>
+        <h1>Word Logger</h1>
     </div>
     <div id="app-body">
         <div class="app-nav-interact">

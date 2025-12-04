@@ -8,18 +8,19 @@ use App\Http\Controllers\DeckController;
 use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\FeedbackCommentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Office\LessonPlannerController;
+use App\Http\Controllers\Office\SpeechMakerController;
+use App\Http\Controllers\Office\WordLoggerController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
-use App\Http\Controllers\ToDoController;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\RecordWizardController;
-use App\Http\Controllers\Workbench\SpeechMakerController;
 use App\Http\Resources\AudioResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
@@ -140,11 +141,6 @@ Route::post('/email', [EmailAnnouncementController::class, 'store'])
     ->middleware('admin')->name('email.store');
 
 Route::prefix('/library')->controller(TermController::class)->group(function () {
-    Route::middleware('admin')->group(function () {
-        Route::resource('/terms', TermController::class)->except(['index', 'show']);
-        Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
-    });
-
     Route::prefix('/terms')->group(function () {
         Route::get('/', 'index')->name('terms.index');
         Route::get('/{term:slug}', 'show')->name('terms.show');
@@ -226,10 +222,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{score}', 'destroy')->name('scores.destroy');
         });
 
-        Route::middleware('admin')->group(function () {
-            Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
-        });
-
         Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
             Route::get('/', 'index')->name('explore.index');
             Route::get('/{page}', 'show')->name('explore.show');
@@ -247,7 +239,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{deck}/get', function (Deck $deck) {
                 return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
             })->name('decks.get');
-
         });
 
         Route::prefix('/audios')->group(function () {
@@ -262,17 +253,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/workbench')->group(function () {
-        Route::prefix('/speech-maker')->middleware(['admin'])->controller(SpeechMakerController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('speech-maker.index');
-                Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
-                Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
-                Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
-                Route::get('/get-terms/{id}', function (string $sentenceId) {
-                    return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
-                })->name('speech-maker.get-terms');
-            });
-
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/', 'index')->name('deck-master.index');
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
@@ -296,13 +276,44 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::prefix('/todo')->controller(ToDoController::class)->group(function () {
-        Route::post('/', 'store')
-            ->name('todo.store');
-        Route::get('/', 'index')
-            ->middleware('admin')->name('todo.index');
-        Route::delete('/{feedbackComment}', 'destroy')
-            ->middleware('admin')->name('todo.destroy');
+    Route::prefix('/office')->middleware(['admin'])->group(function () {
+        Route::resource('/terms', TermController::class)->except(['index', 'show', 'create', 'edit']);;
+        Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
+        Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
+        Route::resource('/units', UnitController::class)->except(['index', 'show', 'create', 'edit']);
+        Route::resource('/lessons', LessonController::class)->except(['index', 'show', 'create', 'edit']);;
+
+        Route::prefix('/word-logger')->controller(WordLoggerController::class)->group(function () {
+            Route::get('/', 'index')->name('word-logger.index');
+            Route::get('/term/{term?}', 'term')->name('word-logger.term');
+        });
+
+        Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
+            Route::get('/', 'index')->name('speech-maker.index');
+            Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
+            Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
+            Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
+            Route::get('/get-terms/{id}', function (string $sentenceId) {
+                return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
+            })->name('speech-maker.get-terms');
+        });
+
+        Route::prefix('/lesson-planner')->controller(LessonPlannerController::class)->group(function () {
+            Route::get('/', 'index')->name('lesson-planner.index');
+            Route::patch('/', 'update')->name('lesson-planner.update');
+            Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
+            Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
+            Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
+        });
+
+        Route::controller(LessonController::class)->group(function () {
+            Route::get('/lessons/search', 'search')->name('lessons.search');
+        });
+
+        Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
+            Route::post('/', 'store')->name('todo.store');
+            Route::delete('/{feedbackComment}', 'destroy')->name('todo.destroy');
+        });
     });
 
     Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
