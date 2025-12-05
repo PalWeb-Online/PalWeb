@@ -112,7 +112,7 @@ const currentTab = ref('deck');
     </div>
     <div id="app-body" v-show="currentTab === 'skills'">
         <template v-if="lesson.data.skills">
-            <component v-if="lesson.skills" :is="lessonComponent" :lesson="lesson.data"/>
+            <component v-if="lesson.data.skills" :is="lessonComponent" :lesson="lesson.data"/>
         </template>
         <template v-else>
             No Skills assigned to this Lesson yet.

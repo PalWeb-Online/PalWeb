@@ -36,6 +36,11 @@ class Lesson extends Model
         return $this->belongsTo(Deck::class);
     }
 
+    public function activity(): BelongsTo
+    {
+        return $this->belongsTo(Activity::class);
+    }
+
     public function dialog(): BelongsTo
     {
         return $this->belongsTo(Dialog::class);

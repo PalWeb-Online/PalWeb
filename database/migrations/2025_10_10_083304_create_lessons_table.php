@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->json('skills')->nullable();
             $table->foreignId('deck_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('activity_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('dialog_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('published')->default(false);
             $table->timestamps();

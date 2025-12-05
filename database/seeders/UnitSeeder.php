@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Lesson;
@@ -15,8 +16,10 @@ class UnitSeeder extends Seeder
      */
     public function run(): void
     {
+        $activityIds = Activity::pluck('id');
+
         Unit::factory()
-            ->count(9)
+            ->count(3)
             ->sequence(fn ($sequence) => [
                 'position' => $sequence->index + 1,
                 'title' => fake()->sentence(3),
@@ -47,6 +50,7 @@ class UnitSeeder extends Seeder
                         ],
                     ],
                     'deck_id' => Deck::pluck('id')->random(),
+                    'activity_id' => $activityIds[($unit->position - 1) * 9 + $sequence->index],
                     'dialog_id' => Dialog::pluck('id')->random(),
                 ])
                 ->create()
