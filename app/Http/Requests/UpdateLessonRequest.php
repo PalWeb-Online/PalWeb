@@ -17,7 +17,8 @@ class UpdateLessonRequest extends FormRequest
                 'integer',
                 'exists:units,id',
                 function ($attribute, $value, $fail) {
-                    if ($value) {
+                    $lesson = $this->route('lesson');
+                    if ($value  && $lesson->unit_id != $value) {
                         $count = \App\Models\Lesson::where('unit_id', $value)->count();
                         if ($count >= 9) {
                             $fail('The selected Unit already has the maximum of 9 Lessons.');

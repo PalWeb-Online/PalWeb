@@ -25,6 +25,7 @@ const zIndices = ref({
     academy: -1,
     library: -1,
     workbench: -1,
+    office: -1,
 });
 
 const toSection = async (section, key) => {
@@ -136,10 +137,10 @@ onMounted(() => {
                         </Slide>
                         <Slide class="nav-carousel-slide" key="1">
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.academy }">
-                                <div @click="navigateOrPrompt('coming-soon')"
+                                <div @click="navigateOrPrompt('units.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                        'active': $page.component === 'Workbench/Index',
+                                        'active': ['Academy/Units/Index', 'Academy/Units/Show', 'Academy/Lessons/Show'].includes($page.component),
                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Academy\LessonController;
 use App\Http\Controllers\Academy\ScoreController;
+use App\Http\Controllers\Academy\UnitController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
@@ -197,10 +199,13 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->middleware(['student'])->group(function () {
-        Route::prefix('/lessons')->controller(UnitController::class)->group(function () {
-            Route::get('/', 'index')->name('academy.index');
-            Route::get('/{unit}', 'unit')->name('academy.unit');
-            Route::get('/{unit}/{lesson}', 'lesson')->name('academy.lesson');
+        Route::controller(UnitController::class)->group(function () {
+            Route::get('/', 'index')->name('units.index');
+            Route::get('/units/{unit}', 'show')->name('units.show');
+        });
+
+        Route::controller(LessonController::class)->group(function () {
+            Route::get('/lessons/{lesson:slug}', 'show')->name('lessons.show');
         });
 
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {

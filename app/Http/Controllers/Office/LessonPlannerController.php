@@ -73,6 +73,7 @@ class LessonPlannerController extends Controller
             'lesson' => [
                 'unit' => [
                     'id' => $unit->id,
+                    'title' => $unit->title,
                 ],
             ],
         ]);
