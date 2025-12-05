@@ -12,6 +12,19 @@ class StoreLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'unit_id' => [
+                'nullable',
+                'integer',
+                'exists:units,id',
+                function ($attribute, $value, $fail) {
+                    if ($value) {
+                        $count = \App\Models\Lesson::where('unit_id', $value)->count();
+                        if ($count >= 9) {
+                            $fail('The selected Unit already has the maximum of 9 Lessons.');
+                        }
+                    }
+                },
+            ],
             'title' => ['required'],
             'skills.*.type' => ['required'],
             'skills.*.title' => ['required'],

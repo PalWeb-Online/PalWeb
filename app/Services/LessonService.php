@@ -10,10 +10,7 @@ class LessonService
 {
     public static function reorderUnitLessons(Unit $unit): void
     {
-        $lessons = $unit->lessons()
-            ->orderBy('position')
-            ->orderBy('id')
-            ->get();
+        $lessons = $unit->lessons;
 
         if ($lessons->isEmpty()) {
             return;
@@ -37,15 +34,11 @@ class LessonService
 
     public static function reorderAllUnitsAndLessons(): void
     {
-        $units = Unit::query()->orderBy('position')->orderBy('id')->get();
+        $units = Unit::all();
 
         if ($units->isEmpty()) {
             return;
         }
-
-        $units->load(['lessons' => function ($query) {
-            $query->orderBy('position')->orderBy('id');
-        }]);
 
         $allLessons = $units
             ->flatMap(function (Unit $unit) {
@@ -55,10 +48,8 @@ class LessonService
 
         if ($allLessons->isEmpty()) {
             foreach ($units as $index => $unit) {
-                $position = $index + 1;
-
                 $unit->update([
-                    'position' => $position,
+                    'position' => $index + 1,
                 ]);
             }
 
@@ -72,15 +63,13 @@ class LessonService
         }
 
         foreach ($units as $index => $unit) {
-            $position = $index + 1;
-
             $unit->update([
-                'position' => $position,
+                'position' => $index + 1,
             ]);
         }
 
         foreach ($units as $unit) {
-            $lessons = $unit->lessons->sortBy('position')->sortBy('id')->values();
+            $lessons = $unit->lessons;
 
             foreach ($lessons as $index => $lesson) {
                 $position = $index + 1;

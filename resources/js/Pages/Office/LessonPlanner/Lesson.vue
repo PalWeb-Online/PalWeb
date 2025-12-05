@@ -105,6 +105,7 @@ const deleteLesson = () => {
                 type="unit"
                 :lesson-id="props.lesson?.id || null"
                 :initial-title="props.lesson?.unit?.title || ''"
+                :errors="lesson.errors"
             />
 
             <div class="field-item">

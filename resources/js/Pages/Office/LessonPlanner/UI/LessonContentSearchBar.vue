@@ -19,7 +19,8 @@ const props = defineProps({
     initialTitle: {
         type: String,
         default: "",
-    }
+    },
+    errors: {type: Object, required: false},
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -146,6 +147,7 @@ onBeforeUnmount(() => {
                 delete
             </div>
         </div>
+        <div v-if="errors?.unit_id" v-text="errors?.unit_id" class="field-error"/>
 
         <div v-if="isOpen" class="search-select-dropdown">
             <ul class="search-select-list">
