@@ -35,12 +35,7 @@ watch(() => page.props.flash.notification, (notification) => {
 
     <div id="app-container" :class="section">
         <slot/>
-
-        <Footer v-if="![
-            'Workbench/RecordWizard/RecordWizard',
-            'Workbench/DeckMaster/DeckMaster',
-            'Workbench/SpeechMaker/SpeechMaker',
-            ].includes($page.component)"/>
+        <Footer/>
     </div>
 
     <ModalWrapper v-model="SearchStore.data.isOpen">
