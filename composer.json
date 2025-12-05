@@ -12,6 +12,7 @@
         "dompdf/dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.8",
         "inertiajs/inertia-laravel": "^2.0",
+        "intervention/image-laravel": "^1.5",
         "itsgoingd/clockwork": "^5.1",
         "laravel/cashier": "^15.2",
         "laravel/framework": "^11.38",
