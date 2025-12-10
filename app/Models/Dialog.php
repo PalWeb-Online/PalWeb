@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use App\Models\Scopes\DialogScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ScopedBy([DialogScope::class])]
 class Dialog extends Model
 {
     use HasFactory;
@@ -16,13 +18,6 @@ class Dialog extends Model
         'description',
         'media',
     ];
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::addGlobalScope(new DialogScope);
-    }
 
     public function sentences(): HasMany
     {

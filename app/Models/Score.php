@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use App\Models\Scopes\ScoreScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[ScopedBy([ScoreScope::class])]
 class Score extends Model
 {
     use HasFactory;
@@ -25,13 +27,6 @@ class Score extends Model
         'settings' => 'json',
         'results' => 'json',
     ];
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::addGlobalScope(new ScoreScope);
-    }
 
     public function user(): BelongsTo
     {

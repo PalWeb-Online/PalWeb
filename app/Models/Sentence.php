@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use App\Http\Resources\TermResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -125,7 +126,8 @@ class Sentence extends Model
         return null;
     }
 
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function filter($query, array $filters): void
     {
         $query->when($filters['sort'] === 'latest', fn ($query) => $query
             ->orderByDesc('sentences.id')

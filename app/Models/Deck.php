@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use App\Models\Scopes\DeckScope;
 use App\Models\Traits\HasScoreStats;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
+#[ScopedBy([DeckScope::class])]
 class Deck extends Model
 {
     use HasFactory;
@@ -32,8 +35,6 @@ class Deck extends Model
     protected static function boot(): void
     {
         parent::boot();
-
-        static::addGlobalScope(new DeckScope);
 
         static::deleting(function ($deck) {
             $deck->bookmarks()->delete();
@@ -72,7 +73,8 @@ class Deck extends Model
         return $this->morphMany(Score::class, 'scorable')->orderByDesc('created_at');
     }
 
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function filter($query, array $filters): void
     {
         $query->when($filters['sort'] === 'popular', fn ($query) => $query
             ->leftJoin('markable_bookmarks', function ($join) {
