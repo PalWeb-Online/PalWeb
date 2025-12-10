@@ -1,6 +1,5 @@
 import { createApp, h } from "vue/dist/vue.esm-bundler";
 import { createInertiaApp } from "@inertiajs/vue3";
-import { InertiaProgress } from '@inertiajs/progress'
 import { createPinia } from 'pinia';
 import axios from 'axios';
 // import Alpine from 'alpinejs';
@@ -42,10 +41,3 @@ createInertiaApp({
     },
     title: title => "PalWeb | " + title
 });
-
-InertiaProgress.init({
-    delay: 250,
-    color: '#ffc32c',
-    includeCSS: true,
-    showSpinner: false,
-})
