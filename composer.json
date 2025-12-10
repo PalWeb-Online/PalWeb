@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.4.2",
         "dompdf/dompdf": "^3.0",
+        "fakerphp/faker": "^1.24",
         "guzzlehttp/guzzle": "^7.8",
         "inertiajs/inertia-laravel": "^2.0",
         "itsgoingd/clockwork": "^5.1",
@@ -34,7 +35,6 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.10",
-        "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.0",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
