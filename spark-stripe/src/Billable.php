@@ -87,7 +87,6 @@ trait Billable
     /**
      * Get all of the local receipts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @deprecated This method will be removed in a future Spark release.
      */

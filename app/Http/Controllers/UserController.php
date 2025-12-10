@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Events\ProfileChanged;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\DeckResource;
@@ -13,6 +12,7 @@ use App\Models\User;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class UserController extends Controller

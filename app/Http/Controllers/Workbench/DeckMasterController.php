@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Workbench;
 
-use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
@@ -11,6 +10,7 @@ use App\Services\QuizService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class DeckMasterController extends Controller

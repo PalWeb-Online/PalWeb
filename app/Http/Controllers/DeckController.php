@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreDeckRequest;
@@ -15,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
