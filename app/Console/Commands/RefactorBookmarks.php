@@ -27,15 +27,15 @@ class RefactorBookmarks extends Command
     public function handle()
     {
         DB::table('markable_bookmarks')
-            ->where('markable_type', 'App\Models\Term')
+            ->where('markable_type', \App\Models\Term::class)
             ->update(['markable_type' => 'term']);
 
         DB::table('markable_bookmarks')
-            ->where('markable_type', 'App\Models\Sentence')
+            ->where('markable_type', \App\Models\Sentence::class)
             ->update(['markable_type' => 'sentence']);
 
         DB::table('markable_bookmarks')
-            ->where('markable_type', 'App\Models\Deck')
+            ->where('markable_type', \App\Models\Deck::class)
             ->update(['markable_type' => 'deck']);
 
         $this->info('Successfully updated markable_type values');
