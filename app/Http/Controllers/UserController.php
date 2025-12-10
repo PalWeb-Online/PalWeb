@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Events\ProfileChanged;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\DeckResource;
@@ -20,7 +21,7 @@ class UserController extends Controller
 
     public function show(User $user): \Inertia\Response
     {
-        $this->authorize('interact', $user);
+        Gate::authorize('interact', $user);
 
         $user->load(['dialect', 'badges', 'speaker', 'decks']);
 
@@ -37,7 +38,7 @@ class UserController extends Controller
 
     public function edit(User $user): \Inertia\Response
     {
-        $this->authorize('modify', $user);
+        Gate::authorize('modify', $user);
 
         $user->load(['dialect']);
 
@@ -49,7 +50,7 @@ class UserController extends Controller
 
     public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
     {
-        $this->authorize('modify', $user);
+        Gate::authorize('modify', $user);
 
         $user->update([
             'name' => $request->name,

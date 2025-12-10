@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Workbench;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
@@ -27,7 +28,7 @@ class DeckMasterController extends Controller
     public function build(?Deck $deck = null): \Inertia\Response
     {
         if ($deck) {
-            $this->authorize('modify', $deck);
+            Gate::authorize('modify', $deck);
             $deck->load(['terms.pronunciations']);
         }
 
@@ -87,7 +88,7 @@ class DeckMasterController extends Controller
 
     public function getCards(Deck $deck): JsonResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         return response()->json([
             'terms' => TermResource::collection(

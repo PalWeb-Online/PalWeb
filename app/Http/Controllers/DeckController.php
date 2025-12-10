@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
 use App\Http\Requests\StoreDeckRequest;
@@ -21,7 +22,7 @@ class DeckController extends Controller
 {
     public function pin(Request $request, Deck $deck): JsonResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $user = $request->user();
 
@@ -79,7 +80,7 @@ class DeckController extends Controller
 
     public function show(Deck $deck): \Inertia\Response
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $deck->load(['terms.pronunciations', 'scores']);
 
@@ -108,7 +109,7 @@ class DeckController extends Controller
 
     public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
@@ -143,7 +144,7 @@ class DeckController extends Controller
 
     public function destroy(Deck $deck): RedirectResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         $deck->delete();
         session()->flash('notification',
@@ -154,7 +155,7 @@ class DeckController extends Controller
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
@@ -194,7 +195,7 @@ class DeckController extends Controller
 
     public function copy(Request $request, Deck $deck): RedirectResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $user = $request->user();
 
@@ -223,7 +224,7 @@ class DeckController extends Controller
 
     public function export(Deck $deck): never
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $deck->load(['terms.glosses']);
 
