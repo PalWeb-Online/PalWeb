@@ -23,10 +23,13 @@ class Score extends Model
         'results',
     ];
 
-    protected $casts = [
-        'settings' => 'json',
-        'results' => 'json',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'settings' => 'json',
+            'results' => 'json',
+        ];
+    }
 
     public function user(): BelongsTo
     {
