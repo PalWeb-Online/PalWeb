@@ -4,8 +4,8 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -41,19 +41,21 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
-            if (! app()->environment(['local', 'testing']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+            if (! app()->environment(['local']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
                 report($exception);
 
                 Inertia::setRootView('layouts.app');
+
                 return Inertia::render('Error', [
                     'section' => 'community',
-                    'status' => $response->getStatusCode()
+                    'status' => $response->getStatusCode(),
                 ])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
 
             } elseif ($response->getStatusCode() === 419) {
                 session()->flash('notification', ['type' => 'error', 'message' => 'The page expired, please try again.']);
+
                 return back();
             }
 

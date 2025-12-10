@@ -67,23 +67,23 @@ Route::get('/', function () {
         'testimonials' => [
             [
                 'user' => new UserResource(User::find(243)),
-                'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.'
+                'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.',
             ],
             [
                 'user' => new UserResource(User::find(1317)),
-                'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.'
+                'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.',
             ],
             [
                 'user' => new UserResource(User::find(16)),
-                'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.'
+                'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.',
             ],
             [
                 'user' => new UserResource(User::find(18)),
-                'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.'
+                'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.',
             ],
             [
                 'user' => new UserResource(User::find(3)),
-                'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!'
+                'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
             ],
         ],
         'featuredTerm' => new TermResource(Term::find(662))->additional(['detail' => true]),
@@ -93,14 +93,14 @@ Route::get('/', function () {
 })->name('homepage');
 
 Route::get('/wiki/{page}', function ($page) {
-//    View::share('pageDescription', 'Dive into the most detailed publicly-accessible descriptive grammar of Palestinian Arabic ever; practical enough for learners, rigorous enough for linguists. Everything you need to understand the intricacies of the language is right here.');
+    //    View::share('pageDescription', 'Dive into the most detailed publicly-accessible descriptive grammar of Palestinian Arabic ever; practical enough for learners, rigorous enough for linguists. Everything you need to understand the intricacies of the language is right here.');
 
     $componentPath = resource_path("js/Pages/Wiki/Pages/{$page}.vue");
 
     if (file_exists($componentPath)) {
         return Inertia::render("Wiki/Pages/{$page}", [
             'section' => 'wiki',
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
@@ -128,7 +128,7 @@ Route::prefix('/email')->middleware('auth')->controller(EmailVerificationControl
     Route::get('/verification', function () {
         return to_route('users.show', auth()->user())->with('notification', [
             'type' => 'warning',
-            'message' => 'You must verify your email to access this feature.'
+            'message' => 'You must verify your email to access this feature.',
         ]);
     })->name('verification.notice');
     Route::post('/verification/link', 'link')
@@ -152,7 +152,7 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
 
-//        todo: should these be API routes?
+        //        todo: should these be API routes?
         Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
         Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
         Route::get('/{pronunciation}/get/audios', function (Pronunciation $pronunciation) {

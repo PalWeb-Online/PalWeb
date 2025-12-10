@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Mail\UserSubscribed;
-use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Spark\Events\SubscriptionCreated;
 

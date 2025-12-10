@@ -23,10 +23,8 @@ class InstallCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->callSilent('vendor:publish', ['--tag' => 'spark-provider']);
         $this->callSilent('vendor:publish', ['--tag' => 'spark-config']);

@@ -26,7 +26,7 @@ class DeckSeeder extends Seeder
                 foreach ($randomTerms as $index => $term) {
                     $termsWithPivot[$term->id] = [
                         'position' => $index + 1,
-                        'gloss_id' => $term->glosses->first()->id
+                        'gloss_id' => $term->glosses->first()->id,
                     ];
                 }
 

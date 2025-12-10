@@ -84,7 +84,7 @@ class ScoreController extends Controller
     public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
     {
         $request->validate([
-            'score' => ['nullable', 'integer', 'exists:scores,id']
+            'score' => ['nullable', 'integer', 'exists:scores,id'],
         ]);
 
         $modelClass = match ($scorable_type) {

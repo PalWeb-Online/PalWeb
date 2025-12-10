@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
@@ -21,7 +22,7 @@ class DeckController extends Controller
 {
     public function pin(Request $request, Deck $deck): JsonResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $user = $request->user();
 
@@ -41,7 +42,7 @@ class DeckController extends Controller
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'latest'], $request->only([
-            'search', 'match', 'sort', 'pinned'
+            'search', 'match', 'sort', 'pinned',
         ]));
 
         if (empty($filters['search'])) {
@@ -79,13 +80,13 @@ class DeckController extends Controller
 
     public function show(Deck $deck): \Inertia\Response
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $deck->load(['terms.pronunciations', 'scores']);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',
-            'deck' => new DeckResource($deck)
+            'deck' => new DeckResource($deck),
         ]);
     }
 
@@ -102,18 +103,20 @@ class DeckController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
+
         return to_route('decks.show', $deck);
     }
 
     public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
+
         return to_route('decks.show', $deck);
     }
 
@@ -141,17 +144,18 @@ class DeckController extends Controller
 
     public function destroy(Deck $deck): RedirectResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         $deck->delete();
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
+
         return to_route('decks.index');
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse
     {
-        $this->authorize('modify', $deck);
+        Gate::authorize('modify', $deck);
 
         if (! $deck->terms->contains($term->id)) {
             $position = $deck->terms->count() + 1;
@@ -191,7 +195,7 @@ class DeckController extends Controller
 
     public function copy(Request $request, Deck $deck): RedirectResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $user = $request->user();
 
@@ -214,12 +218,13 @@ class DeckController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
+
         return to_route('decks.show', $newDeck->id);
     }
 
     public function export(Deck $deck): never
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         $deck->load(['terms.glosses']);
 

@@ -67,8 +67,8 @@ class UpdatePaymentInformationController
             'billing_city' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
             'billing_state' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
             'billing_postal_code' => [$addressRequired ? 'required' : 'nullable', 'max:225'],
-            'billing_country' => [$countryRule, 'max:2', new ValidCountry()],
-            'vat_id' => ['nullable', 'max:225', new ValidVatNumber()],
+            'billing_country' => [$countryRule, 'max:2', new ValidCountry],
+            'vat_id' => ['nullable', 'max:225', new ValidVatNumber],
         ]);
     }
 }

@@ -22,7 +22,7 @@ class SpeakerResource extends JsonResource
                 'ar_name' => $this->user->ar_name,
                 'username' => $this->user->username,
                 'avatar' => $this->user->avatar,
-                'private' => $this->user->private
+                'private' => $this->user->private,
             ],
             'dialect' => $this->whenLoaded('dialect', function () {
                 return [

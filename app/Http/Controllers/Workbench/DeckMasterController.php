@@ -10,13 +10,12 @@ use App\Services\QuizService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class DeckMasterController extends Controller
 {
-    public function __construct(private readonly QuizService $quizService)
-    {
-    }
+    public function __construct(private readonly QuizService $quizService) {}
 
     public function index(Request $request): \Inertia\Response
     {
@@ -29,7 +28,7 @@ class DeckMasterController extends Controller
     public function build(?Deck $deck = null): \Inertia\Response
     {
         if ($deck) {
-            $this->authorize('modify', $deck);
+            Gate::authorize('modify', $deck);
             $deck->load(['terms.pronunciations']);
         }
 
@@ -48,7 +47,7 @@ class DeckMasterController extends Controller
             session()->flash('notification',
                 [
                     'type' => 'warning',
-                    'message' => __("You can't Quiz an empty Deck!")
+                    'message' => __("You can't Quiz an empty Deck!"),
                 ]);
 
             return to_route('deck-master.index', ['mode' => 'study']);
@@ -67,7 +66,7 @@ class DeckMasterController extends Controller
         $quiz = $this->quizService->generateQuiz($deck, $settings);
 
         return response()->json([
-            'quiz' => $quiz
+            'quiz' => $quiz,
         ]);
     }
 
@@ -89,14 +88,14 @@ class DeckMasterController extends Controller
 
     public function getCards(Deck $deck): JsonResponse
     {
-        $this->authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
         return response()->json([
             'terms' => TermResource::collection(
                 $deck->terms->load(['pronunciations'])->map(function ($term) {
                     return new TermResource($term)->additional(['detail' => true]);
                 })
-            )
+            ),
         ]);
     }
 }

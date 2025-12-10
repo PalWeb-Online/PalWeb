@@ -15,8 +15,8 @@ class AuthUserResource extends UserResource
 
         $data['roles'] = $roles;
         $data['email'] = $this->email;
-        $data['is_verified'] = !!$this->email_verified_at;
-        $data['has_discord'] = !!$this->discord_id;
+        $data['is_verified'] = (bool) $this->email_verified_at;
+        $data['has_discord'] = (bool) $this->discord_id;
 
         return $data;
     }

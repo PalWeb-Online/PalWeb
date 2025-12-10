@@ -48,7 +48,7 @@ class SentenceController extends Controller
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'latest'], $request->only([
-            'search', 'match', 'sort', 'pinned'
+            'search', 'match', 'sort', 'pinned',
         ]));
 
         if (empty($filters['search'])) {
@@ -87,18 +87,18 @@ class SentenceController extends Controller
             'filters' => $filters,
         ]);
 
-//        View::share('pageDescription',
-//            'Discover the Corpus, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+        //        View::share('pageDescription',
+        //            'Discover the Corpus, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
     }
 
     public function show(Sentence $sentence): \Inertia\Response
     {
-//        View::share('pageDescription',
-//            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+        //        View::share('pageDescription',
+        //            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
         return Inertia::render('Library/Sentences/Show', [
             'section' => 'library',
-            'sentence' => new SentenceResource($sentence)
+            'sentence' => new SentenceResource($sentence),
         ]);
     }
 
@@ -109,6 +109,7 @@ class SentenceController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $sentence->sentence])]);
+
         return to_route('speech-maker.sentence', $sentence);
     }
 
@@ -119,6 +120,7 @@ class SentenceController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $sentence->sentence])]);
+
         return to_route('speech-maker.sentence', $sentence);
     }
 
@@ -163,6 +165,7 @@ class SentenceController extends Controller
         $sentence->delete();
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $sentence->sentence])]);
+
         return to_route('sentences.index');
     }
 }

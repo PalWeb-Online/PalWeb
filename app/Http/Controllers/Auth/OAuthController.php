@@ -16,14 +16,13 @@ use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function redirect(Request $request): RedirectResponse
     {
         if ($request->user() && $request->user()->discord_id) {
             $this->flasher->addInfo('Your Discord account is already connected.');
+
             return back();
 
         } else {
@@ -118,6 +117,7 @@ class OAuthController extends Controller
     {
         if (! $request->user()->password) {
             session()->flash('notification', ['type' => 'warning', 'message' => 'You have not set a password yet. You cannot disconnect from Discord until you have set a password on PalWeb. Set a password first, then try again.']);
+
             return back();
         }
 
@@ -125,6 +125,7 @@ class OAuthController extends Controller
 
         if (! $token) {
             session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. No Discord token was found.']);
+
             return back();
         }
 
@@ -155,7 +156,7 @@ class OAuthController extends Controller
             }
 
         } catch (\Exception $e) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. ' . $e->getMessage()]);
+            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. '.$e->getMessage()]);
         }
 
         return back();

@@ -13,21 +13,21 @@ class AudioDirectoryRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_addAudioFile_throws_exception_if_file_does_not_have_an_extension(): void
+    public function test_add_audio_file_throws_exception_if_file_does_not_have_an_extension(): void
     {
         $this->expectException(AudioFileException::class);
         $user = User::factory()->make();
         $this->getRepository()->addAudioFile($user, 'no-extension');
     }
 
-    public function test_addAudioFile_accepts_custom_path_if_provided(): void
+    public function test_add_audio_file_accepts_custom_path_if_provided(): void
     {
         $user = User::factory()->create();
         $this->getRepository()->addAudioFile($user, 'audio.mp3', '/cat/dog/');
         $this->assertEquals('/cat/dog/', File::first()->path);
     }
 
-    public function test_addAudioFile_creates_a_database_record(): void
+    public function test_add_audio_file_creates_a_database_record(): void
     {
         $user = User::factory()->create();
         $this->assertEquals(0, File::count());

@@ -25,7 +25,7 @@ class AssignGlossToDeckTerms extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $rows = DB::table('deck_term')
             ->whereNull('gloss_id')
@@ -43,6 +43,6 @@ class AssignGlossToDeckTerms extends Command
             $this->info("Updated deck_id {$row->deck_id}, term_id {$row->term_id} with gloss_id {$gloss->id}.");
         }
 
-        $this->info("Done fixing gloss_id values.");
+        $this->info('Done fixing gloss_id values.');
     }
 }

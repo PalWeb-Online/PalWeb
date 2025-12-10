@@ -59,6 +59,7 @@ class UnitController extends Controller
             'It\'s time to Learn Palestinian Arabic with the most comprehensive online course ever, featuring a curriculum of expertly-paced lessons designed to teach real-life skills & never overwhelm. Boost your vocabulary with activities & practical word decks. Develop your fluency with immersive & realistic dialogues. Your journey to mastering Palestinian Arabic starts here!');
 
         $unit = new $this->units[$unit];
+
         return $unit->render();
     }
 
@@ -69,6 +70,7 @@ class UnitController extends Controller
             'It\'s time to Learn Palestinian Arabic with the most comprehensive online course ever, featuring a curriculum of expertly-paced lessons designed to teach real-life skills & never overwhelm. Boost your vocabulary with activities & practical word decks. Develop your fluency with immersive & realistic dialogues. Your journey to mastering Palestinian Arabic starts here!');
 
         $unit = new $this->units[$unit];
+
         return $unit->getLesson($lesson);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -74,7 +75,7 @@ class Term extends Model
             ->with([
                 'audios' => fn ($query) => $query
                     ->limit(1)
-                    ->with(['speaker.user'])
+                    ->with(['speaker.user']),
             ])
             ->limit(1)
             ->first();
@@ -88,10 +89,10 @@ class Term extends Model
                     ->with([
                         'audios' => fn ($query) => $query
                             ->limit(1)
-                            ->with(['speaker.user'])
+                            ->with(['speaker.user']),
                     ])
                     ->limit(1)
-                    ->first()
+                    ->first(),
             ]);
         }
 
@@ -208,7 +209,8 @@ class Term extends Model
             ->withPivot('type', 'gloss_id');
     }
 
-    public function scopeMatch($query, ?string $search): void
+    #[Scope]
+    protected function match($query, ?string $search): void
     {
         $query->when($search, fn ($query) => $query
             ->where(fn ($query) => $query
@@ -227,7 +229,8 @@ class Term extends Model
         );
     }
 
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function filter($query, array $filters): void
     {
         $query->when($filters['sort'] === 'alphabetical', fn ($query) => $query
             ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
