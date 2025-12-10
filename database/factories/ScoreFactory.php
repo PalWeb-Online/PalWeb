@@ -28,7 +28,7 @@ class ScoreFactory extends Factory
                     'strictTerms' => true,
                     'strictGloss' => true,
                     'withTranslation' => true,
-                ]
+                ],
             ],
             'score' => 0,
             'results' => [],
@@ -55,9 +55,9 @@ class ScoreFactory extends Factory
                         'term' => $term->term,
                         'slug' => $term->slug,
                     ],
-                    'answer'   => $answers,
+                    'answer' => $answers,
                     'response' => $response,
-                    'correct'  => in_array($response, $answers, true),
+                    'correct' => in_array($response, $answers, true),
                 ];
             }
 

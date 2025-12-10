@@ -14,9 +14,7 @@ use Inertia\Inertia;
 
 class DeckMasterController extends Controller
 {
-    public function __construct(private readonly QuizService $quizService)
-    {
-    }
+    public function __construct(private readonly QuizService $quizService) {}
 
     public function index(Request $request): \Inertia\Response
     {
@@ -48,7 +46,7 @@ class DeckMasterController extends Controller
             session()->flash('notification',
                 [
                     'type' => 'warning',
-                    'message' => __("You can't Quiz an empty Deck!")
+                    'message' => __("You can't Quiz an empty Deck!"),
                 ]);
 
             return to_route('deck-master.index', ['mode' => 'study']);
@@ -67,7 +65,7 @@ class DeckMasterController extends Controller
         $quiz = $this->quizService->generateQuiz($deck, $settings);
 
         return response()->json([
-            'quiz' => $quiz
+            'quiz' => $quiz,
         ]);
     }
 
@@ -96,7 +94,7 @@ class DeckMasterController extends Controller
                 $deck->terms->load(['pronunciations'])->map(function ($term) {
                     return new TermResource($term)->additional(['detail' => true]);
                 })
-            )
+            ),
         ]);
     }
 }

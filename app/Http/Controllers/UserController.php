@@ -16,9 +16,7 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function show(User $user): \Inertia\Response
     {
@@ -68,6 +66,7 @@ class UserController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
+
         return to_route('users.show', $user);
     }
 

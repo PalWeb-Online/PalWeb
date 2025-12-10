@@ -16,7 +16,7 @@ class StoreFeedbackCommentRequest extends FormRequest
                 'required',
                 'string',
                 'max:500',
-            ]
+            ],
         ];
     }
 }

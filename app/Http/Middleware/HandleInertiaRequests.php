@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
                 ->utcOffset(),
             'flash' => [
                 'notification' => fn () => $request->session()->get('notification'),
-                'denied' => fn () => $request->session()->get('denied')
+                'denied' => fn () => $request->session()->get('denied'),
             ],
         ]);
     }

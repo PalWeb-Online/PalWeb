@@ -41,7 +41,7 @@ class DeckController extends Controller
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'latest'], $request->only([
-            'search', 'match', 'sort', 'pinned'
+            'search', 'match', 'sort', 'pinned',
         ]));
 
         if (empty($filters['search'])) {
@@ -85,7 +85,7 @@ class DeckController extends Controller
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',
-            'deck' => new DeckResource($deck)
+            'deck' => new DeckResource($deck),
         ]);
     }
 
@@ -102,6 +102,7 @@ class DeckController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
+
         return to_route('decks.show', $deck);
     }
 
@@ -114,6 +115,7 @@ class DeckController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
+
         return to_route('decks.show', $deck);
     }
 
@@ -146,6 +148,7 @@ class DeckController extends Controller
         $deck->delete();
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
+
         return to_route('decks.index');
     }
 
@@ -214,6 +217,7 @@ class DeckController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
+
         return to_route('decks.show', $newDeck->id);
     }
 

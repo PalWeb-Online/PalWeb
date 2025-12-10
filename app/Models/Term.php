@@ -74,7 +74,7 @@ class Term extends Model
             ->with([
                 'audios' => fn ($query) => $query
                     ->limit(1)
-                    ->with(['speaker.user'])
+                    ->with(['speaker.user']),
             ])
             ->limit(1)
             ->first();
@@ -88,10 +88,10 @@ class Term extends Model
                     ->with([
                         'audios' => fn ($query) => $query
                             ->limit(1)
-                            ->with(['speaker.user'])
+                            ->with(['speaker.user']),
                     ])
                     ->limit(1)
-                    ->first()
+                    ->first(),
             ]);
         }
 

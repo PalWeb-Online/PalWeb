@@ -2,7 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
 use Spark\Events\SubscriptionCancelled;
 
 class AfterSubscriptionCancelled

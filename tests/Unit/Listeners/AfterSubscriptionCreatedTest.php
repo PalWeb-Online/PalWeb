@@ -12,7 +12,7 @@ class AfterSubscriptionCreatedTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_afterSubscriptionCreated_adds_user_to_student_role(): void
+    public function test_after_subscription_created_adds_user_to_student_role(): void
     {
         $this->roles();
 
@@ -25,7 +25,7 @@ class AfterSubscriptionCreatedTest extends TestCase
         $this->assertTrue($user->hasRole('student'));
     }
 
-    public function test_afterSubscriptionCreated_if_user_is_already_a_student(): void
+    public function test_after_subscription_created_if_user_is_already_a_student(): void
     {
         $this->roles();
 
@@ -39,7 +39,7 @@ class AfterSubscriptionCreatedTest extends TestCase
         $this->assertTrue($user->hasRole('student'));
     }
 
-    public function test_afterSubscriptionCreated_if_user_is_an_admin(): void
+    public function test_after_subscription_created_if_user_is_an_admin(): void
     {
         $this->roles();
 

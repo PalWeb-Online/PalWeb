@@ -14,8 +14,8 @@ use Maize\Markable\Models\Bookmark;
 
 class Deck extends Model
 {
-    use HasScoreStats;
     use HasFactory;
+    use HasScoreStats;
     use Markable;
 
     protected static array $marks = [
@@ -83,7 +83,6 @@ class Deck extends Model
             ->groupBy('decks.id')
             ->orderByDesc('pins_count')
         );
-
 
         $query->when($filters['sort'] === 'latest', fn ($query) => $query
             ->orderByDesc('decks.id')

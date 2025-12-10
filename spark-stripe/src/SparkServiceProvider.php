@@ -4,7 +4,6 @@ namespace Spark;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Cashier\Cashier;
 use RuntimeException;
 use Spark\Contracts\Actions\CalculatesVatRate;
 use Spark\Contracts\Actions\CreatesSubscriptions;

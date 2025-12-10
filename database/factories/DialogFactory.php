@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Dialog;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DialogFactory extends Factory

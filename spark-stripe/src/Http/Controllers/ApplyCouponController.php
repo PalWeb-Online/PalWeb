@@ -10,8 +10,8 @@ use Stripe\Exception\InvalidRequestException;
 
 class ApplyCouponController
 {
-    use RetrievesBillableModels;
     use HandlesCouponExceptions;
+    use RetrievesBillableModels;
 
     /**
      * Update the receipt emails for the given billable.

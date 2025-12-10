@@ -24,7 +24,7 @@ class SpeakerController extends Controller
                     ->where('speaker_id', $speaker->id)
                     ->with([
                         'speaker',
-                        'pronunciation.term'
+                        'pronunciation.term',
                     ])
                     ->orderByDesc('id')
                     ->paginate(25)
@@ -50,6 +50,7 @@ class SpeakerController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => 'Your Speaker profile has been saved!']);
+
         return to_route('record-wizard.index');
     }
 

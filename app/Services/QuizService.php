@@ -99,7 +99,6 @@ class QuizService
 
         $quiz = [];
 
-
         foreach ($deck->terms->shuffle() as $term) {
             if (count($quiz) >= 25) {
                 break;
@@ -124,7 +123,6 @@ class QuizService
                 )
                 ->pluck('id')
                 ->push($term->id);
-
 
             if ($withTranslation) {
                 $decoys = $deck->terms
