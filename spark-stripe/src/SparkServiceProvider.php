@@ -17,7 +17,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         if (! $this->app->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__.'/../config/spark.php', 'spark');
@@ -39,7 +39,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (is_array(config('spark.billables')) && count(config('spark.billables')) > 1) {
             throw new RuntimeException('The Stripe edition of Spark only supports a single billable type.');

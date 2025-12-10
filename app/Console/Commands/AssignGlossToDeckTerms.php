@@ -25,7 +25,7 @@ class AssignGlossToDeckTerms extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $rows = DB::table('deck_term')
             ->whereNull('gloss_id')

@@ -24,7 +24,7 @@ class RefactorBookmarks extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         DB::table('markable_bookmarks')
             ->where('markable_type', \App\Models\Term::class)
