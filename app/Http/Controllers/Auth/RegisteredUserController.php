@@ -5,14 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\User;
-use App\Providers\AppServiceProvider;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
@@ -35,6 +32,7 @@ class RegisteredUserController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('signup.message', ['user' => $request->user()->name])]);
+
         return to_route('users.show', $user);
     }
 }

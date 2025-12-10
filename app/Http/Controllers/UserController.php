@@ -12,17 +12,16 @@ use App\Models\User;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher)
-    {
-    }
+    public function __construct(protected FlasherInterface $flasher) {}
 
     public function show(User $user): \Inertia\Response
     {
-        $this->authorize('interact', $user);
+        Gate::authorize('interact', $user);
 
         $user->load(['dialect', 'badges', 'speaker', 'decks']);
 
@@ -39,7 +38,7 @@ class UserController extends Controller
 
     public function edit(User $user): \Inertia\Response
     {
-        $this->authorize('modify', $user);
+        Gate::authorize('modify', $user);
 
         $user->load(['dialect']);
 
@@ -51,7 +50,7 @@ class UserController extends Controller
 
     public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
     {
-        $this->authorize('modify', $user);
+        Gate::authorize('modify', $user);
 
         $user->update([
             'name' => $request->name,
@@ -68,6 +67,7 @@ class UserController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
+
         return to_route('users.show', $user);
     }
 

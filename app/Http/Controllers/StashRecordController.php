@@ -80,7 +80,7 @@ class StashRecordController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to upload file.',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

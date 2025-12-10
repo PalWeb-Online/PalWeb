@@ -18,7 +18,7 @@ class DialogSeeder
                 $sentence->update([
                     'dialog_id' => $dialog->id,
                     'speaker' => fake()->name,
-                    'position' => $i+1
+                    'position' => $i + 1,
                 ]);
             }
         }

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\DiscordController;
 use App\Http\Controllers\StashRecordController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

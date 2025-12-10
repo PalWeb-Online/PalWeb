@@ -35,8 +35,7 @@ class TermRepository
             ->where('root', 'like', $search.'%')
             ->get();
 
-        return $roots->flatMap(fn ($root) =>
-            $root->terms->map(fn ($term) => ['term_id' => $term->id])
+        return $roots->flatMap(fn ($root) => $root->terms->map(fn ($term) => ['term_id' => $term->id])
         );
     }
 

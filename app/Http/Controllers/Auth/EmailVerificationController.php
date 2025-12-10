@@ -37,11 +37,13 @@ class EmailVerificationController extends Controller
     {
         if ($request->user()->hasVerifiedEmail()) {
             session()->flash('notification', ['type' => 'info', 'message' => 'Your email is already verified.']);
+
             return back();
         }
 
         $request->user()->sendEmailVerificationNotification();
         session()->flash('notification', ['type' => 'success', 'message' => 'Verification link has been sent to your email!']);
+
         return back();
     }
 }

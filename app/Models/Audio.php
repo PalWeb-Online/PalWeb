@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +36,8 @@ class Audio extends Model
         return $this->belongsTo(Pronunciation::class);
     }
 
-    public function scopeOrderByFluency(Builder $query, string $direction = 'desc'): Builder
+    #[Scope]
+    protected function orderByFluency(Builder $query, string $direction = 'desc'): Builder
     {
         return $query
             ->select('audios.*')
@@ -44,7 +46,8 @@ class Audio extends Model
             ->orderBy('audios.id', $direction);
     }
 
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function filter($query, array $filters): void
     {
         $query->when($filters['location'] ?? false, fn ($query, $location) => $query
             ->whereHas('speaker', fn ($query) => $query

@@ -41,10 +41,12 @@ class NewPasswordController extends Controller
 
         if ($status == Password::PASSWORD_RESET) {
             session()->flash('notification', ['type' => 'success', 'message' => 'New password has been set!']);
+
             return to_route('users.show', $request->user());
 
         } else {
             session()->flash('notification', ['type' => 'error', 'message' => 'Failed to reset password.']);
+
             return back();
         }
     }
@@ -54,12 +56,13 @@ class NewPasswordController extends Controller
         $user = $request->user();
 
         $user->forceFill([
-            'password' => Hash::make($request->password_new)
+            'password' => Hash::make($request->password_new),
         ])->save();
 
         event(new PasswordReset($user));
 
         session()->flash('notification', ['type' => 'success', 'message' => 'New password has been set!']);
+
         return to_route('users.show', $request->user());
     }
 }

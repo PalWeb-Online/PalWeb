@@ -17,6 +17,7 @@ class AuthenticatedSessionController extends Controller
 
             session()->flash('notification',
                 ['type' => 'success', 'message' => __('signin.message', ['user' => auth()->user()->name])]);
+
             return back();
         }
 
@@ -36,6 +37,7 @@ class AuthenticatedSessionController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('signout.message', ['user' => $name])]);
+
         return to_route('homepage');
     }
 }
