@@ -4,6 +4,7 @@
 /public/storage
 /resources/views/quarantine
 /storage/*.key
+/storage/pail
 /storage/app/audio/
 /vendor
 .env
@@ -15,5 +16,6 @@ auth.json
 npm-debug.log
 yarn-error.log
 /.idea
+/.nova
 /.vscode
 /database/backup.sql
