@@ -37,6 +37,9 @@ const navigate = () => {
                 }}
             </p>
         </AppTip>
+        <Link href="/billing" v-if="UserStore.isUser"
+        style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--color-dark-primary)"
+        >to Billing Portal</Link>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">

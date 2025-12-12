@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Mail\PasswordReset;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class AfterPasswordReset
@@ -22,6 +23,11 @@ class AfterPasswordReset
      */
     public function handle(\Illuminate\Auth\Events\PasswordReset $event): void
     {
-        Mail::to($event->user)->send(new PasswordReset($event->user));
+        try {
+            Mail::to($event->user)->send(new PasswordReset($event->user));
+
+        } catch (\Throwable $e) {
+            Log::error("Failed to send subscription email: ".$e->getMessage());
+        }
     }
 }
