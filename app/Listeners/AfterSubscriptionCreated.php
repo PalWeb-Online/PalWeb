@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Mail\UserSubscribed;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Spark\Events\SubscriptionCreated;
 
@@ -26,6 +27,11 @@ class AfterSubscriptionCreated
         $user = $event->billable;
         $user->grantStudentRole();
 
-        Mail::to($user)->send(new UserSubscribed($user));
+        try {
+            Mail::to($user)->send(new UserSubscribed($user));
+
+        } catch (\Throwable $e) {
+            Log::error("Failed to send subscription email: ".$e->getMessage());
+        }
     }
 }
