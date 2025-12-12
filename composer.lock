@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bbefdc8360a879360259b9819be8098",
+    "content-hash": "982febc14202fe7a4a7f2cfff4f6ee46",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.366.4",
+            "version": "3.367.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1861cc8eede21cdaab0732fd44f43f19ddf1effd"
+                "reference": "4155279437f17a51604f05f8373b685c058bc278"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1861cc8eede21cdaab0732fd44f43f19ddf1effd",
-                "reference": "1861cc8eede21cdaab0732fd44f43f19ddf1effd",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4155279437f17a51604f05f8373b685c058bc278",
+                "reference": "4155279437f17a51604f05f8373b685c058bc278",
                 "shasum": ""
             },
             "require": {
@@ -153,9 +153,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.366.4"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.367.1"
             },
-            "time": "2025-12-09T19:21:22+00:00"
+            "time": "2025-12-11T19:13:06+00:00"
         },
         {
             "name": "brick/math",
@@ -1857,16 +1857,16 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "v15.7.1",
+            "version": "v16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier-stripe.git",
-                "reference": "8dd6a6c35fd2eb67857d06438d849254e47de7d1"
+                "reference": "6d526c79ea0b0e664299e5a122811034fe75ece9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/8dd6a6c35fd2eb67857d06438d849254e47de7d1",
-                "reference": "8dd6a6c35fd2eb67857d06438d849254e47de7d1",
+                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/6d526c79ea0b0e664299e5a122811034fe75ece9",
+                "reference": "6d526c79ea0b0e664299e5a122811034fe75ece9",
                 "shasum": ""
             },
             "require": {
@@ -1884,17 +1884,17 @@
                 "moneyphp/money": "^4.0",
                 "nesbot/carbon": "^2.0|^3.0",
                 "php": "^8.1",
-                "stripe/stripe-php": "^16.2",
+                "stripe/stripe-php": "^17.3.0",
                 "symfony/console": "^6.0|^7.0",
                 "symfony/http-kernel": "^6.0|^7.0",
-                "symfony/polyfill-intl-icu": "^1.22.1"
+                "symfony/polyfill-intl-icu": "^1.22.1",
+                "symfony/polyfill-php84": "^1.32"
             },
             "require-dev": {
                 "dompdf/dompdf": "^2.0|^3.0",
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^8.18|^9.0|^10.0",
+                "orchestra/testbench": "^8.36|^9.15|^10.8",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^10.4|^11.5"
+                "spatie/laravel-ray": "^1.40"
             },
             "suggest": {
                 "dompdf/dompdf": "Required when generating and downloading invoice PDF's using Dompdf (^2.0|^3.0).",
@@ -1908,7 +1908,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-master": "15.x-dev"
+                    "dev-master": "16.x-dev"
                 }
             },
             "autoload": {
@@ -1941,7 +1941,7 @@
                 "issues": "https://github.com/laravel/cashier/issues",
                 "source": "https://github.com/laravel/cashier"
             },
-            "time": "2025-07-22T15:49:31+00:00"
+            "time": "2025-12-03T00:26:48+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2501,6 +2501,116 @@
                 "source": "https://github.com/laravel/socialite"
             },
             "time": "2025-12-09T15:37:06+00:00"
+        },
+        {
+            "name": "laravel/spark-stripe",
+            "version": "v6.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:laravel/spark-stripe.git",
+                "reference": "9eb549f4ae6b0077260855380f04265ac9164c7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://spark.laravel.com/dist/laravel/spark-stripe/laravel-spark-stripe-9eb549f4ae6b0077260855380f04265ac9164c7e-zip-be82c5.zip",
+                "reference": "9eb549f4ae6b0077260855380f04265ac9164c7e",
+                "shasum": "6cf46c74ad25a8616f4e2734ceb72ae08caead8d"
+            },
+            "require": {
+                "dompdf/dompdf": "^2.0|^3.0",
+                "ext-json": "*",
+                "illuminate/contracts": "^10.0|^11.0|^12.0",
+                "inertiajs/inertia-laravel": "^1.3.2|^2.0",
+                "laravel/cashier": "^16.0",
+                "mpociot/vat-calculator": "^3.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.20",
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^8.14|^9.0|^10.0",
+                "orchestra/workbench": "^8.13|^9.9|^10.0",
+                "phpstan/phpstan": "^2.1.14"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spark\\SparkServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spark\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Spark\\Tests\\": "tests/",
+                    "Workbench\\App\\": "workbench/app/",
+                    "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+                    "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@clear",
+                    "@prepare"
+                ],
+                "clear": [
+                    "@php vendor/bin/testbench package:purge-skeleton --ansi"
+                ],
+                "prepare": [
+                    "@php -r \"if (! file_exists('workbench/.env')) { copy('workbench/.env.dist', 'workbench/.env'); }\"",
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "build": [
+                    "@php vendor/bin/testbench workbench:build --ansi"
+                ],
+                "serve": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "@clear",
+                    "@build",
+                    "@putenv PHP_CLI_SERVER_WORKERS=5",
+                    "@php vendor/bin/testbench serve --ansi"
+                ],
+                "stripe-login": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "stripe login"
+                ],
+                "stripe-listen": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "stripe listen --forward-to http://127.0.0.1:8000/spark/webhook"
+                ],
+                "test": [
+                    "@clear",
+                    "@prepare",
+                    "@php vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Spark provides scaffolding for Laravel SaaS applications.",
+            "keywords": [
+                "billing",
+                "laravel",
+                "saas",
+                "scaffolding",
+                "stripe"
+            ],
+            "support": {
+                "source": "https://github.com/laravel/spark-stripe/tree/v6.0.0",
+                "issues": "https://github.com/laravel/spark-stripe/issues"
+            },
+            "time": "2025-09-24T07:43:22+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -7194,16 +7304,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.6.0",
+            "version": "v17.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff"
+                "reference": "a6219df5df1324a0d3f1da25fb5e4b8a3307ea16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
-                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/a6219df5df1324a0d3f1da25fb5e4b8a3307ea16",
+                "reference": "a6219df5df1324a0d3f1da25fb5e4b8a3307ea16",
                 "shasum": ""
             },
             "require": {
@@ -7213,7 +7323,7 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.5.0",
+                "friendsofphp/php-cs-fixer": "3.72.0",
                 "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^5.7 || ^9.0"
             },
@@ -7247,9 +7357,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.6.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v17.6.0"
             },
-            "time": "2025-02-24T22:35:29+00:00"
+            "time": "2025-08-27T19:32:42+00:00"
         },
         {
             "name": "symfony/clock",
@@ -7428,20 +7538,20 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v7.4.0",
+            "version": "v8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135"
+                "reference": "6225bd458c53ecdee056214cb4a2ffaf58bd592b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
-                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/6225bd458c53ecdee056214cb4a2ffaf58bd592b",
+                "reference": "6225bd458c53ecdee056214cb4a2ffaf58bd592b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2"
+                "php": ">=8.4"
             },
             "type": "library",
             "autoload": {
@@ -7473,7 +7583,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v7.4.0"
+                "source": "https://github.com/symfony/css-selector/tree/v8.0.0"
             },
             "funding": [
                 {
@@ -7493,7 +7603,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-30T13:39:42+00:00"
+            "time": "2025-10-30T14:17:19+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -10720,23 +10830,23 @@
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tijsverkoyen/CssToInlineStyles.git",
-                "reference": "0d72ac1c00084279c1816675284073c5a337c20d"
+                "reference": "f0292ccf0ec75843d65027214426b6b163b48b41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tijsverkoyen/CssToInlineStyles/zipball/0d72ac1c00084279c1816675284073c5a337c20d",
-                "reference": "0d72ac1c00084279c1816675284073c5a337c20d",
+                "url": "https://api.github.com/repos/tijsverkoyen/CssToInlineStyles/zipball/f0292ccf0ec75843d65027214426b6b163b48b41",
+                "reference": "f0292ccf0ec75843d65027214426b6b163b48b41",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "php": "^7.4 || ^8.0",
-                "symfony/css-selector": "^5.4 || ^6.0 || ^7.0"
+                "symfony/css-selector": "^5.4 || ^6.0 || ^7.0 || ^8.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^2.0",
@@ -10769,9 +10879,9 @@
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "support": {
                 "issues": "https://github.com/tijsverkoyen/CssToInlineStyles/issues",
-                "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.3.0"
+                "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.4.0"
             },
-            "time": "2024-12-21T16:25:41+00:00"
+            "time": "2025-12-02T11:56:42+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
