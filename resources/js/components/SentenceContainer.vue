@@ -4,6 +4,9 @@ import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import TermItem from "./TermItem.vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -28,7 +31,7 @@ const {sentence, isLoading, isPlaying, playAudio} = useSentence(props);
             <div class="window-section-head">
                 <h1>sentence</h1>
                 <PinButton modelType="sentence" :model="sentence"/>
-                <SentenceActions :model="sentence"/>
+                <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
             </div>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="sentence.dialog" class="sentence-dialog-data">

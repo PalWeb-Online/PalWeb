@@ -3,6 +3,9 @@ import {useDialog} from "../composables/Dialog.js";
 import SentenceItem from "./SentenceItem.vue";
 import DialogActions from "./Actions/DialogActions.vue";
 import {route} from "ziggy-js";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -25,7 +28,7 @@ const {data} = useDialog(props);
             </div>
             <div class="window-section-head">
                 <h1>dialog</h1>
-                <DialogActions :model="data.dialog"/>
+                <DialogActions v-if="UserStore.isAdmin" :model="data.dialog"/>
             </div>
             <div class="window-content-head">
                 <div class="window-content-head-title" style="direction: rtl">{{ data.dialog.title }}</div>

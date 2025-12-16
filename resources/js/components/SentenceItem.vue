@@ -4,6 +4,10 @@ import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";
 import {route} from "ziggy-js";
+import {useUserStore} from "../stores/UserStore.js";
+import {router} from "@inertiajs/vue3";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -51,8 +55,8 @@ const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(p
             </div>
             <div class="model-item sentence-item">
                 <PinButton modelType="sentence" :model="sentence"/>
-                <div class="model-item-content" v-if="sentence.terms.length > 0">
-                    <template v-for="term in sentence.terms">
+                <div class="model-item-content">
+                    <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
                         <Link v-if="term.id"
                               :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                               :target="isCurrentTerm(term) ? '' : '_blank'"
@@ -63,13 +67,16 @@ const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(p
                             <div>{{ term.sentencePivot.sent_term }}</div>
                         </div>
                     </template>
-                </div>
-                <Link v-else class="model-item-content" :href="route('sentences.show', sentence.id)">
-                    <div class="sentence-term" style="background: none">
+                    <div v-else class="sentence-term" style="background: none">
                         <div>{{ sentence.sentence }}</div>
                     </div>
-                </Link>
-                <SentenceActions :model="sentence"/>
+                </div>
+                <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
+                <div v-else class="popup-menu-wrapper">
+                    <button class="material-symbols-rounded" @click="router.get(route('sentences.show', sentence.id))">
+                        visibility
+                    </button>
+                </div>
             </div>
             <div class="model-item-description">
                 {{ sentence.trans }}

@@ -1,14 +1,11 @@
 <script setup>
 import {route} from 'ziggy-js';
 import {router} from '@inertiajs/vue3'
-import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 
 const props = defineProps({
     model: Object,
 });
-
-const UserStore = useUserStore();
 
 const deleteDialog = () => {
     if (!confirm('Are you sure you want to delete this Dialog?')) return;
@@ -19,17 +16,11 @@ const deleteDialog = () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link :href="route('dialogs.show', model.id)" role="menuitem" tabindex="-1">
-            View Dialog
+        <Link :href="route('speech-maker.dialog', model.id)" role="menuitem" tabindex="-1">
+            Edit Dialog
         </Link>
-
-        <template v-if="UserStore.isAdmin">
-            <Link :href="route('speech-maker.dialog', model.id)" role="menuitem" tabindex="-1">
-                Edit Dialog
-            </Link>
-            <button @click="deleteDialog" role="menuitem" tabindex="-1">
-                Delete Dialog
-            </button>
-        </template>
+        <button @click="deleteDialog" role="menuitem" tabindex="-1">
+            Delete Dialog
+        </button>
     </ContextActions>
 </template>

@@ -4,6 +4,9 @@ import DialogActions from "./Actions/DialogActions.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {computed} from "vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -33,7 +36,7 @@ const {data} = useDialog(props);
                         {{ data.dialog.title }}
                     </div>
                 </div>
-                <DialogActions :model="data.dialog"/>
+                <DialogActions v-if="UserStore.isAdmin" :model="data.dialog"/>
             </div>
 
             <div v-if="data.dialog.description" class="model-item-description">

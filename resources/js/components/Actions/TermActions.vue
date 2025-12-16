@@ -8,8 +8,6 @@ const props = defineProps({
     model: Object,
 });
 
-const UserStore = useUserStore();
-
 const deleteTerm = () => {
     if (!confirm('Are you sure you want to delete this Term?')) return;
 
@@ -19,17 +17,11 @@ const deleteTerm = () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link :href="route('terms.show', model.slug)" role="menuitem" tabindex="-1">
-            View Term
+        <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
+            Edit Term
         </Link>
-
-        <template v-if="UserStore.isAdmin">
-            <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
-                Edit Term
-            </Link>
-            <button @click="deleteTerm" role="menuitem" tabindex="-1">
-                Delete Term
-            </button>
-        </template>
+        <button @click="deleteTerm" role="menuitem" tabindex="-1">
+            Delete Term
+        </button>
     </ContextActions>
 </template>

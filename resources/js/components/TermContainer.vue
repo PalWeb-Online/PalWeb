@@ -13,6 +13,9 @@ import ChartInflection from "./Charts/ChartInflection.vue";
 import ChartConjugation from "./Charts/ChartConjugation.vue";
 import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -204,7 +207,7 @@ const etymology = computed(() => {
             <div class="window-section-head">
                 <h1>term</h1>
                 <PinButton modelType="term" :model="term"/>
-                <TermActions :model="term"/>
+                <TermActions v-if="UserStore.isAdmin" :model="term"/>
             </div>
             <div class="term-container-head">
                 <div class="term-headword">

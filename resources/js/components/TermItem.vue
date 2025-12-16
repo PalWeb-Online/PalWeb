@@ -4,6 +4,9 @@ import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
 import {route} from "ziggy-js";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -43,7 +46,7 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                     </div>
                 </div>
                 <TermDeckToggleButton :model="term"/>
-                <TermActions :model="term"/>
+                <TermActions v-if="UserStore.isAdmin" :model="term"/>
             </div>
         </div>
     </template>
