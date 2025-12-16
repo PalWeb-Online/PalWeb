@@ -47,7 +47,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         </button>
 
         <div class="audio-item-data">
-            <div class="mini-user-profile">
+            <div class="audio-item-speaker">
                 <template v-if="model.speaker.user.private">
                     <div>by
                         <Link :href="route('speaker.show', model.speaker)">Speaker #{{ model.speaker.id }}</Link>

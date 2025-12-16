@@ -271,6 +271,7 @@ onMounted(() => {
                     <div class="nav-user-menu-head">myAdmin</div>
                     <div class="nav-user-menu-items">
                         <button @click="showSendMail = true">Send Mail</button>
+                        <Link :href="route('feedback.index')">View Feedback</Link>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">

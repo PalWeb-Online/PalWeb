@@ -3,7 +3,6 @@ import {route} from "ziggy-js";
 import Layout from "../../../Shared/Layout.vue";
 
 defineProps({
-    feedbackComments: Array,
     fromSentences: Array,
     missingInflections: Array,
     termsMissingSentences: Array,
@@ -14,7 +13,7 @@ defineOptions({
 })
 </script>
 <template>
-    <Head title="to-Do List"/>
+    <Head title="Word Logger"/>
     <div id="app-head">
         <h1>Word Logger</h1>
     </div>
@@ -27,21 +26,6 @@ defineOptions({
                 ({{ term.sent_translit }})
 
                 <Link :href="route('sentences.show', term.sentence_id)">View Sentence</Link>
-            </div>
-        </div>
-
-        <h1>Missing Terms</h1>
-        <div class="missing-terms">
-            <div v-for="comment in feedbackComments">
-                {{ comment.comment }}
-
-                <!--                    <form method="POST" action="{{ route('missing.terms.destroy', $missingTerm) }}">-->
-                <!--                        @csrf-->
-                <!--                        @method('DELETE')-->
-                <!--                        <button onclick="return confirm('Are you sure you want to delete this item from the list?')">-->
-                <!--                            <a>Delete Missing</a>-->
-                <!--                        </button>-->
-                <!--                    </form>-->
             </div>
         </div>
 
