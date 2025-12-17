@@ -58,7 +58,7 @@ class UnitController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $unit->title])]);
-        return to_route('units.index');
+        return to_route('lesson-planner.unit', $unit);
     }
 
     public function update(Request $request, Unit $unit): RedirectResponse
@@ -111,7 +111,7 @@ class UnitController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $unit->title])]);
-        return to_route('units.index');
+        return to_route('lesson-planner.unit', $unit);
     }
 
     public function destroy(Unit $unit): RedirectResponse

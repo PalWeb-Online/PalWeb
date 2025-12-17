@@ -18,6 +18,7 @@ class Lesson extends Model
         'title',
         'skills',
         'deck_id',
+        'activity_id',
         'dialog_id',
         'published',
     ];

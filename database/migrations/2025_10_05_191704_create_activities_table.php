@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->json('document');
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
     }

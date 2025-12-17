@@ -14,6 +14,7 @@ use App\Services\LessonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -21,9 +22,9 @@ class LessonController extends Controller
 {
     public function show(Lesson $lesson): \Inertia\Response
     {
-        $this->authorize('view', $lesson);
+        Gate::authorize('view', $lesson);
 
-        $lesson->load(['deck', 'dialog']);
+        $lesson->load(['deck', 'activity.scores', 'dialog']);
 
         return Inertia::render('Academy/Lessons/Show', [
             'section' => 'academy',
@@ -52,7 +53,7 @@ class LessonController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $lesson->title])]);
-        return to_route('lessons.show', $lesson->slug);
+        return to_route('lesson-planner.lesson', $lesson);
     }
 
     public function update(UpdateLessonRequest $request, Lesson $lesson): RedirectResponse
@@ -93,7 +94,7 @@ class LessonController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $lesson->title])]);
-        return to_route('lessons.show', $lesson->slug);
+        return to_route('lesson-planner.lesson', $lesson);
     }
 
     public function destroy(Lesson $lesson): RedirectResponse

@@ -593,7 +593,7 @@ ul.search-results {
         margin: 0;
     }
 
-    button:not(.app-button) {
+    button:not(.app-button):not(.material-symbols-rounded) {
         justify-self: start;
         font-family: $monoFont;
         font-weight: 700;
@@ -793,6 +793,11 @@ ul.search-results {
     font-weight: 700;
     font-size: 1.6rem;
     text-transform: capitalize;
+
+    &[disabled='true'] {
+        opacity: 0.5;
+        pointer-events: none;
+    }
 }
 
 button.toggle-button {

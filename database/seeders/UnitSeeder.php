@@ -54,6 +54,11 @@ class UnitSeeder extends Seeder
                     'dialog_id' => Dialog::pluck('id')->random(),
                 ])
                 ->create()
+                ->each(fn (Lesson $lesson) => Activity::factory()
+                    ->count(1)
+                    ->for($lesson)
+                    ->create()
+                )
             );
     }
 }

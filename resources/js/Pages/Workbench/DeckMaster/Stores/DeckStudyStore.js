@@ -163,7 +163,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             },
             onError: (errors) => {
                 data.isSaved = false;
-                console.error('Error saving score:', errors);
+                console.error('Error saving Score:', errors);
             }
         });
     };

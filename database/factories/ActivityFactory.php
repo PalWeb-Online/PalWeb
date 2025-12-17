@@ -17,7 +17,8 @@ class ActivityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->words(5, true),
+            'document' => [],
         ];
     }
 }
