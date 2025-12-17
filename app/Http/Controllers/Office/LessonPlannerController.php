@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Office;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ActivityResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
@@ -84,6 +85,17 @@ class LessonPlannerController extends Controller
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
             'lesson' => $lesson ? new LessonResource($lesson) : null,
+        ]);
+    }
+
+    public function activity(Lesson $lesson): \Inertia\Response
+    {
+        $activity = $lesson->activity;
+
+        return Inertia::render('Office/LessonPlanner/Activity', [
+            'section' => 'office',
+            'lesson' => new LessonResource($lesson),
+            'activity' => $activity ? new ActivityResource($activity) : null,
         ]);
     }
 }

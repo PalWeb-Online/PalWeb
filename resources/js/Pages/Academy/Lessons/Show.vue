@@ -7,6 +7,7 @@ import UnitNav from "../Units/UI/UnitNav.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import TermItem from "../../../components/TermItem.vue";
+import ActivityItem from "../../../components/ActivityItem.vue";
 
 defineOptions({
     layout: Layout
@@ -111,8 +112,9 @@ const currentTab = ref('deck');
         </template>
     </div>
     <div id="app-body" v-show="currentTab === 'skills'">
-        <template v-if="lesson.data.skills">
+        <template v-if="lesson.data.skills.length > 0">
             <component v-if="lesson.data.skills" :is="lessonComponent" :lesson="lesson.data"/>
+            <ActivityItem :model="lesson.data.activity"/>
         </template>
         <template v-else>
             No Skills assigned to this Lesson yet.

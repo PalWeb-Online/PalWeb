@@ -130,6 +130,8 @@ const deleteLesson = () => {
                 :initial-title="props.lesson?.deck?.name || ''"
             />
 
+            <Link :href="route('lesson-planner.lesson-activity', props.lesson?.id)">-> to Activity</Link>
+
             <LessonContentSearchBar
                 v-model="lesson.dialog_id"
                 type="dialog"

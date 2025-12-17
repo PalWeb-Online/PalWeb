@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Academy\ActivityController;
 use App\Http\Controllers\Academy\LessonController;
 use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\Academy\UnitController;
@@ -208,6 +209,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/lessons/{lesson:slug}', 'show')->name('lessons.show');
         });
 
+        Route::controller(ActivityController::class)->group(function () {
+            Route::get('/lessons/{lesson:slug}/activity', 'show')->name('activities.show');
+        });
+
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
             Route::get('/', 'index')->name('dialogs.index');
             Route::get('/{dialog}', 'show')->name('dialogs.show');
@@ -286,7 +291,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/units', UnitController::class)->except(['index', 'show', 'create', 'edit']);
-        Route::resource('/lessons', LessonController::class)->except(['index', 'show', 'create', 'edit']);;
+        Route::resource('/lessons', LessonController::class)->except(['index', 'show', 'create', 'edit']);
+        Route::resource('/activities', ActivityController::class)->except(['index', 'show', 'create', 'edit']);
 
         Route::prefix('/word-logger')->controller(WordLoggerController::class)->group(function () {
             Route::get('/', 'index')->name('word-logger.index');
@@ -309,6 +315,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
             Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
             Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
+            Route::get('/lesson/{lesson}/activity', 'activity')->name('lesson-planner.lesson-activity');
         });
 
         Route::controller(LessonController::class)->group(function () {

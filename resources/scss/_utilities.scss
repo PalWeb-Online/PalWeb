@@ -93,6 +93,10 @@ input, textarea, select {
         cursor: not-allowed;
         pointer-events: none;
     }
+
+    &.invalid {
+        background: var(--color-accent-light);
+    }
 }
 
 textarea {

@@ -162,6 +162,17 @@
         display: flex;
         justify-content: center;
         gap: 1.6rem;
+
+        button:not(.app-button) {
+            font-family: $monoFont;
+            font-weight: 700;
+            color: var(--color-medium-primary);
+
+            &[disabled] {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+        }
     }
 }
 

@@ -189,6 +189,215 @@
     text-align: center;
 }
 
+.block-add-buttons {
+    display: flex;
+    gap: 3.2rem;
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-family: $headFont;
+        font-weight: 700;
+    }
+}
+
+.add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: var(--color-medium-primary);
+    font-size: 1.6rem;
+    width: 1.75em;
+    height: 1.75em;
+    border-radius: 50%;
+    font-family: $monoFont;
+    cursor: pointer;
+    user-select: none;
+
+    &:active {
+        background: var(--color-accent-medium)
+    }
+}
+
+.block-container-wrapper {
+    display: grid;
+    gap: 3.2rem;
+}
+
+.block-container {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.6rem;
+    background: var(--color-pastel-medium);
+
+    .block-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+
+        * {
+            color: var(--color-medium-primary);
+        }
+
+        button[disabled] {
+            opacity: 0.33;
+        }
+    }
+}
+
+.block--text {
+    textarea {
+        padding: 1.2rem 1.6rem;
+        font-family: $bodyFont;
+        font-size: 1.6rem;
+    }
+}
+
+.block--audio {
+    audio {
+        width: 100%;
+        border-radius: 0.8rem;
+    }
+}
+
+.block--table {
+    display: grid;
+    gap: 3.2rem;
+
+    .table-grid {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .table-column-wrapper, .table-row-content {
+        display: grid;
+        justify-items: center;
+        gap: 0.4rem;
+
+        input {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        *:not(input) {
+            color: var(--color-medium-primary);
+        }
+    }
+
+    .table-rows {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .table-row-wrapper {
+        display: grid;
+        gap: 0.4rem;
+    }
+}
+
+.block--exercises {
+    display: grid;
+    gap: 3.2rem;
+
+    .exercises-draggable {
+        display: grid;
+        gap: 1.6rem;
+    }
+
+    .exercise-item {
+        display: grid;
+        gap: 1.6rem;
+        padding: 1.6rem;
+        border-radius: 0.5em;
+        border: 0.1rem solid var(--color-medium-primary);
+    }
+
+    input {
+        font-size: 1.4rem;
+    }
+
+    .block-meta {
+        font-size: 2.0rem;
+        font-weight: 700;
+    }
+
+    .exercise-images {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+        font-family: $monoFont;
+        font-size: 1.4rem;
+        font-weight: 700;
+
+        & > div {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        img {
+            border-radius: 0.8rem;
+        }
+
+        button {
+            color: var(--color-medium-primary)
+        }
+    }
+
+    .exercise-question {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        direction: rtl;
+
+        input {
+            font-weight: 700;
+        }
+    }
+
+    .exercise-answers {
+        display: grid;
+        gap: 0.8rem;
+        direction: rtl;
+    }
+
+    .exercise-select-option {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        font-family: $monoFont;
+        font-weight: 700;
+
+        button {
+            color: var(--color-medium-primary);
+        }
+
+        button.checkmark {
+            opacity: 0.33;
+        }
+
+        button.active {
+            opacity: 1;
+        }
+    }
+
+    .exercise-select-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        font-size: 1.4rem;
+        direction: rtl;
+
+        button {
+            color: var(--color-dark-primary);
+        }
+    }
+}
+
 .lesson-stages {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -582,7 +791,7 @@ figure.unit-image {
     display: grid;
     gap: 0.8rem;
 
-    li {
+    li.draggable-item {
         & > div {
             flex-grow: 1;
             display: flex;
