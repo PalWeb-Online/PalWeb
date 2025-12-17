@@ -3,7 +3,7 @@ import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {useForm} from "@inertiajs/vue3";
 import Draggable from 'vuedraggable';
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -67,6 +67,16 @@ const updateUnitPositions = () => {
         unit.position = index + 1;
     });
 };
+
+watch(
+    () => props.units,
+    (newValue) => {
+        if (newValue) {
+            Object.assign(form.units, newValue);
+        }
+    },
+    {deep: true}
+);
 </script>
 <template>
     <Head title="Academy: Lessons"/>

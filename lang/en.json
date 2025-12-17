@@ -335,6 +335,8 @@
     "created": "Created :thing!",
     "updated": "Updated :thing!",
     "deleted": "Deleted :thing!",
+    "published": "Published :thing!",
+    "unpublished": "Reverted :thing to Draft!",
     "dictionary": "dictionary",
     "terms.new": "new term",
     "terms.edit": "edit term",

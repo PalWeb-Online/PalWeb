@@ -20,10 +20,12 @@ class LessonResource extends JsonResource
     public function toArray(Request $request): array
     {
         $deck = $this->deck;
+        $activity = $this->activity;
         $dialog = $this->dialog;
 
         if ($this->withContent()) {
             $deck?->load(['terms.pronunciations', 'scores']);
+            $activity?->load(['scores']);
             $dialog?->load('sentences')
                 ->setRelation('sentences',
                     $dialog->sentences->map(function ($sentence) {
@@ -39,6 +41,7 @@ class LessonResource extends JsonResource
             'title' => $this->title,
             'skills' => $this->skills,
             'deck' => new DeckResource($deck),
+            'activity' => new ActivityResource($activity),
             'dialog' => new DialogResource($dialog),
             'progress' => $this->getProgressFor($request->user()),
             'published' => $this->published,

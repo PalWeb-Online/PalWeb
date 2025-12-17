@@ -4,7 +4,7 @@ import {useUserStore} from "../../../../stores/UserStore.js";
 
 const props = defineProps({
     unit: Object,
-    activeSlug: {type: Number, required: false},
+    activeSlug: {type: String, required: false},
 })
 
 const UserStore = useUserStore();
