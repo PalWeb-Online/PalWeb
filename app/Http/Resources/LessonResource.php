@@ -39,7 +39,7 @@ class LessonResource extends JsonResource
             'unit' => new UnitResource($this->unit),
             'slug' => $this->slug,
             'title' => $this->title,
-            'skills' => $this->skills,
+            'document' => $this->document,
             'deck' => new DeckResource($deck),
             'activity' => new ActivityResource($activity),
             'dialog' => new DialogResource($dialog),

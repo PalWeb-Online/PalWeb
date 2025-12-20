@@ -56,7 +56,7 @@ const props = defineProps({
             </template>
             <template #content>
                 <div class="lesson-item-skills">
-                    <div class="lesson-item-skill-wrapper" v-for="skill in lesson.skills">
+                    <div class="lesson-item-skill-wrapper" v-for="skill in lesson.document.skills">
                         <div class="lesson-skill-type featured-title">{{ skill.type }}</div>
                         <div class="lesson-skill-title">{{ skill.title }}</div>
                         <div class="lesson-skill-description">{{ skill.description }}</div>

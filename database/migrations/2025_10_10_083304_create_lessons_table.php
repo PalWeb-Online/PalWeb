@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('position');
             $table->string('slug')->unique()->index();
             $table->string('title');
-            $table->json('skills')->nullable();
+            $table->json('document')->nullable();
             $table->foreignId('deck_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('activity_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('dialog_id')->nullable()->constrained()->nullOnDelete();

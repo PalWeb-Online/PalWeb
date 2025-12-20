@@ -16,7 +16,7 @@ class Lesson extends Model
         'position',
         'slug',
         'title',
-        'skills',
+        'document',
         'deck_id',
         'activity_id',
         'dialog_id',
@@ -24,7 +24,7 @@ class Lesson extends Model
     ];
 
     protected $casts = [
-        'skills' => 'json',
+        'document' => 'json',
     ];
 
     public function unit(): BelongsTo
