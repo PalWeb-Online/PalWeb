@@ -702,25 +702,18 @@ figure.unit-image {
     }
 }
 
-.lesson-concept-container {
+.skill-container {
     width: min(100%, 96rem);
     font-size: 1.8rem;
     text-align: justify;
     //transition: 0.3s;
     border-radius: 2.4rem;
     background: white;
-    padding: clamp(2.4rem, 4vw, 3.6rem);
+    //padding: clamp(2.4rem, 4vw, 3.6rem);
     margin: 0;
     position: relative;
     overflow: hidden;
-
-    h1, h2 {
-        //font-size: 2.8rem;
-        line-height: 1em;
-        margin: 3.2rem 0 1.6rem;
-        font-family: $headFont;
-        text-transform: none;
-    }
+    //padding: 0;
 
     p {
         margin-block-start: 1.6rem;
@@ -734,55 +727,47 @@ figure.unit-image {
     & > .popout {
         width: 6.4rem;
     }
-}
 
-.lesson-concept-container {
-    padding: 0;
-
-    .lesson-concept-head {
+    .skill-head {
         padding: 2.4rem 3.2rem;
+        background: var(--color-medium-primary);
 
         .featured-title {
             color: white;
         }
     }
 
-    .lesson-concept-body {
+    .skill-body {
         display: grid;
-        padding: 3.2rem;
 
         h1 {
             font-size: 6.4rem;
-            margin: 0 0 1.6rem;
-        }
-    }
-
-    &.skill {
-        //box-shadow: -0.6rem 0.6rem 0 var(--color-pastel-dark);
-
-        .lesson-concept-head {
-            background: var(--color-medium-primary);
+            color: var(--color-medium-primary);
+            margin-block-end: 0;
+            padding-block-end: 1.6rem;
+            border-block-end: 0.2rem solid var(--color-medium-primary);
+            line-height: 1em;
+            font-family: $headFont;
+            text-transform: none;
         }
 
-        .lesson-concept-body {
-            h1 {
-                color: var(--color-medium-primary);
-            }
-        }
-    }
-
-    &.idea {
-        border: 0.1rem solid var(--color-dark-primary);
-        box-shadow: -0.4rem 0.4rem 0 rgb(black, 0.25);
-
-        .lesson-concept-head {
-            background: var(--color-accent-medium);
+        h1, p, .app-tip, .sentence-item-container {
+            margin-inline: 3.2rem;
+            margin-block-end: 3.2rem;
         }
 
-        .lesson-concept-body {
-            h1 {
-                color: var(--color-dark-primary);
-            }
+        .app-tip {
+            width: auto;
+        }
+
+        .sentence-item-container {
+            margin-inline: 3.2rem;
+            justify-self: center;
+
+        }
+
+        & > *:last-child:not(.inflection-carousel) {
+            margin-block-end: 6.4rem;
         }
     }
 }
