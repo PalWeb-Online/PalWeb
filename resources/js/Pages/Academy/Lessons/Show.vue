@@ -1,13 +1,14 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
-import {computed, defineAsyncComponent, ref} from "vue";
+import {onMounted, provide, ref} from "vue";
 import {route} from "ziggy-js";
 import UnitNav from "../Units/UI/UnitNav.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import TermItem from "../../../components/TermItem.vue";
 import ActivityItem from "../../../components/ActivityItem.vue";
+import SkillContainer from "../Lessons/UI/SkillContainer.vue";
 
 defineOptions({
     layout: Layout
@@ -17,13 +18,41 @@ const props = defineProps({
     lesson: Object,
 })
 
-const lessonComponent = computed(() => {
-    return defineAsyncComponent(() =>
-        import(`./Pages/${props.lesson.data.slug}.vue`)
-    );
-});
+const sentenceLookup = ref({});
+const isLoadingSentences = ref(true);
+
+provide('lessonSentences', sentenceLookup);
 
 const currentTab = ref('deck');
+
+onMounted(async () => {
+    const ids = new Set();
+    props.lesson.data.document.skills.forEach(skill => {
+        skill.blocks.forEach(block => {
+            if (block.type === 'sentence' && block.model?.id) {
+                ids.add(block.model.id);
+            }
+        });
+    });
+
+    if (ids.size === 0) {
+        isLoadingSentences.value = false;
+        return;
+    }
+
+    try {
+        const response = await axios.post(route('sentences.get-many'), {
+            ids: Array.from(ids)
+        });
+        sentenceLookup.value = response.data;
+
+    } catch (error) {
+        console.error("Failed to fetch lesson sentences", error);
+
+    } finally {
+        isLoadingSentences.value = false;
+    }
+});
 </script>
 <template>
     <Head :title="`Academy: Lesson ${lesson.data.slug}`"/>
@@ -112,20 +141,13 @@ const currentTab = ref('deck');
         </template>
     </div>
     <div id="app-body" v-show="currentTab === 'skills'">
-        <template v-if="lesson.data.skills.length > 0">
-            <component v-if="lesson.data.skills" :is="lessonComponent" :lesson="lesson.data"/>
-            <ActivityItem :model="lesson.data.activity"/>
-        </template>
-        <template v-else>
-            No Skills assigned to this Lesson yet.
-        </template>
+        <SkillContainer v-for="skill in lesson.data.document.skills" :skill="skill" :key="skill.id"/>
+        <ActivityItem v-if="lesson.data.activity" :model="lesson.data.activity"/>
     </div>
     <div id="app-body" v-show="currentTab === 'dialog'">
-        <template v-if="lesson.data.dialog">
-            <DialogContainer :model="lesson.data.dialog"/>
-        </template>
-        <template v-else>
+        <DialogContainer v-if="lesson.data.dialog" :model="lesson.data.dialog"/>
+        <p v-else>
             No Dialog assigned to this Lesson yet.
-        </template>
+        </p>
     </div>
 </template>
