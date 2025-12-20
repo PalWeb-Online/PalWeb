@@ -60,10 +60,10 @@ class UpsertActivityRequest extends FormRequest
                 $rows = $block['rows'] ?? [];
 
                 if (!is_array($cols) || count($cols) < 1) {
-                    $errors["document.blocks.$bi.columns"] = ['Table must have at least 1 column.'];
+                    $errors["document.blocks.$bi.columns"] = ['Table Block must have at least 1 Column.'];
                 }
                 if (!is_array($rows) || count($rows) < 1) {
-                    $errors["document.blocks.$bi.rows"] = ['Table must have at least 1 row.'];
+                    $errors["document.blocks.$bi.rows"] = ['Table Block must have at least 1 Row.'];
                 }
 
                 foreach ($cols as $ci => $col) {
@@ -88,6 +88,10 @@ class UpsertActivityRequest extends FormRequest
 
             if ($type === 'exercises') {
                 $items = $block['items'] ?? [];
+
+                if (!is_array($items) || count($items) < 1) {
+                    $errors["document.blocks.$bi.items"] = ['Exercises Block must have at least one Exercise.'];
+                }
 
                 foreach ($block['examples'] as $ei => $ex) {
                     $prompt = trim((string)($ex['prompt'] ?? ''));

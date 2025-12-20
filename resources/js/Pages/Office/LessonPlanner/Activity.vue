@@ -8,10 +8,7 @@ import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
-import TextBlockEditor from "./UI/TextBlockEditor.vue";
-import AudioBlockEditor from "./UI/AudioBlockEditor.vue";
-import TableBlockEditor from "./UI/TableBlockEditor.vue";
-import ExercisesBlockEditor from "./UI/ExercisesBlockEditor.vue";
+import DocumentBlocksManager from "./UI/DocumentBlocksManager.vue";
 
 defineOptions({
     layout: Layout,
@@ -34,241 +31,6 @@ const activity = useForm({
     published: props.activity?.published || false,
 });
 
-const uid = () => (globalThis.crypto?.randomUUID?.() ?? `id_${Date.now()}_${Math.random().toString(16).slice(2)}`);
-
-const findIndexById = (arr, id) => arr.findIndex(x => x?.id === id);
-
-const insertAtStart = (arr, item) => {
-    arr.unshift(item);
-};
-
-const insertAfterId = (arr, afterId, item) => {
-    if (!afterId) {
-        arr.push(item);
-        return;
-    }
-    const i = findIndexById(arr, afterId);
-    arr.splice(i === -1 ? arr.length : i + 1, 0, item);
-};
-
-const removeById = (arr, id) => {
-    const i = findIndexById(arr, id);
-    if (i !== -1) arr.splice(i, 1);
-};
-
-const moveItem = (arr, fromIndex, toIndex) => {
-    if (toIndex < 0 || toIndex >= arr.length) return;
-    const [item] = arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, item);
-};
-
-const moveBlockUp = (blockId) => {
-    const i = findIndexById(activity.document.blocks, blockId);
-    if (i <= 0) return;
-    moveItem(activity.document.blocks, i, i - 1);
-};
-
-const moveBlockDown = (blockId) => {
-    const i = findIndexById(activity.document.blocks, blockId);
-    if (i === -1 || i >= activity.document.blocks.length - 1) return;
-    moveItem(activity.document.blocks, i, i + 1);
-};
-
-const blockTypes = [
-    'text',
-    'audio',
-    'table',
-    'exercises',
-];
-
-const blockFactories = {
-    text: () => ({
-        id: uid(),
-        type: 'text',
-        content: ''
-    }),
-    audio: () => ({
-        id: uid(),
-        type: 'audio',
-        media: ''
-    }),
-    table: () => ({
-        id: uid(),
-        type: 'table',
-        columns: [],
-        rows: []
-    }),
-    exercises: () => ({
-        id: uid(),
-        type: 'exercises',
-        exerciseType: null,
-        shuffle: true,
-        examples: [],
-        items: []
-    }),
-};
-
-const blockEditors = {
-    text: TextBlockEditor,
-    audio: AudioBlockEditor,
-    table: TableBlockEditor,
-    exercises: ExercisesBlockEditor,
-};
-
-const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
-
-const createBlock = (type) => (blockFactories[type] ?? blockFactories.text)();
-
-const createColumn = () => ({
-    id: uid(),
-    label: '',
-});
-
-const createRow = () => ({
-    id: uid(),
-    cells: {},
-});
-
-// const createExample = () => ({
-//     id: uid(),
-//     prompt: '',
-//     answer: '',
-// });
-
-const createExercise = (type = 'select') => {
-    switch (type) {
-        case 'input':
-            return {
-                id: uid(),
-                type: 'input',
-                images: [],
-                prompt: '',
-                answers: [''],
-            };
-        case 'match':
-            return {
-                id: uid(),
-                type: 'match',
-                images: [],
-                prompt: '',
-                pairs: [
-                    {start: '', end: ''},
-                    {start: '', end: ''},
-                ],
-            };
-        case 'select':
-        default:
-            return {
-                id: uid(),
-                type: 'select',
-                images: [],
-                prompt: '',
-                options: ['', ''],
-                answerIndex: 0,
-                shuffleOptions: true
-            };
-    }
-};
-
-const addBlock = ({afterBlockId = null, type = 'text', atStart = false} = {}) => {
-    const block = createBlock(type);
-
-    if (atStart) {
-        insertAtStart(activity.document.blocks, block);
-        return;
-    }
-
-    insertAfterId(activity.document.blocks, afterBlockId, block);
-};
-
-const getTableBlock = (blockId) => {
-    const block = activity.document.blocks.find(b => b.id === blockId);
-    if (!block || block.type !== 'table') return null;
-    return block;
-};
-
-const addTableColumn = ({blockId, afterColumnId = null} = {}) => {
-    const block = getTableBlock(blockId);
-    if (!block) return;
-
-    const col = createColumn();
-    insertAfterId(block.columns, afterColumnId, col);
-
-    for (const row of block.rows) {
-        row.cells ??= {};
-        row.cells[col.id] ??= '';
-    }
-};
-
-const removeTableColumn = ({blockId, columnId} = {}) => {
-    const block = getTableBlock(blockId);
-    if (!block) return;
-
-    for (const row of block.rows) {
-        if (row.cells && Object.prototype.hasOwnProperty.call(row.cells, columnId)) {
-            delete row.cells[columnId];
-        }
-    }
-
-    removeById(block.columns, columnId);
-};
-
-const addTableRow = ({blockId, afterRowId = null} = {}) => {
-    const block = getTableBlock(blockId);
-    if (!block) return;
-
-    const row = createRow();
-
-    for (const col of block.columns) {
-        row.cells[col.id] = '';
-    }
-
-    insertAfterId(block.rows, afterRowId, row);
-};
-
-const removeTableRow = ({blockId, rowId} = {}) => {
-    const block = getTableBlock(blockId);
-    if (!block) return;
-
-    removeById(block.rows, rowId);
-};
-
-const addExercise = ({blockId, afterExerciseId = null, type = 'select'} = {}) => {
-    const block = activity.document.blocks.find(b => b.id === blockId);
-    if (!block || block.type !== 'exercises') return;
-
-    if (!block.exerciseType) {
-        block.exerciseType = type;
-
-        if (type !== 'input') {
-            block.examples = [];
-        }
-
-    } else if (block.exerciseType !== type) {
-        alert(`This Exercises Block is locked to "${block.exerciseType}". Clear the block to change type.`);
-        return;
-    }
-
-    const ex = createExercise(type);
-    insertAfterId(block.items, afterExerciseId, ex);
-};
-
-const removeBlock = (blockId) => {
-    removeById(activity.document.blocks, blockId);
-};
-
-const removeExercise = ({blockId, exerciseId}) => {
-    const block = activity.document.blocks.find(b => b.id === blockId);
-    if (!block || block.type !== 'exercises') return;
-
-    removeById(block.items, exerciseId);
-
-    if ((block.items?.length ?? 0) === 0) {
-        block.exerciseType = null;
-        block.examples = [];
-    }
-};
-
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
@@ -277,7 +39,7 @@ const hasNavigationGuard = computed(() => {
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
-const submitActivity = async ({publish}) => {
+const saveActivity = async ({publish}) => {
     isSaving.value = true;
     activity.published = !!publish;
 
@@ -340,12 +102,12 @@ const publishIssues = computed(() => {
             const cols = block.columns ?? [];
             const rows = block.rows ?? [];
 
-            if (cols.length < 1) issues.push(`${where}: Table Block must have at least 1 column.`);
-            if (rows.length < 1) issues.push(`${where}: Table Block must have at least 1 row.`);
+            if (cols.length < 1) issues.push(`${where}: Table Block must have at least 1 Column.`);
+            if (rows.length < 1) issues.push(`${where}: Table Block must have at least 1 Row.`);
 
             cols.forEach((col, colIndex) => {
                 if (!isNonEmptyString(col?.label)) {
-                    issues.push(`${where}: column ${colIndex + 1} label cannot be empty.`);
+                    issues.push(`${where}: Column ${colIndex + 1} label cannot be empty.`);
                 }
             });
 
@@ -353,7 +115,7 @@ const publishIssues = computed(() => {
                 cols.forEach((col, colIndex) => {
                     const cell = row?.cells?.[col.id];
                     if (!isNonEmptyString(cell)) {
-                        issues.push(`${where}: row ${rowIndex + 1}, column ${colIndex + 1} cell cannot be empty.`);
+                        issues.push(`${where}: Row ${rowIndex + 1}, Column ${colIndex + 1} cell cannot be empty.`);
                     }
                 });
             });
@@ -366,6 +128,10 @@ const publishIssues = computed(() => {
                 if (!isNonEmptyString(ex?.prompt)) issues.push(`${where}: Example ${exIndex + 1} prompt is empty.`);
                 if (!isNonEmptyString(ex?.answer)) issues.push(`${where}: Example ${exIndex + 1} answer is empty.`);
             });
+
+            if (items.length === 0) {
+                issues.push(`${where}: Exercises Block must have at least one Exercise.`);
+            }
 
             items.forEach((ex, exIndex) => {
                 const exWhere = `${where}: Exercise ${exIndex + 1} (${ex.type})`;
@@ -446,67 +212,9 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
 
             <div class="featured-title m">blocks</div>
 
-            <div class="block-add-buttons">
-                <div v-for="blockType in blockTypes">
-                    <div class="add-button"
-                         @click="addBlock({ type: blockType, atStart: true })">+
-                    </div>
-                    <div>{{ blockType }}</div>
-                </div>
-            </div>
-
-            <AppTip v-if="activity.document.blocks.length === 0">
-                <p>No Blocks have been added to the Activity yet.</p>
-            </AppTip>
-
-            <div class="block-container-wrapper" v-for="(block, index) in activity.document.blocks" :key="block.id">
-                <div class="block-container">
-                    <div class="block-meta">
-                        <div class="featured-title s" style="flex-grow: 1">
-                            {{ index + 1 }}:
-                            <span style="color: var(--color-dark-primary)">
-                                {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
-                            </span>
-                        </div>
-                        <button type="button"
-                                class="material-symbols-rounded"
-                                @click="moveBlockUp(block.id)"
-                                :disabled="index === 0">
-                            move_up
-                        </button>
-                        <button type="button"
-                                class="material-symbols-rounded"
-                                @click="moveBlockDown(block.id)"
-                                :disabled="index === activity.document.blocks.length - 1">
-                            move_down
-                        </button>
-                        <button type="button"
-                                class="material-symbols-rounded"
-                                style="margin-inline-start: 0.8rem"
-                                @click="removeBlock(block.id)">
-                            delete
-                        </button>
-                    </div>
-                    <component
-                        :is="getBlockEditor(block.type)"
-                        :block="block"
-                        :addTableColumn="addTableColumn"
-                        :removeTableColumn="removeTableColumn"
-                        :addTableRow="addTableRow"
-                        :removeTableRow="removeTableRow"
-                        :addExercise="addExercise"
-                        :removeExercise="removeExercise"
-                    />
-                </div>
-                <div class="block-add-buttons">
-                    <div v-for="blockType in blockTypes">
-                        <div class="add-button"
-                             @click="addBlock({ afterBlockId: block.id, type: blockType })">+
-                        </div>
-                        <div>{{ blockType }}</div>
-                    </div>
-                </div>
-            </div>
+            <DocumentBlocksManager :document-blocks="activity.document.blocks"
+                                   :block-types="['text', 'audio', 'table', 'exercises']"
+            />
         </div>
 
         <AppTip>
@@ -527,14 +235,14 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">
                 <button type="button"
-                        @click="submitActivity({ publish: activity.published })"
+                        @click="saveActivity({ publish: activity.published })"
                         :disabled="isSaving || !hasNavigationGuard || (activity.published && !isPublishable)">
                     Save
                 </button>
                 <button type="button" :disabled="!hasNavigationGuard" @click="activity.reset()">Reset</button>
                 <button type="button"
-                        @click="submitActivity({ publish: !activity.published })"
-                        :disabled="isSaving"
+                        @click="saveActivity({ publish: !activity.published })"
+                        :disabled="isSaving  || (!activity.published && !isPublishable)"
                 >
                     {{ hasNavigationGuard ? 'Save & ' : '' }} {{ activity.published ? 'Revert to Draft' : 'Publish' }}
                 </button>

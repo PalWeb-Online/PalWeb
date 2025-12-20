@@ -6,11 +6,10 @@ import {computed, ref} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import ToggleSingle from "../../../components/ToggleSingle.vue";
 import AppTip from "../../../components/AppTip.vue";
 import LessonContentSearchBar from "./UI/LessonContentSearchBar.vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
-import AppButton from "../../../components/AppButton.vue";
+import DocumentBlocksManager from "./UI/DocumentBlocksManager.vue";
 
 defineOptions({
     layout: Layout,
@@ -25,19 +24,29 @@ const props = defineProps({
 const lesson = useForm({
     unit_id: props.lesson?.unit?.id || null,
     title: props.lesson?.title || '',
-    skills: props.lesson?.skills || [],
+    document: props.lesson?.document || {
+        schemaVersion: 1,
+        skills: []
+    },
     deck_id: props.lesson?.deck?.id || null,
     dialog_id: props.lesson?.dialog?.id || null,
     published: props.lesson?.published || false,
-})
+});
 
 const addSkill = () => {
-    lesson.skills.push({
+    if (lesson.document.skills.length === 3) return;
+
+    lesson.document.skills.push({
         type: '',
         title: '',
         description: '',
+        blocks: []
     });
-};
+}
+
+const removeSkill = (index) => {
+    lesson.document.skills.splice(index, 1)
+}
 
 const isSaving = ref(false);
 
@@ -47,12 +56,9 @@ const hasNavigationGuard = computed(() => {
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
-const isValidRequest = computed(() => {
-    return lesson.title && ! (! lesson.unit_id && lesson.published);
-});
-
-const saveLesson = async () => {
+const saveLesson = async ({publish}) => {
     isSaving.value = true;
+    lesson.published = !!publish
 
     const method = props.lesson?.id
         ? lesson.patch.bind(lesson)
@@ -80,6 +86,92 @@ const deleteLesson = () => {
 
     router.delete(route('lessons.destroy', props.lesson.id));
 };
+
+const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
+
+const publishIssues = computed(() => {
+    const issues = [];
+
+    const skills = lesson.document.skills || [];
+
+    if (skills.length === 0) {
+        issues.push('At least one Skill is required.');
+    }
+
+    skills.forEach((skill, si) => {
+        const skillName = `Skill ${si + 1}`;
+
+        if (!isNonEmptyString(skill.type)) issues.push(`${skillName}: Type is required.`);
+        if (!isNonEmptyString(skill.title)) issues.push(`${skillName}: Title is required.`);
+        if (!isNonEmptyString(skill.description)) issues.push(`${skillName}: Description is required.`);
+
+        if (skill.blocks.length === 0) {
+            issues.push(`${skillName}: Skill must have at least one Block.`);
+        }
+
+        skill.blocks.forEach((block, bi) => {
+            const where = `${skillName}, Block ${bi + 1} (${block.type})`;
+
+            if (block.type === 'text') {
+                if (!isNonEmptyString(block.content)) {
+                    issues.push(`${where}: Text Block content cannot be empty.`);
+                }
+            }
+
+            if (block.type === 'sentence') {
+                if (!block.model && !block.custom) {
+                    issues.push(`${where}: Sentence Block must have Sentence model or custom Sentence.`);
+
+                } else if (block.custom) {
+                    if (!isNonEmptyString(block.custom.transl)) {
+                        issues.push(`${where}: Translation cannot be empty.`);
+                    }
+
+                    if (!block.custom.terms || block.custom.terms.length === 0) {
+                        issues.push(`${where}: Sentence must have at least one Term.`);
+
+                    } else {
+                        block.custom.terms.forEach((term, ti) => {
+                            if (!isNonEmptyString(term.term) || !isNonEmptyString(term.transc)) {
+                                issues.push(`${where}: Term ${ti + 1} must have both Arabic text and transcription.`);
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (block.type === 'chart') {
+                const rows = block.rows || [];
+                if (rows.length === 0) {
+                    issues.push(`${where}: Chart Block must have at least one row.`);
+                } else {
+                    rows.forEach((row, ri) => {
+                        row.items.forEach((item, ii) => {
+                            if (!isNonEmptyString(item.key) || !isNonEmptyString(item.ar) || !isNonEmptyString(item.tr)) {
+                                issues.push(`${where}: Row ${ri + 1}, Item ${ii + 1} is missing required values (key, ar, or tr).`);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    });
+
+    if (!lesson.unit_id) issues.push('Lesson must be attached to a Unit.');
+    if (!lesson.deck_id) issues.push('Lesson must have an assigned Deck.');
+    if (!lesson.dialog_id) issues.push('Lesson must have an assigned Dialog.');
+
+    if (!props.lesson.activity?.id) {
+        issues.push('Lesson must have an associated Activity.');
+
+    } else if (!props.lesson.activity.published) {
+        issues.push('The associated Activity must be published before the Lesson can be published.');
+    }
+
+    return issues;
+});
+
+const isPublishable = computed(() => publishIssues.value.length === 0);
 </script>
 <template>
     <Head title="Academy: Lessons"/>
@@ -87,7 +179,7 @@ const deleteLesson = () => {
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
-        <div class="form-body" style="width: min(96rem, 100%)">
+        <div class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
                 <Link v-if="props.lesson.unit?.id" :href="route('lesson-planner.unit', props.lesson.unit?.id)">
                     <- to Unit
@@ -112,16 +204,6 @@ const deleteLesson = () => {
                 <label>Title</label>
                 <input type="text" v-model="lesson.title" placeholder="Title" required>
             </div>
-            <div v-for="(skill, index) in lesson.skills" :key="index">
-                <div class="field-item">
-                    <label>Skill {{ index + 1 }}</label>
-                    <input type="text" v-model="skill.type" placeholder="type" required>
-                    <input type="text" v-model="skill.title" placeholder="title" required>
-                    <input type="text" v-model="skill.description" placeholder="description" required>
-                    <button @click="lesson.skills.splice(index, 1)">- Skill</button>
-                </div>
-            </div>
-            <button @click="addSkill">+ Skill</button>
 
             <LessonContentSearchBar
                 v-model="lesson.deck_id"
@@ -130,7 +212,27 @@ const deleteLesson = () => {
                 :initial-title="props.lesson?.deck?.name || ''"
             />
 
-            <Link :href="route('lesson-planner.lesson-activity', props.lesson?.id)">-> to Activity</Link>
+            <div v-for="(skill, si) in lesson.document.skills" :key="si">
+                <div class="field-item">
+                    <div class="featured-title m">Skill {{ si + 1 }}</div>
+                    <button type="button" @click="removeSkill(si)">Remove Skill</button>
+                    <input type="text" v-model="skill.type" placeholder="type" required>
+                    <input type="text" v-model="skill.title" placeholder="title" required>
+                    <input type="text" v-model="skill.description" placeholder="description" required>
+                </div>
+
+                <DocumentBlocksManager :document-blocks="lesson.document.skills[si].blocks"
+                                       :block-types="['text', 'chart', 'sentence']"
+                />
+            </div>
+            <button v-if="lesson.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>
+
+            <Link v-if="props.lesson?.id" :href="route('lesson-planner.lesson-activity', props.lesson.id)">
+                -> to Activity
+            </Link>
+            <AppTip v-else>
+                <p>You must create the Lesson first to create the Activity.</p>
+            </AppTip>
 
             <LessonContentSearchBar
                 v-model="lesson.dialog_id"
@@ -140,23 +242,34 @@ const deleteLesson = () => {
             />
         </div>
 
-        <ToggleSingle v-model="lesson.published" label="Publish"/>
-        <AppTip v-if="lesson.published && (!lesson.unit_id || !lesson.deck_id || !lesson.dialog_id || lesson.skills.length < 3)">
-            <p>This Lesson is incomplete.
-                <span v-if="!lesson.deck_id">It has no assigned Deck. </span>
-                <span v-if="!lesson.dialog_id">It has no assigned Dialog. </span>
-                <span v-if="lesson.skills.length < 3">It has fewer than 3 Skills. </span>
-                <span v-if="!lesson.unit_id">It is not attached to any Unit, so it may not be published. </span>
-            </p>
+        <AppTip>
+            <p>The Lesson is currently {{ lesson.published ? 'Published' : 'a Draft' }}.</p>
+
+            <template v-if="!isPublishable">
+                <p style="font-weight: 700">The Activity cannot be Published in the current state.</p>
+                <ul>
+                    <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
+                </ul>
+                <p v-if="lesson.published" style="font-weight: 700">Because the Lesson is already Published, the
+                    current state cannot be saved except by reverting it to Draft.</p>
+            </template>
         </AppTip>
 
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">
-                <button class="app-button" @click="saveLesson"
-                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest">
-                    save
+                <button type="button"
+                        @click="saveLesson({ publish: lesson.published })"
+                        :disabled="isSaving || !hasNavigationGuard || (lesson.published && !isPublishable)">
+                    Save
                 </button>
-                <AppButton @click="deleteLesson" label="delete"/>
+                <button type="button" :disabled="!hasNavigationGuard" @click="lesson.reset()">Reset</button>
+                <button type="button"
+                        @click="saveLesson({ publish: !lesson.published })"
+                        :disabled="isSaving || (!lesson.published && !isPublishable)"
+                >
+                    {{ hasNavigationGuard ? 'Save & ' : '' }} {{ lesson.published ? 'Revert to Draft' : 'Publish' }}
+                </button>
+                <button type="button" @click="deleteLesson">Delete Lesson</button>
             </div>
         </div>
     </div>

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreLessonRequest;
-use App\Http\Requests\UpdateLessonRequest;
+use App\Http\Requests\UpsertLessonRequest;
 use App\Http\Resources\LessonResource;
 use App\Models\Deck;
 use App\Models\Dialog;
@@ -32,7 +31,7 @@ class LessonController extends Controller
         ]);
     }
 
-    public function store(StoreLessonRequest $request): RedirectResponse
+    public function store(UpsertLessonRequest $request): RedirectResponse
     {
         $unit = Unit::firstWhere('id', $request->unit_id);
         $position = $unit ? $unit->lessons()->count() + 1 : 1;
@@ -56,7 +55,7 @@ class LessonController extends Controller
         return to_route('lesson-planner.lesson', $lesson);
     }
 
-    public function update(UpdateLessonRequest $request, Lesson $lesson): RedirectResponse
+    public function update(UpsertLessonRequest $request, Lesson $lesson): RedirectResponse
     {
         $oldUnit = $lesson->unit;
 

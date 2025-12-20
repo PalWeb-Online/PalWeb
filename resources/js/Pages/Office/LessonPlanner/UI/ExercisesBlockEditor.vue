@@ -1,18 +1,13 @@
 <script setup>
 import Draggable from "vuedraggable";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
+import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+
+const { addExercise, removeExercise } = useDocumentBuilder();
 
 const props = defineProps({
     block: {type: Object, required: true},
-    addExercise: {type: Function, required: true},
-    removeExercise: {type: Function, required: true},
 });
-
-const exerciseTypes = [
-    'input',
-    'match',
-    'select',
-];
 
 const addExample = () => {
     props.block.examples.push({
@@ -78,16 +73,16 @@ const removeMatchPair = (ex, pairIndex) => {
 <template>
     <div class="block--exercises">
         <div class="block-add-buttons">
-            <div v-if="!props.block.exerciseType" v-for="exerciseType in exerciseTypes"
+            <div v-if="!props.block.exerciseType" v-for="exerciseType in ['input', 'match', 'select']"
                  :key="exerciseType">
                 <div class="add-button"
-                     @click="props.addExercise({ blockId: props.block.id, type: exerciseType })">+
+                     @click="addExercise({ blockId: props.block.id, type: exerciseType })">+
                 </div>
                 <div>{{ exerciseType }}</div>
             </div>
             <div v-else>
                 <div class="add-button"
-                     @click="props.addExercise({ blockId: props.block.id, type: props.block.exerciseType })">+
+                     @click="addExercise({ blockId: props.block.id, type: props.block.exerciseType })">+
                 </div>
                 <div>{{ props.block.exerciseType }}</div>
             </div>
@@ -149,7 +144,7 @@ const removeMatchPair = (ex, pairIndex) => {
                         <button
                             type="button"
                             class="material-symbols-rounded"
-                            @click="props.removeExercise({ blockId: props.block.id, exerciseId: ex.id })"
+                            @click="removeExercise({ blockId: props.block.id, exerciseId: ex.id })"
                         >
                             Delete
                         </button>

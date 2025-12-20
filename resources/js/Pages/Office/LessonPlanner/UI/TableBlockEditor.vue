@@ -2,13 +2,12 @@
 import AppTip from "../../../../components/AppTip.vue";
 import {computed} from "vue";
 import Draggable from "vuedraggable";
+import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+
+const { addTableColumn, removeTableColumn, addTableRow, removeTableRow } = useDocumentBuilder();
 
 const props = defineProps({
     block: {type: Object, required: true},
-    addTableColumn: {type: Function, required: true},
-    removeTableColumn: {type: Function, required: true},
-    addTableRow: {type: Function, required: true},
-    removeTableRow: {type: Function, required: true},
 });
 
 const gridStyle = computed(() => ({
@@ -21,13 +20,13 @@ const gridStyle = computed(() => ({
         <div class="block-add-buttons">
             <div>
                 <div class="add-button"
-                     @click="props.addTableColumn({ blockId: props.block.id })">
+                     @click="addTableColumn({ blockId: props.block.id })">
                     +
                 </div>
                 <div>column</div>
             </div>
             <div>
-                <div class="add-button" @click="props.addTableRow({ blockId: props.block.id })">
+                <div class="add-button" @click="addTableRow({ blockId: props.block.id })">
                     +
                 </div>
                 <div>row</div>
@@ -46,7 +45,7 @@ const gridStyle = computed(() => ({
             <template #item="{ element: col }">
                 <div class="table-column-wrapper" style="position:relative;">
                     <button type="button" class="material-symbols-rounded"
-                            @click="props.removeTableColumn({ blockId: props.block.id, columnId: col.id })"
+                            @click="removeTableColumn({ blockId: props.block.id, columnId: col.id })"
                     >
                         delete
                     </button>
@@ -69,7 +68,7 @@ const gridStyle = computed(() => ({
                         <button
                             type="button"
                             class="material-symbols-rounded"
-                            @click="props.removeTableRow({ blockId: props.block.id, rowId: row.id })"
+                            @click="removeTableRow({ blockId: props.block.id, rowId: row.id })"
                         >
                             delete
                         </button>
