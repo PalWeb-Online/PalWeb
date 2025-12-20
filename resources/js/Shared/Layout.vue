@@ -10,6 +10,7 @@ import {usePage} from "@inertiajs/vue3";
 import {onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
+import i18n from "../i18n.js";
 
 defineProps({
     section: {
@@ -35,11 +36,21 @@ onMounted(() => {
     }
 });
 
-watch(() => page.props.flash.notification, (notification) => {
-    if (notification) {
-        NotificationStore.addNotification(notification.message, notification.type);
+watch(() => page.props.flash.notification,
+    (notification) => {
+        if (notification) {
+            NotificationStore.addNotification(notification.message, notification.type);
+        }
+    });
+
+watch(
+    () => page.props.locale,
+    (newLocale) => {
+        if (newLocale) {
+            i18n.global.locale.value = newLocale;
+        }
     }
-});
+);
 </script>
 
 <template>

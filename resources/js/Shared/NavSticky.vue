@@ -4,11 +4,26 @@ import {useNavigationStore} from "../stores/NavigationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import ThemePicker from "../components/Modals/ThemePicker.vue";
-import {usePage} from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import { useConnectionStatus } from '../composables/useConnectionStatus.js';
+import {useActions} from "../composables/Actions.js";
+import {useI18n} from "vue-i18n";
+
+const { locale } = useI18n();
+
+const changeLanguage = (lang) => {
+    locale.value = lang;
+
+    router.post(route('language.store', lang), {}, {
+        preserveScroll: true,
+        onSuccess: () => closeMenu()
+    });
+};
 
 const { status } = useConnectionStatus(Echo);
+
+const {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu} = useActions();
 
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
@@ -121,6 +136,22 @@ onMounted(() => {
             >
                 palette
             </button>
+<!--            <div class="popup-menu-wrapper" :class="{ active: isOpen }">-->
+<!--                <button ref="reference" @click="toggleMenu()" class="material-symbols-rounded"-->
+<!--                        @keydown.enter.prevent="toggleMenu(true)">-->
+<!--                    language-->
+<!--                </button>-->
+
+<!--                <Teleport to="body">-->
+<!--                    <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu"-->
+<!--                         role="menu" @keydown="onMenuKeydown"-->
+<!--                    >-->
+<!--                        <button :class="{selected: locale === 'en'}" @click="changeLanguage('en')">English</button>-->
+<!--                        <button :class="{selected: locale === 'es'}" @click="changeLanguage('es')">Español</button>-->
+<!--                        <button :class="{selected: locale === 'ar'}" @click="changeLanguage('ar')">عربيّ</button>-->
+<!--                    </div>-->
+<!--                </Teleport>-->
+<!--            </div>-->
             <button
                 class="material-symbols-rounded"
                 @click="SearchStore.openSearchGenie('search')"

@@ -84,8 +84,10 @@ onMounted(() => {
         <div class="nav-sidebar" ref="sidebarRef">
             <div class="nav-sidebar-head">
                 <div>
-                    {{ UserStore.user ? UserStore.highestRole : 'Guest' }}
-                    <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">Manage</Link>
+                    {{ $t(UserStore.user ? UserStore.highestRole : 'guest') }}
+                    <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">
+                        {{ $t('user.subscriptions.manage') }}
+                    </Link>
                 </div>
                 <template v-if="UserStore.isUser">
                     <button class="material-symbols-rounded" @click="router.post(route('signout'))">logout</button>
@@ -104,7 +106,7 @@ onMounted(() => {
                     <div class="nav-carousel-head">
                         <button v-if="NavigationStore.data.section !== 'home'" @click.stop="toSection('home', 0)"><-
                         </button>
-                        <div>{{ NavigationStore.data.section }}</div>
+                        <div>{{ $t('nav.sidebar.'+NavigationStore.data.section+'.title') }}</div>
                     </div>
                     <Carousel
                         :items-to-show="1"
@@ -115,24 +117,24 @@ onMounted(() => {
                         <Slide key="0">
                             <div @click="toSection('academy', 1)" class="nav-carousel-page-item"
                                  :class="{ 'active': NavigationStore.data.section === 'academy' }">
-                                <div>academy</div>
-                                <div>for Students only</div>
+                                <div>{{ $t('nav.sidebar.academy.title') }}</div>
+                                <div>{{ $t('nav.sidebar.academy.subtitle') }}</div>
                             </div>
                             <div @click="toSection('library', 1)" class="nav-carousel-page-item"
                                  :class="{ 'active': NavigationStore.data.section === 'library' }">
-                                <div>library</div>
-                                <div>the Web of Palestinian Arabic</div>
+                                <div>{{ $t('nav.sidebar.library.title') }}</div>
+                                <div>{{ $t('nav.sidebar.library.subtitle') }}</div>
                             </div>
                             <div @click="toSection('workbench', 1)" class="nav-carousel-page-item"
                                  :class="{ 'active': NavigationStore.data.section === 'workbench' }">
-                                <div>workbench</div>
-                                <div>database-powered tools</div>
+                                <div>{{ $t('nav.sidebar.workbench.title') }}</div>
+                                <div>{{ $t('nav.sidebar.workbench.subtitle') }}</div>
                             </div>
                             <div v-if="['admin'].includes(UserStore.highestRole)"
                                  @click="toSection('office', 1)" class="nav-carousel-page-item"
                                  :class="{ 'active': NavigationStore.data.section === 'office' }">
-                                <div>office</div>
-                                <div>for Teachers only</div>
+                                <div>{{ $t('nav.sidebar.office.title') }}</div>
+                                <div>{{ $t('nav.sidebar.office.subtitle') }}</div>
                             </div>
                         </Slide>
                         <Slide class="nav-carousel-slide" key="1">
@@ -144,8 +146,8 @@ onMounted(() => {
                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
-                                    <div>lessons</div>
-                                    <div>learn Palestinian Arabic</div>
+                                    <div>{{ $t('nav.sidebar.lessons.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.lessons.subtitle') }}</div>
                                 </div>
                                 <div @click="navigateOrPrompt('dialogs.index')"
                                      class="nav-carousel-page-item"
@@ -154,8 +156,8 @@ onMounted(() => {
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
-                                    <div>dialogs</div>
-                                    <div>natural language input</div>
+                                    <div>{{ $t('nav.sidebar.dialogs.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.dialogs.subtitle') }}</div>
                                 </div>
                                 <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
@@ -164,8 +166,8 @@ onMounted(() => {
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
-                                    <div>scores</div>
-                                    <div>view your Score history</div>
+                                    <div>{{ $t('nav.sidebar.scores.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.scores.subtitle') }}</div>
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
@@ -173,15 +175,15 @@ onMounted(() => {
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Terms/Index', 'Library/Terms/Show'].includes($page.component) }"
                                 >
-                                    <div>dictionary</div>
-                                    <div>Term::all()</div>
+                                    <div>{{ $t('nav.sidebar.dictionary.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.dictionary.subtitle') }}</div>
                                 </Link>
                                 <Link :href="route('sentences.index')"
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
                                 >
-                                    <div>corpus</div>
-                                    <div>Sentence::with('terms')->all()</div>
+                                    <div>{{ $t('nav.sidebar.corpus.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.corpus.subtitle') }}</div>
                                 </Link>
                                 <div @click="navigateOrPrompt('decks.index')"
                                      class="nav-carousel-page-item"
@@ -190,8 +192,8 @@ onMounted(() => {
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
-                                    <div>decks</div>
-                                    <div>Deck::where('private', false)->all()</div>
+                                    <div>{{ $t('nav.sidebar.decks.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.decks.subtitle') }}</div>
                                 </div>
                                 <div @click="navigateOrPrompt('audios.index')"
                                      class="nav-carousel-page-item"
@@ -200,8 +202,8 @@ onMounted(() => {
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
-                                    <div>audios</div>
-                                    <div>Audio::with('speaker')->all()</div>
+                                    <div>{{ $t('nav.sidebar.audios.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.audios.subtitle') }}</div>
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.workbench }">
@@ -212,8 +214,8 @@ onMounted(() => {
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
-                                    <div>deckMaster</div>
-                                    <div>build & study Decks</div>
+                                    <div>{{ $t('nav.sidebar.deck-master.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.deck-master.subtitle') }}</div>
                                 </div>
                                 <div @click="navigateOrPrompt('record-wizard.index')"
                                      class="nav-carousel-page-item"
@@ -222,8 +224,8 @@ onMounted(() => {
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
-                                    <div>recordWizard</div>
-                                    <div>immortalize Palestinian Arabic</div>
+                                    <div>{{ $t('nav.sidebar.sound-booth.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.sound-booth.subtitle') }}</div>
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.office }">
@@ -232,24 +234,24 @@ onMounted(() => {
                                     class="nav-carousel-page-item"
                                     :class="{ 'active': $page.component === 'Office/WordLogger/Index' }"
                                 >
-                                    <div>wordLogger</div>
-                                    <div>manage Dictionary entries</div>
+                                    <div>{{ $t('nav.sidebar.word-logger.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.word-logger.subtitle') }}</div>
                                 </div>
                                 <div
                                     @click="navigateOrPrompt('speech-maker.index')"
                                     class="nav-carousel-page-item"
                                     :class="{ 'active': $page.component === 'Office/SpeechMaker/SpeechMaker' }"
                                 >
-                                    <div>speechMaker</div>
-                                    <div>create Sentences & Dialogs</div>
+                                    <div>{{ $t('nav.sidebar.speech-maker.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.speech-maker.subtitle') }}</div>
                                 </div>
                                 <div
                                     @click="navigateOrPrompt('lesson-planner.index')"
                                     class="nav-carousel-page-item"
                                     :class="{ 'active': $page.component === 'Office/LessonPlanner/Course' }"
                                 >
-                                    <div>lessonPlanner</div>
-                                    <div>create Lessons & Activities</div>
+                                    <div>{{ $t('nav.sidebar.lesson-planner.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.lesson-planner.subtitle') }}</div>
                                 </div>
                             </div>
                         </Slide>
@@ -268,28 +270,27 @@ onMounted(() => {
                 </div>
 
                 <div v-if="UserStore.isAdmin" class="nav-user-menu">
-                    <div class="nav-user-menu-head">myAdmin</div>
+                    <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-admin') }}</div>
                     <div class="nav-user-menu-items">
-                        <button @click="showSendMail = true">Send Mail</button>
-                        <Link :href="route('feedback.index')">View Feedback</Link>
+                        <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
+                        <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">
-                    <div class="nav-user-menu-head">myAccount</div>
+                    <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-account') }}</div>
                     <div class="nav-user-menu-items">
-                        <Link :href="route('subscription.index')">Manage Subscription</Link>
-                        <Link :href="route('password.edit')">Change Password</Link>
-                        <button v-if="UserStore.user.has_discord" @click="router.post(route('auth.discord.revoke'))">
-                            Unlink
-                            from Discord
+                        <Link :href="route('subscription.index')">{{ $t('nav.sidebar.manage-subscription') }}</Link>
+                        <Link :href="route('password.edit')">{{ $t('nav.sidebar.change-password') }}</Link>
+                        <a v-if="!UserStore.user.has_discord" :href="route('auth.discord')">{{ $t('nav.sidebar.link-discord') }}</a>
+                        <button v-else @click="router.post(route('auth.discord.revoke'))">
+                            {{ $t('nav.sidebar.unlink-discord') }}
                         </button>
-                        <a v-else :href="route('auth.discord')">Link to Discord</a>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">
-                    <div class="nav-user-menu-head">getHelp</div>
+                    <div class="nav-user-menu-head">{{ $t('nav.sidebar.get-help') }}</div>
                     <div class="nav-user-menu-items">
-                        <button @click="NavigationStore.showSendFeedback = true">Send Feedback</button>
+                        <button @click="NavigationStore.showSendFeedback = true">{{ $t('nav.sidebar.send-feedback') }}</button>
                     </div>
                 </div>
             </div>
