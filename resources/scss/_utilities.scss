@@ -148,7 +148,7 @@ iframe {
 
 h1, h2, h3 {
     color: black;
-    font-family: $monoFont, $ar_headFont;
+    font-family: $monoFont;
     font-weight: 700;
     text-align: start;
     text-wrap: balance;
@@ -256,6 +256,11 @@ h3 {
             text-decoration: none;
             color: white;
             background: var(--color-medium-secondary);
+        }
+
+        &.selected {
+            color: var(--color-polar-light);
+            background: var(--color-dark-primary);
         }
     }
 

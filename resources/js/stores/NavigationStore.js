@@ -21,9 +21,9 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         document.body.style.overflow = ''
     }
 
-    const themes = ['PalWebOS', 'Watermelon', 'Nabatean'];
+    const themes = ['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem'];
 
-    const activeTheme = ref(localStorage.getItem('selectedTheme') || 'Nabatean');
+    const activeTheme = ref(localStorage.getItem('selectedTheme') || 'Jerusalem');
 
     const updateTheme = (theme) => {
         document.body.classList.remove(...themes.map((t) => `theme-${t}`));

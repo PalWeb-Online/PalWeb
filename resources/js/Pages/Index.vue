@@ -90,7 +90,7 @@ defineOptions({
     <Head title="Home"/>
     <div id="app-body" class="homepage">
         <div class="homepage-hero-wrapper">
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.1 Release Notes -></Link>
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.2 Release Notes -></Link>
             <HomepageHero/>
         </div>
 

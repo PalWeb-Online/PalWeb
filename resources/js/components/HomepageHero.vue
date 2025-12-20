@@ -1,8 +1,14 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import AppLogo from "../Shared/AppLogo.vue";
+import {useI18n} from "vue-i18n";
+import {usePage} from "@inertiajs/vue3";
 
-const fullText = ref("the Web of Palestinian Arabic!");
+const { t } = useI18n();
+
+const page = usePage();
+
+const fullText = ref(t('meta.app.subtitle'));
 const displayedText = ref("");
 const cursorOpacity = ref(1);
 
@@ -40,6 +46,17 @@ onBeforeUnmount(() => {
     clearInterval(typingInterval);
     clearInterval(cursorInterval);
 });
+
+watch(
+    () => page.props.locale,
+    (newLocale) => {
+        if (newLocale) {
+            fullText.value = t('meta.app.subtitle');
+            displayedText.value = "";
+            startTypingEffect();
+        }
+    }
+);
 </script>
 <template>
     <div class="app-logo-wrapper">

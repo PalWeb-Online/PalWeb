@@ -29,7 +29,7 @@
 
         .term-headword-arb {
             font-size: 3.6rem;
-            font-family: 'Vazirmatn', sans-serif;
+            font-family: $ar_bodyFont;
         }
 
         .term-headword-eng {
@@ -437,7 +437,7 @@
 
             > div {
                 padding: 0.4rem;
-                font-family: $monoFont, $ar_headFont;
+                font-family: $monoFont;
                 border: 0.1rem solid var(--color-dark-primary);
                 box-shadow: -0.3rem 0.3rem rgba(black, 0.25);
                 background: var(--color-pastel-light);

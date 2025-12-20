@@ -72,14 +72,17 @@
     }
 }
 
-// PalWeb Fonts
-$logoFont: 'benda', sans-serif;
-$displayFont: 'beastly', 'greycliff-arabic-cf', serif;
+$displayFont: 'beastly', 'Lalezar', serif;
 $headFont: 'monotalic', 'greycliff-arabic-cf', sans-serif;
-$monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
 $bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
-$ar_headFont: 'ibm-plex-arabic', sans-serif;
+$monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
 $ar_bodyFont: 'Vazirmatn', sans-serif;
+
+//$displayFont: 'digibop', 'greycliff-arabic-cf', serif;
+//$headFont: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
+//:root {
+//    font-variation-settings: 'wdth' 130, 'wght' 800;
+//}
 
 :root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
@@ -129,34 +132,50 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-light: hsl(36, 80%, 92%);
 }
 
-//.theme-Jerusalem {
+.theme-Jerusalem {
+    --color-polar-dark: hsl(0, 0%, 0%);
+    --color-polar-light: hsl(0, 0%, 100%);
+    --color-dark-secondary: #050566;
+    --color-dark-primary: hsl(240, 80%, 30%);
+    --color-medium-secondary: hsl(215, 90%, 45%);
+    --color-medium-primary: hsl(172, 100%, 34%);
+    --color-pastel-dark: hsl(200, 75%, 80%);
+    --color-pastel-medium: hsl(200, 90%, 92%);
+    --color-pastel-light: hsl(172, 50%, 94%);
+    --color-transparent: hsla(200, 90%, 92%, 0.75);
+    --color-accent-dark: hsl(178, 95%, 20%);
+    --color-accent-medium: hsl(45, 95%, 50%);
+    --color-accent-light: hsl(45, 85%, 90%);
+
+    //--color-dark-secondary: hsl(220, 80%, 12%);
+    //--color-dark-primary: hsl(220, 100%, 25%);
+    //--color-medium-secondary: hsl(200, 95%, 38%);
+    //--color-medium-primary: hsl(190, 100%, 40%);
+    //--color-pastel-dark: hsl(160, 60%, 80%);
+    //--color-pastel-medium: hsl(160, 60%, 84%);
+    //--color-pastel-light: hsl(160, 60%, 95%);
+    //--color-transparent: hsla(65, 60%, 84%, 0.75);
+    //--color-accent-medium: hsl(355, 60%, 55%);
+    //--color-accent-light: hsl(32, 100%, 92%);
+}
+
+//.theme-Falastin {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
-//    --color-dark-secondary: #050566;
-//    --color-dark-primary: hsl(240, 80%, 30%);
-//    --color-medium-secondary: hsl(215, 90%, 45%);
-//    --color-medium-primary: hsl(172, 97%, 34%);
-//    --color-pastel-dark: hsl(200, 75%, 80%);
-//    --color-pastel-medium: hsl(200, 90%, 92%);
-//    --color-pastel-light: hsl(172, 50%, 94%);
-//    --color-transparent: hsla(38, 90%, 88%, 0.75);
-//    --color-accent-dark: hsl(16, 35%, 30%);
-//    --color-accent-medium: hsl(46, 80%, 55%);
-//    --color-accent-light: hsl(46, 85%, 92%);
-//
-//    --color-dark-secondary: hsl(220, 80%, 12%);
-//    --color-dark-primary: hsl(220, 100%, 25%);
-//    --color-medium-secondary: hsl(200, 95%, 38%);
-//    --color-medium-primary: hsl(190, 100%, 40%);
-//    --color-pastel-dark: hsl(160, 60%, 80%);
-//    --color-pastel-medium: hsl(160, 60%, 84%);
-//    --color-pastel-light: hsl(160, 60%, 95%);
-//    --color-transparent: hsla(65, 60%, 84%, 0.75);
-//    --color-accent-medium: hsl(355, 60%, 55%);
-//    --color-accent-light: hsl(32, 100%, 92%);
+//    --color-dark-secondary: hsl(20, 20%, 5%);
+//    --color-dark-primary: hsl(20, 12%, 15%);
+//    --color-medium-secondary: hsl(20, 8%, 25%);
+//    --color-medium-primary: hsl(20, 8%, 40%);
+//    --color-pastel-dark: hsl(20, 8%, 80%);
+//    --color-pastel-medium: hsl(20, 8%, 90%);
+//    --color-pastel-light: hsl(20, 8%, 95%);
+//    --color-transparent: hsla(0, 0%, 92%, 0.75);
+//    --color-accent-dark: hsl(30, 30%, 20%);
+//    --color-accent-medium: hsl(30, 30%, 65%);
+//    --color-accent-light: hsl(30, 80%, 95%);
 //}
 
-//.theme-Summac {
+//.theme-Sumac {
 //    --color-polar-dark: hsl(0, 0%, 0%);
 //    --color-polar-light: hsl(0, 0%, 100%);
 //    --color-dark-secondary: hsl(300, 28%, 16%);
@@ -257,28 +276,6 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     }
 }
 
-// Colors
-html {
-    --red: rgba(237, 28, 36, 1);
-    --dimred: rgba(237, 28, 36, 0.1);
-    --orn: rgba(242, 101, 34, 1);
-    --dimorn: rgba(242, 101, 34, 0.1);
-    --yel: rgba(255, 194, 14, 1);
-    --dimyel: rgba(255, 194, 14, 0.1);
-    --grn: rgba(0, 166, 81, 1);
-    --dimgrn: rgba(0, 166, 81, 0.1);
-    --cyn: rgba(0, 174, 239, 1);
-    --dimcyn: rgba(0, 174, 239, 0.1);
-    --blu: rgba(0, 114, 188, 1);
-    --dimblu: rgba(0, 114, 188, 0.1);
-    --prp: rgba(102, 45, 145, 1);
-    --dimprp: rgba(102, 45, 145, 0.1);
-    --mag: rgba(236, 0, 140, 1);
-    --dimmag: rgba(236, 0, 140, 0.1);
-    --gry: rgba(136, 136, 136, 1);
-    --dimgry: rgba(136, 136, 136, 0.1);
-}
-
 // Legacy Colors
 $red: rgb(237, 28, 36);
 $cyn: rgb(0, 174, 239);
@@ -288,17 +285,6 @@ $grn: rgb(0, 166, 83); // 150, 100, 65
 $blu: rgb(0, 102, 204); // 210, 100, 80
 $prp: rgb(110, 33, 166); // 275, 80, 65
 $mag: rgb(229, 23, 126); // 330, 90, 90
-
-$colors: (
-    "red": $red,
-    "orn": $orn,
-    "yel": $yel,
-    "grn": $grn,
-    "cyn": $cyn,
-    "blu": $blu,
-    "prp": $prp,
-    "mag": $mag,
-);
 
 $cast: (
     // students of Arabic literature at Birzeit University
@@ -323,76 +309,6 @@ $cast: (
     "guest-2": $prp,
     "guest-3": $orn,
 );
-
-$boxes: (
-    "grammar": $grn,
-    "vocab": $prp,
-    "dialog": $orn,
-    "text": $grn,
-    "info": $blu
-);
-
-$charts: (
-    "red": $red,
-    "orn": $orn,
-    "yel": $yel,
-    "grn": $grn,
-    "cyn": $cyn,
-    "blu": $blu,
-    "prp": $prp,
-    "mag": $mag,
-    // greeting = grn
-    "resp": $orn,
-    // inherited = grn
-    "borrowed": $mag,
-    "ap": $yel,
-    "pp": $blu,
-    "nv": $grn,
-    "dialog": $orn,
-    "vocab": $prp,
-    "msc": $blu,
-    "fem": $mag,
-    "plr": $prp,
-    "elt": $blu,
-    "defect": $blu,
-    "sing": $mag,
-    "pauc": $prp,
-    "m": $blu,
-    "f": $mag,
-    "p": $prp,
-    "collective": $blu,
-    "demonym": $prp,
-    "pseudo": $mag,
-    "participle": $yel,
-    "clitic": $orn,
-    "idiom": $orn,
-    "isPatient": $orn,
-    "hasObject": $prp,
-);
-
-@each $name, $color in $colors {
-    .#{$name} {
-        color: $color
-    }
-}
-
-.rainbow-background {
-    color: white !important;
-    background: linear-gradient(
-            105deg,
-            rgba(255, 0, 0, 1) 0%,
-            rgba(255, 154, 0, 1) 10%,
-            rgba(208, 222, 33, 1) 20%,
-            rgba(79, 220, 74, 1) 30%,
-            rgba(63, 218, 216, 1) 40%,
-            rgba(47, 201, 226, 1) 50%,
-            rgba(28, 127, 238, 1) 60%,
-            rgba(95, 21, 242, 1) 70%,
-            rgba(186, 12, 248, 1) 80%,
-            rgba(251, 7, 217, 1) 90%,
-            rgba(255, 0, 0, 1) 100%
-    );
-}
 
 @keyframes bounceIn {
     from,
@@ -437,47 +353,4 @@ $charts: (
         -webkit-transform: scale3d(1, 1, 1);
         transform: scale3d(1, 1, 1);
     }
-}
-
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(0.8rem);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fontToggle {
-    0% {
-        font-weight: 400;
-        text-transform: uppercase;
-        font-family: $displayFont;
-    }
-
-    33% {
-        font-weight: 700;
-        text-transform: none;
-        font-family: $headFont;
-    }
-
-    66% {
-        font-weight: 700;
-        text-transform: lowercase;
-        font-family: $logoFont;
-    }
-
-    100% {
-        font-weight: 400;
-        text-transform: uppercase;
-        font-family: $displayFont;
-    }
-}
-
-.font-toggle {
-    line-height: 2.4rem;
-    //animation: fontToggle 3s infinite;
 }

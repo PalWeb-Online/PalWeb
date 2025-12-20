@@ -127,7 +127,7 @@ onMounted(() => {
                 <span v-else-if="status === 'connecting'" >wifi_find</span>
                 <span v-else>wifi_off</span>
             </div>
-            <Link :href="route('homepage')">PalWeb 2.1 (Nabatean)</Link>
+            <Link :href="route('homepage')">PalWeb 2.2 (Jerusalem)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button
@@ -166,29 +166,6 @@ onMounted(() => {
             </button>
         </div>
     </div>
-
-    <!--    <x-dropdown>-->
-    <!--        <x-slot name="trigger">-->
-    <!--            <a class="material-symbols-rounded" @click="open = ! open">language</a>-->
-    <!--        </x-slot>-->
-    <!--        <x-slot name="content">-->
-    <!--            <form id="frm-en" method="post" action="{{ route("language.store", "en") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">EN</button>-->
-    <!--            </form>-->
-
-    <!--            <form id="frm-es" method="post" action="{{ route("language.store", "es") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">ES</button>-->
-    <!--            </form>-->
-
-    <!--            <form id="frm-ar" method="post" action="{{ route("language.store", "ar") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">AR</button>-->
-    <!--            </form>-->
-    <!--        </x-slot>-->
-    <!--    </x-dropdown>-->
-
     <ModalWrapper v-model="showThemePicker">
         <ThemePicker/>
     </ModalWrapper>

@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
                     ? new \App\Http\Resources\AuthUserResource($request->user()->load(['roles']))
                     : null,
             ],
+            'locale' => app()->getLocale(),
             'utcOffsetMinutes' => now()
                 ->setTimezone('Asia/Jerusalem')
                 ->utcOffset(),
