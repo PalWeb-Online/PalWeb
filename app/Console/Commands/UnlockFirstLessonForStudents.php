@@ -29,6 +29,13 @@ class UnlockFirstLessonForStudents extends Command
     {
         $this->info('Unlocking first Lesson for all Student users...');
 
+        $firstLesson = \App\Models\Lesson::orderBy('slug')->first();
+
+        if (!$firstLesson) {
+            $this->error('No Lessons found in the database.');
+            return;
+        }
+
         $studentIds = DB::table('model_has_roles')
             ->pluck('model_id');
 
@@ -44,16 +51,16 @@ class UnlockFirstLessonForStudents extends Command
             }
 
             $alreadyUnlocked = DB::table('lesson_user')
-                ->where('lesson_id', 1)
+                ->where('lesson_id', $firstLesson->id)
                 ->where('user_id', $userId)
                 ->exists();
 
             if (!$alreadyUnlocked) {
-                $user->lessons()->attach(1);
+                $user->lessons()->attach($firstLesson->id);
                 $created++;
             }
         }
 
-        $this->info("Unlocked Lesson 1 for {$created} students.");
+        $this->info("Unlocked Lesson $firstLesson->slug for {$created} students.");
     }
 }

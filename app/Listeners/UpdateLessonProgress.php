@@ -31,12 +31,7 @@ class UpdateLessonProgress implements ShouldQueue
         $user = $score->user;
         $scorable = $score->scorable;
 
-//        if DeckScoreCreated & ActivityScoreCreated are managed separately, the conditional is unnecessary
-        if ($scorable instanceof \App\Models\Deck) {
-            $deck = $scorable;
-            $lesson = Lesson::where('deck_id', $scorable->id)->first();
-        }
-
+        $lesson = $score->scorable->lesson;
         if (! $lesson) {
             return;
         }
@@ -50,47 +45,46 @@ class UpdateLessonProgress implements ShouldQueue
             return;
         }
 
-        $deckScoreCount = $deck
+        $scoreCount = $scorable
             ->scores()
             ->where('user_id', $user->id)
             ->where('score', 1)
             ->count();
 
-        if ($pivot->stage < 2 && $deckScoreCount >= 3) {
-            $user->lessons()->updateExistingPivot($lesson->id, [
-                'stage' => 2,
-            ]);
-
-            LessonProgressUpdated::dispatch(
-                "Great job! You've unlocked the Skills for this Lesson!",
-                'success',
-                $user->id
-            );
-        }
-
-        // (Future) If Activity complete, stage 2 → 3
-        // For now, we can simulate completion when stage = 2
-
-        if ($pivot->stage < 3 && $pivot->stage === 2) {
-            $user->lessons()->updateExistingPivot($lesson->id, [
-                'stage' => 3,
-                'completed' => true,
-            ]);
-
-            $nextLesson = Lesson::where('slug', '>', $lesson->slug)
-                ->orderBy('slug')
-                ->first();
-
-            if ($nextLesson && ! $user->lessons()->where('lesson_id', $nextLesson->id)->exists()) {
-                $user->lessons()->attach($nextLesson->id);
+        if ($scorable instanceof \App\Models\Deck) {
+            if ($pivot->stage < 2 && $scoreCount >= 3) {
+                $user->lessons()->updateExistingPivot($lesson->id, [
+                    'stage' => 2,
+                ]);
 
                 LessonProgressUpdated::dispatch(
-                    "Amazing! You've unlocked Lesson $nextLesson->slug!",
+                    "Great job! You've unlocked the Activity for this Lesson!",
                     'success',
                     $user->id
                 );
             }
 
+        } else if ($scorable instanceof \App\Models\Activity) {
+            if ($pivot->stage === 2 && $scoreCount >= 1) {
+                $user->lessons()->updateExistingPivot($lesson->id, [
+                    'stage' => 3,
+                    'completed' => true,
+                ]);
+
+                $nextLesson = Lesson::where('slug', '>', $lesson->slug)
+                    ->orderBy('slug')
+                    ->first();
+
+                if ($nextLesson && ! $user->lessons()->where('lesson_id', $nextLesson->id)->exists()) {
+                    $user->lessons()->attach($nextLesson->id);
+
+                    LessonProgressUpdated::dispatch(
+                        "You've finished the Lesson & unlocked the Dialog! You can proceed to Lesson $nextLesson->slug!",
+                        'success',
+                        $user->id
+                    );
+                }
+            }
         }
     }
 }

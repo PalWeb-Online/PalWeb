@@ -1,11 +1,11 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useDeck} from "../composables/Deck.js";
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
+const {toggleTerm} = useDeck();
+const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 
 const props = defineProps({
     model: Object,
@@ -18,26 +18,6 @@ const handleToggleMenu = async () => {
 
     toggleMenu();
 }
-
-const toggleTerm = async (deck) => {
-    try {
-        const response = await axios.post(route('decks.term.toggle', {deck: deck.id, term: props.model.id}));
-
-        if (response.data.isPresent) {
-            deck.terms.push(props.model);
-
-        } else {
-            deck.terms = deck.terms.filter(term => term.id !== props.model.id);
-        }
-
-        NotificationStore.addNotification(response.data.message);
-
-    } catch (error) {
-        console.error('Deck Toggle Failed', error);
-    }
-};
-
-const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
 </script>
 
 <template>
@@ -50,7 +30,7 @@ const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
             <Teleport to="body">
                 <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
                     <form v-if="UserStore.decks.length > 0">
-                        <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck)">
+                        <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck, model)">
                             <span style="font-weight: 700; text-transform: uppercase">
                                 [{{ deck.terms.some(term => term.id === model.id) ? '✓' : ' ' }}]
                             </span>

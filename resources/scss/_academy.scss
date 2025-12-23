@@ -221,12 +221,12 @@
     }
 }
 
-.block-container-wrapper {
+.block-editor-container-wrapper {
     display: grid;
     gap: 3.2rem;
 }
 
-.block-container {
+.block-editor-container {
     display: grid;
     gap: 0.8rem;
     padding: 1.6rem;
@@ -248,7 +248,7 @@
     }
 }
 
-.block--text {
+.block-editor--text {
     textarea {
         padding: 1.2rem 1.6rem;
         font-family: $bodyFont;
@@ -256,14 +256,14 @@
     }
 }
 
-.block--audio {
+.block-editor--audio {
     audio {
         width: 100%;
         border-radius: 0.8rem;
     }
 }
 
-.block--table {
+.block-editor--table {
     display: grid;
     gap: 3.2rem;
 
@@ -299,7 +299,7 @@
     }
 }
 
-.block--exercises {
+.block-editor--exercises {
     display: grid;
     gap: 3.2rem;
 

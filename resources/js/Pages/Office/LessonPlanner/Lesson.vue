@@ -246,7 +246,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             <p>The Lesson is currently {{ lesson.published ? 'Published' : 'a Draft' }}.</p>
 
             <template v-if="!isPublishable">
-                <p style="font-weight: 700">The Activity cannot be Published in the current state.</p>
+                <p style="font-weight: 700">The Lesson cannot be Published in the current state.</p>
                 <ul>
                     <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
                 </ul>
