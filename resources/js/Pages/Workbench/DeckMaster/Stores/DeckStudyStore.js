@@ -1,17 +1,17 @@
 import {defineStore} from 'pinia';
 import {nextTick, reactive, ref} from 'vue';
 import {shuffle} from "lodash";
-import {router} from "@inertiajs/vue3";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useScoreManager} from "../../../../composables/useScoreManager.js";
 
 export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
+    const scoreManager = useScoreManager();
     const NotificationStore = useNotificationStore();
 
     const data = reactive({
         step: 'settings',
         deck: null,
         terms: [],
-        isSaved: false,
         isLoading: false,
     });
 
@@ -22,12 +22,6 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             strictGloss: true,
             withTranslation: true,
         }
-    });
-
-    const score = reactive({
-        settings: {},
-        score: 0,
-        results: {},
     });
 
     const quiz = ref([]);
@@ -86,53 +80,54 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     };
 
     const submitQuiz = () => {
-        score.settings = settings;
-        score.results = quiz.value;
+        scoreManager.score.settings = settings;
 
-        if (settings.quizType === 'glosses') {
-            score.results = score.results.map(q => ({
-                term: {
-                    id: q.term.id,
-                    term: q.term.term,
-                    slug: q.term.slug
-                },
-                answer: [q.options[q.answer]],
-                response: q.options[q.response],
-                correct: q.answer === q.response,
-            }))
+        scoreManager.score.results = quiz.value.map(q => {
+            if (settings.quizType === 'glosses') {
+                return {
+                    term: {
+                        id: q.term.id,
+                        term: q.term.term,
+                        slug: q.term.slug
+                    },
+                    answer: [q.options[q.answer]],
+                    response: q.options[q.response],
+                    correct: q.answer === q.response,
+                }
 
-        } else if (settings.quizType === 'inflections') {
-            score.results = quiz.value.map(q => ({
-                term: {
-                    id: q.term.id,
-                    term: q.term.term,
-                    slug: q.term.slug
-                },
-                prompt: q.prompt,
-                answer: q.answer,
-                response: q.response,
-                correct: q.answer.includes(q.response),
-            }))
+            } else if (settings.quizType === 'inflections') {
+                return {
+                    term: {
+                        id: q.term.id,
+                        term: q.term.term,
+                        slug: q.term.slug
+                    },
+                    prompt: q.prompt,
+                    answer: q.answer,
+                    response: q.response,
+                    correct: q.answer.includes(q.response),
+                }
 
-        } else if (settings.quizType === 'sentences') {
-            score.results = quiz.value.map(q => ({
-                term: {
-                    id: q.term.id,
-                    term: q.term.term,
-                    slug: q.term.slug
-                },
-                sentence: {
-                    id: q.sentence.id,
-                    sentence: q.sentence.sentence,
-                },
-                prompt: q.prompt,
-                answer: [q.options[q.answer]['term']],
-                response: q.options[q.response]['term'],
-                correct: q.answer === q.response,
-            }))
-        }
+            } else if (settings.quizType === 'sentences') {
+                return {
+                    term: {
+                        id: q.term.id,
+                        term: q.term.term,
+                        slug: q.term.slug
+                    },
+                    sentence: {
+                        id: q.sentence.id,
+                        sentence: q.sentence.sentence,
+                    },
+                    prompt: q.prompt,
+                    answer: [q.options[q.answer]['term']],
+                    response: q.options[q.response]['term'],
+                    correct: q.answer === q.response,
+                }
+            }
+        });
 
-        scoreQuiz();
+        scoreManager.calculateScore();
         data.step = 'results';
 
         nextTick(() => {
@@ -140,30 +135,11 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         });
     };
 
-    const scoreQuiz = () => {
-        score.score = score.results.filter(q => q.correct).length / quiz.value.length;
-    };
-
-    const saveScore = async () => {
-        data.isSaved = true;
-
-        router.post(route('scores.store'), {
-            scorable_type: 'deck',
-            scorable_id: data.deck.id,
-            settings: score.settings,
-            score: score.score,
-            results: score.results,
-        }, {
+    const saveScore = () => {
+        scoreManager.saveScore('deck', data.deck.id, {
             onSuccess: () => {
                 data.step = 'settings';
-                score.score = 0;
-                score.results = {};
                 quiz.value = [];
-                data.isSaved = false;
-            },
-            onError: (errors) => {
-                data.isSaved = false;
-                console.error('Error saving Score:', errors);
             }
         });
     };
@@ -171,30 +147,26 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     const reset = () => {
         data.step = 'settings';
         data.deck = null;
-        data.isSaved = false;
-
         settings.quizType = 'practice';
         settings.options = {
             strictTerms: true,
             strictGloss: true,
             withTranslation: true,
         }
-
-        score.score = 0;
-        score.results = {};
-
         quiz.value = [];
+        scoreManager.resetScore();
     };
 
     return {
         data,
         settings,
-        score,
+        score: scoreManager.score,
+        isSaved: scoreManager.isSaved,
         quiz,
         startPractice,
         startQuiz,
         submitQuiz,
-        scoreQuiz,
+        markCorrect: scoreManager.markCorrect,
         saveScore,
         reset
     };

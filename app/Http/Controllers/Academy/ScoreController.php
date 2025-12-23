@@ -78,7 +78,7 @@ class ScoreController extends Controller
         session()->flash('notification',
             ['type' => 'success', 'message' => 'Your Score for this model has been saved!']);
 
-        return to_route('deck-master.study', $request->scorable_id);
+        return back();
     }
 
     public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
@@ -89,7 +89,7 @@ class ScoreController extends Controller
 
         $modelClass = match ($scorable_type) {
             'deck' => Deck::class,
-            'dialog' => Dialog::class,
+            'activity' => Activity::class,
             default => abort(404),
         };
 
@@ -106,7 +106,7 @@ class ScoreController extends Controller
 
         return Inertia::render('Academy/Scores/History', [
             'section' => 'academy',
-            'model' => $scorable_type === 'deck' ? new DeckResource($model) : new DialogResource($model),
+            'model' => $scorable_type === 'deck' ? new DeckResource($model) : new ActivityResource($model),
             'scorable_type' => $scorable_type,
             'scores' => ScoreResource::collection($scores),
             'totalCount' => $totalCount,

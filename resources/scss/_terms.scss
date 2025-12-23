@@ -493,20 +493,6 @@
     }
 }
 
-.chart-dialog {
-    display: grid;
-    gap: 0.8rem;
-    justify-items: center;
-    direction: rtl;
-    text-align: start;
-    background: var(--color-accent-light);
-    padding: 2.4rem 3.2rem 3.2rem;
-
-    .dialog-line-wrapper {
-        width: min(100%, 48rem);
-    }
-}
-
 .term-editor, .term-editor > * {
     width: 100%;
     max-width: 96rem;

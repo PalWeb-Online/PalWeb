@@ -1,12 +1,9 @@
 <script setup>
-import AnswerItem from "../Pages/Workbench/DeckMaster/UI/AnswerItem.vue";
 import {computed} from "vue";
-import {useDeckStudyStore} from "../Pages/Workbench/DeckMaster/Stores/DeckStudyStore.js";
-
-const DeckStudyStore = useDeckStudyStore();
 
 const props = defineProps({
-    score: Object,
+    score: {type: Object, required: true},
+    model: {type: Object, required: false}
 });
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -59,8 +56,8 @@ const scoreMessage = computed(() => {
     <div class="quiz-results">
         <div class="score-figure featured-title">
             <div>{{ formatter.format(score.score) }}</div>
-            <div v-if="!score.id && DeckStudyStore.score.score > DeckStudyStore.data.model?.stats.highest"
-                 class="quiz-results-callout">new record!
+            <div v-if="!score.id && score.score > model?.stats.highest" class="quiz-results-callout">
+                new record!
             </div>
         </div>
         <div class="score-feedback">
@@ -75,9 +72,5 @@ const scoreMessage = computed(() => {
             <div>Review your answers below.</div>
         </div>
     </div>
-    <div class="quiz-answer-array">
-        <AnswerItem v-for="(question, index) in score.results" :key="index"
-                    :question="question"
-                    :index="index"/>
-    </div>
+    <slot/>
 </template>

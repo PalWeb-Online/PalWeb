@@ -70,10 +70,12 @@ const startTypingEffect = (text) => {
             </div>
         </div>
 
-        <div class="quiz-question-options">
-            <AppButton v-for="(option, i) in question.options"
+        <div class="exercise--select-choices">
+            <button v-for="(option, i) in question.options"
                        :class="{'selected': question.response === Number(i)}"
-                       @click="toggleSelection(i)" :label="option"/>
+                       @click="toggleSelection(i)">
+                {{ option }}
+            </button>
         </div>
     </div>
 </template>

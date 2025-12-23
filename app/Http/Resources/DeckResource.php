@@ -16,6 +16,7 @@ class DeckResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'model_class' => 'deck',
             'name' => $this->name,
             'description' => $this->description,
             'private' => $this->private,

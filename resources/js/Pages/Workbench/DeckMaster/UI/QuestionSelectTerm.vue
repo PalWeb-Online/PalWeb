@@ -40,7 +40,7 @@ const toggleSelection = (index) => {
             </div>
         </div>
 
-        <div class="quiz-question-options">
+        <div class="exercise--select-choices">
             <AppButton v-for="(option, i) in question.options"
                        :class="{'selected': question.response === Number(i)}"
                        @click="toggleSelection(i)" :label="option.term"/>
