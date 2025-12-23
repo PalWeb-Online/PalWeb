@@ -53,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
             'sentence' => \App\Models\Sentence::class,
             'deck' => \App\Models\Deck::class,
             'dialog' => \App\Models\Dialog::class,
+            'activity' => \App\Models\Activity::class,
         ]);
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {

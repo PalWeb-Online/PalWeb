@@ -27,8 +27,8 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
         <p>No Blocks have been added yet.</p>
     </AppTip>
 
-    <div class="block-container-wrapper" v-for="(block, bi) in documentBlocks" :key="block.id">
-        <div class="block-container">
+    <div class="block-editor-container-wrapper" v-for="(block, bi) in documentBlocks" :key="block.id">
+        <div class="block-editor-container">
             <div class="block-meta">
                 <div class="featured-title s" style="flex-grow: 1">
                     {{ bi + 1 }}:

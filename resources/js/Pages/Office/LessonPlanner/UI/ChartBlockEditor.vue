@@ -1,6 +1,7 @@
 <script setup>
 import Draggable from "vuedraggable";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import ChartBlock from "../../../Academy/Lessons/UI/ChartBlock.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -43,6 +44,8 @@ const removeItem = (row, index) => row.items.splice(index, 1);
                 <div>row</div>
             </div>
         </div>
+
+        <ChartBlock :chart="block"/>
 
         <Draggable :list="block.rows" item-key="id" handle=".handle" class="chart-editor-grid">
             <template #item="{ element: row, index: ri }">

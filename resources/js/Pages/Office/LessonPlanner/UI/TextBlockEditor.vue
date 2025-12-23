@@ -5,7 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="block--text">
+    <div class="block-editor--text">
         <textarea v-model="props.block.content" :class="{ 'invalid': !props.block.content }"/>
     </div>
 </template>

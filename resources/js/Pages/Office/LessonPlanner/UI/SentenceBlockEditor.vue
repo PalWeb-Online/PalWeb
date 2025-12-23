@@ -58,7 +58,7 @@ watch(
 </script>
 
 <template>
-    <div class="block--text">
+    <div class="block-editor--text">
         <div class="block-add-buttons">
             <template v-if="!block.model && !block.custom">
                 <div>

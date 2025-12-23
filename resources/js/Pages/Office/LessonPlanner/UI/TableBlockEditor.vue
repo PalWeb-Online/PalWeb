@@ -16,7 +16,7 @@ const gridStyle = computed(() => ({
 </script>
 
 <template>
-    <div class="block--table">
+    <div class="block-editor--table">
         <div class="block-add-buttons">
             <div>
                 <div class="add-button"
