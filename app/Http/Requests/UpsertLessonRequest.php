@@ -37,7 +37,7 @@ class UpsertLessonRequest extends FormRequest
             'dialog_id' => ['nullable', 'integer', 'exists:dialogs,id'],
             'document' => ['required', 'array'],
             'document.schemaVersion' => ['required', 'integer'],
-            'document.skills' => ['required', 'array'],
+            'document.skills' => ['present', 'array'],
             'published' => ['required', 'boolean'],
         ];
     }

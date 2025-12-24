@@ -12,7 +12,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 });
 
 const scoreMessage = computed(() => {
-    if (props.score.score === 1) {
+    if (props.score.score >= 1) {
         return "Flawless!";
     }
     if (props.score.score >= 0.85) {
@@ -29,7 +29,7 @@ const scoreMessage = computed(() => {
 </script>
 <template>
     <div class="score-metadata">
-        <div class="score-metadata-row">
+        <div class="score-metadata-row" v-if="score.scorable_type === 'deck'">
             <div>
                 <span style="font-weight: 700">Quiz Type</span>
                 <span style="text-transform: capitalize">{{ score.settings.quizType }}</span>

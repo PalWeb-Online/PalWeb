@@ -23,7 +23,7 @@ const props = defineProps({
 
 const activity = useForm({
     lesson_id: props.lesson.id,
-    title: 'Lesson ' + props.lesson.slug + ': ' + props.lesson.title,
+    title: 'Activity ' + props.lesson.slug + ': ' + props.lesson.title,
     document: props.activity?.document || {
         schemaVersion: 1,
         blocks: []

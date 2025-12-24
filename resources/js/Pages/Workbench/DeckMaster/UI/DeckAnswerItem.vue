@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useDeck} from "../../../../composables/Deck.js";
@@ -52,8 +52,8 @@ const isCorrect = computed(() => {
                         {{ deck.terms.some(term => term.id === exercise.term.id) ? 'Remove from' : 'Add to' }} Deck
                     </button>
                 </template>
+                <button v-if="!isCorrect" type="button" @click="markCorrect">Mark as Correct</button>
             </template>
-            <button v-if="!isCorrect" type="button" @click="markCorrect">Mark as Correct</button>
         </div>
     </div>
 </template>

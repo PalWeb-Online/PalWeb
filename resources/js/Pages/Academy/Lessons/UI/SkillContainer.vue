@@ -3,7 +3,7 @@ import {inject, ref} from "vue";
 import SentenceItem from "../../../../components/SentenceItem.vue";
 import SentenceBlock from "./SentenceBlock.vue";
 import ChartBlock from "./ChartBlock.vue";
-import AppTip from "../../../../components/AppTip.vue";
+import TextBlock from "./TextBlock.vue";
 
 defineProps({
     skill: {type: Object, required: true}
@@ -23,10 +23,7 @@ const isOpen = ref(false);
 
             <template v-for="block in skill.blocks">
                 <template v-if="block.type === 'text'">
-                    <AppTip v-if="block.tip">
-                        <p>{{ block.content }}</p>
-                    </AppTip>
-                    <p v-else>{{ block.content }}</p>
+                    <TextBlock :block="block"/>
                 </template>
                 <template v-if="block.type === 'sentence'">
                     <SentenceItem v-if="block.model" :model="lessonSentences[block.model.id]"/>

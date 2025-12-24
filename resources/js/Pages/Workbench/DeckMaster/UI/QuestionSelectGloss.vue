@@ -1,6 +1,5 @@
 <script setup>
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
-import AppButton from "../../../../components/AppButton.vue";
 import {ref} from "vue";
 
 const DeckStudyStore = useDeckStudyStore();
@@ -70,7 +69,7 @@ const startTypingEffect = (text) => {
             </div>
         </div>
 
-        <div class="exercise--select-choices">
+        <div class="exercise--select-options">
             <button v-for="(option, i) in question.options"
                        :class="{'selected': question.response === Number(i)}"
                        @click="toggleSelection(i)">

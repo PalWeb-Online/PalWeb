@@ -210,7 +210,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('deck-master.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': $page.component === 'Workbench/DeckMaster/DeckMaster',
+                                         'active': ['Workbench/DeckMaster/Index', 'Workbench/DeckMaster/Build', 'Workbench/DeckMaster/Study'].includes($page.component),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >

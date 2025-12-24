@@ -66,10 +66,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
         <ScoreDetail :score="DeckStudyStore.score" :model="DeckStudyStore.data.deck">
             <div class="quiz-answer-array">
-                <DeckAnswerItem v-for="(exercise, i) in DeckStudyStore.score.results" :key="i"
+                <DeckAnswerItem v-for="exercise in DeckStudyStore.score.results" :key="exercise.id"
                                 :exercise="exercise"
                                 :deck="DeckStudyStore.data.deck"
-                                :markCorrect="() => DeckStudyStore.markCorrect(i)"
+                                :markCorrect="() => DeckStudyStore.markCorrect(exercise.id)"
                 />
             </div>
         </ScoreDetail>

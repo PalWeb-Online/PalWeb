@@ -11,10 +11,14 @@ export function useScoreManager() {
 
     const isSaved = ref(false);
 
-    const markCorrect = (index) => {
-        score.results[index].correct = true;
-        calculateScore();
-        isSaved.value = false;
+    const markCorrect = (id) => {
+        const result = score.results.find(r => r.id === id);
+
+        if (result) {
+            result.correct = true;
+            calculateScore();
+            isSaved.value = false;
+        }
     }
 
     const calculateScore = () => {
@@ -28,8 +32,6 @@ export function useScoreManager() {
     };
 
     const saveScore = async (scorableType, scorableId, options = {}) => {
-        isSaved.value = true;
-
         router.post(route('scores.store'), {
             scorable_type: scorableType,
             scorable_id: scorableId,
@@ -38,12 +40,10 @@ export function useScoreManager() {
             results: score.results,
         }, {
             onSuccess: () => {
-                isSaved.value = false;
                 console.log('Score saved successfully!');
                 if (options.onSuccess) options.onSuccess();
             },
             onError: (errors) => {
-                isSaved.value = false;
                 console.error('Error saving Score:', errors);
                 if (options.onError) options.onError(errors);
             }
@@ -54,7 +54,6 @@ export function useScoreManager() {
         score.settings = {};
         score.score = 0;
         score.results = [];
-        isSaved.value = false;
     }
 
     return {

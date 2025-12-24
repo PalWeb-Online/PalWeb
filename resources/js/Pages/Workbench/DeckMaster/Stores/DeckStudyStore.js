@@ -83,48 +83,38 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         scoreManager.score.settings = settings;
 
         scoreManager.score.results = quiz.value.map(q => {
+            const result = {
+                id: q.id || `q_${q.term.id}_${Math.random().toString(16).slice(2, 6)}`,
+                term: {
+                    id: q.term.id,
+                    term: q.term.term,
+                    slug: q.term.slug,
+                },
+            };
+
             if (settings.quizType === 'glosses') {
-                return {
-                    term: {
-                        id: q.term.id,
-                        term: q.term.term,
-                        slug: q.term.slug
-                    },
-                    answer: [q.options[q.answer]],
-                    response: q.options[q.response],
-                    correct: q.answer === q.response,
-                }
+                    result.answer = [q.options[q.answer]];
+                    result.response = q.options[q.response];
+                    result.correct = q.answer === q.response;
 
             } else if (settings.quizType === 'inflections') {
-                return {
-                    term: {
-                        id: q.term.id,
-                        term: q.term.term,
-                        slug: q.term.slug
-                    },
-                    prompt: q.prompt,
-                    answer: q.answer,
-                    response: q.response,
-                    correct: q.answer.includes(q.response),
-                }
+                    result.prompt = q.prompt;
+                    result.answer = q.answer;
+                    result.response = q.response;
+                    result.correct = q.answer.includes(q.response);
 
             } else if (settings.quizType === 'sentences') {
-                return {
-                    term: {
-                        id: q.term.id,
-                        term: q.term.term,
-                        slug: q.term.slug
-                    },
-                    sentence: {
+                    result.sentence = {
                         id: q.sentence.id,
                         sentence: q.sentence.sentence,
-                    },
-                    prompt: q.prompt,
-                    answer: [q.options[q.answer]['term']],
-                    response: q.options[q.response]['term'],
-                    correct: q.answer === q.response,
-                }
+                    };
+                    result.prompt = q.prompt;
+                    result.answer = [q.options[q.answer]['term']];
+                    result.response = q.options[q.response]['term'];
+                    result.correct = q.answer === q.response;
             }
+
+            return result;
         });
 
         scoreManager.calculateScore();

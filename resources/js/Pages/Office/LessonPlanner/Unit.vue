@@ -30,6 +30,10 @@ const addLesson = () => {
     unit.lessons.push({
         id: null,
         title: '',
+        document: props.lesson?.document || {
+            schemaVersion: 1,
+            skills: []
+        },
         position: unit.lessons.length + 1,
     });
 }

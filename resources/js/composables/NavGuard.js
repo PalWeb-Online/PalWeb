@@ -6,6 +6,10 @@ export function useNavGuard(hasNavigationGuard) {
     const pendingVisit = ref(null);
     const isSkippingGuard = ref(false);
 
+    const skipNext = () => {
+        isSkippingGuard.value = true;
+    };
+
     const handleConfirm = () => {
         showAlert.value = false;
 
@@ -46,7 +50,7 @@ export function useNavGuard(hasNavigationGuard) {
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         const unsubscribe = router.on('before', (event) => {
-            if (isSkippingGuard.value) {
+            if (isSkippingGuard.value  || event.detail.visit.method !== 'get') {
                 return;
             }
 
@@ -66,6 +70,7 @@ export function useNavGuard(hasNavigationGuard) {
 
     return {
         showAlert,
+        skipNext,
         handleConfirm,
         handleCancel,
     };

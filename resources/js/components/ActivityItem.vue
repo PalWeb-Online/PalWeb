@@ -25,7 +25,7 @@ const formatter = new Intl.NumberFormat('en-US', {
     <div class="model-item-container deck-item-container">
         <div class="model-item deck-item">
             <div class="model-item-content" style="border: none"
-                 @click="router.get(route('activities.show', model.lesson.slug))">
+                 @click="router.get(route('scores.history', { scorable_type: 'activity', scorable_id: model.id }))">
                 <div class="model-item-title">
                     {{ model.title }}
                 </div>
