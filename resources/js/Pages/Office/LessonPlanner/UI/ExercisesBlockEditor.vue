@@ -3,7 +3,7 @@ import Draggable from "vuedraggable";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
 
-const { addExercise, removeExercise } = useDocumentBuilder();
+const { addExercise, removeExercise, addSelectOption, removeSelectOption } = useDocumentBuilder();
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -35,26 +35,6 @@ const addInputAnswer = (ex) => {
 const removeInputAnswer = (ex, index) => {
     ex.answers.splice(index, 1);
     if (ex.answers.length === 0) ex.answers.push('');
-};
-
-const addSelectOption = (ex) => {
-    ex.options.push('');
-};
-
-const removeSelectOption = (ex, optionIndex) => {
-    if (ex.options.length <= 2) return;
-
-    ex.options.splice(optionIndex, 1);
-
-    if (ex.answerIndex === optionIndex) {
-        ex.answerIndex = 0;
-    } else if (optionIndex < ex.answerIndex) {
-        ex.answerIndex -= 1;
-    }
-
-    if (ex.answerIndex < 0 || ex.answerIndex >= ex.options.length) {
-        ex.answerIndex = 0;
-    }
 };
 
 const addMatchPair = (ex) => {
@@ -184,20 +164,20 @@ const removeMatchPair = (ex, pairIndex) => {
                         <div class="exercise-answers">
                             <div class="exercise-select-option" v-for="(opt, i) in ex.options" :key="opt.id">
                                 <button
-                                    @click="ex.answerIndex = i"
+                                    @click="ex.answerId = opt.id"
                                     class="checkmark material-symbols-rounded"
-                                    :class="{'active': i === ex.answerIndex}"
+                                    :class="{'active': ex.answerId === opt.id}"
                                 >
                                     check_circle
                                 </button>
-                                <input v-model="ex.options[i]"
-                                       :class="{ 'invalid': !ex.options[i] }"
+                                <input v-model="opt.text"
+                                       :class="{ 'invalid': !opt.text }"
                                        style="flex:1"
                                        placeholder="خيار"/>
                                 <button v-if="ex.options.length > 2"
                                         type="button"
                                         class="material-symbols-rounded"
-                                        @click="removeSelectOption(ex, i)"
+                                        @click="removeSelectOption(ex, opt.id)"
                                 >
                                     delete
                                 </button>

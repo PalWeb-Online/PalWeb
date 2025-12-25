@@ -196,8 +196,11 @@ export function useDocumentBuilder(documentBlocks = null) {
                     type: 'select',
                     images: [],
                     prompt: '',
-                    options: ['', ''],
-                    answerIndex: 0,
+                    options: [
+                        { id: uid(), text: '' },
+                        { id: uid(), text: '' }
+                    ],
+                    answerId: null,
                     shuffleOptions: true
                 };
         }
@@ -235,6 +238,23 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
     };
 
+    const addSelectOption = (ex) => {
+        ex.options.push({
+            id: uid(),
+            text: ''
+        });
+    };
+
+    const removeSelectOption = (ex, optionId) => {
+        if (ex.options.length <= 2) return;
+
+        removeById(ex.options, optionId);
+
+        if (ex.answerId === optionId) {
+            ex.answerId = null;
+        }
+    };
+
     return {
         uid,
         provideBuilder,
@@ -249,5 +269,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         removeTableRow,
         addExercise,
         removeExercise,
+        addSelectOption,
+        removeSelectOption
     };
 }

@@ -128,9 +128,17 @@ class UpsertActivityRequest extends FormRequest
 
                     if (($ex['type'] ?? null) === 'select') {
                         $options = $ex['options'] ?? [];
-                        $anyEmpty = is_array($options) && collect($options)->contains(fn ($o) => trim((string)$o) === '');
+                        $answerId = $ex['answerId'] ?? null;
+
+                        $optionIds = collect($options)->pluck('id')->toArray();
+
+                        $anyEmpty = collect($options)->contains(fn ($o) => trim((string)($o['text'] ?? '')) === '');
                         if ($anyEmpty) {
                             $errors["document.blocks.$bi.items.$ei.options"] = ['Options cannot be empty.'];
+                        }
+
+                        if (!$answerId || !in_array($answerId, $optionIds)) {
+                            $errors["document.blocks.$bi.items.$ei.answerId"] = ['A valid correct answer must be selected.'];
                         }
                     }
 

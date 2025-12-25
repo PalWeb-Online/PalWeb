@@ -156,9 +156,14 @@ const publishIssues = computed(() => {
 
                 if (ex.type === 'select') {
                     const options = Array.isArray(ex.options) ? ex.options : [];
-                    const anyEmpty = options.some(o => o === '');
+                    const anyEmpty = options.some(o => !isNonEmptyString(o.text));
                     if (anyEmpty) {
-                        issues.push(`${exWhere}: option cannot be empty.`);
+                        issues.push(`${exWhere}: option text cannot be empty.`);
+                    }
+
+                    const optionIds = options.map(o => o.id);
+                    if (!ex.answerId || !optionIds.includes(ex.answerId)) {
+                        issues.push(`${exWhere}: a correct answer must be selected.`);
                     }
                 }
 
