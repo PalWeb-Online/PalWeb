@@ -49,8 +49,8 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         });
 
         generateQuiz().then(() => {
-            if (!quiz.value.length) {
-                NotificationStore.addNotification('No Terms in the Deck could be used to generate the Quiz.', 'error');
+            if (quiz.value.length < 5) {
+                NotificationStore.addNotification('Couldn\'t generate a Quiz with at least 5 items.', 'warning');
                 data.step = 'settings';
             }
         });
