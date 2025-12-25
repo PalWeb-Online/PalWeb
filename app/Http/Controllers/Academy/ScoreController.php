@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Academy;
 use App\Events\ScoreCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreScoreRequest;
+use App\Http\Resources\ActivityResource;
 use App\Http\Resources\DeckResource;
-use App\Http\Resources\DialogResource;
 use App\Http\Resources\ScoreResource;
+use App\Models\Activity;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Score;
@@ -25,32 +26,52 @@ class ScoreController extends Controller
      */
     public function index(Request $request): \Inertia\Response
     {
-        $latestScores = Score::query()
-            ->whereIn('id', function ($query) use ($request) {
-                $query->selectRaw('max(id)')
-                    ->from((new Score)->getTable())
-                    ->where('user_id', $request->user()->id)
-                    ->groupBy('scorable_type', 'scorable_id');
-            })
-            ->with('scorable')
+        $latestScoreIds = Score::query()
+            ->where('user_id', $request->user()->id)
+            ->groupBy('scorable_type', 'scorable_id')
+            ->selectRaw('max(id)')
+            ->pluck('max(id)');
+
+        $allLatestScores = Score::whereIn('id', $latestScoreIds)
+            ->with([
+                'scorable' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Deck::class => ['lesson', 'scores'],
+                        Activity::class => ['lesson', 'scores'],
+                    ]);
+                }
+            ])
             ->latest()
             ->get();
 
-        $latestScoredDecks = [];
+        $scoredLessonModels = [];
+        $latestDecks = collect();
 
-        foreach ($latestScores as $score) {
-            $scorable = $score->scorable;
-            $scorable->load('scores');
-            $latestScoredDecks[] = $scorable;
+        foreach ($allLatestScores as $score) {
+            $model = $score->scorable;
+            if (! $model) {
+                continue;
+            }
+
+            if ($model->lesson) {
+                $lessonSlug = $model->lesson->slug;
+
+                $score->scorable_type === 'deck'
+                    ? $scoredLessonModels[$lessonSlug]['deck'] = new DeckResource($model)
+                    : $scoredLessonModels[$lessonSlug]['activity'] = new ActivityResource($model);
+            }
+
+            if ($score->scorable_type === 'deck' && ! $model->lesson) {
+                $latestDecks->push($model);
+            }
         }
 
-        $totalCount = count($latestScoredDecks);
+        $totalCount = $latestDecks->count();
         $perPage = 10;
         $currentPage = $request->input('page', 1);
-        $decks = collect($latestScoredDecks)->forPage($currentPage, $perPage);
 
-        $decks = new LengthAwarePaginator(
-            $decks,
+        $paginatedDecks = new LengthAwarePaginator(
+            $latestDecks->forPage($currentPage, $perPage)->values(),
             $totalCount,
             $perPage,
             $currentPage,
@@ -59,7 +80,8 @@ class ScoreController extends Controller
 
         return Inertia::render('Academy/Scores/Index', [
             'section' => 'academy',
-            'decks' => DeckResource::collection($decks),
+            'scoredLessonModels' => $scoredLessonModels,
+            'latestScoredDecks' => DeckResource::collection($paginatedDecks),
             'totalCount' => $totalCount,
         ]);
     }
