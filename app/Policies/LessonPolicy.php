@@ -24,4 +24,19 @@ class LessonPolicy
 
         return false;
     }
+
+    public function viewActivity(User $user, Lesson $lesson): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isStudent()) {
+            return $lesson->published
+                && $lesson->isUnlockedFor($user)
+                && $lesson->getProgressFor($user)['stage'] > 1;
+        }
+
+        return false;
+    }
 }

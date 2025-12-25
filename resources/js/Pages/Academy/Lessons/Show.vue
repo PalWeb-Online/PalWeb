@@ -4,11 +4,12 @@ import DialogContainer from "../../../components/DialogContainer.vue";
 import {onMounted, provide, ref} from "vue";
 import {route} from "ziggy-js";
 import UnitNav from "../Units/UI/UnitNav.vue";
-import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
-import TermItem from "../../../components/TermItem.vue";
-import ActivityItem from "../../../components/ActivityItem.vue";
 import SkillContainer from "../Lessons/UI/SkillContainer.vue";
+import DeckContainer from "../../../components/DeckContainer.vue";
+import ScoreStats from "../../../components/ScoreStats.vue";
+import WindowSection from "../../../components/WindowSection.vue";
+import ActivityActions from "../../../components/Actions/ActivityActions.vue";
 
 defineOptions({
     layout: Layout
@@ -27,7 +28,7 @@ const currentTab = ref('deck');
 
 onMounted(async () => {
     const ids = new Set();
-    props.lesson.data.document.skills.forEach(skill => {
+    props.lesson.data.document?.skills.forEach(skill => {
         skill.blocks.forEach(block => {
             if (block.type === 'sentence' && block.model?.id) {
                 ids.add(block.model.id);
@@ -115,8 +116,7 @@ onMounted(async () => {
     <div id="app-body" v-show="currentTab === 'deck'">
         <template v-if="lesson.data.deck">
             <div class="lesson-model-progress-wrapper">
-                <DeckItem :model="lesson.data.deck" target="academy"/>
-
+                <div></div>
                 <div>
                     <div class="lesson-model-score-count">
                         <div class="material-symbols-rounded"
@@ -132,22 +132,56 @@ onMounted(async () => {
                     <Link :href="route('deck-master.study', lesson.data.deck.id)">study</Link>
                 </div>
             </div>
-            <div class="model-list">
-                <TermItem v-for="term in lesson.data.deck.terms" :model="term" :key="term.id"/>
-            </div>
+            <DeckContainer :model="lesson.data.deck"/>
         </template>
         <template v-else>
-            No Deck assigned to this Lesson yet.
+            No Deck available for this Lesson yet.
         </template>
     </div>
     <div id="app-body" v-show="currentTab === 'skills'">
-        <SkillContainer v-for="skill in lesson.data.document.skills" :skill="skill" :key="skill.id"/>
-        <ActivityItem v-if="lesson.data.activity" :model="lesson.data.activity"/>
+        <template v-if="lesson.data.document">
+            <SkillContainer v-for="skill in lesson.data.document.skills" :skill="skill" :key="skill.id"/>
+        </template>
+
+        <template v-if="lesson.data.activity">
+            <div class="featured-title l">ready to go?</div>
+            <div class="window-container">
+                <div class="window-header">
+                    <div class="material-symbols-rounded">home</div>
+                    <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}</div>
+                </div>
+                <div class="window-section-head">
+                    <h1>activity</h1>
+                    <ActivityActions :model="lesson.data.activity"/>
+                </div>
+                <div class="window-content-head">
+                    <div class="window-content-head-title">{{ lesson.data.activity.title }}</div>
+                </div>
+                <WindowSection>
+                    <template #title>
+                        <h2>stats</h2>
+                    </template>
+                    <template #content>
+                        <ScoreStats :model="lesson.data.activity"/>
+                    </template>
+                </WindowSection>
+
+                <div class="window-footer">
+                    <Link :href="route('activities.show', lesson.data.slug)">
+                        Start Activity
+                    </Link>
+                </div>
+            </div>
+        </template>
+
+        <p v-else>
+            No Activity available for this Lesson yet.
+        </p>
     </div>
     <div id="app-body" v-show="currentTab === 'dialog'">
         <DialogContainer v-if="lesson.data.dialog" :model="lesson.data.dialog"/>
         <p v-else>
-            No Dialog assigned to this Lesson yet.
+            No Dialog available for to this Lesson yet.
         </p>
     </div>
 </template>

@@ -16,15 +16,18 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      */
-//    public function show(Lesson $lesson): \Inertia\Response
-//    {
-//        Gate::authorize('view', $lesson);
-//
-////        return Inertia::render('Academy/Activities/Show', [
-////            'section' => 'academy',
-////            'activity' => new ActivityResource($lesson->activity),
-////        ]);
-//    }
+    public function show(Lesson $lesson): \Inertia\Response
+    {
+        Gate::authorize('viewActivity', $lesson);
+
+        $activity = $lesson->activity;
+        $activity?->load(['scores']);
+
+        return Inertia::render('Academy/Activities/Show', [
+            'section' => 'academy',
+            'activity' => new ActivityResource($activity),
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.

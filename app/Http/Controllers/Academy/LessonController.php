@@ -23,8 +23,6 @@ class LessonController extends Controller
     {
         Gate::authorize('view', $lesson);
 
-        $lesson->load(['deck', 'activity', 'dialog']);
-
         return Inertia::render('Academy/Lessons/Show', [
             'section' => 'academy',
             'lesson' => new LessonResource($lesson)->additional(['content' => true]),

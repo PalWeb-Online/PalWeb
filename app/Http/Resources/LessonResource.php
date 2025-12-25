@@ -19,9 +19,12 @@ class LessonResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $progress = $this->getProgressFor($request->user());
+        $stage = $progress['stage'] ?? 1;
+
         $deck = $this->deck;
-        $activity = $this->activity;
-        $dialog = $this->dialog;
+        $activity = $stage > 1 ? $this->activity : null;
+        $dialog = $stage > 2 ? $this->dialog : null;
 
         if ($this->withContent()) {
             $deck?->load(['terms.pronunciations', 'scores']);
@@ -39,7 +42,7 @@ class LessonResource extends JsonResource
             'unit' => new UnitResource($this->unit),
             'slug' => $this->slug,
             'title' => $this->title,
-            'document' => $this->document,
+            'document' => $this->when($stage >= 2, $this->document),
             'deck' => new DeckResource($deck),
             'activity' => new ActivityResource($activity),
             'dialog' => new DialogResource($dialog),
