@@ -12,7 +12,15 @@ class DeckPolicy
 
     public function interact(User $user, Deck $deck)
     {
-        return $user->isAdmin() || $user->id === $deck->user_id || ! $deck->private;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($deck->lesson) {
+            return $deck->lesson->published && $user->hasUnlockedLesson($deck->lesson->id);
+        }
+
+        return $user->id === $deck->user_id || ! $deck->private;
     }
 
     public function modify(User $user, Deck $deck)
