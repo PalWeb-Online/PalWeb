@@ -330,7 +330,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
-    Route::get('/toggle-view', [UserController::class, 'toggleView'])->name('admin.toggle-view');
+    Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
 
 require __DIR__.'/auth.php';

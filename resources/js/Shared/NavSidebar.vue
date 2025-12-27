@@ -106,7 +106,7 @@ onMounted(() => {
                     <div class="nav-carousel-head">
                         <button v-if="NavigationStore.data.section !== 'home'" @click.stop="toSection('home', 0)"><-
                         </button>
-                        <div>{{ $t('nav.sidebar.'+NavigationStore.data.section+'.title') }}</div>
+                        <div>{{ $t('nav.sidebar.' + NavigationStore.data.section + '.title') }}</div>
                     </div>
                     <Carousel
                         :items-to-show="1"
@@ -274,9 +274,18 @@ onMounted(() => {
                     <div class="nav-user-menu-items">
                         <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
                         <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
-                        <button @click="router.get(route('admin.toggle-view'))">
-                            {{ UserStore.isAdmin ? 'View as Student' : 'Restore Admin View' }}
+
+                        <button v-if="!UserStore.isAdmin" @click="router.get(route('admin.toggle-view'))">
+                            Restore Admin View
                         </button>
+                        <template v-else>
+                            <button @click="router.get(route('admin.toggle-view', 'student'))">
+                                View as Student
+                            </button>
+                            <button @click="router.get(route('admin.toggle-view', 'pal'))">
+                                View as Pal
+                            </button>
+                        </template>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">
@@ -284,7 +293,9 @@ onMounted(() => {
                     <div class="nav-user-menu-items">
                         <Link :href="route('subscription.index')">{{ $t('nav.sidebar.manage-subscription') }}</Link>
                         <Link :href="route('password.edit')">{{ $t('nav.sidebar.change-password') }}</Link>
-                        <a v-if="!UserStore.user.has_discord" :href="route('auth.discord')">{{ $t('nav.sidebar.link-discord') }}</a>
+                        <a v-if="!UserStore.user.has_discord" :href="route('auth.discord')">
+                            {{ $t('nav.sidebar.link-discord') }}
+                        </a>
                         <button v-else @click="router.post(route('auth.discord.revoke'))">
                             {{ $t('nav.sidebar.unlink-discord') }}
                         </button>
@@ -293,7 +304,9 @@ onMounted(() => {
                 <div v-if="UserStore.isUser" class="nav-user-menu">
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.get-help') }}</div>
                     <div class="nav-user-menu-items">
-                        <button @click="NavigationStore.showSendFeedback = true">{{ $t('nav.sidebar.send-feedback') }}</button>
+                        <button @click="NavigationStore.showSendFeedback = true">
+                            {{ $t('nav.sidebar.send-feedback') }}
+                        </button>
                     </div>
                 </div>
             </div>

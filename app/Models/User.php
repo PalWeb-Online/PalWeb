@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
         })->all();
 
         if (empty($roles)) {
-            return 'hobbyist';
+            return 'pal';
         }
 
         return implode(',', $roles);
@@ -152,5 +152,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Lesson::class)
             ->withPivot('completed')
             ->withTimestamps();
+    }
+
+    protected ?array $unlockedLessonIds = null;
+
+    public function hasUnlockedLesson(int $lessonId): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($this->unlockedLessonIds === null) {
+            $this->unlockedLessonIds = $this->lessons()->pluck('lessons.id')->toArray();
+        }
+
+        return in_array($lessonId, $this->unlockedLessonIds);
     }
 }
