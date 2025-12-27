@@ -16,49 +16,60 @@ class UnitSeeder extends Seeder
      */
     public function run(): void
     {
-        $activityIds = Activity::pluck('id');
-
         Unit::factory()
             ->count(3)
             ->sequence(fn ($sequence) => [
                 'position' => $sequence->index + 1,
                 'title' => fake()->sentence(3),
+                'published' => fake()->boolean(),
             ])
             ->create()
             ->each(fn (Unit $unit) => Lesson::factory()
                 ->count(9)
                 ->for($unit)
                 ->sequence(fn ($sequence) => [
+                    'group' => 'main',
                     'position' => $sequence->index + 1,
                     'slug' => $unit->position.'0'.($sequence->index + 1),
                     'title' => fake()->sentence(3),
-                    'skills' => [
-                        [
-                            'type' => 'grammar',
-                            'title' => fake()->word(),
-                            'description' => fake()->text(100),
-                        ],
-                        [
-                            'type' => 'vocab',
-                            'title' => fake()->word(),
-                            'description' => fake()->text(100),
-                        ],
-                        [
-                            'type' => 'convo',
-                            'title' => fake()->word(),
-                            'description' => fake()->text(100),
-                        ],
+                    'description' => fake()->paragraph(3),
+                    'document' => [
+                        'schemaVersion' => '1',
+                        'skills' => [
+                            [
+                                'type' => 'grammar',
+                                'title' => fake()->word(),
+                                'description' => fake()->text(100),
+                                'blocks' => []
+                            ],
+                            [
+                                'type' => 'vocab',
+                                'title' => fake()->word(),
+                                'description' => fake()->text(100),
+                                'blocks' => []
+                            ],
+                            [
+                                'type' => 'convo',
+                                'title' => fake()->word(),
+                                'description' => fake()->text(100),
+                                'blocks' => []
+                            ],
+                        ]
                     ],
                     'deck_id' => Deck::pluck('id')->random(),
-                    'activity_id' => $activityIds[($unit->position - 1) * 9 + $sequence->index],
+                    'activity_id' => Activity::factory()
+                        ->sequence(fn ($sequence) => [
+                            'document' => [
+                                'schemaVersion' => '1',
+                                'blocks' => []
+                            ]
+                        ])
+                        ->create()->id,
                     'dialog_id' => Dialog::pluck('id')->random(),
+                    'unlock_conditions' => null,
+                    'published' => fake()->boolean()
                 ])
                 ->create()
-                ->each(fn (Lesson $lesson) => Activity::factory()
-                    ->count(1)
-                    ->for($lesson)
-                    ->create()
-                )
             );
     }
 }

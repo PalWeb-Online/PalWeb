@@ -39,15 +39,18 @@ class LessonResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'group' => $this->group,
             'unit' => new UnitResource($this->unit),
             'slug' => $this->slug,
             'title' => $this->title,
             'document' => $this->when($stage >= 2, $this->document),
+            'description' => $this->description,
             'deck' => new DeckResource($deck),
             'activity' => new ActivityResource($activity),
             'dialog' => new DialogResource($dialog),
-            'progress' => $this->getProgressFor($request->user()),
+            'unlock_conditions' => $this->unlock_conditions,
             'published' => $this->published,
+            'progress' => $this->getProgressFor($request->user()),
         ];
     }
 }

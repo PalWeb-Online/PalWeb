@@ -21,9 +21,9 @@ defineProps({
         <h1>academy</h1>
     </div>
     <div id="lesson-nav" style="margin-block: 4.8rem 9.6rem;">
-        <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.index')" class="lesson-planner featured-title m">Lesson Planner</Link>
-        <template v-for="unit in units" :key="unit.id">
-            <UnitNav v-if="unit.published || UserStore.isAdmin" :unit="unit"/>
-        </template>
+        <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.index')" class="lesson-planner featured-title m">
+            Lesson Planner
+        </Link>
+        <UnitNav v-for="unit in units" :key="unit.id" :unit="unit"/>
     </div>
 </template>

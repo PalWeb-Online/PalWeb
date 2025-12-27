@@ -14,6 +14,7 @@ class UpsertLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'group' => ['required', 'string', 'in:main,extra'],
             'unit_id' => [
                 'nullable',
                 'integer',
@@ -39,34 +40,63 @@ class UpsertLessonRequest extends FormRequest
             'document.schemaVersion' => ['required', 'integer'],
             'document.skills' => ['present', 'array'],
             'published' => ['required', 'boolean'],
+            'unlock_conditions' => ['nullable', 'array'],
         ];
     }
 
     protected function passedValidation(): void
     {
-        if (!$this->boolean('published')) {
+        if ($this->input('group') === 'main') {
+            $this->merge(['unlock_conditions' => null]);
+        }
+
+        if (! $this->boolean('published')) {
             return;
         }
 
         $errors = [];
         $lesson = $this->route('lesson');
 
-        if (!$lesson || !$lesson->activity_id) {
+        if (! $lesson || ! $lesson->activity_id) {
             $errors['activity_id'] = ['The Lesson must have an associated Activity to be published.'];
 
         } else {
             $lesson->loadMissing('activity');
 
-            if (!$lesson->activity->published) {
+            if (! $lesson->activity->published) {
                 $errors['activity_id'] = ['The associated Activity must be published before the Lesson can be published.'];
             }
         }
 
         $skills = $this->input('document.skills', []);
 
-        if (!$this->input('unit_id')) $errors['unit_id'] = ['Lesson must be attached to a Unit to be published.'];
-        if (!$this->input('deck_id')) $errors['deck_id'] = ['Lesson must have an assigned Deck.'];
-        if (!$this->input('dialog_id')) $errors['dialog_id'] = ['Lesson must have an assigned Dialog.'];
+        if (! $this->input('unit_id')) {
+            $errors['unit_id'] = ['Lesson must be attached to a Unit to be published.'];
+        }
+        if (! $this->input('deck_id')) {
+            $errors['deck_id'] = ['Lesson must have an assigned Deck.'];
+        }
+        if (! $this->input('dialog_id')) {
+            $errors['dialog_id'] = ['Lesson must have an assigned Dialog.'];
+        }
+
+        if ($this->input('group') === 'extra') {
+            $conditions = $this->input('unlock_conditions', []);
+
+            if (empty($conditions)) {
+                $errors['unlock_conditions'] = ['Extra Lessons must have at least one Unlock Condition.'];
+            }
+
+            foreach ($conditions as $i => $condition) {
+                $prefix = "unlock_conditions.$i";
+                if (empty($condition['type'])) {
+                    $errors["$prefix.type"] = ["Unlock Condition ".($i + 1)." is missing a type."];
+                }
+                if (empty($condition['value'])) {
+                    $errors["$prefix.value"] = ["Unlock Condition ".($i + 1)." is missing a value."];
+                }
+            }
+        }
 
         if (count($skills) === 0) {
             $errors['document.skills'] = ['At least one Skill is required.'];
@@ -75,9 +105,15 @@ class UpsertLessonRequest extends FormRequest
         foreach ($skills as $si => $skill) {
             $prefix = "document.skills.$si";
 
-            if (empty(trim($skill['type'] ?? ''))) $errors["$prefix.type"] = ['Type is required.'];
-            if (empty(trim($skill['title'] ?? ''))) $errors["$prefix.title"] = ['Title is required.'];
-            if (empty(trim($skill['description'] ?? ''))) $errors["$prefix.description"] = ['Description is required.'];
+            if (empty(trim($skill['type'] ?? ''))) {
+                $errors["$prefix.type"] = ['Type is required.'];
+            }
+            if (empty(trim($skill['title'] ?? ''))) {
+                $errors["$prefix.title"] = ['Title is required.'];
+            }
+            if (empty(trim($skill['description'] ?? ''))) {
+                $errors["$prefix.description"] = ['Description is required.'];
+            }
 
             $blocks = $skill['blocks'] ?? [];
             if (empty($blocks)) {
@@ -96,7 +132,7 @@ class UpsertLessonRequest extends FormRequest
                     if (empty($block['model']) && empty($block['custom'])) {
                         $errors[$blockPrefix] = ['Sentence Block must have Sentence model or custom Sentence.'];
 
-                    } elseif (!empty($block['custom'])) {
+                    } elseif (! empty($block['custom'])) {
                         if (empty(trim($block['custom']['transl'] ?? ''))) {
                             $errors["$blockPrefix.custom.transl"] = ['Translation cannot be empty.'];
                         }
@@ -108,8 +144,12 @@ class UpsertLessonRequest extends FormRequest
 
                         } else {
                             foreach ($terms as $ti => $term) {
-                                if (empty(trim($term['term'] ?? ''))) $errors["$blockPrefix.custom.terms.$ti.term"] = ['Arabic text is required.'];
-                                if (empty(trim($term['transc'] ?? ''))) $errors["$blockPrefix.custom.terms.$ti.transc"] = ['Transcription is required.'];
+                                if (empty(trim($term['term'] ?? ''))) {
+                                    $errors["$blockPrefix.custom.terms.$ti.term"] = ['Arabic text is required.'];
+                                }
+                                if (empty(trim($term['transc'] ?? ''))) {
+                                    $errors["$blockPrefix.custom.terms.$ti.transc"] = ['Transcription is required.'];
+                                }
                             }
                         }
                     }
@@ -125,9 +165,15 @@ class UpsertLessonRequest extends FormRequest
                         foreach ($rows as $ri => $row) {
                             $items = $row['items'] ?? [];
                             foreach ($items as $ii => $item) {
-                                if (empty(trim($item['key'] ?? ''))) $errors["$blockPrefix.rows.$ri.items.$ii.key"] = ['Key is required.'];
-                                if (empty(trim($item['ar'] ?? ''))) $errors["$blockPrefix.rows.$ri.items.$ii.ar"] = ['Arabic text is required.'];
-                                if (empty(trim($item['tr'] ?? ''))) $errors["$blockPrefix.rows.$ri.items.$ii.tr"] = ['Transcription is required.'];
+                                if (empty(trim($item['key'] ?? ''))) {
+                                    $errors["$blockPrefix.rows.$ri.items.$ii.key"] = ['Key is required.'];
+                                }
+                                if (empty(trim($item['ar'] ?? ''))) {
+                                    $errors["$blockPrefix.rows.$ri.items.$ii.ar"] = ['Arabic text is required.'];
+                                }
+                                if (empty(trim($item['tr'] ?? ''))) {
+                                    $errors["$blockPrefix.rows.$ri.items.$ii.tr"] = ['Transcription is required.'];
+                                }
                             }
                         }
                     }
@@ -135,7 +181,7 @@ class UpsertLessonRequest extends FormRequest
             }
         }
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             throw ValidationException::withMessages($errors);
         }
     }

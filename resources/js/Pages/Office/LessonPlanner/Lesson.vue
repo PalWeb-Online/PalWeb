@@ -2,7 +2,7 @@
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {router, useForm} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -22,15 +22,24 @@ const props = defineProps({
 })
 
 const lesson = useForm({
+    group: props.lesson?.group || 'main',
     unit_id: props.lesson?.unit?.id || null,
     title: props.lesson?.title || '',
+    description: props.lesson?.description || '',
     document: props.lesson?.document || {
         schemaVersion: 1,
         skills: []
     },
     deck_id: props.lesson?.deck?.id || null,
     dialog_id: props.lesson?.dialog?.id || null,
+    unlock_conditions: props.lesson?.unlock_conditions || [],
     published: props.lesson?.published || false,
+});
+
+watch(() => lesson.group, (newGroup) => {
+    if (newGroup === 'main') {
+        lesson.unlock_conditions = {};
+    }
 });
 
 const addSkill = () => {
@@ -44,8 +53,19 @@ const addSkill = () => {
     });
 }
 
-const removeSkill = (index) => {
-    lesson.document.skills.splice(index, 1)
+const removeSkill = (i) => {
+    lesson.document.skills.splice(i, 1)
+}
+
+const addUnlockCondition = () => {
+    lesson.unlock_conditions.push({
+        type: '',
+        value: '',
+    });
+}
+
+const removeUnlockCondition = (i) => {
+    lesson.unlock_conditions.splice(i, 1)
 }
 
 const isSaving = ref(false);
@@ -91,6 +111,24 @@ const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
 
 const publishIssues = computed(() => {
     const issues = [];
+
+    if (lesson.group === 'extra') {
+        const conditions = lesson.unlock_conditions || [];
+
+        if (conditions.length === 0) {
+            issues.push('Extra Lessons must have at least one Unlock Condition.');
+        }
+
+        conditions.forEach((condition, i) => {
+            const name = `Unlock Condition ${i + 1}`;
+            if (!isNonEmptyString(condition.type)) {
+                issues.push(`${name}: Type is required.`);
+            }
+            if (!condition.value) {
+                issues.push(`${name}: Value is required.`);
+            }
+        });
+    }
 
     const skills = lesson.document.skills || [];
 
@@ -192,6 +230,30 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 {{ props.lesson?.id ? 'Lesson ' + props.lesson.slug : 'New Lesson' }}
             </div>
 
+            <div class="field-item">
+                <label>Group</label>
+                <select v-model="lesson.group" required>
+                    <option value="main">main</option>
+                    <option value="extra">extra</option>
+                </select>
+            </div>
+
+            <div class="field-item" v-if="lesson.group !== 'main'">
+                <label>Unlock Conditions</label>
+                <template v-for="(condition, i) in lesson.unlock_conditions" :key="i">
+                    <select v-model="condition.type" required>
+                        <option value="after_lesson_id">After Lesson ID</option>
+                        <option value="after_lesson_position">After Lesson Position</option>
+                        <option value="after_unit_id">After Unit ID</option>
+                        <option value="after_unit_position">After Unit Position</option>
+                    </select>
+<!--                    todo: enable searching for units & lessons for ID retrieval-->
+                    <input type="text" v-model="condition.value" placeholder="Value" required>
+                    <button @click="removeUnlockCondition(i)">Remove</button>
+                </template>
+                <button @click="addUnlockCondition">Add</button>
+            </div>
+
             <LessonContentSearchBar
                 v-model="lesson.unit_id"
                 type="unit"
@@ -203,6 +265,10 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             <div class="field-item">
                 <label>Title</label>
                 <input type="text" v-model="lesson.title" placeholder="Title" required>
+            </div>
+            <div class="field-item">
+                <label>Description</label>
+                <textarea v-model="lesson.description"/>
             </div>
 
             <LessonContentSearchBar

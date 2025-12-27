@@ -11,6 +11,7 @@ use App\Services\LessonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -18,20 +19,28 @@ class UnitController extends Controller
 {
     public function index(): \Inertia\Response
     {
+        $units = auth()->user()->isAdmin()
+            ? Unit::all()
+            : Unit::published()->get();
+
         return Inertia::render('Academy/Units/Index', [
             'section' => 'academy',
-            'units' => UnitResource::collection(Unit::published()->get()),
+            'units' => UnitResource::collection($units),
         ]);
     }
 
     public function show(Unit $unit): \Inertia\Response
     {
-        $unit->lessons->load(['deck', 'dialog']);
+        Gate::authorize('view', $unit);
+
+        $lessons = auth()->user()->isAdmin()
+            ? $unit->lessons
+            : $unit->lessons()->published()->get();
 
         return Inertia::render('Academy/Units/Show', [
             'section' => 'academy',
             'unit' => new UnitResource($unit),
-            'lessons' => LessonResource::collection($unit->lessons()->published()->get()),
+            'lessons' => LessonResource::collection($lessons),
         ]);
     }
 
