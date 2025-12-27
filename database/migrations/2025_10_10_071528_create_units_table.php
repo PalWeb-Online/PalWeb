@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('position');
+            $table->unsignedInteger('position')->unique()->index();
             $table->string('title');
             $table->boolean('published')->default(false);
             $table->timestamps();

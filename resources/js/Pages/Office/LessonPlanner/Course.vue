@@ -84,7 +84,7 @@ watch(
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
-        <div class="form-body" style="width: min(96rem, 100%)">
+        <div class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
                 <Link :href="route('units.index')">
                     <- to Academy
@@ -121,18 +121,21 @@ watch(
                 + Unit
             </button>
 
-            <div class="featured-title m">
-                Lessons
-            </div>
-            <div class="unit-lessons-draggable">
-                <li v-for="lesson in lessons" class="draggable-item" :class="{'hidden': !lesson.published}">
-                    <div>
-                        <div>{{ lesson.id }}</div>
-                        <div style="width: 100%">{{ lesson.title }}</div>
-                        <Link :href="route('lesson-planner.lesson', lesson)" class="material-symbols-rounded">edit</Link>
-                    </div>
-                </li>
-            </div>
+            <template v-if="lessons.length">
+                <div class="featured-title m">
+                    Lessons
+                </div>
+                <div class="unit-lessons-draggable">
+                    <li v-for="lesson in lessons" class="draggable-item" :class="{'hidden': !lesson.published}">
+                        <div>
+                            <div>{{ lesson.id }}</div>
+                            <div style="width: 100%">{{ lesson.title }}</div>
+                            <Link :href="route('lesson-planner.lesson', lesson)" class="material-symbols-rounded">edit
+                            </Link>
+                        </div>
+                    </li>
+                </div>
+            </template>
         </div>
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">

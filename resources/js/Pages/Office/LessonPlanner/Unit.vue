@@ -106,12 +106,12 @@ watch(
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
-        <div class="form-body" style="width: min(96rem, 100%)">
+        <div class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
                 <Link :href="route('lesson-planner.index')">
                     <- to Course
                 </Link>
-                <Link v-if="props.unit?.id" :href="route('units.show', props.unit.id)">
+                <Link v-if="props.unit?.id" :href="route('units.show', props.unit.position)">
                     View
                 </Link>
             </div>

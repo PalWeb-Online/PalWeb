@@ -202,7 +202,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->middleware(['student'])->group(function () {
         Route::controller(UnitController::class)->group(function () {
             Route::get('/', 'index')->name('units.index');
-            Route::get('/units/{unit}', 'show')->name('units.show');
+            Route::get('/units/{unit:position}', 'show')->name('units.show');
         });
 
         Route::controller(LessonController::class)->group(function () {
