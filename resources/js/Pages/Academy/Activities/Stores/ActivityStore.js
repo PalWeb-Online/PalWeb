@@ -19,6 +19,8 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     };
 
     const startActivity = () => {
+        scoreManager.score.scorableType = 'activity';
+
         exercises.value = data.activity.document.blocks
             .filter(b => b.type === 'exercises')
             .flatMap(b => b.items.map(item => ({
@@ -30,44 +32,32 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     };
 
     const submitActivity = () => {
-        const results = [];
+        data.activity.document.blocks.forEach(block => {
+            if (block.type === 'exercises') {
+                block.items.forEach(item => {
+                    const userExercise = getExerciseById(item.id);
+                    item.response = userExercise.response;
 
-        exercises.value.forEach(ex => {
-            if (ex.type === 'match') {
-                ex.pairs.forEach(validPair => {
-                    const userFoundIt = ex.response.some(userPair =>
-                        userPair.start === validPair.start && userPair.end === validPair.end
-                    );
+                    if (block.exerciseType === 'match') {
+                        item.pairs.forEach(pair => {
+                            pair.correct = userExercise.response.some(r =>
+                                r.start === pair.start && r.end === pair.end
+                            );
+                        });
 
-                    results.push({
-                        id: `${ex.id}_pair_${validPair.start}`,
-                        parentId: ex.id,
-                        type: 'match_pair',
-                        start: validPair.start,
-                        end: validPair.end,
-                        response: ex.response.find(r => r.start === validPair.start)?.end || null,
-                        correct: userFoundIt
-                    });
-                });
+                    } else if (block.exerciseType === 'input') {
+                        item.correct = item.answers.some(a =>
+                            a.trim().toLowerCase() === userExercise.response?.trim().toLowerCase()
+                        );
 
-            } else {
-                let isCorrect = false;
-
-                if (ex.type === 'input') {
-                    isCorrect = ex.answers.some(a => a.trim().toLowerCase() === ex.response?.trim().toLowerCase());
-
-                } else if (ex.type === 'select') {
-                    isCorrect = ex.answerId === ex.response;
-                }
-
-                results.push({
-                    ...ex,
-                    correct: isCorrect
+                    } else if (block.exerciseType === 'select') {
+                        item.correct = item.answerId === userExercise.response;
+                    }
                 });
             }
         });
 
-        scoreManager.score.results = results;
+        scoreManager.score.results = data.activity.document.blocks;
         scoreManager.calculateScore();
 
         data.step = 'results';
@@ -78,7 +68,7 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     };
 
     const saveScore = () => {
-        scoreManager.saveScore('activity', data.activity.id, {
+        scoreManager.saveScore(data.activity.id, {
             onSuccess: () => {
                 router.get(route('lessons.show', data.activity.lesson.slug));
             }

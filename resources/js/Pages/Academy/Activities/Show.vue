@@ -63,6 +63,7 @@ watch(() => props.activity, (newActivity) => {
                 <div class="featured-title l">activity</div>
 
                 <ActivityBlocksWrapper v-if="!ActivityStore.data.isLoading" :blocks="ActivityStore.data.activity.document.blocks"/>
+
                 <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="ActivityStore.submitActivity">
                     check
                 </button>

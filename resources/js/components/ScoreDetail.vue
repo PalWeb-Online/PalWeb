@@ -1,15 +1,13 @@
 <script setup>
 import {computed} from "vue";
+import {useScoreManager} from "../composables/useScoreManager.js";
 
 const props = defineProps({
+    model: {type: Object, required: false},
     score: {type: Object, required: true},
-    model: {type: Object, required: false}
 });
 
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-});
+const { getScoreStats } = useScoreManager();
 
 const scoreMessage = computed(() => {
     if (props.score.score >= 1) {
@@ -55,7 +53,7 @@ const scoreMessage = computed(() => {
     </div>
     <div class="quiz-results">
         <div class="score-figure featured-title">
-            <div>{{ formatter.format(score.score) }}</div>
+            <div>{{ getScoreStats(score).formatted }}</div>
             <div v-if="!score.id && score.score > model?.stats.highest" class="quiz-results-callout">
                 new record!
             </div>
@@ -64,9 +62,9 @@ const scoreMessage = computed(() => {
             <div>{{ scoreMessage }}</div>
             <div style="font-weight: 700">
                 You answered
-                {{ score.results.filter(q => q.correct).length }}
+                {{ getScoreStats(score).correct }}
                 out of
-                {{ score.results.length }}
+                {{ getScoreStats(score).total }}
                 questions correctly.
             </div>
             <div>Review your answers below.</div>

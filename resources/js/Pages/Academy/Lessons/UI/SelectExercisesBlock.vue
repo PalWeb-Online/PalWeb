@@ -1,16 +1,15 @@
 <script setup>
-import {useExerciseBase} from "../../../../composables/useExerciseBlock.js";
+import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
 
 const props = defineProps({
     block: {type: Object, required: true},
-    results: {type: Array, default: null}
 });
 
 const {
     ActivityStore,
-    getItemState,
+    isViewingResults,
     processedItems,
-} = useExerciseBase(props);
+} = useExerciseBlock(props);
 
 const selectOption = (itemId, optionId) => {
     const exercise = ActivityStore.getExerciseById(itemId);
@@ -31,24 +30,24 @@ const selectOption = (itemId, optionId) => {
                     <img v-for="imgUrl in item.images" :src="imgUrl" alt="Reference Image">
                 </div>
                 <div class="exercise-prompt">
-                        <span v-if="!!results" class="material-symbols-rounded"
-                              :class="{ 'correct': getItemState(item.id)?.correct }">
-                            {{ getItemState(item.id)?.correct ? 'check_circle' : 'cancel' }}
+                        <span v-if="isViewingResults" class="material-symbols-rounded"
+                              :class="{ 'correct': item.correct }">
+                            {{ item.correct ? 'check_circle' : 'cancel' }}
                         </span>
                     <p>{{ item.prompt }}</p>
                 </div>
                 <div class="exercise--select-options">
                     <template v-for="option in item.displayOptions" :key="option.id">
-                        <button v-if="!results"
-                                :class="{ 'selected': ActivityStore.getExerciseById(item.id).response === option.id }"
+                        <button v-if="!isViewingResults"
+                                :class="{ 'selected': ActivityStore.getExerciseById(item.id)?.response === option.id }"
                                 @click="selectOption(item.id, option.id)"
                         >
                             {{ option.text }}
                         </button>
                         <button v-else disabled
                                 :class="{
-                                    'incorrect': getItemState(item.id)?.response === option.id && getItemState(item.id)?.answerId !== option.id,
-                                    'correct': getItemState(item.id)?.answerId === option.id,
+                                    'incorrect': item.response === option.id && item.answerId !== option.id,
+                                    'correct': item.answerId === option.id,
                                 }"
                         >
                             {{ option.text }}

@@ -8,7 +8,6 @@ import SelectExercisesBlock from "../../Lessons/UI/SelectExercisesBlock.vue";
 
 const props = defineProps({
     blocks: {type: Object, required: true},
-    results: {type: Array, default: null}
 });
 </script>
 
@@ -20,9 +19,9 @@ const props = defineProps({
             <TableBlock v-if="block.type === 'table'" :table="block"/>
 
             <template v-if="block.type === 'exercises'">
-                <InputExercisesBlock v-if="block.exerciseType === 'input'" :block="block" :results="results"/>
-                <MatchExercisesBlock v-if="block.exerciseType === 'match'" :block="block" :results="results"/>
-                <SelectExercisesBlock v-if="block.exerciseType === 'select'" :block="block" :results="results"/>
+                <InputExercisesBlock v-if="block.exerciseType === 'input'" :block="block"/>
+                <MatchExercisesBlock v-if="block.exerciseType === 'match'" :block="block"/>
+                <SelectExercisesBlock v-if="block.exerciseType === 'select'" :block="block"/>
             </template>
         </template>
     </div>

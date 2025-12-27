@@ -1,17 +1,16 @@
 <script setup>
 import DialogLine from "../../../../components/Charts/DialogLine.vue";
-import {useExerciseBase} from "../../../../composables/useExerciseBlock.js";
+import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
 
 const props = defineProps({
     block: {type: Object, required: true},
-    results: {type: Array, default: null}
 });
 
 const {
     ActivityStore,
-    getItemState,
+    isViewingResults,
     processedItems,
-} = useExerciseBase(props);
+} = useExerciseBlock(props);
 </script>
 
 <template>
@@ -28,22 +27,22 @@ const {
                 <img v-for="imgUrl in item.images" :src="imgUrl" alt="Reference Image">
             </div>
             <div class="exercise--input" :class="{
-                    'correct': results && getItemState(item.id)?.correct,
-                    'incorrect': results && !getItemState(item.id)?.correct
+                    'correct': isViewingResults && item.correct,
+                    'incorrect': isViewingResults && !item.correct
                 }">
                 <div class="exercise-prompt">
-                        <span v-if="!!results" class="material-symbols-rounded"
-                              :class="{ 'correct': getItemState(item.id)?.correct }">
-                            {{ getItemState(item.id)?.correct ? 'check_circle' : 'cancel' }}
+                        <span v-if="isViewingResults" class="material-symbols-rounded"
+                              :class="{ 'correct': item.correct }">
+                            {{ item.correct ? 'check_circle' : 'cancel' }}
                         </span>
                     <p>{{ item.prompt }}</p>
                 </div>
                 <input type="text" placeholder="جواب"
-                       :disabled="!!results"
-                       :value="getItemState(item.id)?.response"
+                       :disabled="isViewingResults"
+                       :value="isViewingResults ? item.response : ActivityStore.getExerciseById(item.id)?.response"
                        @input="ActivityStore.getExerciseById(item.id).response = $event.target.value"
                 >
-                <div class="exercise--input-answers" v-if="!!results && !getItemState(item.id)?.correct">
+                <div class="exercise--input-answers" v-if="isViewingResults && !item.correct">
                     <div>
                         ->
                         <span v-for="answer in item.answers">

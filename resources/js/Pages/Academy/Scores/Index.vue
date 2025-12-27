@@ -34,15 +34,6 @@ const mode = ref('decks');
                         @click="mode = 'lessons'">lsn
                 </button>
             </div>
-
-            <template v-if="mode === 'lessons'" v-for="(lesson, slug) in scoredLessonModels">
-                <div class="featured-title m">Lesson {{ slug }}</div>
-                <div class="model-list">
-                    <DeckItem v-if="lesson.deck" :model="lesson.deck" target="academy"/>
-                    <ActivityItem v-if="lesson.activity" :model="lesson.activity" target="academy"/>
-                </div>
-            </template>
-
             <template v-if="mode === 'decks'">
                 <AppTip>
                     <p>Here are all the Decks you've studied, from most to least recent, except for Decks associated
@@ -58,6 +49,20 @@ const mode = ref('decks');
                     <DeckItem v-for="deck in latestScoredDecks.data" :model="deck" :key="deck.id" target="academy"/>
                     <Paginator :links="latestScoredDecks.meta.links"/>
                 </div>
+            </template>
+            <template v-if="mode === 'lessons'">
+                <AppTip v-if="scoredLessonModels.length === 0">
+                    <p>You don't have any Scores for any Lesson Decks or Activities. Have you started the Lessons in the
+                        Academy yet? If not, <Link :href="route('units.index')">click here</Link> to get started!
+                    </p>
+                </AppTip>
+                <template v-else v-for="(lesson, slug) in scoredLessonModels">
+                    <div class="featured-title m">Lesson {{ slug }}</div>
+                    <div class="model-list">
+                        <DeckItem v-if="lesson.deck" :model="lesson.deck" target="academy"/>
+                        <ActivityItem v-if="lesson.activity" :model="lesson.activity" target="academy"/>
+                    </div>
+                </template>
             </template>
         </div>
     </div>

@@ -15,6 +15,7 @@ import {router} from "@inertiajs/vue3";
 import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
 import ActivityActions from "../../../components/Actions/ActivityActions.vue";
 import ActivityBlocksWrapper from "../Activities/UI/ActivityBlocksWrapper.vue";
+import {useScoreManager} from "../../../composables/useScoreManager.js";
 
 defineOptions({
     layout: Layout
@@ -28,12 +29,9 @@ const props = defineProps({
     selectedScore: Object,
 })
 
-const showPurgeScores = ref(false);
+const {getScoreStats} = useScoreManager();
 
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-});
+const showPurgeScores = ref(false);
 
 const deleteScore = (id) => {
     if (!confirm('Are you sure you want to delete this Score?')) return;
@@ -132,9 +130,8 @@ watch(() => props.selectedScore, (newVal) => {
                             :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
                             class="score-item" preserve-scroll preserve-state>
                             <div style="text-transform: capitalize">{{ score.settings.quizType ?? 'Activity' }}</div>
-                            <div>{{ formatter.format(score.score) }} ({{
-                                    score.results.filter(q => q.correct).length
-                                }}/{{ score.results.length }})
+                            <div>{{ getScoreStats(score).formatted }}
+                                ({{ getScoreStats(score).correct }}/{{ getScoreStats(score).total }})
                             </div>
                             <div style="font-size: 1.2rem">{{ score.created_at }}</div>
                         </Link>
@@ -145,10 +142,7 @@ watch(() => props.selectedScore, (newVal) => {
             </template>
         </div>
 
-        <ActivityBlocksWrapper v-if="selectedScore && scorable_type === 'activity'"
-                               :blocks="model.document.blocks"
-                               :results="selectedScore.results"
-        />
+        <ActivityBlocksWrapper v-if="selectedScore && scorable_type === 'activity'" :blocks="selectedScore.results"/>
     </div>
 
     <ModalWrapper v-model="showPurgeScores">

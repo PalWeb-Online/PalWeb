@@ -41,6 +41,8 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     }
 
     const startQuiz = () => {
+        scoreManager.score.scorableType = 'deck';
+
         data.step = 'quiz';
         data.isLoading = true;
 
@@ -126,7 +128,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     };
 
     const saveScore = () => {
-        scoreManager.saveScore('deck', data.deck.id, {
+        scoreManager.saveScore(data.deck.id, {
             onSuccess: () => {
                 data.step = 'settings';
                 quiz.value = [];
