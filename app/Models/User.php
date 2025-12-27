@@ -48,16 +48,26 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    /**
-     * Returns true if the current user is an admin
-     */
+    public function isSuperuser(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
     public function isAdmin(): bool
     {
+        if (session()->has('view_as_role')) {
+            return false;
+        }
+
         return $this->hasRole('admin');
     }
 
     public function isStudent(): bool
     {
+        if (session()->get('view_as_role') === 'student') {
+            return true;
+        }
+
         return $this->hasRole('student');
     }
 

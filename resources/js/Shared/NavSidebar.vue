@@ -269,11 +269,14 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <div v-if="UserStore.isAdmin" class="nav-user-menu">
+                <div v-if="UserStore.isSuperuser" class="nav-user-menu">
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-admin') }}</div>
                     <div class="nav-user-menu-items">
                         <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
                         <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
+                        <button @click="router.get(route('admin.toggle-view'))">
+                            {{ UserStore.isAdmin ? 'View as Student' : 'Restore Admin View' }}
+                        </button>
                     </div>
                 </div>
                 <div v-if="UserStore.isUser" class="nav-user-menu">

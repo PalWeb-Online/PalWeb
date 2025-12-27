@@ -12,6 +12,7 @@ use App\Models\User;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -76,5 +77,21 @@ class UserController extends Controller
         return response()->json([
             'decks' => DeckResource::collection(auth()->user()->decks->load(['terms'])),
         ]);
+    }
+
+    public function toggleView(Request $request, string $role = 'student')
+    {
+        if (!$request->user()->isSuperuser()) {
+            abort(403);
+        }
+
+        if (session()->has('view_as_role')) {
+            session()->forget('view_as_role');
+
+        } else {
+            session()->put('view_as_role', $role);
+        }
+
+        return back();
     }
 }
