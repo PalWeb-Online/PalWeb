@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Scopes\PublishedScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ScopedBy([PublishedScope::class])]
 class Lesson extends Model
 {
     use HasFactory;
@@ -103,10 +106,5 @@ class Lesson extends Model
                 'completed' => $this->users()->where('user_id', $user->id)->first()?->pivot?->completed,
             ];
         }
-    }
-
-    public function scopePublished(Builder $query): Builder
-    {
-        return $query->where('published', true);
     }
 }

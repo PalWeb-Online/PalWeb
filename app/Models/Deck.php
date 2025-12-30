@@ -33,12 +33,18 @@ class Deck extends Model
         'private',
     ];
 
-    protected static function boot(): void
+    protected static function booted(): void
     {
-        parent::boot();
-
-        static::deleting(function ($deck) {
+        static::deleting(function (Deck $deck) {
             $deck->bookmarks()->delete();
+
+            $lesson = Lesson::where('activity_id', $deck->id)->first();
+
+            if ($lesson && $lesson->published) {
+                $lesson->update(['published' => false]);
+
+                \Log::warning("Lesson {$lesson->slug} was automatically unpublished because its Deck was deleted.");
+            }
         });
     }
 

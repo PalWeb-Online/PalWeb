@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PublishedScope;
 use App\Models\Traits\HasScoreStats;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+#[ScopedBy([PublishedScope::class])]
 class Activity extends Model
 {
     use HasFactory;
@@ -24,6 +27,19 @@ class Activity extends Model
         return [
             'document' => 'json',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Activity $activity) {
+            $lesson = Lesson::where('activity_id', $activity->id)->first();
+
+            if ($lesson && $lesson->published) {
+                $lesson->update(['published' => false]);
+
+                \Log::warning("Lesson {$lesson->slug} was automatically unpublished because its Activity was deleted.");
+            }
+        });
     }
 
     public function lesson(): HasOne
