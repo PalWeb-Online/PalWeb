@@ -195,7 +195,6 @@ const publishIssues = computed(() => {
         });
     });
 
-    if (!lesson.unit_id) issues.push('Lesson must be attached to a Unit.');
     if (!lesson.deck_id) issues.push('Lesson must have an assigned Deck.');
     if (!lesson.dialog_id) issues.push('Lesson must have an assigned Dialog.');
 

@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Models\Scopes\PublishedScope;
+use App\Observers\LessonObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy([LessonObserver::class])]
 #[ScopedBy([PublishedScope::class])]
 class Lesson extends Model
 {
@@ -59,51 +62,28 @@ class Lesson extends Model
             ->withTimestamps();
     }
 
-    public function isUnlockedFor(User $user): bool
+    public function getProgressFor(?User $user): array
     {
-        return $this->users()->where('user_id', $user->id)->exists();
-    }
+        if (!$user) return ['unlocked' => false, 'stage' => 0, 'completed' => false];
 
-    public function getProgressFor(User $user): array
-    {
-        $deck = $this->deck;
-        $activity = $this->activity;
-
-        $deckScores = $deck
-            ? $deck->scores()
-                ->where('user_id', $user->id)
-                ->where('score', 1)
-                ->count()
-            : 0;
-
-        $activityScores = $activity
-            ? $activity->scores()
-                ->where('user_id', $user->id)
-                ->where('score', 1)
-                ->count()
-            : 0;
-
-        if (auth()->user()->isAdmin()) {
+        if ($user->isAdmin()) {
             return [
-                'scores_count' => [
-                    'deck' => 3,
-                    'activity' => 1,
-                ],
-                'unlocked' => true,
-                'stage' => 3,
-                'completed' => true,
-            ];
-
-        } else {
-            return [
-                'scores_count' => [
-                    'deck' => $deckScores,
-                    'activity' => $activityScores,
-                ],
-                'unlocked' => $this->isUnlockedFor($user),
-                'stage' => $this->users()->where('user_id', $user->id)->first()?->pivot?->stage,
-                'completed' => $this->users()->where('user_id', $user->id)->first()?->pivot?->completed,
+                'scores_count' => ['deck' => 3, 'activity' => 1],
+                'unlocked' => true, 'stage' => 3, 'completed' => true,
             ];
         }
+
+        $scores = $user->getScoreCounts();
+        $progress = $user->getLessonProgress()[$this->id] ?? null;
+
+        return [
+            'scores_count' => [
+                'deck' => $scores["deck:{$this->deck_id}"] ?? 0,
+                'activity' => $scores["activity:{$this->activity_id}"] ?? 0,
+            ],
+            'unlocked' => (bool) $progress,
+            'stage' => $progress['stage'] ?? 1,
+            'completed' => $progress['completed'] ?? false,
+        ];
     }
 }

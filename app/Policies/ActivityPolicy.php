@@ -21,13 +21,11 @@ class ActivityPolicy
         if ($user->isStudent()) {
             $lesson = $activity->lesson;
 
-            if ($lesson) {
-                return $lesson->published
-                    && $lesson->isUnlockedFor($user)
-                    && $lesson->getProgressFor($user)['stage'] > 1;
-            }
+            if (!$lesson) return true;
 
-            return true;
+            if (!$lesson->published) return false;
+
+            return $user->getLessonStage($lesson) >= 2;
         }
 
         return false;

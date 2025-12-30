@@ -21,13 +21,11 @@ class DialogPolicy
         if ($user->isStudent()) {
             $lesson = $dialog->lesson;
 
-            if ($lesson) {
-                return $lesson->published
-                    && $lesson->isUnlockedFor($user)
-                    && $lesson->getProgressFor($user)['stage'] > 2;
-            }
+            if (!$lesson) return true;
 
-            return true;
+            if (!$lesson->published) return false;
+
+            return $user->getLessonStage($lesson) >= 3;
         }
 
         return false;

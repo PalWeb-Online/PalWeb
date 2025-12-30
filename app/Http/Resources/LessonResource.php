@@ -7,11 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class LessonResource extends JsonResource
 {
-    private function withContent(): bool
-    {
-        return $this->additional['content'] ?? false;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -22,35 +17,41 @@ class LessonResource extends JsonResource
         $progress = $this->getProgressFor($request->user());
         $stage = $progress['stage'] ?? 1;
 
-        $deck = $this->deck;
-        $activity = $stage > 1 ? $this->activity : null;
-        $dialog = $stage > 2 ? $this->dialog : null;
+        $document = $this->document;
 
-        if ($this->withContent()) {
-            $deck?->load(['terms.pronunciations', 'scores']);
-            $activity?->load(['scores']);
-            $dialog?->load('sentences')
-                ->setRelation('sentences',
-                    $dialog->sentences->map(function ($sentence) {
-                        return new SentenceResource($sentence)->additional(['terms' => false]);
-                    })
-                );
+        if ($document && isset($document['skills'])) {
+            $document['skills'] = collect($document['skills'])->map(function ($skill) use ($stage) {
+                if ($stage < 2) {
+                    $skill['blocks'] = [];
+                }
+                return $skill;
+            })->all();
         }
 
         return [
             'id' => $this->id,
             'group' => $this->group,
-            'unit' => new UnitResource($this->unit),
+            'unit' => $this->whenLoaded('unit', fn() => [
+                'id' => $this->unit->id,
+                'title' => $this->unit->title,
+                'position' => $this->unit->position
+            ]),
             'slug' => $this->slug,
             'title' => $this->title,
-            'document' => $this->when($stage >= 2, $this->document),
+            'document' => $document,
             'description' => $this->description,
-            'deck' => new DeckResource($deck),
-            'activity' => new ActivityResource($activity),
-            'dialog' => new DialogResource($dialog),
+            'deck' => $this->whenLoaded('deck', function() {
+                return new DeckResource($this->deck);
+            }),
+            'activity' => $this->whenLoaded('activity', function() use ($stage) {
+                return $stage > 1 ? new ActivityResource($this->activity) : null;
+            }),
+            'dialog' => $this->whenLoaded('dialog', function() use ($stage) {
+                return $stage > 2 ? new DialogResource($this->dialog) : null;
+            }),
             'unlock_conditions' => $this->unlock_conditions,
-            'published' => $this->published,
-            'progress' => $this->getProgressFor($request->user()),
+            'published' => (bool) $this->published,
+            'progress' => $progress,
         ];
     }
 }

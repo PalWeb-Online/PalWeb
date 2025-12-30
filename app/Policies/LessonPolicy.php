@@ -18,9 +18,7 @@ class LessonPolicy
             return true;
         }
 
-        if ($user->isStudent()) {
-            return $lesson->published && $lesson->isUnlockedFor($user);
-        }
+        if ($user->isStudent()) return $lesson->published && $user->hasUnlockedLesson($lesson);
 
         return false;
     }

@@ -70,9 +70,6 @@ class UpsertLessonRequest extends FormRequest
 
         $skills = $this->input('document.skills', []);
 
-        if (! $this->input('unit_id')) {
-            $errors['unit_id'] = ['Lesson must be attached to a Unit to be published.'];
-        }
         if (! $this->input('deck_id')) {
             $errors['deck_id'] = ['Lesson must have an assigned Deck.'];
         }

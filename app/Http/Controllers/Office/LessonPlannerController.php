@@ -82,6 +82,13 @@ class LessonPlannerController extends Controller
 
     public function lesson(?Lesson $lesson = null): \Inertia\Response
     {
+        $lesson?->load([
+            'unit',
+            'deck',
+            'activity',
+            'dialog'
+        ]);
+
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
             'lesson' => $lesson ? new LessonResource($lesson) : null,

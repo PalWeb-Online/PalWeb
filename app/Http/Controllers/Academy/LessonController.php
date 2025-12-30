@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Academy;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpsertLessonRequest;
 use App\Http\Resources\LessonResource;
+use App\Http\Resources\UnitResource;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Lesson;
@@ -23,9 +24,18 @@ class LessonController extends Controller
     {
         Gate::authorize('view', $lesson);
 
+        $lesson->load([
+            'unit',
+            'deck.scores',
+            'deck.terms.pronunciations',
+            'activity.scores',
+            'dialog.sentences'
+        ]);
+
         return Inertia::render('Academy/Lessons/Show', [
             'section' => 'academy',
-            'lesson' => new LessonResource($lesson)->additional(['content' => true]),
+            'unit' => $lesson->unit ? new UnitResource($lesson->unit): null,
+            'lesson' => new LessonResource($lesson),
         ]);
     }
 

@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\LessonProgressUpdated;
 use App\Events\ScoreCreated;
-use App\Models\Lesson;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
@@ -71,15 +70,21 @@ class UpdateLessonProgress implements ShouldQueue
                     'completed' => true,
                 ]);
 
-                $nextLesson = Lesson::where('slug', '>', $lesson->slug)
-                    ->orderBy('slug')
-                    ->first();
+                $newlyUnlocked = \App\Services\LessonService::syncUserProgress($user);
 
-                if ($nextLesson && ! $user->lessons()->where('lesson_id', $nextLesson->id)->exists()) {
-                    $user->lessons()->attach($nextLesson->id);
+                if ($newlyUnlocked->isNotEmpty()) {
+                    $count = $newlyUnlocked->count();
+                    $firstSlug = $newlyUnlocked->first()->slug;
 
-                    LessonProgressUpdated::dispatch(
-                        "You've finished the Lesson & unlocked the Dialog! You can proceed to Lesson $nextLesson->slug!",
+                    $message = $count === 1
+                        ? "Lesson completed! You've unlocked Lesson $firstSlug."
+                        : "Lesson completed! You've unlocked $count new Lessons.";
+
+                    \App\Events\LessonProgressUpdated::dispatch($message, 'success', $user->id);
+
+                } else {
+                    \App\Events\LessonProgressUpdated::dispatch(
+                        "You've finished the Lesson & completed all the content you're eligible for in the Academy.",
                         'success',
                         $user->id
                     );

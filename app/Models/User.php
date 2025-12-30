@@ -150,22 +150,62 @@ class User extends Authenticatable implements MustVerifyEmail
     public function lessons(): BelongsToMany
     {
         return $this->belongsToMany(Lesson::class)
-            ->withPivot('completed')
+            ->withPivot(['stage', 'completed'])
             ->withTimestamps();
     }
 
-    protected ?array $unlockedLessonIds = null;
+    protected ?array $lessonProgressCache = null;
+    protected ?array $scoreCountsCache = null;
 
-    public function hasUnlockedLesson(int $lessonId): bool
+    public function forgetLessonProgressCache(): void
     {
-        if ($this->isAdmin()) {
-            return true;
+        $this->lessonProgressCache = null;
+    }
+
+    public function getLessonProgress(): array
+    {
+        if ($this->lessonProgressCache === null) {
+            $this->lessonProgressCache = $this->lessons()
+                ->get()
+                ->keyBy('id')
+                ->map(fn($lesson) => [
+                    'stage' => (int) $lesson->pivot->stage,
+                    'completed' => (bool) $lesson->pivot->completed,
+                ])
+                ->toArray();
         }
 
-        if ($this->unlockedLessonIds === null) {
-            $this->unlockedLessonIds = $this->lessons()->pluck('lessons.id')->toArray();
+        return $this->lessonProgressCache;
+    }
+
+    public function getScoreCounts(): array
+    {
+        if ($this->scoreCountsCache === null) {
+            $this->scoreCountsCache = $this->scores()
+                ->where('score', 1)
+                ->select('scorable_type', 'scorable_id', \DB::raw('count(*) as total'))
+                ->groupBy('scorable_type', 'scorable_id')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return ["{$item->scorable_type}:{$item->scorable_id}" => (int) $item->total];
+                })
+                ->toArray();
         }
 
-        return in_array($lessonId, $this->unlockedLessonIds);
+        return $this->scoreCountsCache;
+    }
+
+    public function hasUnlockedLesson(Lesson $lesson): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        return isset($this->getLessonProgress()[$lesson->id]);
+    }
+
+    public function getLessonStage(Lesson $lesson): int
+    {
+        if ($this->isAdmin()) return 3;
+
+        return $this->getLessonProgress()[$lesson->id]['stage'] ?? 0;
     }
 }
