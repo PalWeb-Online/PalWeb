@@ -16,12 +16,11 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Lesson $lesson): \Inertia\Response
+    public function show(Activity $activity): \Inertia\Response
     {
-        Gate::authorize('viewActivity', $lesson);
+        Gate::authorize('view', $activity);
 
-        $activity = $lesson->activity;
-        $activity?->load(['scores']);
+        $activity->load(['scores']);
 
         return Inertia::render('Academy/Activities/Show', [
             'section' => 'academy',

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\DialogScope;
+use App\Models\Scopes\PublishedScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[ScopedBy([DialogScope::class])]
+#[ScopedBy([PublishedScope::class])]
 class Dialog extends Model
 {
     use HasFactory;
@@ -23,7 +25,7 @@ class Dialog extends Model
     protected static function booted(): void
     {
         static::deleting(function (Dialog $dialog) {
-            $lesson = Lesson::where('activity_id', $dialog->id)->first();
+            $lesson = Lesson::where('dialog_id', $dialog->id)->first();
 
             if ($lesson && $lesson->published) {
                 $lesson->update(['published' => false]);

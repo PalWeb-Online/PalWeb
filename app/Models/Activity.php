@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ActivityScope;
 use App\Models\Scopes\PublishedScope;
 use App\Models\Traits\HasScoreStats;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+#[ScopedBy([ActivityScope::class])]
 #[ScopedBy([PublishedScope::class])]
 class Activity extends Model
 {

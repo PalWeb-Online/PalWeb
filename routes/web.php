@@ -210,7 +210,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::controller(ActivityController::class)->group(function () {
-            Route::get('/lessons/{lesson:slug}/activity', 'show')->name('activities.show');
+            Route::get('/activities/{activity}', 'show')->name('activities.show');
         });
 
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
@@ -315,7 +315,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
             Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
             Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
-            Route::get('/lesson/{lesson}/activity', 'activity')->name('lesson-planner.lesson-activity');
+            Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');
         });
 
         Route::controller(LessonController::class)->group(function () {

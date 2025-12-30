@@ -63,13 +63,12 @@ export function useScoreManager() {
     const calculateScore = () => {
         const exercises = getScoreStats(score);
 
-        if (exercises.length === 0) {
+        if (exercises.total === 0) {
             score.score = 0;
             return;
         }
 
-        const correctCount = exercises.filter(q => q.correct).length;
-        score.score = correctCount / exercises.length;
+        score.score = exercises.correct / exercises.total;
     };
 
     const saveScore = async (scorableId, options = {}) => {

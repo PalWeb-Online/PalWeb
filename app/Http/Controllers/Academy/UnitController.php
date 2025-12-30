@@ -19,13 +19,9 @@ class UnitController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $units = auth()->user()->isAdmin()
-            ? Unit::all()
-            : Unit::published()->get();
-
         return Inertia::render('Academy/Units/Index', [
             'section' => 'academy',
-            'units' => UnitResource::collection($units),
+            'units' => UnitResource::collection(Unit::all()),
         ]);
     }
 
@@ -33,14 +29,10 @@ class UnitController extends Controller
     {
         Gate::authorize('view', $unit);
 
-        $lessons = auth()->user()->isAdmin()
-            ? $unit->lessons
-            : $unit->lessons()->published()->get();
-
         return Inertia::render('Academy/Units/Show', [
             'section' => 'academy',
             'unit' => new UnitResource($unit),
-            'lessons' => LessonResource::collection($lessons),
+            'lessons' => LessonResource::collection($unit->lessons),
         ]);
     }
 

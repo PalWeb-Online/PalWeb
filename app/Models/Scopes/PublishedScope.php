@@ -15,8 +15,26 @@ class PublishedScope implements Scope
     {
         $user = auth()->user();
 
-        if (! $user || ! $user->isAdmin()) {
-            $builder->where($model->getTable().'.published', true);
+        if ($user && $user->isAdmin()) {
+            return;
+        }
+
+        $table = $model->getTable();
+
+        $builder->where($table.'.published', true);
+
+        if ($table === 'lessons') {
+            $builder->where(function ($query) {
+                $query->whereDoesntHave('unit')
+                    ->orWhereHas('unit', fn ($q) => $q->where('published', true));
+            });
+        }
+
+        if ($table === 'activities' || $table === 'dialogs') {
+            $builder->where(function ($query) {
+                $query->whereDoesntHave('lesson')
+                    ->orWhereHas('lesson', fn ($q) => $q->where('published', true));
+            });
         }
     }
 }

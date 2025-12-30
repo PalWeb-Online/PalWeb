@@ -9,6 +9,7 @@ use App\Http\Resources\SentenceResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class DialogController extends Controller
@@ -23,6 +24,8 @@ class DialogController extends Controller
 
     public function show(Dialog $dialog): \Inertia\Response|RedirectResponse
     {
+        Gate::authorize('view', $dialog);
+
         return Inertia::render('Academy/Dialogs/Show', [
             'section' => 'academy',
             'dialog' => new DialogResource(

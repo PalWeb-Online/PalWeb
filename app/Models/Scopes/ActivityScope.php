@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class DialogScope implements Scope
+class ActivityScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -14,7 +14,6 @@ class DialogScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
-            ->with(['lesson'])
-            ->withCount('sentences');
+            ->with(['lesson']);
     }
 }

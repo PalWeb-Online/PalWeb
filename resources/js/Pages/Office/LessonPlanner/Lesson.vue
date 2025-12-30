@@ -247,7 +247,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                         <option value="after_unit_id">After Unit ID</option>
                         <option value="after_unit_position">After Unit Position</option>
                     </select>
-<!--                    todo: enable searching for units & lessons for ID retrieval-->
+                    <!--                    todo: enable searching for units & lessons for ID retrieval-->
                     <input type="text" v-model="condition.value" placeholder="Value" required>
                     <button @click="removeUnlockCondition(i)">Remove</button>
                 </template>
@@ -277,6 +277,10 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 :lesson-id="props.lesson?.id || null"
                 :initial-title="props.lesson?.deck?.name || ''"
             />
+            <AppTip>
+                <p>If you cannot find the desired Deck, make sure it doesn't already belong to another Lesson. Also,
+                    make sure the Deck is not set to private, as private Decks will still appear in the search.</p>
+            </AppTip>
 
             <div v-for="(skill, si) in lesson.document.skills" :key="si">
                 <div class="field-item">

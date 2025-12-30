@@ -88,7 +88,7 @@ class LessonPlannerController extends Controller
         ]);
     }
 
-    public function activity(Lesson $lesson): \Inertia\Response
+    public function lessonActivity(Lesson $lesson): \Inertia\Response
     {
         $activity = $lesson->activity;
 
