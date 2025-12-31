@@ -74,7 +74,7 @@ class UpdateLessonProgress implements ShouldQueue
 
                 if ($newlyUnlocked->isNotEmpty()) {
                     $count = $newlyUnlocked->count();
-                    $firstSlug = $newlyUnlocked->first()->slug;
+                    $firstSlug = $newlyUnlocked->first()->global_position;
 
                     $message = $count === 1
                         ? "Lesson completed! You've unlocked Lesson $firstSlug."

@@ -26,8 +26,8 @@ class UnitResource extends JsonResource
 
                 return [
                     'id' => $lesson->id,
-                    'position' => $lesson->position,
-                    'slug' => $lesson->slug,
+                    'unit_position' => $lesson->unit_position,
+                    'global_position' => $lesson->global_position,
                     'title' => $lesson->title,
                     'unlocked' => $user?->isAdmin() || isset($progress),
                     'completed' => (bool) ($progress['completed'] ?? false),

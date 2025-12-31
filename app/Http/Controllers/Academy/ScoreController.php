@@ -54,11 +54,11 @@ class ScoreController extends Controller
             }
 
             if ($model->lesson) {
-                $lessonSlug = $model->lesson->slug;
+                $lessonGlobalPosition = $model->lesson->global_position;
 
                 $score->scorable_type === 'deck'
-                    ? $scoredLessonModels[$lessonSlug]['deck'] = new DeckResource($model)
-                    : $scoredLessonModels[$lessonSlug]['activity'] = new ActivityResource($model);
+                    ? $scoredLessonModels[$lessonGlobalPosition]['deck'] = new DeckResource($model)
+                    : $scoredLessonModels[$lessonGlobalPosition]['activity'] = new ActivityResource($model);
             }
 
             if ($score->scorable_type === 'deck' && ! $model->lesson) {

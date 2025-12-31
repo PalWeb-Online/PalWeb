@@ -4,7 +4,8 @@ import {useUserStore} from "../../../../stores/UserStore.js";
 
 const props = defineProps({
     unit: Object,
-    activeSlug: {type: String, required: false},
+    lesson: {type: Object, required: false},
+    activeLesson: {type: String, required: false},
 })
 
 const UserStore = useUserStore();
@@ -22,29 +23,29 @@ const UserStore = useUserStore();
             <Link :href="route('lesson-planner.unit', unit)">edit</Link>
         </div>
         <div class="unit-progress-bar-wrapper">
-            <Link :href="route('units.show', unit)" class="material-symbols-rounded"
-                  :class="{ active: $page.component === 'Academy/Lessons/Unit' }">
+            <Link :href="route('units.show', unit.position)" class="material-symbols-rounded"
+                  :class="{ active: $page.component === 'Academy/Units/Show' }">
                 home
             </Link>
             <div class="unit-progress-bar">
                 <Link v-for="lesson in unit.lessons"
                       :href="route('lessons.show', lesson)"
                       :class="{
-                        locked: !UserStore.isAdmin && !lesson.unlocked,
-                        unlocked: UserStore.isAdmin || lesson.unlocked,
+                        locked: !UserStore.isAdmin && !UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)),
+                        unlocked: UserStore.isAdmin || UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)),
                         completed: lesson.completed,
-                        active: activeSlug === lesson.slug,
-                        hidden: !lesson.published
+                        active: activeLesson === lesson.global_position,
+                        hidden: !UserStore.isAdmin && !lesson.published
                       }"
                 >
-                    {{ lesson.slug }}
+                    {{ lesson.global_position }}
                 </Link>
-                <Link v-if="unit.lessons.length < 9"
+                <Link v-if="UserStore.isAdmin && unit.lessons?.length < 9"
                       :href="route('lesson-planner.unit-lesson', unit)">+
                 </Link>
             </div>
             <div class="material-symbols-rounded checkmark"
-                 :class="{completed: !unit.lessons.some(lesson => !lesson.completed)}">
+                 :class="{completed: !unit.lessons?.some(lsn => !lsn.completed)}">
                 check
             </div>
         </div>

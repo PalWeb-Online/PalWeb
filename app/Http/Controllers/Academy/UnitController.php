@@ -19,9 +19,12 @@ class UnitController extends Controller
 {
     public function index(): \Inertia\Response
     {
+        $lessons = Lesson::where('unit_id', null)->get();
+
         return Inertia::render('Academy/Units/Index', [
             'section' => 'academy',
             'units' => UnitResource::collection(Unit::all()),
+            'lessons' => LessonResource::collection($lessons),
         ]);
     }
 
@@ -45,15 +48,16 @@ class UnitController extends Controller
                 'published' => $request->published,
             ]);
 
-            foreach ($request->lessons as $lessonData) {
-                Lesson::updateOrCreate(['id' => $lessonData['id']], [
-                    'unit_id' => $unit->id,
-                    'slug' => Str::uuid(),
-                    'title' => $lessonData['title'],
-                ]);
-            }
+//            todo: I don't think this ever happens, because the Unit is created first before adding Lessons
+//            foreach ($request->lessons as $lessonData) {
+//                Lesson::updateOrCreate(['id' => $lessonData['id']], [
+//                    'unit_id' => $unit->id,
+//                    'global_position' => Str::uuid(),
+//                    'title' => $lessonData['title'],
+//                ]);
+//            }
+//            $unit->refresh();
 
-            $unit->refresh();
             LessonService::reorderUnitLessons($unit);
         });
 
@@ -88,8 +92,8 @@ class UnitController extends Controller
                 Lesson::whereIn('id', $detachedIds)->get()->each(function (Lesson $lesson) {
                     $lesson->update([
                         'unit_id' => null,
-                        'position' => 0,
-                        'slug' => 'id'.$lesson->id,
+                        'unit_position' => null,
+                        'global_position' => 'ex'.$lesson->id,
                     ]);
                 });
             }
@@ -99,8 +103,8 @@ class UnitController extends Controller
                     ['id' => $lessonData['id']],
                     [
                         'unit_id' => $unit->id,
-                        'position' => $lessonData['position'],
-                        'slug' => Str::uuid(),
+                        'unit_position' => $lessonData['unit_position'],
+                        'global_position' => 'tmp-'.Str::uuid(),
                         'title' => $lessonData['title'],
                     ]
                 );

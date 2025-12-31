@@ -36,7 +36,7 @@ class LessonResource extends JsonResource
                 'title' => $this->unit->title,
                 'position' => $this->unit->position
             ]),
-            'slug' => $this->slug,
+            'global_position' => $this->global_position,
             'title' => $this->title,
             'document' => $document,
             'description' => $this->description,

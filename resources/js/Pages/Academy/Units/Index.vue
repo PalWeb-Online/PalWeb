@@ -3,6 +3,7 @@ import Layout from "../../../Shared/Layout.vue";
 import UnitNav from "./UI/UnitNav.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
+import LessonItem from "../../../components/LessonItem.vue";
 
 const UserStore = useUserStore();
 
@@ -25,5 +26,6 @@ defineProps({
             Lesson Planner
         </Link>
         <UnitNav v-for="unit in units" :key="unit.id" :unit="unit"/>
+        <LessonItem v-for="lesson in lessons" :key="lesson.id" :lesson="lesson"/>
     </div>
 </template>

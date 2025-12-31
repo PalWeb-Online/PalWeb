@@ -21,16 +21,16 @@ class LessonService
 
         foreach ($lessons as $lesson) {
             $lesson->update([
-                'slug' => 'tmp-'.$lesson->id.'-'.Str::uuid(),
+                'global_position' => 'tmp-'.Str::uuid(),
             ]);
         }
 
         foreach ($lessons as $index => $lesson) {
-            $position = $index + 1;
+            $positionInUnit = $index + 1;
 
             $lesson->update([
-                'position' => $position,
-                'slug' => $unit->position.'0'.$position,
+                'unit_position' => $positionInUnit,
+                'global_position' => $unit->position.'0'.$positionInUnit,
             ]);
         }
 
@@ -45,8 +45,12 @@ class LessonService
     {
         $units = Unit::all();
 
-        if ($units->isEmpty()) {
-            return;
+        if ($units->isEmpty()) return;
+
+        foreach ($units as $index => $unit) {
+            $unit->update([
+                'position' => $index + 1,
+            ]);
         }
 
         $allLessons = $units
@@ -55,25 +59,11 @@ class LessonService
             })
             ->values();
 
-        if ($allLessons->isEmpty()) {
-            foreach ($units as $index => $unit) {
-                $unit->update([
-                    'position' => $index + 1,
-                ]);
-            }
-
-            return;
-        }
+        if ($allLessons->isEmpty()) return;
 
         foreach ($allLessons as $lesson) {
             $lesson->update([
-                'slug' => 'tmp-'.$lesson->id.'-'.Str::uuid(),
-            ]);
-        }
-
-        foreach ($units as $index => $unit) {
-            $unit->update([
-                'position' => $index + 1,
+                'global_position' => 'tmp-'.Str::uuid(),
             ]);
         }
 
@@ -81,16 +71,16 @@ class LessonService
             $lessons = $unit->lessons;
 
             foreach ($lessons as $index => $lesson) {
-                $position = $index + 1;
+                $positionInUnit = $index + 1;
 
                 $lesson->update([
-                    'position' => $position,
-                    'slug' => $unit->position.'0'.$position,
+                    'unit_position' => $positionInUnit,
+                    'global_position' => $unit->position.'0'.$positionInUnit,
                 ]);
             }
         }
 
-        User::role('student')->chunk(100, function ($users) {
+        User::role(['student', 'admin'])->chunk(100, function ($users) {
             foreach ($users as $user) {
                 self::syncUserProgress($user);
             }
@@ -115,8 +105,8 @@ class LessonService
             }
 
             $previousLesson = Lesson::where('group', 'main')
-                ->where('slug', '<', $lesson->slug)
-                ->orderByDesc('slug')
+                ->where('global_position', '<', $lesson->global_position)
+                ->orderByDesc('global_position')
                 ->first();
 
             if (! $previousLesson) {
@@ -137,7 +127,7 @@ class LessonService
 
                 case 'after_lesson_position':
                     $requiredIds = Lesson::where('group', 'main')
-                        ->where('slug', '<=', $value)
+                        ->where('global_position', '<=', $value)
                         ->pluck('id');
 
                     if (empty($requiredIds)) return false;

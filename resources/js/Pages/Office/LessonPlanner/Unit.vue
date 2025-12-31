@@ -34,7 +34,7 @@ const addLesson = () => {
             schemaVersion: 1,
             skills: []
         },
-        position: unit.lessons.length + 1,
+        unit_position: unit.lessons.length + 1,
     });
 }
 
@@ -86,7 +86,7 @@ const deleteUnit = () => {
 
 const updateLessonPositions = () => {
     unit.lessons.forEach((lesson, index) => {
-        lesson.position = index + 1;
+        lesson.unit_position = index + 1;
     });
 };
 

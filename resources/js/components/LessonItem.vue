@@ -14,7 +14,7 @@ const props = defineProps({
     <div class="window-container lesson-item"
          :class="{ locked: !UserStore.isAdmin && !UserStore.user.lessons.includes(lesson.slug) }">
         <div class="window-section-head">
-            <h1>lesson {{ lesson.slug }}</h1>
+            <h1>lesson {{ lesson.global_position }}</h1>
             <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.lesson', lesson.id)" class="material-symbols-rounded">
                 edit
             </Link>
@@ -65,7 +65,7 @@ const props = defineProps({
             </template>
         </WindowSection>
         <div class="window-footer">
-            <Link :href="route('lessons.show', lesson.slug)">
+            <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)) }">
                 open lesson
             </Link>
         </div>

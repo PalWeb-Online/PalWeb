@@ -19,8 +19,8 @@ class Lesson extends Model
     protected $fillable = [
         'group',
         'unit_id',
-        'position',
-        'slug',
+        'unit_position',
+        'global_position',
         'title',
         'description',
         'document',

@@ -17,7 +17,7 @@ class DeckPolicy
         }
 
         $lesson = $deck->lesson;
-        if ($lesson) return $lesson->published && $user->hasUnlockedLesson($lesson->id);
+        if ($lesson) return $lesson->published && $user->hasUnlockedLesson($lesson);
 
         return $user->id === $deck->user_id || ! $deck->private;
     }

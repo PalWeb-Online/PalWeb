@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('group')->default('main');
             $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
-            $table->unsignedInteger('position');
-            $table->string('slug')->unique()->index();
+            $table->unsignedInteger('unit_position')->nullable();
+            $table->string('global_position')->unique()->index();
             $table->string('title');
             $table->text('description')->nullable();
             $table->json('document')->nullable();

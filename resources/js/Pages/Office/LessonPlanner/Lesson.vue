@@ -221,12 +221,12 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 <Link v-if="props.lesson.unit?.id" :href="route('lesson-planner.unit', props.lesson.unit?.id)">
                     <- to Unit
                 </Link>
-                <Link v-if="props.lesson?.id" :href="route('lessons.show', props.lesson.slug)">
+                <Link v-if="props.lesson?.id" :href="route('lessons.show', props.lesson.global_position)">
                     View
                 </Link>
             </div>
             <div class="featured-title l">
-                {{ props.lesson?.id ? 'Lesson ' + props.lesson.slug : 'New Lesson' }}
+                {{ props.lesson?.id ? 'Lesson ' + props.lesson.global_position : 'New Lesson' }}
             </div>
 
             <div class="field-item">

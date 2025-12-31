@@ -59,7 +59,7 @@ watch(() => props.activity, (newActivity) => {
     <div id="app-body">
         <div id="dm-study">
             <template v-if="ActivityStore.data.step === 'activity'">
-                <Link :href="route('lessons.show', activity.lesson.slug)" style="margin-block-end: 3.2rem"><- Exit Activity</Link>
+                <Link :href="route('lessons.show', activity.lesson.global_position)" style="margin-block-end: 3.2rem"><- Exit Activity</Link>
                 <div class="featured-title l">activity</div>
 
                 <ActivityBlocksWrapper v-if="!ActivityStore.data.isLoading" :blocks="ActivityStore.data.activity.document.blocks"/>

@@ -29,8 +29,8 @@ class UnitSeeder extends Seeder
                 ->for($unit)
                 ->sequence(fn ($sequence) => [
                     'group' => 'main',
-                    'position' => $sequence->index + 1,
-                    'slug' => $unit->position.'0'.($sequence->index + 1),
+                    'unit_position' => $sequence->index + 1,
+                    'global_position' => $unit->position.'0'.($sequence->index + 1),
                     'title' => fake()->sentence(3),
                     'description' => fake()->paragraph(3),
                     'document' => [
@@ -65,7 +65,7 @@ class UnitSeeder extends Seeder
                             ]
                         ])
                         ->create()->id,
-                    'dialog_id' => Dialog::pluck('id')->random(),
+                    'dialog_id' => null,
                     'unlock_conditions' => null,
                     'published' => fake()->boolean()
                 ])

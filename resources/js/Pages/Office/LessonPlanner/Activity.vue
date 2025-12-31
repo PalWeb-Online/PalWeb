@@ -23,7 +23,7 @@ const props = defineProps({
 
 const activity = useForm({
     lesson_id: props.lesson.id,
-    title: 'Activity ' + props.lesson.slug + ': ' + props.lesson.title,
+    title: 'Activity ' + props.lesson.global_position + ': ' + props.lesson.title,
     document: props.activity?.document || {
         schemaVersion: 1,
         blocks: []
@@ -206,7 +206,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 </Link>
             </div>
             <div class="featured-title l">
-                Lesson {{ props.lesson.slug }}: Activity
+                Lesson {{ props.lesson.global_position }}: Activity
             </div>
             <AppTip v-if="lesson.published">
                 <p><b>WARNING:</b> You are editing an Activity for a published Lesson. If you intend to revert it to a

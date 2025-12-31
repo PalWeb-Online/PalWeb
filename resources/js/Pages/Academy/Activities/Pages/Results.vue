@@ -30,7 +30,7 @@ const handleSave = () => {
 <template>
     <div class="window-container">
         <div class="window-header">
-            <Link :href="route('lessons.show', ActivityStore.data.activity.lesson.slug)"
+            <Link :href="route('lessons.show', ActivityStore.data.activity.lesson.global_position)"
                   class="material-symbols-rounded">close
             </Link>
             <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}/activity</div>

@@ -34,7 +34,13 @@ class LessonPlannerController extends Controller
         ]);
 
         DB::transaction(function () use ($validated) {
-            foreach ($validated['units'] as $index => $unitData) {
+            $incomingUnits = collect($validated['units']);
+
+            Unit::whereIn('id', $incomingUnits->pluck('id')->filter())->each(function ($unit) {
+                $unit->update(['position' => $unit->position + 1000]);
+            });
+
+            foreach ($incomingUnits as $index => $unitData) {
                 $position = $index + 1;
 
                 if (!empty($unitData['id'])) {

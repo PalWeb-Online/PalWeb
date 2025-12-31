@@ -70,7 +70,7 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     const saveScore = () => {
         scoreManager.saveScore(data.activity.id, {
             onSuccess: () => {
-                router.get(route('lessons.show', data.activity.lesson.slug));
+                router.get(route('lessons.show', data.activity.lesson.global_position));
             }
         });
     };

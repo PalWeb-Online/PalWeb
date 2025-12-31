@@ -206,7 +206,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::controller(LessonController::class)->group(function () {
-            Route::get('/lessons/{lesson:slug}', 'show')->name('lessons.show');
+            Route::get('/lessons/{lesson:global_position}', 'show')->name('lessons.show');
         });
 
         Route::controller(ActivityController::class)->group(function () {

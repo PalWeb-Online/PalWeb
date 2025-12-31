@@ -16,7 +16,7 @@ const deleteActivity = () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link :href="route('lessons.show', model.lesson.slug)" role="menuitem" tabindex="-1">
+        <Link :href="route('lessons.show', model.lesson.global_position)" role="menuitem" tabindex="-1">
             View Lesson
         </Link>
         <Link :href="route('scores.history', { scorable_type: 'activity', scorable_id: model.id })" role="menuitem" tabindex="-1">

@@ -30,7 +30,7 @@ class Dialog extends Model
             if ($lesson && $lesson->published) {
                 $lesson->update(['published' => false]);
 
-                \Log::warning("Lesson {$lesson->slug} was automatically unpublished because its Dialog was deleted.");
+                \Log::warning("Lesson {$lesson->global_position} was automatically unpublished because its Dialog was deleted.");
             }
         });
     }

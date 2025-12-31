@@ -34,28 +34,29 @@ class LessonController extends Controller
 
         return Inertia::render('Academy/Lessons/Show', [
             'section' => 'academy',
-            'unit' => $lesson->unit ? new UnitResource($lesson->unit): null,
+            'unit' => $lesson->unit ? new UnitResource($lesson->unit) : null,
             'lesson' => new LessonResource($lesson),
         ]);
     }
 
     public function store(UpsertLessonRequest $request): RedirectResponse
     {
-        $unit = Unit::firstWhere('id', $request->unit_id);
-        $position = $unit ? $unit->lessons()->count() + 1 : 1;
-        $slug = Str::uuid();
+        $unit = $request->unit_id ? Unit::find($request->unit_id) : null;
 
         $request->merge([
-            'position' => $position,
-            'slug' => $slug
+            'global_position' => 'tmp-'.Str::uuid()
         ]);
 
         $lesson = Lesson::create($request->all());
 
         if ($unit) {
-            $unit->refresh();
             LessonService::reorderUnitLessons($unit);
-            $lesson->refresh();
+
+        } else {
+            $lesson->update([
+                'unit_position' => null,
+                'global_position' => 'ex'.$lesson->id
+            ]);
         }
 
         session()->flash('notification',
@@ -69,8 +70,8 @@ class LessonController extends Controller
 
         if (! $request->unit_id) {
             $request->merge([
-                'position' => 0,
-                'slug' => 'id'.$lesson->id,
+                'unit_position' => null,
+                'global_position' => 'ex'.$lesson->id,
             ]);
 
         } else {
@@ -78,8 +79,8 @@ class LessonController extends Controller
 
             if ($oldUnit && $incomingUnit && $oldUnit->id !== $incomingUnit->id) {
                 $request->merge([
-                    'position' => 0,
-                    'slug' => Str::uuid(),
+                    'unit_position' => null,
+                    'global_position' => 'tmp-'.Str::uuid(),
                 ]);
             }
         }

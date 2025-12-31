@@ -19,7 +19,7 @@ class ActivityResource extends JsonResource
             'model_class' => 'activity',
             'lesson' => [
                 'id' => $this->lesson->id,
-                'slug' => $this->lesson->slug,
+                'global_position' => $this->lesson->global_position,
             ],
             'title' => $this->title,
             'document' => $this->document,
