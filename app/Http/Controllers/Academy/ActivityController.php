@@ -28,6 +28,18 @@ class ActivityController extends Controller
         ]);
     }
 
+    public function activity(Activity $activity): \Inertia\Response
+    {
+        Gate::authorize('view', $activity);
+
+        $activity->load(['scores']);
+
+        return Inertia::render('Academy/Activities/Activity', [
+            'section' => 'academy',
+            'activity' => new ActivityResource($activity),
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

@@ -211,6 +211,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::controller(ActivityController::class)->group(function () {
             Route::get('/activities/{activity}', 'show')->name('activities.show');
+            Route::get('/activities/{activity}/activity', 'activity')->name('activities.activity');
         });
 
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {

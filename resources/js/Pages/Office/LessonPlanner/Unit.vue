@@ -116,7 +116,7 @@ watch(
                 </Link>
             </div>
             <div class="featured-title l">
-                {{ props.unit?.id ? 'Unit ' + props.unit.id : 'New Unit' }}: {{ unit.title }}
+                {{ props.unit?.id ? 'Unit ' + props.unit.position : 'New Unit' }}: {{ unit.title }}
             </div>
 
             <div class="field-item">

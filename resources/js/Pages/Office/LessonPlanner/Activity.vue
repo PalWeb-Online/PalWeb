@@ -201,7 +201,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 <Link :href="route('lesson-planner.lesson', lesson.id)">
                     <- to Lesson
                 </Link>
-                <Link v-if="props.activity?.id" :href="route('activities.show', props.activity.id)">
+                <Link v-if="props.activity?.id" :href="route('activities.activity', props.activity.id)">
                     View
                 </Link>
             </div>
