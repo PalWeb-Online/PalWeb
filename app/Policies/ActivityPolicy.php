@@ -14,9 +14,7 @@ class ActivityPolicy
      */
     public function view(User $user, Activity $activity): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        if ($user->isAdmin()) return true;
 
         if ($user->isStudent()) {
             $lesson = $activity->lesson;

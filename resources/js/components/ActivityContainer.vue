@@ -3,6 +3,7 @@ import {route} from "ziggy-js";
 import WindowSection from "./WindowSection.vue";
 import ActivityActions from "./Actions/ActivityActions.vue";
 import ScoreStats from "./ScoreStats.vue";
+import LessonStatus from "./LessonStatus.vue";
 
 defineProps({
     model: {type: Object, required: false}
@@ -19,9 +20,12 @@ defineProps({
             <h1>activity</h1>
             <ActivityActions :model="model"/>
         </div>
-        <div class="window-content-head">
+
+        <LessonStatus v-if="model.lesson" :lesson="model.lesson" :model="model"/>
+        <div v-else class="window-content-head">
             <div class="window-content-head-title">{{ model.title }}</div>
         </div>
+
         <WindowSection>
             <template #title>
                 <h2>stats</h2>

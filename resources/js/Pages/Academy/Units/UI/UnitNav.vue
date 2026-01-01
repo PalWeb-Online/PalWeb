@@ -1,6 +1,10 @@
 <script setup>
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
+import {computed} from "vue";
+import {router, usePage} from "@inertiajs/vue3";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     unit: Object,
@@ -31,8 +35,8 @@ const UserStore = useUserStore();
                 <Link v-for="lesson in unit.lessons"
                       :href="route('lessons.show', lesson)"
                       :class="{
-                        locked: !UserStore.isAdmin && !UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)),
-                        unlocked: UserStore.isAdmin || UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)),
+                        locked: !UserStore.isAdmin && !UserStore.hasUnlockedLesson(lesson.id),
+                        unlocked: UserStore.isAdmin || UserStore.hasUnlockedLesson(lesson.id),
                         completed: lesson.completed,
                         active: activeLesson === lesson.global_position,
                         hidden: !UserStore.isAdmin && !lesson.published

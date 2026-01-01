@@ -4,7 +4,8 @@ import DeckActions from "./Actions/DeckActions.vue";
 import {useDeck} from "../composables/Deck.js";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
+import AppTooltip from "./AppTooltip.vue";
 
 const props = defineProps({
     model: {
@@ -15,6 +16,8 @@ const props = defineProps({
     size: {type: String, default: 'm'},
     target: {type: String, default: 'library'},
 });
+
+const tooltip = ref(null);
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'percent',
@@ -36,6 +39,10 @@ const {deck, blurb, isLoading} = useDeck(props);
 <template>
     <template v-if="! isLoading">
         <div class="model-item-container deck-item-container">
+            <div v-if="!deck.unlocked" class="model-item-overlay"
+                 @mousemove="tooltip.showTooltip('You haven\'t unlocked this Deck in the Academy yet.', $event);"
+                 @mouseleave="tooltip.hideTooltip()"></div>
+
             <div :class="['model-item', 'deck-item', size]">
                 <PinButton modelType="deck" :model="deck"/>
                 <div class="model-item-content" @click="router.get(requestTarget)">
@@ -71,5 +78,6 @@ const {deck, blurb, isLoading} = useDeck(props);
                 <span>({{ deck.stats.latest_date }})</span>
             </div>
         </div>
+        <AppTooltip ref="tooltip"/>
     </template>
 </template>

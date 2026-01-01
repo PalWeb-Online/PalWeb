@@ -14,9 +14,7 @@ class DialogPolicy
      */
     public function view(User $user, Dialog $dialog): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        if ($user->isAdmin()) return true;
 
         if ($user->isStudent()) {
             $lesson = $dialog->lesson;

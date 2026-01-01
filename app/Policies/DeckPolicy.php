@@ -12,9 +12,7 @@ class DeckPolicy
 
     public function interact(User $user, Deck $deck)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        if ($user->isAdmin()) return true;
 
         $lesson = $deck->lesson;
         if ($lesson) return $lesson->published && $user->hasUnlockedLesson($lesson);

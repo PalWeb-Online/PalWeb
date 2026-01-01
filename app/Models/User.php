@@ -174,8 +174,8 @@ class User extends Authenticatable implements MustVerifyEmail
                 ->get()
                 ->keyBy('id')
                 ->map(fn($lesson) => [
-                    'stage' => (int) $lesson->pivot->stage,
-                    'completed' => (bool) $lesson->pivot->completed,
+                    'stage' => (int) $this->isAdmin() ? 3 : $lesson->pivot->stage,
+                    'completed' => (bool) $this->isAdmin() ? true : $lesson->pivot->completed,
                 ])
                 ->toArray();
         }

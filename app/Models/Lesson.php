@@ -66,13 +66,6 @@ class Lesson extends Model
     {
         if (!$user) return ['unlocked' => false, 'stage' => 0, 'completed' => false];
 
-        if ($user->isAdmin()) {
-            return [
-                'scores_count' => ['deck' => 3, 'activity' => 1],
-                'unlocked' => true, 'stage' => 3, 'completed' => true,
-            ];
-        }
-
         $scores = $user->getScoreCounts();
         $progress = $user->getLessonProgress()[$this->id] ?? null;
 

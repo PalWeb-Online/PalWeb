@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
     <div class="window-container lesson-item"
-         :class="{ locked: !UserStore.isAdmin && !UserStore.user.lessons.includes(lesson.slug) }">
+         :class="{hidden: !lesson.published}">
         <div class="window-section-head">
             <h1>lesson {{ lesson.global_position }}</h1>
             <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.lesson', lesson.id)" class="material-symbols-rounded">
@@ -25,27 +25,6 @@ const props = defineProps({
                 <div class="material-symbols-rounded" :class="{ completed: lesson.progress.stage > 1}">check</div>
                 <div class="material-symbols-rounded" :class="{ completed: lesson.progress.stage > 2}">check</div>
             </div>
-        </div>
-
-        <div class="lesson-model-progress-wrapper">
-            <div class="featured-title l" style="flex-grow: 1">deck</div>
-            <div v-if="lesson.deck">
-                <div class="lesson-model-score-count">
-                    <div class="material-symbols-rounded"
-                         :class="{ completed: lesson.progress.scores_count?.deck > 0 }">check
-                    </div>
-                    <div class="material-symbols-rounded"
-                         :class="{ completed: lesson.progress.scores_count?.deck > 1 }">check
-                    </div>
-                    <div class="material-symbols-rounded"
-                         :class="{ completed: lesson.progress.scores_count?.deck > 2 }">check
-                    </div>
-                </div>
-                <Link :href="route('deck-master.study', lesson.deck.id)">study</Link>
-            </div>
-            <template v-else>
-                No Deck assigned to this Lesson yet.
-            </template>
         </div>
 
         <WindowSection :visible="false">
@@ -65,7 +44,7 @@ const props = defineProps({
             </template>
         </WindowSection>
         <div class="window-footer">
-            <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !UserStore.user.unlocked_lessons.includes(Number(lesson.global_position)) }">
+            <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !UserStore.hasUnlockedLesson(lesson.id) }">
                 open lesson
             </Link>
         </div>

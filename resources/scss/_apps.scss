@@ -18,6 +18,18 @@
     box-shadow: -0.25em 0.25em 0 0 rgba(black, 0.25);
     border-radius: 1em;
     overflow: hidden;
+    position: relative;
+
+    .model-item-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0.75;
+        background: var(--color-accent-light);
+        z-index: 1;
+    }
 }
 
 .model-item {
@@ -322,7 +334,7 @@
         background: var(--color-pastel-medium);
     }
 
-    button[disabled] {
+    button[disabled], a.disabled {
         color: var(--color-pastel-medium);
         pointer-events: none;
     }
@@ -886,6 +898,14 @@
         direction: ltr;
         font-size: 1.6rem;
         font-family: $ar_bodyFont;
+    }
+
+    &.decks {
+        &.locked {
+            opacity: 0.33;
+            user-select: none;
+            pointer-events: none;
+        }
     }
 }
 

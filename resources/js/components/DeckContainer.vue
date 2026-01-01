@@ -8,6 +8,7 @@ import AppTip from "./AppTip.vue";
 import {route} from "ziggy-js";
 import ScoreStats from "./ScoreStats.vue";
 import WindowSection from "./WindowSection.vue";
+import LessonStatus from "./LessonStatus.vue";
 
 const props = defineProps({
     model: {
@@ -41,11 +42,12 @@ const {deck, isLoading} = useDeck(props);
                     only visible to you. </p>
             </AppTip>
 
-            <div class="window-content-head">
+            <LessonStatus v-if="deck.lesson" :lesson="deck.lesson" :model="deck"/>
+            <div v-else class="window-content-head">
                 <div class="window-content-head-title">{{ deck.name }}</div>
             </div>
 
-            <UserItem :user="deck.author" size="m" comment>
+            <UserItem v-if="!deck.lesson" :user="deck.author" size="m" comment>
                 <template #comment>
                     <div class="user-comment-content">
                         <template v-if="deck.description">

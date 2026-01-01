@@ -38,6 +38,15 @@ class DeckResource extends JsonResource
             'stats' => $this->whenLoaded('scores', function () {
                 return $this->score_stats;
             }),
+            'lesson' => $this->when($this->lesson, function() use ($request) {
+                return [
+                    'id' => $this->lesson?->id,
+                    'global_position' => $this->lesson?->global_position,
+                    'progress' => $request->user()?->getLessonProgress()[$this->lesson?->id] ?? null,
+                    'scores_count' => $request->user()?->getScoreCounts() ?? null,
+                ];
+            }),
+            'unlocked' => $request->user()?->can('interact', $this->resource),
         ];
     }
 }

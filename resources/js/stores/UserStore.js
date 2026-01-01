@@ -23,6 +23,10 @@ export const useUserStore = defineStore('UserStore', () => {
         }
     };
 
+    const hasUnlockedLesson = (id) => {
+        return user.value.unlocked_lessons.includes(id);
+    }
+
     const isSuperuser = computed(() => user.value?.is_superuser);
     const isAdmin = computed(() => user.value?.roles?.includes('admin'));
     const isStudent = computed(() => user.value?.roles?.includes('student') || user.value?.roles?.includes('admin'));
@@ -40,6 +44,7 @@ export const useUserStore = defineStore('UserStore', () => {
         decks,
         hasFetchedDecks,
         fetchDecks,
+        hasUnlockedLesson,
         isSuperuser,
         isAdmin,
         isStudent,
