@@ -106,7 +106,7 @@ onMounted(async () => {
 
 <template>
     <div class="window-section-head">
-        <h2>Speaker</h2>
+        <h2>{{ $t('speaker.speaker') }}</h2>
 
         <PopupWindow title="Sound Booth (Speaker)">
             <div>What is my Speaker profile?</div>
@@ -209,14 +209,14 @@ onMounted(async () => {
 
                     <div class="speaker-data">
                         <div class="speaker-data-head">
-                            <div>Speaker Data</div>
+                            <div>{{ $t('speaker.speaker')}}</div>
                             <button :disabled="form.processing || !hasNavigationGuard || !isValidRequest"
                                     class="material-symbols-rounded" @click="saveSpeaker">
                                 save
                             </button>
                         </div>
                         <div class="speaker-data-row">
-                            <div>Dialect</div>
+                            <div>{{ $t('speaker.dialect') }}</div>
                             <WizardDropdown
                                 v-model="form.dialect_id"
                                 :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
@@ -224,21 +224,21 @@ onMounted(async () => {
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>Location</div>
+                            <div>{{ $t('speaker.location') }}</div>
                             <WizardDropdown
                                 v-model="form.location_id"
                                 :options="locations.map(location => ({ data: location.id, label: location.name_ar }))"
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>Fluency</div>
+                            <div>{{ $t('speaker.fluency') }}</div>
                             <WizardDropdown
                                 v-model="form.fluency"
                                 :options="levels"
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>Gender</div>
+                            <div>{{ $t('speaker.gender') }}</div>
                             <WizardDropdown
                                 v-model="form.gender"
                                 :options="genders"
@@ -248,18 +248,13 @@ onMounted(async () => {
                 </div>
             </div>
             <div class="rw-test-status">
-                <div class="rw-test-status-info" v-if="RecordWizardStore.data.testState === 'ready'">
-                    <div>Waiting</div>
-                    <div>Click to test your mic.</div>
-                </div>
-                <div class="rw-test-status-info" v-else-if="RecordWizardStore.data.testState === 'speak'">
-                    <div>Recording</div>
-                    <div>Speak into the mic now.</div>
-                </div>
-                <div class="rw-test-status-info" v-else-if="RecordWizardStore.data.testState === 'check'">
-                    <div>Listening</div>
-                    <div>How does the audio sound?</div>
-                </div>
+                <template v-for="state in testStates" :key="state">
+                    <div class="rw-test-status-info" v-if="SoundBoothStore.data.testState === state">
+                        <div>{{ $t('sound-booth.test.' + state + '.title') }}</div>
+                        <div>{{ $t('sound-booth.test.' + state + '.subtitle') }}</div>
+                    </div>
+                </template>
+
                 <img
                     :class="`rw-test-button ${SoundBoothStore.data.testState !== 'waiting' ? 'disabled' : ''}`"
                     :src="`/img/${

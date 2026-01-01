@@ -97,6 +97,54 @@
             "manage": "gestionar"
         }
     },
+    "speaker": {
+        "speaker": "hablante",
+        "dialect": "dialecto",
+        "location": "ubicación",
+        "fluency": "fluidez",
+        "gender": "género"
+    },
+    "sound-booth": {
+        "test": {
+            "waiting": {
+                "title": "esperando",
+                "subtitle": "Haz click para probar el micro."
+            },
+            "recording": {
+                "title": "recording",
+                "subtitle": "Háblale el micro ya."
+            },
+            "listening": {
+                "title": "listening",
+                "subtitle": "¿Cómo suena el audio?"
+            }
+        },
+        "queue": {
+            "queue": "lista",
+            "status": {
+                "full": "Ya tienes 100 artículos en la Lista.",
+                "empty": "La Lista ya está vacía."
+            },
+            "load": {
+                "button": "cargar baraja",
+                "message": "Agrega todos los Términos de una Baraja para grabar."
+            },
+            "auto": {
+                "button": "lista automática",
+                "message": "Llena la Lista automáticamente con hasta 100 artículos."
+            },
+            "clear": {
+                "button": "limpiar lista",
+                "message": "Saca todos los artículos de la Lista."
+            }
+        },
+        "record": {
+            "record": "grabar",
+            "upload": "subir",
+            "prompt-start": "¡Graba algo para comenzar!"
+        },
+        "check": "revisar"
+    },
     "documentation": "documentación",
     "dictionary": "diccionario",
     "lessons": "cursos",

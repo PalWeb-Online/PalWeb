@@ -31,7 +31,7 @@ onMounted(() => {
 
 <template>
     <div class="window-section-head">
-        <h2>Queue</h2>
+        <h2>{{ $t('sound-booth.queue.queue') }}</h2>
 
         <PopupWindow title="Sound Booth (Queue)">
             <div>What is the Queue?</div>
@@ -87,21 +87,24 @@ onMounted(() => {
         <div class="rw-queue-foot">
             <div class="rw-queue-buttons">
                 <button :disabled="QueueStore.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? 'Queue up all the Terms in a Deck for recording.' : '(You already have 100 items in the Queue.)', $event);"
+                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? $t('sound-booth.queue.load.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="SearchStore.openSearchGenie('insert', 'decks')">Load Deck
+                        @click="SearchStore.openSearchGenie('insert', 'decks')">
+                    {{ $t('sound-booth.queue.load.button') }}
                 </button>
 
                 <button :disabled="QueueStore.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? 'Automatically fill your Queue with up to 100 items.' : '(You already have 100 items in the Queue.)', $event);"
+                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? $t('sound-booth.queue.auto.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="QueueStore.fetchAutoItems">Fetch Items
+                        @click="QueueStore.fetchAutoItems">
+                    {{ $t('sound-booth.queue.auto.button') }}
                 </button>
 
                 <button :disabled="QueueStore.queue.length <= 0"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length > 0 ? 'Remove all items from your Queue.' : '(Your Queue is already empty.)', $event);"
+                        @mousemove="tooltip.showTooltip(QueueStore.queue.length > 0 ? $t('sound-booth.queue.clear.message') : $t('sound-booth.queue.status.empty'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="QueueStore.flushQueue()">Flush Queue
+                        @click="QueueStore.flushQueue()">
+                    {{ $t('sound-booth.queue.clear.button') }}
                 </button>
             </div>
 

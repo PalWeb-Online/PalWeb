@@ -98,6 +98,54 @@
             "manage": "manage"
         }
     },
+    "speaker": {
+        "speaker": "speaker",
+        "dialect": "dialect",
+        "location": "location",
+        "fluency": "fluency",
+        "gender": "gender"
+    },
+    "sound-booth": {
+        "test": {
+            "waiting": {
+                "title": "waiting",
+                "subtitle": "Click to test your mic."
+            },
+            "recording": {
+                "title": "recording",
+                "subtitle": "Speak into the mic now."
+            },
+            "listening": {
+                "title": "listening",
+                "subtitle": "How does the audio sound?"
+            }
+        },
+        "queue": {
+            "queue": "queue",
+            "status": {
+                "full": "You already have 100 items in the Queue.",
+                "empty": "The Queue is already empty."
+            },
+            "load": {
+                "button": "load deck",
+                "message": "Queue up all the Terms in a Deck for recording."
+            },
+            "auto": {
+                "button": "fetch items",
+                "message": "Automatically fill the Queue with up to 100 items."
+            },
+            "clear": {
+                "button": "flush queue",
+                "message": "Remove all items from the Queue."
+            }
+        },
+        "record": {
+            "record": "record",
+            "upload": "upload",
+            "prompt-start": "Record something to get started!"
+        },
+        "check": "check"
+    },
     "wiki": "wiki",
     "lessons": "lessons",
     "texts": "texts",

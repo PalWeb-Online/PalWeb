@@ -18,7 +18,7 @@ const audios = computed(() =>
 
 <template>
     <div class="window-section-head">
-        <h2>Check</h2>
+        <h2>{{ $t('sound-booth.check') }}</h2>
     </div>
     <AppTip>
         <p>Check the Audios you have just published. Only the Audios published in this session of the Sound Booth

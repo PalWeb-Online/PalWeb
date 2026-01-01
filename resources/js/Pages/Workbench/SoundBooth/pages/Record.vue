@@ -50,7 +50,7 @@ onMounted(() => {
 
 <template>
     <div class="window-section-head">
-        <h2>Record</h2>
+        <h2>{{ $t('sound-booth.record.record') }}</h2>
     </div>
     <AppTip v-if="SoundBoothStore.data.errorMessage">
         <p>{{ SoundBoothStore.data.errorMessage }}</p>
@@ -106,7 +106,7 @@ onMounted(() => {
             <!--           TODO: disable it if no word is selected -->
             <div :class="`rw-actions ${SoundBoothStore.data.isUploading && 'disabled'}`">
                 <div class="rw-actions-title">
-                    Record
+                    {{ $t('sound-booth.record.record') }}
                 </div>
                 <div class="rw-actions-content">
                     <div class="rw-actions-bar">
@@ -166,7 +166,7 @@ onMounted(() => {
 
             <div class="rw-actions">
                 <div class="rw-actions-title">
-                    Upload
+                    {{ $t('sound-booth.record.upload') }}
                 </div>
                 <div class="rw-actions-content">
                     <template v-if="Object.keys(RecordStore.data.records).length !== 0">
@@ -194,7 +194,7 @@ onMounted(() => {
                     </template>
 
                     <template v-else>
-                        Record something to get started!
+                        {{ $t('sound-booth.record.prompt-start') }}
                     </template>
 
                     <!--                    <span class="mwe-rw-othercounter">-->
