@@ -172,7 +172,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($this->lessonProgressCache === null) {
             $this->lessonProgressCache = $this->lessons()
                 ->get()
-                ->keyBy('global_position')
+                ->keyBy('id')
                 ->map(fn($lesson) => [
                     'stage' => (int) $lesson->pivot->stage,
                     'completed' => (bool) $lesson->pivot->completed,
@@ -204,13 +204,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         if ($this->isAdmin()) return true;
 
-        return isset($this->getLessonProgress()[$lesson->global_position]);
+        return isset($this->getLessonProgress()[$lesson->id]);
     }
 
     public function getLessonStage(Lesson $lesson): int
     {
         if ($this->isAdmin()) return 3;
 
-        return $this->getLessonProgress()[$lesson->global_position]['stage'] ?? 0;
+        return $this->getLessonProgress()[$lesson->id]['stage'] ?? 0;
     }
 }

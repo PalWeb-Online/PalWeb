@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SyncAllUsersProgress;
 use App\Models\Lesson;
 use App\Models\Unit;
 use App\Models\User;
@@ -13,105 +14,71 @@ class LessonService
 {
     public static function reorderUnitLessons(Unit $unit): void
     {
-        $lessons = $unit->lessons;
+        $lessons = $unit->lessons()->withoutGlobalScopes()->get();
 
-        if ($lessons->isEmpty()) {
-            return;
+        if (self::applyNewOrder($unit->position, $lessons)) {
+            SyncAllUsersProgress::dispatch()->afterCommit();
         }
-
-        foreach ($lessons as $lesson) {
-            $lesson->update([
-                'global_position' => 'tmp-'.Str::uuid(),
-            ]);
-        }
-
-        foreach ($lessons as $index => $lesson) {
-            $positionInUnit = $index + 1;
-
-            $lesson->update([
-                'unit_position' => $positionInUnit,
-                'global_position' => $unit->position.'0'.$positionInUnit,
-            ]);
-        }
-
-        User::role(['student', 'admin'])->chunk(100, function ($users) {
-            foreach ($users as $user) {
-                self::syncUserProgress($user);
-            }
-        });
     }
 
     public static function reorderAllUnitsAndLessons(): void
     {
-        $units = Unit::all();
+        $anyChanges = false;
 
-        if ($units->isEmpty()) return;
+        $units = Unit::withoutGlobalScopes()->orderBy('position')->get();
 
         foreach ($units as $index => $unit) {
-            $unit->update([
-                'position' => $index + 1,
-            ]);
-        }
+            $unit->update(['position' => $index + 1]);
 
-        $allLessons = $units
-            ->flatMap(function (Unit $unit) {
-                return $unit->lessons;
-            })
-            ->values();
+            $lessons = $unit->lessons()->withoutGlobalScopes()->get();
 
-        if ($allLessons->isEmpty()) return;
-
-        foreach ($allLessons as $lesson) {
-            $lesson->update([
-                'global_position' => 'tmp-'.Str::uuid(),
-            ]);
-        }
-
-        foreach ($units as $unit) {
-            $lessons = $unit->lessons;
-
-            foreach ($lessons as $index => $lesson) {
-                $positionInUnit = $index + 1;
-
-                $lesson->update([
-                    'unit_position' => $positionInUnit,
-                    'global_position' => $unit->position.'0'.$positionInUnit,
-                ]);
+            if (self::applyNewOrder($unit->position, $lessons)) {
+                $anyChanges = true;
             }
         }
 
-        User::role(['student', 'admin'])->chunk(100, function ($users) {
-            foreach ($users as $user) {
-                self::syncUserProgress($user);
-            }
-        });
+        if ($anyChanges) {
+            SyncAllUsersProgress::dispatch()->afterCommit();
+        }
     }
 
-    public static function canUnlock(User $user, Lesson $lesson, ?array $completedIds = null): bool
+    private static function applyNewOrder(int $unitPosition, Collection $lessons): bool
     {
-        if ($completedIds === null) {
-            $progress = $user->getLessonProgress();
-            $completedIds = collect($progress)
-                ->filter(fn($p) => $p['completed'])
-                ->keys()
-                ->toArray();
+        if ($lessons->isEmpty()) {
+            return false;
         }
 
+        Lesson::withoutEvents(function () use ($lessons, $unitPosition) {
+            foreach ($lessons as $lesson) {
+                $lesson->update(['global_position' => 'tmp-'.Str::uuid()]);
+            }
+
+            foreach ($lessons->values() as $index => $lesson) {
+                $pos = $index + 1;
+                $lesson->update([
+                    'unit_position' => $pos,
+                    'global_position' => $unitPosition.'0'.$pos,
+                ]);
+            }
+        });
+
+        return true;
+    }
+
+    public static function canUnlock(Lesson $lesson, array $completedIds): bool
+    {
         $conditions = $lesson->unlock_conditions ?? [];
 
         if (empty($conditions)) {
-            if ($lesson->group !== 'main') {
-                return false;
-            }
+            if ($lesson->group !== 'main') return false;
 
-            $previousLesson = Lesson::where('group', 'main')
+            $previousLesson = Lesson::withoutGlobalScopes()
+                ->where('group', 'main')
                 ->where('global_position', '<', $lesson->global_position)
                 ->orderByDesc('global_position')
                 ->first();
 
-            if (! $previousLesson) {
-                return true;
-            }
+            if (! $previousLesson) return true;
 
             return in_array($previousLesson->id, $completedIds);
         }
@@ -122,11 +89,12 @@ class LessonService
 
             switch ($type) {
                 case 'after_lesson_id':
-                    if (!in_array($value, $completedIds)) return false;
+                    if (! in_array($value, $completedIds)) return false;
                     break;
 
                 case 'after_lesson_position':
-                    $requiredIds = Lesson::where('group', 'main')
+                    $requiredIds = Lesson::withoutGlobalScopes()
+                        ->where('group', 'main')
                         ->where('global_position', '<=', $value)
                         ->pluck('id');
 
@@ -135,17 +103,24 @@ class LessonService
                     break;
 
                 case 'after_unit_id':
-                    $unit = Unit::find($value);
+                    $unit = Unit::withoutGlobalScopes()->find($value);
                     if (! $unit) return false;
 
-                    $requiredIds = $unit->lessons()->pluck('id');
+                    $requiredIds = $unit->withoutGlobalScopes()->lessons()->pluck('id');
                     if (empty($requiredIds)) return true;
+
                     if (count(array_intersect($requiredIds, $completedIds)) < count($requiredIds)) return false;
                     break;
 
                 case 'after_unit_position':
-                    $units = Unit::where('position', '<=', $value)->pluck('id');
-                    $requiredIds = Lesson::whereIn('unit_id', $units)->pluck('id')->toArray();
+                    $units = Unit::withoutGlobalScopes()
+                        ->where('position', '<=', $value)
+                        ->pluck('id');
+
+                    $requiredIds = Lesson::withoutGlobalScopes()
+                        ->whereIn('unit_id', $units)
+                        ->pluck('id')
+                        ->toArray();
 
                     if (empty($requiredIds)) return true;
                     if (count(array_intersect($requiredIds, $completedIds)) < count($requiredIds)) return false;
@@ -166,34 +141,32 @@ class LessonService
         }
 
         $newlyUnlocked = collect();
-        $lessons = Lesson::where('published', true)->get();
+        $publishedLessons = Lesson::withoutGlobalScopes()->where('published', true)->get();
 
-        do {
-            $newlyUnlockedCount = 0;
+        $progress = $user->getLessonProgress();
+        $unlockedIds = array_keys($progress);
 
-            $progress = $user->getLessonProgress();
-            $unlockedIds = array_keys($progress);
-            $completedIds = collect($progress)->filter(fn($p) => $p['completed'])->keys()->toArray();
+        $completedIds = [];
+        foreach($progress as $id => $data) {
+            if ($data['completed']) $completedIds[] = $id;
+        }
 
-            foreach ($lessons as $lesson) {
-                if (in_array($lesson->id, $unlockedIds)) {
-                    continue;
-                }
+        $idsToAttach = [];
 
-                if (self::canUnlock($user, $lesson, $completedIds)) {
-                    $user->lessons()->syncWithoutDetaching($lesson->id);
-                    $newlyUnlocked->push($lesson);
-                    $newlyUnlockedCount++;
+        foreach ($publishedLessons as $lesson) {
+            if (in_array($lesson->id, $unlockedIds)) continue;
 
-                    $unlockedIds[] = $lesson->id;
-                }
+            if (self::canUnlock($lesson, $completedIds)) {
+                $newlyUnlocked->push($lesson);
+                $idsToAttach[] = $lesson->id;
+                $unlockedIds[] = $lesson->id;
             }
+        }
 
-            if ($newlyUnlockedCount > 0) {
-                $user->forgetLessonProgressCache();
-            }
-
-        } while ($newlyUnlockedCount > 0);
+        if (!empty($idsToAttach)) {
+            $user->lessons()->syncWithoutDetaching($idsToAttach);
+            $user->forgetLessonProgressCache();
+        }
 
         return $newlyUnlocked;
     }

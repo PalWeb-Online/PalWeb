@@ -2,6 +2,7 @@
 
 namespace App\Models\Scopes;
 
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -13,11 +14,11 @@ class PublishedScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
+//        if (app()->runningInConsole()) return;
+
         $user = auth()->user();
 
-        if ($user && $user->isAdmin()) {
-            return;
-        }
+        if ($user && $user->isAdmin()) return;
 
         $table = $model->getTable();
 
@@ -25,15 +26,25 @@ class PublishedScope implements Scope
 
         if ($table === 'lessons') {
             $builder->where(function ($query) {
-                $query->whereDoesntHave('unit')
-                    ->orWhereHas('unit', fn ($q) => $q->where('published', true));
+                $query->whereNull('unit_id')
+                    ->orWhereIn('unit_id', function ($subquery) {
+                        $subquery->select('id')
+                            ->from('units')
+                            ->where('published', true);
+                    });
             });
         }
 
         if ($table === 'activities' || $table === 'dialogs') {
-            $builder->where(function ($query) {
-                $query->whereDoesntHave('lesson')
-                    ->orWhereHas('lesson', fn ($q) => $q->where('published', true));
+            $column = $table === 'activities' ? 'activity_id' : 'dialog_id';
+
+            $builder->where(function ($query) use ($column) {
+                $query->whereNotExists(function ($subquery) use ($column) {
+                    $subquery->select(DB::raw(1))
+                        ->from('lessons')
+                        ->whereColumn('lessons.'.$column, 'id')
+                        ->where('published', false);
+                });
             });
         }
     }

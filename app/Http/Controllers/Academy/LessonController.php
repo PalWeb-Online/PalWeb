@@ -52,11 +52,12 @@ class LessonController extends Controller
         if ($unit) {
             LessonService::reorderUnitLessons($unit);
 
-        } else {
-            $lesson->update([
-                'unit_position' => null,
-                'global_position' => 'ex'.$lesson->id
-            ]);
+//            todo: we haven't yet created a way to create a standalone Lesson
+//        } else {
+//            $lesson->update([
+//                'unit_position' => null,
+//                'global_position' => 'ex'.$lesson->id
+//            ]);
         }
 
         session()->flash('notification',
@@ -92,9 +93,8 @@ class LessonController extends Controller
 
         if ($oldUnit && (! $newUnit || $oldUnit->id !== $newUnit->id)) {
             LessonService::reorderUnitLessons($oldUnit);
-        }
 
-        if ($newUnit) {
+        } elseif ($newUnit && $oldUnit?->id !== $newUnit->id) {
             LessonService::reorderUnitLessons($newUnit);
         }
 
