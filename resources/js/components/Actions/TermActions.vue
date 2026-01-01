@@ -4,6 +4,8 @@ import {router} from '@inertiajs/vue3'
 import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 
+const UserStore = useUserStore();
+
 const props = defineProps({
     model: Object,
 });
@@ -17,11 +19,17 @@ const deleteTerm = () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
-            Edit Term
+        <Link v-if="$page.component !== 'Library/Terms/Show'"
+              :href="route('terms.show', model.slug)" role="menuitem" tabindex="-1">
+            View Term
         </Link>
-        <button @click="deleteTerm" role="menuitem" tabindex="-1">
-            Delete Term
-        </button>
+        <template v-if="UserStore.isAdmin">
+            <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
+                Edit Term
+            </Link>
+            <button @click="deleteTerm" role="menuitem" tabindex="-1">
+                Delete Term
+            </button>
+        </template>
     </ContextActions>
 </template>

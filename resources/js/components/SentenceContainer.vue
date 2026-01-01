@@ -31,7 +31,7 @@ const {sentence, isLoading, isPlaying, playAudio} = useSentence(props);
             <div class="window-section-head">
                 <h1>sentence</h1>
                 <PinButton modelType="sentence" :model="sentence"/>
-                <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
+                <SentenceActions :model="sentence"/>
             </div>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="sentence.dialog" class="sentence-dialog-data">

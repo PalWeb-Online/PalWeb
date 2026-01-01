@@ -207,7 +207,7 @@ const etymology = computed(() => {
             <div class="window-section-head">
                 <h1>term</h1>
                 <PinButton modelType="term" :model="term"/>
-                <TermActions v-if="UserStore.isAdmin" :model="term"/>
+                <TermActions :model="term"/>
             </div>
             <div class="term-container-head">
                 <div class="term-headword">

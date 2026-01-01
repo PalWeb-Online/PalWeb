@@ -28,7 +28,7 @@ const {data} = useDialog(props);
             </div>
             <div class="window-section-head">
                 <h1>dialog</h1>
-                <DialogActions v-if="UserStore.isAdmin" :model="data.dialog"/>
+                <DialogActions :model="data.dialog"/>
             </div>
             <div class="window-content-head">
                 <div class="window-content-head-title" style="direction: rtl">{{ data.dialog.title }}</div>

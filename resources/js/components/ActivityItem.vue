@@ -30,7 +30,7 @@ const formatter = new Intl.NumberFormat('en-US', {
                     {{ model.title }}
                 </div>
             </div>
-            <ActivityActions v-if="UserStore.isAdmin" :model="model"/>
+            <ActivityActions :model="model"/>
         </div>
 
         <div v-if="model.stats" class="model-item-stats">

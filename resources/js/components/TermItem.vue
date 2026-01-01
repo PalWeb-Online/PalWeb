@@ -46,7 +46,7 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                     </div>
                 </div>
                 <TermDeckToggleButton :model="term"/>
-                <TermActions v-if="UserStore.isAdmin" :model="term"/>
+                <TermActions :model="term"/>
             </div>
         </div>
     </template>

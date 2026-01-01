@@ -2,6 +2,9 @@
 import {route} from 'ziggy-js';
 import {router} from '@inertiajs/vue3';
 import ContextActions from "./ContextActions.vue";
+import {useUserStore} from "../../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: Object,
@@ -16,14 +19,17 @@ const deleteSentence = () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link v-if="$page.component !== 'Library/Sentences/Show'" :href="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
+        <Link v-if="$page.component !== 'Library/Sentences/Show'"
+              :href="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
             View Sentence
         </Link>
-        <Link :href="route('speech-maker.sentence', model.id)" role="menuitem" tabindex="-1">
-            Edit Sentence
-        </Link>
-        <button @click="deleteSentence" role="menuitem" tabindex="-1">
-            Delete Sentence
-        </button>
+        <template v-if="UserStore.isAdmin">
+            <Link :href="route('speech-maker.sentence', model.id)" role="menuitem" tabindex="-1">
+                Edit Sentence
+            </Link>
+            <button @click="deleteSentence" role="menuitem" tabindex="-1">
+                Delete Sentence
+            </button>
+        </template>
     </ContextActions>
 </template>
