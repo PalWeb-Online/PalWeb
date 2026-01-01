@@ -113,7 +113,7 @@ watch(
                                   class="material-symbols-rounded">edit
                             </Link>
                         </div>
-                        <span class="handle material-symbols-rounded">menu</span>
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
                     </li>
                 </template>
             </draggable>

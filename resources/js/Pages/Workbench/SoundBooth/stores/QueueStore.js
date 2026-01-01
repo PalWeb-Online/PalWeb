@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia';
 import {reactive, ref, watch} from 'vue';
-import {useRecordWizardStore} from "./RecordWizardStore.js";
+import {useSoundBoothStore} from "./SoundBoothStore.js";
 import {useRecordStore} from './RecordStore';
 import {route} from "ziggy-js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
 export const useQueueStore = defineStore('QueueStore', () => {
-    const RecordWizardStore = useRecordWizardStore();
+    const SoundBoothStore = useSoundBoothStore();
     const RecordStore = useRecordStore();
 
     const NotificationStore = useNotificationStore();
@@ -54,7 +54,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
         const newSelected = queue[index];
         if (RecordStore.data.status[newSelected.id] === 'stashed') {
-            if (RecordWizardStore.data.isRecording) RecordStore.stopRecording();
+            if (SoundBoothStore.data.isRecording) RecordStore.stopRecording();
             RecordStore.playRecord();
         }
     };
@@ -85,15 +85,15 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchAutoItems = async () => {
         try {
-            const response = await axios.post(route('record-wizard.get.auto'), {
-                speaker_id: RecordWizardStore.speaker.id,
-                dialect_id: RecordWizardStore.speaker.dialect.id,
+            const response = await axios.post(route('sound-booth.get.auto'), {
+                speaker_id: SoundBoothStore.speaker.id,
+                dialect_id: SoundBoothStore.speaker.dialect.id,
                 queuedItems: queue,
             });
 
             if (response.data) {
-                console.log(`pushing ${response.data.items.length} items to queue`);
                 queue.push(...response.data.items);
+                NotificationStore.addNotification(`Added ${response.data.items.length} Pronunciations to the Queue!`);
             }
         } catch (error) {
             console.error('Error loading items:', error);
@@ -102,9 +102,9 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchDeckItems = async (id) => {
         try {
-            const response = await axios.post(route('record-wizard.get.deck', id), {
-                speaker_id: RecordWizardStore.speaker.id,
-                dialect_id: RecordWizardStore.speaker.dialect.id,
+            const response = await axios.post(route('sound-booth.get.deck', id), {
+                speaker_id: SoundBoothStore.speaker.id,
+                dialect_id: SoundBoothStore.speaker.dialect.id,
                 queuedItems: queue,
             });
 

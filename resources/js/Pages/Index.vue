@@ -244,7 +244,7 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">record wizard</div>
+                    <div class="feature-panel-title">sound booth</div>
                     <div class="feature-panel-subtitle">Let your voice shine through.</div>
                     <div class="feature-panel-description">Breathe life into language by recording pronunciation samples
                         of everything in your dialect — & represent the diversity of Palestinian Arabic.

@@ -51,7 +51,7 @@ const gridStyle = computed(() => ({
                     </button>
                     <input v-model="col.label" :class="{ 'invalid': !col.label }" style="width: 100%"
                            placeholder="عمود"/>
-                    <span class="handle material-symbols-rounded" style="cursor:grab;">menu</span>
+                    <span class="handle material-symbols-rounded">drag_indicator</span>
                 </div>
             </template>
         </Draggable>
@@ -64,7 +64,7 @@ const gridStyle = computed(() => ({
             <template #item="{ element: row }">
                 <div class="table-row-wrapper">
                     <div class="block-meta" style="justify-content: flex-end">
-                        <span class="handle material-symbols-rounded" style="cursor:grab;">menu</span>
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
                         <button
                             type="button"
                             class="material-symbols-rounded"

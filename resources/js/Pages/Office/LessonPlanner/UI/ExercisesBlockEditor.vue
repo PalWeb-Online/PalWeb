@@ -120,7 +120,7 @@ const removeMatchPair = (ex, pairIndex) => {
                 <div class="exercise-item">
                     <div class="block-meta">
                         <div style="flex-grow: 1">{{ index + 1 + '. ' + ex.type }}</div>
-                        <span class="handle material-symbols-rounded" style="cursor:grab;">menu</span>
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
                         <button
                             type="button"
                             class="material-symbols-rounded"

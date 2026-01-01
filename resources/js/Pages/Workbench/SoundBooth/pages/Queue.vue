@@ -33,10 +33,10 @@ onMounted(() => {
     <div class="window-section-head">
         <h2>Queue</h2>
 
-        <PopupWindow title="(RW) Queue">
+        <PopupWindow title="Sound Booth (Queue)">
             <div>What is the Queue?</div>
             <p>Terms have many Pronunciations. The <b>Queue</b> is the list of Pronunciation items you will be
-                recording with the <b>Record Wizard</b>.</p>
+                recording with the <b>Sound Booth</b>.</p>
             <p><b>You may only queue up a maximum of 100 items.</b> After uploading your recordings, you
                 may return to the Queue page to refresh the list with another 100 items.</p>
             <p><b>You may only record any given item once — one Audio per Pronunciation per Speaker.</b> If an item
@@ -75,7 +75,7 @@ onMounted(() => {
                               @click="remove(index)">delete</span>
                         <span>{{ index + 1 }}.</span>
                         <div><span>{{ element.term.term }}</span> ({{ element.translit }})</div>
-                        <span class="handle material-symbols-rounded">menu</span>
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
                     </li>
                 </template>
             </draggable>
@@ -105,7 +105,7 @@ onMounted(() => {
                 </button>
             </div>
 
-            <div class="rw-item-counter">{{ QueueStore.queue.length }} of 100</div>
+            <div class="rw-item-counter">{{ QueueStore.queue.length }} / 100</div>
         </div>
     </div>
 

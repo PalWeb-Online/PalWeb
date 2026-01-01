@@ -33,7 +33,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
         <div class="window-section-head">
             <h2>Results</h2>
-            <PopupWindow title="DM (Results)">
+            <PopupWindow title="Deck Master (Results)">
                 <div class="h1">Results</div>
                 <p>Sometimes humans are smarter than machines. The Deck Master automatically generates Quizzes & grades
                     them through a simple matching operation, so it's possible in certain cases for an answer that

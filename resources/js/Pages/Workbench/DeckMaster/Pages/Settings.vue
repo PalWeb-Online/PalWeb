@@ -47,7 +47,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
 
         <div class="window-section-head">
             <h2>Settings</h2>
-            <PopupWindow title="DM (Study)">
+            <PopupWindow title="Deck Master (Study)">
                 <div class="h1">Study</div>
                 <p>Welcome to the Deck Master <b>Study</b> page, where you can study Decks in a variety of modes. Use
                     <b>Practice</b> mode to view your Decks as flashcards, or dynamically generate three different types

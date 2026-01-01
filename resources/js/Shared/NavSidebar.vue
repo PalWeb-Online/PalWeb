@@ -217,10 +217,10 @@ onMounted(() => {
                                     <div>{{ $t('nav.sidebar.deck-master.title') }}</div>
                                     <div>{{ $t('nav.sidebar.deck-master.subtitle') }}</div>
                                 </div>
-                                <div @click="navigateOrPrompt('record-wizard.index')"
+                                <div @click="navigateOrPrompt('sound-booth.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': $page.component === 'Workbench/RecordWizard/RecordWizard',
+                                         'active': $page.component === 'Workbench/SoundBooth/SoundBooth',
                                          'disabled': !UserStore.isUser
                                      }"
                                 >

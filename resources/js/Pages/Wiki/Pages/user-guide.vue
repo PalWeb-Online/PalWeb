@@ -58,7 +58,7 @@ defineOptions({
             <li><Link :href="route('wiki.show', 'workbench')">Workbench</Link></li>
             <ul>
                 <li><Link :href="route('wiki.show', 'workbench') + '#deck-master'">Deck Master</Link></li>
-                <li><Link :href="route('wiki.show', 'workbench') + '#record-wizard'">Record Wizard</Link></li>
+                <li><Link :href="route('wiki.show', 'workbench') + '#record-wizard'">Sound Booth</Link></li>
             </ul>
 
             <li><Link :href="route('wiki.show', 'contributing')">Contributing</Link></li>
@@ -131,7 +131,7 @@ defineOptions({
             differ depending on the site context. (The <b>Search Genie</b> informs of you the action it will take by
             way of a tooltip.)</p>
         <p>By default, selecting a result will take you to its page in the Dictionary, Corpus or Deck Library. In the
-            <b>Deck Master</b>, the <b>Search Genie</b> is used to add Terms to a Deck. In the <b>Record Wizard</b>, it
+            <b>Deck Master</b>, the <b>Search Genie</b> is used to add Terms to a Deck. In the <b>Sound Booth</b>, it
             is used to add all Terms in a given Deck to the Queue of items to record.</p>
 
         <h2>Limitations</h2>

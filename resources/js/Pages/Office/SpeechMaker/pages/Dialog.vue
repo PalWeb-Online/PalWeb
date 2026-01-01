@@ -175,7 +175,7 @@ onMounted(() => {
                        @end="updatePosition()">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                        <span class="handle material-symbols-rounded">menu</span>
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
                         <div class="model-item-container sentence-item-container">
                             <div class="sentence-dialog-data">
                                 <div>

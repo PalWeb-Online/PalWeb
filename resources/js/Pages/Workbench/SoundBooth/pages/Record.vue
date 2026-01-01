@@ -1,6 +1,6 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
+import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
 import {useRecordStore} from '../stores/RecordStore';
 import {useQueueStore} from '../stores/QueueStore.js';
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
@@ -8,7 +8,7 @@ import WizardProgressBar from "../ui/WizardProgressBar.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 
-const RecordWizardStore = useRecordWizardStore();
+const SoundBoothStore = useSoundBoothStore();
 const RecordStore = useRecordStore();
 const QueueStore = useQueueStore();
 
@@ -52,12 +52,12 @@ onMounted(() => {
     <div class="window-section-head">
         <h2>Record</h2>
     </div>
-    <AppTip v-if="RecordWizardStore.data.errorMessage">
-        <p>{{ RecordWizardStore.data.errorMessage }}</p>
+    <AppTip v-if="SoundBoothStore.data.errorMessage">
+        <p>{{ SoundBoothStore.data.errorMessage }}</p>
     </AppTip>
 
     <div class="rw-page__record mwe-rws-audio"
-         :class="{ 'mwe-rws-recording': RecordWizardStore.data.isRecording }">
+         :class="{ 'mwe-rws-recording': SoundBoothStore.data.isRecording }">
         <section class="rw-record-queue">
             <div
                 v-for="(pronunciation, index) in QueueStore.queue"
@@ -104,7 +104,7 @@ onMounted(() => {
             </div>
 
             <!--           TODO: disable it if no word is selected -->
-            <div :class="`rw-actions ${RecordWizardStore.data.isUploading && 'disabled'}`">
+            <div :class="`rw-actions ${SoundBoothStore.data.isUploading && 'disabled'}`">
                 <div class="rw-actions-title">
                     Record
                 </div>
@@ -115,13 +115,13 @@ onMounted(() => {
                             <template v-if="canRecord">
                                 <img
                                     class="toggle-record"
-                                    :src="`/img/${!RecordWizardStore.data.isRecording ? 'record' : 'stop'}.svg`"
-                                    :alt="!RecordWizardStore.data.isRecording ? 'Record' : 'Stop'"
+                                    :src="`/img/${!SoundBoothStore.data.isRecording ? 'record' : 'stop'}.svg`"
+                                    :alt="!SoundBoothStore.data.isRecording ? 'Record' : 'Stop'"
                                     @click="RecordStore.toggleRecording"
                                 />
                                 <WizardVUMeter id="rw-vumeter"
                                                :value="RecordStore.vumeter"
-                                               :class="{ 'saturated': RecordStore.saturated, 'recording': RecordWizardStore.data.isRecording }"
+                                               :class="{ 'saturated': RecordStore.saturated, 'recording': SoundBoothStore.data.isRecording }"
                                 />
                             </template>
                         </template>
@@ -142,7 +142,7 @@ onMounted(() => {
                     </div>
 
                     <div class="rw-item-counter">
-                        {{ RecordStore.data.statusCount.stashed }} of {{ QueueStore.queue.length }}
+                        {{ RecordStore.data.statusCount.stashed }} / {{ QueueStore.queue.length }}
                     </div>
                 </div>
 
@@ -178,8 +178,8 @@ onMounted(() => {
                                 alt="Upload"
                                 @click="RecordStore.uploadRecords"
                             />
-                            <!--                    :disabled="RecordWizardStore.hasPendingRequests"-->
-                            <!--                            (RecordWizardStore.data.isUploading === false || RecordWizardStore.hasPendingRequests === true)-->
+                            <!--                    :disabled="SoundBoothStore.hasPendingRequests"-->
+                            <!--                            (SoundBoothStore.data.isUploading === false || SoundBoothStore.hasPendingRequests === true)-->
 
                             <WizardProgressBar
                                 :value="(100 * RecordStore.data.statusCount.done / Object.keys(RecordStore.data.records).length)"

@@ -11,18 +11,15 @@ use App\Models\Pronunciation;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 
-class RecordWizardController extends Controller
+class SoundBoothController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        View::share('pageTitle', 'Record Wizard');
-
         $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
 
-        return Inertia::render('Workbench/RecordWizard/RecordWizard', [
+        return Inertia::render('Workbench/SoundBooth/SoundBooth', [
             'section' => 'workbench',
             'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
@@ -71,11 +68,13 @@ class RecordWizardController extends Controller
             $queuedIds = collect($queued)->pluck('id');
 
             $deck = Deck::firstWhere('id', $deckId)->load(['terms.pronunciations']);
-            $pronunciations = [];
+            $pronunciationsToQueue = [];
 
             foreach ($deck->terms as $term) {
-                foreach ($term->pronunciations as $pronunciation) {
-                    if (count($queued) + count($pronunciations) >= 100) {
+                $termPronunciations = $term->pronunciations->load(['term']);
+
+                foreach ($termPronunciations as $pronunciation) {
+                    if (count($queued) + count($pronunciationsToQueue) >= 100) {
                         session()->flash('notification',
                             ['type' => 'success', 'message' => 'You\'ve reached the Queue max. Some items could not be added.']);
                         break 2;
@@ -90,16 +89,14 @@ class RecordWizardController extends Controller
                             ->exists();
 
                         if (! $alreadyRecorded) {
-                            $item = $pronunciation->toArray();
-                            $item['term'] = $pronunciation->term->term;
-                            $pronunciations[] = $item;
+                            $pronunciationsToQueue[] = $pronunciation;
                         }
                     }
                 }
             }
 
             return response()->json([
-                'items' => $pronunciations,
+                'items' => PronunciationResource::collection($pronunciationsToQueue),
             ]);
 
         } catch (\Exception $e) {

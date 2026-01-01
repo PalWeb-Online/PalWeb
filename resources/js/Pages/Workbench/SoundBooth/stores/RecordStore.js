@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {reactive, ref, watch} from 'vue';
-import {useRecordWizardStore} from "./RecordWizardStore.js";
+import {useSoundBoothStore} from "./SoundBoothStore.js";
 import {useQueueStore} from "./QueueStore.js";
 import Record from "../../../../utils/Record.js";
 import RequestQueue from "../../../../utils/RequestQueue.js";
@@ -8,6 +8,9 @@ import LinguaRecorder from "../../../../utils/LinguaRecorder.js";
 import {route} from "ziggy-js";
 
 export const useRecordStore = defineStore('RecordStore', () => {
+    const SoundBoothStore = useSoundBoothStore();
+    const QueueStore = useQueueStore();
+
     const data = reactive({
         records: {},
         status: {},
@@ -45,8 +48,6 @@ export const useRecordStore = defineStore('RecordStore', () => {
         }
     }, {deep: true});
 
-    const RecordWizardStore = useRecordWizardStore();
-    const QueueStore = useQueueStore();
     const requestQueue = new RequestQueue();
 
     const openRecorder = (audioParams) => {
@@ -65,7 +66,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         console.log('Recorder has been created!');
 
         recorder.value.on('ready', () => {
-            RecordWizardStore.data.hasPermission = true;
+            SoundBoothStore.data.hasPermission = true;
             console.log('Recorder is ready to go!');
         });
 
@@ -77,7 +78,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
         });
 
         recorder.value.on('stopped', (record) => {
-            if (RecordWizardStore.data.step === 'speaker') {
+            if (SoundBoothStore.data.step === 'speaker') {
                 testPlay(record);
             } else {
                 onDataAvailable(record);
@@ -96,13 +97,13 @@ export const useRecordStore = defineStore('RecordStore', () => {
         recorder.value.close();
         recorder.value = null;
 
-        RecordWizardStore.data.hasPermission = false;
+        SoundBoothStore.data.hasPermission = false;
         console.log('Recorder has been destroyed!');
     };
 
     const testRecord = () => {
-        if (RecordWizardStore.data.testState === 'ready') {
-            RecordWizardStore.data.testState = 'speak';
+        if (SoundBoothStore.data.testState === 'waiting') {
+            SoundBoothStore.data.testState = 'recording';
             recorder.value.start();
 
             timer.value = setTimeout(() => {
@@ -114,21 +115,21 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const testPlay = (record) => {
-        RecordWizardStore.data.testState = 'check';
+        SoundBoothStore.data.testState = 'listening';
         clearTimeout(timer.value);
 
         const audioNode = record.getAudioElement();
         audioNode.play();
 
         setTimeout(() => {
-            RecordWizardStore.data.testState = 'ready';
+            SoundBoothStore.data.testState = 'waiting';
         }, record.getDuration() * 1000 + 300);
     };
 
     const startRecording = () => {
         if (!recorder.value) return;
 
-        RecordWizardStore.data.isRecording = true;
+        SoundBoothStore.data.isRecording = true;
         recorder.value.start();
         console.log('Recorder is listening!');
     };
@@ -136,7 +137,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const stopRecording = () => {
         if (!recorder.value) return;
 
-        RecordWizardStore.data.isRecording = false;
+        SoundBoothStore.data.isRecording = false;
         vumeter.value = 0;
         saturated.value = false;
         recorder.value.cancel();
@@ -144,7 +145,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     };
 
     const toggleRecording = () => {
-        if (RecordWizardStore.data.isRecording) {
+        if (SoundBoothStore.data.isRecording) {
             stopRecording();
         } else {
             if (QueueStore.queue[QueueStore.selected]) startRecording();
@@ -163,7 +164,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const showError = (error) => {
         let message = errorMessageAssociation[error.name] || 'An unknown microphone error occurred.';
 
-        RecordWizardStore.data.errorMessage = message;
+        SoundBoothStore.data.errorMessage = message;
         console.error('Microphone Error:', error);
         alert(message);
     };
@@ -206,7 +207,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const setError = (item, error, message) => {
         if (!data.errors[item]) {
             data.errors[item] = error;
-            RecordWizardStore.data.errorMessage = message;
+            SoundBoothStore.data.errorMessage = message;
 
         } else {
             if (data.errors[item] !== false) {
@@ -223,7 +224,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
     const stashRecord = async (item, blob) => {
         if (!data.records[item.id]) {
             data.records[item.id] = new Record(item);
-            data.records[item.id].setSpeaker(RecordWizardStore.speaker);
+            data.records[item.id].setSpeaker(SoundBoothStore.speaker);
         }
 
         const record = data.records[item.id];
@@ -306,14 +307,14 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
         } catch (error) {
             console.error(`Error discarding recording with stashKey ${stashKey}:`, error);
-            RecordWizardStore.data.errorMessage = 'Record could not be discarded. Please try again.';
+            SoundBoothStore.data.errorMessage = 'Record could not be discarded. Please try again.';
             return false;
         }
     };
 
     const clearStash = async () => {
         try {
-            await axios.delete(route('stash.clear', RecordWizardStore.speaker.id));
+            await axios.delete(route('stash.clear', SoundBoothStore.speaker.id));
 
             Object.keys(data.status).forEach(key => {
                 if (data.status[key] === 'stashed') {
@@ -333,7 +334,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
 
     const uploadRecords = async () => {
         if (confirm('Are you sure you want to upload all of your recordings?')) {
-            RecordWizardStore.data.isUploading = true;
+            SoundBoothStore.data.isUploading = true;
 
             const stashedIds = Object.keys(data.status).filter(
                 (id) => data.status[id] === 'stashed'
@@ -374,7 +375,7 @@ export const useRecordStore = defineStore('RecordStore', () => {
                 });
             }
 
-            RecordWizardStore.data.isUploading = false;
+            SoundBoothStore.data.isUploading = false;
             console.log('All recordings uploaded successfully.');
         }
     };

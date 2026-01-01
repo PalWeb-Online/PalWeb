@@ -3,13 +3,13 @@ import {computed, reactive} from 'vue';
 import {useRecordStore} from "./RecordStore";
 import {useQueueStore} from "./QueueStore.js";
 
-export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
+export const useSoundBoothStore = defineStore('SoundBoothStore', () => {
     const QueueStore = useQueueStore();
     const RecordStore = useRecordStore();
 
     const data = reactive({
         step: 'speaker',
-        testState: 'ready',
+        testState: 'waiting',
         errorMessage: false,
         hasPermission: false,
         isRecording: false,
@@ -107,7 +107,7 @@ export const useRecordWizardStore = defineStore('RecordWizardStore', () => {
 
         if (currentStep?.canMoveNext()) {
             if (currentStep === 'record' && RecordStore.data.statusCount.stashed > 0) {
-                if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Record Wizard without uploading your stashed recordings, they will be deleted.')) return;
+                if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Sound Booth without uploading your stashed recordings, they will be deleted.')) return;
             }
 
             data.step = currentStep.nextStep;

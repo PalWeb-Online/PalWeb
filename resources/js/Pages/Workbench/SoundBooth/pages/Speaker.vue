@@ -1,6 +1,6 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import {useRecordWizardStore} from "../stores/RecordWizardStore.js";
+import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
 import {useRecordStore} from "../stores/RecordStore.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import {useForm} from "@inertiajs/vue3";
@@ -13,8 +13,14 @@ import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 
 const UserStore = useUserStore();
+const SoundBoothStore = useSoundBoothStore();
 const RecordStore = useRecordStore();
-const RecordWizardStore = useRecordWizardStore();
+
+const testStates = [
+    'waiting',
+    'recording',
+    'listening',
+];
 
 const dialects = ref([]);
 const locations = ref([]);
@@ -32,13 +38,13 @@ const levels = ref([
 ]);
 
 const form = useForm({
-    dialect_id: RecordWizardStore.speaker.dialect?.id || '',
-    location_id: RecordWizardStore.speaker.location?.id || '',
-    fluency: RecordWizardStore.speaker.fluency || '',
-    gender: RecordWizardStore.speaker.gender || '',
+    dialect_id: SoundBoothStore.speaker.dialect?.id || '',
+    location_id: SoundBoothStore.speaker.location?.id || '',
+    fluency: SoundBoothStore.speaker.fluency || '',
+    gender: SoundBoothStore.speaker.gender || '',
 })
 
-watch(() => RecordWizardStore.speaker, (newSpeaker) => {
+watch(() => SoundBoothStore.speaker, (newSpeaker) => {
     if (newSpeaker && newSpeaker.id !== null) {
         form.dialect_id = newSpeaker.dialect?.id || '';
         form.location_id = newSpeaker.location?.id || '';
@@ -62,7 +68,7 @@ const isValidRequest = computed(() => {
 
 const fetchSpeakerOptions = async () => {
     try {
-        const response = await axios.get('/workbench/record-wizard/options');
+        const response = await axios.get(route('speaker.options'));
 
         if (response.data) {
             dialects.value = response.data.dialects;
@@ -92,7 +98,7 @@ const saveSpeaker = async () => {
 
 onMounted(async () => {
     RecordStore.openRecorder(RecordStore.audioParams);
-    RecordWizardStore.data.testState = 'ready';
+    SoundBoothStore.data.testState = 'waiting';
     await fetchSpeakerOptions();
     await RecordStore.clearStash();
 });
@@ -102,7 +108,7 @@ onMounted(async () => {
     <div class="window-section-head">
         <h2>Speaker</h2>
 
-        <PopupWindow title="(RW) Speaker">
+        <PopupWindow title="Sound Booth (Speaker)">
             <div>What is my Speaker profile?</div>
             <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
                 create, so that others can know the dialect & other sociolinguistic information behind what they're
@@ -112,7 +118,7 @@ onMounted(async () => {
                 Private. You can change this at any time.</p>
             <div>What is my Dialect?</div>
             <p>Your Dialect is the variety of Palestinian Arabic that you speak, or that you intend to represent in
-                your Audios. In the Record Wizard, you will only be shown Pronunciation items valid for the selected
+                your Audios. In the Sound Booth, you will only be shown Pronunciation items valid for the selected
                 Dialect. PalWeb is an ongoing research project, so the list of Dialects is provisional. If what you
                 consider to be your Dialect does not appear on the list, simply choose the closest one. You may see
                 discrepancies between the items presented to you & the way you pronounce them; this is absolutely
@@ -147,7 +153,7 @@ onMounted(async () => {
         </PopupWindow>
     </div>
 
-    <template v-if="!RecordWizardStore.data.hasPermission">
+    <template v-if="!SoundBoothStore.data.hasPermission">
         <AppTip>
             <p>Allow the browser to use your mic in order to proceed.
                 <button @click="RecordStore.openRecorder(RecordStore.audioParams)">Click here to prompt again.</button>
@@ -157,7 +163,7 @@ onMounted(async () => {
 
     <template v-else>
         <AppTip>
-            <p v-if="!RecordWizardStore.speaker.id">It looks like you don't have a Speaker profile yet.
+            <p v-if="!SoundBoothStore.speaker.id">It looks like you don't have a Speaker profile yet.
                 Let's get you set up: fill out this form & click Create to get started. Refer to the Info
                 box in
                 the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
@@ -173,15 +179,15 @@ onMounted(async () => {
             <div class="user-item l">
                 <div class="rw-test-booth">
                     <Link :disabled="!!RecordStore.recorder"
-                          :href="RecordWizardStore.speaker.id ? route('speaker.show', RecordWizardStore.speaker.id) : '#'"
+                          :href="SoundBoothStore.speaker.id ? route('speaker.show', SoundBoothStore.speaker.id) : '#'"
                           class="user-avatar">
                         <img alt="Profile Picture"
                              :src="`/img/avatars/${ UserStore.user.private ? 'palweb01.jpg' : UserStore.user.avatar }`"/>
                     </Link>
                     <img
-                        v-if="RecordWizardStore.data.testState !== 'ready'"
+                        v-if="SoundBoothStore.data.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
-                        :src="`/img/${RecordWizardStore.data.testState === 'speak' ? 'speak' : 'listen'}.svg`"
+                        :src="`/img/${SoundBoothStore.data.testState === 'recording' ? 'speak' : 'listen'}.svg`"
                         alt="Prompt"
                     />
                 </div>
@@ -192,7 +198,7 @@ onMounted(async () => {
                         <div class="user-name-en">
                             <div>
                                 {{
-                                    UserStore.user.private ? 'Speaker #' + RecordWizardStore.speaker.id : UserStore.user.name
+                                    UserStore.user.private ? 'Speaker #' + SoundBoothStore.speaker.id : UserStore.user.name
                                 }}
                             </div>
                             <div>
@@ -214,7 +220,7 @@ onMounted(async () => {
                             <WizardDropdown
                                 v-model="form.dialect_id"
                                 :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                                :disabled="!!RecordWizardStore.speaker.id"
+                                :disabled="!!SoundBoothStore.speaker.id"
                             />
                         </div>
                         <div class="speaker-data-row">
@@ -255,10 +261,10 @@ onMounted(async () => {
                     <div>How does the audio sound?</div>
                 </div>
                 <img
-                    :class="`rw-test-button ${RecordWizardStore.data.testState !== 'ready' ? 'disabled' : ''}`"
+                    :class="`rw-test-button ${SoundBoothStore.data.testState !== 'waiting' ? 'disabled' : ''}`"
                     :src="`/img/${
-                                                RecordWizardStore.data.testState === 'speak' ? 'record' :
-                                                RecordWizardStore.data.testState === 'check' ? 'stop' : 'play'
+                                                SoundBoothStore.data.testState === 'recording' ? 'record' :
+                                                SoundBoothStore.data.testState === 'listening' ? 'stop' : 'play'
                                             }.svg`"
                     alt="Test"
                     @click="RecordStore.testRecord"

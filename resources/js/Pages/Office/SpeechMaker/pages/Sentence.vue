@@ -267,7 +267,7 @@ watch(
                             </div>
                         </div>
                     </div>
-                    <span class="handle material-symbols-rounded">menu</span>
+                    <span class="handle material-symbols-rounded">drag_indicator</span>
                 </div>
             </template>
         </draggable>

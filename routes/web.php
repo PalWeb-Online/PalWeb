@@ -23,7 +23,7 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Workbench\DeckMasterController;
-use App\Http\Controllers\Workbench\RecordWizardController;
+use App\Http\Controllers\Workbench\SoundBoothController;
 use App\Http\Resources\AudioResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
@@ -273,16 +273,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/record-wizard')->group(function () {
-            Route::controller(RecordWizardController::class)->group(function () {
-                Route::get('/', 'index')->name('record-wizard.index');
-                Route::post('/pronunciations', 'getAutoItems')->name('record-wizard.get.auto');
-                Route::post('/decks/{deck}', 'getDeckItems')->name('record-wizard.get.deck');
+        Route::prefix('/sound-booth')->group(function () {
+            Route::controller(SoundBoothController::class)->group(function () {
+                Route::get('/', 'index')->name('sound-booth.index');
+                Route::post('/pronunciations', 'getAutoItems')->name('sound-booth.get.auto');
+                Route::post('/decks/{deck}', 'getDeckItems')->name('sound-booth.get.deck');
             });
             Route::controller(SpeakerController::class)->group(function () {
                 Route::post('/speaker', 'store')->name('speaker.store');
-                Route::get('/speaker', 'getSpeaker');
-                Route::get('/options', 'getSpeakerOptions');
+                Route::get('/options', 'getSpeakerOptions')->name('speaker.options');
             });
         });
     });

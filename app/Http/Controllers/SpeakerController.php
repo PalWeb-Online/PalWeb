@@ -51,7 +51,7 @@ class SpeakerController extends Controller
         session()->flash('notification',
             ['type' => 'success', 'message' => 'Your Speaker profile has been saved!']);
 
-        return to_route('record-wizard.index');
+        return to_route('sound-booth.index');
     }
 
     public function getSpeakerOptions(): JsonResponse

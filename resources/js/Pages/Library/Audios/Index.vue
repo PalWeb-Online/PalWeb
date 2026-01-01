@@ -62,7 +62,7 @@ function updateFilter({filter, value}) {
             <div class="window-header">
                 <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
                 <div class="window-header-url">www.palweb.app/library/audios</div>
-                <Link v-if="UserStore.isUser" :href="route('record-wizard.index')" class="material-symbols-rounded">add</Link>
+                <Link v-if="UserStore.isUser" :href="route('sound-booth.index')" class="material-symbols-rounded">add</Link>
             </div>
             <div class="window-section-head">
                 <h1>audio library</h1>
