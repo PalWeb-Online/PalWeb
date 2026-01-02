@@ -103,7 +103,7 @@ class Term extends Model
         ];
     }
 
-    public function getSingleGlossSentence(): Collection
+    public function loadSingleGlossSentence(): void
     {
         $sentenceData = DB::table('sentence_term')
             ->where('sentence_term.term_id', $this->id)
@@ -119,9 +119,11 @@ class Term extends Model
             $sentenceCounts[$row->gloss_id] = $row->sentences_count;
         });
 
-        $sentences = Sentence::whereIn('id', $sentenceIds->values())->get();
+        $sentences = Sentence::whereIn('id', $sentenceIds->values())
+            ->with(['dialog'])
+            ->get();
 
-        return $sentences->groupBy(function ($sentence) use ($sentenceIds) {
+        $this->gloss_sentences = $sentences->groupBy(function ($sentence) use ($sentenceIds) {
             return $sentenceIds->flip()[$sentence->id];
         })->map(function ($group, $glossId) use ($sentenceCounts) {
             return [

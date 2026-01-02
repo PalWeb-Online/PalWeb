@@ -123,10 +123,9 @@ class TermController extends Controller
                         $query->limit(10);
                     },
                 ])
-                ->loadCount(['pronunciations']);
+                ->loadCount(['pronunciations'])
+                ->loadSingleGlossSentence();
             //            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
-
-            $model->gloss_sentences = $model->getSingleGlossSentence();
         }
 
         return Inertia::render('Library/Terms/Show', [

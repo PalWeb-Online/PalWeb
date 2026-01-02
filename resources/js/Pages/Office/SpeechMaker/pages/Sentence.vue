@@ -56,6 +56,7 @@ const insertTerm = (term) => {
             sent_term: term.term,
             sent_translit: term.translit,
             position: '',
+            toggleable: false,
         }
     };
 
@@ -73,6 +74,7 @@ const addTerm = () => {
             sent_term: '',
             sent_translit: '',
             position: '',
+            toggleable: false,
         }
     };
 
@@ -228,8 +230,14 @@ watch(
             <div class="model-item sentence-item">
                 <div class="model-item-content">
                     <div v-if="sentence.terms.length > 0" class="sentence-term" v-for="term in sentence.terms">
-                        <div>{{ term.sentencePivot.sent_term }}</div>
-                        <div>{{ term.sentencePivot.sent_translit }}</div>
+                        <template v-if="!term.sentencePivot.toggleable">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div>{{ term.sentencePivot.sent_translit }}</div>
+                        </template>
+                        <template v-else>
+                            <div>ــــــــ</div>
+                            <div>[]</div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -239,6 +247,11 @@ watch(
         <div class="window-section-head">
             <h2>terms</h2>
         </div>
+        <AppTip v-if="sentence.dialog.id">
+            <p>Since this Sentence appears in a Dialog, you may select the Terms that should be toggled off if the
+                Student wants to use the Dialog for conversation practice. (The Terms will be visible under all other
+                circumstances.)</p>
+        </AppTip>
         <draggable :list="termsList" itemKey="uuid" handle=".handle"
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
@@ -246,6 +259,10 @@ watch(
                     <span class="delete material-symbols-rounded"
                           v-show="termsList.length > 0"
                           @click="removeTerm(index)">delete</span>
+                    <span v-if="sentence.dialog.id" class="material-symbols-rounded"
+                          @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
+                        {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}
+                    </span>
                     <div class="model-item-container term-item-container">
                         <div class="model-item term-item">
                             <div class="model-item-content">

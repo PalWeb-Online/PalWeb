@@ -24,10 +24,17 @@ class SentenceResource extends JsonResource
             'sentence' => $this->sentence,
             'translit' => $this->translit,
             'trans' => $this->trans,
-            'dialog' => $this->whenLoaded('dialog', [
-                'id' => $this->dialog?->id,
-                'title' => $this->dialog?->title,
-            ]),
+            'dialog' => $this->whenLoaded('dialog', function () use ($request) {
+                if ($request->user()?->can('view', $this->dialog)) {
+                    return [
+                        'id' => $this->dialog?->id,
+                        'title' => $this->dialog?->title,
+                    ];
+
+                } else {
+                    return null;
+                }
+            }),
             'speaker' => $this->speaker,
             'position' => $this->position,
             'audio' => $this->getAudio(),

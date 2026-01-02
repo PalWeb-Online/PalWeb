@@ -96,6 +96,8 @@ class SentenceController extends Controller
         //        View::share('pageDescription',
         //            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
 
+        $sentence->load(['dialog']);
+
         return Inertia::render('Library/Sentences/Show', [
             'section' => 'library',
             'sentence' => new SentenceResource($sentence),
@@ -154,6 +156,7 @@ class SentenceController extends Controller
                 'sent_term' => $termData['sentencePivot']['sent_term'],
                 'sent_translit' => $termData['sentencePivot']['sent_translit'],
                 'position' => $termData['sentencePivot']['position'],
+                'toggleable' => $termData['sentencePivot']['toggleable'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

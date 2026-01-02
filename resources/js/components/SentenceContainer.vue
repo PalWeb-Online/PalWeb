@@ -4,9 +4,6 @@ import {useSentence} from "../composables/Sentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import TermItem from "./TermItem.vue";
-import {useUserStore} from "../stores/UserStore.js";
-
-const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -16,7 +13,7 @@ const props = defineProps({
     },
 });
 
-const {sentence, isLoading, isPlaying, playAudio} = useSentence(props);
+const {sentence, isLoading} = useSentence(props);
 </script>
 
 <template>

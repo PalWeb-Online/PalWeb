@@ -85,6 +85,7 @@ class Sentence extends Model
                     'sent_term' => $sentenceTerm->sent_term,
                     'sent_translit' => $sentenceTerm->sent_translit,
                     'position' => $sentenceTerm->position,
+                    'toggleable' => $sentenceTerm->toggleable,
                 ];
 
                 return $termResource;
@@ -95,6 +96,7 @@ class Sentence extends Model
                     'sent_term' => $sentenceTerm->sent_term,
                     'sent_translit' => $sentenceTerm->sent_translit,
                     'position' => $sentenceTerm->position,
+                    'toggleable' => $sentenceTerm->toggleable,
                 ],
             ];
         })->values()->toArray();

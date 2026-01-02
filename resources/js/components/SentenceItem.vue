@@ -16,6 +16,8 @@ const props = defineProps({
         default: null,
     },
     currentTerm: Number,
+    showTerms: {type: Boolean, default: true},
+    showTranscription: {type: Boolean, default: false},
     speaker: Boolean,
     dialog: Boolean,
 });
@@ -62,13 +64,20 @@ const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(p
                               :target="isCurrentTerm(term) ? '' : '_blank'"
                               :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
                             <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
                         </Link>
+                        <div v-else-if="!showTerms" class="sentence-term">
+                            <div>ــــــــ</div>
+                            <div v-if="showTranscription">[]</div>
+                        </div>
                         <div v-else class="sentence-term">
                             <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
                         </div>
                     </template>
                     <div v-else class="sentence-term" style="background: none">
                         <div>{{ sentence.sentence }}</div>
+                        <div v-if="showTranscription">{{ sentence.translit }}</div>
                     </div>
                 </div>
                 <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
@@ -78,7 +87,7 @@ const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(p
                     </button>
                 </div>
             </div>
-            <div class="model-item-description">
+            <div v-if="showTerms" class="model-item-description">
                 {{ sentence.trans }}
             </div>
         </div>

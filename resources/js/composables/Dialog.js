@@ -4,25 +4,52 @@ import {route} from "ziggy-js";
 export function useDialog(props) {
     const dialog = reactive({});
     const isLoading = ref(true);
+    const isLoadingTerms = ref(true);
 
-    const fetchDialog = async () => {
-        if (props.model) {
-            dialog.value = props.model;
-            isLoading.value = false;
+    const initDialog = (model) => {
+        if (!model) return;
+        Object.assign(dialog, props.model);
 
-        } else {
-            try {
-                const response = await axios.get(route('dialogs.get', props.id));
-                dialog.value = response.data.data;
-                isLoading.value = false;
+        fetchSentenceTerms();
+    }
 
-            } catch (error) {
-                console.error("Error fetching Dialog:", error);
-            }
+    onMounted(() => {
+        if (props?.model) initDialog(props.model);
+        isLoading.value = false;
+    });
+
+    const fetchSentenceTerms = async () => {
+        if (!dialog || !dialog.sentences) {
+            isLoadingTerms.value = false;
+            return;
+        }
+
+        const ids = new Set();
+        dialog.sentences.forEach(sentence => {
+            ids.add(sentence.id);
+        });
+
+        if (ids.size === 0) {
+            isLoadingTerms.value = false;
+            return;
+        }
+
+        try {
+            const response = await axios.post(route('sentences.get-many'), {
+                ids: Array.from(ids)
+            });
+
+            dialog.sentences.forEach(sentence => {
+                sentence.terms = response.data[sentence.id].terms
+            })
+
+        } catch (error) {
+            console.error("Failed to fetch Dialog Sentences", error);
+
+        } finally {
+            isLoadingTerms.value = false;
         }
     }
 
-    onMounted(fetchDialog);
-
-    return {dialog, isLoading, fetchDialog};
+    return {dialog, isLoading, isLoadingTerms};
 }

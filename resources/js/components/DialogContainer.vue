@@ -4,6 +4,9 @@ import SentenceItem from "./SentenceItem.vue";
 import DialogActions from "./Actions/DialogActions.vue";
 import {route} from "ziggy-js";
 import AppTip from "./AppTip.vue";
+import {ref} from "vue";
+import ToggleSingle from "./ToggleSingle.vue";
+import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     model: {
@@ -13,7 +16,10 @@ const props = defineProps({
     },
 });
 
-const {dialog, isLoading} = useDialog(props);
+const showTerms = ref(true);
+const showTranscription = ref(false);
+
+const {dialog, isLoading, isLoadingTerms} = useDialog(props);
 </script>
 
 <template>
@@ -47,9 +53,17 @@ const {dialog, isLoading} = useDialog(props);
             <div class="window-section-head">
                 <h2>transcript</h2>
             </div>
+            <ToggleSingle v-model="showTerms" label="Show Terms"/>
+            <ToggleSingle v-model="showTranscription" label="Show Transcription"/>
+
+            <LoadingSpinner v-if="isLoadingTerms"/>
+
             <div class="dialog-body">
                 <template v-for="sentence in dialog.sentences">
-                    <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker/>
+                    <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker
+                                  :showTerms="showTerms"
+                                  :showTranscription="showTranscription"
+                    />
                 </template>
             </div>
         </div>

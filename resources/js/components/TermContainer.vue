@@ -13,9 +13,6 @@ import ChartInflection from "./Charts/ChartInflection.vue";
 import ChartConjugation from "./Charts/ChartConjugation.vue";
 import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
-import {useUserStore} from "../stores/UserStore.js";
-
-const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
