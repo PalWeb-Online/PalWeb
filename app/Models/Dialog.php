@@ -20,6 +20,7 @@ class Dialog extends Model
         'title',
         'description',
         'media',
+        'published',
     ];
 
     protected static function booted(): void

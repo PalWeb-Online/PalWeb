@@ -24,6 +24,7 @@ const dialog = useForm({
     description: props.dialog?.description || '',
     media: props.dialog?.media || '',
     sentences: props.dialog?.sentences || [],
+    published: props.dialog?.published || false,
 });
 
 const isSaving = ref(false);
@@ -133,6 +134,9 @@ onMounted(() => {
     <div class="window-container">
         <div class="window-header">
             <Link :href="route('speech-maker.index')" class="material-symbols-rounded">arrow_back</Link>
+            <button @click="dialog.published = !dialog.published" class="material-symbols-rounded">
+                {{ !dialog.published ? 'lock' : 'public' }}
+            </button>
             <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
             <button class="material-symbols-rounded"
                     @click="router.get(route('speech-maker.dialog-sentence', dialog.id))" :disabled="!dialog.id">

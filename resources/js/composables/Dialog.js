@@ -1,22 +1,20 @@
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 
 export function useDialog(props) {
-    const data = reactive({
-        dialog: {},
-        isLoading: true
-    });
+    const dialog = reactive({});
+    const isLoading = ref(true);
 
     const fetchDialog = async () => {
         if (props.model) {
-            data.dialog = props.model;
-            data.isLoading = false;
+            dialog.value = props.model;
+            isLoading.value = false;
 
         } else {
             try {
                 const response = await axios.get(route('dialogs.get', props.id));
-                data.dialog = response.data.data;
-                data.isLoading = false;
+                dialog.value = response.data.data;
+                isLoading.value = false;
 
             } catch (error) {
                 console.error("Error fetching Dialog:", error);
@@ -26,5 +24,5 @@ export function useDialog(props) {
 
     onMounted(fetchDialog);
 
-    return {data};
+    return {dialog, isLoading, fetchDialog};
 }
