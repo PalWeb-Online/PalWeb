@@ -15,7 +15,7 @@ const {
 
 <template>
     <div class="block--exercises">
-        <div class="featured-title l">{{ block.exerciseType }}</div>
+        <h2>{{ block.exerciseType }}</h2>
         <p>Answer the prompt with a complete sentence.</p>
         <div v-if="block.examples" v-for="ex in block.examples" class="dialog-body">
             <div class="featured-title s">example</div>

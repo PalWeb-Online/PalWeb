@@ -195,14 +195,25 @@ const publishIssues = computed(() => {
         });
     });
 
-    if (!lesson.deck_id) issues.push('Lesson must have an assigned Deck.');
-    if (!lesson.dialog_id) issues.push('Lesson must have an assigned Dialog.');
+    if (!props.lesson.deck?.id || !lesson.deck_id) {
+        issues.push('Lesson must have an assigned Deck.');
+
+    } else if (props.lesson.deck.private) {
+        issues.push('The Deck must be public before the Lesson can be published.');
+    }
+
+    if (!props.lesson.dialog?.id || !lesson.dialog_id) {
+        issues.push('Lesson must have an assigned Dialog.');
+
+    } else if (!props.lesson.dialog.published) {
+        issues.push('The Dialog must be published before the Lesson can be published.');
+    }
 
     if (!props.lesson.activity?.id) {
-        issues.push('Lesson must have an associated Activity.');
+        issues.push('Lesson must have an assigned Activity.');
 
     } else if (!props.lesson.activity.published) {
-        issues.push('The associated Activity must be published before the Lesson can be published.');
+        issues.push('The Activity must be published before the Lesson can be published.');
     }
 
     return issues;

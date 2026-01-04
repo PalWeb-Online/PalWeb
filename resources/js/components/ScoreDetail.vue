@@ -26,7 +26,7 @@ const scoreMessage = computed(() => {
 });
 </script>
 <template>
-    <div class="score-metadata">
+    <div class="score-metadata" v-if="score.id || score.scorable_type === 'deck'">
         <div class="score-metadata-row" v-if="score.scorable_type === 'deck'">
             <div>
                 <span style="font-weight: 700">Quiz Type</span>

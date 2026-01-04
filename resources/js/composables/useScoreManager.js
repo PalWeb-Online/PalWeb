@@ -4,7 +4,7 @@ import {route} from 'ziggy-js';
 
 export function useScoreManager() {
     const score = reactive({
-        scorableType: '',
+        scorable_type: '',
         settings: {},
         score: 0,
         results: [],
@@ -17,18 +17,23 @@ export function useScoreManager() {
         maximumFractionDigits: 0,
     });
 
-    const getScoreStats = (scoreObject) => {
-        if (!scoreObject || !scoreObject.results?.length) {
-            return { correct: 0, total: 0, formatted: '0%' };
-        }
+    const flattenExercises = (scoreObject) => {
+        if (!scoreObject?.results?.length) return [];
 
-        let exercises;
-        if (scoreObject.scorable_type === 'activity' || scoreObject.scorableType === 'activity') {
-            exercises = scoreObject.results
+        if (scoreObject.scorable_type === 'activity') {
+            return scoreObject.results
                 .filter(b => b.type === 'exercises')
                 .flatMap(b => b.items);
-        } else {
-            exercises = scoreObject.results;
+        }
+
+        return scoreObject.results;
+    };
+
+    const getScoreStats = (scoreObject) => {
+        const exercises = flattenExercises(scoreObject);
+
+        if (exercises.length === 0) {
+            return { correct: 0, total: 0, formatted: '0%' };
         }
 
         const correct = exercises.reduce((acc, item) => {
@@ -50,7 +55,7 @@ export function useScoreManager() {
     };
 
     const markCorrect = (id) => {
-        const exercises = getScoreStats(score);
+        const exercises = flattenExercises(score);
         const result = exercises.find(r => r.id === id);
 
         if (result) {
@@ -73,7 +78,7 @@ export function useScoreManager() {
 
     const saveScore = async (scorableId, options = {}) => {
         router.post(route('scores.store'), {
-            scorable_type: score.scorableType,
+            scorable_type: score.scorable_type,
             scorable_id: scorableId,
             settings: score.settings,
             score: score.score,
@@ -91,7 +96,7 @@ export function useScoreManager() {
     };
 
     const resetScore = () => {
-        score.scorableType = null;
+        score.scorable_type = null;
         score.settings = {};
         score.score = 0;
         score.results = [];

@@ -19,7 +19,7 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     };
 
     const startActivity = () => {
-        scoreManager.score.scorableType = 'activity';
+        scoreManager.score.scorable_type = 'activity';
 
         exercises.value = data.activity.document.blocks
             .filter(b => b.type === 'exercises')
@@ -39,6 +39,9 @@ export const useActivityStore = defineStore('ActivityStore', () => {
                     item.response = userExercise.response;
 
                     if (block.exerciseType === 'match') {
+                        // todo: hacky solution so that match block items have a `correct` key
+                        item.correct = userExercise.response.length === item.pairs.length;
+
                         item.pairs.forEach(pair => {
                             pair.correct = userExercise.response.some(r =>
                                 r.start === pair.start && r.end === pair.end

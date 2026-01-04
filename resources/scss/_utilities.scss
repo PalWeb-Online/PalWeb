@@ -646,23 +646,25 @@ h3 {
     align-items: center;
     gap: 1.6rem;
 
-    .handle {
+    .material-symbols-rounded {
         color: var(--color-accent-medium);
+        user-select: none;
+    }
+
+    .toggleable {
+        color: var(--color-medium-primary);
+    }
+
+    .handle {
         cursor: grab;
     }
 
     .delete {
-        color: var(--color-accent-medium);
         cursor: pointer;
     }
 
     .term-item-container {
         grid-template-columns: 1fr
-    }
-
-    .trash {
-        cursor: pointer;
-        width: 2.0rem;
     }
 }
 

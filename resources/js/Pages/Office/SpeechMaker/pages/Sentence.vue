@@ -257,9 +257,9 @@ watch(
             <template #item="{ element, index }">
                 <div class="draggable-item">
                     <span class="delete material-symbols-rounded"
-                          v-show="termsList.length > 0"
                           @click="removeTerm(index)">delete</span>
                     <span v-if="sentence.dialog.id" class="material-symbols-rounded"
+                          :class="{toggleable: element.sentencePivot.toggleable}"
                           @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
                         {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}
                     </span>

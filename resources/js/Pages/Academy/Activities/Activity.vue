@@ -26,6 +26,8 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const isValidRequest = computed(() => {
+    if (!ActivityStore.exercises.length) return;
+
     return !ActivityStore.exercises.some(e => {
         if (e.response === null || e.response === undefined) return true;
 
@@ -56,21 +58,24 @@ watch(() => props.activity, (newActivity) => {
 
 <template>
     <Head title="Activity"/>
+    <div class="activity-head" v-if="ActivityStore.data.step === 'activity'">
+        <Link class="feature-callout" style="justify-self: center"
+              :href="route('lessons.show', activity.lesson.global_position)">
+            Exit to Lesson
+        </Link>
+        <h1>activity</h1>
+    </div>
     <div id="app-body">
-        <div id="dm-study">
-            <template v-if="ActivityStore.data.step === 'activity'">
-                <Link :href="route('lessons.show', activity.lesson.global_position)" style="margin-block-end: 3.2rem"><- Exit Activity</Link>
-                <div class="featured-title l">activity</div>
-
-                <ActivityBlocksWrapper v-if="!ActivityStore.data.isLoading" :blocks="ActivityStore.data.activity.document.blocks"/>
-
-                <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="ActivityStore.submitActivity">
-                    check
-                </button>
-            </template>
-
-            <Results v-if="ActivityStore.data.step === 'results'"/>
+        <div class="activity-container" v-if="ActivityStore.data.step === 'activity'">
+            <ActivityBlocksWrapper v-if="!ActivityStore.data.isLoading"
+                                   :blocks="ActivityStore.data.activity.document.blocks"/>
+            <button class="material-symbols-rounded" :disabled="!isValidRequest"
+                    @click="ActivityStore.submitActivity">
+                check
+            </button>
         </div>
+
+        <Results v-if="ActivityStore.data.step === 'results'"/>
     </div>
 
     <ModalWrapper v-model="showAlert">

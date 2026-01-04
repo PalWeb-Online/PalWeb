@@ -36,7 +36,7 @@ onMounted(() => {
     }
 });
 
-const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(props);
+const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 </script>
 
 <template>
@@ -52,7 +52,6 @@ const {sentence, isLoading, isPlaying, isCurrentTerm, playAudio} = useSentence(p
                 <div v-if="speaker">
                     <div>speaker</div>
                     <div>{{ sentence.speaker }}</div>
-                    <!--                    <img class="play" src="/img/audio.svg" alt="play" @click="playAudio"/>-->
                 </div>
             </div>
             <div class="model-item sentence-item">

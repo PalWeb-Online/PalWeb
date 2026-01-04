@@ -174,38 +174,36 @@ onMounted(() => {
         <div class="window-section-head">
             <h2>transcript</h2>
         </div>
-        <div class="dialog-body">
-            <draggable class="draggable" :list="dialog.sentences" itemKey="id" handle=".handle"
-                       @end="updatePosition()">
-                <template #item="{ element, index }">
-                    <div class="draggable-item">
-                        <span class="handle material-symbols-rounded">drag_indicator</span>
-                        <div class="model-item-container sentence-item-container">
-                            <div class="sentence-dialog-data">
-                                <div>
-                                    <div>speaker</div>
-                                    <input v-model="element.speaker" placeholder="ناطق"/>
-                                </div>
-                            </div>
-                            <div class="model-item sentence-item">
-                                <div class="model-item-content">
-                                    <div class="sentence-term" style="background: none">
-                                        <div>{{ element.sentence }}</div>
-                                    </div>
-                                </div>
-                                <SentenceActions v-if="element.id" :model="element"/>
-                            </div>
-                            <div class="model-item-description">
-                                {{ element.trans }}
+        <draggable class="dialog-body draggable" :list="dialog.sentences" itemKey="id" handle=".handle"
+                   @end="updatePosition()">
+            <template #item="{ element, index }">
+                <div class="draggable-item">
+                    <span class="delete material-symbols-rounded"
+                          v-show="dialog.sentences.length > 0"
+                          @click="removeSentence(index)">delete</span>
+                    <div class="model-item-container sentence-item-container">
+                        <div class="sentence-dialog-data">
+                            <div>
+                                <div>speaker</div>
+                                <input v-model="element.speaker" placeholder="ناطق"/>
                             </div>
                         </div>
-                        <span class="delete material-symbols-rounded"
-                              v-show="dialog.sentences.length > 0"
-                              @click="removeSentence(index)">delete</span>
+                        <div class="model-item sentence-item">
+                            <div class="model-item-content">
+                                <div class="sentence-term" style="background: none">
+                                    <div>{{ element.sentence }}</div>
+                                </div>
+                            </div>
+                            <SentenceActions v-if="element.id" :model="element"/>
+                        </div>
+                        <div class="model-item-description">
+                            {{ element.trans }}
+                        </div>
                     </div>
-                </template>
-            </draggable>
-        </div>
+                    <span class="handle material-symbols-rounded">drag_indicator</span>
+                </div>
+            </template>
+        </draggable>
     </div>
 
     <ModalWrapper v-model="showAlert">

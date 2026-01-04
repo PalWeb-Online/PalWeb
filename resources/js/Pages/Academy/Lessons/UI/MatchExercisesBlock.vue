@@ -194,7 +194,7 @@ const getMatchState = (itemId, type, value) => {
 
 <template>
     <div class="block--exercises" ref="blockRef">
-        <div class="featured-title l">{{ block.exerciseType }}</div>
+        <h2>{{ block.exerciseType }}</h2>
         <p>Match the two columns based on the prompt.</p>
         <template v-for="item in processedItems" :key="item.id">
             <div v-if="item.images.length" class="exercise-images">

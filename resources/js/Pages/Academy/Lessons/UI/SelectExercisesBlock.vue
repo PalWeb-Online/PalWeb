@@ -22,7 +22,7 @@ const selectOption = (itemId, optionId) => {
 
 <template>
     <div class="block--exercises">
-        <div class="featured-title l">{{ block.exerciseType }}</div>
+        <h2>{{ block.exerciseType }}</h2>
         <p>Select the most appropriate answer in response to the prompt.</p>
         <template v-for="item in processedItems">
             <div class="exercise--select">

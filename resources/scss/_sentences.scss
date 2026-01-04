@@ -129,6 +129,10 @@
     }
 }
 
+.model-item.sentence-item {
+    height: auto;
+}
+
 .sentence-item .model-item-content {
     background: white;
     display: flex;
@@ -203,8 +207,9 @@
         max-width: 100%;
     }
 
-    .draggable, .draggable-item {
-        justify-items: end;
+    .draggable-item {
+        max-width: 100%;
+        min-width: 0;
     }
 
     & + & {

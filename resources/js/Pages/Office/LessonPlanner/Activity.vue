@@ -208,7 +208,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             <div class="featured-title l">
                 Lesson {{ props.lesson.global_position }}: Activity
             </div>
-            <AppTip v-if="lesson.published">
+            <AppTip v-if="lesson.published && activity.published">
                 <p><b>WARNING:</b> You are editing an Activity for a published Lesson. If you intend to revert it to a
                     draft, <b>you must revert the Lesson to a draft first</b>. Otherwise, if you make any changes to the
                     Activity now that would render it unpublishable, you will not be able to save those changes.</p>
