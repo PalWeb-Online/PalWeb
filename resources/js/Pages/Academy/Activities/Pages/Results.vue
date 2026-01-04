@@ -80,7 +80,9 @@ const handleSave = () => {
         </div>
     </div>
 
-    <ActivityBlocksWrapper :blocks="ActivityStore.data.activity.document.blocks"/>
+    <div class="activity-container">
+        <ActivityBlocksWrapper :blocks="ActivityStore.data.activity.document.blocks"/>
+    </div>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard

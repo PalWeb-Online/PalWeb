@@ -50,14 +50,25 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
                 <iframe :src="dialog.media" allowfullscreen></iframe>
             </template>
 
+            <template v-if="!isLoadingTerms">
+                <div class="window-section-head">
+                    <h2>options</h2>
+                </div>
+                <div class="settings-wrapper">
+                    <ToggleSingle v-model="showTerms" label="Show Terms"/>
+                    <ToggleSingle v-model="showTranscription" label="Show Transcription"/>
+                </div>
+            </template>
+
             <div class="window-section-head">
                 <h2>transcript</h2>
             </div>
-            <ToggleSingle v-model="showTerms" label="Show Terms"/>
-            <ToggleSingle v-model="showTranscription" label="Show Transcription"/>
-
-            <LoadingSpinner v-if="isLoadingTerms"/>
-
+            <div class="loading-dialog" v-if="isLoadingTerms">
+                <AppTip>
+                    <p>Please wait for a moment while we load the data for all the Terms in every Sentence.</p>
+                </AppTip>
+                <LoadingSpinner/>
+            </div>
             <div class="dialog-body">
                 <template v-for="sentence in dialog.sentences">
                     <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker

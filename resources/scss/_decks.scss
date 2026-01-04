@@ -260,22 +260,18 @@
 
 }
 
-#dm-study {
-    display: grid;
-    width: min(100%, 96rem);
-    justify-items: center;
-
-    .carousel {
-        width: 100%;
-        margin-block: 3.2rem;
-    }
+.carousel.flashcard-carousel {
+    width: 100%;
+    margin-block: 3.2rem;
+    gap: 3.2rem;
 
     .carousel__pagination {
+        justify-self: center;
+        width: min(96rem, 100%);
         align-items: center;
-        margin-block: 0 !important;
         gap: 0.4rem;
         flex-wrap: wrap;
-        margin-inline: 1.6rem;
+        margin: 3.2rem 1.6rem 0;
     }
 
     .carousel__pagination-item {
@@ -291,36 +287,18 @@
 
     .carousel__pagination-button::after {
         width: 100% !important;
-        height: 0.4rem !important;
+        height: 0.6rem !important;
         border-radius: 3.2rem !important;
-        background: white !important;
+        background: var(--color-accent-light) !important;
     }
 
     .carousel__pagination-button--active::after {
-        height: 0.8rem !important;
-        background: var(--color-medium-secondary) !important;
+        height: 1.2rem !important;
+        background: var(--color-medium-primary) !important;
     }
 
-    .carousel-index {
-        color: var(--color-dark-primary);
-        font-weight: 700;
-        font-size: 2.4rem;
-        font-family: $headFont;
-    }
-
-    & > button {
-        width: 6.4rem;
-        height: 6.4rem;
-        font-size: 4.8rem;
-        border-radius: 50%;
-        color: white;
-        background: var(--color-medium-secondary);
-        margin-block: 6.4rem;
-
-        &[disabled] {
-            opacity: 50%;
-            cursor: not-allowed;
-        }
+    .featured-title {
+        text-transform: none;
     }
 }
 

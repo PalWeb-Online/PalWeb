@@ -41,14 +41,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 Select the Term that best fits the blank in the Sentence. <b>Terms are listed in their Dictionary form,
                 not necessarily as they would be expected to appear in the Sentence.</b></p>
         </AppTip>
-        <div class="quiz-settings-wrapper" style="justify-content: space-around">
+        <div class="settings-wrapper" style="justify-content: space-around">
             <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
             <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'glosses'"
                           v-model="showInflections" label="Show Inflections"/>
         </div>
     </QuizzerWindow>
 
-    <div class="quiz-container" v-if="!DeckStudyStore.data.isLoading">
+    <LoadingSpinner v-if="DeckStudyStore.data.isLoading"/>
+    <div class="quiz-container" v-else>
         <QuestionSelectGloss v-if="DeckStudyStore.settings.quizType === 'glosses'"
                              v-for="(question, index) in DeckStudyStore.quiz"
                              :question="question"
@@ -67,10 +68,11 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                             :question="question" :index="index"
                             :showTranslit="showTranslit"
         />
-    </div>
-    <LoadingSpinner v-else/>
 
-    <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">check</button>
+        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">
+            check
+        </button>
+    </div>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard

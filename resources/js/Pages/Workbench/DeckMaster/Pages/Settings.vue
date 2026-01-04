@@ -170,7 +170,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 <p><b>This Deck has 5 or fewer Terms.</b> You should select
                     "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
             </AppTip>
-            <div class="quiz-settings-wrapper">
+            <div class="settings-wrapper">
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictGloss" label="strict gloss"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictTerms" label="strict terms"/>
             </div>
@@ -205,7 +205,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                             : 'is not provided'
                     }}</b>.
             </p>
-            <div class="quiz-settings-wrapper">
+            <div class="settings-wrapper">
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictGloss" label="strict gloss"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.withTranslation" label="translation"/>
             </div>

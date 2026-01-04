@@ -131,7 +131,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
                 </ul>
             </PopupWindow>
         </div>
-        <div class="quiz-settings-wrapper">
+        <div class="settings-wrapper">
             <ToggleDouble v-model="flipDefault" label="Initial Face" option-a="Term" option-b="Gloss"/>
             <ToggleDouble v-model="flipDefaultInflections" label="Inflections" option-a="Back"
                           option-b="Front"/>
@@ -154,6 +154,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
     </QuizzerWindow>
 
     <Carousel
+        class="flashcard-carousel"
         v-if="!DeckStudyStore.data.isLoading"
         :items-to-show="1"
         :wrap-around="true"
@@ -175,7 +176,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
         </template>
         <template #addons>
             <Pagination/>
-            <div class="carousel-index">{{ currentSlideIndex + 1 }} out of {{ cards.length }}</div>
+            <div class="featured-title s">{{ currentSlideIndex + 1 }} of {{ cards.length }}</div>
         </template>
     </Carousel>
     <LoadingSpinner v-else/>

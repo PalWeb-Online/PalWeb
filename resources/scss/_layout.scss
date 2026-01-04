@@ -11,9 +11,13 @@ body {
 
 #app-container {
     display: grid;
-    min-height: calc(100vh - 3.6rem);
+    min-height: calc(100vh - 4.8rem);
     grid-template-rows: min-content 1fr;
     align-content: start;
+
+    @media (min-width: 960px) {
+        min-height: calc(100vh - 3.6rem);
+    }
 
     &.academy, &.workbench:has(.dm-mode-study) {
         background: var(--color-accent-medium);
@@ -128,6 +132,9 @@ body {
 }
 
 .app-body-section {
+    display: grid;
+    gap: 3.2rem;
+
     #paginator .pagination {
         margin-block: 3.2rem;
         height: 4.8rem;
