@@ -42,6 +42,7 @@ li {
         'wght' 400,
         'GRAD' 0,
         'opsz' 24;
+    user-select: none;
 }
 
 button {
@@ -113,6 +114,11 @@ img {
     &.front {
         height: clamp(6.4rem, 10vw, 9.6rem)
     }
+}
+
+audio {
+    height: 3.6rem;
+    border-radius: 0.8rem;
 }
 
 figure {
@@ -648,7 +654,6 @@ h3 {
 
     .material-symbols-rounded {
         color: var(--color-accent-medium);
-        user-select: none;
     }
 
     .toggleable {

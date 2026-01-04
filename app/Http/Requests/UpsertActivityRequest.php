@@ -107,14 +107,18 @@ class UpsertActivityRequest extends FormRequest
                 }
 
                 foreach ($items as $ei => $ex) {
-                    $prompt = trim((string)($ex['prompt'] ?? ''));
-                    if ($prompt === '') {
-                        $errors["document.blocks.$bi.items.$ei.prompt"] = ['Prompt cannot be empty.'];
+                    $prompts = $ex['prompts'] ?? [];
+                    $hasValidPrompt = collect($prompts)->contains(fn($p) =>
+                        in_array($p['type'], ['text', 'audio']) && trim((string)($p['value'] ?? '')) !== ''
+                    );
+
+                    if (!$hasValidPrompt) {
+                        $errors["document.blocks.$bi.items.$ei.prompts"] = ['Exercise must have at least one valid Text or Audio prompt.'];
                     }
 
-                    foreach ($ex['images'] as $ii => $url) {
-                        if (trim((string)$url) === '') {
-                            $errors["document.blocks.$bi.items.$ei.images.$ii"] = ['Image URL cannot be empty.'];
+                    foreach ($prompts as $pi => $p) {
+                        if (trim((string)($p['value'] ?? '')) === '') {
+                            $errors["document.blocks.$bi.items.$ei.prompts.$pi"] = ['Prompt value cannot be empty.'];
                         }
                     }
 

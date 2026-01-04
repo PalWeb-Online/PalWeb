@@ -136,13 +136,18 @@ const publishIssues = computed(() => {
             items.forEach((ex, exIndex) => {
                 const exWhere = `${where}: Exercise ${exIndex + 1} (${ex.type})`;
 
-                if (!isNonEmptyString(ex?.prompt)) {
-                    issues.push(`${exWhere}: prompt cannot be empty.`);
+                const prompts = ex.prompts || [];
+                const hasValidTextOrAudio = prompts.some(p =>
+                    (p.type === 'text' || p.type === 'audio') && isNonEmptyString(p.value)
+                );
+
+                if (!hasValidTextOrAudio) {
+                    issues.push(`${exWhere}: must have at least one non-empty Text or Audio prompt.`);
                 }
 
-                (ex.images ?? []).forEach((img, imgIndex) => {
-                    if (!isNonEmptyString(img)) {
-                        issues.push(`${exWhere}: image ${imgIndex + 1} URL is empty.`);
+                prompts.forEach((p, pi) => {
+                    if (!isNonEmptyString(p.value)) {
+                        issues.push(`${exWhere}: Prompt ${pi + 1} (${p.type}) cannot be empty.`);
                     }
                 });
 

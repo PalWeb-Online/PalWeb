@@ -1,6 +1,7 @@
 <script setup>
 import DialogLine from "../../../../components/Charts/DialogLine.vue";
 import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
+import ExercisePrompts from "./ExercisePrompts.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -23,20 +24,12 @@ const {
             <DialogLine speaker="جواب" :ar="ex.answer" align="ltr"/>
         </div>
         <template v-for="item in processedItems">
-            <div v-if="item.images.length" class="exercise-images">
-                <img v-for="imgUrl in item.images" :src="imgUrl" alt="Reference Image">
-            </div>
             <div class="exercise--input" :class="{
                     'correct': isViewingResults && item.correct,
                     'incorrect': isViewingResults && !item.correct
                 }">
-                <div class="exercise-prompt">
-                        <span v-if="isViewingResults" class="material-symbols-rounded"
-                              :class="{ 'correct': item.correct }">
-                            {{ item.correct ? 'check_circle' : 'cancel' }}
-                        </span>
-                    <p>{{ item.prompt }}</p>
-                </div>
+                <ExercisePrompts :exercise="item" :isViewingResults="isViewingResults"/>
+
                 <input type="text" placeholder="جواب"
                        :disabled="isViewingResults"
                        :value="isViewingResults ? item.response : ActivityStore.getExerciseById(item.id)?.response"

@@ -4,6 +4,7 @@ import SentenceItem from "../../../../components/SentenceItem.vue";
 import SentenceBlock from "./SentenceBlock.vue";
 import ChartBlock from "./ChartBlock.vue";
 import TextBlock from "./TextBlock.vue";
+import ContainerBlock from "./ContainerBlock.vue";
 
 defineProps({
     skill: {type: Object, required: true}
@@ -32,6 +33,8 @@ const isOpen = ref(false);
                 <template v-if="block.type === 'chart'">
                     <ChartBlock :chart="block"/>
                 </template>
+
+                <ContainerBlock :container="block" v-if="block.type === 'container'"/>
             </template>
         </div>
     </div>

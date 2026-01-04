@@ -5,10 +5,14 @@ import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js"
 const props = defineProps({
     documentBlocks: {type: Array, required: true},
     blockTypes: {type: Array, required: true},
+    isNested: {type: Boolean, default: false}
 });
 
 const builder = useDocumentBuilder(props.documentBlocks);
-builder.provideBuilder();
+
+if (!props.isNested) {
+    builder.provideBuilder();
+}
 
 const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(props.documentBlocks);
 </script>
@@ -28,7 +32,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
     </AppTip>
 
     <div class="block-editor-container-wrapper" v-for="(block, bi) in documentBlocks" :key="block.id">
-        <div class="block-editor-container">
+        <div class="block-editor-container" :class="{ nested: isNested }">
             <div class="block-meta">
                 <div class="featured-title s" style="flex-grow: 1">
                     {{ bi + 1 }}:

@@ -2,6 +2,7 @@
 import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {shuffle} from "lodash";
 import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
+import ExercisePrompts from "./ExercisePrompts.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -197,13 +198,8 @@ const getMatchState = (itemId, type, value) => {
         <h2>{{ block.exerciseType }}</h2>
         <p>Match the two columns based on the prompt.</p>
         <template v-for="item in processedItems" :key="item.id">
-            <div v-if="item.images.length" class="exercise-images">
-                <img v-for="imgUrl in item.images" :src="imgUrl" alt="Reference Image">
-            </div>
             <div class="exercise--match" :data-item-id="item.id">
-                <div class="exercise-prompt">
-                    <p>{{ item.prompt }}</p>
-                </div>
+                <ExercisePrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <div class="exercise--match-grid">
                     <div class="exercise--match-column">

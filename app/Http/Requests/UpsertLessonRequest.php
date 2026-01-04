@@ -115,71 +115,86 @@ class UpsertLessonRequest extends FormRequest
             $blocks = $skill['blocks'] ?? [];
             if (empty($blocks)) {
                 $errors["$prefix.blocks"] = ['Skill must contain at least one Block.'];
-            }
 
-            foreach ($blocks as $bi => $block) {
-                $blockPrefix = "$prefix.blocks.$bi";
-                $type = $block['type'] ?? '';
-
-                if ($type === 'text' && empty(trim($block['content'] ?? ''))) {
-                    $errors["$blockPrefix.content"] = ['Text Block content cannot be empty.'];
-                }
-
-                if ($type === 'sentence') {
-                    if (empty($block['model']) && empty($block['custom'])) {
-                        $errors[$blockPrefix] = ['Sentence Block must have Sentence model or custom Sentence.'];
-
-                    } elseif (! empty($block['custom'])) {
-                        if (empty(trim($block['custom']['transl'] ?? ''))) {
-                            $errors["$blockPrefix.custom.transl"] = ['Translation cannot be empty.'];
-                        }
-
-                        $terms = $block['custom']['terms'] ?? [];
-
-                        if (empty($terms)) {
-                            $errors["$blockPrefix.custom.terms"] = ['Sentence must have at least one Term.'];
-
-                        } else {
-                            foreach ($terms as $ti => $term) {
-                                if (empty(trim($term['term'] ?? ''))) {
-                                    $errors["$blockPrefix.custom.terms.$ti.term"] = ['Arabic text is required.'];
-                                }
-                                if (empty(trim($term['transc'] ?? ''))) {
-                                    $errors["$blockPrefix.custom.terms.$ti.transc"] = ['Transcription is required.'];
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if ($type === 'chart') {
-                    $rows = $block['rows'] ?? [];
-
-                    if (empty($rows)) {
-                        $errors["$blockPrefix.rows"] = ['Chart must have at least one row.'];
-
-                    } else {
-                        foreach ($rows as $ri => $row) {
-                            $items = $row['items'] ?? [];
-                            foreach ($items as $ii => $item) {
-                                if (empty(trim($item['key'] ?? ''))) {
-                                    $errors["$blockPrefix.rows.$ri.items.$ii.key"] = ['Key is required.'];
-                                }
-                                if (empty(trim($item['ar'] ?? ''))) {
-                                    $errors["$blockPrefix.rows.$ri.items.$ii.ar"] = ['Arabic text is required.'];
-                                }
-                                if (empty(trim($item['tr'] ?? ''))) {
-                                    $errors["$blockPrefix.rows.$ri.items.$ii.tr"] = ['Transcription is required.'];
-                                }
-                            }
-                        }
-                    }
-                }
+            } else {
+                $this->validateBlocksRecursive($blocks, $errors, "$prefix.blocks");
             }
         }
 
         if (! empty($errors)) {
             throw ValidationException::withMessages($errors);
+        }
+    }
+
+    protected function validateBlocksRecursive(array $blocks, array &$errors, string $path): void
+    {
+        foreach ($blocks as $bi => $block) {
+            $blockPrefix = "$path.blocks.$bi";
+            $type = $block['type'] ?? '';
+
+            if ($type === 'container') {
+                $nested = $block['blocks'] ?? [];
+                if (empty($nested)) {
+                    $errors["$blockPrefix.blocks"] = ['Container cannot be empty.'];
+                } else {
+                    $this->validateBlocksRecursive($nested, $errors, "$blockPrefix.blocks");
+                }
+            }
+
+            if ($type === 'text' && empty(trim($block['content'] ?? ''))) {
+                $errors["$blockPrefix.content"] = ['Text Block content cannot be empty.'];
+            }
+
+            if ($type === 'sentence') {
+                if (empty($block['model']) && empty($block['custom'])) {
+                    $errors[$blockPrefix] = ['Sentence Block must have Sentence model or custom Sentence.'];
+
+                } elseif (! empty($block['custom'])) {
+                    if (empty(trim($block['custom']['transl'] ?? ''))) {
+                        $errors["$blockPrefix.custom.transl"] = ['Translation cannot be empty.'];
+                    }
+
+                    $terms = $block['custom']['terms'] ?? [];
+
+                    if (empty($terms)) {
+                        $errors["$blockPrefix.custom.terms"] = ['Sentence must have at least one Term.'];
+
+                    } else {
+                        foreach ($terms as $ti => $term) {
+                            if (empty(trim($term['term'] ?? ''))) {
+                                $errors["$blockPrefix.custom.terms.$ti.term"] = ['Arabic text is required.'];
+                            }
+                            if (empty(trim($term['transc'] ?? ''))) {
+                                $errors["$blockPrefix.custom.terms.$ti.transc"] = ['Transcription is required.'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($type === 'chart') {
+                $rows = $block['rows'] ?? [];
+
+                if (empty($rows)) {
+                    $errors["$blockPrefix.rows"] = ['Chart must have at least one row.'];
+
+                } else {
+                    foreach ($rows as $ri => $row) {
+                        $items = $row['items'] ?? [];
+                        foreach ($items as $ii => $item) {
+                            if (empty(trim($item['key'] ?? ''))) {
+                                $errors["$blockPrefix.rows.$ri.items.$ii.key"] = ['Key is required.'];
+                            }
+                            if (empty(trim($item['ar'] ?? ''))) {
+                                $errors["$blockPrefix.rows.$ri.items.$ii.ar"] = ['Arabic text is required.'];
+                            }
+                            if (empty(trim($item['tr'] ?? ''))) {
+                                $errors["$blockPrefix.rows.$ri.items.$ii.tr"] = ['Transcription is required.'];
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

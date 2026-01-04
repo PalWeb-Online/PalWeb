@@ -109,6 +109,63 @@ const deleteLesson = () => {
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
 
+const validateBlocks = (blocks, issues, path) => {
+    blocks.forEach((block, bi) => {
+        const where = `${path}, Block ${bi + 1} (${block.type})`;
+
+        if (block.type === 'container') {
+            if (!block.blocks || block.blocks.length === 0) {
+                issues.push(`${where}: Container cannot be empty.`);
+            } else {
+                validateBlocks(block.blocks, issues, where);
+            }
+        }
+
+        if (block.type === 'text') {
+            if (!isNonEmptyString(block.content)) {
+                issues.push(`${where}: Text Block content cannot be empty.`);
+            }
+        }
+
+        if (block.type === 'sentence') {
+            if (!block.model && !block.custom) {
+                issues.push(`${where}: Sentence Block must have Sentence model or custom Sentence.`);
+
+            } else if (block.custom) {
+                if (!isNonEmptyString(block.custom.transl)) {
+                    issues.push(`${where}: Translation cannot be empty.`);
+                }
+
+                if (!block.custom.terms || block.custom.terms.length === 0) {
+                    issues.push(`${where}: Sentence must have at least one Term.`);
+
+                } else {
+                    block.custom.terms.forEach((term, ti) => {
+                        if (!isNonEmptyString(term.term) || !isNonEmptyString(term.transc)) {
+                            issues.push(`${where}: Term ${ti + 1} must have both Arabic text and transcription.`);
+                        }
+                    });
+                }
+            }
+        }
+
+        if (block.type === 'chart') {
+            const rows = block.rows || [];
+            if (rows.length === 0) {
+                issues.push(`${where}: Chart Block must have at least one row.`);
+            } else {
+                rows.forEach((row, ri) => {
+                    row.items.forEach((item, ii) => {
+                        if (!isNonEmptyString(item.key) || !isNonEmptyString(item.ar) || !isNonEmptyString(item.tr)) {
+                            issues.push(`${where}: Row ${ri + 1}, Item ${ii + 1} is missing required values (key, ar, or tr).`);
+                        }
+                    });
+                });
+            }
+        }
+    });
+};
+
 const publishIssues = computed(() => {
     const issues = [];
 
@@ -145,54 +202,10 @@ const publishIssues = computed(() => {
 
         if (skill.blocks.length === 0) {
             issues.push(`${skillName}: Skill must have at least one Block.`);
+
+        } else {
+            validateBlocks(skill.blocks, issues, skillName);
         }
-
-        skill.blocks.forEach((block, bi) => {
-            const where = `${skillName}, Block ${bi + 1} (${block.type})`;
-
-            if (block.type === 'text') {
-                if (!isNonEmptyString(block.content)) {
-                    issues.push(`${where}: Text Block content cannot be empty.`);
-                }
-            }
-
-            if (block.type === 'sentence') {
-                if (!block.model && !block.custom) {
-                    issues.push(`${where}: Sentence Block must have Sentence model or custom Sentence.`);
-
-                } else if (block.custom) {
-                    if (!isNonEmptyString(block.custom.transl)) {
-                        issues.push(`${where}: Translation cannot be empty.`);
-                    }
-
-                    if (!block.custom.terms || block.custom.terms.length === 0) {
-                        issues.push(`${where}: Sentence must have at least one Term.`);
-
-                    } else {
-                        block.custom.terms.forEach((term, ti) => {
-                            if (!isNonEmptyString(term.term) || !isNonEmptyString(term.transc)) {
-                                issues.push(`${where}: Term ${ti + 1} must have both Arabic text and transcription.`);
-                            }
-                        });
-                    }
-                }
-            }
-
-            if (block.type === 'chart') {
-                const rows = block.rows || [];
-                if (rows.length === 0) {
-                    issues.push(`${where}: Chart Block must have at least one row.`);
-                } else {
-                    rows.forEach((row, ri) => {
-                        row.items.forEach((item, ii) => {
-                            if (!isNonEmptyString(item.key) || !isNonEmptyString(item.ar) || !isNonEmptyString(item.tr)) {
-                                issues.push(`${where}: Row ${ri + 1}, Item ${ii + 1} is missing required values (key, ar, or tr).`);
-                            }
-                        });
-                    });
-                }
-            }
-        });
     });
 
     if (!props.lesson.deck?.id || !lesson.deck_id) {
@@ -302,7 +315,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 </div>
 
                 <DocumentBlocksManager :document-blocks="lesson.document.skills[si].blocks"
-                                       :block-types="['text', 'chart', 'sentence']"
+                                       :block-types="['container', 'text', 'chart', 'sentence']"
                 />
             </div>
             <button v-if="lesson.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>

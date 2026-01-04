@@ -3,7 +3,7 @@ import Draggable from "vuedraggable";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
 
-const { addExercise, removeExercise, addSelectOption, removeSelectOption } = useDocumentBuilder();
+const { addExercise, removeExercise, addPrompt, removePrompt, addSelectOption, removeSelectOption } = useDocumentBuilder();
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -18,14 +18,6 @@ const addExample = () => {
 
 const removeExample = (index) => {
     props.block.examples.splice(index, 1);
-};
-
-const addImage = (ex) => {
-    ex.images.push('');
-};
-
-const removeImage = (ex, index) => {
-    ex.images.splice(index, 1);
 };
 
 const addInputAnswer = (ex) => {
@@ -131,33 +123,76 @@ const removeMatchPair = (ex, pairIndex) => {
                     </div>
 
                     <div class="block-add-buttons">
+                        <div v-if="ex.prompts.filter(p => p.type === 'text').length < 1">
+                            <div class="add-button"
+                                 @click="addPrompt(ex, 'text')">+
+                            </div>
+                            <div>text</div>
+                        </div>
+                        <div v-if="ex.prompts.filter(p => p.type === 'audio').length < 1">
+                            <div class="add-button"
+                                 @click="addPrompt(ex, 'audio')">+
+                            </div>
+                            <div>audio</div>
+                        </div>
                         <div>
                             <div class="add-button"
-                                 @click="addImage(ex)">+
+                                 @click="addPrompt(ex, 'image')">+
                             </div>
                             <div>image</div>
                         </div>
                     </div>
-                    <div class="exercise-images">
-                        <div v-for="(img, i) in ex.images">
-                            <img v-if="ex.images[i]" :src="ex.images[i]" alt="No Image Found"/>
+                    <div class="exercise-prompt_build"
+                         v-if="ex.prompts.some(p => p.type === 'image')"
+                    >
+                        <div v-for="image in ex.prompts.filter(p => p.type === 'image')" :key="image.id">
+                            <img v-if="image.value" :src="image.value" alt="No Image Found"/>
                             <div style="display: flex; gap: 0.8rem; align-items: center">
                                 <button type="button"
                                         class="material-symbols-rounded"
-                                        @click="removeImage(ex, i)"
+                                        @click="removePrompt(ex, image.id)"
                                 >
                                     delete
                                 </button>
-                                <input v-model="ex.images[i]" :class="{ 'invalid': !ex.images[i] }" style="width: 100%;"
-                                       placeholder="URL"/>
+                                <input v-model="image.value" :class="{ 'invalid': !image.value }" style="width: 100%;"
+                                       placeholder="Image URL"/>
                             </div>
                         </div>
                     </div>
-
-                    <div class="exercise-question">
-                        <div class="material-symbols-rounded">help</div>
-                        <input v-model="ex.prompt" :class="{ 'invalid': !ex.prompt }" style="width: 100%;"
-                               placeholder="سؤال"/>
+                    <div class="exercise-prompt_build"
+                         v-if="ex.prompts.some(p => p.type === 'audio')"
+                    >
+                        <div v-for="audio in ex.prompts.filter(p => p.type === 'audio')" :key="audio.id">
+                            <audio v-if="audio.value" :src="audio.value" controls/>
+                            <div style="display: flex; gap: 0.8rem; align-items: center">
+                                <button type="button"
+                                        class="material-symbols-rounded"
+                                        @click="removePrompt(ex, audio.id)"
+                                >
+                                    delete
+                                </button>
+                                <input v-model="audio.value" :class="{ 'invalid': !audio.value }" style="width: 100%;"
+                                       placeholder="Audio URL"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exercise-prompt_build" style="grid-template-columns: 1fr"
+                         v-if="ex.prompts.some(p => p.type === 'text')"
+                    >
+                        <div v-for="text in ex.prompts.filter(p => p.type === 'text')" :key="text.id"
+                            style="display: flex; align-items: center">
+                            <div class="material-symbols-rounded">help</div>
+                            <input v-model="text.value"
+                                   :class="{ 'invalid': !text.value }"
+                                   style="width: 100%;"
+                                   placeholder="سؤال"/>
+                            <button type="button"
+                                    class="material-symbols-rounded"
+                                    @click="removePrompt(ex, text.id)"
+                            >
+                                delete
+                            </button>
+                        </div>
                     </div>
 
                     <template v-if="ex.type === 'select'">

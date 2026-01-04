@@ -5,6 +5,7 @@ import ExercisesBlockEditor from "../Pages/Office/LessonPlanner/UI/ExercisesBloc
 import {inject, provide} from "vue";
 import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockEditor.vue";
 import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
+import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
 
 const symbol = Symbol('document-builder');
 
@@ -34,6 +35,7 @@ export function useDocumentBuilder(documentBlocks = null) {
     };
 
     const blockEditors = {
+        container: ContainerBlockEditor,
         text: TextBlockEditor,
         audio: AudioBlockEditor,
         table: TableBlockEditor,
@@ -45,12 +47,12 @@ export function useDocumentBuilder(documentBlocks = null) {
     const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
 
     const blockFactories = {
+        container: () => ({ id: uid(), type: 'container', title: '', blocks: [] }),
         text: () => ({ id: uid(), type: 'text', content: '', tip: false }),
         audio: () => ({ id: uid(), type: 'audio', media: '' }),
         table: () => ({ id: uid(), type: 'table', columns: [], rows: [] }),
         chart: () => ({ id: uid(), type: 'chart', title: '', rows: [] }),
         sentence: () => ({ id: uid(), type: 'sentence', model: null, custom: null }),
-        collapsible: () => ({ id: uid(), type: 'collapsible', title: '', blocks: [] }),
         exercises: () => ({
             id: uid(),
             type: 'exercises',
@@ -169,21 +171,23 @@ export function useDocumentBuilder(documentBlocks = null) {
     };
 
     const createExercise = (type = 'select') => {
+        const base = {
+            id: uid(),
+            type: type,
+            prompts: [
+                { id: uid(), type: 'text', value: '' }
+            ],
+        };
+
         switch (type) {
             case 'input':
                 return {
-                    id: uid(),
-                    type: 'input',
-                    images: [],
-                    prompt: '',
+                    ...base,
                     answers: [''],
                 };
             case 'match':
                 return {
-                    id: uid(),
-                    type: 'match',
-                    images: [],
-                    prompt: '',
+                    ...base,
                     pairs: [
                         {start: '', end: ''},
                         {start: '', end: ''},
@@ -192,10 +196,7 @@ export function useDocumentBuilder(documentBlocks = null) {
             case 'select':
             default:
                 return {
-                    id: uid(),
-                    type: 'select',
-                    images: [],
-                    prompt: '',
+                    ...base,
                     options: [
                         { id: uid(), text: '' },
                         { id: uid(), text: '' }
@@ -238,6 +239,18 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
     };
 
+    const addPrompt = (ex, type) => {
+        ex.prompts.push({
+            id: uid(),
+            type: type,
+            value: '',
+        });
+    };
+
+    const removePrompt = (ex, promptId) => {
+        removeById(ex.prompts, promptId);
+    };
+
     const addSelectOption = (ex) => {
         ex.options.push({
             id: uid(),
@@ -269,6 +282,8 @@ export function useDocumentBuilder(documentBlocks = null) {
         removeTableRow,
         addExercise,
         removeExercise,
+        addPrompt,
+        removePrompt,
         addSelectOption,
         removeSelectOption
     };
