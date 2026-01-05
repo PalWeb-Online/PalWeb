@@ -41,7 +41,7 @@ class UnitController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        DB::transaction(function () use ($request) {
+        $unit = DB::transaction(function () use ($request) {
             $unit = Unit::create([
                 'position' => $request->position ?? Unit::count() + 1,
                 'title' => $request->title,
@@ -59,6 +59,8 @@ class UnitController extends Controller
 //            $unit->refresh();
 
             LessonService::reorderUnitLessons($unit);
+
+            return $unit;
         });
 
         session()->flash('notification',

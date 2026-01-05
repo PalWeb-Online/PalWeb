@@ -28,10 +28,16 @@ class UpdateLessonProgress implements ShouldQueue
         $score = $event->score;
 
         $user = $score->user;
-        $scorable = $score->scorable;
 
-        $lesson = $score->scorable->lesson;
+        $scorable = $score->scorable;
+        if (! $scorable) {
+            \Log::error("Scorable not found for Score {$score->id}. If this is an Activity, make sure the Lesson is published.");
+            return;
+        }
+
+        $lesson = $scorable->lesson;
         if (! $lesson) {
+            \Log::error("Lesson not found for Scorable {$scorable->id}. Are you sure both the Unit & the Lesson are published?");
             return;
         }
 
@@ -47,7 +53,7 @@ class UpdateLessonProgress implements ShouldQueue
         $scoreCount = $scorable
             ->scores()
             ->where('user_id', $user->id)
-            ->where('score', 1)
+            ->where('score', '>=', 1)
             ->count();
 
         if ($scorable instanceof \App\Models\Deck) {
@@ -84,7 +90,7 @@ class UpdateLessonProgress implements ShouldQueue
 
                 } else {
                     \App\Events\LessonProgressUpdated::dispatch(
-                        "You've finished the Lesson & completed all the content you're eligible for in the Academy.",
+                        "You've finished the Lesson & completed everything you're eligible for in the Academy. Check back in soon!",
                         'success',
                         $user->id
                     );

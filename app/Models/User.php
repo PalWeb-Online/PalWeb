@@ -207,10 +207,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return isset($this->getLessonProgress()[$lesson->id]);
     }
 
+    public function hasCompletedLesson(Lesson $lesson): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        return $this->getLessonProgress()[$lesson->id]['completed'] ?? false;
+    }
+
     public function getLessonStage(Lesson $lesson): int
     {
         if ($this->isAdmin()) return 3;
 
-        return $this->getLessonProgress()[$lesson->id]['stage'] ?? 0;
+        return $this->getLessonProgress()[$lesson->id]['stage'] ?? 1;
     }
 }

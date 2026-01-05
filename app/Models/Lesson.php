@@ -67,16 +67,19 @@ class Lesson extends Model
         if (!$user) return ['unlocked' => false, 'stage' => 0, 'completed' => false];
 
         $scores = $user->getScoreCounts();
-        $progress = $user->getLessonProgress()[$this->id] ?? null;
+
+        $unlocked = $user->hasUnlockedLesson($this);
+        $stage = $user->getLessonStage($this);
+        $completed = $user->hasCompletedLesson($this);
 
         return [
             'scores_count' => [
                 'deck' => $scores["deck:{$this->deck_id}"] ?? 0,
                 'activity' => $scores["activity:{$this->activity_id}"] ?? 0,
             ],
-            'unlocked' => (bool) $progress,
-            'stage' => $progress['stage'] ?? 1,
-            'completed' => $progress['completed'] ?? false,
+            'unlocked' => $unlocked,
+            'stage' => $stage,
+            'completed' => $completed,
         ];
     }
 }

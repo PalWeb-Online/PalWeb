@@ -41,16 +41,20 @@ class LessonController extends Controller
 
     public function store(UpsertLessonRequest $request): RedirectResponse
     {
-        $unit = $request->unit_id ? Unit::find($request->unit_id) : null;
+//        todo: this method is hit if & only if the Lesson is created via the `lesson-planner.unit-lesson` route;
+//         if it's created in the `lesson-planner.unit` route, the UnitController store() method is hit.
+        $lesson = DB::transaction(function () use ($request) {
+            $unit = $request->unit_id ? Unit::find($request->unit_id) : null;
 
-        $request->merge([
-            'global_position' => 'tmp-'.Str::uuid()
-        ]);
+            $request->merge([
+                'unit_position' => null,
+                'global_position' => 'tmp-'.Str::uuid()
+            ]);
 
-        $lesson = Lesson::create($request->all());
+            $lesson = Lesson::create($request->all());
 
-        if ($unit) {
-            LessonService::reorderUnitLessons($unit);
+            if ($unit) {
+                LessonService::reorderUnitLessons($unit);
 
 //            todo: we haven't yet created a way to create a standalone Lesson
 //        } else {
@@ -58,7 +62,10 @@ class LessonController extends Controller
 //                'unit_position' => null,
 //                'global_position' => 'ex'.$lesson->id
 //            ]);
-        }
+            }
+
+            return $lesson;
+        });
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $lesson->title])]);
@@ -67,36 +74,38 @@ class LessonController extends Controller
 
     public function update(UpsertLessonRequest $request, Lesson $lesson): RedirectResponse
     {
-        $oldUnit = $lesson->unit;
+        DB::transaction(function () use ($request, $lesson) {
+            $oldUnit = $lesson->unit;
 
-        if (! $request->unit_id) {
-            $request->merge([
-                'unit_position' => null,
-                'global_position' => 'ex'.$lesson->id,
-            ]);
-
-        } else {
-            $incomingUnit = Unit::find($request->unit_id);
-
-            if ($oldUnit && $incomingUnit && $oldUnit->id !== $incomingUnit->id) {
+            if (! $request->unit_id) {
                 $request->merge([
                     'unit_position' => null,
-                    'global_position' => 'tmp-'.Str::uuid(),
+                    'global_position' => 'ex'.$lesson->id,
                 ]);
+
+            } else {
+                $incomingUnit = Unit::find($request->unit_id);
+
+                if ($oldUnit && $incomingUnit && $oldUnit->id !== $incomingUnit->id) {
+                    $request->merge([
+                        'unit_position' => null,
+                        'global_position' => 'tmp-'.Str::uuid(),
+                    ]);
+                }
             }
-        }
 
-        $lesson->update($request->all());
-        $lesson->refresh();
+            $lesson->update($request->all());
+            $lesson->refresh();
 
-        $newUnit = $lesson->unit;
+            $newUnit = $lesson->unit;
 
-        if ($oldUnit && (! $newUnit || $oldUnit->id !== $newUnit->id)) {
-            LessonService::reorderUnitLessons($oldUnit);
+            if ($oldUnit && (! $newUnit || $oldUnit->id !== $newUnit->id)) {
+                LessonService::reorderUnitLessons($oldUnit);
 
-        } elseif ($newUnit && $oldUnit?->id !== $newUnit->id) {
-            LessonService::reorderUnitLessons($newUnit);
-        }
+            } elseif ($newUnit && $oldUnit?->id !== $newUnit->id) {
+                LessonService::reorderUnitLessons($newUnit);
+            }
+        });
 
         $lesson->refresh();
 
