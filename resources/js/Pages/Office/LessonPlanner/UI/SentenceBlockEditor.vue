@@ -25,7 +25,9 @@ const addSentence = () => {
     props.block.model = null;
     props.block.custom = {
         transl: '',
-        terms: []
+        terms: [
+            {term: '', transc: ''}
+        ]
     }
 }
 
@@ -58,7 +60,7 @@ watch(
 </script>
 
 <template>
-    <div class="block-editor--text">
+    <div class="block-editor--sentence">
         <div class="block-add-buttons">
             <template v-if="!block.model && !block.custom">
                 <div>
@@ -76,23 +78,53 @@ watch(
             </div>
         </div>
 
-        <div v-if="block.model || block.custom"
-             style="display: flex; justify-content: space-between; align-items: center"
-        >
+        <div v-if="block.model || block.custom" class="sentence-preview">
             <button class="material-symbols-rounded" @click="clearSentence">mop</button>
-
             <SentenceItem v-if="block.model" :model="block.model"/>
             <SentenceBlock v-else-if="block.custom" :sentence="block.custom"/>
         </div>
 
-        <div v-if="block.custom" style="display: grid; gap: 0.8rem">
-            <input v-model="block.custom.transl" placeholder="Translation"/>
-            <div v-for="(term, i) in block.custom.terms" style="display: flex">
-                <input v-model="block.custom.terms[i].term" placeholder="Term"/>
-                <input v-model="block.custom.terms[i].transc" placeholder="Transcription"/>
-                <button class="material-symbols-rounded" @click="removeTerm(i)">delete</button>
+        <template v-if="block.custom">
+            <div class="sentence-fields">
+                <div v-for="(term, i) in block.custom.terms" class="sentence-term">
+                    <input v-model="block.custom.terms[i].term" placeholder="Term"/>
+                    <input v-model="block.custom.terms[i].transc" style="direction: ltr" placeholder="Transcription"/>
+                    <button class="material-symbols-rounded" @click="removeTerm(i)">delete</button>
+                </div>
             </div>
-        </div>
-
+            <div class="field-item">
+                <input v-model="block.custom.transl" style="direction: ltr" placeholder="Translation"/>
+            </div>
+        </template>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.block-editor--sentence {
+    display: grid;
+    gap: 1.6rem;
+
+    .sentence-preview {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        direction: rtl;
+    }
+
+    .sentence-preview button,
+    .sentence-term button {
+        color: var(--color-medium-primary)
+    }
+
+    .sentence-fields {
+        display: grid;
+        gap: 0.8rem;
+        direction: rtl;
+    }
+
+    .sentence-term {
+        display: flex;
+        gap: 0.8rem;
+    }
+}
+</style>

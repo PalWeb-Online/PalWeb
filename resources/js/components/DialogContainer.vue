@@ -7,6 +7,7 @@ import AppTip from "./AppTip.vue";
 import {ref} from "vue";
 import ToggleSingle from "./ToggleSingle.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
+import LessonStatus from "./LessonStatus.vue";
 
 const props = defineProps({
     model: {
@@ -38,6 +39,7 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
                     only visible to admins. </p>
             </AppTip>
 
+            <LessonStatus v-if="dialog.lesson" :lesson="dialog.lesson" :model="dialog"/>
             <div class="window-content-head">
                 <div class="window-content-head-title" style="direction: rtl">{{ dialog.title }}</div>
                 <div class="dialog-description" v-if="dialog.description">{{ dialog.description }}</div>

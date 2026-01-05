@@ -24,10 +24,10 @@ const removeItem = (row, index) => row.items.splice(index, 1);
 </script>
 
 <template>
-    <div class="block--chart">
+    <div class="block-editor--chart">
         <div class="field-item">
-            <label>Chart Title</label>
-            <input v-model="block.title" placeholder="e.g. Subject Pronouns"/>
+            <label>Title</label>
+            <input v-model="block.title" placeholder="Title"/>
         </div>
 
         <div class="block-add-buttons">
@@ -47,27 +47,32 @@ const removeItem = (row, index) => row.items.splice(index, 1);
 
         <ChartBlock :chart="block"/>
 
-        <Draggable :list="block.rows" item-key="id" handle=".handle" class="chart-editor-grid">
+        <Draggable v-if="block.rows.length" :list="block.rows" item-key="id" handle=".handle" class="chart-editor-grid">
             <template #item="{ element: row, index: ri }">
-                <div class="chart-row-edit-wrapper">
-                    <div class="row-controls">
-                        <span class="handle material-symbols-rounded">drag_indicator</span>
-                        <button class="material-symbols-rounded" @click="addItemToRow(row)" v-if="row.items.length < 2" title="Add Column">add</button>
-                        <button class="material-symbols-rounded" @click="removeRow(ri)">delete</button>
-                    </div>
-
-                    <div class="chart-row-items" :class="{ 'single-col': row.items.length === 1 }">
-                        <div v-for="(item, ii) in row.items" :key="ii" class="chart-item-edit">
+                <div class="chart-row-wrapper">
+                    <span class="handle material-symbols-rounded">drag_indicator</span>
+                    <div class="chart-row-items">
+                        <div v-for="(item, ii) in row.items" :key="ii" class="item-wrapper">
                             <div class="item-header">
-                                <input v-model="item.key" class="key-input" :class="{ 'invalid': !item.key }" placeholder="Key"/>
-                                <button @click="removeItem(row, ii)" v-if="row.items.length > 1">×</button>
+                                <input v-model="item.key" :class="{ 'invalid': !item.key }"
+                                       placeholder="Key"/>
+
+                                <button v-if="row.items.length > 1" class="material-symbols-rounded"
+                                        @click="removeItem(row, ii)">delete
+                                </button>
+                                <button v-else class="material-symbols-rounded"
+                                        @click="addItemToRow(row)"
+                                        title="Add Column">add
+                                </button>
                             </div>
+
                             <div class="item-inputs">
                                 <input v-model="item.ar" :class="{ 'invalid': !item.ar }" placeholder="Arabic"/>
                                 <input v-model="item.tr" :class="{ 'invalid': !item.tr }" placeholder="Transcription"/>
                             </div>
                         </div>
                     </div>
+                    <button class="material-symbols-rounded" @click="removeRow(ri)">delete</button>
                 </div>
             </template>
         </Draggable>
@@ -75,46 +80,60 @@ const removeItem = (row, index) => row.items.splice(index, 1);
 </template>
 
 <style scoped lang="scss">
+.block-editor--chart {
+    display: grid;
+    gap: 1.6rem;
+}
+
 .chart-editor-grid {
+    display: grid;
+    gap: 1.6rem;
+    direction: rtl;
+}
+
+.chart-row-wrapper {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
+    align-items: center;
+    gap: 1.6rem;
+
+    span, button {
+        color: var(--color-medium-primary);
+    }
 }
 
 .chart-row-items {
+    flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    gap: 0.8rem;
+}
 
-    &.single-col .chart-item-edit {
-        grid-column: span 2;
+.item-wrapper {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        font-size: 2.0rem;
+        color: var(--color-medium-primary);
+    }
+
+    input {
+        font-weight: bold;
+        width: 6.4rem;
     }
 }
 
-.chart-item-edit {
-    background: var(--color-light-gray);
-    padding: 0.5rem;
-    border-radius: 4px;
+.item-inputs {
+    display: flex;
+    gap: 0.4rem;
 
-    .item-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.3rem;
-
-        .key-input {
-            font-weight: bold;
-            width: 60px;
-        }
-    }
-
-    .item-inputs {
-        display: flex;
-        gap: 0.3rem;
-
-        input {
-            flex: 1;
-        }
+    input {
+        flex: 1;
     }
 }
 </style>

@@ -208,17 +208,17 @@ const publishIssues = computed(() => {
         }
     });
 
-    if (!props.lesson.deck?.id || !lesson.deck_id) {
+    if (!props.lesson.deck?.id && !lesson.deck_id) {
         issues.push('Lesson must have an assigned Deck.');
 
-    } else if (props.lesson.deck.private) {
+    } else if (props.lesson.deck && props.lesson.deck?.private) {
         issues.push('The Deck must be public before the Lesson can be published.');
     }
 
-    if (!props.lesson.dialog?.id || !lesson.dialog_id) {
+    if (!props.lesson.dialog?.id && !lesson.dialog_id) {
         issues.push('Lesson must have an assigned Dialog.');
 
-    } else if (!props.lesson.dialog.published) {
+    } else if (props.lesson.dialog && !props.lesson.dialog?.published) {
         issues.push('The Dialog must be published before the Lesson can be published.');
     }
 
@@ -250,7 +250,9 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                 </Link>
             </div>
             <div class="featured-title l">
-                {{ props.lesson?.id ? 'Lesson ' + props.lesson.global_position : 'New Lesson' }}
+                <span v-if="props.lesson?.id">Lesson {{ props.lesson.global_position }}</span>
+                <span v-else-if="props.lesson.unit.id">Lesson in Unit {{ props.lesson.unit.position }}</span>
+                <span v-else>New Lesson</span>
             </div>
 
             <div class="field-item">
@@ -305,10 +307,23 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
                     make sure the Deck is not set to private, as private Decks will still appear in the search.</p>
             </AppTip>
 
-            <div v-for="(skill, si) in lesson.document.skills" :key="si">
+            <LessonContentSearchBar
+                v-model="lesson.dialog_id"
+                type="dialog"
+                :lesson-id="props.lesson?.id || null"
+                :initial-title="props.lesson?.dialog?.title || ''"
+            />
+            <Link v-if="lesson.dialog_id" :href="route('dialogs.show', lesson.dialog_id)">View</Link>
+
+            <div class="lesson-planner--skill" v-for="(skill, si) in lesson.document.skills" :key="si">
                 <div class="field-item">
-                    <div class="featured-title m">Skill {{ si + 1 }}</div>
-                    <button type="button" @click="removeSkill(si)">Remove Skill</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <span class="featured-title m">Skill {{ si + 1 }}</span>
+                        <button type="button" @click="removeSkill(si)"
+                                class="material-symbols-rounded">
+                            delete
+                        </button>
+                    </div>
                     <input type="text" v-model="skill.type" placeholder="type" required>
                     <input type="text" v-model="skill.title" placeholder="title" required>
                     <input type="text" v-model="skill.description" placeholder="description" required>
@@ -320,19 +335,14 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             </div>
             <button v-if="lesson.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>
 
-            <Link v-if="props.lesson?.id" :href="route('lesson-planner.lesson-activity', props.lesson.id)">
-                -> to Activity
+            <Link v-if="props.lesson?.id" :href="route('lesson-planner.lesson-activity', props.lesson.id)"
+                  class="portal-button" style="justify-self: center"
+            >
+                {{ props.lesson.activity?.id ? 'Edit' : 'Create' }} Activity
             </Link>
             <AppTip v-else>
                 <p>You must create the Lesson first to create the Activity.</p>
             </AppTip>
-
-            <LessonContentSearchBar
-                v-model="lesson.dialog_id"
-                type="dialog"
-                :lesson-id="props.lesson?.id || null"
-                :initial-title="props.lesson?.dialog?.title || ''"
-            />
         </div>
 
         <AppTip>

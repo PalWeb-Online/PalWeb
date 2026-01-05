@@ -14,6 +14,11 @@ if (!props.isNested) {
     builder.provideBuilder();
 }
 
+const handleRemoveBlock = (documentBlocks, blockId) => {
+    if (!confirm('Are you sure you want to remove this Block?')) return;
+    removeBlock(documentBlocks, blockId);
+}
+
 const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(props.documentBlocks);
 </script>
 
@@ -55,7 +60,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
                 <button type="button"
                         class="material-symbols-rounded"
                         style="margin-inline-start: 0.8rem"
-                        @click="removeBlock(documentBlocks, block.id)">
+                        @click="handleRemoveBlock(documentBlocks, block.id)">
                     delete
                 </button>
             </div>
@@ -65,6 +70,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
             />
         </div>
         <div class="block-add-buttons">
+            <span>Insert --></span>
             <div v-for="blockType in blockTypes">
                 <div class="add-button"
                      @click="addBlock(documentBlocks, { afterBlockId: block.id, type: blockType })">+

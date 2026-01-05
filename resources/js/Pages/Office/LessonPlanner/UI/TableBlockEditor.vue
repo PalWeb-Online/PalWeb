@@ -4,7 +4,7 @@ import {computed} from "vue";
 import Draggable from "vuedraggable";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
 
-const { addTableColumn, removeTableColumn, addTableRow, removeTableRow } = useDocumentBuilder();
+const {addTableColumn, removeTableColumn, addTableRow, removeTableRow} = useDocumentBuilder();
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -63,7 +63,7 @@ const gridStyle = computed(() => ({
         >
             <template #item="{ element: row }">
                 <div class="table-row-wrapper">
-                    <div class="block-meta" style="justify-content: flex-end">
+                    <div class="table-row-buttons">
                         <span class="handle material-symbols-rounded">drag_indicator</span>
                         <button
                             type="button"
@@ -87,3 +87,52 @@ const gridStyle = computed(() => ({
         </Draggable>
     </div>
 </template>
+
+<style scoped lang="scss">
+.block-editor--table {
+    display: grid;
+    gap: 3.2rem;
+
+    .table-grid {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .table-column-wrapper, .table-row-content {
+        display: grid;
+        justify-items: center;
+        gap: 0.4rem;
+
+        input {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        *:not(input) {
+            color: var(--color-medium-primary);
+        }
+    }
+
+    .table-rows {
+        display: grid;
+        gap: 1.6rem;
+    }
+
+    .table-row-wrapper {
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    .table-row-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        direction: rtl;
+
+        span, button {
+            color: var(--color-medium-primary)
+        }
+    }
+}
+</style>

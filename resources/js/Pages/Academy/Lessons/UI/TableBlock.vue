@@ -11,9 +11,11 @@ const gridStyle = computed(() => ({
 </script>
 <template>
     <div class="block--table" :style="gridStyle">
-        <div class="block--table-column-label" v-for="column in table.columns">{{ column.label }}</div>
+        <div class="block--table-column-label" v-for="column in table.columns" :key="column.id">{{ column.label }}</div>
         <template v-for="row in table.rows">
-            <div class="block--table-row-cell" v-for="cell in row.cells">{{ cell }}</div>
+            <div class="block--table-row-cell" v-for="column in table.columns" :key="column.id">
+                {{ row.cells[column.id] }}
+            </div>
         </template>
     </div>
 </template>

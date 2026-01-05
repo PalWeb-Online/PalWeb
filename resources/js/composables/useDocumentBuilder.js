@@ -48,7 +48,7 @@ export function useDocumentBuilder(documentBlocks = null) {
 
     const blockFactories = {
         container: () => ({ id: uid(), type: 'container', title: '', blocks: [] }),
-        text: () => ({ id: uid(), type: 'text', content: '', tip: false }),
+        text: () => ({ id: uid(), type: 'text', content: '' }),
         audio: () => ({ id: uid(), type: 'audio', media: '' }),
         table: () => ({ id: uid(), type: 'table', columns: [], rows: [] }),
         chart: () => ({ id: uid(), type: 'chart', title: '', rows: [] }),

@@ -16,11 +16,7 @@ const paragraphs = computed(() => {
 </script>
 
 <template>
-    <AppTip v-if="block.tip">
-        <p v-for="(p, i) in paragraphs" :key="i" v-html="p"></p>
-    </AppTip>
-
-    <div v-else class="block--text">
+    <div class="block--text">
         <p v-for="(p, i) in paragraphs" :key="i" v-html="p"></p>
     </div>
 </template>

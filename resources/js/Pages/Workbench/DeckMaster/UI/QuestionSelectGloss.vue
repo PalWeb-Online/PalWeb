@@ -61,7 +61,7 @@ const startTypingEffect = (text) => {
                     </div>
                 </div>
                 <div class="term-flashcard-glosses">
-                    <div v-show="DeckStudyStore.quiz[props.index].response">
+                    <div v-show="DeckStudyStore.quiz[props.index].response" style="line-height: 1.5">
                         {{ displayedText }}
                     </div>
                     <div></div>

@@ -45,7 +45,7 @@ const removeMatchPair = (ex, pairIndex) => {
 <template>
     <div class="block-editor--exercises">
         <div class="block-add-buttons">
-            <div v-if="!props.block.exerciseType" v-for="exerciseType in ['input', 'match', 'select']"
+            <div v-if="!props.block.exerciseType" v-for="exerciseType in ['match', 'select', 'input']"
                  :key="exerciseType">
                 <div class="add-button"
                      @click="addExercise({ blockId: props.block.id, type: exerciseType })">+

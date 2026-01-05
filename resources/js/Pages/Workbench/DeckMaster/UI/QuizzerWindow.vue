@@ -3,6 +3,7 @@ import {route} from "ziggy-js";
 import PinButton from "../../../../components/PinButton.vue";
 import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import LessonStatus from "../../../../components/LessonStatus.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 </script>
@@ -30,6 +31,8 @@ const DeckStudyStore = useDeckStudyStore();
                 <DeckActions :model="DeckStudyStore.data.deck"/>
             </template>
         </div>
+
+        <LessonStatus v-if="DeckStudyStore.data.deck?.lesson" :lesson="DeckStudyStore.data.deck.lesson" :model="DeckStudyStore.data.deck"/>
         <div class="window-content-head">
             <div class="window-content-head-title">{{ DeckStudyStore.data.deck?.name }}</div>
         </div>
