@@ -23,6 +23,9 @@ const deleteTerm = () => {
               :href="route('terms.show', model.slug)" role="menuitem" tabindex="-1">
             View Term
         </Link>
+        <Link v-if="model.root" :href="route('roots.show', model.root.id)" role="menuitem" tabindex="-1">
+            View Root
+        </Link>
         <template v-if="UserStore.isAdmin">
             <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
                 Edit Term
