@@ -7,6 +7,7 @@ import UnitNav from "../Units/UI/UnitNav.vue";
 import SkillContainer from "../Lessons/UI/SkillContainer.vue";
 import DeckContainer from "../../../components/DeckContainer.vue";
 import ActivityContainer from "../../../components/ActivityContainer.vue";
+import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({
     layout: Layout
@@ -68,8 +69,8 @@ watch(currentTab, (newTab) => {
                 <div class="lesson-head-title">{{ lesson.title }}</div>
             </div>
             <div class="lesson-data-body">
-                <div>{{ lesson.description }}</div>
-                <div class="lesson-skill-summary">
+                <div>{{ lesson.description ?? '(No description has been written for the Lesson yet.)' }}</div>
+                <div v-if="lesson.document" class="lesson-skill-summary">
                     <div style="font-weight: 700">In this Lesson, you'll learn to:</div>
                     <ul style="margin-block: 1.6rem">
                         <li v-for="skill in lesson.document.skills">
@@ -113,28 +114,26 @@ watch(currentTab, (newTab) => {
         <template v-if="lesson.deck">
             <DeckContainer :model="lesson.deck"/>
         </template>
-        <template v-else>
-            No Deck available for this Lesson yet.
-        </template>
+        <AppTip v-else>
+            <p>No Deck available for this Lesson yet.</p>
+        </AppTip>
     </div>
     <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
-        <template v-if="lesson.document">
-            <SkillContainer v-for="skill in lesson.document.skills" :skill="skill" :key="skill.id"/>
-        </template>
+        <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill" :key="skill.id"/>
 
         <template v-if="lesson.activity">
             <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
             <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
         </template>
-        <p v-else>
-            No Activity available for this Lesson yet.
-        </p>
+        <AppTip v-else>
+            <p>No Activity available for this Lesson yet.</p>
+        </AppTip>
     </div>
     <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
         <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
-        <p v-else>
-            No Dialog available for this Lesson yet.
-        </p>
+        <AppTip v-else>
+            <p>No Dialog available for this Lesson yet.</p>
+        </AppTip>
     </div>
 </template>
 

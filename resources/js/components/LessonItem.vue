@@ -2,6 +2,7 @@
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import WindowSection from "./WindowSection.vue";
+import AppTip from "./AppTip.vue";
 
 const UserStore = useUserStore();
 
@@ -34,13 +35,16 @@ const props = defineProps({
                 </div>
             </template>
             <template #content>
-                <div class="lesson-item-skills">
-                    <div class="lesson-item-skill-wrapper" v-for="skill in lesson.document.skills">
+                <div v-if="lesson.document" class="lesson-item-skills">
+                    <div v-if="lesson.document" class="lesson-item-skill-wrapper" v-for="skill in lesson.document?.skills">
                         <div class="lesson-skill-type featured-title">{{ skill.type }}</div>
                         <div class="lesson-skill-title">{{ skill.title }}</div>
                         <div class="lesson-skill-description">{{ skill.description }}</div>
                     </div>
                 </div>
+                <AppTip v-else>
+                    <p>(No Skills have been added to the Lesson yet.)</p>
+                </AppTip>
             </template>
         </WindowSection>
         <div class="window-footer">
