@@ -331,7 +331,7 @@ defineOptions({
                     </div>
                 </div>
                 <Carousel
-                    :autoplay="2000"
+                    :autoplay="3200"
                     :items-to-show="1"
                     :wrap-around="true"
                 >
@@ -357,7 +357,7 @@ defineOptions({
                     </div>
                 </div>
                 <Carousel
-                    :autoplay="2000"
+                    :autoplay="2800"
                     :items-to-show="1"
                     :wrap-around="true"
                 >

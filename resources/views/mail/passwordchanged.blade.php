@@ -10,7 +10,7 @@
 @section('mail')
 
     <h1>{{ __("mail.subject.passwordchanged") }}</h1>
-    <p>{{ __("mail.greeting") }} {{ $user->name }},</p>
-    <p style="padding: 0 16px;">{{ __("mail.passwordchanged") }}</p>
+    <p style="font-size: 18px">{{ __("mail.greeting") }} {{ $user->name }},</p>
+    <p>{{ __("mail.passwordchanged") }}</p>
 
 @endsection
