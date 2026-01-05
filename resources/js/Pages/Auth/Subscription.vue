@@ -37,6 +37,9 @@ const navigate = () => {
                 }}
             </p>
         </AppTip>
+        <Link href="/billing" v-if="UserStore.isUser"
+        style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--color-dark-primary)"
+        >to Billing Portal</Link>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">
@@ -61,7 +64,7 @@ const navigate = () => {
                     <div>Access to <b>Library: Corpus</b></div>
                     <div>Access to <b>Library: Decks</b></div>
                     <div>Access to <b>Library: Audios</b></div>
-                    <div>Access to <b>Workbench: Record Wizard</b></div>
+                    <div>Access to <b>Workbench: Sound Booth</b></div>
                     <div><b>Pin</b> Terms, Sentences & Decks</div>
                     <div><b>Deck Master</b>: Build Decks</div>
                     <div><b>Deck Master</b>: Study Decks (<b>Practice</b> only)</div>
@@ -82,7 +85,7 @@ const navigate = () => {
                     <div>Access to <b>Library: Corpus</b></div>
                     <div>Access to <b>Library: Decks</b></div>
                     <div>Access to <b>Library: Audios</b></div>
-                    <div>Access to <b>Workbench: Record Wizard</b></div>
+                    <div>Access to <b>Workbench: Sound Booth</b></div>
                     <div><b>Pin</b> Terms, Sentences & Decks</div>
                     <div><b>Deck Master</b>: Build Decks</div>
                     <div><b>Deck Master</b>: Study Decks (<b>Practice</b> & <b>Quiz</b>)</div>

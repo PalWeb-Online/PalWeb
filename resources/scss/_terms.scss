@@ -29,7 +29,7 @@
 
         .term-headword-arb {
             font-size: 3.6rem;
-            font-family: 'Vazirmatn', sans-serif;
+            font-family: $ar_bodyFont;
         }
 
         .term-headword-eng {
@@ -437,7 +437,7 @@
 
             > div {
                 padding: 0.4rem;
-                font-family: $monoFont, $ar_headFont;
+                font-family: $monoFont;
                 border: 0.1rem solid var(--color-dark-primary);
                 box-shadow: -0.3rem 0.3rem rgba(black, 0.25);
                 background: var(--color-pastel-light);
@@ -490,20 +490,6 @@
                 transform: rotate(180deg);
             }
         }
-    }
-}
-
-.chart-dialog {
-    display: grid;
-    gap: 0.8rem;
-    justify-items: center;
-    direction: rtl;
-    text-align: start;
-    background: var(--color-accent-light);
-    padding: 2.4rem 3.2rem 3.2rem;
-
-    .dialog-line-wrapper {
-        width: min(100%, 48rem);
     }
 }
 

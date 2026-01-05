@@ -15,7 +15,7 @@ const props = defineProps({
             <div>Speaker Data</div>
             <Link v-if="$page.component === 'Community/Users/Show'" :href="route('speaker.show', speaker.id)"
                   class="material-symbols-rounded">open_in_new</Link>
-            <Link v-else-if="speaker.user.id === UserStore.user.id" :href="route('record-wizard.index')"
+            <Link v-else-if="speaker.user.id === UserStore.user.id" :href="route('sound-booth.index')"
                   class="material-symbols-rounded">edit</Link>
         </div>
         <div class="speaker-data-row">

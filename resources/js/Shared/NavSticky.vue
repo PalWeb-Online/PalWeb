@@ -1,11 +1,29 @@
 <script setup>
-import { route } from "ziggy-js";
-import { useNavigationStore } from "../stores/NavigationStore.js";
-import { useSearchStore } from "../stores/SearchStore.js";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import {route} from "ziggy-js";
+import {useNavigationStore} from "../stores/NavigationStore.js";
+import {useSearchStore} from "../stores/SearchStore.js";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import ThemePicker from "../components/Modals/ThemePicker.vue";
-import { usePage } from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
+import { useConnectionStatus } from '../composables/useConnectionStatus.js';
+import {useActions} from "../composables/Actions.js";
+import {useI18n} from "vue-i18n";
+
+const { locale } = useI18n();
+
+const changeLanguage = (lang) => {
+    locale.value = lang;
+
+    router.post(route('language.store', lang), {}, {
+        preserveScroll: true,
+        onSuccess: () => closeMenu()
+    });
+};
+
+const { status } = useConnectionStatus(Echo);
+
+const {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu} = useActions();
 
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
@@ -13,7 +31,7 @@ const SearchStore = useSearchStore();
 const showThemePicker = ref(false);
 
 const {
-    props: { utcOffsetMinutes },
+    props: {utcOffsetMinutes},
 } = usePage();
 
 const utcOffsetHours = utcOffsetMinutes / 60;
@@ -70,7 +88,6 @@ onMounted(() => {
         if (document.visibilityState === "visible") {
             displayedTime.value = Date.now();
 
-            // animation loop isn't running, start it up again
             if (animationFrameId === null) {
                 animationFrameId = requestAnimationFrame(updateDisplayedTime);
             }
@@ -105,7 +122,12 @@ onMounted(() => {
                 }}
                 (UTC +{{ utcOffsetHours }})
             </div>
-            <Link :href="route('homepage')">PalWeb 2.1 (Nabatean)</Link>
+            <div class="material-symbols-rounded connection-status">
+                <span v-if="status === 'online'" style="color: var(--color-accent-medium)">wifi</span>
+                <span v-else-if="status === 'connecting'" >wifi_find</span>
+                <span v-else>wifi_off</span>
+            </div>
+            <Link :href="route('homepage')">PalWeb 2.2 (Jerusalem)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button
@@ -114,6 +136,22 @@ onMounted(() => {
             >
                 palette
             </button>
+<!--            <div class="popup-menu-wrapper" :class="{ active: isOpen }">-->
+<!--                <button ref="reference" @click="toggleMenu()" class="material-symbols-rounded"-->
+<!--                        @keydown.enter.prevent="toggleMenu(true)">-->
+<!--                    language-->
+<!--                </button>-->
+
+<!--                <Teleport to="body">-->
+<!--                    <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu"-->
+<!--                         role="menu" @keydown="onMenuKeydown"-->
+<!--                    >-->
+<!--                        <button :class="{selected: locale === 'en'}" @click="changeLanguage('en')">English</button>-->
+<!--                        <button :class="{selected: locale === 'es'}" @click="changeLanguage('es')">Español</button>-->
+<!--                        <button :class="{selected: locale === 'ar'}" @click="changeLanguage('ar')">عربيّ</button>-->
+<!--                    </div>-->
+<!--                </Teleport>-->
+<!--            </div>-->
             <button
                 class="material-symbols-rounded"
                 @click="SearchStore.openSearchGenie('search')"
@@ -128,30 +166,7 @@ onMounted(() => {
             </button>
         </div>
     </div>
-
-    <!--    <x-dropdown>-->
-    <!--        <x-slot name="trigger">-->
-    <!--            <a class="material-symbols-rounded" @click="open = ! open">language</a>-->
-    <!--        </x-slot>-->
-    <!--        <x-slot name="content">-->
-    <!--            <form id="frm-en" method="post" action="{{ route("language.store", "en") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">EN</button>-->
-    <!--            </form>-->
-
-    <!--            <form id="frm-es" method="post" action="{{ route("language.store", "es") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">ES</button>-->
-    <!--            </form>-->
-
-    <!--            <form id="frm-ar" method="post" action="{{ route("language.store", "ar") }}">-->
-    <!--            @csrf-->
-    <!--            <button onclick="this.closest('form').submit();return false;">AR</button>-->
-    <!--            </form>-->
-    <!--        </x-slot>-->
-    <!--    </x-dropdown>-->
-
     <ModalWrapper v-model="showThemePicker">
-        <ThemePicker />
+        <ThemePicker/>
     </ModalWrapper>
 </template>

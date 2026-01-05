@@ -185,7 +185,7 @@ watch(() => SearchStore.data.results, () => {
                 <div
                     v-for="(model, index) in SearchStore.data.results[SearchStore.data.activeModel]"
                     :key="model.id"
-                    :class="['sg-result-item', SearchStore.data.activeModel, { active: activeIndex === index }]"
+                    :class="['sg-result-item', SearchStore.data.activeModel, { active: activeIndex === index, locked: SearchStore.data.activeModel === 'decks' && !model.unlocked }]"
                     @mousemove="handleMouseMove($event)"
                     @mouseleave="handleMouseLeave"
                     @mouseover="activeIndex = index"
@@ -195,12 +195,8 @@ watch(() => SearchStore.data.results, () => {
                         <div>{{ model.term }}</div>
                         <div>({{ model.translit }}) {{ model.category }}.</div>
                     </template>
-                    <template v-else-if="SearchStore.data.activeModel === 'sentences'">
-                        <div>{{ model.sentence }}</div>
-                    </template>
-                    <template v-else-if="SearchStore.data.activeModel === 'decks'">
-                        <div>{{ model.name }}</div>
-                    </template>
+                    <div v-else-if="SearchStore.data.activeModel === 'sentences'">{{ model.sentence }}</div>
+                    <div v-else-if="SearchStore.data.activeModel === 'decks'">{{ model.name }}</div>
                 </div>
             </template>
             <div v-else-if="!SearchStore.isLoading" class="sg-empty">

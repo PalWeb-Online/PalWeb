@@ -6,11 +6,11 @@ import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 import AppTooltip from "../AppTooltip.vue";
 
+const UserStore = useUserStore();
+
 const props = defineProps({
     model: Object,
 });
-
-const UserStore = useUserStore();
 
 const isAuthor = computed(() => {
     return UserStore.user?.id === props.model.author.id;
@@ -45,10 +45,10 @@ const tooltip = ref(null);
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link :href="route('decks.show', model.id)" role="menuitem" tabindex="-1">
+        <Link v-if="$page.component !== 'Library/Decks/Show'"
+            :href="route('decks.show', model.id)" role="menuitem" tabindex="-1">
             View Deck
         </Link>
-
         <template v-if="isAuthor">
             <Link :href="route('deck-master.build', model.id)" role="menuitem" tabindex="-1">
                 Edit Deck
@@ -68,6 +68,9 @@ const tooltip = ref(null);
                 Study Deck
             </Link>
             <template v-if="UserStore.isStudent">
+                <Link v-if="model.lesson" :href="route('lessons.show', model.lesson.global_position)" role="menuitem" tabindex="-1">
+                    View Lesson
+                </Link>
                 <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })" role="menuitem" tabindex="-1">
                     View Scores
                 </Link>

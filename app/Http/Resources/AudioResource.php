@@ -19,7 +19,7 @@ class AudioResource extends JsonResource
             'filename' => $this->filename,
             'speaker' => new SpeakerResource($this->whenLoaded('speaker')),
             'pronunciation' => new PronunciationResource($this->whenLoaded('pronunciation')),
-            'created_at' => $this->created_at->format('j F Y')
+            'created_at' => $this->created_at->format('j F Y'),
         ];
     }
 }

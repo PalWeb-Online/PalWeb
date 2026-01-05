@@ -27,7 +27,7 @@ class DeckScope implements Scope
             );
 
         $builder
-            ->with(['author'])
+            ->with(['author', 'lesson'])
             ->withCount('terms');
     }
 }

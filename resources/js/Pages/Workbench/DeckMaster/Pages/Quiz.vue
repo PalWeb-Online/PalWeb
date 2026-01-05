@@ -8,6 +8,9 @@ import QuestionInputInflection from "../UI/QuestionInputInflection.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import QuestionSelectTerm from "../UI/QuestionSelectTerm.vue";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
+import {useNavGuard} from "../../../../composables/NavGuard.js";
+import NavGuard from "../../../../components/Modals/NavGuard.vue";
+import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -17,6 +20,12 @@ const isValidRequest = computed(() => {
 
 const showInflections = ref(false);
 const showTranslit = ref(false);
+
+const hasNavigationGuard = computed(() => {
+    return true;
+});
+
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 <template>
     <QuizzerWindow>
@@ -32,14 +41,15 @@ const showTranslit = ref(false);
                 Select the Term that best fits the blank in the Sentence. <b>Terms are listed in their Dictionary form,
                 not necessarily as they would be expected to appear in the Sentence.</b></p>
         </AppTip>
-        <div class="quiz-settings-wrapper" style="justify-content: space-around">
+        <div class="settings-wrapper" style="justify-content: space-around">
             <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
             <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'glosses'"
                           v-model="showInflections" label="Show Inflections"/>
         </div>
     </QuizzerWindow>
 
-    <div class="quiz-container" v-if="!DeckStudyStore.data.isLoading">
+    <LoadingSpinner v-if="DeckStudyStore.data.isLoading"/>
+    <div class="quiz-container" v-else>
         <QuestionSelectGloss v-if="DeckStudyStore.settings.quizType === 'glosses'"
                              v-for="(question, index) in DeckStudyStore.quiz"
                              :question="question"
@@ -58,8 +68,17 @@ const showTranslit = ref(false);
                             :question="question" :index="index"
                             :showTranslit="showTranslit"
         />
-    </div>
-    <LoadingSpinner v-else/>
 
-    <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">check</button>
+        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">
+            check
+        </button>
+    </div>
+
+    <ModalWrapper v-model="showAlert">
+        <NavGuard
+            message="You haven't finished the Quiz yet. Are you sure you want to leave this page? Your progress will not be saved."
+            @confirm="handleConfirm"
+            @cancel="handleCancel"
+        />
+    </ModalWrapper>
 </template>

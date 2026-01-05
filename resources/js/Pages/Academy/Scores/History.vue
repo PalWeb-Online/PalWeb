@@ -12,6 +12,10 @@ import PurgeScores from "../../../components/Modals/PurgeScores.vue";
 import {nextTick, onMounted, ref, watch} from "vue";
 import ScoreDetail from "../../../components/ScoreDetail.vue";
 import {router} from "@inertiajs/vue3";
+import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
+import ActivityActions from "../../../components/Actions/ActivityActions.vue";
+import ActivityBlocksWrapper from "../Activities/UI/ActivityBlocksWrapper.vue";
+import {useScoreManager} from "../../../composables/useScoreManager.js";
 
 defineOptions({
     layout: Layout
@@ -25,12 +29,9 @@ const props = defineProps({
     selectedScore: Object,
 })
 
-const showPurgeScores = ref(false);
+const {getScoreStats} = useScoreManager();
 
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-});
+const showPurgeScores = ref(false);
 
 const deleteScore = (id) => {
     if (!confirm('Are you sure you want to delete this Score?')) return;
@@ -41,7 +42,7 @@ function scrollToDetail() {
     nextTick(() => {
         const el = document.querySelector('#score-detail');
         if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            el.scrollIntoView({behavior: 'smooth', block: 'start'});
         }
     });
 }
@@ -61,18 +62,20 @@ watch(() => props.selectedScore, (newVal) => {
 <template>
     <Head :title="`Academy: Score History for ${model.id}`"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>my Progress</h1></Link>
+        <Link :href="route('scores.index')"><h1>Scores</h1></Link>
     </div>
     <div id="app-body">
-        <div id="quizzer-container" class="window-container">
+        <div class="window-container">
             <div class="window-header">
                 <Link :href="route('scores.index')" class="material-symbols-rounded">home</Link>
-                <div class="window-header-url">www.palweb.app/academy/scores/history/{{ '{'+scorable_type+'}'}}</div>
+                <div class="window-header-url">www.palweb.app/academy/scores/history/{{ '{' + scorable_type + '}' }}
+                </div>
             </div>
             <div class="window-section-head">
                 <h1>{{ scorable_type }}</h1>
                 <PinButton :modelType="scorable_type" :model="model"/>
                 <DeckActions v-if="scorable_type === 'deck'" :model="model"/>
+                <ActivityActions v-if="scorable_type === 'activity'" :model="model"/>
             </div>
             <div class="window-content-head">
                 <div class="window-content-head-title">{{ scorable_type === 'deck' ? model.name : model.title }}</div>
@@ -96,12 +99,20 @@ watch(() => props.selectedScore, (newVal) => {
                     <h2>Detail</h2>
                     <button @click="deleteScore(selectedScore?.id)" class="material-symbols-rounded">delete</button>
                 </div>
-                <ScoreDetail :score="selectedScore"/>
+                <ScoreDetail :score="selectedScore">
+                    <div class="quiz-answer-array" v-if="scorable_type === 'deck'">
+                        <DeckAnswerItem v-for="(exercise, index) in selectedScore.results" :key="index"
+                                        :exercise="exercise"
+                        />
+                    </div>
+                </ScoreDetail>
             </template>
             <template v-else>
                 <div class="window-section-head">
                     <h2>History</h2>
-                    <button v-if="totalCount > 0" @click="showPurgeScores = true" class="material-symbols-rounded">delete_sweep</button>
+                    <button v-if="totalCount > 0" @click="showPurgeScores = true" class="material-symbols-rounded">
+                        delete_sweep
+                    </button>
                 </div>
                 <AppTip>
                     <p v-if="totalCount > 0">Displaying all {{ totalCount }} Scores for this
@@ -115,12 +126,12 @@ watch(() => props.selectedScore, (newVal) => {
                 </AppTip>
                 <template v-if="totalCount > 0">
                     <div class="score-item-wrapper" v-for="score in scores.data">
-                        <Link :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
-                              class="score-item" preserve-scroll preserve-state>
-                            <div style="text-transform: capitalize">{{ score.settings.quizType }}</div>
-                            <div>{{ formatter.format(score.score) }} ({{
-                                    score.results.filter(q => q.correct).length
-                                }}/{{ score.results.length }})
+                        <Link
+                            :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
+                            class="score-item" preserve-scroll preserve-state>
+                            <div style="text-transform: capitalize">{{ score.settings.quizType ?? 'Activity' }}</div>
+                            <div>{{ getScoreStats(score).formatted }}
+                                ({{ getScoreStats(score).correct }}/{{ getScoreStats(score).total }})
                             </div>
                             <div style="font-size: 1.2rem">{{ score.created_at }}</div>
                         </Link>
@@ -130,6 +141,8 @@ watch(() => props.selectedScore, (newVal) => {
                 </template>
             </template>
         </div>
+
+        <ActivityBlocksWrapper v-if="selectedScore && scorable_type === 'activity'" :blocks="selectedScore.results"/>
     </div>
 
     <ModalWrapper v-model="showPurgeScores">

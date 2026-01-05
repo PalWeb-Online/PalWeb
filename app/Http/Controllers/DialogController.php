@@ -9,6 +9,7 @@ use App\Http\Resources\SentenceResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class DialogController extends Controller
@@ -23,6 +24,8 @@ class DialogController extends Controller
 
     public function show(Dialog $dialog): \Inertia\Response|RedirectResponse
     {
+        Gate::authorize('view', $dialog);
+
         return Inertia::render('Academy/Dialogs/Show', [
             'section' => 'academy',
             'dialog' => new DialogResource(
@@ -35,8 +38,8 @@ class DialogController extends Controller
             ),
         ]);
 
-//        View::share('pageDescription',
-//            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
+        //        View::share('pageDescription',
+        //            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
     }
 
     public function store(StoreDialogRequest $request): RedirectResponse
@@ -46,6 +49,7 @@ class DialogController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $dialog->title])]);
+
         return to_route('speech-maker.dialog', $dialog);
     }
 
@@ -56,6 +60,7 @@ class DialogController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $dialog->title])]);
+
         return to_route('speech-maker.dialog', $dialog);
     }
 
@@ -85,6 +90,7 @@ class DialogController extends Controller
         $dialog->delete();
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $dialog->title])]);
+
         return to_route('dialogs.index');
     }
 }

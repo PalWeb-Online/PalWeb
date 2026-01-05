@@ -18,7 +18,7 @@ defineOptions({
             on PalWeb:</p>
         <ul>
             <li><a href="#deck-master">Deck Master</a></li>
-            <li><a href="#record-wizard">Record Wizard</a></li>
+            <li><a href="#record-wizard">Sound Booth</a></li>
         </ul>
         <p>How these tools are used is explained in the section of this page corresponding to each.</p>
     </div>
@@ -95,22 +95,22 @@ defineOptions({
         </p>
     </div>
     <div class="wiki-content-block" id="record-wizard">
-        <h1>Record Wizard</h1>
-        <p>The <b>Record Wizard</b> is a tool to record yourself speaking Arabic. Its primary purpose is as a means to
+        <h1>Sound Booth</h1>
+        <p>The <b>Sound Booth</b> is a tool to record yourself speaking Arabic. Its primary purpose is as a means to
             source audio samples of the many possible Pronunciations of the Terms in the PalWeb Dictionary; this is for
             documentation purposes, but is also practical for learners of Arabic dialects to have something to listen
             to,
             practice with & emulate.</p>
-        <p>But the <b>Record Wizard</b> is not necessarily only for native speakers to use. If you speak Palestinian
+        <p>But the <b>Sound Booth</b> is not necessarily only for native speakers to use. If you speak Palestinian
             Arabic
-            well, or even if you just want to practice, you are welcome to use the Record Wizard too. All Audio files
+            well, or even if you just want to practice, you are welcome to use the Sound Booth too. All Audio files
             are
             associated with a Speaker whose Fluency level is indicated everywhere that they appear, so it will always be
             clear which Audios belong to native speakers as opposed to other learners of Arabic.</p>
 
-        <p>On opening the <b>Record Wizard</b>, your browser may ask you for permission to use of your mic; you must
+        <p>On opening the <b>Sound Booth</b>, your browser may ask you for permission to use of your mic; you must
             allow
-            this to proceed. The <b>Record Wizard</b> is divided into four areas:</p>
+            this to proceed. The <b>Sound Booth</b> is divided into four areas:</p>
 
         <h2>Speaker</h2>
         <p>On the <b>Speaker</b> page, you will create or adjust your Speaker profile & test your mic.</p>
@@ -215,7 +215,7 @@ defineOptions({
             files on PalWeb without exiting the Wizard, in case you would like to continue the recording session.</p>
 
         <AppTip>
-            <p>By using the PalWeb Record Wizard, you agree to the publication and use of your recordings under the
+            <p>By using the Sound Booth, you agree to the publication and use of your recordings under the
                 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons CC BY 4.0</a>
                 license, which allows anyone to share, use, and adapt your recordings, even for commercial purposes,
                 provided they give proper attribution. PalWeb will only use your recordings for non-commercial

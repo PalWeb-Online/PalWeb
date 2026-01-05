@@ -16,13 +16,12 @@ class AudioController extends Controller
 {
     public function __construct(
         protected AudioService $audioService
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'latest'], $request->only([
-            'location', 'dialect', 'gender', 'sort'
+            'location', 'dialect', 'gender', 'sort',
         ]));
 
         $query = Audio::query()
@@ -56,7 +55,7 @@ class AudioController extends Controller
 
     public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
     {
-//        todo: create AudioPolicy
+        //        todo: create AudioPolicy
         if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
             return $request->expectsJson()
                 ? response()->json(['error' => 'Unauthorized.'], 403)
@@ -68,10 +67,12 @@ class AudioController extends Controller
             $audio->delete();
 
             session()->flash('notification', ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
+
             return back();
 
         } catch (\Exception $e) {
             session()->flash('notification', ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
+
             return back();
         }
     }

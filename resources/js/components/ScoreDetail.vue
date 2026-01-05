@@ -1,21 +1,16 @@
 <script setup>
-import AnswerItem from "../Pages/Workbench/DeckMaster/UI/AnswerItem.vue";
 import {computed} from "vue";
-import {useDeckStudyStore} from "../Pages/Workbench/DeckMaster/Stores/DeckStudyStore.js";
-
-const DeckStudyStore = useDeckStudyStore();
+import {useScoreManager} from "../composables/useScoreManager.js";
 
 const props = defineProps({
-    score: Object,
+    model: {type: Object, required: false},
+    score: {type: Object, required: true},
 });
 
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-});
+const { getScoreStats } = useScoreManager();
 
 const scoreMessage = computed(() => {
-    if (props.score.score === 1) {
+    if (props.score.score >= 1) {
         return "Flawless!";
     }
     if (props.score.score >= 0.85) {
@@ -31,8 +26,8 @@ const scoreMessage = computed(() => {
 });
 </script>
 <template>
-    <div class="score-metadata">
-        <div class="score-metadata-row">
+    <div class="score-metadata" v-if="score.id || score.scorable_type === 'deck'">
+        <div class="score-metadata-row" v-if="score.scorable_type === 'deck'">
             <div>
                 <span style="font-weight: 700">Quiz Type</span>
                 <span style="text-transform: capitalize">{{ score.settings.quizType }}</span>
@@ -58,26 +53,22 @@ const scoreMessage = computed(() => {
     </div>
     <div class="quiz-results">
         <div class="score-figure featured-title">
-            <div>{{ formatter.format(score.score) }}</div>
-            <div v-if="!score.id && DeckStudyStore.score.score > DeckStudyStore.data.model?.stats.highest"
-                 class="quiz-results-callout">new record!
+            <div>{{ getScoreStats(score).formatted }}</div>
+            <div v-if="!score.id && score.score > model?.stats.highest" class="quiz-results-callout">
+                new record!
             </div>
         </div>
         <div class="score-feedback">
             <div>{{ scoreMessage }}</div>
             <div style="font-weight: 700">
                 You answered
-                {{ score.results.filter(q => q.correct).length }}
+                {{ getScoreStats(score).correct }}
                 out of
-                {{ score.results.length }}
+                {{ getScoreStats(score).total }}
                 questions correctly.
             </div>
             <div>Review your answers below.</div>
         </div>
     </div>
-    <div class="quiz-answer-array">
-        <AnswerItem v-for="(question, index) in score.results" :key="index"
-                    :question="question"
-                    :index="index"/>
-    </div>
+    <slot/>
 </template>

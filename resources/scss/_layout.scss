@@ -11,9 +11,13 @@ body {
 
 #app-container {
     display: grid;
-    min-height: calc(100vh - 3.6rem);
+    min-height: calc(100vh - 4.8rem);
     grid-template-rows: min-content 1fr;
     align-content: start;
+
+    @media (min-width: 960px) {
+        min-height: calc(100vh - 3.6rem);
+    }
 
     &.academy, &.workbench:has(.dm-mode-study) {
         background: var(--color-accent-medium);
@@ -41,6 +45,10 @@ body {
 
     &.workbench {
         background: var(--color-medium-primary);
+    }
+
+    &.office {
+        background: var(--color-accent-light);
     }
 
     &.account {
@@ -111,7 +119,7 @@ body {
 
     @media (min-width: 960px) {
         gap: 3.2rem;
-        padding: 3.2rem;
+        padding: 3.2rem 3.2rem 12.8rem;
 
         .app-body-section {
             padding: 0;
@@ -124,6 +132,9 @@ body {
 }
 
 .app-body-section {
+    display: grid;
+    gap: 3.2rem;
+
     #paginator .pagination {
         margin-block: 3.2rem;
         height: 4.8rem;
@@ -158,44 +169,38 @@ body {
     gap: 6.4rem;
     justify-items: center;
     margin-block: 6.4rem 12.8rem;
+}
 
-    .homepage-hero {
-        width: 90%;
-        display: grid;
+.app-logo-wrapper {
+    width: 90%;
+    display: grid;
 
-        .logo {
-            animation: bounceIn 0.5s;
-            z-index: 1;
+    h1 {
+        text-align: center;
+        text-transform: none;
+        font-family: $headFont;
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        margin-inline-start: 17.5%;
+        margin-block-start: -1.5em;
+        padding: 0.75em;
+        line-height: 1.25;
+        color: var(--color-dark-primary);
+        background: white;
+        filter: drop-shadow(-0.25em 0.25em 0 rgba(black, 0.25));
+        position: relative;
 
-            @include pop-on-hover;
-        }
-
-        h1 {
-            text-align: center;
-            text-transform: none;
-            font-family: $headFont;
-            font-size: clamp(1.8rem, 4vw, 3.2rem);
-            margin-inline-start: 17.5%;
-            margin-block-start: -1.5em;
-            padding: 0.75em;
-            line-height: 1.25;
-            color: var(--color-dark-primary);
-            background: white;
-            filter: drop-shadow(-0.25em 0.25em 0 rgba(black, 0.25));
-            position: relative;
-
-            img {
-                position: absolute;
-                bottom: -25%;
-                left: -7.5%;
-                width: 3em;
-            }
-
-            .typing-cursor {
-                transition: opacity 0.2s;
-            }
+        .typing-cursor {
+            transition: opacity 0.2s;
         }
     }
+}
+
+.app-logo {
+    animation: bounceIn 0.5s;
+    z-index: 1;
+    cursor: pointer;
+
+    @include pop-on-hover;
 }
 
 .homepage-section {
@@ -279,6 +284,40 @@ body {
             width: 100%;
             border-radius: 0.25em;
         }
+    }
+
+    .carousel__slide img {
+        border-radius: 0.8rem;
+    }
+
+    .carousel__pagination {
+        justify-self: center;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin: 0 1.6rem 0;
+    }
+
+    .carousel__pagination-item {
+        padding: 0;
+        flex-grow: 1;
+        min-width: 1.6rem;
+    }
+
+    .carousel__pagination-button {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .carousel__pagination-button::after {
+        width: 100% !important;
+        height: 1.6rem !important;
+        border-radius: 3.2rem !important;
+        background: var(--color-accent-medium) !important;
+    }
+
+    .carousel__pagination-button--active::after {
+        background: var(--color-medium-primary) !important;
     }
 }
 
@@ -409,6 +448,7 @@ body {
             font-family: $displayFont;
             font-size: 0.5em;
             line-height: 1.25;
+            hyphens: none;
         }
     }
 }
@@ -416,23 +456,24 @@ body {
 .footer-container {
     align-self: end;
     display: grid;
-    gap: 6.4rem;
-
+    gap: 3.2rem;
     font-family: $headFont;
     color: white;
     font-size: 1.6rem;
-    padding: 4.8rem min(5vw, 3.6rem) 0;
-    //margin-block-start: calc(2 * 3.2rem + 1.6rem);
     background: var(--color-medium-secondary);
     position: relative;
 
+    .footer-body {
+        display: grid;
+        justify-items: center;
+        padding-inline: min(4vw, 3.6rem);
+        padding-block-start: 3.2rem;
+    }
+
     .footer-social {
-        align-self: center;
-        justify-self: end;
         display: flex;
         gap: 0.8rem;
-        transition: 0.1s;
-        margin-block-end: -3.2rem;
+        transition: transform 0.1s;
 
         img {
             width: 4.8rem;
@@ -444,86 +485,110 @@ body {
         }
     }
 
-    .footer-body {
+    .footer-logo-wrapper {
+        width: min(80%, 48rem);
         display: grid;
-        gap: 6.4rem;
-    }
+        grid-template-areas: 'overlap';
+        align-items: end;
+        justify-items: end;
+        padding-block: 3.2rem 4.8rem;
 
-    .footer-hero {
-        display: grid;
-        gap: 1.6rem;
-        width: 100%;
-        max-width: 64rem;
-
-        .footer-hero-title {
-            font-size: clamp(8.0rem, 18vw, 12.8rem);
-            font-weight: 700;
-            font-family: $logoFont;
-            text-transform: lowercase;
-            margin-inline-start: 0.4rem;
-            filter: drop-shadow(-0.075em 0.075em 0 rgba(0, 0, 0, 0.25));
+        & > * {
+            grid-area: overlap;
         }
 
-        .footer-hero-subtitle {
-            font-family: $monoFont;
-            font-size: 1.4rem;
-            line-height: 1.75;
+        div {
+            color: var(--color-accent-medium);
+            font-family: $headFont;
+            font-size: min(3.3vw, 2.2rem);
+            font-weight: 700;
+            margin-inline-start: 15%;
+            line-height: 1.2;
         }
     }
 
     .footer-links-wrapper {
-        flex-grow: 1;
-        flex-shrink: 0;
-        flex-basis: 33%;
         display: grid;
-        gap: 1.6rem;
         grid-template-columns: repeat(2, 1fr);
         padding-block-end: 1.6rem;
-    }
+        width: min(64rem, 100%);
 
-    .footer-links {
-        display: grid;
-        align-content: start;
-        justify-content: start;
-        gap: 0.8rem;
+        .footer-links {
+            display: grid;
+            align-content: start;
+            justify-content: center;
+            justify-items: center;
+            gap: 0.8rem;
 
-        .footer-links-title {
-            color: var(--color-accent-medium);
-            text-transform: uppercase;
-            font-weight: 700;
-            font-size: 2.0rem;
-        }
+            div {
+                color: var(--color-accent-medium);
+                font-family: $displayFont;
+                font-size: 3.2rem;
+                text-transform: uppercase;
+                //padding-block-end: 1.2rem;
+            }
 
-        a:hover {
-            text-decoration: underline;
+            a {
+                font-size: 1.4rem;
+                font-family: $monoFont
+            }
+
+            a:hover {
+                text-decoration: 0.1rem underline;
+            }
         }
     }
 
     .footer-bottom {
+        font-family: $monoFont;
         font-size: 1.2rem;
+        font-weight: 700;
         text-align: center;
-        border-block-start: 0.3rem dotted var(--color-accent-medium);
-        padding-block: 1.6rem;
+        padding-block: 0.8rem;
+        background: var(--color-dark-primary);
     }
 
     @media print {
         display: none;
     }
 
-    @media (min-width: 1280px) {
+    @media (min-width: 960px) {
+        .footer-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 6.4rem;
+            padding-block-start: 0;
+        }
+
         .footer-social {
             position: absolute;
             top: -2.4rem;
             right: 4.8rem;
+
+            img {
+                width: 4.8rem;
+            }
         }
 
-        .footer-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+        .footer-logo-wrapper {
+            width: min(48rem, 40%);
+            margin-block-start: -3.2rem;
+            padding-block: 0;
 
-            .footer-links-wrapper {
-                flex-grow: 0;
+            div {
+                font-size: min(2.2rem, 1.7vw);
+            }
+        }
+
+        .footer-links-wrapper {
+            flex-basis: 50%;
+            flex-grow: 0;
+            margin-block-start: 6.4rem;
+
+            .footer-links {
+                justify-content: start;
+                justify-items: start;
             }
         }
     }

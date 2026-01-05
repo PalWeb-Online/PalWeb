@@ -6,6 +6,7 @@ use App\Mail\UserVerified;
 use App\Models\Badge;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class AfterEmailVerified
@@ -17,7 +18,8 @@ class AfterEmailVerified
      */
     public function __construct(
         protected FlasherInterface $flasher
-    ) {}
+    ) {
+    }
 
     /**
      * Handle the event.
@@ -28,8 +30,14 @@ class AfterEmailVerified
 
         $event->user->badges()->attach($badge);
 
-        session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
+        session()->flash('notification',
+            ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
 
-        Mail::to($event->user)->send(new UserVerified($event->user));
+        try {
+            Mail::to($event->user)->send(new UserVerified($event->user));
+
+        } catch (\Throwable $e) {
+            Log::error("Failed to send subscription email: ".$e->getMessage());
+        }
     }
 }

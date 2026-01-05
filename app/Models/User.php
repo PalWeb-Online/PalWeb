@@ -48,16 +48,26 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    /**
-     * Returns true if the current user is an admin
-     */
+    public function isSuperuser(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
     public function isAdmin(): bool
     {
+        if (session()->has('view_as_role')) {
+            return false;
+        }
+
         return $this->hasRole('admin');
     }
 
     public function isStudent(): bool
     {
+        if (session()->get('view_as_role') === 'student') {
+            return true;
+        }
+
         return $this->hasRole('student');
     }
 
@@ -71,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
         })->all();
 
         if (empty($roles)) {
-            return 'hobbyist';
+            return 'pal';
         }
 
         return implode(',', $roles);
@@ -135,5 +145,79 @@ class User extends Authenticatable implements MustVerifyEmail
     public function speaker(): hasOne
     {
         return $this->hasOne(Speaker::class);
+    }
+
+    public function scores(): HasMany
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function lessons(): BelongsToMany
+    {
+        return $this->belongsToMany(Lesson::class)
+            ->withPivot(['stage', 'completed'])
+            ->withTimestamps();
+    }
+
+    protected ?array $lessonProgressCache = null;
+    protected ?array $scoreCountsCache = null;
+
+    public function forgetLessonProgressCache(): void
+    {
+        $this->lessonProgressCache = null;
+    }
+
+    public function getLessonProgress(): array
+    {
+        if ($this->lessonProgressCache === null) {
+            $this->lessonProgressCache = $this->lessons()
+                ->get()
+                ->keyBy('id')
+                ->map(fn($lesson) => [
+                    'stage' => (int) $this->isAdmin() ? 3 : $lesson->pivot->stage,
+                    'completed' => (bool) $this->isAdmin() ? true : $lesson->pivot->completed,
+                ])
+                ->toArray();
+        }
+
+        return $this->lessonProgressCache;
+    }
+
+    public function getScoreCounts(): array
+    {
+        if ($this->scoreCountsCache === null) {
+            $this->scoreCountsCache = $this->scores()
+                ->where('score', 1)
+                ->select('scorable_type', 'scorable_id', \DB::raw('count(*) as total'))
+                ->groupBy('scorable_type', 'scorable_id')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return ["{$item->scorable_type}:{$item->scorable_id}" => (int) $item->total];
+                })
+                ->toArray();
+        }
+
+        return $this->scoreCountsCache;
+    }
+
+    public function hasUnlockedLesson(Lesson $lesson): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        return isset($this->getLessonProgress()[$lesson->id]);
+    }
+
+    public function hasCompletedLesson(Lesson $lesson): bool
+    {
+        if ($this->isAdmin()) return true;
+
+        return $this->getLessonProgress()[$lesson->id]['completed'] ?? false;
+    }
+
+    public function getLessonStage(Lesson $lesson): int
+    {
+        if ($this->isAdmin()) return 3;
+
+        return $this->getLessonProgress()[$lesson->id]['stage'] ?? 1;
     }
 }

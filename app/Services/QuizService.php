@@ -73,11 +73,16 @@ class QuizService
 
         foreach ($deck->terms->shuffle()->take(50) as $term) {
             $term->load(['inflections']);
-            if ($term->inflections->isEmpty()) {
+
+            $validInflections = $term->inflections->filter(function ($inflection) {
+                return $inflection->form !== 'genitive';
+            });
+
+            if ($validInflections->isEmpty()) {
                 continue;
             }
 
-            $inflection = $term->inflections->random();
+            $inflection = $validInflections->random();
 
             $quiz[] = [
                 'term' => new TermResource($term)->additional(['detail' => true]),
@@ -98,7 +103,6 @@ class QuizService
         $withTranslation = $settings['options']['withTranslation'] ?? true;
 
         $quiz = [];
-
 
         foreach ($deck->terms->shuffle() as $term) {
             if (count($quiz) >= 25) {
@@ -124,7 +128,6 @@ class QuizService
                 )
                 ->pluck('id')
                 ->push($term->id);
-
 
             if ($withTranslation) {
                 $decoys = $deck->terms

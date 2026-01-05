@@ -34,528 +34,349 @@
     }
 }
 
-#unit-nav {
-    text-align: center;
-    user-select: none;
+.unit-meta {
     display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
     align-items: center;
-    gap: 1.6rem;
-    font-family: $monoFont, $ar_headFont;
+    gap: 3.2rem;
+    padding: 1.6rem;
+    background: var(--color-accent-light);
+    color: var(--color-dark-primary);
+    font-family: $monoFont;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-transform: uppercase;
 
-    .unit-nav-units {
-        display: flex;
-        align-items: center;
-        gap: 4.8rem;
-
-        * {
-            font-size: 6.4rem;
-            color: var(--color-dark-primary);
-            font-family: $displayFont;
-            text-transform: uppercase;
-            transition: 0.1s;
-
-            &.active {
-                transform: translate(0.4rem, -0.4rem);
-                text-shadow: -0.4rem 0.4rem 0 var(--color-accent-medium);
-            }
-        }
-
-        a:hover {
-            transform: translate(0.4rem, -0.4rem);
-            text-shadow: -0.4rem 0.4rem 0 var(--color-accent-medium);
-        }
+    a:hover {
+        text-decoration: 0.2rem underline;
     }
 
-    .unit-nav-lessons {
-        flex: 1 0 100%;
+    & > div {
         display: flex;
-        flex-flow: row;
-        justify-content: space-between;
-        align-items: center;
-        color: $grn;
+        gap: 1.6rem;
     }
 }
 
-.lesson-nav-link {
+#lesson-nav {
+    display: grid;
+    gap: 3.2rem;
+    align-content: start;
+    justify-items: center;
+
+    & > * {
+        width: min(100%, 96rem);
+    }
+
+    @media (min-width: 960px) {
+        padding-inline: 3.2rem;
+    }
+}
+
+.lesson-planner.featured-title {
+    color: var(--color-accent-medium);
+    background: var(--color-medium-primary);
+    text-align: center;
+}
+
+.lesson-planner--skill {
+    display: grid;
+    gap: 3.2rem;
+    border-block-start: 0.8rem solid var(--color-accent-medium);
+    padding-block: 3.2rem;
+}
+
+.block-add-buttons {
+    display: flex;
+    align-items: center;
+    gap: 3.2rem;
+    font-weight: 700;
+
+    & > span {
+        font-family: $monoFont;
+    }
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-family: $headFont;
+    }
+}
+
+.add-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 9.6rem;
-    width: 9.6rem;
-    padding-block-start: 1.6rem;
-    padding-inline-start: 1.6rem;
+    color: white;
+    background: var(--color-medium-primary);
+    font-size: 1.6rem;
+    width: 1.75em;
+    height: 1.75em;
     border-radius: 50%;
-    color: var(--color-dark-primary);
-    border: 0.1rem solid var(--color-dark-primary);
-    background: var(--color-accent-light);
-    font-family: $displayFont;
-    font-size: 12.8rem;
-    font-weight: 700;
-    line-height: 1;
-    text-transform: uppercase;
-    overflow: hidden;
+    font-family: $monoFont;
+    cursor: pointer;
+    user-select: none;
 
-    &.active {
-        color: var(--color-accent-medium);
-        border: 0.1rem solid var(--color-accent-medium);
-        background: var(--color-accent-medium);
-    }
-
-    &:not(.active):hover {
-        background: var(--color-dark-primary);
+    &:active {
+        background: var(--color-accent-medium)
     }
 }
 
-figure.unit-image {
-    max-width: 100%;
-    width: 100%;
-    position: relative;
-    margin: 0;
-
-    img {
-        width: 100%;
-        max-height: 600px;
-        object-fit: cover;
-        border: 0.4rem solid var(--color-dark-primary);
-        border-radius: 2.4rem;
-        padding: 0.2rem;
-        background: var(--color-pastel-light);
-        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
-    }
-
-    figcaption {
-        @include caption;
-        position: absolute;
-        top: 3.2rem;
-        right: -1.2rem;
-        transition: 0.2s;
-    }
-
-    &:hover {
-        figcaption {
-            transform: rotate(-2deg);
-        }
-    }
-}
-
-.lesson-index {
-    position: relative;
+.block-editor-container-wrapper {
     display: grid;
-    gap: 2.4rem;
-    padding: 0 2.4rem 1.6rem;
-    background: var(--color-accent-light);
-    margin-block-start: 3.2rem;
-    border-radius: 1.6rem;
-    border: 0.1rem solid var(--color-dark-primary);
-    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    gap: 3.2rem;
+}
 
-    .deck-flashcard-wrapper {
-        display: none;
+.block-editor-container {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.6rem;
+    background: var(--color-pastel-medium);
+
+    &.nested {
+        background: var(--color-pastel-dark);
     }
 
-    .lesson-index-head {
-        justify-self: end;
+    .block-meta {
         display: flex;
-        flex-flow: row-reverse;
+        justify-content: space-between;
         align-items: center;
+        gap: 0.8rem;
+
+        * {
+            color: var(--color-medium-primary);
+        }
+
+        button[disabled] {
+            opacity: 0.33;
+        }
+    }
+}
+
+.block-editor--container {
+    display: grid;
+    gap: 1.6rem;
+
+    .block-editor-container-wrapper {
         gap: 1.6rem;
-        margin-block-start: -2.0rem;
+    }
+}
 
-        .folder {
-            img {
-                width: 4.8rem;
+.block-editor--text {
+    textarea {
+        padding: 1.2rem 1.6rem;
+        font-family: $bodyFont;
+        font-size: 1.6rem;
+    }
+}
+
+.block-editor--audio {
+    audio {
+        width: 100%;
+        border-radius: 0.8rem;
+    }
+}
+
+.form-body .unit-lessons-draggable {
+    display: grid;
+    gap: 0.8rem;
+
+    li.draggable-item {
+        & > div {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: var(--color-medium-primary);
+            padding: 0.8rem 1.2rem;
+            color: white;
+
+            div {
+                font-family: $monoFont;
+                font-weight: 700;
             }
 
-            .open {
-                display: none;
-            }
-
-            .closed {
-                display: block;
+            input {
+                width: 100%;
             }
         }
 
-        .folder:hover {
-            .open {
-                display: block;
-            }
-
-            .closed {
-                display: none;
-            }
+        & > span {
+            color: var(--color-medium-primary);
         }
 
-        & > *:first-child {
-            justify-self: end;
-            color: var(--color-dark-primary);
-            font-family: $displayFont;
-            background: white;
-            border-radius: 1.6rem;
-            border: 0.1rem solid var(--color-dark-primary);
-            padding: 0.2rem 1.6rem 0.4rem;
-            font-weight: 700;
-            font-size: 3.2rem;
-            text-transform: uppercase;
+        &.hidden {
+            opacity: 0.5;
+        }
+    }
+}
+
+.activity-blocks-wrapper {
+    width: min(100%, 96rem);
+    display: grid;
+    gap: 6.4rem;
+    justify-items: center;
+    font-size: 1.8rem;
+
+    .block--text {
+        background: var(--color-polar-light);
+    }
+
+    .block--text,
+    .block--exercises > p {
+        font-size: 1em;
+        padding: 1em 2em;
+        border-radius: 1em;
+        margin: 0;
+    }
+
+    h2 {
+        font-family: var(--display-font), serif;
+        font-weight: 400;
+        font-size: 5.6rem;
+        color: var(--color-dark-primary);
+        margin: 0 0 0.8rem;
+
+        @media (min-width: 960px) {
+            font-size: 6.4rem;
         }
     }
 
-    .lesson-index-title {
-        color: var(--color-dark-primary);
+    p {
+        color: var(--color-dark-secondary);
+    }
+}
+
+.block--exercises {
+    width: min(100%, 96rem);
+    display: grid;
+    font-size: 1.6rem;
+    margin-block-end: 3.2rem;
+
+    & > p {
+        justify-self: start;
+        background: var(--color-accent-light);
         font-family: $headFont;
         font-weight: 700;
-        font-size: 4.8rem;
-        border-bottom: 0.1rem solid var(--color-dark-primary);
     }
 
-    .lesson-index-body {
-        display: flex;
-        flex-flow: row-reverse wrap;
-        gap: 3.2rem;
+    img {
+        border-radius: 1.6rem;
     }
 }
 
-.lesson-index-content-section-wrapper {
-    flex-grow: 1;
+.exercise-prompt_build {
     display: grid;
-    align-content: start;
-    gap: 1.6rem;
-
-    .lesson-index-content-section {
-        display: grid;
-        grid-template-columns: max-content auto;
-        align-items: end;
-        gap: 0.4rem;
-        padding-block-end: 0.8rem;
-        border-block-end: 0.1rem solid var(--color-accent-medium);
-
-        .lesson-index-content-section-heading {
-            color: var(--color-accent-medium);
-            font-family: $displayFont;
-            font-size: 2.2rem;
-            text-transform: uppercase;
-        }
-
-        .lesson-index-content-section-title {
-            text-align: end;
-            color: var(--color-dark-primary);
-            font-family: $headFont;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .lesson-index-content-section-content {
-            grid-column: span 2;
-            font-size: 1.4rem;
-            font-family: $bodyFont;
-        }
-    }
-}
-
-@media (min-width: 960px) {
-    .lesson-index .deck-flashcard-wrapper {
-        display: grid;
-    }
-}
-
-.lesson-concept-container {
-    width: 100%;
-    font-size: 1.8rem;
-    text-align: justify;
-    transition: 0.3s;
-    border-radius: 2.4rem;
-    background: white;
-    padding: clamp(2.4rem, 4vw, 3.6rem);
-    margin: 3.2rem 0;
-    position: relative;
-
-    & > .title-container {
-        margin: 0 0 2.8rem -0.6rem;
-        @media (min-width: 960px) {
-            margin: 2.4rem 0 3.6rem -1.2rem;
-        }
-    }
-
-    h1, h2 {
-        //font-size: 2.8rem;
-        line-height: 1em;
-        margin: 3.2rem 0 1.6rem;
-        font-family: $headFont;
-        text-transform: none;
-    }
-
-    p {
-        margin-block-start: 1.6rem;
-        margin-block-end: 1.6rem;
-    }
-
-    & > *:last-child {
-        margin-bottom: 0;
-    }
-
-    & > .popout {
-        width: 6.4rem;
-    }
-}
-
-.lesson-concept-container {
-    padding: 0;
-
-    .lesson-concept-head {
-        padding: 2.4rem 3.2rem;
-        border-radius: 2.3rem 2.3rem 0 0;
-
-        .featured-title {
-            color: white;
-        }
-    }
-
-    .lesson-concept-body {
-        display: grid;
-        padding: 3.2rem;
-
-        h1 {
-            font-size: 6.4rem;
-            margin: 0 0 1.6rem;
-        }
-    }
-
-    &.skill {
-        box-shadow: -0.6rem 0.6rem 0 var(--color-pastel-dark);
-
-        .lesson-concept-head {
-            background: var(--color-medium-primary);
-        }
-
-        .lesson-concept-body {
-            h1 {
-                color: var(--color-medium-primary);
-            }
-        }
-    }
-
-    &.idea {
-        border: 0.1rem solid var(--color-dark-primary);
-        box-shadow: -0.4rem 0.4rem 0 rgb(black, 0.25);
-
-        .lesson-concept-head {
-            background: var(--color-accent-medium);
-        }
-
-        .lesson-concept-body {
-            h1 {
-                color: var(--color-dark-primary);
-            }
-        }
-    }
-
-    & > .popout {
-        position: absolute;
-        top: -2.4rem;
-        right: 1.6rem;
-    }
-}
-
-.activity-title {
-    margin: 3.2rem 0.8rem 0.6rem;
-    border-radius: 1.6rem 1.6rem 0.4rem 0.4rem;
-    background: rgba($grn, 0.8);
-    color: white;
-    text-align: center;
-    text-transform: uppercase;
-    font-family: $monoFont, $ar_bodyFont;
-    font-size: 2.4rem;
-    font-weight: 700;
-    padding: 0.8rem 2.0rem;
-    max-width: 100%;
-
-    @media (min-width: 960px) {
-        max-width: 25%;
-    }
-}
-
-.activity-area {
-    display: grid;
-    gap: 2.4rem;
-    margin-block: 3.2rem;
-
-    .question-group {
-        display: grid;
-        gap: 0.8rem;
-    }
-}
-
-.activity-info-container {
-    display: grid;
-    direction: rtl;
     grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
     gap: 0.8rem;
-    border-radius: 1.2rem;
-    font-size: 1.6rem;
+    font-family: $monoFont;
+    font-size: 1.4rem;
     font-weight: 700;
-    border: 0.1rem solid var(--color-accent-medium);
-    box-shadow: -0.4rem 0.4rem 0 var(--color-accent-light);
-    padding: 0.8rem;
-    background: white;
-
-    // TODO: How to resolve the spacing issue?
-    font-family: 'JetBrains Mono', 'Vazirmatn', monospace;
-    text-align: center;
-
-    & > * {
-        min-width: 12rem;
-        background: var(--color-accent-light);
-        padding: 0.8rem 1.6rem;
-        border-radius: 0.8rem;
-
-    }
-}
-
-.activity-select {
-    display: flex;
     direction: rtl;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1.6rem;
-    white-space: nowrap;
-    background: white;
-    border-radius: 1.6rem;
-    border: 0.1rem solid var(--color-accent-medium);
-    box-shadow: -0.4rem 0.4rem 0 var(--color-accent-light);
-    padding: 1.2rem 1.6rem;
-    margin-block: 1.2rem 0.4rem;
-
-    p {
-        font-family: $ar_bodyFont;
-        font-size: 2.0rem;
-        margin: 0;
-    }
-
-    .activity-select-choices {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 0.8rem;
-        margin-block-start: -2.4rem;
-
-        button {
-            font-family: $bodyFont;
-            font-weight: 700;
-            font-size: 1.8rem;
-            @include button-primary-dark;
-
-            &:hover {
-                box-shadow: none;
-                transform: translate(-0.2rem, 0.2rem);
-            }
-
-            &.selected {
-                box-shadow: none;
-                transform: translate(-0.2rem, 0.2rem);
-                background: var(--color-medium-secondary);
-                color: white;
-            }
-        }
-    }
-}
-
-.activity-fill {
-    display: flex;
-    flex-flow: row-reverse wrap;
-
-    background-color: white;
-    border: 0.1rem solid var(--color-accent-medium);
-    box-shadow: -0.4rem 0.4rem 0 var(--color-accent-light);
-    border-radius: 1.6rem;
-    padding: 0.8rem 1.6rem;
-    margin-block: 0.4rem 0.8rem;
-
-    justify-content: space-between;
-    align-content: center;
-    align-items: center;
-
-    gap: 0.4rem 1.6rem;
-    text-align: center;
-    white-space: nowrap;
 
     & > div {
-        flex-grow: 1;
-        display: flex;
-        flex-flow: row-reverse wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 1.6rem;
+        display: grid;
+        gap: 0.8rem;
     }
 
-    p {
-        flex-basis: 30%;
-        font-family: $ar_bodyFont;
-    }
-
-    p, input {
-        direction: rtl;
-        text-align: start;
-        font-weight: 400;
-        font-size: 2.0rem;
-        line-height: 3.2rem;
-        margin: 0;
-    }
-
-    input {
-        font-family: $ar_bodyFont;
-        accent-color: var(--color-dark-primary);
-        border-radius: 1.2rem;
-        border: 0.1rem solid var(--color-medium-secondary);
-        box-shadow: -0.2rem 0.2rem 0 var(--color-medium-secondary);
-        color: var(--color-dark-primary);
-        background: white;
-        padding: 0.4rem 1.2rem;
-        margin-block: 0.2rem;
-        flex-grow: 1;
-
-        &:focus {
-            outline: 0.1rem solid var(--color-accent-medium);
-            border: 0.1rem solid var(--color-accent-medium);
-        }
+    img {
+        border-radius: 0.8rem;
     }
 
     button {
-        border-radius: 0.8rem;
-        font-size: 1.6rem;
-        padding: 0.4rem;
-        color: var(--color-dark-primary);
-        background: white;
-        border: 0.1rem solid var(--color-medium-secondary);
-        box-shadow: -0.2rem 0.2rem 0 var(--color-medium-secondary);
-        margin-block-end: 0.2rem;
+        color: var(--color-medium-primary)
+    }
+}
+
+.exercise-prompt_render {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    .material-symbols-rounded {
+        font-size: 3.2rem;
+        color: var(--color-medium-primary);
+        user-select: none;
+
+        &.correct {
+            color: var(--color-medium-secondary);
+        }
     }
 
-    button:hover {
-        box-shadow: none;
-        transform: translate(-0.2rem, 0.2rem);
+    p {
+        font-family: $ar_bodyFont;
+        font-size: 2.0rem;
+        margin: 0;
+        background: white;
+        border-radius: 1.6rem;
+        box-shadow: 0 0.8rem 0 var(--color-accent-light);
+        padding: 1.2rem 1.6rem;
+        margin-block-end: 0.8rem;
+    }
+}
+
+.exercise--input,
+.exercise--select {
+    margin-block-start: 6.4rem;
+    display: grid;
+    direction: rtl;
+    justify-items: start;
+    gap: 1.6rem;
+    white-space: nowrap;
+}
+
+.exercise--select-options {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
+
+    button {
+        min-width: 8rem;
+        color: var(--color-dark-secondary);
+        background: var(--color-accent-light);
+        font-size: 1.6rem;
+        font-weight: 700;
+        font-family: $monoFont;
+        line-height: 1.5;
+        border-radius: 0.75em;
+        padding: 0.25em 1em 0.33em;
+
+        &.correct, &.selected {
+            color: white;
+            background: var(--color-medium-secondary);
+        }
+
+        &[disabled] {
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        &.incorrect {
+            outline: 0.4rem solid var(--color-medium-primary);
+        }
+    }
+}
+
+.exercise--input {
+    input {
+        direction: rtl;
+        font-size: 2.0rem;
+        font-weight: 700;
+        width: 100%;
+        background: var(--color-accent-light);
+
+        &[disabled] {
+            opacity: 1;
+        }
     }
 
     &.correct {
         input {
-            color: black !important;
-            box-shadow: none;
-            transform: translate(-0.1rem, 0.1rem);
-            border: none;
-        }
-
-        button {
             color: white;
             background: var(--color-medium-secondary);
-            box-shadow: none;
-            transform: translate(-0.2rem, 0.2rem);
         }
-    }
-
-    img {
-        border-radius: 0.8rem 0.8rem 0 0.8rem;
-        max-width: 50%;
     }
 }
 
@@ -606,14 +427,12 @@ div.activity-image .image-card {
     filter: drop-shadow(-0.0625em 0.0625em 0 var(--color-medium-secondary));
 }
 
-.quiz-settings-wrapper {
+.settings-wrapper {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    gap: 1.6rem;
-    margin: 1.6rem 0;
-    padding: 1.6rem;
-    border-radius: 1.6rem;
+    gap: 2.4rem;
+    padding: 3.2rem;
 }
 
 .quiz-settings-type {
@@ -641,7 +460,7 @@ div.activity-image .image-card {
             outline: 0.2rem solid var(--color-medium-primary);
         }
 
-        .quiz-settings-wrapper {
+        .settings-wrapper {
             filter: grayscale(1);
             opacity: 0.5;
             cursor: not-allowed;
@@ -662,12 +481,15 @@ div.activity-image .image-card {
         font-size: 1.6rem;
     }
 
-    .quiz-settings-wrapper {
+    .settings-wrapper {
         background: white;
         justify-self: center;
+        border-radius: 1.6rem;
+        margin-block-start: 1.6rem;
     }
 }
 
+.activity-container,
 .quiz-container {
     width: min(100%, 96rem);
     display: grid;
@@ -675,15 +497,27 @@ div.activity-image .image-card {
     gap: 9.6rem;
 
     & > button {
-        color: var(--color-dark-primary);
-        font-weight: 700;
-        font-family: $bodyFont;
-        font-size: 1.6rem;
-        justify-self: start;
+        width: 6.4rem;
+        height: 6.4rem;
+        font-size: 4.8rem;
+        border-radius: 50%;
+        color: white;
+        background: var(--color-medium-secondary);
+        margin-block: 6.4rem;
+        justify-self: center;
 
-        &:hover {
-            text-decoration: underline;
+        &[disabled] {
+            opacity: 50%;
+            cursor: not-allowed;
         }
+    }
+}
+
+.activity-container {
+    padding: 3.2rem;
+
+    @media (min-width: 960px) {
+        padding-inline: 0;
     }
 }
 
@@ -697,24 +531,6 @@ div.activity-image .image-card {
         margin: 0;
     }
 
-    .quiz-question-options {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        gap: 1.6rem;
-
-        * {
-            font-family: $bodyFont;
-            text-transform: none;
-            border-radius: 0.75em;
-            padding: 0.25em 1em 0.33em;
-
-            &.selected {
-                color: var(--color-medium-primary);
-            }
-        }
-    }
-
     .sentence-item {
         border: none;
         box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
@@ -723,6 +539,10 @@ div.activity-image .image-card {
             color: var(--color-medium-primary);
         }
     }
+}
+
+.quiz-question .exercise--select-options button {
+    font-family: $monoFont;
 }
 
 .score-metadata {
@@ -748,7 +568,7 @@ div.activity-image .image-card {
 }
 
 .quiz-results {
-    margin: 3.2rem 3.2rem 6.4rem;
+    margin: 3.2rem 3.2rem 3.2rem;
     display: flex;
     flex-flow: row wrap;
     gap: 1.6rem 3.2rem;
@@ -786,10 +606,10 @@ div.activity-image .image-card {
 .quiz-answer-array {
     display: grid;
     gap: 2.4rem;
-    margin: 2.4rem 2.4rem 3.2rem;
+    margin: 3.2rem 2.4rem 3.2rem;
 
     @media (min-width: 960px) {
-        margin: 3.2rem 3.2rem 4.8rem;
+        margin: 4.8rem 3.2rem 4.8rem;
     }
 }
 

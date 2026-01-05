@@ -42,6 +42,7 @@ li {
         'wght' 400,
         'GRAD' 0,
         'opsz' 24;
+    user-select: none;
 }
 
 button {
@@ -93,6 +94,10 @@ input, textarea, select {
         cursor: not-allowed;
         pointer-events: none;
     }
+
+    &.invalid {
+        background: var(--color-accent-light);
+    }
 }
 
 textarea {
@@ -109,6 +114,11 @@ img {
     &.front {
         height: clamp(6.4rem, 10vw, 9.6rem)
     }
+}
+
+audio {
+    height: 3.6rem;
+    border-radius: 0.8rem;
 }
 
 figure {
@@ -144,7 +154,7 @@ iframe {
 
 h1, h2, h3 {
     color: black;
-    font-family: $monoFont, $ar_headFont;
+    font-family: $monoFont;
     font-weight: 700;
     text-align: start;
     text-wrap: balance;
@@ -252,6 +262,11 @@ h3 {
             text-decoration: none;
             color: white;
             background: var(--color-medium-secondary);
+        }
+
+        &.selected {
+            color: var(--color-polar-light);
+            background: var(--color-dark-primary);
         }
     }
 
@@ -637,30 +652,30 @@ h3 {
     align-items: center;
     gap: 1.6rem;
 
-    .handle {
+    .material-symbols-rounded {
         color: var(--color-accent-medium);
+    }
+
+    .toggleable {
+        color: var(--color-medium-primary);
+    }
+
+    .handle {
         cursor: grab;
     }
 
     .delete {
-        color: var(--color-accent-medium);
         cursor: pointer;
     }
 
     .term-item-container {
         grid-template-columns: 1fr
     }
-
-    .trash {
-        cursor: pointer;
-        width: 2.0rem;
-    }
 }
 
 .app-tip {
     @include box-accent-light;
-    width: 100%;
-    max-width: 96rem;
+    width: min(96rem, 100%);
 
     .tip-head {
         display: grid;
@@ -696,6 +711,7 @@ h3 {
 
         p {
             margin: 0;
+            padding: 0;
             font-size: 1.6rem;
         }
 

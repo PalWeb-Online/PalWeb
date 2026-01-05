@@ -1,30 +1,55 @@
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 
 export function useDialog(props) {
-    const data = reactive({
-        dialog: {},
-        isLoading: true
+    const dialog = reactive({});
+    const isLoading = ref(true);
+    const isLoadingTerms = ref(true);
+
+    const initDialog = (model) => {
+        if (!model) return;
+        Object.assign(dialog, props.model);
+
+        fetchSentenceTerms();
+    }
+
+    onMounted(() => {
+        if (props?.model) initDialog(props.model);
+        isLoading.value = false;
     });
 
-    const fetchDialog = async () => {
-        if (props.model) {
-            data.dialog = props.model;
-            data.isLoading = false;
+    const fetchSentenceTerms = async () => {
+        if (!dialog || !dialog.sentences) {
+            isLoadingTerms.value = false;
+            return;
+        }
 
-        } else {
-            try {
-                const response = await axios.get(route('dialogs.get', props.id));
-                data.dialog = response.data.data;
-                data.isLoading = false;
+        const ids = new Set();
+        dialog.sentences.forEach(sentence => {
+            ids.add(sentence.id);
+        });
 
-            } catch (error) {
-                console.error("Error fetching Dialog:", error);
-            }
+        if (ids.size === 0) {
+            isLoadingTerms.value = false;
+            return;
+        }
+
+        try {
+            const response = await axios.post(route('sentences.get-many'), {
+                ids: Array.from(ids)
+            });
+
+            dialog.sentences.forEach(sentence => {
+                sentence.terms = response.data[sentence.id].terms
+            })
+
+        } catch (error) {
+            console.error("Failed to fetch Dialog Sentences", error);
+
+        } finally {
+            isLoadingTerms.value = false;
         }
     }
 
-    onMounted(fetchDialog);
-
-    return {data};
+    return {dialog, isLoading, isLoadingTerms};
 }

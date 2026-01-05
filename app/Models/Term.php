@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -74,7 +75,7 @@ class Term extends Model
             ->with([
                 'audios' => fn ($query) => $query
                     ->limit(1)
-                    ->with(['speaker.user'])
+                    ->with(['speaker.user']),
             ])
             ->limit(1)
             ->first();
@@ -88,10 +89,10 @@ class Term extends Model
                     ->with([
                         'audios' => fn ($query) => $query
                             ->limit(1)
-                            ->with(['speaker.user'])
+                            ->with(['speaker.user']),
                     ])
                     ->limit(1)
-                    ->first()
+                    ->first(),
             ]);
         }
 
@@ -102,7 +103,7 @@ class Term extends Model
         ];
     }
 
-    public function getSingleGlossSentence(): Collection
+    public function loadSingleGlossSentence(): void
     {
         $sentenceData = DB::table('sentence_term')
             ->where('sentence_term.term_id', $this->id)
@@ -118,9 +119,11 @@ class Term extends Model
             $sentenceCounts[$row->gloss_id] = $row->sentences_count;
         });
 
-        $sentences = Sentence::whereIn('id', $sentenceIds->values())->get();
+        $sentences = Sentence::whereIn('id', $sentenceIds->values())
+            ->with(['dialog'])
+            ->get();
 
-        return $sentences->groupBy(function ($sentence) use ($sentenceIds) {
+        $this->gloss_sentences = $sentences->groupBy(function ($sentence) use ($sentenceIds) {
             return $sentenceIds->flip()[$sentence->id];
         })->map(function ($group, $glossId) use ($sentenceCounts) {
             return [
@@ -208,7 +211,8 @@ class Term extends Model
             ->withPivot('type', 'gloss_id');
     }
 
-    public function scopeMatch($query, ?string $search): void
+    #[Scope]
+    protected function match($query, ?string $search): void
     {
         $query->when($search, fn ($query) => $query
             ->where(fn ($query) => $query
@@ -227,7 +231,8 @@ class Term extends Model
         );
     }
 
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function filter($query, array $filters): void
     {
         $query->when($filters['sort'] === 'alphabetical', fn ($query) => $query
             ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')

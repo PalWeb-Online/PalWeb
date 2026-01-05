@@ -4,39 +4,66 @@ import {route} from "ziggy-js";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import Paginator from "../../../Shared/Paginator.vue";
+import ActivityItem from "../../../components/ActivityItem.vue";
+import {ref} from "vue";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
-    decks: Object,
+    scoredLessonModels: Object,
+    latestScoredDecks: Object,
     totalCount: Number,
 })
+
+const mode = ref('decks');
 </script>
 <template>
-    <Head title="Academy: myProgress"/>
+    <Head title="Academy: Scores"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>my Progress</h1></Link>
+        <Link :href="route('scores.index')"><h1>Scores</h1></Link>
     </div>
     <div id="app-body">
         <div class="app-body-section">
-            <div class="model-list">
-                <div class="featured-title l" style="text-transform: none">Lessons</div>
+            <div class="sm-mode-select">
+                <button class="featured-title l" :class="{'active': mode === 'decks'}"
+                        @click="mode = 'decks'">dck
+                </button>
+                <button class="featured-title l" :class="{'active': mode === 'lessons'}"
+                        @click="mode = 'lessons'">lsn
+                </button>
+            </div>
+            <template v-if="mode === 'decks'">
                 <AppTip>
-                    <p>Lessons & progress tracking will be available by December 31, 2025.</p>
+                    <p>Here are all the Decks you've studied, from most to least recent, except for Decks associated
+                        with Lessons, which are shown in the Lessons tab.</p>
                 </AppTip>
-            </div>
 
-            <div class="model-list" style="margin-block-start: 6.4rem">
                 <div class="featured-title m" style="text-transform: none">Latest Scored</div>
-                <AppTip v-if="!totalCount">
-                    <p>You have not Quizzed anything yet. When you do, you will see your most recently Scored models
-                        here.</p>
+                <div class="model-list">
+                    <AppTip v-if="!totalCount">
+                        <p>You have not Quizzed anything yet. When you do, you will see your most recently Scored models
+                            here.</p>
+                    </AppTip>
+                    <DeckItem v-for="deck in latestScoredDecks.data" :model="deck" :key="deck.id" target="academy"/>
+                    <Paginator :links="latestScoredDecks.meta.links"/>
+                </div>
+            </template>
+            <template v-if="mode === 'lessons'">
+                <AppTip v-if="scoredLessonModels.length === 0">
+                    <p>You don't have any Scores for any Lesson Decks or Activities. Have you started the Lessons in the
+                        Academy yet? If not, <Link :href="route('units.index')">click here</Link> to get started!
+                    </p>
                 </AppTip>
-                <DeckItem v-for="deck in decks.data" :model="deck" :key="deck.id" target="academy"/>
-            </div>
-            <Paginator :links="decks.meta.links"/>
+                <template v-else v-for="(lesson, slug) in scoredLessonModels">
+                    <div class="featured-title m">Lesson {{ slug }}</div>
+                    <div class="model-list">
+                        <DeckItem v-if="lesson.deck" :model="lesson.deck" target="academy"/>
+                        <ActivityItem v-if="lesson.activity" :model="lesson.activity" target="academy"/>
+                    </div>
+                </template>
+            </template>
         </div>
     </div>
 </template>

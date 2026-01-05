@@ -19,8 +19,22 @@ class DialogResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'media' => $this->media,
-            'sentences' => SentenceResource::collection($this->whenLoaded('sentences')),
-            'sentences_count' => $this->sentences_count
+            'sentences' => $this->whenLoaded('sentences', function() {
+                return $this->sentences->map(function ($sentence) {
+                    return new SentenceResource($sentence)->additional(['terms' => false]);
+                });
+            }),
+            'sentences_count' => $this->sentences_count,
+            'published' => $this->published,
+            'lesson' => $this->when($this->lesson, function () use ($request) {
+                return [
+                    'id' => $this->lesson->id,
+                    'global_position' => $this->lesson->global_position,
+                    'progress' => $request->user()?->getLessonProgress()[$this->lesson?->id] ?? null,
+                    'scores_count' => $request->user()?->getScoreCounts() ?? null,
+                ];
+            }),
+            'unlocked' => $request->user()?->can('view', $this->resource),
         ];
     }
 }

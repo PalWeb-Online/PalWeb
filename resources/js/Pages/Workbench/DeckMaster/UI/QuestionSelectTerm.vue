@@ -1,6 +1,5 @@
 <script setup>
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
-import AppButton from "../../../../components/AppButton.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -40,10 +39,12 @@ const toggleSelection = (index) => {
             </div>
         </div>
 
-        <div class="quiz-question-options">
-            <AppButton v-for="(option, i) in question.options"
+        <div class="exercise--select-options">
+            <button v-for="(option, i) in question.options"
                        :class="{'selected': question.response === Number(i)}"
-                       @click="toggleSelection(i)" :label="option.term"/>
+                       @click="toggleSelection(i)">
+                {{ option.term }}
+            </button>
         </div>
     </div>
 </template>

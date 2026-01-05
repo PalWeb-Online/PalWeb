@@ -1,4 +1,150 @@
 {
+    "meta": {
+        "app": {
+            "title": "PalWeb",
+            "subtitle": "la Red del Árabe Palestino!"
+        }
+    },
+    "nav": {
+        "sidebar": {
+            "home": {
+                "title": "inicio"
+            },
+            "academy": {
+                "title": "academia",
+                "subtitle": "solo para Estudiantes"
+            },
+            "library": {
+                "title": "biblioteca",
+                "subtitle": "la Red del Árabe Palestino"
+            },
+            "workbench": {
+                "title": "taller",
+                "subtitle": "herramientas x base de datos"
+            },
+            "office": {
+                "title": "oficina",
+                "subtitle": "solo para Profesores"
+            },
+            "lessons": {
+                "title": "lecciones",
+                "subtitle": "aprende árabe palestino"
+            },
+            "dialogs": {
+                "title": "dialogos",
+                "subtitle": "entrada de lenguaje natural"
+            },
+            "scores": {
+                "title": "puntajes",
+                "subtitle": "ver historial de Puntajes"
+            },
+            "dictionary": {
+                "title": "diccionario",
+                "subtitle": "Term::all()"
+            },
+            "corpus": {
+                "title": "corpus",
+                "subtitle": "Sentence::all()"
+            },
+            "decks": {
+                "title": "barajas",
+                "subtitle": "Deck::all()"
+            },
+            "audios": {
+                "title": "audios",
+                "subtitle": "Audio::all()"
+            },
+            "deck-master": {
+                "title": "deckMaster",
+                "subtitle": "crea & estudia Barajas"
+            },
+            "sound-booth": {
+                "title": "soundBooth",
+                "subtitle": "inmortaliza el árabe palestino"
+            },
+            "word-logger": {
+                "title": "wordLogger",
+                "subtitle": "gestiona entradas de Diccionario"
+            },
+            "speech-maker": {
+                "title": "speechMaker",
+                "subtitle": "crea Frases & Dialogos"
+            },
+            "lesson-planner": {
+                "title": "lessonPlanner",
+                "subtitle": "crea Lecciones & Actividades"
+            },
+            "my-admin": "miAdmin",
+            "send-mail": "Enviar Mail",
+            "view-feedback": "Ver Feedback",
+            "my-account": "miCuenta",
+            "manage-subscription": "Gestionar Suscripción",
+            "change-password": "Cambiar Contraseña",
+            "link-discord": "Conectar Discord",
+            "get-help": "Ayuda",
+            "send-feedback": "Enviar Feedback"
+        }
+    },
+    "user": {
+        "roles": {
+            "student": "estudiante",
+            "teacher": "profesor",
+            "admin": "admin",
+            "pal": "pal",
+            "guest": "invitado"
+        },
+        "subscriptions": {
+            "manage": "gestionar"
+        }
+    },
+    "speaker": {
+        "speaker": "hablante",
+        "dialect": "dialecto",
+        "location": "ubicación",
+        "fluency": "fluidez",
+        "gender": "género"
+    },
+    "sound-booth": {
+        "test": {
+            "waiting": {
+                "title": "esperando",
+                "subtitle": "Haz click para probar el micro."
+            },
+            "recording": {
+                "title": "recording",
+                "subtitle": "Háblale el micro ya."
+            },
+            "listening": {
+                "title": "listening",
+                "subtitle": "¿Cómo suena el audio?"
+            }
+        },
+        "queue": {
+            "queue": "lista",
+            "status": {
+                "full": "Ya tienes 100 artículos en la Lista.",
+                "empty": "La Lista ya está vacía."
+            },
+            "load": {
+                "button": "cargar baraja",
+                "message": "Agrega todos los Términos de una Baraja para grabar."
+            },
+            "auto": {
+                "button": "lista automática",
+                "message": "Llena la Lista automáticamente con hasta 100 artículos."
+            },
+            "clear": {
+                "button": "limpiar lista",
+                "message": "Saca todos los artículos de la Lista."
+            }
+        },
+        "record": {
+            "record": "grabar",
+            "upload": "subir",
+            "prompt-start": "¡Graba algo para comenzar!"
+        },
+        "check": "revisar"
+    },
     "documentation": "documentación",
     "dictionary": "diccionario",
     "lessons": "cursos",

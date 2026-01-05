@@ -14,6 +14,7 @@ class DialogScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
+            ->with(['lesson'])
             ->withCount('sentences');
     }
 }

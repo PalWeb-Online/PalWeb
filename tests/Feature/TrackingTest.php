@@ -20,7 +20,7 @@ class TrackingTest extends TestCase
     /**
      * @test
      */
-    public function a_UserViewed_event_will_be_fired_off_on_every_page_view(): void
+    public function a_user_viewed_event_will_be_fired_off_on_every_page_view(): void
     {
         Config::set('app.track_page_views', true);
         Event::fake();
@@ -32,7 +32,7 @@ class TrackingTest extends TestCase
         Config::set('app.track_page_views', false);
     }
 
-    public function test_a_UserDeniedAccess_event_will_be_fired_off_if_user_is_denied_access_to_api_route(): void
+    public function test_a_user_denied_access_event_will_be_fired_off_if_user_is_denied_access_to_api_route(): void
     {
         Config::set('app.track_page_views', true);
         $this->expectException(UnauthorizedAccessException::class);

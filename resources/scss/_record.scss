@@ -111,6 +111,7 @@
             font-family: $headFont;
             font-weight: 700;
             font-size: 2.0rem;
+            text-transform: capitalize;
         }
 
         div:nth-child(2) {
@@ -153,11 +154,12 @@
 
     .rw-queue-buttons {
         display: flex;
-        gap: 1.6rem
+        gap: 1.6rem;
     }
 
     button {
         @include link-purple-deep;
+        text-transform: capitalize;
 
         &[disabled] {
             text-decoration: none;
@@ -383,6 +385,7 @@
         font-size: 1.6rem;
         font-weight: 700;
         padding: 0.6rem 1.2rem 0.4rem;
+        text-transform: capitalize;
     }
 
     .rw-actions-content {

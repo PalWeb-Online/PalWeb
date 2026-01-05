@@ -1,4 +1,151 @@
 {
+    "meta": {
+        "app": {
+            "title": "PalWeb",
+            "subtitle": "the Web of Palestinian Arabic!"
+        }
+    },
+    "nav": {
+        "sidebar": {
+            "home": {
+                "title": "home"
+            },
+            "academy": {
+                "title": "academy",
+                "subtitle": "for Students only"
+            },
+            "library": {
+                "title": "library",
+                "subtitle": "the Web of Palestinian Arabic"
+            },
+            "workbench": {
+                "title": "workbench",
+                "subtitle": "database-powered tools"
+            },
+            "office": {
+                "title": "office",
+                "subtitle": "for Teachers only"
+            },
+            "lessons": {
+                "title": "lessons",
+                "subtitle": "learn Palestinian Arabic"
+            },
+            "dialogs": {
+                "title": "dialogs",
+                "subtitle": "natural language input"
+            },
+            "scores": {
+                "title": "scores",
+                "subtitle": "view your Score history"
+            },
+            "dictionary": {
+                "title": "dictionary",
+                "subtitle": "Term::all()"
+            },
+            "corpus": {
+                "title": "corpus",
+                "subtitle": "Sentence::all()"
+            },
+            "decks": {
+                "title": "decks",
+                "subtitle": "Deck::all()"
+            },
+            "audios": {
+                "title": "audios",
+                "subtitle": "Audio::all()"
+            },
+            "deck-master": {
+                "title": "deckMaster",
+                "subtitle": "build & study Decks"
+            },
+            "sound-booth": {
+                "title": "soundBooth",
+                "subtitle": "immortalize Palestinian Arabic"
+            },
+            "word-logger": {
+                "title": "wordLogger",
+                "subtitle": "manage Dictionary entries"
+            },
+            "speech-maker": {
+                "title": "speechMaker",
+                "subtitle": "create Sentences & Dialogs"
+            },
+            "lesson-planner": {
+                "title": "lessonPlanner",
+                "subtitle": "create Lessons & Activities"
+            },
+            "my-admin": "myAdmin",
+            "send-mail": "Send Mail",
+            "view-feedback": "View Feedback",
+            "my-account": "myAccount",
+            "manage-subscription": "Manage Subscription",
+            "change-password": "Change Password",
+            "link-discord": "Link Discord",
+            "unlink-discord": "Unlink Discord",
+            "get-help": "getHelp",
+            "send-feedback": "Send Feedback"
+        }
+    },
+    "user": {
+        "roles": {
+            "student": "student",
+            "teacher": "teacher",
+            "admin": "admin",
+            "pal": "pal",
+            "guest": "guest"
+        },
+        "subscriptions": {
+            "manage": "manage"
+        }
+    },
+    "speaker": {
+        "speaker": "speaker",
+        "dialect": "dialect",
+        "location": "location",
+        "fluency": "fluency",
+        "gender": "gender"
+    },
+    "sound-booth": {
+        "test": {
+            "waiting": {
+                "title": "waiting",
+                "subtitle": "Click to test your mic."
+            },
+            "recording": {
+                "title": "recording",
+                "subtitle": "Speak into the mic now."
+            },
+            "listening": {
+                "title": "listening",
+                "subtitle": "How does the audio sound?"
+            }
+        },
+        "queue": {
+            "queue": "queue",
+            "status": {
+                "full": "You already have 100 items in the Queue.",
+                "empty": "The Queue is already empty."
+            },
+            "load": {
+                "button": "load deck",
+                "message": "Queue up all the Terms in a Deck for recording."
+            },
+            "auto": {
+                "button": "fetch items",
+                "message": "Automatically fill the Queue with up to 100 items."
+            },
+            "clear": {
+                "button": "flush queue",
+                "message": "Remove all items from the Queue."
+            }
+        },
+        "record": {
+            "record": "record",
+            "upload": "upload",
+            "prompt-start": "Record something to get started!"
+        },
+        "check": "check"
+    },
     "wiki": "wiki",
     "lessons": "lessons",
     "texts": "texts",
@@ -335,6 +482,8 @@
     "created": "Created :thing!",
     "updated": "Updated :thing!",
     "deleted": "Deleted :thing!",
+    "published": "Published :thing!",
+    "unpublished": "Reverted :thing to Draft!",
     "dictionary": "dictionary",
     "terms.new": "new term",
     "terms.edit": "edit term",

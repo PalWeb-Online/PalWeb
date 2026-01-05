@@ -10,11 +10,12 @@ import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
+import DeckAnswerItem from "../UI/DeckAnswerItem.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
 const hasNavigationGuard = computed(() => {
-    return !DeckStudyStore.data.isSaved;
+    return !DeckStudyStore.isSaved;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -32,7 +33,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
         <div class="window-section-head">
             <h2>Results</h2>
-            <PopupWindow title="DM (Results)">
+            <PopupWindow title="Deck Master (Results)">
                 <div class="h1">Results</div>
                 <p>Sometimes humans are smarter than machines. The Deck Master automatically generates Quizzes & grades
                     them through a simple matching operation, so it's possible in certain cases for an answer that
@@ -63,10 +64,18 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             </p>
         </AppTip>
 
-        <ScoreDetail :score="DeckStudyStore.score"/>
+        <ScoreDetail :score="DeckStudyStore.score" :model="DeckStudyStore.data.deck">
+            <div class="quiz-answer-array">
+                <DeckAnswerItem v-for="exercise in DeckStudyStore.score.results" :key="exercise.id"
+                                :exercise="exercise"
+                                :deck="DeckStudyStore.data.deck"
+                                :markCorrect="() => DeckStudyStore.markCorrect(exercise.id)"
+                />
+            </div>
+        </ScoreDetail>
 
         <div class="window-footer">
-            <button @click="DeckStudyStore.saveScore" :disabled="DeckStudyStore.data.isSaved">save & quit</button>
+            <button @click="DeckStudyStore.saveScore" :disabled="DeckStudyStore.isSaved">save & quit</button>
         </div>
     </QuizzerWindow>
 

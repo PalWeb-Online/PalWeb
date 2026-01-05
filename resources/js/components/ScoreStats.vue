@@ -152,7 +152,7 @@ const trendLinePoints = computed(() => {
                              :style="{ height: `${s.score * 100}%` }"
                         >
                             <Link
-                                :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id, score: s.id })"
+                                :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id, score: s.id })"
                                 class="interact-button"
                                 @mousemove="showTooltip(s, $event)"
                                 @mouseleave="hideTooltip()"
@@ -187,7 +187,7 @@ const trendLinePoints = computed(() => {
                 </div>
             </div>
         </div>
-        <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })">See
+        <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id })">See
             Score History
         </Link>
     </div>

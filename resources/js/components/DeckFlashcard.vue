@@ -60,11 +60,9 @@ const {deck, blurb, isLoading} = useDeck(props);
                             by {{ !deck.author.private ? deck.author.name : 'Anonymous' }}
                         </div>
                     </div>
-                    <div class="deck-flashcard-front-body">
-                        <div v-if="blurb" class="item-description"
-                             :style="`font-style: ${ deck.description ? 'normal' : 'italic' }`">
-                            {{ blurb }}
-                        </div>
+                    <div class="deck-flashcard-front-body"
+                         :style="`font-style: ${ deck.description ? 'normal' : 'italic' }`">
+                        {{ blurb ?? '' }}
                     </div>
                 </div>
                 <div class="deck-flashcard-back">

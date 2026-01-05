@@ -80,5 +80,5 @@ export function useActions() {
         document.removeEventListener('click', onOutsideClick);
     });
 
-    return {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating};
+    return {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu};
 }

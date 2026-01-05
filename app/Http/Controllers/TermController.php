@@ -33,8 +33,7 @@ class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository
-    ) {
-    }
+    ) {}
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -55,7 +54,7 @@ class TermController extends Controller
     public function index(Request $request, SearchService $searchService): \Inertia\Response
     {
         $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural'
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
         ]));
 
         if (empty($filters['search'])) {
@@ -100,8 +99,8 @@ class TermController extends Controller
             'filters' => $filters,
         ]);
 
-//        View::share('pageDescription',
-//            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+        //        View::share('pageDescription',
+        //            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
 
     public function show(Term $term): \Inertia\Response
@@ -124,10 +123,9 @@ class TermController extends Controller
                         $query->limit(10);
                     },
                 ])
-                ->loadCount(['pronunciations']);
-//            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
-
-            $model->gloss_sentences = $model->getSingleGlossSentence();
+                ->loadCount(['pronunciations'])
+                ->loadSingleGlossSentence();
+            //            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
         }
 
         return Inertia::render('Library/Terms/Show', [
@@ -139,8 +137,8 @@ class TermController extends Controller
             ),
         ]);
 
-//        View::share('pageDescription',
-//            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+        //        View::share('pageDescription',
+        //            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
 
     public function getPronunciations(Term $term): AnonymousResourceCollection
@@ -149,7 +147,7 @@ class TermController extends Controller
             ->with([
                 'audios' => fn ($query) => $query
                     ->limit(1)
-                    ->with(['speaker.user'])
+                    ->with(['speaker.user']),
             ])
             ->withCount('audios')
             ->get();
@@ -164,36 +162,6 @@ class TermController extends Controller
             ->get();
 
         return SentenceResource::collection($sentences);
-    }
-
-    public function create(): \Inertia\Response
-    {
-        View::share('pageTitle', 'Create Term');
-
-        return Inertia::render('Library/Terms/Create', [
-            'section' => 'library',
-        ]);
-    }
-
-    public function edit(Term $term): \Inertia\Response
-    {
-        View::share('pageTitle', 'Edit Term');
-
-        $term->load([
-            'root',
-            'pronunciations',
-            'attributes',
-            'spellings',
-            'relatives',
-            'patterns',
-            'glosses.attributes',
-            'inflections',
-        ]);
-
-        return Inertia::render('Library/Terms/Create', [
-            'section' => 'library',
-            'term' => new TermResource($term)->additional(['detail' => true]),
-        ]);
     }
 
     public function store(StoreTermRequest $request): RedirectResponse
@@ -240,6 +208,7 @@ class TermController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $term->term])]);
+
         return to_route('terms.show', $term);
     }
 
@@ -302,6 +271,7 @@ class TermController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $term->term])]);
+
         return to_route('terms.show', $term);
     }
 
@@ -349,7 +319,7 @@ class TermController extends Controller
         }
     }
 
-    function handleAttributes(object $model, array $attributes, string $relation): void
+    public function handleAttributes(object $model, array $attributes, string $relation): void
     {
         $requestAttributes = array_map(fn ($item) => $item['attribute'], $attributes);
         foreach ($requestAttributes as $attribute) {
@@ -433,24 +403,24 @@ class TermController extends Controller
 
         $existingDependents->except($requestItems)->each->delete();
 
-//        $existingDependents = $existingDependents->keyBy('id');
-//
-//        foreach ($requestDependents as $dependentData) {
-//            $id = $dependentData['id'] ?? null;
-//
-//            if ($id && $existingDependents->has($id)) {
-//                $existingDependents[$id]->update($dependentData);
-//
-//            } else {
-//                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
-//            }
-//        }
-//
-//        $existingDependents->each(function ($dependent) use ($requestDependents) {
-//            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
-//                $dependent->delete();
-//            }
-//        });
+        //        $existingDependents = $existingDependents->keyBy('id');
+        //
+        //        foreach ($requestDependents as $dependentData) {
+        //            $id = $dependentData['id'] ?? null;
+        //
+        //            if ($id && $existingDependents->has($id)) {
+        //                $existingDependents[$id]->update($dependentData);
+        //
+        //            } else {
+        //                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
+        //            }
+        //        }
+        //
+        //        $existingDependents->each(function ($dependent) use ($requestDependents) {
+        //            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
+        //                $dependent->delete();
+        //            }
+        //        });
     }
 
     public function destroy(Term $term): RedirectResponse
@@ -477,6 +447,7 @@ class TermController extends Controller
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $term->term])]);
+
         return to_route('terms.index');
     }
 }

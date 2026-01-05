@@ -3,7 +3,8 @@ import {useDialog} from "../composables/Dialog.js";
 import DialogActions from "./Actions/DialogActions.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
+import AppTooltip from "./AppTooltip.vue";
 
 const props = defineProps({
     model: {
@@ -11,34 +12,40 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    id: Number,
     target: {type: String, default: 'library'},
 });
 
+const tooltip = ref(null);
+
 const requestTarget = computed(() => {
     return props.target === 'library'
-        ? route('dialogs.show', data.dialog?.id)
-        : route('speech-maker.dialog', data.dialog?.id);
+        ? route('dialogs.show', dialog?.id)
+        : route('speech-maker.dialog', dialog?.id);
 })
 
-const {data} = useDialog(props);
+const {dialog, isLoading} = useDialog(props);
 </script>
 
 <template>
-    <template v-if="! data.isLoading">
+    <template v-if="!isLoading">
         <div class="model-item-container dialog-item-container">
+            <div v-if="!dialog.unlocked" class="model-item-overlay"
+                 @mousemove="tooltip.showTooltip('You haven\'t unlocked this Dialog in the Academy yet.', $event);"
+                 @mouseleave="tooltip.hideTooltip()"></div>
+
             <div class="model-item dialog-item">
                 <div class="model-item-content" @click="router.get(requestTarget)">
                     <div class="model-item-title">
-                        {{ data.dialog.title }}
+                        {{ dialog.title }}
                     </div>
                 </div>
-                <DialogActions :model="data.dialog"/>
+                <DialogActions :model="dialog"/>
             </div>
 
-            <div v-if="data.dialog.description" class="model-item-description">
-                {{ data.dialog.description }}
+            <div v-if="dialog.description" class="model-item-description">
+                {{ dialog.description }}
             </div>
         </div>
+        <AppTooltip ref="tooltip"/>
     </template>
 </template>

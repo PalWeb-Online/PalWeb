@@ -16,6 +16,7 @@ import SentenceItem from "../components/SentenceItem.vue";
 import AppButton from "../components/AppButton.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
+import {Carousel, Pagination, Slide} from "vue3-carousel";
 
 defineProps({
     count: Object,
@@ -61,6 +62,8 @@ const duplicateCarouselItems = (carousel) => {
     }
 };
 
+const imageSlides = []
+
 let intervalId = null;
 
 onMounted(async () => {
@@ -90,7 +93,7 @@ defineOptions({
     <Head title="Home"/>
     <div id="app-body" class="homepage">
         <div class="homepage-hero-wrapper">
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.1 Release Notes -></Link>
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.2 Release Notes -></Link>
             <HomepageHero/>
         </div>
 
@@ -244,7 +247,7 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">record wizard</div>
+                    <div class="feature-panel-title">sound booth</div>
                     <div class="feature-panel-subtitle">Let your voice shine through.</div>
                     <div class="feature-panel-description">Breathe life into language by recording pronunciation samples
                         of everything in your dialect — & represent the diversity of Palestinian Arabic.
@@ -252,7 +255,7 @@ defineOptions({
                 </div>
 
                 <div class="homepage-panel-content">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front05.png" alt="Front Page 05">
+                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front04.png" alt="Front Page 04">
                 </div>
             </div>
         </div>
@@ -318,27 +321,60 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="homepage-panel-wrapper">
-                <div class="homepage-panel-content" style="max-width: 96rem; justify-self: center">
+            <div class="homepage-panel-wrapper inline">
+                <div class="homepage-panel-content">
                     <div class="feature-panel-title">quiz & score</div>
-                    <div class="feature-panel-subtitle">Test yourself. Best yourself.</div>
+                    <div class="feature-panel-subtitle">Test yourself before you wreck yourself.</div>
                     <div class="feature-panel-description">Drill your flashcard Decks with customizable Quizzes that
                         will put your knowledge of Arabic vocabulary to the test. Save your Scores & see how your
                         learning journey evolves over time!
                     </div>
                 </div>
-                <div class="homepage-panel-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer01.png"
-                         alt="Quizzer 01">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer02.png"
-                         alt="Quizzer 02">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer03.png"
-                         alt="Quizzer 03">
-                    <img src="https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer04.png"
-                         alt="Quizzer 04">
+                <Carousel
+                    :autoplay="2000"
+                    :items-to-show="1"
+                    :wrap-around="true"
+                >
+                    <template #slides>
+                        <Slide v-for="slide in 4" :key="slide">
+                            <img
+                                :src="`https://abdulbaha.fra1.digitaloceanspaces.com/images/front-quizzer0${slide}.png`"
+                                alt="Slide Image">
+                        </Slide>
+                    </template>
+                    <template #addons>
+                        <Pagination/>
+                    </template>
+                </Carousel>
+            </div>
+            <div class="homepage-panel-wrapper inline reverse">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">lessons & activities</div>
+                    <div class="feature-panel-subtitle">Go from zero to hero.</div>
+                    <div class="feature-panel-description">Go through the Lessons to discover new words, learn new
+                        skills & practice with dialog templates! Each Lesson has an Activity designed to put your
+                        integrate everything you learn.
+                    </div>
                 </div>
+                <Carousel
+                    :autoplay="2000"
+                    :items-to-show="1"
+                    :wrap-around="true"
+                >
+                    <template #slides>
+                        <Slide v-for="slide in 3" :key="slide">
+                            <img
+                                :src="`https://abdulbaha.fra1.digitaloceanspaces.com/images/front-academy0${slide}.png`"
+                                alt="Slide Image">
+                        </Slide>
+                    </template>
+                    <template #addons>
+                        <Pagination/>
+                    </template>
+                </Carousel>
             </div>
         </div>
+
 
         <div class="homepage-section pastel-light">
             <div>

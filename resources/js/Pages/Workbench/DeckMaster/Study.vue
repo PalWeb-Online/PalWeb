@@ -36,11 +36,9 @@ watch(() => props.deck, (newDeck) => {
 <template>
     <Head title="Deck Master: Study"/>
     <div id="app-body">
-        <div id="dm-study">
-            <Settings v-if="DeckStudyStore.data.step === 'settings'"/>
-            <Practice v-if="DeckStudyStore.data.step === 'practice'"/>
-            <Quiz v-if="DeckStudyStore.data.step === 'quiz'"/>
-            <Results v-if="DeckStudyStore.data.step === 'results'"/>
-        </div>
+        <Settings v-if="DeckStudyStore.data.step === 'settings'"/>
+        <Practice v-if="DeckStudyStore.data.step === 'practice'"/>
+        <Quiz v-if="DeckStudyStore.data.step === 'quiz'"/>
+        <Results v-if="DeckStudyStore.data.step === 'results'"/>
     </div>
 </template>

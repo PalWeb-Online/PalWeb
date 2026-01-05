@@ -41,12 +41,13 @@ class HandleInertiaRequests extends Middleware
                     ? new \App\Http\Resources\AuthUserResource($request->user()->load(['roles']))
                     : null,
             ],
+            'locale' => app()->getLocale(),
             'utcOffsetMinutes' => now()
                 ->setTimezone('Asia/Jerusalem')
                 ->utcOffset(),
             'flash' => [
                 'notification' => fn () => $request->session()->get('notification'),
-                'denied' => fn () => $request->session()->get('denied')
+                'denied' => fn () => $request->session()->get('denied'),
             ],
         ]);
     }

@@ -16,7 +16,7 @@ class StoreScoreRequest extends FormRequest
         return [
             'scorable_type' => ['required', 'string', Rule::in(array_keys(Relation::morphMap()))],
             'scorable_id' => ['required', 'integer'],
-            'settings' => ['required', 'array'],
+            'settings' => ['present', 'array'],
             'score' => ['required', 'numeric', 'min:0', 'max:1'],
             'results' => ['required', 'array'],
         ];

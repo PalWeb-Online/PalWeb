@@ -18,8 +18,7 @@ class AudioService
     public function __construct(
         protected AudioDirectoryRepository $audioDirectory,
         protected UploadAudioFileRepository $audioUploader,
-    ) {
-    }
+    ) {}
 
     public function uploadAudio(string $wavPath, string $filename): void
     {
@@ -38,7 +37,6 @@ class AudioService
         } catch (\Exception $e) {
             Log::error('Failed to upload audio file: '.$e->getMessage());
             throw $e;
-
         } finally {
             File::delete($mp3Path);
         }
@@ -58,7 +56,7 @@ class AudioService
 
         if ($returnVar !== 0) {
             throw new \Exception("Failed to convert audio file to .mp3. Command: {$command}, Output: ".implode("\n",
-                    $output));
+                $output));
         }
     }
 

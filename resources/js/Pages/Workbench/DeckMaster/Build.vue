@@ -203,7 +203,7 @@ onMounted(async () => {
                                   v-show="deck.terms.length > 0"
                                   @click="removeTerm(index)">delete</span>
                             <TermItem :term="element"/>
-                            <span class="handle material-symbols-rounded">menu</span>
+                            <span class="handle material-symbols-rounded">drag_indicator</span>
                         </div>
                     </template>
                 </draggable>

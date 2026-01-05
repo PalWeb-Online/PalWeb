@@ -7,8 +7,10 @@ import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {usePage} from "@inertiajs/vue3";
-import {watch} from "vue";
+import {onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
+import {useUserStore} from "../stores/UserStore.js";
+import i18n from "../i18n.js";
 
 defineProps({
     section: {
@@ -17,16 +19,38 @@ defineProps({
     }
 });
 
+const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const page = usePage();
 
-watch(() => page.props.flash.notification, (notification) => {
-    if (notification) {
-        NotificationStore.addNotification(notification.message, notification.type);
+onMounted(() => {
+    const userId = UserStore.user?.id ?? null;
+
+    if (userId) {
+        window.Echo.private(`users.${userId}`)
+            .listen('LessonProgressUpdated', (e) => {
+                NotificationStore.addNotification(e.message, e.type);
+            });
     }
 });
+
+watch(() => page.props.flash.notification,
+    (notification) => {
+        if (notification) {
+            NotificationStore.addNotification(notification.message, notification.type);
+        }
+    });
+
+watch(
+    () => page.props.locale,
+    (newLocale) => {
+        if (newLocale) {
+            i18n.global.locale.value = newLocale;
+        }
+    }
+);
 </script>
 
 <template>
@@ -35,12 +59,7 @@ watch(() => page.props.flash.notification, (notification) => {
 
     <div id="app-container" :class="section">
         <slot/>
-
-        <Footer v-if="![
-            'Workbench/RecordWizard/RecordWizard',
-            'Workbench/DeckMaster/DeckMaster',
-            'Workbench/SpeechMaker/SpeechMaker',
-            ].includes($page.component)"/>
+        <Footer/>
     </div>
 
     <ModalWrapper v-model="SearchStore.data.isOpen">

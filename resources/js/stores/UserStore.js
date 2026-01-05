@@ -23,9 +23,14 @@ export const useUserStore = defineStore('UserStore', () => {
         }
     };
 
-    const isUser = computed(() => !!user.value);
-    const isStudent = computed(() => user.value?.roles?.includes('student') || user.value?.roles?.includes('admin'));
+    const hasUnlockedLesson = (id) => {
+        return user.value.unlocked_lessons.includes(id);
+    }
+
+    const isSuperuser = computed(() => user.value?.is_superuser);
     const isAdmin = computed(() => user.value?.roles?.includes('admin'));
+    const isStudent = computed(() => user.value?.roles?.includes('student') || user.value?.roles?.includes('admin'));
+    const isUser = computed(() => !!user.value);
 
     const highestRole = computed(() => {
         if (isAdmin.value) return 'admin';
@@ -39,9 +44,11 @@ export const useUserStore = defineStore('UserStore', () => {
         decks,
         hasFetchedDecks,
         fetchDecks,
-        isUser,
-        isStudent,
+        hasUnlockedLesson,
+        isSuperuser,
         isAdmin,
+        isStudent,
+        isUser,
         highestRole
     };
 });

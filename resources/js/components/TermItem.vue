@@ -4,6 +4,9 @@ import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
 import {route} from "ziggy-js";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {

@@ -44,10 +44,10 @@ return [
     |
     */
 
-    // 'brand' =>  [
-    //     'logo' => realpath(__DIR__.'/../public/svg/billing-logo.svg'),
-    //     'color' => 'bg-gray-800',
-    // ],
+     'brand' =>  [
+         'logo' => realpath(__DIR__.'/../public/img/logo_circle_watermelon.svg'),
+         'color' => '#005244FF',
+     ],
 
     /*
     |--------------------------------------------------------------------------
@@ -87,10 +87,10 @@ return [
     */
 
     'features' => [
-        Features::billingAddressCollection(['required' => true]),
+        // Features::billingAddressCollection(['required' => true]),
         // Features::mustAcceptTerms(),
         // Features::euVatCollection(['home-country' => 'BE']),
-        Features::receiptEmails(['custom-addresses' => true]),
+        // Features::invoiceEmails(['custom-addresses' => true]),
         Features::paymentNotificationEmails(),
     ],
 
@@ -105,12 +105,12 @@ return [
     |
     */
 
-    'receipt_data' => [
+    'invoice_data' => [
         'vendor' => 'PalWeb',
         'product' => 'Student Plan Subscription',
-        'street' => '',
-        'location' => 'Madrid, Spain',
-        'phone' => '+34-674452411',
+        'street' => '40713 Desert Creek Lane',
+        'location' => 'Rancho Mirage, CA',
+        'phone' => '(760) 413-4032',
     ],
 
     /*
@@ -141,8 +141,9 @@ return [
                 [
                     'name' => 'Student',
                     'short_description' => 'Get access to all the features of PalWeb!',
-                    'monthly_id' => 'price_1LnJkZIQsnH1GQByDBTzKkqV',
-                    'yearly_id' => 'price_1Mmnr5IQsnH1GQByMUlzg32w',
+                    'monthly_id' => env('SPARK_STUDENT_MONTHLY_PLAN', 'price_id'),
+                    'yearly_id' => env('SPARK_STUDENT_YEARLY_PLAN', 'price_id'),
+                    'trial_days' => 14,
                     'features' => [
                         'Access to the Academy (Lessons & Texts)',
                         'Access to the Explore Portal',

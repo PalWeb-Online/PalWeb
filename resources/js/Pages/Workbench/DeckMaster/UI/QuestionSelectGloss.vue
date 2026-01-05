@@ -1,6 +1,5 @@
 <script setup>
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
-import AppButton from "../../../../components/AppButton.vue";
 import {ref} from "vue";
 
 const DeckStudyStore = useDeckStudyStore();
@@ -62,7 +61,7 @@ const startTypingEffect = (text) => {
                     </div>
                 </div>
                 <div class="term-flashcard-glosses">
-                    <div v-show="DeckStudyStore.quiz[props.index].response">
+                    <div v-show="DeckStudyStore.quiz[props.index].response" style="line-height: 1.5">
                         {{ displayedText }}
                     </div>
                     <div></div>
@@ -70,10 +69,12 @@ const startTypingEffect = (text) => {
             </div>
         </div>
 
-        <div class="quiz-question-options">
-            <AppButton v-for="(option, i) in question.options"
+        <div class="exercise--select-options">
+            <button v-for="(option, i) in question.options"
                        :class="{'selected': question.response === Number(i)}"
-                       @click="toggleSelection(i)" :label="option"/>
+                       @click="toggleSelection(i)">
+                {{ option }}
+            </button>
         </div>
     </div>
 </template>

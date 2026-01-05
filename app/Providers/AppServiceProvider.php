@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -38,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if (app()->environment('local')) {
             URL::forceScheme('https');
+
+//            Lang::handleMissingKeysUsing(function ($key, $replace, $locale) {
+//                throw new \RuntimeException("Missing translation: [$locale] $key");
+//            });
         }
 
         Paginator::defaultView('vendor.pagination.default');
@@ -48,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
             'sentence' => \App\Models\Sentence::class,
             'deck' => \App\Models\Deck::class,
             'dialog' => \App\Models\Dialog::class,
+            'activity' => \App\Models\Activity::class,
         ]);
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
