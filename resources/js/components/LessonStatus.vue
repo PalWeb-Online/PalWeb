@@ -9,27 +9,22 @@ defineProps({
 
 <template>
     <div class="lesson-status">
-        <div style="background: var(--color-accent-light)">
+        <div style="background: var(--color-medium-secondary); color: white;">
             <Link class="lesson-title" :href="route('lessons.show', lesson.global_position)">
                 Lesson {{ lesson.global_position }}
             </Link>
 
-            <template v-if="lesson.progress">
-                <div style="display: flex; align-items: center; gap: 0.4rem">
-                    <div class="lock material-symbols-rounded" :class="{ unlocked: lesson.progress?.stage }">
-                        {{ lesson.progress?.stage ? 'lock_open' : 'lock' }}
-                    </div>
-                    <div class="check material-symbols-rounded"
-                         :class="{ active: lesson.progress?.stage > 1 }">check
-                    </div>
-                    <div class="check material-symbols-rounded"
-                         :class="{ active: lesson.progress?.stage > 2 }">check
-                    </div>
+            <div style="display: flex; align-items: center; gap: 0.8rem">
+                <div class="lock material-symbols-rounded" :class="{ unlocked: lesson.progress?.stage }">
+                    {{ lesson.progress?.stage ? 'lock_open' : 'lock' }}
                 </div>
-            </template>
-            <template v-else>
-                Not Unlocked Yet
-            </template>
+                <div class="check material-symbols-rounded"
+                     :class="{ active: lesson.progress?.stage > 1 }">check
+                </div>
+                <div class="check material-symbols-rounded"
+                     :class="{ active: lesson.progress?.stage > 2 }">check
+                </div>
+            </div>
         </div>
 
         <div style="flex-grow: 1; justify-content: space-between; font-weight: 700">
@@ -51,7 +46,7 @@ defineProps({
 .lesson-status {
     display: flex;
     align-items: center;
-    background: var(--color-pastel-medium);
+    background: var(--color-pastel-dark);
     color: var(--color-dark-secondary);
 
     & > div {
@@ -71,11 +66,10 @@ defineProps({
     }
 
     .lock {
-        color: var(--color-medium-secondary);
-        opacity: 0.33;
+        color: var(--color-accent-medium);
 
         &.unlocked {
-            opacity: 1;
+            color: white;
         }
     }
 
@@ -86,8 +80,8 @@ defineProps({
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        background: var(--color-medium-primary);
+        color: var(--color-medium-secondary);
+        background: white;
         font-size: 2.0rem;
         font-variation-settings: 'wght' 700;
         opacity: 0.33;
