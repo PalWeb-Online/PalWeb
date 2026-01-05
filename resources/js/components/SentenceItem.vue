@@ -58,21 +58,23 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                 <PinButton modelType="sentence" :model="sentence"/>
                 <div class="model-item-content">
                     <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
-                        <Link v-if="term.id"
-                              :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
-                              :target="isCurrentTerm(term) ? '' : '_blank'"
-                              :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
-                            <div>{{ term.sentencePivot.sent_term }}</div>
-                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                        </Link>
-                        <div v-else-if="!showTerms" class="sentence-term">
+                        <div v-if="!showTerms && term.sentencePivot.toggleable" class="sentence-term">
                             <div>ــــــــ</div>
                             <div v-if="showTranscription">[]</div>
                         </div>
-                        <div v-else class="sentence-term">
-                            <div>{{ term.sentencePivot.sent_term }}</div>
-                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                        </div>
+                        <template v-else>
+                            <Link v-if="term.id"
+                                  :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                                  :target="isCurrentTerm(term) ? '' : '_blank'"
+                                  :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
+                                <div>{{ term.sentencePivot.sent_term }}</div>
+                                <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
+                            </Link>
+                            <div v-else class="sentence-term">
+                                <div>{{ term.sentencePivot.sent_term }}</div>
+                                <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
+                            </div>
+                        </template>
                     </template>
                     <div v-else class="sentence-term" style="background: none">
                         <div>{{ sentence.sentence }}</div>
