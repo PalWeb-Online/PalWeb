@@ -1,12 +1,12 @@
 <body
-    style="background-color: #f1edfd; font-family: 'Helvetica Neue', sans-serif; max-width: 720px; margin: 0 auto; padding: 0 0 16px; border-spacing: 0">
+    style="background: var(--color-pastel-light); font-family: 'Helvetica Neue', sans-serif; max-width: 720px; margin: 0 auto; padding: 0 0 16px; border-spacing: 0">
 
 <div style="padding: 0 160px; margin: 48px 0">
     <img src="{{ asset('img/logo.png') }}" width="100%" alt="PalWeb Logo"/>
 </div>
 
 <div
-    style="padding: 16px 32px; background: #fff0ca; border-radius: 16px; border: 1px solid #ffc32c; margin: 32px 0">
+    style="padding: 16px 32px; background: var(--color-accent-light)">
 
     @yield('mail')
 
@@ -14,7 +14,7 @@
     <p><b>— R. Adrian</b></p>
 </div>
 
-<div style="padding: 24px 24px 8px; background: #7047eb; border-radius: 16px; color: white">
+<div style="padding: 24px 24px 8px; background: var(--color-dark-primary); color: white">
     <h1 style="margin: 12px 0">PalWeb</h1>
     <h3 style="margin: 12px 0">the Web of Palestinian Arabic</h3>
     <div style="border-top: 1px solid white"></div>

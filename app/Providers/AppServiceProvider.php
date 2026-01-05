@@ -2,16 +2,18 @@
 
 namespace App\Providers;
 
+use App\Listeners\AfterSubscriptionCreated;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Spark\Events\SubscriptionCreated;
+use Spark\Events\SubscriptionUpdated;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,7 +47,6 @@ class AppServiceProvider extends ServiceProvider
 //            });
         }
 
-        Paginator::defaultView('vendor.pagination.default');
         JsonResource::withoutWrapping();
 
         Relation::morphMap([
@@ -55,6 +56,16 @@ class AppServiceProvider extends ServiceProvider
             'dialog' => \App\Models\Dialog::class,
             'activity' => \App\Models\Activity::class,
         ]);
+
+        Event::listen(
+            SubscriptionCreated::class,
+            AfterSubscriptionCreated::class,
+        );
+
+        Event::listen(
+            SubscriptionUpdated::class,
+            AfterSubscriptionCreated::class,
+        );
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
