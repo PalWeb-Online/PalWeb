@@ -78,6 +78,14 @@ $bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
 $monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
 $ar_bodyFont: 'Vazirmatn', sans-serif;
 
+:root {
+    --display-font: 'beastly', 'Lalezar';
+    --head-font: 'monotalic', 'greycliff-arabic-cf';
+    --body-font: 'komet', 'greycliff-arabic-cf';
+    --mono-font: 'JetBrains Mono', 'Vazirmatn';
+    --ar-body-font: 'JetBrains Mono', 'Vazirmatn';
+}
+
 //$displayFont: 'digibop', 'greycliff-arabic-cf', serif;
 //$headFont: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
 //:root {
@@ -95,7 +103,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-pastel-medium: hsl(255, 80%, 92%);
     --color-pastel-light: hsl(260, 90%, 97%);
     --color-transparent: hsla(255, 80%, 92%, 0.75);
-    --color-accent-dark: var(--color-dark-primary);
+    --color-accent-dark: hsl(275, 50%, 30%);
     --color-accent-medium: hsl(40, 92%, 60%);
     --color-accent-light: hsl(40, 92%, 90%);
 }
@@ -135,8 +143,8 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
 .theme-Jerusalem {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: #050566;
-    --color-dark-primary: hsl(240, 80%, 30%);
+    --color-dark-secondary: hsl(240, 80%, 20%);
+    --color-dark-primary: hsl(240, 75%, 33%);
     --color-medium-secondary: hsl(215, 90%, 45%);
     --color-medium-primary: hsl(172, 100%, 34%);
     --color-pastel-dark: hsl(200, 75%, 80%);
@@ -144,8 +152,8 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-pastel-light: hsl(172, 50%, 92%);
     --color-transparent: hsla(200, 90%, 92%, 0.75);
     --color-accent-dark: hsl(178, 95%, 20%);
-    --color-accent-medium: hsl(45, 95%, 50%);
-    --color-accent-light: hsl(45, 85%, 90%);
+    --color-accent-medium: hsl(44, 97%, 57%);
+    --color-accent-light: hsl(44, 85%, 90%);
 
     //--color-dark-secondary: hsl(220, 80%, 12%);
     //--color-dark-primary: hsl(220, 100%, 25%);

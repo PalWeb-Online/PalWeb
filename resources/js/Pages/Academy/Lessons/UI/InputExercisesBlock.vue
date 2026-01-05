@@ -50,3 +50,41 @@ const {
         </template>
     </div>
 </template>
+
+<style scoped lang="scss">
+.exercise--input-answers {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        font-family: var(--mono-font), monospace;
+        font-size: 2.0rem;
+        font-weight: 700;
+        color: var(--color-medium-secondary);
+    }
+
+    span {
+        font-size: 1.6rem;
+        background: white;
+        padding: 0.8rem 2.4rem;
+        border-radius: 6.4rem;
+        color: white;
+        background: var(--color-medium-secondary);
+    }
+
+    button {
+        font-size: 1.6rem;
+        font-family: var(--body-font), sans-serif;
+        font-weight: 700;
+        color: var(--color-dark-secondary);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+</style>

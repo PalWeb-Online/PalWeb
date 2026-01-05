@@ -285,6 +285,40 @@ body {
             border-radius: 0.25em;
         }
     }
+
+    .carousel__slide img {
+        border-radius: 0.8rem;
+    }
+
+    .carousel__pagination {
+        justify-self: center;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin: 0 1.6rem 0;
+    }
+
+    .carousel__pagination-item {
+        padding: 0;
+        flex-grow: 1;
+        min-width: 1.6rem;
+    }
+
+    .carousel__pagination-button {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .carousel__pagination-button::after {
+        width: 100% !important;
+        height: 1.6rem !important;
+        border-radius: 3.2rem !important;
+        background: var(--color-accent-medium) !important;
+    }
+
+    .carousel__pagination-button--active::after {
+        background: var(--color-medium-primary) !important;
+    }
 }
 
 .homepage-panel-content {

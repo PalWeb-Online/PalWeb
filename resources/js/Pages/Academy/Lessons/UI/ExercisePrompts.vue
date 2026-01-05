@@ -17,7 +17,7 @@ defineProps({
     <template v-if="exercise.prompts.some(p => p.type === 'text')">
         <div v-for="text in exercise.prompts.filter(p => p.type === 'text')"
              class="exercise-prompt_render">
-                        <span v-if="isViewingResults" class="material-symbols-rounded"
+                        <span v-if="isViewingResults && exercise.type !== 'match'" class="material-symbols-rounded"
                               :class="{ 'correct': exercise.correct }">
                             {{ exercise.correct ? 'check_circle' : 'cancel' }}
                         </span>
@@ -25,7 +25,3 @@ defineProps({
         </div>
     </template>
 </template>
-
-<style scoped>
-
-</style>

@@ -236,3 +236,82 @@ const getMatchState = (itemId, type, value) => {
         </template>
     </div>
 </template>
+
+<style scoped lang="scss">
+.exercise--match {
+    margin-block-start: 6.4rem;
+    display: grid;
+    gap: 3.2rem;
+    direction: rtl;
+
+    .exercise--match-grid {
+        display: flex;
+        justify-content: space-between;
+        gap: 8rem;
+        position: relative;
+    }
+
+    .exercise--match-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        line {
+            pointer-events: stroke;
+            stroke: var(--color-accent-light);
+            stroke-width: 0.4rem;
+            stroke-linecap: round;
+
+            &.correct {
+                stroke: var(--color-medium-secondary);
+            }
+
+            &.missed {
+                stroke: var(--color-medium-primary);
+                stroke-dasharray: 0.8rem;
+            }
+        }
+    }
+
+    .exercise--match-column {
+        min-width: 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 2.4rem;
+        z-index: 1;
+
+        & > div {
+            display: flex;
+            align-items: center;
+            flex-basis: 20%;
+
+            div {
+                width: 2.4rem;
+                height: 2.4rem;
+                background: var(--color-medium-primary);
+                border-radius: 50%;
+                z-index: -1;
+            }
+        }
+
+        button {
+            flex-grow: 1;
+            font-family: var(--ar-body-font), sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            background: var(--color-accent-light);
+            color: var(--color-dark-secondary);
+            padding: 1.2rem 2.4rem;
+            border-radius: 0.8rem;
+        }
+
+        button.pending, button.committed:not(.incorrect), button.correct {
+            color: white;
+            background: var(--color-medium-secondary);
+        }
+    }
+}
+</style>

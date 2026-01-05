@@ -86,3 +86,27 @@ watch(() => props.activity, (newActivity) => {
         />
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.activity-head {
+    display: grid;
+    justify-items: center;
+    gap: 2.4rem;
+    background: var(--color-accent-light);
+    padding-block: 3.2rem;
+
+    h1 {
+        margin: 0;
+        font-family: var(--display-font), serif;
+        font-weight: 700;
+        font-size: 7.2rem;
+        color: var(--color-dark-primary);
+        line-height: 0.75;
+        padding-block-end: 1.2rem;
+
+        @media (min-width: 960px) {
+            font-size: 9.6rem;
+        }
+    }
+}
+</style>

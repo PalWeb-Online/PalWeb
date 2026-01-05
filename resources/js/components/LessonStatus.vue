@@ -33,17 +33,21 @@ defineProps({
         </div>
 
         <div style="flex-grow: 1; justify-content: space-between; font-weight: 700">
-            <div>
-                Times Scored:
-                {{ lesson.scores_count[`${model.model_class}:${model.id}`] ?? 0 }}/{{ model.model_class === 'deck' ? '3' : '1'}}
+            <div v-if="['deck', 'activity'].includes(model.model_class)">
+                Scored 100%
+                ({{
+                    lesson.scores_count[`${model.model_class}:${model.id}`] ?? 0
+                }}/{{ model.model_class === 'deck' ? '3' : '1' }})
             </div>
             <Link v-if="model.model_class === 'deck'" :href="route('deck-master.study', model)">Start Quiz</Link>
-            <Link v-else-if="model.model_class === 'activity'" :href="route('activities.activity', model)">Start Activity</Link>
+            <Link v-else-if="model.model_class === 'activity'" :href="route('activities.activity', model)">Start
+                Activity
+            </Link>
         </div>
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .lesson-status {
     display: flex;
     align-items: center;

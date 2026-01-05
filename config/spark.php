@@ -143,6 +143,7 @@ return [
                     'short_description' => 'Get access to all the features of PalWeb!',
                     'monthly_id' => env('SPARK_STUDENT_MONTHLY_PLAN', 'price_id'),
                     'yearly_id' => env('SPARK_STUDENT_YEARLY_PLAN', 'price_id'),
+                    'trial_days' => 14,
                     'features' => [
                         'Access to the Academy (Lessons & Texts)',
                         'Access to the Explore Portal',

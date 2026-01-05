@@ -1,34 +1,32 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
-import {onMounted, provide, ref} from "vue";
+import {provide, ref, watch} from "vue";
 import {route} from "ziggy-js";
 import UnitNav from "../Units/UI/UnitNav.vue";
-import AppTip from "../../../components/AppTip.vue";
 import SkillContainer from "../Lessons/UI/SkillContainer.vue";
 import DeckContainer from "../../../components/DeckContainer.vue";
-import ScoreStats from "../../../components/ScoreStats.vue";
-import WindowSection from "../../../components/WindowSection.vue";
-import ActivityActions from "../../../components/Actions/ActivityActions.vue";
+import ActivityContainer from "../../../components/ActivityContainer.vue";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
-    lesson: Object,
+    unit: {type: Object, required: false},
+    lesson: {type: Object, required: true},
 })
 
-const sentenceLookup = ref({});
+const lessonSentences = ref({});
 const isLoadingSentences = ref(true);
 
-provide('lessonSentences', sentenceLookup);
+provide('lessonSentences', lessonSentences);
 
 const currentTab = ref('deck');
 
-onMounted(async () => {
+const loadSkillSentences = async () => {
     const ids = new Set();
-    props.lesson.data.document?.skills.forEach(skill => {
+    props.lesson.document?.skills.forEach(skill => {
         skill.blocks.forEach(block => {
             if (block.type === 'sentence' && block.model?.id) {
                 ids.add(block.model.id);
@@ -45,39 +43,42 @@ onMounted(async () => {
         const response = await axios.post(route('sentences.get-many'), {
             ids: Array.from(ids)
         });
-        sentenceLookup.value = response.data;
+        lessonSentences.value = response.data;
 
     } catch (error) {
-        console.error("Failed to fetch lesson sentences", error);
+        console.error("Failed to fetch Skill Sentences", error);
 
     } finally {
         isLoadingSentences.value = false;
     }
+}
+
+watch(currentTab, (newTab) => {
+    if (newTab === 'skills') loadSkillSentences();
 });
 </script>
 <template>
-    <Head :title="`Academy: Lesson ${lesson.data.slug}`"/>
+    <Head :title="`Academy: Lesson ${lesson.global_position}`"/>
 
     <div id="lesson-nav">
-        <UnitNav v-if="lesson.data.unit" :unit="lesson.data.unit" :activeSlug="lesson.data.slug"/>
-
-        <div class="lesson-head">
-            <div class="featured-title m">Lesson {{ lesson.data.slug }}</div>
-            <div class="lesson-head-title">{{ lesson.data.title }}</div>
+        <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
+        <div class="lesson-data-container">
+            <div class="lesson-data-head">
+                <div class="featured-title s">Lesson {{ lesson.global_position }}:</div>
+                <div class="lesson-head-title">{{ lesson.title }}</div>
+            </div>
+            <div class="lesson-data-body">
+                <div>{{ lesson.description }}</div>
+                <div class="lesson-skill-summary">
+                    <div style="font-weight: 700">In this Lesson, you'll learn to:</div>
+                    <ul style="margin-block: 1.6rem">
+                        <li v-for="skill in lesson.document.skills">
+                            {{ skill.description }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="unit-meta">
-            <div>{{ lesson.data.published ? '' : 'not' }} published</div>
-            <Link :href="route('lesson-planner.lesson', lesson.data)">edit</Link>
-        </div>
-
-        <AppTip>
-            <p v-if="lesson.data.progress.stage === 1">Get a Score of 100% on this Lesson's Deck 3 times to unlock the
-                Skills!</p>
-            <p v-if="lesson.data.progress.stage === 2">Get a Score of 100% on this Lesson's Activity to complete the
-                Lesson!</p>
-            <p v-if="lesson.data.progress.stage === 3">You've completed this Lesson! Use the Dialog to practice what
-                you've learned!</p>
-        </AppTip>
 
         <div class="lesson-stages">
             <div class="lesson-stage-wrapper" @click="currentTab = 'deck'"
@@ -86,8 +87,8 @@ onMounted(async () => {
                 <div class="featured-title m">deck</div>
             </div>
             <div class="lesson-stage-wrapper" @click="currentTab = 'skills'"
-                 :class="{active: currentTab === 'skills', disabled: lesson.data.progress.stage < 2}">
-                <div v-if="lesson.data.progress.stage < 2" class="lesson-stage-index">
+                 :class="{active: currentTab === 'skills', disabled: lesson.progress.stage < 2}">
+                <div v-if="lesson.progress.stage < 2" class="lesson-stage-index">
                     <span class="material-symbols-rounded">lock</span>
                 </div>
                 <template v-else>
@@ -96,8 +97,8 @@ onMounted(async () => {
                 </template>
             </div>
             <div class="lesson-stage-wrapper" @click="currentTab = 'dialog'"
-                 :class="{active: currentTab === 'dialog', disabled: lesson.data.progress.stage < 3}">
-                <div v-if="lesson.data.progress.stage < 3" class="lesson-stage-index">
+                 :class="{active: currentTab === 'dialog', disabled: lesson.progress.stage < 3}">
+                <div v-if="lesson.progress.stage < 3" class="lesson-stage-index">
                     <span class="material-symbols-rounded">lock</span>
                 </div>
                 <template v-else>
@@ -105,83 +106,159 @@ onMounted(async () => {
                     <div class="featured-title m">dialog</div>
                 </template>
             </div>
-            <!--            <div class="lesson-model-score-count material-symbols-rounded"-->
-            <!--                 v-if="lesson.data.progress.stage >= 2"-->
-            <!--            >-->
-            <!--                <div :class="{ completed: lesson.data.progress.scores_count.activity > 0 }">check</div>-->
-            <!--            </div>-->
         </div>
     </div>
 
     <div id="app-body" v-show="currentTab === 'deck'">
-        <template v-if="lesson.data.deck">
-            <div class="lesson-model-progress-wrapper">
-                <div></div>
-                <div>
-                    <div class="lesson-model-score-count">
-                        <div class="material-symbols-rounded"
-                             :class="{ completed: lesson.data.progress.scores_count.deck > 0 }">check
-                        </div>
-                        <div class="material-symbols-rounded"
-                             :class="{ completed: lesson.data.progress.scores_count.deck > 1 }">check
-                        </div>
-                        <div class="material-symbols-rounded"
-                             :class="{ completed: lesson.data.progress.scores_count.deck > 2 }">check
-                        </div>
-                    </div>
-                    <Link :href="route('deck-master.study', lesson.data.deck.id)">study</Link>
-                </div>
-            </div>
-            <DeckContainer :model="lesson.data.deck"/>
+        <template v-if="lesson.deck">
+            <DeckContainer :model="lesson.deck"/>
         </template>
         <template v-else>
             No Deck available for this Lesson yet.
         </template>
     </div>
-    <div id="app-body" v-show="currentTab === 'skills'">
-        <template v-if="lesson.data.document">
-            <SkillContainer v-for="skill in lesson.data.document.skills" :skill="skill" :key="skill.id"/>
+    <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
+        <template v-if="lesson.document">
+            <SkillContainer v-for="skill in lesson.document.skills" :skill="skill" :key="skill.id"/>
         </template>
 
-        <template v-if="lesson.data.activity">
-            <div class="featured-title l">ready to go?</div>
-            <div class="window-container">
-                <div class="window-header">
-                    <div class="material-symbols-rounded">home</div>
-                    <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}</div>
-                </div>
-                <div class="window-section-head">
-                    <h1>activity</h1>
-                    <ActivityActions :model="lesson.data.activity"/>
-                </div>
-                <div class="window-content-head">
-                    <div class="window-content-head-title">{{ lesson.data.activity.title }}</div>
-                </div>
-                <WindowSection>
-                    <template #title>
-                        <h2>stats</h2>
-                    </template>
-                    <template #content>
-                        <ScoreStats :model="lesson.data.activity"/>
-                    </template>
-                </WindowSection>
-
-                <div class="window-footer">
-                    <Link :href="route('activities.show', lesson.data.slug)">
-                        Start Activity
-                    </Link>
-                </div>
-            </div>
+        <template v-if="lesson.activity">
+            <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
+            <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
         </template>
-
         <p v-else>
             No Activity available for this Lesson yet.
         </p>
     </div>
-    <div id="app-body" v-show="currentTab === 'dialog'">
-        <DialogContainer v-if="lesson.data.dialog" :model="lesson.data.dialog"/>
+    <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
+        <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
         <p v-else>
-            No Dialog available for to this Lesson yet.
+            No Dialog available for this Lesson yet.
         </p>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.lesson-data-container {
+    display: grid;
+    overflow: hidden;
+
+    @media (min-width: 960px) {
+        border-radius: 3.2rem;
+    }
+}
+
+.lesson-data-head {
+    display: grid;
+    gap: 1.6rem;
+    color: white;
+    background: var(--color-medium-secondary);
+    padding: 3.2rem 3.2rem 1.6rem;
+
+    .featured-title {
+        color: var(--color-accent-medium)
+    }
+
+    .lesson-head-title {
+        font-family: var(--head-font), sans-serif;
+        font-size: 4.8rem;
+        font-weight: 700;
+        text-transform: none;
+        hyphens: none;
+    }
+}
+
+.lesson-data-body {
+    display: grid;
+    gap: 3.2rem;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    padding: 3.2rem;
+    color: var(--color-dark-primary);
+    background: var(--color-accent-light);
+}
+
+.lesson-stages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    margin-block: 3.2rem 6.4rem;
+
+    .lesson-stage-wrapper {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        grid-template-areas: 'overlap';
+        user-select: none;
+        cursor: pointer;
+        font-size: clamp(0.8rem, 2vw, 1.6rem);
+
+        & > * {
+            grid-area: overlap;
+        }
+
+        .featured-title {
+            color: white;
+            background: var(--color-medium-secondary);
+            font-size: 3em;
+            padding: 0.1em 0.3em 0.2em;
+            z-index: 1;
+        }
+
+        .lesson-stage-index {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark-primary);
+            font-family: var(--display-font), serif;
+            font-size: 16em;
+            height: 0.75em;
+            width: 0.75em;
+            border-radius: 50%;
+            background: var(--color-accent-light);
+            overflow: hidden;
+            z-index: 0;
+            transition: rotate 0.1s;
+
+            .material-symbols-rounded {
+                font-size: 0.2em;
+            }
+        }
+
+        &:not(.disabled) {
+            .lesson-stage-index {
+                padding-block-end: 0.125em;
+            }
+
+            &:hover {
+                .lesson-stage-index {
+                    rotate: 9deg;
+                }
+            }
+        }
+
+        &.active {
+            .featured-title {
+                color: var(--color-medium-secondary);
+                background: var(--color-accent-light);
+            }
+
+            .lesson-stage-index {
+                background: var(--color-medium-secondary);
+                rotate: 9deg;
+            }
+        }
+
+        &.disabled {
+            .lesson-stage-index {
+                color: var(--color-accent-light);
+                background: var(--color-dark-primary);
+            }
+
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    }
+
+}
+</style>

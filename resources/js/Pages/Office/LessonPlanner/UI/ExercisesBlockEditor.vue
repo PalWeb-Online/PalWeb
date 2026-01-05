@@ -294,3 +294,82 @@ const removeMatchPair = (ex, pairIndex) => {
         <ToggleSingle label="shuffle" v-model="props.block.shuffle"/>
     </div>
 </template>
+
+<style scoped lang="scss">
+.block-editor--exercises {
+    display: grid;
+    gap: 3.2rem;
+
+    .exercises-draggable {
+        display: grid;
+        gap: 1.6rem;
+    }
+
+    .exercise-item {
+        display: grid;
+        gap: 1.6rem;
+        padding: 1.6rem;
+        border-radius: 0.5em;
+        border: 0.1rem solid var(--color-medium-primary);
+    }
+
+    input {
+        font-size: 1.4rem;
+    }
+
+    .block-meta {
+        font-size: 2.0rem;
+        font-weight: 700;
+    }
+
+    .exercise-question {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        direction: rtl;
+
+        input {
+            font-weight: 700;
+        }
+    }
+
+    .exercise-answers {
+        display: grid;
+        gap: 0.8rem;
+        direction: rtl;
+    }
+
+    .exercise-select-option {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        font-family: var(--mono-font), monospace;
+        font-weight: 700;
+
+        button {
+            color: var(--color-medium-primary);
+        }
+
+        button.checkmark {
+            opacity: 0.33;
+        }
+
+        button.active {
+            opacity: 1;
+        }
+    }
+
+    .exercise-select-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        font-size: 1.4rem;
+        direction: rtl;
+
+        button {
+            color: var(--color-dark-primary);
+        }
+    }
+}
+</style>

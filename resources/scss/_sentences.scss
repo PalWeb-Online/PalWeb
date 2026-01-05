@@ -9,6 +9,7 @@
     .model-item-description {
         justify-content: center;
         font-size: 1.4rem;
+        direction: ltr;
     }
 
     &.highlighted {
@@ -215,6 +216,10 @@
     & + & {
         margin-block-start: 0;
     }
+
+    & + .exercise--input {
+        margin-block-start: 3.2rem;
+    }
 }
 
 .chart-dialog {
@@ -288,7 +293,7 @@
     padding: 3.2rem;
 
     @media (min-width: 960px) {
-        padding: 0 1.6rem;
+        padding: 0;
     }
 }
 
