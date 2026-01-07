@@ -49,3 +49,21 @@ const {dialog, isLoading} = useDialog(props);
         <AppTooltip ref="tooltip"/>
     </template>
 </template>
+
+<style scoped lang="scss">
+.dialog-item {
+    .model-item-content {
+        padding: 1.0rem 1.6rem;
+        justify-content: flex-end;
+
+        .model-item-title {
+            font-size: 1.8rem;
+            direction: rtl;
+        }
+
+        .model-item-description {
+            font-size: 1.4rem;
+        }
+    }
+}
+</style>

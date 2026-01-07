@@ -38,17 +38,45 @@ defineOptions({
         <p>For instance, the pattern of <b>شغل (šuġl)</b> is <b>CVCC</b>, while the pattern of <b>شغّال (šaġġāl)</b> is
             <b>CVC:LC</b> or, more specifically, <b>CaC:āC</b>. In cases where there are letters that are invariant in
             a pattern, these letters may be written instead of the wildcards that represent them; hence, <b>CaC:āC</b>
-            is a specific configuration of the more general <b>CVC:LC</b> pattern.</p>
-        <p>We can be as general or as specific as we wish when describing a pattern. Specificity proceeds in a concrete
-            order, marked by the breakpoints at which new morphological tendencies emerge: first, the length of the
-            pattern, measured as the number of length-bearing elements (i.e. consonants & long vowels), then the
-            arrangement of the length-bearing elements, then the values of the length-bearing elements, & finally the
-            values of non-length-bearing elements (i.e. short vowels).</p>
-        <p>Patterns are listed separately from other patterns similar to it when they have distinguishing grammatical
-            features, like a semantic association, a plural pattern reserved for that pattern, etc. Since <b>ة (-e)</b>
-            may appear in any pattern with no morphological repercussions, the patterns listed below should be
-            understood to imply its possibility; <b>زلمة (zalame)</b>, then, is in the <b>CVCVC</b> pattern. Only <b>CVCCe</b>
-            is listed separately from <b>CVCC</b>, because there it has a reserved plural pattern.</p>
+            is a specific configuration of the more general <b>CVC:LC</b> pattern. Not all terms in the same pattern
+            will necessarily look the same. <b>Weak Roots</b> (see <b>Morphology: Roots</b>) may affect the surface form
+            of the term; for instance, <b>صفّ (ṣaff)</b> is in the <b>CVCC</b> pattern, although the repetition of the
+            final two root consonants results in gemination.</p>
+        <p>Identifying patterns in Arabic terms is useful for a handful of reasons: As a learning aid, it reduces the
+            amount of information that must be recalled for a given term, as the general form of the term is not
+            particular or unique to that term itself; rather, the term may be grouped with other terms that sound just
+            like it. Additionally, patterns may carry various types of information with them: Some of them have semantic
+            value, or are associated with a particular class of word (e.g. elative adjectives), meaning that some of the
+            meaning of the word may be inscribed in its very form.</p>
+        <p>In terms of syntax, we can group word patterns into three categories: singular patterns, plural patterns &
+            verbal patterns. (See <b>Morphology: Verb Forms</b> for more information on verbal patterns & patterns for
+            terms derived from verbs, like participles.) Generally speaking, a word will feature a pattern that is in
+            accordance with its syntactic properties: verbs are in verbal patterns; plural nouns & adjectives are in
+            plural patterns; singular patterns correspond to singular nouns & adjectives, but is also the default for
+            other parts of speech that may be in a pattern.</p>
+        <p>Arabic terms with the same or similar patterns in their lemma form exhibit similar morphological properties;
+            namely, similar singular patterns prefer similar types of plural patterns. Similarity between patterns
+            is determined primarily with attention to their length-bearing elements; that is, their consonants & long
+            vowels, but not their short vowels. Similarity may be measured according to the following hierarchy:</p>
+        <ol>
+            <li>the number of length-bearing elements (e.g. <b>CVCC</b> & <b>CLC</b> have three, while <b>CCCC</b> &
+                <b>CCLC</b> have four)
+            </li>
+            <li>the arrangement of length-bearing elements (e.g. <b>CLCC</b> vs. <b>CCLC</b>)</li>
+            <li>the values of long vowels (e.g. <b>CCāC</b> vs. <b>CCīC</b>)</li>
+            <li>the values of short vowels (e.g. <b>CaCCaC</b> vs. <b>CaCCiC</b>)</li>
+        </ol>
+        <p>Characteristics further down the list are more specific; for instance, all terms in the <b>CCāC</b> pattern
+            are in the <b>CCLC</b> pattern, but not all terms in the <b>CCLC</b> pattern are in the <b>CCāC</b> pattern.
+            However, differences in morphological behavior are weaker as the similarity between patterns increases. We
+            can be as general or as specific as we wish when describing a pattern. Hence, the word <b>كتاب (ktāb)</b>
+            may be described as <b>CCāC</b> (more specific) or <b>CCLC</b> (less specific).</p>
+        <p>On PalWeb, patterns are listed separately from other patterns similar to it when they have distinguishing
+            grammatical features (e.g. a certain semantic association, a plural pattern reserved for that pattern,
+            etc.). Since <b>ة (-e)</b> may appear in any pattern with no morphological repercussions, the patterns
+            listed below should be understood to imply its possibility; <b>زلمة (zalame)</b>, then, is in the
+            <b>CVCVC</b> pattern. Only <b>CVCCe</b> is listed separately from <b>CVCC</b>, because there it has a
+            reserved plural pattern.</p>
         <p>Patterns like these are a feature of all Arabic varieties & more broadly of Semitic languages, where raw
             consonantal strings (i.e. roots) carry semantic value. Such patterning makes the voweling of terms highly
             predictable in Arabic, underpinning the viability & practicality of using an abjad — which doesn't represent
@@ -75,29 +103,6 @@ defineOptions({
             terms in the pattern may feature the classical voweling; in fact, this non-native voweling is one factor
             that allows us to identify borrowed terms as such. By this criterion, then, <b>جمال (žamāl)</b> is
             considered a borrowed term in the <b>CCāC</b> pattern.</p>
-        (below is kind of repetitive with the plural section)
-        <p>Patterns may carry morphological properties shared among terms in the pattern, namely inflectional behavior
-            like pluralization. More specifically, this behavior is generally shared among patterns of the same length,
-            measured in terms of consonants & long vowels (e.g. both <b>CVCC</b> & <b>CVCVC</b> have three
-            length-bearing elements). While not all terms that feature the same pattern in their lemma (i.e.
-            singular) form will necessarily have the same plural form, the pattern of the plural form is usually
-            selected from a pool of patterns specific to patterns of the same length, with sometimes multiple plural
-            forms being possible.</p>
-        (below is kind of related to ta marbuta)
-        <p>Not all terms in the same pattern will necessarily look the same. <b>Weak Roots</b> (see <b>Morphology:
-            Roots</b>) may affect the surface form of the term; for instance, <b>صفّ (ṣaff)</b> is in the
-            <b>CVCC</b> pattern, but the repetition of the final two root consonants results in gemination.</p>
-        <p>Identifying patterns in Arabic terms is useful for a handful of reasons: As a learning aid, it reduces the
-            amount of information that must be recalled for a given term, as the general form of the term is not
-            particular or unique to that term itself; rather, the term may be grouped with other terms that sound just
-            like it. Additionally, in some cases, terms with similar patterns may also have shared semantic, syntactic
-            or morphological properties, as will be discussed below. (repetitive)</p>
-        <p>We can group word patterns into three categories: singular patterns, plural patterns & verbal patterns. See
-            <b>Morphology: Verb Forms</b> for more information on verbal patterns & patterns for terms derived from
-            verbs, like participles.</p>
-        <p>Some patterns have semantic value, or are associated with a particular class of word (e.g. elative
-            adjectives), while others do not. Aside from verbal patterns, most patterns may appear among any type of
-            word; the semantic values of these patterns are also not fixed.</p>
         <ul>
             <li>Intensives & Defects have specific syntactic uses & so always have the same feminine & plural forms,
                 whereas the other two can have any plural form.
@@ -247,25 +252,27 @@ defineOptions({
             are not based on suffixation.</p>
         <p>It is often said that the plural form of a noun or adjective cannot be determined or inferred on the basis of
             its singular form. But this is not entirely true, as morphological, syntactic & even semantic factors all
-            play a role in limiting the ways a term could be inflected. Most notably, adjectives always have sound
+            play a role in limiting the ways a term could be pluralized. Most notably, adjectives always have sound
             plurals, except for those in the <b>CCīC</b> pattern, which may have a broken plural in the <b>CCāC</b>
             pattern, & Defect Adjectives, which always have a broken plural in the <b>CuCuC</b> pattern. Because of the
             patterned nature of broken plurals, moreover, singular nouns that don't fall into any discernible pattern
-            as a general rule have sound plurals as well. Other general tendencies may be observed: human nouns in a
-            <b>CaC:āC</b> pattern usually have sound plurals ending in <b>ين (-īn)</b>, & nouns ending in <b>ة (-e)</b>
-            are more likely to have a sound plural ending in <b>ات (-āt)</b> than ones that don't.</p>
-        <p>Even if a term has a broken plural, the precise selection of the plural pattern is not entirely random.
-            Patterns of the same length usually draw from the same pool of plural patterns. If we group plural patterns
-            by the length of the singular patterns they are associated with, we will find that there is practically no
-            overlap, except for the <b>CCāC</b> plural pattern, which is available to all Length 3 terms (e.g. <b>باب
-                (bāb)</b> > <b>بواب (bwāb)</b>), but only to Length 4 adjectives in the <b>CCīC</b> pattern (e.g. <b>كبير
-                (kbīr)</b> > <b>كبار (kbār)</b>). Also, the <b>CVCCān</b> pattern is available to either Length 3 or 4
-            terms indiscriminately.</p>
-        <p>Patterns of a given length usually only draw from their respective plural pattern pool, with very rare
-            exceptions (e.g. <b>أرض (ʔarḍ)</b> > <b>أراضي (ʔarādy)</b>). Only one systematic exception exists: certain
-            relative adjectives that refer to humans — mostly, but not exclusively, demonyms — may optionally be forced
-            to fit in the <b>CaCāCCe</b> pattern regardless of the morphology of the lemma form, even with the addition
-            of extra consonants if needed.</p>
+            generally have no plural pattern either; they have sound plurals. Other tendencies may be observed: human
+            nouns in the <b>CaC:āC</b> pattern usually have sound plurals ending in <b>ين (-īn)</b>, & nouns ending in
+            <b>ة (-e)</b> are more likely to have a sound plural ending in <b>ات (-āt)</b> than ones that don't.</p>
+        <p>Even if a term has a broken plural, the precise selection of the plural pattern is not entirely random. While
+            not all terms in the same singular pattern necessarily feature the same plural pattern, the plural pattern
+            is usually selected from a pool of patterns specific to patterns of the same length, with sometimes multiple
+            plural forms being possible. If we group plural patterns by the length of the singular patterns they are
+            associated with, we will find that there is practically no overlap between these pools. Exceptions include
+            the <b>CCāC</b> plural pattern, which is available to all Length 3 terms (e.g. <b>باب (bāb)</b> > <b>بواب
+                (bwāb)</b>), but also to Length 4 adjectives in the <b>CCīC</b> pattern (e.g. <b>كبير (kbīr)</b> > <b>كبار
+                (kbār)</b>), as well as the <b>CVCCān</b> pattern, which is available to either Length 3 or 4 terms
+            indiscriminately.</p>
+        <p>Aside from rare, sporadic exceptions (e.g. <b>أرض (ʔarḍ)</b> > <b>أراضي (ʔarādy)</b>), only one systematic
+            exception exists wherein terms of a given length draw from a different plural pattern pool: certain relative
+            adjectives that refer to humans — mostly, but not exclusively, demonyms — may optionally be forced to fit in
+            the <b>CaCāCCe</b> pattern regardless of the morphology of the lemma form, even with the addition of extra
+            consonants if needed (e.g. <b>مصريّ (maṣri)</b> > <b>مصاروة (maṣārwe)</b>).</p>
         <ul>
             <li>Length 3</li>
             <ul>

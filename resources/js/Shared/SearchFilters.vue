@@ -114,12 +114,12 @@ const hasPlural = computed(() => {
 });
 
 const isRegular = computed(() => {
-    const allowedSingPatterns = ['CiCiC', 'CCīC', 'relative', 'ia'];
+    const allowedSingPatterns = ['CiCiC', 'ia'];
     return allowedSingPatterns.includes(filters.value.singular);
 });
 
 const isCCC = computed(() => {
-    const allowedSingPatterns = ['CLC', 'CvCC', 'CvCCe', 'CvCvC'];
+    const allowedSingPatterns = ['CLC', 'CVCC', 'CVCCe', 'CVCVC'];
     return allowedSingPatterns.includes(filters.value.singular);
 });
 </script>

@@ -56,25 +56,8 @@ const isOpen = ref(false);
         border-radius: 2.4rem;
     }
 
-    p {
-        margin: 0
-    }
-
-    .block--text {
-        padding-inline: 3.2rem;
-        margin-block: 3.2rem;
-
-        p:not(:last-child) {
-            margin-block-end: 2.4rem;
-        }
-    }
-
     & > *:last-child {
         margin-bottom: 0;
-    }
-
-    & > .popout {
-        width: 6.4rem;
     }
 
     .skill-head {
@@ -103,19 +86,10 @@ const isOpen = ref(false);
             direction: rtl;
         }
 
-        .app-tip, .sentence-item-container {
+        .app-tip {
             margin-inline: 3.2rem;
             margin-block-end: 3.2rem;
-        }
-
-        .app-tip {
             width: auto;
-        }
-
-        .sentence-item-container {
-            margin-block-start: 1.6rem;
-            justify-self: center;
-
         }
 
         & > *:last-child:not(.inflection-carousel) {
