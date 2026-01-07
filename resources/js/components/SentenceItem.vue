@@ -36,6 +36,13 @@ onMounted(() => {
     }
 });
 
+const parseToggleableTerm = (termStr) => {
+    const punctuationRegex = /[،.!؟:؛]+$/;
+    const match = termStr.match(punctuationRegex);
+    const punctuation = match ? match[0] : '';
+    return 'ــــــــ' + punctuation;
+};
+
 const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 </script>
 
@@ -59,7 +66,9 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                 <div class="model-item-content">
                     <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
                         <div v-if="!showTerms && term.sentencePivot.toggleable" class="sentence-term">
-                            <div>ــــــــ</div>
+                            <div>
+                                {{ parseToggleableTerm(term.sentencePivot.sent_term) }}
+                            </div>
                             <div v-if="showTranscription">[]</div>
                         </div>
                         <template v-else>

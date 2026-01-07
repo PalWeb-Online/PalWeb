@@ -47,12 +47,12 @@ export function useDocumentBuilder(documentBlocks = null) {
     const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
 
     const blockFactories = {
-        container: () => ({ id: uid(), type: 'container', title: '', blocks: [] }),
-        text: () => ({ id: uid(), type: 'text', content: '' }),
-        audio: () => ({ id: uid(), type: 'audio', media: '' }),
-        table: () => ({ id: uid(), type: 'table', columns: [], rows: [] }),
-        chart: () => ({ id: uid(), type: 'chart', title: '', rows: [] }),
-        sentence: () => ({ id: uid(), type: 'sentence', model: null, custom: null }),
+        container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
+        text: () => ({id: uid(), type: 'text', content: ''}),
+        audio: () => ({id: uid(), type: 'audio', media: ''}),
+        table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
+        chart: () => ({id: uid(), type: 'chart', title: '', rows: []}),
+        sentence: () => ({id: uid(), type: 'sentence', model: null, custom: null}),
         exercises: () => ({
             id: uid(),
             type: 'exercises',
@@ -63,7 +63,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         }),
     };
 
-    const addBlock = (arr, { afterBlockId = null, type = 'text', atStart = false } = {}) => {
+    const addBlock = (arr, {afterBlockId = null, type = 'text', atStart = false} = {}) => {
         const block = blockFactories[type]();
 
         if (atStart) {
@@ -99,16 +99,16 @@ export function useDocumentBuilder(documentBlocks = null) {
     const applyChartTemplate = (block, templateType) => {
         const templates = {
             person: [
-                { id: uid(), items: [{ key: '1S', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: '1P', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: '2M', ar: '', tr: '' }, { key: '2F', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: '2P', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: '3M', ar: '', tr: '' }, { key: '3F', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: '3P', ar: '', tr: '' }] },
+                {id: uid(), items: [{key: '1S', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: '1P', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: '2M', ar: '', tr: ''}, {key: '2F', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: '2P', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: '3M', ar: '', tr: ''}, {key: '3F', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: '3P', ar: '', tr: ''}]},
             ],
             inflection: [
-                { id: uid(), items: [{ key: 'M', ar: '', tr: '' }, { key: 'F', ar: '', tr: '' }] },
-                { id: uid(), items: [{ key: 'P', ar: '', tr: '' }] },
+                {id: uid(), items: [{key: 'M', ar: '', tr: ''}, {key: 'F', ar: '', tr: ''}]},
+                {id: uid(), items: [{key: 'P', ar: '', tr: ''}]},
             ]
         };
 
@@ -175,7 +175,7 @@ export function useDocumentBuilder(documentBlocks = null) {
             id: uid(),
             type: type,
             prompts: [
-                { id: uid(), type: 'text', value: '' }
+                {id: uid(), type: 'text', value: ''}
             ],
         };
 
@@ -198,8 +198,8 @@ export function useDocumentBuilder(documentBlocks = null) {
                 return {
                     ...base,
                     options: [
-                        { id: uid(), text: '' },
-                        { id: uid(), text: '' }
+                        {id: uid(), text: ''},
+                        {id: uid(), text: ''}
                     ],
                     answerId: null,
                     shuffleOptions: true
@@ -207,7 +207,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
     };
 
-    const addExercise = ({blockId, afterExerciseId = null, type = 'select'} = {}) => {
+    const addExercise = ({blockId, afterExerciseId = null, type = 'select', atStart = false} = {}) => {
         const block = getBlockById(blockId);
         if (!block) return;
 
@@ -224,7 +224,13 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
 
         const ex = createExercise(type);
-        insertAfterId(block.items, afterExerciseId, ex);
+
+        if (atStart) {
+            block.items.unshift(ex);
+
+        } else {
+            insertAfterId(block.items, afterExerciseId, ex);
+        }
     };
 
     const removeExercise = ({blockId, exerciseId}) => {
@@ -237,6 +243,34 @@ export function useDocumentBuilder(documentBlocks = null) {
             block.exerciseType = null;
             block.examples = [];
         }
+    };
+
+    const duplicateExercise = ({blockId, exerciseId}) => {
+        const block = getBlockById(blockId);
+        if (!block) return;
+
+        const index = findIndexById(block.items, exerciseId);
+        if (index === -1) return;
+
+        const copy = JSON.parse(JSON.stringify(block.items[index]));
+        copy.id = uid();
+
+        if (copy.prompts) {
+            copy.prompts.forEach(p => p.id = uid());
+        }
+
+        if (copy.options) {
+            const oldAnswerId = copy.answerId;
+            copy.options.forEach(opt => {
+                const newId = uid();
+                if (opt.id === oldAnswerId) {
+                    copy.answerId = newId;
+                }
+                opt.id = newId;
+            });
+        }
+
+        block.items.splice(index + 1, 0, copy);
     };
 
     const addPrompt = (ex, type) => {
@@ -282,6 +316,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         removeTableRow,
         addExercise,
         removeExercise,
+        duplicateExercise,
         addPrompt,
         removePrompt,
         addSelectOption,

@@ -210,6 +210,27 @@
     }
 }
 
+.skill-container {
+    p {
+        margin: 0
+    }
+
+    .block--text {
+        padding-inline: 3.2rem;
+        margin-block: 3.2rem;
+
+        p:not(:last-child) {
+            margin-block-end: 2.4rem;
+        }
+    }
+
+    .sentence-item-container {
+        margin-inline: 3.2rem;
+        margin-block: 1.6rem 3.2rem;
+        justify-self: center;
+    }
+}
+
 .activity-blocks-wrapper {
     width: min(100%, 96rem);
     display: grid;

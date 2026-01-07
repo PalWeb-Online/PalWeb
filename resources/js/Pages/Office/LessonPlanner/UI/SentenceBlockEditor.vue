@@ -89,7 +89,7 @@ watch(
                 <div v-for="(term, i) in block.custom.terms" class="sentence-term">
                     <input v-model="block.custom.terms[i].term" placeholder="Term"/>
                     <input v-model="block.custom.terms[i].transc" style="direction: ltr" placeholder="Transcription"/>
-                    <button class="material-symbols-rounded" @click="removeTerm(i)">delete</button>
+                    <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded" @click="removeTerm(i)">delete</button>
                 </div>
             </div>
             <div class="field-item">

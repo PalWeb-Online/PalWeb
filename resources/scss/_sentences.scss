@@ -182,21 +182,6 @@
     }
 }
 
-.dialog-item {
-    .model-item-content {
-        padding: 1.0rem 1.6rem;
-        justify-content: flex-end;
-
-        .model-item-title {
-            font-size: 1.8rem;
-        }
-
-        .model-item-description {
-            font-size: 1.4rem;
-        }
-    }
-}
-
 .dialog-body {
     display: grid;
     text-align: start;
