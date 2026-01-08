@@ -229,13 +229,23 @@ h3 {
     text-align: start;
     text-transform: none;
     user-select: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     z-index: 2;
+
+    .loading-spinner {
+        justify-self: center;
+
+        svg {
+            max-width: 3.2rem;
+        }
+    }
 
     form {
         display: contents;
     }
 
-    a, button {
+    a, div, button {
         line-height: 1.5;
         white-space: nowrap;
         text-align: start;
@@ -250,7 +260,9 @@ h3 {
         font-weight: 400;
         text-transform: capitalize;
         color: var(--color-dark-primary);
+    }
 
+    a, button {
         &:focus {
             text-decoration: none;
             color: var(--color-dark-primary);

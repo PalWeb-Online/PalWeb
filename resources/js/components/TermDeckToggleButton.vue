@@ -2,6 +2,7 @@
 import {useUserStore} from "../stores/UserStore.js";
 import {useActions} from "../composables/Actions.js";
 import {useDeck} from "../composables/Deck.js";
+import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 const {toggleTerm} = useDeck();
@@ -11,9 +12,9 @@ const props = defineProps({
     model: Object,
 });
 
-const handleToggleMenu = async () => {
+const handleToggleMenu = () => {
     if (!UserStore.hasFetchedDecks) {
-        await UserStore.fetchDecks();
+        UserStore.fetchDecks();
     }
 
     toggleMenu();
@@ -29,7 +30,11 @@ const handleToggleMenu = async () => {
 
             <Teleport to="body">
                 <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
-                    <form v-if="UserStore.decks.length > 0">
+                    <template v-if="!UserStore.hasFetchedDecks">
+                        <div>Loading Decks</div>
+                        <LoadingSpinner/>
+                    </template>
+                    <form v-else-if="UserStore.decks.length > 0">
                         <button v-for="deck in UserStore.decks" :key="deck.id" @click.prevent="toggleTerm(deck, model)">
                             <span style="font-weight: 700; text-transform: uppercase">
                                 [{{ deck.terms.some(term => term.id === model.id) ? '✓' : ' ' }}]

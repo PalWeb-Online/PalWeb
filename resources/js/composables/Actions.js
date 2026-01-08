@@ -1,5 +1,5 @@
 import {nextTick, onBeforeUnmount, ref, watch} from "vue";
-import {flip, offset, shift, useFloating} from "@floating-ui/vue";
+import {autoPlacement, autoUpdate, offset, shift, size, useFloating} from "@floating-ui/vue";
 
 export function useActions() {
     const isOpen = ref(false);
@@ -9,7 +9,23 @@ export function useActions() {
 
     const {floatingStyles} = useFloating(reference, floating, {
         placement: 'bottom',
-        middleware: [offset(4), flip(), shift()],
+        whileElementsMounted: autoUpdate,
+        middleware: [
+            offset(4),
+            autoPlacement({
+                allowedPlacements: ['top', 'bottom'],
+                padding: 8
+            }),
+            shift({ padding: 8 }),
+            size({
+                apply({availableHeight, elements}) {
+                    Object.assign(elements.floating.style, {
+                        maxHeight: `min(480px, ${availableHeight - 48}px)`,
+                    });
+                },
+                padding: 8,
+            }),
+        ],
     });
 
     const toggleMenu = (isKeyboard = false) => {
