@@ -13,7 +13,7 @@ export const useUserStore = defineStore('UserStore', () => {
     const fetchDecks = async () => {
         if (!hasFetchedDecks.value) {
             try {
-                const response = await axios.get(route('user.get-decks'));
+                const response = await axios.get(route('users.decks.get'));
                 decks.value = response.data.decks || [];
                 hasFetchedDecks.value = true;
 

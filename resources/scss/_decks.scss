@@ -310,6 +310,10 @@
     cursor: pointer;
     user-select: none;
 
+    &.disabled {
+        pointer-events: none;
+    }
+
     &.flipped {
         .term-flashcard-front {
             transform: rotateX(180deg);

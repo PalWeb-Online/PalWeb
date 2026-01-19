@@ -10,7 +10,6 @@ use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +29,9 @@ class DeckController extends Controller
 
         $deck->isPinned() && event(new ModelPinned($user));
 
-        $message = $deck->isPinned() ? __('pin.added', ['thing' => $deck->name]) : __('pin.removed', ['thing' => $deck->name]);
+        $message = $deck->isPinned()
+            ? __('pin.added', ['thing' => $deck->name])
+            : __('pin.removed', ['thing' => $deck->name]);
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
@@ -83,6 +84,10 @@ class DeckController extends Controller
         Gate::authorize('interact', $deck);
 
         $deck->load(['terms.pronunciations', 'scores']);
+        $deck->load([
+            'terms.pronunciations',
+            'scores'
+        ]);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',
@@ -239,7 +244,7 @@ class DeckController extends Controller
 
         $output = fopen('php://output', 'w');
         if (! $output) {
-            throw new Exception('Failed to open php://output');
+            throw new \Exception('Failed to open php://output');
         }
 
         header('Content-Type: text/csv');

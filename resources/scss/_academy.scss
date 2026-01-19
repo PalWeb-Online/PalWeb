@@ -798,38 +798,6 @@ div.activity-image .image-card {
             }
         }
     }
-
-}
-
-.score-stats-graph-data {
-    position: fixed;
-    color: var(--color-dark-primary);
-    background-color: white;
-    border: 0.2rem solid var(--color-dark-primary);
-    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
-    padding: 0.8rem 1.0rem;
-    border-radius: 0.8rem;
-    pointer-events: none;
-    z-index: 9999;
-
-    & > *:nth-child(1) {
-        font-family: $headFont;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--color-medium-primary);
-    }
-
-    & > *:nth-child(2) {
-        font-family: $bodyFont;
-        font-size: 1.6rem;
-        font-weight: 700;
-        padding-block-end: 0.4rem;
-    }
-
-    & > *:nth-child(3) {
-        font-family: $bodyFont;
-        font-size: 1.2rem;
-    }
 }
 
 .score-stats-wrapper {

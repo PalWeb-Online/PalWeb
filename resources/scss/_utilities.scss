@@ -200,6 +200,10 @@ h3 {
     &.s {
         font-size: clamp(2.4rem, 4vw, 3.6rem);
     }
+
+    & > button.material-symbols-rounded {
+        color: var(--color-medium-primary);
+    }
 }
 
 .dropdown-container {
@@ -450,6 +454,9 @@ h3 {
         justify-content: center;
         padding-block-end: 0.8rem;
 
+        .portal-button {
+            font-size: 2.4rem;
+        }
     }
 }
 
@@ -457,11 +464,11 @@ h3 {
     color: var(--color-dark-primary);
     background: var(--color-accent-medium);
     font-family: $headFont;
-    font-size: 2.4rem;
+    font-size: 1.6rem;
     font-weight: 700;
     text-transform: capitalize;
-    padding: 1.6rem 3.2rem;
-    border-radius: 3.2rem;
+    padding: 0.75em 1.5em;
+    border-radius: 4em;
     transform: rotate(-1deg);
     transition: 0.2s;
 
@@ -594,7 +601,6 @@ h3 {
 
 .carousel {
     display: grid;
-    grid-template-rows: auto min-content min-content;
     gap: 1.6rem 0;
 
     .app-button {

@@ -16,7 +16,7 @@ class AuthUserResource extends UserResource
             'has_discord' => (bool) $this->discord_id,
             'unlocked_lessons' => $this->when(
                 $request->user()?->id === $this->id,
-                fn() => array_keys($this->getLessonProgress())
+                fn () => array_keys($this->getLessonProgress())
             ),
         ]);
     }

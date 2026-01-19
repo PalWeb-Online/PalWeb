@@ -9,16 +9,11 @@ import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
-import Layout from "../../../../Shared/Layout.vue";
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
 import AppButton from "../../../../components/AppButton.vue";
 
 const DeckStudyStore = useDeckStudyStore();
-
-defineOptions({
-    layout: Layout
-});
 
 const cards = reactive([]);
 const carouselRef = ref(null);

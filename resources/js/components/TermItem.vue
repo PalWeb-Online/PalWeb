@@ -35,7 +35,7 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                     </div>
                     <div class="term-item-term">
                         <Link style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
-                             :href="route('terms.show', term.slug)">
+                              :href="route('terms.show', term.slug)">
                             <span class="arb">{{ term.term }}</span>
                             <span class="translit">({{ term.translit }})</span>
                         </Link>

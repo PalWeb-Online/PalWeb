@@ -115,6 +115,13 @@
     padding: 0.6rem 1.2rem;
     color: var(--color-dark-primary);
     background: var(--color-pastel-light);
+
+    button {
+        font-family: $bodyFont;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--color-dark-primary);
+    }
 }
 
 .model-item-stats {
@@ -641,6 +648,7 @@
 
 .app-tooltip {
     height: auto;
+    max-width: 36rem;
     text-transform: none;
     font-weight: 400;
     direction: ltr;
@@ -653,9 +661,45 @@
     border-radius: 0.4rem;
     font-family: $monoFont;
     font-size: 1.2rem;
-    white-space: nowrap;
     pointer-events: none;
     z-index: 9999;
+}
+
+.data-tooltip {
+    position: fixed;
+    display: grid;
+    gap: 0.4rem;
+    padding-block-end: 0.8rem;
+    color: var(--color-dark-primary);
+    background-color: white;
+    border: 0.1rem solid var(--color-dark-primary);
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
+    border-radius: 0.8rem;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 9999;
+
+    & > *:nth-child(1) {
+        font-family: $headFont;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--color-medium-secondary);
+        background: var(--color-pastel-light);
+        padding: 0.4rem 0.8rem;
+        margin-block-end: 0.2rem;
+    }
+
+    & > *:nth-child(2) {
+        font-size: 1.6rem;
+        font-weight: 700;
+        padding-inline: 0.8rem 1.6rem;
+    }
+
+    & > * {
+        font-family: $bodyFont;
+        font-size: 1.2rem;
+        padding-inline: 0.8rem 1.6rem;
+    }
 }
 
 .app-button {

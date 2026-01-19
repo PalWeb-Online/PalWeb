@@ -249,7 +249,6 @@
 
 .term-item-container {
     display: grid;
-    gap: 0.4rem;
 }
 
 .term-item {
@@ -533,4 +532,39 @@
         font-family: $bodyFont;
         font-size: 1.6rem;
     }
+}
+
+.card-level__0 {
+    color: var(--card-level__0);
+    background: var(--card-level__0);
+}
+
+.card-level__1 {
+    color: var(--card-level__1);
+    background: var(--card-level__1);
+}
+
+.card-level__2 {
+    color: var(--card-level__2);
+    background: var(--card-level__2);
+}
+
+.card-level__3 {
+    color: var(--card-level__3);
+    background: var(--card-level__3);
+}
+
+.card-level__4 {
+    color: var(--card-level__4);
+    background: var(--card-level__4);
+}
+
+.card-level__5 {
+    color: var(--card-level__5);
+    background: var(--card-level__5);
+}
+
+.answer-buttons > button.material-symbols-rounded {
+    font-size: 3.2rem;
+    color: var(--color-medium-secondary);
 }

@@ -1,29 +1,13 @@
 <script setup>
-import {ref} from "vue";
+import {useTooltip} from "../composables/useTooltip.js";
 
-const visible = ref(false);
-const message = ref("");
-const tooltipStyle = ref({
-    top: "0px",
-    left: "0px",
-});
-
-const showTooltip = (newMessage, event) => {
-    message.value = newMessage;
-    visible.value = true;
-    updatePosition(event);
-}
-
-const hideTooltip = () => {
-    visible.value = false;
-}
-
-const updatePosition = (event) => {
-    tooltipStyle.value = {
-        top: `${event.clientY + 10}px`,
-        left: `${event.clientX + 10}px`,
-    };
-}
+const {
+    message,
+    isVisible,
+    tooltipStyle,
+    showTooltip,
+    hideTooltip
+} = useTooltip();
 
 defineExpose({
     showTooltip,
@@ -32,7 +16,12 @@ defineExpose({
 </script>
 
 <template>
-    <div v-if="visible" :style="tooltipStyle" class="app-tooltip">
-        {{ message }}
+    <div v-if="isVisible"
+         :style="tooltipStyle"
+         class="app-tooltip"
+    >
+        <slot>
+            {{ message }}
+        </slot>
     </div>
 </template>

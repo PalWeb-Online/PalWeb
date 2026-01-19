@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Academy;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDialogRequest;
 use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;

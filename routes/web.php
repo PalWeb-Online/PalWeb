@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Academy\ActivityController;
+use App\Http\Controllers\Academy\DialogController;
 use App\Http\Controllers\Academy\LessonController;
 use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\Academy\UnitController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
-use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\FeedbackCommentController;
@@ -330,6 +330,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
+    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('users.decks.get');
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
 
