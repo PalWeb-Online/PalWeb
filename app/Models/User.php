@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'trial_ends_at' => 'datetime',
+            'preferences' => 'json',
         ];
     }
 
@@ -125,6 +126,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->removeRole('student');
 
         return $this;
+    }
+
+    public function getSrsPreference(string $key, mixed $default = null): mixed
+    {
+        return $this->preferences['srs'][$key] ?? $default;
     }
 
     public function dialect(): BelongsTo

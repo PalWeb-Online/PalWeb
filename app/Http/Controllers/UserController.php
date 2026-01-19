@@ -72,6 +72,30 @@ class UserController extends Controller
         return to_route('users.show', $user);
     }
 
+    public function updatePreferences(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'srs_settings' => 'required|array',
+            'srs_settings.new_limit' => 'integer|min:0|max:100',
+            'srs_settings.review_limit' => 'integer|min:0|max:300',
+            'srs_settings.flip_default' => 'boolean',
+            'srs_settings.learning_steps' => 'integer|min:1|max:5',
+        ]);
+
+        $preferences = $user->preferences ?? [];
+        $preferences['srs'] = array_merge($preferences['srs'] ?? [], $request->input('srs_settings'));
+
+        $user->preferences = $preferences;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'preferences' => $user->preferences
+        ]);
+    }
+
     public function getDecks(): JsonResponse
     {
         return response()->json([

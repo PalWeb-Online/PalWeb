@@ -14,6 +14,9 @@ class AuthUserResource extends UserResource
             'is_superuser' => $this->isSuperuser(),
             'is_verified' => (bool) $this->email_verified_at,
             'has_discord' => (bool) $this->discord_id,
+            'preferences' => $this->preferences ?? [
+                    'srs' => config('preferences.srs')
+                ],
             'unlocked_lessons' => $this->when(
                 $request->user()?->id === $this->id,
                 fn () => array_keys($this->getLessonProgress())

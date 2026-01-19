@@ -329,8 +329,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
     Route::get('/get-decks', [UserController::class, 'getDecks'])->name('users.decks.get');
+    Route::patch('/update-preferences', [UserController::class, 'updatePreferences'])->name('users.preferences.update');
+
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
 
