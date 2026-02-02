@@ -21,6 +21,7 @@ const isOpen = ref(false);
 
         <div v-if="isOpen" class="skill-body">
             <h1>{{ skill.title }}</h1>
+            <h2>{{ skill.description }}</h2>
 
             <template v-for="block in skill.blocks">
                 <template v-if="block.type === 'text'">
@@ -84,6 +85,15 @@ const isOpen = ref(false);
             font-family: var(--head-font), serif;
             text-transform: none;
             direction: rtl;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            margin: 3.2rem 3.2rem 0;
+            padding: 0;
+            font-family: var(--head-font), serif;
+            color: var(--color-medium-primary);
+            text-transform: none;
         }
 
         .app-tip {

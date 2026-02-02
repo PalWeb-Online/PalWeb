@@ -168,7 +168,7 @@ onMounted(async () => {
                 <div class="window-section-head">
                     <h1>deck</h1>
                     <PinButton v-if="deck.id" modelType="deck" :model="props.deck"/>
-                    <DeckActions v-if="deck.id" :model="deck"/>
+                    <DeckActions v-if="deck.id" :model="props.deck"/>
                 </div>
 
                 <section>

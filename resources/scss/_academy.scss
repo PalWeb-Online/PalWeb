@@ -166,6 +166,8 @@
         padding: 1.2rem 1.6rem;
         font-family: $bodyFont;
         font-size: 1.6rem;
+        min-height: 16rem;
+        resize: vertical;
     }
 }
 

@@ -35,6 +35,7 @@
         .term-headword-eng {
             font-size: 1.8rem;
             font-family: $monoFont;
+            direction: ltr;
         }
     }
 }
@@ -282,6 +283,7 @@
         }
 
         .translit {
+            direction: ltr;
             flex-shrink: 0;
             font-family: $monoFont;
             font-size: 1.2rem;
