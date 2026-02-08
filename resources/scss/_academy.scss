@@ -135,20 +135,20 @@
     &.nested {
         background: var(--color-pastel-dark);
     }
+}
 
-    .block-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.8rem;
+.block-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
 
-        * {
-            color: var(--color-medium-primary);
-        }
+    * {
+        color: var(--color-medium-primary);
+    }
 
-        button[disabled] {
-            opacity: 0.33;
-        }
+    button[disabled] {
+        opacity: 0.33;
     }
 }
 
@@ -166,6 +166,8 @@
         padding: 1.2rem 1.6rem;
         font-family: $bodyFont;
         font-size: 1.6rem;
+        min-height: 16rem;
+        resize: vertical;
     }
 }
 
@@ -240,6 +242,7 @@
 
     .block--text {
         background: var(--color-polar-light);
+        margin: 0;
     }
 
     .block--text,
@@ -247,7 +250,6 @@
         font-size: 1em;
         padding: 1em 2em;
         border-radius: 1em;
-        margin: 0;
     }
 
     h2 {
@@ -255,7 +257,7 @@
         font-weight: 400;
         font-size: 5.6rem;
         color: var(--color-dark-primary);
-        margin: 0 0 0.8rem;
+        margin: 0;
 
         @media (min-width: 960px) {
             font-size: 6.4rem;
@@ -274,6 +276,7 @@
     margin-block-end: 3.2rem;
 
     & > p {
+        margin-block: 1.6rem;
         justify-self: start;
         background: var(--color-accent-light);
         font-family: $headFont;
@@ -281,8 +284,17 @@
     }
 
     img {
+        justify-self: center;
         border-radius: 1.6rem;
+        max-width: min(100%, 48rem);
     }
+}
+
+.block-prompt--images {
+    display: grid;
+    gap: 1.6rem;
+    margin-block: 1.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
 }
 
 .exercise-prompt_build {
@@ -337,10 +349,15 @@
 }
 
 .exercise--input,
-.exercise--select {
-    margin-block-start: 6.4rem;
+.exercise--select,
+.exercise--match {
+    margin-block-start: 3.2rem;
     display: grid;
     direction: rtl;
+}
+
+.exercise--input,
+.exercise--select {
     justify-items: start;
     gap: 1.6rem;
     white-space: nowrap;

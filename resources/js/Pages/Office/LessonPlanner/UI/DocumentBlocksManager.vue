@@ -19,6 +19,24 @@ const handleRemoveBlock = (documentBlocks, blockId) => {
     removeBlock(documentBlocks, blockId);
 }
 
+const handleFlattenContainer = (containerId) => {
+    const arr = props.documentBlocks;
+
+    const index = arr.findIndex(b => b?.id === containerId);
+    if (index === -1) return;
+
+    const container = arr[index];
+    const children = Array.isArray(container?.blocks) ? container.blocks : [];
+
+    arr.splice(index, 1);
+
+    if (children.length) {
+        arr.splice(index, 0, ...children);
+    }
+
+    container.blocks = [];
+};
+
 const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(props.documentBlocks);
 </script>
 
@@ -40,10 +58,10 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
         <div class="block-editor-container" :class="{ nested: isNested }">
             <div class="block-meta">
                 <div class="featured-title s" style="flex-grow: 1">
-                    {{ bi + 1 }}:
+                    <span>{{ bi + 1 }}: </span>
                     <span style="color: var(--color-dark-primary)">
-                                {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
-                            </span>
+                        {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
+                    </span>
                 </div>
                 <button type="button"
                         class="material-symbols-rounded"
@@ -67,6 +85,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
             <component
                 :is="getBlockEditor(block.type)"
                 :block="block"
+                @flatten="handleFlattenContainer"
             />
         </div>
         <div class="block-add-buttons">

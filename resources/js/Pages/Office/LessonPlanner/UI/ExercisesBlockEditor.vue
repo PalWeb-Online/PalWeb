@@ -2,13 +2,12 @@
 import Draggable from "vuedraggable";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import ExercisePromptsEditor from "./ExercisePromptsEditor.vue";
 
 const {
     addExercise,
     removeExercise,
     duplicateExercise,
-    addPrompt,
-    removePrompt,
     addSelectOption,
     removeSelectOption
 } = useDocumentBuilder();
@@ -16,6 +15,8 @@ const {
 const props = defineProps({
     block: {type: Object, required: true},
 });
+
+props.block.prompts ??= [];
 
 const addExample = () => {
     props.block.examples.push({
@@ -52,6 +53,7 @@ const removeMatchPair = (ex, pairIndex) => {
 
 <template>
     <div class="block-editor--exercises">
+        <ExercisePromptsEditor v-if="props.block.exerciseType" :owner="props.block" title="Block Prompts"/>
         <div class="block-add-buttons">
             <div v-if="!props.block.exerciseType" v-for="exerciseType in ['match', 'select', 'input']"
                  :key="exerciseType">
@@ -66,7 +68,6 @@ const removeMatchPair = (ex, pairIndex) => {
                 </div>
                 <div>{{ props.block.exerciseType }}</div>
             </div>
-
             <div v-if="props.block.exerciseType === 'input'">
                 <div class="add-button"
                      @click="addExample">+
@@ -122,7 +123,11 @@ const removeMatchPair = (ex, pairIndex) => {
                         <div class="block-meta">
                             <div style="flex-grow: 1">{{ index + 1 + '. ' + ex.type }}</div>
                             <span class="handle material-symbols-rounded">drag_indicator</span>
-                            <span @click="duplicateExercise({ blockId: props.block.id, exerciseId: ex.id })" class="material-symbols-rounded">content_copy</span>
+                            <span class="material-symbols-rounded"
+                                  @click="duplicateExercise({ blockId: props.block.id, exerciseId: ex.id })"
+                            >
+                                content_copy
+                            </span>
                             <button
                                 type="button"
                                 class="material-symbols-rounded"
@@ -131,81 +136,7 @@ const removeMatchPair = (ex, pairIndex) => {
                                 Delete
                             </button>
                         </div>
-
-                        <div class="block-add-buttons">
-                            <div v-if="ex.prompts.filter(p => p.type === 'text').length < 1">
-                                <div class="add-button"
-                                     @click="addPrompt(ex, 'text')">+
-                                </div>
-                                <div>text</div>
-                            </div>
-                            <div v-if="ex.prompts.filter(p => p.type === 'audio').length < 1">
-                                <div class="add-button"
-                                     @click="addPrompt(ex, 'audio')">+
-                                </div>
-                                <div>audio</div>
-                            </div>
-                            <div>
-                                <div class="add-button"
-                                     @click="addPrompt(ex, 'image')">+
-                                </div>
-                                <div>image</div>
-                            </div>
-                        </div>
-                        <div class="exercise-prompt_build"
-                             v-if="ex.prompts.some(p => p.type === 'image')"
-                        >
-                            <div v-for="image in ex.prompts.filter(p => p.type === 'image')" :key="image.id">
-                                <img v-if="image.value" :src="image.value" alt="No Image Found"/>
-                                <div style="display: flex; gap: 0.8rem; align-items: center">
-                                    <button type="button"
-                                            class="material-symbols-rounded"
-                                            @click="removePrompt(ex, image.id)"
-                                    >
-                                        delete
-                                    </button>
-                                    <input v-model="image.value" :class="{ 'invalid': !image.value }"
-                                           style="width: 100%;"
-                                           placeholder="Image URL"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="exercise-prompt_build"
-                             v-if="ex.prompts.some(p => p.type === 'audio')"
-                        >
-                            <div v-for="audio in ex.prompts.filter(p => p.type === 'audio')" :key="audio.id">
-                                <audio v-if="audio.value" :src="audio.value" controls/>
-                                <div style="display: flex; gap: 0.8rem; align-items: center">
-                                    <button type="button"
-                                            class="material-symbols-rounded"
-                                            @click="removePrompt(ex, audio.id)"
-                                    >
-                                        delete
-                                    </button>
-                                    <input v-model="audio.value" :class="{ 'invalid': !audio.value }"
-                                           style="width: 100%;"
-                                           placeholder="Audio URL"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="exercise-prompt_build" style="grid-template-columns: 1fr"
-                             v-if="ex.prompts.some(p => p.type === 'text')"
-                        >
-                            <div v-for="text in ex.prompts.filter(p => p.type === 'text')" :key="text.id"
-                                 style="display: flex; align-items: center">
-                                <div class="material-symbols-rounded">help</div>
-                                <input v-model="text.value"
-                                       :class="{ 'invalid': !text.value }"
-                                       style="width: 100%;"
-                                       placeholder="سؤال"/>
-                                <button type="button"
-                                        class="material-symbols-rounded"
-                                        @click="removePrompt(ex, text.id)"
-                                >
-                                    delete
-                                </button>
-                            </div>
-                        </div>
+                        <ExercisePromptsEditor :owner="ex" title="Exercise Prompts"/>
 
                         <template v-if="ex.type === 'select'">
                             <div class="exercise-answers">
@@ -305,7 +236,8 @@ const removeMatchPair = (ex, pairIndex) => {
                         <span>Insert --></span>
                         <div>
                             <div class="add-button"
-                                 @click="addExercise({ blockId: props.block.id, afterExerciseId: ex.id, type: props.block.exerciseType })">+
+                                 @click="addExercise({ blockId: props.block.id, afterExerciseId: ex.id, type: props.block.exerciseType })">
+                                +
                             </div>
                             <div>{{ props.block.exerciseType }}</div>
                         </div>

@@ -26,7 +26,6 @@ const removeItem = (row, index) => row.items.splice(index, 1);
 <template>
     <div class="block-editor--chart">
         <div class="field-item">
-            <label>Title</label>
             <input v-model="block.title" placeholder="Title"/>
         </div>
 

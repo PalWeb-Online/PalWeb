@@ -179,6 +179,7 @@ onMounted(async () => {
             );
 
             term.pronunciations.push(...pronunciations);
+            term.defaults();
 
         } catch (error) {
             console.error('Error fetching Pronunciations:', error);

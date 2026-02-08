@@ -1,12 +1,14 @@
 <script setup>
 import {useSearchStore} from "../../../../stores/SearchStore.js";
-import {ref, watch} from "vue";
+import {inject, ref, watch} from "vue";
 import SentenceItem from "../../../../components/SentenceItem.vue";
 import SentenceBlock from "../../../Academy/Lessons/UI/SentenceBlock.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
 });
+
+const lessonSentences = inject('lessonSentences');
 
 const SearchStore = useSearchStore();
 const isSearchingForMe = ref(false);
@@ -17,6 +19,8 @@ const openSearch = () => {
 };
 
 const insertSentence = (model) => {
+    lessonSentences.value[model.id] = model;
+
     props.block.model = {id: model.id};
     props.block.custom = null;
 }
@@ -80,7 +84,7 @@ watch(
 
         <div v-if="block.model || block.custom" class="sentence-preview">
             <button class="material-symbols-rounded" @click="clearSentence">mop</button>
-            <SentenceItem v-if="block.model" :model="block.model"/>
+            <SentenceItem v-if="block.model" :model="lessonSentences[block.model.id]"/>
             <SentenceBlock v-else-if="block.custom" :sentence="block.custom"/>
         </div>
 
@@ -89,7 +93,9 @@ watch(
                 <div v-for="(term, i) in block.custom.terms" class="sentence-term">
                     <input v-model="block.custom.terms[i].term" placeholder="Term"/>
                     <input v-model="block.custom.terms[i].transc" style="direction: ltr" placeholder="Transcription"/>
-                    <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded" @click="removeTerm(i)">delete</button>
+                    <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded"
+                            @click="removeTerm(i)">delete
+                    </button>
                 </div>
             </div>
             <div class="field-item">

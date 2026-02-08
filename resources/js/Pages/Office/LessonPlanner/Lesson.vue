@@ -2,7 +2,7 @@
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {router, useForm} from "@inertiajs/vue3";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -20,6 +20,42 @@ const NotificationStore = useNotificationStore();
 const props = defineProps({
     lesson: Object
 })
+
+const lessonSentences = ref({});
+const isLoadingSentences = ref(true);
+
+provide('lessonSentences', lessonSentences);
+
+const loadSkillSentences = async () => {
+    const ids = new Set();
+    props.lesson.document?.skills.forEach(skill => {
+        skill.blocks.forEach(block => {
+            if (block.type === 'sentence' && block.model?.id) {
+                ids.add(block.model.id);
+            }
+        });
+    });
+
+    if (ids.size === 0) {
+        isLoadingSentences.value = false;
+        return;
+    }
+
+    try {
+        const response = await axios.post(route('sentences.get-many'), {
+            ids: Array.from(ids)
+        });
+        lessonSentences.value = response.data;
+
+    } catch (error) {
+        console.error("Failed to fetch Skill Sentences", error);
+
+    } finally {
+        isLoadingSentences.value = false;
+    }
+}
+
+onMounted(loadSkillSentences);
 
 const lesson = useForm({
     group: props.lesson?.group || 'main',
@@ -41,6 +77,18 @@ watch(() => lesson.group, (newGroup) => {
         lesson.unlock_conditions = {};
     }
 });
+
+const uid = () => (globalThis.crypto?.randomUUID?.() ?? `id_${Date.now()}_${Math.random().toString(16).slice(2)}`);
+lesson.document.skills.forEach(s => { s.id ??= uid(); });
+
+const moveSkill = (si, direction) => {
+    const arr = lesson.document.skills;
+    const toIndex = direction === 'up' ? si - 1 : si + 1;
+    if (toIndex < 0 || toIndex >= arr.length) return;
+
+    const [item] = arr.splice(si, 1);
+    arr.splice(toIndex, 0, item);
+};
 
 const addSkill = () => {
     if (lesson.document.skills.length === 3) return;
@@ -315,10 +363,22 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             />
             <Link v-if="lesson.dialog_id" :href="route('dialogs.show', lesson.dialog_id)">View</Link>
 
-            <div class="lesson-planner--skill" v-for="(skill, si) in lesson.document.skills" :key="si">
+            <div class="lesson-planner--skill" v-for="(skill, si) in lesson.document.skills" :key="skill.id">
                 <div class="field-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <span class="featured-title m">Skill {{ si + 1 }}</span>
+                    <div class="block-meta">
+                        <div class="featured-title m" style="flex-grow: 1">Skill {{ si + 1 }}</div>
+                        <button type="button"
+                                class="material-symbols-rounded"
+                                @click="moveSkill(si, 'up')"
+                                :disabled="si === 0">
+                            move_up
+                        </button>
+                        <button type="button"
+                                class="material-symbols-rounded"
+                                @click="moveSkill(si, 'down')"
+                                :disabled="si === lesson.document.skills.length - 1">
+                            move_down
+                        </button>
                         <button type="button" @click="removeSkill(si)"
                                 class="material-symbols-rounded">
                             delete

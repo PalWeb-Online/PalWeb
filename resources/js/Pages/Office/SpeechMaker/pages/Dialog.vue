@@ -156,7 +156,7 @@ onMounted(() => {
         </div>
         <div class="window-section-head">
             <h1>dialog</h1>
-            <DialogActions v-if="dialog.id" :model="dialog"/>
+            <DialogActions v-if="dialog.id" :model="props.dialog"/>
         </div>
 
         <div class="window-content-head">

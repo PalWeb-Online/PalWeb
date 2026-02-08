@@ -2,7 +2,8 @@
 import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {shuffle} from "lodash";
 import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
-import ExercisePrompts from "./ExercisePrompts.vue";
+import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
+import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -196,10 +197,10 @@ const getMatchState = (itemId, type, value) => {
 <template>
     <div class="block--exercises" ref="blockRef">
         <h2>{{ block.exerciseType }}</h2>
-        <p>Match the two columns based on the prompt.</p>
+        <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems" :key="item.id">
             <div class="exercise--match" :data-item-id="item.id">
-                <ExercisePrompts :exercise="item" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <div class="exercise--match-grid">
                     <div class="exercise--match-column">
@@ -239,10 +240,7 @@ const getMatchState = (itemId, type, value) => {
 
 <style scoped lang="scss">
 .exercise--match {
-    margin-block-start: 6.4rem;
-    display: grid;
     gap: 3.2rem;
-    direction: rtl;
 
     .exercise--match-grid {
         display: flex;

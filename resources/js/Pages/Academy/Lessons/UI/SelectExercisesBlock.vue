@@ -1,6 +1,7 @@
 <script setup>
 import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
-import ExercisePrompts from "./ExercisePrompts.vue";
+import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
+import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -24,10 +25,10 @@ const selectOption = (itemId, optionId) => {
 <template>
     <div class="block--exercises">
         <h2>{{ block.exerciseType }}</h2>
-        <p>Select the most appropriate answer in response to the prompt.</p>
+        <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems">
             <div class="exercise--select">
-                <ExercisePrompts :exercise="item" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <div class="exercise--select-options">
                     <template v-for="option in item.displayOptions" :key="option.id">
