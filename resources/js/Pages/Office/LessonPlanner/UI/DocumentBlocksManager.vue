@@ -19,6 +19,24 @@ const handleRemoveBlock = (documentBlocks, blockId) => {
     removeBlock(documentBlocks, blockId);
 }
 
+const handleFlattenContainer = (containerId) => {
+    const arr = props.documentBlocks;
+
+    const index = arr.findIndex(b => b?.id === containerId);
+    if (index === -1) return;
+
+    const container = arr[index];
+    const children = Array.isArray(container?.blocks) ? container.blocks : [];
+
+    arr.splice(index, 1);
+
+    if (children.length) {
+        arr.splice(index, 0, ...children);
+    }
+
+    container.blocks = [];
+};
+
 const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(props.documentBlocks);
 </script>
 
@@ -67,6 +85,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
             <component
                 :is="getBlockEditor(block.type)"
                 :block="block"
+                @flatten="handleFlattenContainer"
             />
         </div>
         <div class="block-add-buttons">

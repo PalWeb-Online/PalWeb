@@ -1,7 +1,8 @@
 <script setup>
 import DialogLine from "../../../../components/Charts/DialogLine.vue";
 import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
-import ExercisePrompts from "./ExercisePrompts.vue";
+import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
+import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -17,7 +18,7 @@ const {
 <template>
     <div class="block--exercises">
         <h2>{{ block.exerciseType }}</h2>
-        <p>Answer the prompt with a complete sentence.</p>
+        <ExercisesBlockPrompts :block="block"/>
         <div v-if="block.examples" v-for="ex in block.examples" class="dialog-body">
             <div class="featured-title s">example</div>
             <DialogLine speaker="سؤال" :ar="ex.prompt"/>
@@ -28,7 +29,7 @@ const {
                     'correct': isViewingResults && item.correct,
                     'incorrect': isViewingResults && !item.correct
                 }">
-                <ExercisePrompts :exercise="item" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <input type="text" placeholder="جواب"
                        :disabled="isViewingResults"

@@ -257,6 +257,7 @@
 
     @media (min-width: 960px) {
         display: grid;
+        align-content: start;
     }
 
     & > div {

@@ -58,6 +58,7 @@ export function useDocumentBuilder(documentBlocks = null) {
             type: 'exercises',
             exerciseType: null,
             shuffle: true,
+            prompts: [],
             examples: [],
             items: []
         }),
@@ -273,16 +274,22 @@ export function useDocumentBuilder(documentBlocks = null) {
         block.items.splice(index + 1, 0, copy);
     };
 
-    const addPrompt = (ex, type) => {
-        ex.prompts.push({
+    const ensurePromptsArray = (obj) => {
+        if (!obj) return [];
+        obj.prompts ??= [];
+        return obj.prompts;
+    };
+
+    const addPrompt = (obj, type) => {
+        ensurePromptsArray(obj).push({
             id: uid(),
             type: type,
             value: '',
         });
     };
 
-    const removePrompt = (ex, promptId) => {
-        removeById(ex.prompts, promptId);
+    const removePrompt = (obj, promptId) => {
+        removeById(ensurePromptsArray(obj), promptId);
     };
 
     const addSelectOption = (ex) => {
