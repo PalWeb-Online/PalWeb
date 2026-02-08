@@ -2,7 +2,7 @@
 import Draggable from "vuedraggable";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
-import ExercisesBlockPromptsEditor from "./ExercisesBlockPromptsEditor.vue";
+import ExercisePromptsEditor from "./ExercisePromptsEditor.vue";
 
 const {
     addExercise,
@@ -53,7 +53,7 @@ const removeMatchPair = (ex, pairIndex) => {
 
 <template>
     <div class="block-editor--exercises">
-        <ExercisesBlockPromptsEditor v-if="props.block.exerciseType" :owner="props.block" title="Block Prompts"/>
+        <ExercisePromptsEditor v-if="props.block.exerciseType" :owner="props.block" title="Block Prompts"/>
         <div class="block-add-buttons">
             <div v-if="!props.block.exerciseType" v-for="exerciseType in ['match', 'select', 'input']"
                  :key="exerciseType">
@@ -136,7 +136,7 @@ const removeMatchPair = (ex, pairIndex) => {
                                 Delete
                             </button>
                         </div>
-                        <ExercisesBlockPromptsEditor :owner="ex" title="Exercise Prompts"/>
+                        <ExercisePromptsEditor :owner="ex" title="Exercise Prompts"/>
 
                         <template v-if="ex.type === 'select'">
                             <div class="exercise-answers">
