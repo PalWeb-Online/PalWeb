@@ -58,10 +58,10 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
         <div class="block-editor-container" :class="{ nested: isNested }">
             <div class="block-meta">
                 <div class="featured-title s" style="flex-grow: 1">
-                    {{ bi + 1 }}:
+                    <span>{{ bi + 1 }}: </span>
                     <span style="color: var(--color-dark-primary)">
-                                {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
-                            </span>
+                        {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
+                    </span>
                 </div>
                 <button type="button"
                         class="material-symbols-rounded"

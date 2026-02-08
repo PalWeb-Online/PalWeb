@@ -135,20 +135,20 @@
     &.nested {
         background: var(--color-pastel-dark);
     }
+}
 
-    .block-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.8rem;
+.block-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
 
-        * {
-            color: var(--color-medium-primary);
-        }
+    * {
+        color: var(--color-medium-primary);
+    }
 
-        button[disabled] {
-            opacity: 0.33;
-        }
+    button[disabled] {
+        opacity: 0.33;
     }
 }
 

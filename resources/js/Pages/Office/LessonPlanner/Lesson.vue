@@ -365,8 +365,8 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
 
             <div class="lesson-planner--skill" v-for="(skill, si) in lesson.document.skills" :key="skill.id">
                 <div class="field-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <span class="featured-title m">Skill {{ si + 1 }}</span>
+                    <div class="block-meta">
+                        <div class="featured-title m" style="flex-grow: 1">Skill {{ si + 1 }}</div>
                         <button type="button"
                                 class="material-symbols-rounded"
                                 @click="moveSkill(si, 'up')"
