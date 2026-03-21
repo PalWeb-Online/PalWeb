@@ -145,6 +145,11 @@ class Term extends Model
         return $relationship;
     }
 
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class)->where('user_id', auth()->id());
+    }
+
     public function decks(): BelongsToMany
     {
         return $this->belongsToMany(Deck::class)

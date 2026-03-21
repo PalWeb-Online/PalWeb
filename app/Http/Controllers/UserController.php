@@ -80,8 +80,8 @@ class UserController extends Controller
             'srs_settings' => 'required|array',
             'srs_settings.new_limit' => 'integer|min:0|max:100',
             'srs_settings.review_limit' => 'integer|min:0|max:300',
-            'srs_settings.flip_default' => 'boolean',
             'srs_settings.learning_steps' => 'integer|min:1|max:5',
+            'srs_settings.prompt_type' => 'string',
         ]);
 
         $preferences = $user->preferences ?? [];

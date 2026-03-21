@@ -7,6 +7,7 @@ use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\Academy\UnitController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
@@ -271,6 +272,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
             Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
+        });
+
+        Route::prefix('/cards')->controller(CardController::class)->group(function () {
+            Route::post('/purge', 'purge')->name('cards.purge');
+
+            Route::middleware('can:update,card')->group(function () {
+                Route::post('/{card}', 'update')->name('cards.update');
+                Route::post('/{card}/master', 'master')->name('cards.master');
+                Route::post('/{card}/suspend', 'suspend')->name('cards.suspend');
+                Route::post('/{card}/reset', 'reset')->name('cards.reset');
+                Route::delete('/{card}', 'destroy')->name('cards.destroy');
+            });
         });
 
         Route::prefix('/sound-booth')->group(function () {

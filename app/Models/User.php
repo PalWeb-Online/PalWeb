@@ -138,6 +138,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Dialect::class, 'dialect_id');
     }
 
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    public function cardReviews(): HasMany
+    {
+        return $this->hasMany(CardReview::class);
+    }
+
     public function decks(): HasMany
     {
         return $this->hasMany(Deck::class);
