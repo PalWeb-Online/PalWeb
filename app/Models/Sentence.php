@@ -81,6 +81,7 @@ class Sentence extends Model
 
                 $termResource = new TermResource($term)->toArray(request());
                 $termResource['sentencePivot'] = [
+                    'uuid' => $sentenceTerm->uuid,
                     'gloss_id' => $sentenceTerm->gloss_id,
                     'sent_term' => $sentenceTerm->sent_term,
                     'sent_translit' => $sentenceTerm->sent_translit,
@@ -93,6 +94,7 @@ class Sentence extends Model
 
             return [
                 'sentencePivot' => [
+                    'uuid' => $sentenceTerm->uuid,
                     'sent_term' => $sentenceTerm->sent_term,
                     'sent_translit' => $sentenceTerm->sent_translit,
                     'position' => $sentenceTerm->position,
