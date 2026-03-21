@@ -217,7 +217,7 @@ watch(
             </p>
         </AppTip>
         <div class="model-item-container sentence-item-container l">
-            <div v-if="sentence.dialog.id" class="sentence-dialog-data">
+            <div v-if="sentence.dialog?.id" class="sentence-dialog-data">
                 <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
                     <div>dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
@@ -247,7 +247,7 @@ watch(
         <div class="window-section-head">
             <h2>terms</h2>
         </div>
-        <AppTip v-if="sentence.dialog.id">
+        <AppTip v-if="sentence.dialog?.id">
             <p>Since this Sentence appears in a Dialog, you may select the Terms that should be toggled off if the
                 Student wants to use the Dialog for conversation practice. (The Terms will be visible under all other
                 circumstances.)</p>
@@ -258,7 +258,7 @@ watch(
                 <div class="draggable-item">
                     <span class="delete material-symbols-rounded"
                           @click="removeTerm(index)">delete</span>
-                    <span v-if="sentence.dialog.id" class="material-symbols-rounded"
+                    <span v-if="sentence.dialog?.id" class="material-symbols-rounded"
                           :class="{toggleable: element.sentencePivot.toggleable}"
                           @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
                         {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}

@@ -18,6 +18,7 @@ defineOptions({
             on PalWeb:</p>
         <ul>
             <li><a href="#deck-master">Deck Master</a></li>
+            <li><a href="#card-dealer">Card Dealer</a></li>
             <li><a href="#record-wizard">Sound Booth</a></li>
         </ul>
         <p>How these tools are used is explained in the section of this page corresponding to each.</p>
@@ -94,6 +95,97 @@ defineOptions({
             of keyboard controls.)
         </p>
     </div>
+    <div class="wiki-content-block" id="card-dealer">
+        <h1>Card Dealer</h1>
+        <p>The <b>Card Dealer</b> is a tool for studying Terms as flashcards ("Cards") through a <a
+            href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank">spaced-repetition (SRS)</a> system.
+            It differs from the <b>Deck Master</b>, where studying a Deck means generating a scored Quiz, or freely
+            viewing the Terms in Card form. In the Card Dealer, the application determines when you should be shown a
+            Term based on how well you know it, so that you never waste time studying what you already know. Rather than
+            freely viewing Cards at your leisure, the application schedules them for you for study after a given number
+            of days from the present.</p>
+        <h2>Cards</h2>
+        <p>In most other flashcard applications, a Card is a custom-made object that is unique & agnostic about its
+            contents. Because the application doesn't care what's on the Card, two unique Cards could have the same
+            contents but still be treated as separate. On PalWeb, each Card you own has a one-to-one relationship with a
+            Term, so a single Card will represent the same Term even if it appears across multiple Decks. In real life,
+            if you know a word, you know it regardless of where it appears; that's why on PalWeb progress you make with
+            the Terms in one Deck applies to all instances of those Terms across the application.</p>
+        <p>As you navigate the site, you will see that Terms will display the data associated with your Card for that
+            Term, so you'll be able to see how many times you're reviewed that Term, the last time you reviewed it &
+            when it's next due for review. Additionally, you will see your <b>Mastery Score</b> for that Term, which is
+            a reflection of how confidently you know it.</p>
+        <p>The Mastery Score is calculated based on the number of times you've reviewed the Card & the current length of
+            the interval between reviews. It rises each time you review a Card successfully & falls each time you fail
+            to recall the Term (i.e. a memory lapse). Although lapses reset the day interval, your repetition count is
+            maintained, so the negative impact of a lapse on your Mastery Score is mitigated by having a higher degree
+            of familiarity with the Term.</p>
+        <p>Your Mastery Score is mapped onto a color-coded list of tiers that represent
+            your <b>Mastery Level</b> for that Card:</p>
+        <ul>
+            <li><b>New</b> (0%; 0 Reps.)</li>
+            <li><b>Rusty</b> (≥0%)</li>
+            <li><b>Learning</b> (≥25%)</li>
+            <li><b>Solid</b> (≥50%)</li>
+            <li><b>Confident</b> (≥70%)</li>
+            <li><b>Mastered</b> (≥85%)</li>
+        </ul>
+        <p>Your goal is to reach sufficiently high stats for a Card so that it reach a 100% Mastery Score. However,
+            learning a Card is never a "completed" process; it will always be due again in the future, even if months or
+            years later — & your Mastery Score could always fall beneath 100% again. By the nature of the SRS system,
+            though, it's exceedingly unlikely that you'd fail a review for a Card that has reached a 100% Mastery
+            Score; that's the whole point.</p>
+        <p>Within the Card Dealer or when viewing a Deck, you will see your <b>Review Progress</b> for the given set of
+            Cards. (If no Deck is selected in the Card Dealer, the data accounts for all Terms in the Dictionary.) The
+            <b>Exposure</b> is the percentage of Cards within the set that have been reviewed; i.e. how many Cards in
+            the set you've seen at least once. The <b>Progress</b> is your overall <b>Mastery Score</b> for the set.
+            Below that, you will see three filters to visualize your progress:</p>
+        <ol>
+            <li>The <b>Created</b> filter will display all the Cards created for that set as a percentage of the total
+                Cards in the set; this data is further detailed under the <b>"Created"</b> heading. The Created filter
+                visually represents the Exposure value, but including all created Cards, even if they have not been
+                reviewed yet (i.e. <b>New</b> Cards). The Exposure value doesn't account for New Cards, since they
+                haven't actually been seen yet; this data is listed under the <b>"Reviewed"</b> heading. If you have no
+                New Cards, these values will all coincide.
+            </li>
+            <li>The <b>Mastery</b> filter will display the percentage of reviewed Cards within the set that belong to
+                each Mastery Level, where each segment represents one Mastery Level. You can hover over each segment to
+                view more information about the Cards within that segment.
+            </li>
+            <li>The <b>Progress</b> filter is a visual representation of the Progress value listed above. It is similar
+                to the data shown by the Created filter, with the difference being that the weight of each Card toward
+                your progress is based on your Mastery Score for that Card. In a set of 100 Cards, then, 1 Card with a
+                10% Mastery Score will only contribute 0.1% (rather than 1%) toward the total Progress. Hence, only a
+                100% Mastery Score for all Cards in the set will fill the bar.
+            </li>
+        </ol>
+        <p>If for whatever reason you do not wish to learn a Term or don't with to see it again in your reviews, you can
+            choose to <b>Suspend</b> the Card. Suspended Cards don't impact your Review Progress, although they are
+            listed under the <b>"Suspended"</b> heading for reference & may be managed alongside the rest of your Cards;
+            you may restore them at any time. While it's also possible to delete a Card, this resets your progress for
+            the Term & thus impacts your Review Progress, since a non-existent Card will simply be treated as an
+            undiscovered Term. Also, it does not prevent the application from creating the Card again in the process of
+            generating New Cards. Suspending an unwanted Term is the correct way to indicate to the application that the
+            Card should be ignored indefinitely.</p>
+
+        <h2>Review Stats</h2>
+        <p>When you access the Card Dealer, you will see your <b>Review Progress</b> as well as three sections with
+            statistics related to your reviews.</p>
+        <ol>
+            <li>
+                <b>Today's Review (Session Preview)</b> lists the total count of Cards that remain due today, including New Cards that
+                have already been created. Some values may appear crossed out if the count of Cards is lower or higher
+                than the expected amount; the real value is lower if your limits are set below the due amounts, or
+                higher if New Cards will be created on starting the session & subsequently become due.
+            </li>
+            <li><b>Review Queue</b> displays how many Cards are due each day within the next 30-day period, including
+                today. Hover over each bar to see exactly how many Cards are due for that day.
+            </li>
+            <li><b>Review History</b> displays a 30-day history of your reviews, including today's session. Click on the
+                Help button next to the title for further information about the data.
+            </li>
+        </ol>
+    </div>
     <div class="wiki-content-block" id="record-wizard">
         <h1>Sound Booth</h1>
         <p>The <b>Sound Booth</b> is a tool to record yourself speaking Arabic. Its primary purpose is as a means to
@@ -108,7 +200,7 @@ defineOptions({
             associated with a Speaker whose Fluency level is indicated everywhere that they appear, so it will always be
             clear which Audios belong to native speakers as opposed to other learners of Arabic.</p>
 
-        <p>On opening the <b>Sound Booth</b>, your browser may ask you for permission to use of your mic; you must
+        <p>On opening the <b>Sound Booth</b>, your browser may ask you for permission to use your mic; you must
             allow
             this to proceed. The <b>Sound Booth</b> is divided into four areas:</p>
 

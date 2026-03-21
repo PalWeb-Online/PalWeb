@@ -82,7 +82,7 @@ const trendLinePoints = computed(() => {
     <div class="score-stats-wrapper">
         <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
             <div class="score-stats-container__overlay">
-                You must be a Student to enable Scores.
+                <span>You must be a Student to enable Scores.</span>
             </div>
             <div class="score-stats-container__content">
                 <div class="score-stats-highlight-wrapper">
@@ -118,7 +118,7 @@ const trendLinePoints = computed(() => {
                     </div>
                 </div>
                 <div class="score-stats-graph-wrapper">
-                    <div>
+                    <div class="graph-y-axis-legend">
                         <div>100%</div>
                         <div>75%</div>
                         <div>50%</div>

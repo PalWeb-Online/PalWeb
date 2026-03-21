@@ -96,7 +96,7 @@ defineOptions({
     <div id="app-head">
         <h1>Deck Master</h1>
         <div @click="toggleMode" id="app-mode-toggle" :class="mode">
-            <div class="app-mode-toggle-slider">{{ mode }}</div>
+            <div class="app-mode-toggle-slider" :class="{active: mode === 'study'}">{{ mode }}</div>
         </div>
     </div>
 

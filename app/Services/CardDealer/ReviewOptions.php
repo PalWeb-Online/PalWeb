@@ -20,7 +20,7 @@ final readonly class ReviewOptions
     public static function forUser(User $user, ?Deck $deck = null): self
     {
         return new self(
-            scope: $deck ? 'deck' : 'dictionary',
+            scope: $deck ? 'deck' : 'all',
             deckId: $deck?->id,
             newLimit: $user->getSrsPreference('new_limit', config('preferences.srs.new_limit')),
             reviewLimit: $user->getSrsPreference('review_limit', config('preferences.srs.review_limit')),

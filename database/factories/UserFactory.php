@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'username' => $this->faker->unique()->userName(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'avatar' => 'battix01.jpg',
+            'avatar' => 'battix01.webp',
             'home' => $this->faker->word(),
             'bio' => $this->faker->text(),
             'dialect_id' => Dialect::all()->random()->id,

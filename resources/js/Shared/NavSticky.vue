@@ -6,11 +6,11 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import ThemePicker from "../components/Modals/ThemePicker.vue";
 import {router, usePage} from "@inertiajs/vue3";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import { useConnectionStatus } from '../composables/useConnectionStatus.js';
+import {useConnectionStatus} from '../composables/useConnectionStatus.js';
 import {useActions} from "../composables/Actions.js";
 import {useI18n} from "vue-i18n";
 
-const { locale } = useI18n();
+const {locale} = useI18n();
 
 const changeLanguage = (lang) => {
     locale.value = lang;
@@ -21,7 +21,7 @@ const changeLanguage = (lang) => {
     });
 };
 
-const { status } = useConnectionStatus(Echo);
+const {status} = useConnectionStatus(Echo);
 
 const {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu} = useActions();
 
@@ -124,10 +124,10 @@ onMounted(() => {
             </div>
             <div class="material-symbols-rounded connection-status">
                 <span v-if="status === 'online'" style="color: var(--color-accent-medium)">wifi</span>
-                <span v-else-if="status === 'connecting'" >wifi_find</span>
+                <span v-else-if="status === 'connecting'">wifi_find</span>
                 <span v-else>wifi_off</span>
             </div>
-            <Link :href="route('homepage')">PalWeb 2.2 (Jerusalem)</Link>
+            <Link :href="route('homepage')">PalWeb 2.3 (Falastin)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button
@@ -136,22 +136,22 @@ onMounted(() => {
             >
                 palette
             </button>
-<!--            <div class="popup-menu-wrapper" :class="{ active: isOpen }">-->
-<!--                <button ref="reference" @click="toggleMenu()" class="material-symbols-rounded"-->
-<!--                        @keydown.enter.prevent="toggleMenu(true)">-->
-<!--                    language-->
-<!--                </button>-->
+            <!--            <div class="popup-menu-wrapper" :class="{ active: isOpen }">-->
+            <!--                <button ref="reference" @click="toggleMenu()" class="material-symbols-rounded"-->
+            <!--                        @keydown.enter.prevent="toggleMenu(true)">-->
+            <!--                    language-->
+            <!--                </button>-->
 
-<!--                <Teleport to="body">-->
-<!--                    <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu"-->
-<!--                         role="menu" @keydown="onMenuKeydown"-->
-<!--                    >-->
-<!--                        <button :class="{selected: locale === 'en'}" @click="changeLanguage('en')">English</button>-->
-<!--                        <button :class="{selected: locale === 'es'}" @click="changeLanguage('es')">Español</button>-->
-<!--                        <button :class="{selected: locale === 'ar'}" @click="changeLanguage('ar')">عربيّ</button>-->
-<!--                    </div>-->
-<!--                </Teleport>-->
-<!--            </div>-->
+            <!--                <Teleport to="body">-->
+            <!--                    <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu"-->
+            <!--                         role="menu" @keydown="onMenuKeydown"-->
+            <!--                    >-->
+            <!--                        <button :class="{selected: locale === 'en'}" @click="changeLanguage('en')">English</button>-->
+            <!--                        <button :class="{selected: locale === 'es'}" @click="changeLanguage('es')">Español</button>-->
+            <!--                        <button :class="{selected: locale === 'ar'}" @click="changeLanguage('ar')">عربيّ</button>-->
+            <!--                    </div>-->
+            <!--                </Teleport>-->
+            <!--            </div>-->
             <button
                 class="material-symbols-rounded"
                 @click="SearchStore.openSearchGenie('search')"

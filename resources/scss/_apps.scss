@@ -155,7 +155,7 @@
         transform: translateX(0%);
     }
 
-    &.study .app-mode-toggle-slider {
+    .app-mode-toggle-slider.active {
         color: var(--color-dark-primary);
         background: var(--color-accent-medium);
         transform: translateX(100%);

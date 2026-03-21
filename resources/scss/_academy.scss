@@ -350,7 +350,6 @@
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    justify-content: center;
     gap: 1.6rem;
 
     button {
@@ -728,7 +727,7 @@ div.activity-image .image-card {
     gap: 0.8rem;
     grid-template-columns: min-content auto;
 
-    & > *:nth-child(1) {
+    .graph-y-axis-legend {
         display: flex;
         flex-flow: column;
         font-weight: 700;
@@ -805,9 +804,10 @@ div.activity-image .image-card {
     gap: 0.8rem;
     margin: 3.2rem;
 
-    a {
+    & > a, & > button {
         justify-self: end;
         font-weight: 700;
+        font-size: 1.6rem;
         font-family: $bodyFont;
         color: var(--color-dark-primary);
 
@@ -825,13 +825,13 @@ div.activity-image .image-card {
     .score-stats-container__content,
     .score-stats-container__overlay {
         grid-area: overlap;
+        border-radius: 1.6rem;
     }
 
     .score-stats-container__content {
         display: grid;
         gap: 3.2rem;
         background: var(--color-pastel-light);
-        border-radius: 1.6rem;
         padding: 3.2rem;
     }
 
@@ -845,16 +845,24 @@ div.activity-image .image-card {
         font-weight: 700;
         font-size: 2.4rem;
         user-select: none;
+        margin: 0.8rem;
+
+        span {
+            padding: 1.6rem 3.2rem;
+            border-radius: 3.2rem;
+            background: var(--color-accent-light);
+        }
     }
 
     &.disabled {
         .score-stats-container__content {
-            filter: opacity(0.33);
+            filter: opacity(0.5);
             pointer-events: none;
         }
 
         .score-stats-container__overlay {
             display: flex;
+            backdrop-filter: blur(0.2rem);
         }
     }
 }
@@ -873,10 +881,19 @@ div.activity-image .image-card {
         text-align: center;
 
         .score-highlight-title {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
             font-family: $headFont;
             font-size: 2.0rem;
             font-weight: 700;
             color: var(--color-medium-primary);
+            z-index: 1;
+
+            .material-symbols-rounded {
+                font-size: 2.0rem;
+                font-weight: 400;
+            }
         }
 
         .featured-title {
