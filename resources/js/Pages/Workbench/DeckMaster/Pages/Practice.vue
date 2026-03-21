@@ -162,6 +162,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
                 <TermFlashcard
                     :model="term"
                     :active="index === currentSlideIndex && !isSliding"
+                    :canInteract="true"
                     :flipDefault="flipDefault"
                     :showTerm="showTerm"
                     :showTranslit="showTranslit"

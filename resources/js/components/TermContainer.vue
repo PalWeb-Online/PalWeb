@@ -406,7 +406,7 @@ const etymology = computed(() => {
             />
 
             <ChartInflection
-                v-if="['noun', 'adjective'].includes(term.category) && inflections.length > 0"
+                v-if="['noun', 'adjective', 'numeral'].includes(term.category) && inflections.length > 0"
                 :term="term"
                 :inflections="inflections"
             />
@@ -425,13 +425,13 @@ const etymology = computed(() => {
             <!--            note that my user is hard-coded -->
             <div v-if="term.usage" class="user-item m">
                 <Link class="user-avatar" :href="route('users.show', 'permanent.intifada')">
-                    <img src="/img/avatars/character02.jpg"
+                    <img src="/img/avatars/character02.webp"
                          alt="Profile Picture"/>
                 </Link>
                 <div class="user-data-wrapper">
                     <div class="user-name">
                         <div class="user-name-en">
-                            <div>Editor's Note</div>
+                            <div>Editor’s Note</div>
                         </div>
                     </div>
                     <div class="user-comment">

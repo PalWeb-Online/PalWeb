@@ -265,6 +265,12 @@
     margin-block: 3.2rem;
     gap: 3.2rem;
 
+    .carousel__slide {
+        display: grid;
+        justify-items: center;
+        justify-content: normal;
+    }
+
     .carousel__pagination {
         justify-self: center;
         width: min(96rem, 100%);
@@ -295,6 +301,11 @@
     .carousel__pagination-button--active::after {
         height: 1.2rem !important;
         background: var(--color-medium-primary) !important;
+    }
+
+    .audio-button {
+        border-radius: 50%;
+        padding: 0.8rem;
     }
 
     .featured-title {

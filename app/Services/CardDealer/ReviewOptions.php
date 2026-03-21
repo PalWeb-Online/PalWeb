@@ -13,7 +13,7 @@ final readonly class ReviewOptions
         public int $newLimit,
         public int $reviewLimit,
         public int $learningSteps,
-        public bool $flipDefault,
+        public string $promptType,
     ) {
     }
 
@@ -25,7 +25,7 @@ final readonly class ReviewOptions
             newLimit: $user->getSrsPreference('new_limit', config('preferences.srs.new_limit')),
             reviewLimit: $user->getSrsPreference('review_limit', config('preferences.srs.review_limit')),
             learningSteps: $user->getSrsPreference('learning_steps', config('preferences.srs.learning_steps')),
-            flipDefault: $user->getSrsPreference('flip_default', config('preferences.srs.flip_default')),
+            promptType: $user->getSrsPreference('prompt_type', config('preferences.srs.prompt_type')),
         );
     }
 }
