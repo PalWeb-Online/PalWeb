@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Services\CardDealer\ReviewOptions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -214,6 +216,23 @@ class Term extends Model
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
             ->withPivot('type', 'gloss_id');
+    }
+
+    #[Scope]
+    public function hasFluentAudio(Builder $query): Builder
+    {
+        return $query->whereHas('pronunciations.audios.speaker', function (Builder $query) {
+            $query->where('fluency', '>=', 4);
+        });
+    }
+
+    #[Scope]
+    public function forReviewOptions(Builder $query, ReviewOptions $options): Builder
+    {
+        return match ($options->scope) {
+            'deck' => $query->whereHas('decks', fn ($q) => $q->where('decks.id', $options->deckId)),
+            default => $query,
+        };
     }
 
     #[Scope]

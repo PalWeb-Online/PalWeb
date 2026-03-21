@@ -23,6 +23,7 @@ use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Workbench\CardDealerController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\SoundBoothController;
 use App\Http\Resources\AudioResource;
@@ -272,6 +273,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
             Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
+        });
+
+        Route::prefix('/card-dealer')->controller(CardDealerController::class)->group(function () {
+            Route::get('/home/{deck?}', 'index')->name('card-dealer.index');
+            Route::get('/cards', 'cards')->name('card-dealer.cards');
+            Route::get('/review/{deck?}', 'review')->name('card-dealer.review');
+            Route::post('/decks/{deck}', 'getDeckCards')->name('card-dealer.get.deck');
         });
 
         Route::prefix('/cards')->controller(CardController::class)->group(function () {
