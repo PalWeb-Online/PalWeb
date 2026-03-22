@@ -1,6 +1,7 @@
 <script setup>
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {useAudio} from "../../../../composables/Audio.js";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -42,16 +43,28 @@ const startTypingEffect = (text) => {
         }
     }, 25);
 };
+
+const {isPlaying, createAudio, playAudio} = useAudio();
+
+onMounted(() => {
+    createAudio(props.question.term.audio);
+});
 </script>
 <template>
     <div class="quiz-question">
-        <div class="term-flashcard quiz-glosses flipped" style="cursor: default">
+        <div v-if="DeckStudyStore.settings.options.promptTerm" class="term-flashcard quiz-glosses flipped" style="cursor: default">
             <div class="term-flashcard-back">
                 <div class="term-flashcard-head">
                     <div class="term-flashcard-headword">
                         <div>{{ question.term.term }}</div>
                         <div v-show="showTranslit">({{ question.term.translit }})</div>
+
                     </div>
+                    <button v-if="question.term.audio" @click="playAudio"
+                        class="audio-button material-symbols-rounded" :class="{'active': isPlaying}"
+                    >
+                        music_note
+                    </button>
                     <div v-show="showInflections && question.term.inflections.length > 0"
                          class="term-flashcard-inflections">
                         <div v-for="inflection in question.term.inflections" class="term-flashcard-inflection-item">
@@ -68,6 +81,11 @@ const startTypingEffect = (text) => {
                 </div>
             </div>
         </div>
+        <button v-else @click="playAudio"
+                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}"
+        >
+            music_note
+        </button>
 
         <div class="exercise--select-options">
             <button v-for="(option, i) in question.options"

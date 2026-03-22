@@ -10,6 +10,7 @@ import {watch} from "vue";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
+import ToggleDouble from "../../../../components/ToggleDouble.vue";
 
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
@@ -171,6 +172,8 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                     "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
             </AppTip>
             <div class="settings-wrapper">
+                <ToggleDouble v-model="DeckStudyStore.settings.options.promptTerm" label="prompt type"
+                              option-a="audio" option-b="term"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictGloss" label="strict gloss"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictTerms" label="strict terms"/>
             </div>

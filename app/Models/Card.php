@@ -203,9 +203,7 @@ class Card extends Model
             'due_at' => Carbon::now(),
         ]);
 
-        $card->setRelation('term', $term);
-
-        return $card;
+        return $card->refresh()->load('term');
     }
 
     public function master(): void
