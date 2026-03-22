@@ -140,8 +140,6 @@ const handleSessionDataRefresh = async () => {
         </div>
     </div>
     <div id="app-body">
-        <AppButton v-if="scope === 'deck' && !deckData.deck"
-                   @click="SearchStore.openSearchGenie('insert', 'decks')" label="select deck"/>
         <SessionPreview
             :deckId="deckData.deck?.id"
             :scope="scope"
@@ -150,12 +148,17 @@ const handleSessionDataRefresh = async () => {
             @refresh="handleSessionDataRefresh"
         />
 
-        <div class="deck-preview-wrapper" v-if="scope === 'deck' && deckData.deck">
-            <DeckItem :model="deckData.deck"/>
-            <span class="material-symbols-rounded"
-                  @click="SearchStore.openSearchGenie('insert', 'decks')">cycle
-            </span>
-        </div>
+        <template v-if="scope === 'deck'">
+            <div class="deck-preview-wrapper" v-if="deckData.deck">
+                <DeckItem :model="deckData.deck"/>
+                <span class="material-symbols-rounded"
+                      @click="SearchStore.openSearchGenie('insert', 'decks')">cycle
+                </span>
+            </div>
+            <AppButton v-else label="select deck"
+                       @click="SearchStore.openSearchGenie('insert', 'decks')"/>
+        </template>
+
         <ReviewProgress
             :cards="activeCards"
             :terms_count="activeTermsCount"

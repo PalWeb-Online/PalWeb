@@ -25,12 +25,23 @@ defineOptions({
             updates like this one every three months.</p>
         <p>Oh, also — I'm hiring! Bringing just one more person onto the team will surely have a huge impact on how — &
             at what rate — the project continues to grow. Your subscriptions to PalWeb make this possible.</p>
-        <p>Now, in addition to various fixes here & there, <b>PalWeb 2.3</b> introduces the <b>Card Dealer</b>:
-            spaced-repetition study (<b>SRS</b>) that uses the power of the PalWeb Dictionary. Now, instead of simply
-            viewing your Decks as flashcards in the Deck Master, the Card Dealer will schedule these "Cards" for study
-            based on how well you know each Term. Since these Cards are directly linked to a Term in the Dictionary, as
-            you navigate the site you can see previews of your Mastery Level for the Terms in a Deck, Sentence, etc.
-            Instead of repeating myself here, I'll refer you directly to the
+        <p>In terms of what's new, let's start with two small but important additions to the site:</p>
+        <ul>
+            <li>Terms are now aware of how many times they appear in Sentences, making it possible to filter Terms
+                in the Dictionary according to frequency. Certain features will take advantage of this to deliver better
+                & more relevant results. (The Card Dealer, for instance, will generate New Cards from the most frequent
+                Terms first, so you start learning what's most relevant.)
+            </li>
+            <li>I've added a new type of "Listening" Quiz to the Deck Master, so you can practice your listening. It's
+                essentially a Gloss-type Quiz where the prompt is an Audio instead of a Term.
+            </li>
+        </ul>
+        <p>Now, most importantly, <b>PalWeb 2.3</b> introduces the <b>Card Dealer</b>: spaced-repetition study
+            (<b>SRS</b>) that uses the power of the PalWeb Dictionary. Now, instead of simply viewing your Decks as
+            flashcards in the Deck Master, the Card Dealer will schedule these "Cards" for study based on how well you
+            know each Term. Since these Cards are directly linked to a Term in the Dictionary, as you navigate the site
+            you can see previews of your Mastery Level for the Terms in a Deck, Sentence, etc. Instead of repeating
+            myself here, I'll refer you directly to the
             <Link :href="route('wiki.show', 'workbench')  + '#card-dealer'">User Guide</Link>
             for a full explanation of the feature. But the best way to see how it works is to try it out yourself! It's
             easy: Just navigate to the Card Dealer & under <b>Today's Review</b>, click <b>Start</b>!

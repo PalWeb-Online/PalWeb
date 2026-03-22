@@ -442,9 +442,14 @@
         display: flex;
         direction: rtl;
         flex-flow: row wrap;
+        align-items: center;
         gap: 0 1em;
         padding: 0.75em 1em;
         background: var(--color-pastel-light);
+
+        .audio-button {
+            font-size: 1.6rem;
+        }
     }
 
     .term-flashcard-headword {

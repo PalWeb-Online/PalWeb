@@ -152,6 +152,7 @@ const isCCC = computed(() => {
                 :class="((activeModel === 'terms' && filters.sort !== 'alphabetical') || (activeModel !== 'terms' && filters.sort !== 'latest')) ? 'persisting' : ''"
                 v-if="['terms', 'decks'].includes(activeModel)">
             <option value="alphabetical" v-if="activeModel === 'terms'">Alphabetical by Root</option>
+            <option value="frequency" v-if="activeModel === 'terms'">by Frequency</option>
             <option value="latest">by Latest</option>
             <option value="popular" v-if="activeModel === 'decks'">by Popularity</option>
             <option value="pinned" v-if="filters.pinned">by Pinned</option>

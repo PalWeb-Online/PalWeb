@@ -48,8 +48,8 @@ class ReviewService
 
         $newTerms = $remainingSessionCapacity > 0 && $remainingNewLimit > 0
             ? Term::query()
-                ->inRandomOrder()
                 ->forReviewOptions($options)
+                ->orderByDesc('usage_count')
                 ->when($options->promptType === 'audio', fn (Builder $query) => $query->hasFluentAudio())
                 ->whereDoesntHave('cards', fn ($q) => $q->where('user_id', $user->id))
                 ->limit(min($remainingSessionCapacity, $remainingNewLimit))
