@@ -2,6 +2,7 @@
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import {onMounted, ref} from "vue";
 import {useAudio} from "../../../../composables/Audio.js";
+import AudioButton from "../../../../components/AudioButton.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -60,11 +61,7 @@ onMounted(() => {
                         <div v-show="showTranslit">({{ question.term.translit }})</div>
 
                     </div>
-                    <button v-if="question.term.audio" @click="playAudio"
-                        class="audio-button material-symbols-rounded" :class="{'active': isPlaying}"
-                    >
-                        music_note
-                    </button>
+                    <AudioButton v-if="question.term.audio" :pronunciation="question.term.pronunciations[0]"/>
                     <div v-show="showInflections && question.term.inflections.length > 0"
                          class="term-flashcard-inflections">
                         <div v-for="inflection in question.term.inflections" class="term-flashcard-inflection-item">
@@ -81,11 +78,7 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <button v-else @click="playAudio"
-                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}"
-        >
-            music_note
-        </button>
+        <AudioButton v-else :pronunciation="question.term.pronunciations[0]"/>
 
         <div class="exercise--select-options">
             <button v-for="(option, i) in question.options"

@@ -6,6 +6,7 @@ import TermActions from "./Actions/TermActions.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import CardItem from "./CardItem.vue";
+import AudioButton from "./AudioButton.vue";
 
 const UserStore = useUserStore();
 
@@ -18,7 +19,7 @@ const props = defineProps({
     glossId: {type: Number, default: null},
 });
 
-const {term, isLoading, isPlaying, playAudio} = useTerm(props);
+const {term, isLoading} = useTerm(props);
 </script>
 
 <template>
@@ -40,10 +41,7 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                             <span class="arb">{{ term.term }}</span>
                             <span class="translit">({{ term.translit }})</span>
                         </Link>
-                        <button v-if="term.audio" @click="playAudio"
-                                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
-                            music_note
-                        </button>
+                        <AudioButton v-if="term.audio" :pronunciation="term.pronunciations[0]"/>
                     </div>
                 </div>
                 <TermDeckToggleButton :model="term"/>

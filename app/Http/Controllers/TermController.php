@@ -97,7 +97,7 @@ class TermController extends Controller
             $model
                 ->load([
                     'root',
-                    'pronunciations',
+                    'pronunciations.audios',
                     'attributes',
                     'spellings',
                     'relatives',

@@ -72,36 +72,41 @@ class Term extends Model
         $dialect = auth()->user()?->dialect ?? Dialect::find(8);
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
-        $userPronunciation = $this->pronunciations()
-            ->whereIn('dialect_id', $dialectIds)
-            ->with([
-                'audios' => fn ($query) => $query
-                    ->limit(1)
-                    ->with(['speaker.user']),
-            ])
-            ->limit(1)
-            ->first();
+        $pronunciations = $this->relationLoaded('pronunciations')
+            ? $this->pronunciations
+            : $this->pronunciations()
+                ->with([
+                    'audios' => fn ($query) => $query
+                        ->limit(1)
+                        ->with(['speaker.user']),
+                ])
+                ->get();
 
-        if ($userPronunciation) {
-            $pronunciations = collect([$userPronunciation]);
-
-        } else {
-            $pronunciations = collect([
-                $this->pronunciations()
-                    ->with([
-                        'audios' => fn ($query) => $query
-                            ->limit(1)
-                            ->with(['speaker.user']),
-                    ])
-                    ->limit(1)
-                    ->first(),
-            ]);
+        if ($pronunciations->isEmpty()) {
+            return [
+                'audio' => null,
+                'translit' => null,
+                'pronunciations' => collect(),
+            ];
         }
 
+        $userPronunciations = $pronunciations->whereIn('dialect_id', $dialectIds);
+        $pronunciationsWithAudio = $pronunciations->filter(fn ($pronunciation) => $pronunciation->audios->isNotEmpty());
+
+        $selectedPronunciation =
+            $userPronunciations->first(fn ($pronunciation) => $pronunciation->audios->isNotEmpty())
+            ?? $pronunciationsWithAudio->first()
+            ?? $userPronunciations->first()
+            ?? $pronunciations->first();
+
+        $selectedTranscription =
+            $userPronunciations->first()?->translit
+            ?? $pronunciations->first()?->translit;
+
         return [
-            'audio' => $pronunciations->first()->audios?->first()?->filename,
-            'translit' => $pronunciations->first()->translit,
-            'pronunciations' => $pronunciations,
+            'audio' => $selectedPronunciation?->audios?->first()?->filename,
+            'translit' => $selectedTranscription,
+            'pronunciations' => collect([$selectedPronunciation])->filter()->values(),
         ];
     }
 

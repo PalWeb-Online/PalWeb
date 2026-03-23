@@ -551,10 +551,8 @@ div.activity-image .image-card {
         margin: 0;
     }
 
-    .audio-button {
-        border-radius: 50%;
+    & > .audio-button {
         font-size: 6.4rem;
-        padding: 0.5em;
     }
 
     .sentence-item {

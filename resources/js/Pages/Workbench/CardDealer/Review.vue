@@ -528,15 +528,6 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     }
 }
 
-.term-flashcard-wrapper {
-    width: 100%;
-    display: grid;
-    font-size: 1.2rem;
-    grid-template-rows: auto min-content;
-    justify-items: center;
-    align-items: center;
-}
-
 .answer-buttons {
     display: flex;
     align-items: flex-start;

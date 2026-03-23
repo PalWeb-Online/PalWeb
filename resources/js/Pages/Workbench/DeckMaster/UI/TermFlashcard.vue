@@ -3,6 +3,7 @@ import {onMounted, onUnmounted, ref, watch} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 import AppButton from "../../../../components/AppButton.vue";
 import {useAudio} from "../../../../composables/Audio.js";
+import AudioButton from "../../../../components/AudioButton.vue";
 
 const props = defineProps({
     model: {
@@ -120,18 +121,12 @@ watch(() => props.active, (newVal) => {
                 </div>
             </div>
         </div>
-        <button v-if="model.audio" @click="playAudio"
-                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
-            music_note
-        </button>
+        <AudioButton v-if="model.audio" :pronunciation="model.pronunciations[0]"/>
     </template>
     <template v-else-if="model.audio">
-        <button @click="playAudio"
-                class="audio-button material-symbols-rounded" :class="{'active': isPlaying}"
-                style="font-size: 6.4rem; padding: 2.4rem; margin-block-end: 3.2rem"
-        >
-            music_note
-        </button>
+        <div class="audio-prompt-wrapper">
+            <AudioButton :pronunciation="model.pronunciations[0]"/>
+        </div>
         <AppButton @click="flipCard" label="Reveal"/>
     </template>
 </template>

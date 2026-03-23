@@ -241,12 +241,13 @@
         font-style: italic;
     }
 
-    button {
+    button, button.audio-button {
         color: white;
         background: var(--color-medium-primary);
         font-size: 2.0rem;
         height: 3.6rem;
         width: 3.6rem;
+        border-radius: 0;
     }
 
     @media (min-width: 720px) {
@@ -263,11 +264,31 @@ button.audio-button {
     text-align: center;
     font-weight: 700;
     color: white;
+    width: 1.5em;
+    height: 1.5em;
+    font-size: 1.6rem;
+    border-radius: 50%;
     background: var(--color-medium-primary);
+    position: relative;
 
     &.active {
         color: var(--color-dark-primary);
         background: var(--color-accent-medium);
+    }
+
+    span {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: -0.2em;
+        left: -0.2em;
+        font-size: 1em;
+        width: 0.8em;
+        height: 0.8em;
+        color: var(--color-medium-secondary);
+        background: white;
+        border-radius: 50%;
     }
 }
 
