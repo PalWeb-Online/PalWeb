@@ -46,35 +46,22 @@ class DeckController extends Controller
             'search', 'match', 'sort', 'pinned',
         ]));
 
-        if (empty($filters['search'])) {
-            $decks = Deck::query()
-                ->filter($filters)
-                ->paginate(25)
-                ->onEachSide(1)
-                ->appends($filters);
-            $totalCount = $decks->total();
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-        } else {
-            $results = $searchService->search($filters, false, true)['decks'];
-            $totalCount = $results->count();
-
-            $perPage = 25;
-            $currentPage = $request->input('page', 1);
-            $decks = $results->forPage($currentPage, $perPage);
-
-            $decks = new \Illuminate\Pagination\LengthAwarePaginator(
-                $decks,
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-        }
+        $decksCollection = $searchService->search($filters, false, true)['decks'];
+        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+            $decksCollection->forPage($currentPage, $perPage)->values(),
+            $decksCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return Inertia::render('Library/Decks/Index', [
             'section' => 'library',
             'decks' => DeckResource::collection($decks),
-            'totalCount' => $totalCount,
+            'totalCount' => $decks->total(),
             'filters' => $filters,
         ]);
     }

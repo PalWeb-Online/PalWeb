@@ -39,10 +39,21 @@ class TermRepository
         );
     }
 
+    public function allTerms(array $filters = []): Collection
+    {
+        return Term::query()
+            ->withUserCard()
+            ->with(['root', 'glosses', 'pronunciations'])
+            ->select('terms.*')
+            ->filter($filters)
+            ->get();
+    }
+
     public function searchTerms($matches, array $filters = []): Collection
     {
         return Term::query()
-            ->with(['root', 'glosses'])
+            ->withUserCard()
+            ->with(['root', 'glosses', 'pronunciations'])
             ->select('terms.*')
             ->whereIn('terms.id', $matches->pluck('term_id'))
             ->filter($filters)

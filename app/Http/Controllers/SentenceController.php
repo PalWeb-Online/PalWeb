@@ -55,30 +55,17 @@ class SentenceController extends Controller
             'search', 'match', 'sort', 'pinned',
         ]));
 
-        if (empty($filters['search'])) {
-            $sentences = Sentence::query()
-                ->filter($filters)
-                ->paginate(25)
-                ->onEachSide(1)
-                ->appends($filters);
-            $totalCount = $sentences->total();
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-        } else {
-            $results = $searchService->search($filters, true, false)['sentences'];
-            $totalCount = $results->count();
-
-            $perPage = 25;
-            $currentPage = $request->input('page', 1);
-            $sentences = $results->forPage($currentPage, $perPage);
-
-            $sentences = new \Illuminate\Pagination\LengthAwarePaginator(
-                $sentences,
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-        }
+        $sentencesCollection = $searchService->search($filters, true, false)['sentences'];
+        $sentences = new \Illuminate\Pagination\LengthAwarePaginator(
+            $sentencesCollection->forPage($currentPage, $perPage)->values(),
+            $sentencesCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return Inertia::render('Library/Sentences/Index', [
             'section' => 'library',
@@ -87,7 +74,7 @@ class SentenceController extends Controller
                     return new SentenceResource($sentence)->additional(['terms' => false]);
                 })
             )->additional(['meta' => $sentences->toArray()]),
-            'totalCount' => $totalCount,
+            'totalCount' => $sentences->total(),
             'filters' => $filters,
         ]);
 

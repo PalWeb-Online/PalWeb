@@ -27,6 +27,10 @@ class SearchService
         $filters['search'] ??= '';
         $filters['match'] ??= 'term';
 
+        if (trim($filters['search']) === '') {
+            return ['terms' => $this->termRepository->allTerms($filters)];
+        }
+
         $matches = match ($filters['match']) {
             'root' => $this->termRepository->findMatchingRoots($filters['search']),
             default => $this->termRepository->findMatchingTerms($filters['search']),

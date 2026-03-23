@@ -59,43 +59,27 @@ class TermController extends Controller
             'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
         ]));
 
-        if (empty($filters['search'])) {
-            $terms = Term::query()
-                ->with(['root', 'glosses', 'pronunciations'])
-                ->select('terms.*')
-                ->filter($filters)
-                ->paginate(25)
-                ->onEachSide(1)
-                ->appends($filters);
-            $totalCount = $terms->total();
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-        } else {
-            $results = $searchService->search($filters)['terms'];
-            $totalCount = $results->count();
-
-            $perPage = 25;
-            $currentPage = $request->input('page', 1);
-            $terms = $results->forPage($currentPage, $perPage);
-
-            $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-                $terms,
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-        }
+        $termsCollection = $searchService->search($filters)['terms'];
+        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+            $termsCollection->forPage($currentPage, $perPage)->values(),
+            $termsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         $featuredTerm = Cache::get('word-of-the-day');
-
-        $featuredTerm
-            ? $featuredTerm = new TermResource($featuredTerm)
-            : $featuredTerm = new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+        $featuredTerm = $featuredTerm
+            ? new TermResource($featuredTerm)
+            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
 
         return Inertia::render('Library/Terms/Index', [
             'section' => 'library',
             'terms' => TermResource::collection($terms),
-            'totalCount' => $totalCount,
+            'totalCount' => $terms->total(),
             'featuredTerm' => $featuredTerm ?? null,
             'filters' => $filters,
         ]);
