@@ -25,7 +25,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
@@ -33,7 +32,8 @@ class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository
-    ) {}
+    ) {
+    }
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -43,7 +43,9 @@ class TermController extends Controller
 
         $term->isPinned() && event(new ModelPinned($user));
 
-        $message = $term->isPinned() ? __('pin.added', ['thing' => $term->term]) : __('pin.removed', ['thing' => $term->term]);
+        $message = $term->isPinned()
+            ? __('pin.added', ['thing' => $term->term])
+            : __('pin.removed', ['thing' => $term->term]);
 
         return response()->json([
             'isPinned' => $term->isPinned(),
@@ -94,7 +96,6 @@ class TermController extends Controller
             'section' => 'library',
             'terms' => TermResource::collection($terms),
             'totalCount' => $totalCount,
-            'latestTerms' => Term::with(['glosses'])->orderByDesc('id')->take(10)->get(),
             'featuredTerm' => $featuredTerm ?? null,
             'filters' => $filters,
         ]);

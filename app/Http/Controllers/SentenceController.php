@@ -27,7 +27,9 @@ class SentenceController extends Controller
 
         $sentence->isPinned() && event(new ModelPinned($user));
 
-        $message = $sentence->isPinned() ? __('pin.added', ['thing' => $sentence->sentence]) : __('pin.removed', ['thing' => $sentence->sentence]);
+        $message = $sentence->isPinned()
+            ? __('pin.added', ['thing' => $sentence->sentence])
+            : __('pin.removed', ['thing' => $sentence->sentence]);
 
         return response()->json([
             'isPinned' => $sentence->isPinned(),
@@ -38,7 +40,7 @@ class SentenceController extends Controller
     public function getMany(Request $request)
     {
         $request->validate([
-            'ids'   => 'required|array',
+            'ids' => 'required|array',
             'ids.*' => 'integer',
         ]);
 

@@ -221,7 +221,7 @@ onMounted(() => {
                                      class="nav-carousel-page-item"
                                      :class="{
                                          'active': ['Workbench/CardDealer/Index', 'Workbench/CardDealer/Review'].includes($page.component),
-                                         'disabled': !UserStore.isUser
+                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
                                     <div>{{ $t('nav.sidebar.card-dealer.title') }}</div>

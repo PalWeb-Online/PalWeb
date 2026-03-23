@@ -9,7 +9,6 @@ const props = defineProps({
         required: false,
         default: null,
     },
-    latestTerms: Object,
 });
 
 const {term, isLoading} = useTerm(props);

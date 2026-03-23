@@ -275,7 +275,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/card-dealer')->controller(CardDealerController::class)->group(function () {
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
             Route::get('/home/{deck?}', 'index')->name('card-dealer.index');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
             Route::get('/review/{deck?}', 'review')->name('card-dealer.review');
