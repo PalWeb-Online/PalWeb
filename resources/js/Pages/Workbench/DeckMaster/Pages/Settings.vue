@@ -11,6 +11,7 @@ import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
+import ReviewProgress from "../../CardDealer/UI/ReviewProgress.vue";
 
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
@@ -30,6 +31,10 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 <h2>stats</h2>
             </template>
             <template #content>
+                <ReviewProgress
+                    :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card)"
+                    :terms_count="DeckStudyStore.data.deck?.terms.length"
+                />
                 <ScoreStats :model="DeckStudyStore.data.deck"/>
             </template>
         </WindowSection>

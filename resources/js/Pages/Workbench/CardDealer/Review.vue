@@ -6,10 +6,11 @@ import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
-import AppButton from "../../../components/AppButton.vue";
 import WindowSection from "../../../components/WindowSection.vue";
 import PopupWindow from "../../../components/Modals/PopupWindow.vue";
 import AppTooltip from "../../../components/AppTooltip.vue";
+import TermItem from "../../../components/TermItem.vue";
+import AppButton from "../../../components/AppButton.vue";
 
 const NotificationStore = useNotificationStore();
 
@@ -254,7 +255,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
             </div>
             <WindowSection :visible="false">
                 <template #title>
-                    <h2>display options</h2>
+                    <h2>options</h2>
                 </template>
                 <template #content>
                     <div class="settings-wrapper">
@@ -264,9 +265,13 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
             </WindowSection>
             <WindowSection :visible="false">
                 <template #title>
-                    <h2>card options</h2>
+                    <h2>card</h2>
                 </template>
                 <template #content>
+                    <div class="model-list index-list">
+                        <TermItem :model="cards[currentSlideIndex].term"
+                                  :glossId="cards[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
+                    </div>
                     <div class="settings-wrapper">
                         <AppButton @click="dismissCard('master')" label="master"
                                    :disabled="currentSlideIndex === queue.length - 1"

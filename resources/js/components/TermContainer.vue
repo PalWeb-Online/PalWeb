@@ -13,6 +13,10 @@ import ChartInflection from "./Charts/ChartInflection.vue";
 import ChartConjugation from "./Charts/ChartConjugation.vue";
 import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
+import CardItem from "./CardItem.vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -207,6 +211,7 @@ const etymology = computed(() => {
                 <TermActions :model="term"/>
             </div>
             <div class="term-container-head">
+                <CardItem v-if="UserStore.isStudent" :card="term.card"/>
                 <div class="term-headword">
                     <div class="term-headword-term">
                         <div class="term-headword-arb">{{ term.term }}</div>

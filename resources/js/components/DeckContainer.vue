@@ -9,6 +9,7 @@ import {route} from "ziggy-js";
 import ScoreStats from "./ScoreStats.vue";
 import WindowSection from "./WindowSection.vue";
 import LessonStatus from "./LessonStatus.vue";
+import ReviewProgress from "../Pages/Workbench/CardDealer/UI/ReviewProgress.vue";
 
 const props = defineProps({
     model: {
@@ -66,6 +67,7 @@ const {deck, isLoading} = useDeck(props);
                     <h2>stats</h2>
                 </template>
                 <template #content>
+                    <ReviewProgress :cards="deck.terms.map(t => t.card).filter(c => c !== null)" :terms_count="deck.terms_count"/>
                     <ScoreStats :model="deck"/>
                 </template>
             </WindowSection>

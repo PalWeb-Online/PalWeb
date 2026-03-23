@@ -5,6 +5,7 @@ import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
+import CardItem from "./CardItem.vue";
 
 const UserStore = useUserStore();
 
@@ -48,6 +49,7 @@ const {term, isLoading, isPlaying, playAudio} = useTerm(props);
                 <TermDeckToggleButton :model="term"/>
                 <TermActions :model="term"/>
             </div>
+            <CardItem v-if="UserStore.isStudent && model.card" :card="model.card"/>
         </div>
     </template>
 </template>

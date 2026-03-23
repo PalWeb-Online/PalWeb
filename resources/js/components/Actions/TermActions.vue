@@ -3,6 +3,7 @@ import {route} from 'ziggy-js';
 import {router} from '@inertiajs/vue3'
 import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
+import CardActions from "./CardActions.vue";
 
 const UserStore = useUserStore();
 
@@ -34,5 +35,7 @@ const deleteTerm = () => {
                 Delete Term
             </button>
         </template>
+
+        <CardActions v-if="model.card" :model="model.card"/>
     </ContextActions>
 </template>

@@ -104,6 +104,7 @@ class TermController extends Controller
                     'patterns',
                     'glosses.attributes',
                     'inflections',
+                    'cards',
                     'decks' => function ($query) {
                         $query->limit(10);
                     },

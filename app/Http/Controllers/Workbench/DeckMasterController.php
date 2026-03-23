@@ -40,7 +40,11 @@ class DeckMasterController extends Controller
 
     public function study(Deck $deck): \Inertia\Response|RedirectResponse
     {
-        $deck->load(['terms', 'scores']);
+        $deck->load([
+            'terms' => fn ($q) => $q->withUserCard(),
+            'terms.pronunciations',
+            'scores'
+        ]);
         $isEmpty = $deck->terms->isEmpty();
 
         if ($isEmpty) {
@@ -75,7 +79,13 @@ class DeckMasterController extends Controller
         $mode = $request->query('mode', 'build');
 
         if ($mode === 'study') {
-            $decks = Deck::whereHasBookmark($request->user())->with(['terms', 'scores'])->get();
+            $decks = Deck::query()
+                ->whereHasBookmark($request->user())
+                ->with([
+                    'terms' => fn ($q) => $q->withUserCard(),
+                    'scores'
+                ])
+                ->get();
 
         } else {
             $decks = $request->user()->decks->load(['terms']);
@@ -92,7 +102,7 @@ class DeckMasterController extends Controller
 
         return response()->json([
             'terms' => TermResource::collection(
-                $deck->terms->load(['pronunciations'])->map(function ($term) {
+                $deck->terms->load(['pronunciations', 'cards'])->map(function ($term) {
                     return new TermResource($term)->additional(['detail' => true]);
                 })
             ),

@@ -9,6 +9,7 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import QuizzerWindow from "./UI/QuizzerWindow.vue";
 import ScoreStats from "../../../components/ScoreStats.vue";
 import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
+import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -134,6 +135,10 @@ defineOptions({
             </div>
 
             <QuizzerWindow v-if="mode === 'study'">
+                <ReviewProgress
+                    :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
+                    :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
+                />
                 <ScoreStats :model="DeckStudyStore.data.deck"/>
                 <div v-if="DeckStudyStore.data.deck" class="window-footer">
                     <button @click="toStudy">

@@ -236,6 +236,14 @@ class Term extends Model
     }
 
     #[Scope]
+    public function withUserCard($query)
+    {
+        return $query->with(['cards' => function ($query) {
+            $query->where('user_id', auth()->id());
+        }]);
+    }
+
+    #[Scope]
     protected function match($query, ?string $search): void
     {
         $query->when($search, fn ($query) => $query
@@ -261,6 +269,10 @@ class Term extends Model
         $query->when($filters['sort'] === 'alphabetical', fn ($query) => $query
             ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
             ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
+        );
+
+        $query->when($filters['sort'] === 'frequency', fn ($query) => $query
+            ->orderByDesc('usage_count')
         );
 
         $query->when($filters['sort'] === 'latest', fn ($query) => $query

@@ -70,8 +70,8 @@ class DeckController extends Controller
     {
         Gate::authorize('interact', $deck);
 
-        $deck->load(['terms.pronunciations', 'scores']);
         $deck->load([
+            'terms' => fn ($q) => $q->withUserCard(),
             'terms.pronunciations',
             'scores'
         ]);
