@@ -567,8 +567,12 @@ div.activity-image .image-card {
     }
 }
 
-.quiz-question .exercise--select-options button {
-    font-family: $monoFont;
+.quiz-question .exercise--select-options {
+    justify-content: center;
+
+    button {
+        font-family: $monoFont;
+    }
 }
 
 .score-metadata {
@@ -732,7 +736,10 @@ div.activity-image .image-card {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
-    margin-block-end: 0.4rem;
+
+    @media (min-width: 960px) {
+        margin-block-end: 0.4rem;
+    }
 
     button {
         font-family: var(--head-font), sans-serif;
@@ -845,7 +852,7 @@ div.activity-image .image-card {
 .score-stats-wrapper {
     display: grid;
     gap: 0.8rem;
-    margin: 3.2rem;
+    margin: 2.4rem;
 
     & > a, & > button {
         justify-self: end;
@@ -856,6 +863,26 @@ div.activity-image .image-card {
 
         &:hover {
             text-decoration: underline;
+        }
+    }
+
+    @media (min-width: 960px) {
+        margin: 3.2rem;
+    }
+}
+
+#app-body > .score-stats-wrapper {
+    width: min(100%, 96rem);
+
+    &:last-child {
+        margin-block-end: 0;
+    }
+
+    .score-stats-container__content {
+        border-radius: 0;
+
+        @media (min-width: 960px) {
+            border-radius: 1.6rem;
         }
     }
 }
@@ -875,7 +902,8 @@ div.activity-image .image-card {
         display: grid;
         gap: 3.2rem;
         background: var(--color-pastel-light);
-        padding: 3.2rem;
+        padding: 2.4rem;
+        overflow: hidden;
     }
 
     .score-stats-container__overlay {
@@ -906,6 +934,12 @@ div.activity-image .image-card {
         .score-stats-container__overlay {
             display: flex;
             backdrop-filter: blur(0.2rem);
+        }
+    }
+
+    @media (min-width: 960px) {
+        .score-stats-container__content {
+            padding: 3.2rem;
         }
     }
 }
@@ -962,6 +996,7 @@ div.activity-image .image-card {
 
     .score-stats-detail {
         display: flex;
+        gap: 0.8rem;
         justify-content: space-between;
         color: var(--color-dark-primary);
 

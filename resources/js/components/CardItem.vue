@@ -57,6 +57,7 @@ const appTooltip = ref(null);
 
 .card-item {
     display: flex;
+    align-items: center;
     color: var(--color-dark-primary);
     background: var(--color-pastel-light);
     font-size: 2.4rem;
@@ -68,6 +69,7 @@ const appTooltip = ref(null);
     }
 
     .level-icon.material-symbols-rounded {
+        flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -94,7 +96,8 @@ const appTooltip = ref(null);
         font-family: inherit;
         align-items: center;
         font-size: 0.5em;
-        gap: 0.75em;
+        padding-block: 0.5em;
+        gap: 0.25em 0.75em;
 
         & > div {
             display: flex;

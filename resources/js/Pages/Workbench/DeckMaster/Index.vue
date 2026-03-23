@@ -133,19 +133,19 @@ defineOptions({
                     <LoadingSpinner/>
                 </div>
             </div>
-
-            <QuizzerWindow v-if="mode === 'study'">
-                <ReviewProgress
-                    :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
-                    :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
-                />
-                <ScoreStats :model="DeckStudyStore.data.deck"/>
-                <div v-if="DeckStudyStore.data.deck" class="window-footer">
-                    <button @click="toStudy">
-                        Select Deck
-                    </button>
-                </div>
-            </QuizzerWindow>
         </div>
+
+        <QuizzerWindow v-if="mode === 'study'">
+            <ReviewProgress
+                :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
+                :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
+            />
+            <ScoreStats :model="DeckStudyStore.data.deck"/>
+            <div v-if="DeckStudyStore.data.deck" class="window-footer">
+                <button @click="toStudy">
+                    Select Deck
+                </button>
+            </div>
+        </QuizzerWindow>
     </div>
 </template>

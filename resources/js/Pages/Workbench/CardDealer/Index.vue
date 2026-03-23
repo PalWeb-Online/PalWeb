@@ -163,14 +163,15 @@ const handleSessionDataRefresh = async () => {
             :cards="activeCards"
             :terms_count="activeTermsCount"
         />
-        <div class="score-stats-container" style="width: min(96rem, 100%)"
-             :class="{ disabled: !UserStore.isStudent }">
-            <div class="score-stats-container__overlay">
-                <span>You must be a Student to enable Scores.</span>
-            </div>
-            <div class="score-stats-container__content">
-                <ReviewQueue :cards="activeCards"/>
-                <ReviewHistory :review_history="review_history"/>
+        <div class="score-stats-wrapper">
+            <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
+                <div class="score-stats-container__overlay">
+                    <span>You must be a Student to enable Scores.</span>
+                </div>
+                <div class="score-stats-container__content">
+                    <ReviewQueue :cards="activeCards"/>
+                    <ReviewHistory :review_history="review_history"/>
+                </div>
             </div>
         </div>
     </div>

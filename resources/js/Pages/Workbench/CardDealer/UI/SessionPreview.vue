@@ -129,99 +129,102 @@ const sessionSettings = ref({
                     learning steps, you won't lose any significant progress by doing so.</p>
             </PopupWindow>
         </div>
-        <div class="session-preview-container">
-            <div class="score-stats-highlight-wrapper">
-                <div class="score-highlight">
-                    <div class="score-highlight-title">Total Due</div>
-                    <div style="display: grid; justify-items: center">
+        <div class="score-stats-container">
+            <div class="score-stats-container__content">
+                <div class="score-stats-highlight-wrapper">
+                    <div class="score-highlight">
+                        <div class="score-highlight-title">Total Due</div>
+                        <div style="display: grid; justify-items: center">
+                            <div v-if="scope === 'deck'" class="featured-title s"
+                                 style="font-size: 3.2rem; color: var(--color-pastel-dark)">
+                                {{ allStats.remainingDue }}
+                            </div>
+                            <template v-if="!hasReachedTotalLimit">
+                                <div class="featured-title">
+                                    {{ activeStats.remainingDue }}
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="featured-title"
+                                     style="text-decoration: 0.4rem var(--color-medium-primary) line-through">
+                                    {{ activeStats.remainingDue }}
+                                </div>
+                                <div class="featured-title s"
+                                     style="font-size: 4.8rem; color: var(--color-medium-secondary)">
+                                    {{ reviewQueueCount }}
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="score-highlight">
+                        <div class="score-highlight-title">New</div>
+                        <div style="display: grid; justify-items: center">
+                            <div v-if="scope === 'deck'" class="featured-title s"
+                                 style="font-size: 3.2rem; color: var(--color-pastel-dark)">
+                                {{ allStats.remainingNew }}
+                            </div>
+                            <template v-if="!hasReachedNewLimit">
+                                <div class="featured-title">
+                                    {{ activeStats.remainingNew }}
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="featured-title"
+                                     style="text-decoration: 0.4rem var(--color-medium-primary) line-through">
+                                    {{ activeStats.remainingNew }}
+                                </div>
+                                <div class="featured-title s"
+                                     style="font-size: 4.8rem; color: var(--color-medium-secondary)">
+                                    {{ newQueueCount }}
+                                </div>
+                            </template>
+                        </div>
+
+                        <button class="material-symbols-rounded"
+                                @click="purgeNew"
+                                @mousemove="appTooltip.showTooltip('Purges all your New Cards.', $event);"
+                                @mouseleave="appTooltip.hideTooltip()"
+                        >cycle
+                        </button>
+                    </div>
+                    <div class="score-highlight">
+                        <div class="score-highlight-title">Review</div>
                         <div v-if="scope === 'deck'" class="featured-title s"
                              style="font-size: 3.2rem; color: var(--color-pastel-dark)">
-                            {{ allStats.remainingDue }}
+                            {{ allStats.remainingReviews }}
                         </div>
-                        <template v-if="!hasReachedTotalLimit">
+                        <template v-if="!hasReachedReviewLimit">
                             <div class="featured-title">
-                                {{ activeStats.remainingDue }}
+                                {{ activeStats.remainingReviews }}
                             </div>
                         </template>
                         <template v-else>
                             <div class="featured-title"
                                  style="text-decoration: 0.4rem var(--color-medium-primary) line-through">
-                                {{ activeStats.remainingDue }}
+                                {{ activeStats.remainingReviews }}
                             </div>
-                            <div class="featured-title s"
-                                 style="font-size: 4.8rem; color: var(--color-medium-secondary)">
-                                {{ reviewQueueCount }}
-                            </div>
-                        </template>
-                    </div>
-                </div>
-                <div class="score-highlight">
-                    <div class="score-highlight-title">New</div>
-                    <div style="display: grid; justify-items: center">
-                        <div v-if="scope === 'deck'" class="featured-title s"
-                             style="font-size: 3.2rem; color: var(--color-pastel-dark)">
-                            {{ allStats.remainingNew }}
-                        </div>
-                        <template v-if="!hasReachedNewLimit">
-                            <div class="featured-title">
-                                {{ activeStats.remainingNew }}
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="featured-title"
-                                 style="text-decoration: 0.4rem var(--color-medium-primary) line-through">
-                                {{ activeStats.remainingNew }}
-                            </div>
-                            <div class="featured-title s"
-                                 style="font-size: 4.8rem; color: var(--color-medium-secondary)">
-                                {{ newQueueCount }}
-                            </div>
-                        </template>
-                    </div>
+                            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                <div class="featured-title s"
+                                     style="font-size: 4.8rem; color: var(--color-medium-secondary)">
+                                    {{ reviewQueueCount }}
+                                </div>
 
-                    <button class="material-symbols-rounded"
-                            @click="purgeNew"
-                            @mousemove="appTooltip.showTooltip('Purges all your New Cards.', $event);"
-                            @mouseleave="appTooltip.hideTooltip()"
-                    >cycle
-                    </button>
-                </div>
-                <div class="score-highlight">
-                    <div class="score-highlight-title">Review</div>
-                    <div v-if="scope === 'deck'" class="featured-title s"
-                         style="font-size: 3.2rem; color: var(--color-pastel-dark)">
-                        {{ allStats.remainingReviews }}
-                    </div>
-                    <template v-if="!hasReachedReviewLimit">
-                        <div class="featured-title">
-                            {{ activeStats.remainingReviews }}
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div class="featured-title"
-                             style="text-decoration: 0.4rem var(--color-medium-primary) line-through">
-                            {{ activeStats.remainingReviews }}
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.8rem;">
-                            <div class="featured-title s"
-                                 style="font-size: 4.8rem; color: var(--color-medium-secondary)">
-                                {{ reviewQueueCount }}
-                            </div>
-
-                            <span class="material-symbols-rounded"
-                                  @mousemove="appTooltip.showTooltip('Your Due Cards are over your Review Limit! Priority will be given to Review Cards, then to all Owned Cards; New Cards will be added last.', $event);"
-                                  @mouseleave="appTooltip.hideTooltip()"
-                            >help
+                                <span class="material-symbols-rounded"
+                                      @mousemove="appTooltip.showTooltip('Your Due Cards are over your Review Limit! Priority will be given to Review Cards, then to all Owned Cards; New Cards will be added last.', $event);"
+                                      @mouseleave="appTooltip.hideTooltip()"
+                                >help
                                     </span>
-                        </div>
-                    </template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
+                <Link class="featured-title s session-start-button"
+                      v-if="scope === 'all'" :href="route('card-dealer.review')">start
+                </Link>
+                <Link class="featured-title s session-start-button"
+                      v-else-if="scope === 'deck' && deckId" :href="route('card-dealer.review', deckId)">start
+                </Link>
             </div>
-
-            <Link class="featured-title s session-start-button"
-                v-if="scope === 'all'" :href="route('card-dealer.review')">start</Link>
-            <Link class="featured-title s session-start-button"
-                v-else-if="scope === 'deck' && deckId" :href="route('card-dealer.review', deckId)">start</Link>
         </div>
 
         <SessionSettings :settings="sessionSettings"/>
@@ -231,21 +234,20 @@ const sessionSettings = ref({
 </template>
 
 <style scoped lang="scss">
-.session-preview-container {
-    display: grid;
-    background: var(--color-accent-light);
-    border-radius: 1.6rem;
-    overflow: hidden;
-
-    .session-start-button {
-        background: var(--color-medium-primary);
-        text-align: center;
-        padding: 1.6rem 1.6rem 1.8rem;
-        color: white
-    }
+.score-stats-container__content {
+    padding: 0;
+    gap: 0;
 }
 
 .score-stats-highlight-wrapper {
     padding: 3.2rem;
+}
+
+.session-start-button {
+    display: block;
+    background: var(--color-medium-primary);
+    text-align: center;
+    padding: 1.6rem 1.6rem 1.8rem;
+    color: white;
 }
 </style>

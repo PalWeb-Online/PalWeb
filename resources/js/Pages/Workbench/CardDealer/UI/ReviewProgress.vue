@@ -229,10 +229,6 @@ const masteryBarSegments = computed(() => {
 </template>
 
 <style scoped lang="scss">
-#app-body > .score-stats-wrapper {
-    width: min(100%, 96rem);
-}
-
 .total-progress-bar {
     display: flex;
     height: 3.2rem;
