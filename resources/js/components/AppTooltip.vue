@@ -16,12 +16,14 @@ defineExpose({
 </script>
 
 <template>
-    <div v-if="isVisible"
-         :style="tooltipStyle"
-         class="app-tooltip"
-    >
-        <slot>
-            {{ message }}
-        </slot>
-    </div>
+    <Teleport to="body">
+        <div v-if="isVisible"
+             :style="tooltipStyle"
+             class="app-tooltip"
+        >
+            <slot>
+                {{ message }}
+            </slot>
+        </div>
+    </Teleport>
 </template>

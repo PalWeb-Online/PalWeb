@@ -20,18 +20,29 @@ class UserController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function show(User $user): \Inertia\Response
+    public function show(User $user, Request $request): \Inertia\Response
     {
         Gate::authorize('interact', $user);
 
-        $user->load(['dialect', 'badges', 'speaker', 'decks']);
+        $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
+
+        $user->load(['dialect', 'badges', 'speaker']);
 
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
+        $sort = $request->string('sort')->toString();
+
+        $decks = $user->decks()
+            ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
+            ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
+            ->paginate(25)
+            ->withQueryString();
+
         return Inertia::render('Community/Users/Show', [
             'section' => 'community',
+            'filters' => $filters,
             'user' => new UserResource($user),
-            'decks' => DeckResource::collection($user->decks),
+            'decks' => DeckResource::collection($decks),
             'badges' => Badge::all(),
             'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
