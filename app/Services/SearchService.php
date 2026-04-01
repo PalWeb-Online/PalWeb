@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Term;
 use App\Repositories\DeckRepository;
 use App\Repositories\SentenceRepository;
 use App\Repositories\TermRepository;
@@ -27,19 +28,24 @@ class SearchService
         $filters['search'] ??= '';
         $filters['match'] ??= 'term';
 
+        $matches = collect();
+
         if (trim($filters['search']) === '') {
-            return ['terms' => $this->termRepository->allTerms($filters)];
+            $results = [
+                'terms' => $this->termRepository->allTerms($filters)
+            ];
+
+        } else {
+            $matches = match ($filters['match']) {
+                'root' => $this->termRepository->findMatchingRoots($filters['search']),
+                'gloss' => $this->termRepository->findMatchingGlosses($filters['search']),
+                default => $this->termRepository->findMatchingTerms($filters['search']),
+            };
+
+            $results = [
+                'terms' => $this->termRepository->searchTerms($matches, $filters),
+            ];
         }
-
-        $matches = match ($filters['match']) {
-            'root' => $this->termRepository->findMatchingRoots($filters['search']),
-            default => $this->termRepository->findMatchingTerms($filters['search']),
-            'gloss' => $this->termRepository->findMatchingGlosses($filters['search']),
-        };
-
-        $results = [
-            'terms' => $this->termRepository->searchTerms($matches, $filters),
-        ];
 
         if ($withDecks) {
             $results['decks'] = $this->deckRepository->searchDecks($matches, $filters);

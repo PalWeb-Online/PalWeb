@@ -9,14 +9,23 @@ class DeckRepository
 {
     public function searchDecks(?Collection $matches, array $filters = []): Collection
     {
+        $matches ??= collect();
+        $terms = $matches->pluck('term_id')->filter()->unique()->values();
+
         return Deck::query()
-            ->when(! empty($filters['search']), fn ($query) => $query
-                ->where('name', 'like', '%'.$filters['search'].'%')
-                ->orWhereHas('terms', fn ($query) => $query
-                    ->whereIn('terms.id', $matches->pluck('term_id'))
-                )
+            ->when(trim($filters['search'] ?? '') !== '', fn ($query) => $query
+                ->where(function ($query) use ($filters, $terms) {
+                    $query->where('name', 'like', '%'.$filters['search'].'%');
+
+                    if ($terms->isNotEmpty()) {
+                        $query->orWhereHas('terms', fn ($query) => $query
+                            ->whereIn('terms.id', $terms)
+                        );
+                    }
+                })
             )
             ->filter($filters)
-            ->get();
+            ->get()
+            ->unique('id');
     }
 }

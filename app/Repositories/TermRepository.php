@@ -49,7 +49,7 @@ class TermRepository
             ->get();
     }
 
-    public function searchTerms($matches, array $filters = []): Collection
+    public function searchTerms(Collection $matches, array $filters = []): Collection
     {
         return Term::query()
             ->withUserCard()
