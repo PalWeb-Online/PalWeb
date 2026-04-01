@@ -3,10 +3,10 @@ import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {ref, watch} from "vue";
-import {router} from "@inertiajs/vue3";
+import {ref} from "vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
+import {useQueryFilters} from "../../../composables/QueryFilters.js";
 
 const UserStore = useUserStore();
 
@@ -29,31 +29,7 @@ const filters = ref({
     sort: props.filters.sort || '',
 });
 
-let previousFilters = {...filters.value};
-
-watch(
-    filters,
-    (newFilters) => {
-        for (const key in newFilters) {
-            if (newFilters[key] !== previousFilters[key]) {
-                updateFilter({filter: key, value: newFilters[key]});
-                previousFilters[key] = newFilters[key];
-            }
-        }
-    },
-    {deep: true}
-);
-
-function updateFilter({filter, value}) {
-    console.log({filter, value});
-    const searchParams = new URLSearchParams(window.location.search);
-
-    value ? searchParams.set(filter, value) : searchParams.delete(filter);
-    searchParams.delete('page');
-
-    const params = Object.fromEntries(searchParams.entries());
-    router.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
-}
+const { updateFilter } = useQueryFilters(filters);
 </script>
 <template>
     <Head title="Library: Audios"/>

@@ -9,62 +9,49 @@ defineOptions({
 </script>
 <template>
     <div class="wiki-content-block">
-        <h2>PalWeb 2.2: Jerusalem</h2>
-        <p>Welcome to <b>PalWeb 2.2: Jerusalem</b>. As promised, this build introduces the meat of the Academy section:
-            the Lessons. By this I mean that I have wired up everything & have developed in-app tooling to create
-            Lessons & Activities with flexibility & speed without shipping any new code. Since I've only just deployed
-            those features, it's only now that I can begin adding Lessons to the course.</p>
-        <p>My original intention was to have Unit 1 available at launch, but I wasn't able to meet that mark. Still, we
-            don't have to wait for big deployments anymore to see this content added to the site, as now that these
-            features are available I will be adding new Lessons every week. At the time of writing, no Lessons are
-            available, but by the time you read this there will probably be several.</p>
-        <p>My official objective is to publish one Unit per month until the main course is completed, as I have other
-            tasks detailed below; however, I may advance quicker than that based on how the work proceeds. I foresee the
-            main course containing 9 Units, each of which has 9 Lessons. Hence, the main course should be completed by
-            the end of September at the latest — & most likely sooner.</p>
-        <p>Each Lesson contains a <b>Deck</b> of 24 Terms, a set of 3 <b>Skills</b> to learn that are tested in an
-            <b>Activity</b>, & a <b>Dialog</b>. Considering a planned 81 Lessons in total, the PalWeb Academy should
-            help you reach a solid intermediate
-            level in Spoken Arabic, with a vocabulary of nearly 2,000 Terms. When you first
-            unlock the Lesson, only the Deck is available for study; you must Quiz it 3 times obtaining a Score of 100%
-            to proceed to the Skills section, which makes use of the vocabulary you've learned. The Skills introduce
-            bite-sized concepts focused on some practical usage context, so that you always come away with the sense
-            that you're able to express yourself in a new way or navigate real-life situations that you previously
-            couldn't. After digesting that information, you enter the Activity, where interactive exercises will have
-            you applying the Skills to prepare you to put them into practice. Once you can ace the Activity with a Score
-            of 100%, you will unlock the Dialog, which integrates everything you've learned in a realistic context. But
-            the idea isn't to simply read the Dialog: toggle off parts of it to turn the Dialog into a template to
-            practice with someone else. Do it enough & you'll find that the phrases will roll of the tongue when you
-            find yourself in similar situations in real life!</p>
-        <p>While <b>PalWeb 2.2</b> inaugurates a long-awaited shift toward content creation rather than coding, there is
-            still a series of important features that I must add to make the application even more robust for language
-            learning & documentation; these will continue to be deployed at a rate of once every three months. Below you
-            will find a summary of those upcoming features & the justification for them.</p>
-        <p>One more thing: <b>PalWeb 2.2</b> technically restores localization to the application to make it available
-            in other languages, namely Spanish & Arabic, but the feature is not public yet. Localization used to be
-            partially supported, but the translations were a pain to maintain when the site was rapidly evolving &
-            changing in terms of frontend rendering, so I gave up on it. Arabic localization will still be a pain due to
-            the fact that I need to support mirroring certain design elements. It should be noted that in any case only
-            the UI & certain important pages would be localized, not the content of the site itself (e.g. the Wiki,
-            Glosses in the Dictionary, etc.). Because it's quite a hassle with quite limited returns, this has always
-            been a low-priority task. Still, I will be passively adding localization data over time & once most of the
-            key areas are accounted for I will enable locale switching.</p>
+        <h2>PalWeb 2.3: Falastin</h2>
+        <p>Welcome to <b>PalWeb 2.3: Falastin</b>. Before we get to the new stuff, let's start with a quick update about
+            how the project is developing:</p>
+        <p>Upon launching <b>PalWeb 2.2</b> in January, I finally began creating the zero-to-hero Palestinian Arabic
+            course within the Academy section of the site. I promised to post one Unit every month from January to about
+            September, since I foresee creating nine Units. I have mostly been able to stick to that promise, although
+            the first few Units took a bit longer to create as the initial content requires especially thoughtful
+            planning. Plus, I was still developing a feel for how I wanted the content to be structured; this aspect
+            will continue to evolve as more Units are added & the course is completed. While I did take about ten days
+            off from work to visit family — hence the two-week delay behind this update — I've otherwise been working at
+            quite a rapid pace, which has raised certain concerns about sustainability while ensuring a high level of
+            quality. So, while I will continue to aim to produce one Unit every month, my overall target will be to have
+            all nine Units completed by the end of the year at the latest. Still, I will continue to publish major
+            updates like this one every three months.</p>
+        <p>Oh, also — I'm hiring! Bringing just one more person onto the team will surely have a huge impact on how — &
+            at what rate — the project continues to grow. Your subscriptions to PalWeb make this possible.</p>
+        <p>In terms of what's new, let's start with two small but important additions to the site:</p>
+        <ul>
+            <li>Terms are now aware of how many times they appear in Sentences, making it possible to filter Terms
+                in the Dictionary according to frequency. Certain features will take advantage of this to deliver better
+                & more relevant results. (The Card Dealer, for instance, will generate New Cards from the most frequent
+                Terms first, so you start learning what's most relevant.)
+            </li>
+            <li>I've added a new type of "Listening" Quiz to the Deck Master, so you can practice your listening. It's
+                essentially a Gloss-type Quiz where the prompt is an Audio instead of a Term.
+            </li>
+        </ul>
+        <p>Now, most importantly, <b>PalWeb 2.3</b> introduces the <b>Card Dealer</b>: spaced-repetition study
+            (<b>SRS</b>) that uses the power of the PalWeb Dictionary. Now, instead of simply viewing your Decks as
+            flashcards in the Deck Master, the Card Dealer will schedule these "Cards" for study based on how well you
+            know each Term. Since these Cards are directly linked to a Term in the Dictionary, as you navigate the site
+            you can see previews of your Mastery Level for the Terms in a Deck, Sentence, etc. Instead of repeating
+            myself here, I'll refer you directly to the
+            <Link :href="route('wiki.show', 'workbench')  + '#card-dealer'">User Guide</Link>
+            for a full explanation of the feature. But the best way to see how it works is to try it out yourself! It's
+            easy: Just navigate to the Card Dealer & under <b>Today's Review</b>, click <b>Start</b>!
+        </p>
 
         <h2>Roadmap</h2>
         <p>Refer to the
             <Link :href="route('wiki.show', 'about')">About</Link>
             page for some history about the project that puts these milestones into context.
         </p>
-
-        <h3>(04/2026) PalWeb 2.3: SRS</h3>
-        <ul>
-            <li>Units 1-3</li>
-        </ul>
-        <p><b>PalWeb 2.3</b> will introduce spaced-repetition study (<b>SRS</b>) for Decks & the Dictionary. By powering
-            the system that makes flashcard applications like Anki great with PalWeb's rich database, you'll be able to
-            track your progress through the entire Palestinian Arabic lexicon & see your mastery level for every Term as
-            you navigate the Dictionary. I'm very excited about this game-changing feature, but I'd like to keep the
-            details a surprise.</p>
 
         <h3>(07/2026) PalWeb 2.4: SoundBooth & WordLogger</h3>
         <ul>
@@ -123,7 +110,8 @@ defineOptions({
     <div class="wiki-content-block">
         <h1>Version History</h1>
         <ul>
-            <li>01/01/2026 — PalWeb v2.2: Jerusalem <b>(Current)</b></li>
+            <li>15/04/2026 — PalWeb v2.3: Falastin <b>(Current)</b></li>
+            <li>01/01/2026 — PalWeb v2.2: Jerusalem</li>
             <li>01/10/2025 — PalWeb v2.1: Nabatean</li>
             <li>01/07/2025 — PalWeb v2.0: Watermelon</li>
             <li>01/04/2025 — PalWeb v2.0 (BETA)</li>
@@ -191,5 +179,46 @@ defineOptions({
             incrementally. Rather, I'm aiming to deploy the entire built Academy section with Unit 1 available on
             January 1, as <b>PalWeb 2.2</b>; that build will take us into next summer, as during the entire first half
             of 2026 I will simply be rolling out new Units every month.</p>
+
+        <h2>PalWeb 2.2: Jerusalem</h2>
+        <p>Welcome to <b>PalWeb 2.2: Jerusalem</b>. As promised, this build introduces the meat of the Academy section:
+            the Lessons. By this I mean that I have wired up everything & have developed in-app tooling to create
+            Lessons & Activities with flexibility & speed without shipping any new code. Since I've only just deployed
+            those features, it's only now that I can begin adding Lessons to the course.</p>
+        <p>My original intention was to have Unit 1 available at launch, but I wasn't able to meet that mark. Still, we
+            don't have to wait for big deployments anymore to see this content added to the site, as now that these
+            features are available I will be adding new Lessons every week. At the time of writing, no Lessons are
+            available, but by the time you read this there will probably be several.</p>
+        <p>My official objective is to publish one Unit per month until the main course is completed, as I have other
+            tasks detailed below; however, I may advance quicker than that based on how the work proceeds. I foresee the
+            main course containing 9 Units, each of which has 9 Lessons. Hence, the main course should be completed by
+            the end of September at the latest — & most likely sooner.</p>
+        <p>Each Lesson contains a <b>Deck</b> of 24 Terms, a set of 3 <b>Skills</b> to learn that are tested in an
+            <b>Activity</b>, & a <b>Dialog</b>. Considering a planned 81 Lessons in total, the PalWeb Academy should
+            help you reach a solid intermediate
+            level in Spoken Arabic, with a vocabulary of nearly 2,000 Terms. When you first
+            unlock the Lesson, only the Deck is available for study; you must Quiz it 3 times obtaining a Score of 100%
+            to proceed to the Skills section, which makes use of the vocabulary you've learned. The Skills introduce
+            bite-sized concepts focused on some practical usage context, so that you always come away with the sense
+            that you're able to express yourself in a new way or navigate real-life situations that you previously
+            couldn't. After digesting that information, you enter the Activity, where interactive exercises will have
+            you applying the Skills to prepare you to put them into practice. Once you can ace the Activity with a Score
+            of 100%, you will unlock the Dialog, which integrates everything you've learned in a realistic context. But
+            the idea isn't to simply read the Dialog: toggle off parts of it to turn the Dialog into a template to
+            practice with someone else. Do it enough & you'll find that the phrases will roll of the tongue when you
+            find yourself in similar situations in real life!</p>
+        <p>While <b>PalWeb 2.2</b> inaugurates a long-awaited shift toward content creation rather than coding, there is
+            still a series of important features that I must add to make the application even more robust for language
+            learning & documentation; these will continue to be deployed at a rate of once every three months. Below you
+            will find a summary of those upcoming features & the justification for them.</p>
+        <p>One more thing: <b>PalWeb 2.2</b> technically restores localization to the application to make it available
+            in other languages, namely Spanish & Arabic, but the feature is not public yet. Localization used to be
+            partially supported, but the translations were a pain to maintain when the site was rapidly evolving &
+            changing in terms of frontend rendering, so I gave up on it. Arabic localization will still be a pain due to
+            the fact that I need to support mirroring certain design elements. It should be noted that in any case only
+            the UI & certain important pages would be localized, not the content of the site itself (e.g. the Wiki,
+            Glosses in the Dictionary, etc.). Because it's quite a hassle with quite limited returns, this has always
+            been a low-priority task. Still, I will be passively adding localization data over time & once most of the
+            key areas are accounted for I will enable locale switching.</p>
     </div>
 </template>

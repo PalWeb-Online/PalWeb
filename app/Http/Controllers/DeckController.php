@@ -10,7 +10,6 @@ use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +29,9 @@ class DeckController extends Controller
 
         $deck->isPinned() && event(new ModelPinned($user));
 
-        $message = $deck->isPinned() ? __('pin.added', ['thing' => $deck->name]) : __('pin.removed', ['thing' => $deck->name]);
+        $message = $deck->isPinned()
+            ? __('pin.added', ['thing' => $deck->name])
+            : __('pin.removed', ['thing' => $deck->name]);
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
@@ -45,35 +46,22 @@ class DeckController extends Controller
             'search', 'match', 'sort', 'pinned',
         ]));
 
-        if (empty($filters['search'])) {
-            $decks = Deck::query()
-                ->filter($filters)
-                ->paginate(25)
-                ->onEachSide(1)
-                ->appends($filters);
-            $totalCount = $decks->total();
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-        } else {
-            $results = $searchService->search($filters, false, true)['decks'];
-            $totalCount = $results->count();
-
-            $perPage = 25;
-            $currentPage = $request->input('page', 1);
-            $decks = $results->forPage($currentPage, $perPage);
-
-            $decks = new \Illuminate\Pagination\LengthAwarePaginator(
-                $decks,
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-        }
+        $decksCollection = $searchService->search($filters, false, true)['decks'];
+        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+            $decksCollection->forPage($currentPage, $perPage)->values(),
+            $decksCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return Inertia::render('Library/Decks/Index', [
             'section' => 'library',
             'decks' => DeckResource::collection($decks),
-            'totalCount' => $totalCount,
+            'totalCount' => $decks->total(),
             'filters' => $filters,
         ]);
     }
@@ -82,7 +70,11 @@ class DeckController extends Controller
     {
         Gate::authorize('interact', $deck);
 
-        $deck->load(['terms.pronunciations', 'scores']);
+        $deck->load([
+            'terms' => fn ($q) => $q->withUserCard(),
+            'terms.pronunciations',
+            'scores'
+        ]);
 
         return Inertia::render('Library/Decks/Show', [
             'section' => 'library',
@@ -239,7 +231,7 @@ class DeckController extends Controller
 
         $output = fopen('php://output', 'w');
         if (! $output) {
-            throw new Exception('Failed to open php://output');
+            throw new \Exception('Failed to open php://output');
         }
 
         header('Content-Type: text/csv');

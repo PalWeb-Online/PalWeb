@@ -18,6 +18,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     const settings = reactive({
         quizType: 'practice',
         options: {
+            promptTerm: true,
             strictTerms: true,
             strictGloss: true,
             withTranslation: true,
@@ -141,6 +142,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         data.deck = null;
         settings.quizType = 'practice';
         settings.options = {
+            promptTerm: true,
             strictTerms: true,
             strictGloss: true,
             withTranslation: true,

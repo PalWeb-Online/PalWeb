@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'trial_ends_at' => 'datetime',
+            'preferences' => 'json',
         ];
     }
 
@@ -127,9 +128,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this;
     }
 
+    public function getSrsPreference(string $key, mixed $default = null): mixed
+    {
+        return $this->preferences['srs'][$key] ?? $default;
+    }
+
     public function dialect(): BelongsTo
     {
         return $this->belongsTo(Dialect::class, 'dialect_id');
+    }
+
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    public function cardReviews(): HasMany
+    {
+        return $this->hasMany(CardReview::class);
     }
 
     public function decks(): HasMany

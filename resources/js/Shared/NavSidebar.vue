@@ -217,6 +217,16 @@ onMounted(() => {
                                     <div>{{ $t('nav.sidebar.deck-master.title') }}</div>
                                     <div>{{ $t('nav.sidebar.deck-master.subtitle') }}</div>
                                 </div>
+                                <div @click="navigateOrPrompt('card-dealer.index')"
+                                     class="nav-carousel-page-item"
+                                     :class="{
+                                         'active': ['Workbench/CardDealer/Index', 'Workbench/CardDealer/Review'].includes($page.component),
+                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
+                                     }"
+                                >
+                                    <div>{{ $t('nav.sidebar.card-dealer.title') }}</div>
+                                    <div>{{ $t('nav.sidebar.card-dealer.subtitle') }}</div>
+                                </div>
                                 <div @click="navigateOrPrompt('sound-booth.index')"
                                      class="nav-carousel-page-item"
                                      :class="{

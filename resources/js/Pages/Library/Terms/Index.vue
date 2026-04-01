@@ -22,7 +22,6 @@ defineOptions({
 const props = defineProps({
     terms: Object,
     totalCount: Number,
-    latestTerms: Object,
     featuredTerm: Object,
     filters: Object,
 });
@@ -75,7 +74,7 @@ const sortingMessage = computed(() => {
             <div class="window-section-head">
                 <h1>dictionary</h1>
             </div>
-            <TermFeatured :model="featuredTerm" :latestTerms="latestTerms"/>
+            <TermFeatured :model="featuredTerm"/>
             <div class="window-section-head">
                 <h2>index</h2>
             </div>

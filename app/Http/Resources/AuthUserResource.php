@@ -8,15 +8,22 @@ class AuthUserResource extends UserResource
 {
     public function toArray(Request $request): array
     {
+        $dialect = auth()->user()?->dialect;
+        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
+
         return array_merge(parent::toArray($request), [
             'email' => $this->email,
             'roles' => $this->getEffectiveRoles(),
+            'dialects' => $dialectIds,
             'is_superuser' => $this->isSuperuser(),
             'is_verified' => (bool) $this->email_verified_at,
             'has_discord' => (bool) $this->discord_id,
+            'preferences' => $this->preferences ?? [
+                    'srs' => config('preferences.srs')
+                ],
             'unlocked_lessons' => $this->when(
                 $request->user()?->id === $this->id,
-                fn() => array_keys($this->getLessonProgress())
+                fn () => array_keys($this->getLessonProgress())
             ),
         ]);
     }

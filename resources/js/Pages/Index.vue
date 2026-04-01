@@ -17,6 +17,7 @@ import AppButton from "../components/AppButton.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
+import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
 
 defineProps({
     count: Object,
@@ -92,9 +93,14 @@ defineOptions({
 <template>
     <Head title="Home"/>
     <div id="app-body" class="homepage">
-        <div class="homepage-hero-wrapper">
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.2 Release Notes -></Link>
-            <HomepageHero/>
+        <div class="homepage-head-container">
+            <div class="kufiyye-strip">
+                <Kufiyye v-for="n in 4" :key="n" class="kufiyye-tile"/>
+            </div>
+            <div class="homepage-hero-wrapper">
+                <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.3 Release Notes -></Link>
+                <HomepageHero/>
+            </div>
         </div>
 
         <div class="homepage-section accent-light" style="padding-block-end: 25.6rem">
@@ -315,6 +321,34 @@ defineOptions({
                 </div>
             </div>
 
+            <div class="homepage-panel-wrapper inline">
+                <div class="homepage-panel-content">
+                    <div class="feature-panel-title">srs review</div>
+                    <div class="feature-panel-subtitle">Don’t study hard; study smart.</div>
+                    <div class="feature-panel-description">Raise your Mastery Level for the Terms in your Decks & across
+                        the whole Dictionary with the Card Dealer, which will schedule Terms for review based on how
+                        well you know them. PalWeb will know your weak points even better than you yourself.
+                    </div>
+                </div>
+
+                <Carousel
+                    :autoplay="3200"
+                    :items-to-show="1"
+                    :wrap-around="true"
+                >
+                    <template #slides>
+                        <Slide v-for="slide in 4" :key="slide">
+                            <img
+                                :src="`https://abdulbaha.fra1.digitaloceanspaces.com/images/front-card-dealer0${slide}.png`"
+                                alt="Slide Image">
+                        </Slide>
+                    </template>
+                    <template #addons>
+                        <Pagination/>
+                    </template>
+                </Carousel>
+            </div>
+
             <div class="carousel-wrapper">
                 <div class="carousel-track" style="animation-direction: reverse">
                     <DeckFlashcard v-for="deck in decks" :model="deck" :key="'deck-carousel' + deck.id"/>
@@ -444,3 +478,44 @@ defineOptions({
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.homepage-head-container {
+    display: grid;
+    justify-items: center;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.homepage-hero-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 96rem;
+    display: grid;
+    gap: 6.4rem;
+    justify-items: center;
+    margin-block: 6.4rem 12.8rem;
+}
+
+.kufiyye-strip {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    z-index: 0;
+    pointer-events: none;
+    display: flex;
+    overflow: hidden;
+    align-items: flex-end;
+    opacity: 0.3;
+}
+
+.kufiyye-tile {
+    flex: 0 0 128rem;
+    width: 128rem;
+    max-width: 128rem;
+}
+</style>

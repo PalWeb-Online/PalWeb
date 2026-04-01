@@ -14,8 +14,8 @@ const description = computed(() => {
             return 'Ancient stones the color of rust, sand as far as the eyes can see; an oasis in the distance.';
         case 'Jerusalem':
             return 'Intricate tilework of turquoise & lapis lazuli; homes protected from winter by the eponymous stone.';
-        // case 'Falastin':
-        //     return 'Most influential newspaper in Ottoman & Mandatory Palestine, a symbol of Palestinian national identity.';
+        case 'Falastin':
+            return 'Most influential newspaper in Ottoman & Mandatory Palestine, a symbol of Palestinian national identity.';
         // case 'Summac':
         //     return 'Chicken, spices & caramelized onion.';
     }

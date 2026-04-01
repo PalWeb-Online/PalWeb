@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('avatar')->default('battix01.jpg');
+            $table->string('avatar')->default('battix01.webp');
             $table->string('home')->nullable();
             $table->text('bio')->nullable();
             $table->foreignId('dialect_id')->constrained();

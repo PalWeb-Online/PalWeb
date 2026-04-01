@@ -250,7 +250,6 @@
 
 .term-item-container {
     display: grid;
-    gap: 0.4rem;
 }
 
 .term-item {
@@ -301,10 +300,6 @@
         position: absolute;
         top: 0.8rem;
         left: -1.2rem;
-        height: 2.4rem;
-        width: 2.4rem;
-        font-size: 1.6rem;
-        border-radius: 50%;
     }
 
     .term-item-gloss {
@@ -535,4 +530,39 @@
         font-family: $bodyFont;
         font-size: 1.6rem;
     }
+}
+
+.mastery-level__0 {
+    color: var(--mastery-level__0);
+    background: var(--mastery-level__0);
+}
+
+.mastery-level__1 {
+    color: var(--mastery-level__1);
+    background: var(--mastery-level__1);
+}
+
+.mastery-level__2 {
+    color: var(--mastery-level__2);
+    background: var(--mastery-level__2);
+}
+
+.mastery-level__3 {
+    color: var(--mastery-level__3);
+    background: var(--mastery-level__3);
+}
+
+.mastery-level__4 {
+    color: var(--mastery-level__4);
+    background: var(--mastery-level__4);
+}
+
+.mastery-level__5 {
+    color: var(--mastery-level__5);
+    background: var(--mastery-level__5);
+}
+
+.answer-buttons > button.material-symbols-rounded {
+    font-size: 3.2rem;
+    color: var(--color-medium-secondary);
 }

@@ -9,6 +9,7 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import QuizzerWindow from "./UI/QuizzerWindow.vue";
 import ScoreStats from "../../../components/ScoreStats.vue";
 import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
+import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
@@ -96,7 +97,7 @@ defineOptions({
     <div id="app-head">
         <h1>Deck Master</h1>
         <div @click="toggleMode" id="app-mode-toggle" :class="mode">
-            <div class="app-mode-toggle-slider">{{ mode }}</div>
+            <div class="app-mode-toggle-slider" :class="{active: mode === 'study'}">{{ mode }}</div>
         </div>
     </div>
 
@@ -132,15 +133,19 @@ defineOptions({
                     <LoadingSpinner/>
                 </div>
             </div>
-
-            <QuizzerWindow v-if="mode === 'study'">
-                <ScoreStats :model="DeckStudyStore.data.deck"/>
-                <div v-if="DeckStudyStore.data.deck" class="window-footer">
-                    <button @click="toStudy">
-                        Select Deck
-                    </button>
-                </div>
-            </QuizzerWindow>
         </div>
+
+        <QuizzerWindow v-if="mode === 'study'">
+            <ReviewProgress
+                :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
+                :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
+            />
+            <ScoreStats :model="DeckStudyStore.data.deck"/>
+            <div v-if="DeckStudyStore.data.deck" class="window-footer">
+                <button @click="toStudy">
+                    Select Deck
+                </button>
+            </div>
+        </QuizzerWindow>
     </div>
 </template>

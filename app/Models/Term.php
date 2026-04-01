@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Services\CardDealer\ReviewOptions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -70,36 +72,41 @@ class Term extends Model
         $dialect = auth()->user()?->dialect ?? Dialect::find(8);
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
-        $userPronunciation = $this->pronunciations()
-            ->whereIn('dialect_id', $dialectIds)
-            ->with([
-                'audios' => fn ($query) => $query
-                    ->limit(1)
-                    ->with(['speaker.user']),
-            ])
-            ->limit(1)
-            ->first();
+        $pronunciations = $this->relationLoaded('pronunciations')
+            ? $this->pronunciations
+            : $this->pronunciations()
+                ->with([
+                    'audios' => fn ($query) => $query
+                        ->limit(1)
+                        ->with(['speaker.user']),
+                ])
+                ->get();
 
-        if ($userPronunciation) {
-            $pronunciations = collect([$userPronunciation]);
-
-        } else {
-            $pronunciations = collect([
-                $this->pronunciations()
-                    ->with([
-                        'audios' => fn ($query) => $query
-                            ->limit(1)
-                            ->with(['speaker.user']),
-                    ])
-                    ->limit(1)
-                    ->first(),
-            ]);
+        if ($pronunciations->isEmpty()) {
+            return [
+                'audio' => null,
+                'translit' => null,
+                'pronunciations' => collect(),
+            ];
         }
 
+        $userPronunciations = $pronunciations->whereIn('dialect_id', $dialectIds);
+        $pronunciationsWithAudio = $pronunciations->filter(fn ($pronunciation) => $pronunciation->audios->isNotEmpty());
+
+        $selectedPronunciation =
+            $userPronunciations->first(fn ($pronunciation) => $pronunciation->audios->isNotEmpty())
+            ?? $pronunciationsWithAudio->first()
+            ?? $userPronunciations->first()
+            ?? $pronunciations->first();
+
+        $selectedTranscription =
+            $userPronunciations->first()?->translit
+            ?? $pronunciations->first()?->translit;
+
         return [
-            'audio' => $pronunciations->first()->audios?->first()?->filename,
-            'translit' => $pronunciations->first()->translit,
-            'pronunciations' => $pronunciations,
+            'audio' => $selectedPronunciation?->audios?->first()?->filename,
+            'translit' => $selectedTranscription,
+            'pronunciations' => collect([$selectedPronunciation])->filter()->values(),
         ];
     }
 
@@ -143,6 +150,11 @@ class Term extends Model
         }
 
         return $relationship;
+    }
+
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class)->where('user_id', auth()->id());
     }
 
     public function decks(): BelongsToMany
@@ -212,6 +224,31 @@ class Term extends Model
     }
 
     #[Scope]
+    public function hasFluentAudio(Builder $query): Builder
+    {
+        return $query->whereHas('pronunciations.audios.speaker', function (Builder $query) {
+            $query->where('fluency', '>=', 4);
+        });
+    }
+
+    #[Scope]
+    public function forReviewOptions(Builder $query, ReviewOptions $options): Builder
+    {
+        return match ($options->scope) {
+            'deck' => $query->whereHas('decks', fn ($q) => $q->where('decks.id', $options->deckId)),
+            default => $query,
+        };
+    }
+
+    #[Scope]
+    public function withUserCard($query)
+    {
+        return $query->with(['cards' => function ($query) {
+            $query->where('user_id', auth()->id());
+        }]);
+    }
+
+    #[Scope]
     protected function match($query, ?string $search): void
     {
         $query->when($search, fn ($query) => $query
@@ -237,6 +274,10 @@ class Term extends Model
         $query->when($filters['sort'] === 'alphabetical', fn ($query) => $query
             ->leftJoin('roots', 'terms.root_id', '=', 'roots.id')
             ->orderByRaw('IFNULL(roots.root, terms.term) ASC, roots.root IS NULL, terms.term ASC')
+        );
+
+        $query->when($filters['sort'] === 'frequency', fn ($query) => $query
+            ->orderByDesc('usage_count')
         );
 
         $query->when($filters['sort'] === 'latest', fn ($query) => $query

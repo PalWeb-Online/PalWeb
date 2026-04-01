@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\Academy\ActivityController;
+use App\Http\Controllers\Academy\DialogController;
 use App\Http\Controllers\Academy\LessonController;
 use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\Academy\UnitController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
-use App\Http\Controllers\DialogController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\FeedbackCommentController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Workbench\CardDealerController;
 use App\Http\Controllers\Workbench\DeckMasterController;
 use App\Http\Controllers\Workbench\SoundBoothController;
 use App\Http\Resources\AudioResource;
@@ -273,6 +275,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
+            Route::get('/home/{deck?}', 'index')->name('card-dealer.index');
+            Route::get('/cards', 'cards')->name('card-dealer.cards');
+            Route::get('/review/{deck?}', 'review')->name('card-dealer.review');
+            Route::post('/decks/{deck}', 'getDeckCards')->name('card-dealer.get.deck');
+        });
+
+        Route::prefix('/cards')->controller(CardController::class)->group(function () {
+            Route::post('/purge', 'purge')->name('cards.purge');
+
+            Route::middleware('can:update,card')->group(function () {
+                Route::post('/{card}', 'update')->name('cards.update');
+                Route::post('/{card}/master', 'master')->name('cards.master');
+                Route::post('/{card}/suspend', 'suspend')->name('cards.suspend');
+                Route::post('/{card}/reset', 'reset')->name('cards.reset');
+                Route::delete('/{card}', 'destroy')->name('cards.destroy');
+            });
+        });
+
         Route::prefix('/sound-booth')->group(function () {
             Route::controller(SoundBoothController::class)->group(function () {
                 Route::get('/', 'index')->name('sound-booth.index');
@@ -329,7 +350,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('user.get-decks');
+    Route::get('/get-decks', [UserController::class, 'getDecks'])->name('users.decks.get');
+    Route::patch('/update-preferences', [UserController::class, 'updatePreferences'])->name('users.preferences.update');
+
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
 
