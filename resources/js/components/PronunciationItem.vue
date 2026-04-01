@@ -88,7 +88,6 @@ onMounted(() => {
         text-align: center;
         background: var(--color-pastel-medium);
         padding-block-end: 0.2rem;
-        //@include link-primary;
 
         &:hover {
             text-decoration: none;
@@ -158,10 +157,6 @@ onMounted(() => {
     .pronunciation-item-phonology {
         font-family: var(--mono-font), monospace;
         font-size: 1.2rem;
-    }
-
-    .play {
-        width: 2.8rem;
     }
 }
 </style>
