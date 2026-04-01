@@ -179,6 +179,7 @@
         font-family: $bodyFont;
         font-size: 1.5em;
         white-space: nowrap;
+        display: none;
     }
 
     .deck-author-avatar {
@@ -197,6 +198,12 @@
     .lock {
         color: var(--color-accent-medium);
         font-size: 1.5em;
+    }
+
+    @media (min-width: 720px) {
+        .deck-author-name {
+            display: block;
+        }
     }
 }
 

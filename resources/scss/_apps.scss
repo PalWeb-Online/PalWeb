@@ -35,7 +35,6 @@
 .model-item {
     height: 5.25em;
     display: flex;
-    overflow: scroll;
 
     .pin-button-wrapper, .popup-menu-wrapper,
     & > button.material-symbols-rounded {
