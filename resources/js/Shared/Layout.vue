@@ -95,10 +95,10 @@ watch(
         min-height: calc(100vh - 3.6rem);
     }
 
-    //> *:not(.app-container-pattern) {
-    //    position: relative;
-    //    z-index: 1;
-    //}
+    > *:not(.app-container-pattern) {
+        position: relative;
+        z-index: 1;
+    }
 
     &.academy {
         background: var(--color-accent-medium);
