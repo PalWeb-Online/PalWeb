@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted, ref} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
@@ -18,6 +18,7 @@ import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
+import i18n from "../i18n.js";
 
 defineProps({
     count: Object,
@@ -76,7 +77,27 @@ onMounted(async () => {
     intervalId = setInterval(() => {
         flipDefault.value = !flipDefault.value;
     }, 2000);
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
 });
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+
+const heroOffset = ref(0);
+let ticking = false;
+
+const handleScroll = () => {
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            const scrollY = window.scrollY
+            heroOffset.value = scrollY * 0.5
+            ticking = false
+        })
+        ticking = true
+    }
+}
 
 onBeforeUnmount(() => {
     carousels.forEach((carousel) => {
@@ -92,17 +113,18 @@ defineOptions({
 </script>
 <template>
     <Head title="Home"/>
-    <div id="app-body" class="homepage">
-        <div class="homepage-head-container">
-            <div class="kufiyye-strip">
-                <Kufiyye v-for="n in 4" :key="n" class="kufiyye-tile"/>
-            </div>
-            <div class="homepage-hero-wrapper">
-                <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.3 Release Notes -></Link>
-                <HomepageHero/>
-            </div>
+    <div class="homepage-head-container">
+        <div class="kufiyye-strip">
+            <Kufiyye v-for="n in 4" :key="n" class="kufiyye-tile"/>
         </div>
-
+        <div class="homepage-hero-wrapper"
+             :style="{ transform: `translateY(${heroOffset}px)` }"
+        >
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.3 Release Notes -></Link>
+            <HomepageHero/>
+        </div>
+    </div>
+    <div id="app-body" class="homepage">
         <div class="homepage-section accent-light" style="padding-block-end: 25.6rem">
             <div class="homepage-panel-content">
                 <div class="feature-panel-subtitle"
@@ -483,9 +505,10 @@ defineOptions({
 .homepage-head-container {
     display: grid;
     justify-items: center;
-    position: relative;
     width: 100%;
+    min-height: 100vh;
     overflow: hidden;
+    background: var(--color-accent-medium);
 }
 
 .homepage-hero-wrapper {
@@ -495,14 +518,17 @@ defineOptions({
     max-width: 96rem;
     display: grid;
     gap: 6.4rem;
+    align-content: center;
     justify-items: center;
     margin-block: 6.4rem 12.8rem;
+    will-change: transform;
 }
 
 .kufiyye-strip {
-    position: absolute;
+    position: fixed;
     inset-inline: 0;
-    bottom: 0;
+    top: -6.4rem;
+    rotate: 180deg;
     width: 100%;
     height: auto;
     z-index: 0;
@@ -514,8 +540,8 @@ defineOptions({
 }
 
 .kufiyye-tile {
-    flex: 0 0 128rem;
-    width: 128rem;
-    max-width: 128rem;
+    flex: 0 0 96rem;
+    width: 96rem;
+    max-width: 96rem;
 }
 </style>

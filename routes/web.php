@@ -55,7 +55,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Index', [
+    return Inertia::render('Home', [
         'count' => [
             'terms' => Term::count(),
             'sentences' => Sentence::count(),
