@@ -37,18 +37,15 @@ const navigate = () => {
                 }}
             </p>
         </AppTip>
-        <Link href="/billing" v-if="UserStore.isUser"
-        style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--color-dark-primary)"
-        >to Billing Portal</Link>
+        <Link href="/billing" v-if="UserStore.isUser" class="portal-button">Billing Portal</Link>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">
                     <h1>Guest</h1>
                 </div>
                 <div class="tier-body">
-                    <div>Access to <b>Wiki</b></div>
-                    <div>Access to <b>Library: Dictionary</b></div>
-                    <div>Access to <b>Library: Corpus</b></div>
+                    <div>Read the <b>Wiki</b></div>
+                    <div><b>Library: Dictionary & Corpus</b></div>
                 </div>
                 <div class="window-footer">
                     <div style="background: var(--color-accent-dark); color: white;">you are here</div>
@@ -59,15 +56,13 @@ const navigate = () => {
                     <h1>Pal</h1>
                 </div>
                 <div class="tier-body">
-                    <div>Access to <b>Wiki</b></div>
-                    <div>Access to <b>Library: Dictionary</b></div>
-                    <div>Access to <b>Library: Corpus</b></div>
-                    <div>Access to <b>Library: Decks</b></div>
-                    <div>Access to <b>Library: Audios</b></div>
-                    <div>Access to <b>Workbench: Sound Booth</b></div>
+                    <div>Read the <b>Wiki</b></div>
+                    <div><b>Library: Dictionary & Corpus</b></div>
+                    <div><b>Library: Decks & Audios</b></div>
                     <div><b>Pin</b> Terms, Sentences & Decks</div>
+                    <div><b>Sound Booth</b></div>
                     <div><b>Deck Master</b>: Build Decks</div>
-                    <div><b>Deck Master</b>: Study Decks (<b>Practice</b> only)</div>
+                    <div><b>Deck Master</b>: Study Decks (<b>Practice</b>)</div>
                 </div>
                 <div class="window-footer">
                     <div v-if="UserStore.highestRole === 'pal'"
@@ -80,18 +75,16 @@ const navigate = () => {
                     <h1>Student</h1>
                 </div>
                 <div class="tier-body">
-                    <div>Access to <b>Wiki</b></div>
-                    <div>Access to <b>Library: Dictionary</b></div>
-                    <div>Access to <b>Library: Corpus</b></div>
-                    <div>Access to <b>Library: Decks</b></div>
-                    <div>Access to <b>Library: Audios</b></div>
-                    <div>Access to <b>Workbench: Sound Booth</b></div>
+                    <div>Read the <b>Wiki</b></div>
+                    <div><b>Library: Dictionary & Corpus</b></div>
+                    <div><b>Library: Decks & Audios</b></div>
                     <div><b>Pin</b> Terms, Sentences & Decks</div>
+                    <div><b>Sound Booth</b></div>
                     <div><b>Deck Master</b>: Build Decks</div>
                     <div><b>Deck Master</b>: Study Decks (<b>Practice</b> & <b>Quiz</b>)</div>
+                    <div><b>Card Dealer</b> (SRS Review)</div>
+                    <div>the <b>Academy</b> (<b>Lessons</b>, <b>Dialogs</b>, etc.)</div>
                     <div>Save your Quiz & Activity <b>Scores</b></div>
-                    <div>Access to <b>Academy: Lessons</b></div>
-                    <div>Access to <b>Academy: Dialogs</b></div>
                     <div><b>Support</b> the Project</div>
                 </div>
                 <div class="window-footer">
@@ -103,3 +96,55 @@ const navigate = () => {
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.portal-button {
+    margin-block: 3.2rem;
+
+    @media (min-width: 960px) {
+        margin: 0
+    }
+}
+
+.subscription-tiers {
+    width: 100%;
+    max-width: 128rem;
+    margin: 0 6.4rem 3.2rem;
+    padding-inline: 3.2rem;
+    gap: 3.2rem;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.tier-item {
+    border-radius: 0.8rem;
+    border: 0.2rem solid var(--color-dark-primary);
+    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
+    max-width: 36rem;
+
+    .tier-body {
+        display: grid;
+        text-align: left;
+        color: var(--color-dark-primary);
+        //padding: 0.6rem 1.2rem;
+        //background: gray;
+
+        & > * {
+            //padding: 1.2rem 0.6rem;
+            //border-block-end: 0.2rem dotted var(--color-pastel-dark);
+            padding: 1.2rem;
+            //background: red;
+        }
+
+        & > *:not(:first-child) {
+            border-block-start: 0.1rem solid var(--color-pastel-dark);
+        }
+
+        & > *:last-child {
+            border-block-end: none;
+        }
+    }
+}
+</style>
