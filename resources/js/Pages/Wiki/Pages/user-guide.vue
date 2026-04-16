@@ -58,6 +58,7 @@ defineOptions({
             <li><Link :href="route('wiki.show', 'workbench')">Workbench</Link></li>
             <ul>
                 <li><Link :href="route('wiki.show', 'workbench') + '#deck-master'">Deck Master</Link></li>
+                <li><Link :href="route('wiki.show', 'workbench') + '#card-dealer'">Card Dealer</Link></li>
                 <li><Link :href="route('wiki.show', 'workbench') + '#record-wizard'">Sound Booth</Link></li>
             </ul>
 

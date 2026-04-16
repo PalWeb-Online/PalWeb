@@ -25,7 +25,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 
@@ -33,7 +32,8 @@ class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository
-    ) {}
+    ) {
+    }
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -43,7 +43,9 @@ class TermController extends Controller
 
         $term->isPinned() && event(new ModelPinned($user));
 
-        $message = $term->isPinned() ? __('pin.added', ['thing' => $term->term]) : __('pin.removed', ['thing' => $term->term]);
+        $message = $term->isPinned()
+            ? __('pin.added', ['thing' => $term->term])
+            : __('pin.removed', ['thing' => $term->term]);
 
         return response()->json([
             'isPinned' => $term->isPinned(),
@@ -57,44 +59,27 @@ class TermController extends Controller
             'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
         ]));
 
-        if (empty($filters['search'])) {
-            $terms = Term::query()
-                ->with(['root', 'glosses', 'pronunciations'])
-                ->select('terms.*')
-                ->filter($filters)
-                ->paginate(25)
-                ->onEachSide(1)
-                ->appends($filters);
-            $totalCount = $terms->total();
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-        } else {
-            $results = $searchService->search($filters)['terms'];
-            $totalCount = $results->count();
-
-            $perPage = 25;
-            $currentPage = $request->input('page', 1);
-            $terms = $results->forPage($currentPage, $perPage);
-
-            $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-                $terms,
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-        }
+        $termsCollection = $searchService->search($filters)['terms'];
+        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+            $termsCollection->forPage($currentPage, $perPage)->values(),
+            $termsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         $featuredTerm = Cache::get('word-of-the-day');
-
-        $featuredTerm
-            ? $featuredTerm = new TermResource($featuredTerm)
-            : $featuredTerm = new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+        $featuredTerm = $featuredTerm
+            ? new TermResource($featuredTerm)
+            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
 
         return Inertia::render('Library/Terms/Index', [
             'section' => 'library',
             'terms' => TermResource::collection($terms),
-            'totalCount' => $totalCount,
-            'latestTerms' => Term::with(['glosses'])->orderByDesc('id')->take(10)->get(),
+            'totalCount' => $terms->total(),
             'featuredTerm' => $featuredTerm ?? null,
             'filters' => $filters,
         ]);
@@ -112,13 +97,14 @@ class TermController extends Controller
             $model
                 ->load([
                     'root',
-                    'pronunciations',
+                    'pronunciations.audios',
                     'attributes',
                     'spellings',
                     'relatives',
                     'patterns',
                     'glosses.attributes',
                     'inflections',
+                    'cards',
                     'decks' => function ($query) {
                         $query->limit(10);
                     },

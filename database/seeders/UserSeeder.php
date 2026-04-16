@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'username' => 'palweb.testing',
             'email' => 'rafiq@palweb.app',
             'email_verified_at' => now(),
-            'avatar' => 'palweb01.jpg',
+            'avatar' => 'palweb01.webp',
             'home' => 'Palestine',
             'bio' => 'Thank you for helping to build PalWeb!',
             'dialect_id' => Dialect::find(1)->id,

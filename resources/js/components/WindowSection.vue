@@ -14,7 +14,7 @@ const sectionVisible = ref(props.visible);
             {{ sectionVisible ? 'collapse_all' : 'expand_all' }}
         </button>
     </div>
-    <section v-if="sectionVisible">
+    <template v-if="sectionVisible">
         <slot name="content"/>
-    </section>
+    </template>
 </template>

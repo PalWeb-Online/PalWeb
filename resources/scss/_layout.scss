@@ -10,23 +10,7 @@ body {
 }
 
 #app-container {
-    display: grid;
-    min-height: calc(100vh - 4.8rem);
-    grid-template-rows: min-content 1fr;
-    align-content: start;
-
-    @media (min-width: 960px) {
-        min-height: calc(100vh - 3.6rem);
-    }
-
-    &.academy, &.workbench:has(.dm-mode-study) {
-        background: var(--color-accent-medium);
-    }
-
     &.library, &.community, &.wiki {
-        background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
-        background-attachment: fixed;
-
         #app-head {
             background: none;
             border: none;
@@ -39,33 +23,7 @@ body {
         }
     }
 
-    &.community {
-        background: var(--color-accent-light);
-    }
-
-    &.workbench {
-        background: var(--color-medium-primary);
-    }
-
-    &.office {
-        background: var(--color-accent-light);
-    }
-
-    &.account {
-        background: var(--color-pastel-light);
-
-        @media (max-width: 959px) {
-            #app-body > .app-tip {
-                border-radius: 0;
-                border: none;
-                box-shadow: 0 0.2rem 0 rgba(black, 0.1);
-            }
-        }
-    }
-
     &.wiki {
-        background: var(--color-pastel-light);
-
         #app-head {
             display: flex;
             gap: 1.6rem;
@@ -160,15 +118,6 @@ body {
     background: var(--color-accent-medium);
     padding: 0;
     gap: 0;
-}
-
-.homepage-hero-wrapper {
-    width: 100%;
-    max-width: 96rem;
-    display: grid;
-    gap: 6.4rem;
-    justify-items: center;
-    margin-block: 6.4rem 12.8rem;
 }
 
 .app-logo-wrapper {

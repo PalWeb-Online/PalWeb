@@ -31,5 +31,9 @@ class DatabaseSeeder extends Seeder
 
         (new UnitSeeder)->run();
         (new ScoreSeeder)->run();
+
+        if (app()->environment('local')) {
+            $this->call(CardSeeder::class);
+        }
     }
 }

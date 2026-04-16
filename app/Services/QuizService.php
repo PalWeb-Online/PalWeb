@@ -23,14 +23,32 @@ class QuizService
         }
     }
 
+    private function getQuizTerms(Deck $deck, bool $promptTerm = true)
+    {
+        $termsQuery = $deck->terms()->with(['pronunciations.audios', 'inflections', 'sentences']);
+
+        if (! $promptTerm) {
+            $termsQuery->whereHas('pronunciations.audios');
+        }
+
+        return $termsQuery->get()->shuffle()->values();
+    }
+
     private function generateGlossesQuiz(Deck $deck, array $settings): array
     {
+        $promptTerm = $settings['options']['promptTerm'] ?? true;
         $strictTerms = $settings['options']['strictTerms'] ?? true;
         $strictGloss = $settings['options']['strictGloss'] ?? true;
 
         $quiz = [];
 
-        foreach ($deck->terms->shuffle()->take(50) as $term) {
+        $terms = $this->getQuizTerms($deck, $promptTerm);
+
+        foreach ($terms as $term) {
+            if (count($quiz) >= 50) {
+                break;
+            }
+
             $glossId = $term->pivot->gloss_id;
 
             $answer = $strictGloss && $glossId
@@ -70,9 +88,12 @@ class QuizService
     private function generateInflectionsQuiz(Deck $deck, array $settings): array
     {
         $quiz = [];
+        $terms = $this->getQuizTerms($deck);
 
-        foreach ($deck->terms->shuffle()->take(50) as $term) {
-            $term->load(['inflections']);
+        foreach ($terms as $term) {
+            if (count($quiz) >= 50) {
+                break;
+            }
 
             $validInflections = $term->inflections->filter(function ($inflection) {
                 return $inflection->form !== 'genitive';
@@ -87,8 +108,10 @@ class QuizService
             $quiz[] = [
                 'term' => new TermResource($term)->additional(['detail' => true]),
                 'prompt' => $inflection->form,
-                'answer' => $term->inflections->where('form',
-                    $inflection->form)->pluck('inflection')->toArray(),
+                'answer' => $term->inflections
+                    ->where('form', $inflection->form)
+                    ->pluck('inflection')
+                    ->toArray(),
                 'response' => null,
                 'correct' => false,
             ];
@@ -103,8 +126,9 @@ class QuizService
         $withTranslation = $settings['options']['withTranslation'] ?? true;
 
         $quiz = [];
+        $terms = $this->getQuizTerms($deck);
 
-        foreach ($deck->terms->shuffle() as $term) {
+        foreach ($terms as $term) {
             if (count($quiz) >= 25) {
                 break;
             }

@@ -31,6 +31,21 @@ const sentence = useForm({
     terms: props.sentence?.terms || [],
 });
 
+const makePivotRow = (term = {}) => ({
+    uuid: term.sentencePivot?.uuid || crypto.randomUUID(),
+    term_id: term.id ?? null,
+    gloss_id: term.sentencePivot?.gloss_id ?? null,
+    sent_term: term.sentencePivot?.sent_term ?? '',
+    sent_translit: term.sentencePivot?.sent_translit ?? '',
+    position: term.sentencePivot?.position ?? '',
+    toggleable: term.sentencePivot?.toggleable ?? false,
+});
+
+const makeListItem = (term = {}) => ({
+    ...term,
+    sentencePivot: makePivotRow(term),
+});
+
 const termsList = ref([]);
 
 const isSaving = ref(false);
@@ -42,47 +57,38 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const insertTerm = (term) => {
-    const newTerm = {
-        id: term.id,
-        term: term.term,
-        category: term.category,
-        translit: term.translit,
-        glosses: term.glosses.map((gloss) => ({
-            id: gloss.id,
-            gloss: gloss.gloss,
-        })),
-        sentencePivot: {
-            gloss_id: term.glosses[0].id,
-            sent_term: term.term,
-            sent_translit: term.translit,
-            position: '',
-            toggleable: false,
-        }
-    };
-
-    termsList.value.push({
-        ...newTerm,
-        uuid: crypto.randomUUID(),
-    });
+    termsList.value.push(
+        makeListItem({
+            id: term.id,
+            term: term.term,
+            category: term.category,
+            translit: term.translit,
+            glosses: term.glosses.map((gloss) => ({
+                id: gloss.id,
+                gloss: gloss.gloss,
+            })),
+            sentencePivot: {
+                gloss_id: term.glosses[0]?.id ?? null,
+                sent_term: term.term,
+                sent_translit: term.translit,
+                position: termsList.value.length + 1,
+                toggleable: false,
+            },
+        })
+    );
 
     NotificationStore.addNotification(`Added ${term.term} to the Sentence!`);
-}
+};
 
 const addTerm = () => {
-    const newTerm = {
-        sentencePivot: {
-            sent_term: '',
-            sent_translit: '',
-            position: '',
-            toggleable: false,
-        }
-    };
-
-    termsList.value.push({
-        ...newTerm,
-        uuid: crypto.randomUUID(),
-    });
-}
+    termsList.value.push(
+        makeListItem({
+            sentencePivot: {
+                position: termsList.value.length + 1,
+            },
+        })
+    );
+};
 
 const removeTerm = (index) => {
     termsList.value.splice(index, 1);
@@ -127,12 +133,7 @@ const saveSentence = async () => {
 };
 
 onMounted(() => {
-    termsList.value = (sentence.terms ?? []).map((term) => {
-        return {
-            ...term,
-            uuid: crypto.randomUUID(),
-        };
-    });
+    termsList.value = (sentence.terms ?? []).map((term) => makeListItem(term));
 
     if (!!props.dialog) {
         sentence.position = props.dialog.sentences_count + 1;
@@ -154,6 +155,7 @@ watch(
     (newValue) => {
         if (newValue) {
             Object.assign(sentence, newValue);
+            termsList.value = (newValue.terms ?? []).map((term) => makeListItem(term));
         }
     },
     {deep: true}
@@ -166,20 +168,7 @@ watch(
             term.sentencePivot.position = index + 1;
         });
 
-        while (sentence.terms.length > newTermsList.length) {
-            sentence.terms.pop();
-        }
-
-        newTermsList.forEach((term, index) => {
-            const {uuid, ...newTerm} = term;
-
-            if (sentence.terms[index]) {
-                sentence.terms[index] = {...newTerm};
-
-            } else {
-                sentence.terms.push(newTerm);
-            }
-        });
+        sentence.terms = newTermsList;
     },
     {deep: true}
 );
@@ -217,7 +206,7 @@ watch(
             </p>
         </AppTip>
         <div class="model-item-container sentence-item-container l">
-            <div v-if="sentence.dialog.id" class="sentence-dialog-data">
+            <div v-if="sentence.dialog?.id" class="sentence-dialog-data">
                 <Link :href="route('speech-maker.dialog', sentence.dialog.id)" target="_blank">
                     <div>dialog</div>
                     <div>{{ sentence.dialog.title }}</div>
@@ -247,18 +236,18 @@ watch(
         <div class="window-section-head">
             <h2>terms</h2>
         </div>
-        <AppTip v-if="sentence.dialog.id">
+        <AppTip v-if="sentence.dialog?.id">
             <p>Since this Sentence appears in a Dialog, you may select the Terms that should be toggled off if the
                 Student wants to use the Dialog for conversation practice. (The Terms will be visible under all other
                 circumstances.)</p>
         </AppTip>
-        <draggable :list="termsList" itemKey="uuid" handle=".handle"
+        <draggable :list="termsList" itemKey="sentencePivot.uuid" handle=".handle"
                    class="model-list index-list draggable">
             <template #item="{ element, index }">
                 <div class="draggable-item">
                     <span class="delete material-symbols-rounded"
                           @click="removeTerm(index)">delete</span>
-                    <span v-if="sentence.dialog.id" class="material-symbols-rounded"
+                    <span v-if="sentence.dialog?.id" class="material-symbols-rounded"
                           :class="{toggleable: element.sentencePivot.toggleable}"
                           @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
                         {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}

@@ -20,18 +20,29 @@ class UserController extends Controller
 {
     public function __construct(protected FlasherInterface $flasher) {}
 
-    public function show(User $user): \Inertia\Response
+    public function show(User $user, Request $request): \Inertia\Response
     {
         Gate::authorize('interact', $user);
 
-        $user->load(['dialect', 'badges', 'speaker', 'decks']);
+        $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
+
+        $user->load(['dialect', 'badges', 'speaker']);
 
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
+        $sort = $request->string('sort')->toString();
+
+        $decks = $user->decks()
+            ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
+            ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
+            ->paginate(25)
+            ->withQueryString();
+
         return Inertia::render('Community/Users/Show', [
             'section' => 'community',
+            'filters' => $filters,
             'user' => new UserResource($user),
-            'decks' => DeckResource::collection($user->decks),
+            'decks' => DeckResource::collection($decks),
             'badges' => Badge::all(),
             'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
@@ -70,6 +81,30 @@ class UserController extends Controller
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
 
         return to_route('users.show', $user);
+    }
+
+    public function updatePreferences(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'srs_settings' => 'required|array',
+            'srs_settings.new_limit' => 'integer|min:0|max:100',
+            'srs_settings.review_limit' => 'integer|min:0|max:300',
+            'srs_settings.learning_steps' => 'integer|min:1|max:5',
+            'srs_settings.prompt_type' => 'string',
+        ]);
+
+        $preferences = $user->preferences ?? [];
+        $preferences['srs'] = array_merge($preferences['srs'] ?? [], $request->input('srs_settings'));
+
+        $user->preferences = $preferences;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'preferences' => $user->preferences
+        ]);
     }
 
     public function getDecks(): JsonResponse

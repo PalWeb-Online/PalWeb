@@ -25,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('sentences', function (Blueprint $table) {
             $table->dropForeign('dialog_id');
-            $table->dropColumn(['dialog_id', 'speaker', 'position']);
+            $table->dropColumn(['speaker', 'position']);
         });
     }
 };

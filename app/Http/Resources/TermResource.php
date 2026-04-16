@@ -56,6 +56,9 @@ class TermResource extends JsonResource
                 ];
             }),
             'isPinned' => $this->isPinned(),
+            'card' => $this->whenLoaded('cards', function () {
+                return new CardResource($this->cards->first());
+            }),
         ];
 
         $detail = [];

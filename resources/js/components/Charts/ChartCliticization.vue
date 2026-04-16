@@ -54,14 +54,14 @@ const genitiveResult = (inflection) => {
 
             <div class="inflection-chart-wrapper">
                 <div class="inflection-chart">
-                    <div class="inflection-chart-item">
+                    <div class="inflection-chart-item" style="grid-column: span 2">
                         <div>1S</div>
                         <div>
                             <div>{{ genitiveResult(inflection)?.ar }}</div>
                             <div>{{ genitiveResult(inflection)?.tr }}</div>
                         </div>
                     </div>
-                    <div class="inflection-chart-item">
+                    <div class="inflection-chart-item" style="grid-column: span 2">
                         <div>1P</div>
                         <div>
                             <div>{{ inflection.inflection }}نا</div>
@@ -101,7 +101,7 @@ const genitiveResult = (inflection) => {
                         <div>2P</div>
                         <div>
                             <div>{{ inflection.inflection }}كم</div>
-                            <div>{{ inflection.translit }}kom</div>
+                            <div>{{ inflection.translit }}kum</div>
                         </div>
                     </div>
                     <div class="inflection-chart-item">
@@ -127,7 +127,7 @@ const genitiveResult = (inflection) => {
                         <div>3P</div>
                         <div>
                             <div>{{ inflection.inflection }}هم</div>
-                            <div>{{ inflection.translit }}hom</div>
+                            <div>{{ inflection.translit }}hum</div>
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,10 @@ import ChartInflection from "./Charts/ChartInflection.vue";
 import ChartConjugation from "./Charts/ChartConjugation.vue";
 import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
+import CardItem from "./CardItem.vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -207,6 +211,7 @@ const etymology = computed(() => {
                 <TermActions :model="term"/>
             </div>
             <div class="term-container-head">
+                <CardItem v-if="UserStore.isStudent" :card="term.card"/>
                 <div class="term-headword">
                     <div class="term-headword-term">
                         <div class="term-headword-arb">{{ term.term }}</div>
@@ -406,7 +411,7 @@ const etymology = computed(() => {
             />
 
             <ChartInflection
-                v-if="['noun', 'adjective'].includes(term.category) && inflections.length > 0"
+                v-if="['noun', 'adjective', 'numeral'].includes(term.category) && inflections.length > 0"
                 :term="term"
                 :inflections="inflections"
             />
@@ -425,13 +430,13 @@ const etymology = computed(() => {
             <!--            note that my user is hard-coded -->
             <div v-if="term.usage" class="user-item m">
                 <Link class="user-avatar" :href="route('users.show', 'permanent.intifada')">
-                    <img src="/img/avatars/character02.jpg"
+                    <img src="/img/avatars/character02.webp"
                          alt="Profile Picture"/>
                 </Link>
                 <div class="user-data-wrapper">
                     <div class="user-name">
                         <div class="user-name-en">
-                            <div>Editor's Note</div>
+                            <div>Editor’s Note</div>
                         </div>
                     </div>
                     <div class="user-comment">

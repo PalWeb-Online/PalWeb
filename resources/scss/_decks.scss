@@ -179,6 +179,7 @@
         font-family: $bodyFont;
         font-size: 1.5em;
         white-space: nowrap;
+        display: none;
     }
 
     .deck-author-avatar {
@@ -197,6 +198,12 @@
     .lock {
         color: var(--color-accent-medium);
         font-size: 1.5em;
+    }
+
+    @media (min-width: 720px) {
+        .deck-author-name {
+            display: block;
+        }
     }
 }
 
@@ -265,6 +272,12 @@
     margin-block: 3.2rem;
     gap: 3.2rem;
 
+    .carousel__slide {
+        display: grid;
+        justify-items: center;
+        justify-content: normal;
+    }
+
     .carousel__pagination {
         justify-self: center;
         width: min(96rem, 100%);
@@ -297,8 +310,29 @@
         background: var(--color-medium-primary) !important;
     }
 
+    .audio-button {
+        font-size: 2.4rem;
+    }
+
     .featured-title {
         text-transform: none;
+    }
+}
+
+.term-flashcard-wrapper {
+    width: 100%;
+    display: grid;
+    font-size: 1.2rem;
+    grid-template-rows: auto min-content;
+    justify-items: center;
+    align-items: center;
+
+    .audio-prompt-wrapper {
+        margin-block-end: 3.2rem;
+
+        & > button.audio-button {
+            font-size: 6.4rem;
+        }
     }
 }
 
@@ -309,6 +343,10 @@
     perspective: 120rem;
     cursor: pointer;
     user-select: none;
+
+    &.disabled {
+        pointer-events: none;
+    }
 
     &.flipped {
         .term-flashcard-front {
@@ -427,6 +465,7 @@
         display: flex;
         direction: rtl;
         flex-flow: row wrap;
+        align-items: center;
         gap: 0 1em;
         padding: 0.75em 1em;
         background: var(--color-pastel-light);

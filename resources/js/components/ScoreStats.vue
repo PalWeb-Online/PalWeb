@@ -1,7 +1,8 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {computed, ref, watch} from "vue";
+import {computed, watch} from "vue";
 import {useUserStore} from "../stores/UserStore.js";
+import {useTooltip} from "../composables/useTooltip.js";
 
 const UserStore = useUserStore();
 
@@ -29,30 +30,13 @@ const formatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 0,
 });
 
-const tooltip = ref(null);
-const visible = ref(false);
-const scoreData = ref(null);
-const tooltipStyle = ref({
-    top: "0px",
-    left: "0px",
-});
-
-const showTooltip = (data, event) => {
-    scoreData.value = data;
-    visible.value = true;
-    updatePosition(event);
-}
-
-const hideTooltip = () => {
-    visible.value = false;
-}
-
-const updatePosition = (event) => {
-    tooltipStyle.value = {
-        top: `${event.clientY + 10}px`,
-        left: `${event.clientX + 10}px`,
-    };
-}
+const {
+    isVisible,
+    tooltipStyle,
+    tooltipData,
+    showTooltip,
+    hideTooltip
+} = useTooltip();
 
 const polylinePoints = computed(() => {
     if (!props.model?.scores?.length) return "";
@@ -98,7 +82,7 @@ const trendLinePoints = computed(() => {
     <div class="score-stats-wrapper">
         <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
             <div class="score-stats-container__overlay">
-                You must be a Student to enable Scores.
+                <span>You must be a Student to enable Scores.</span>
             </div>
             <div class="score-stats-container__content">
                 <div class="score-stats-highlight-wrapper">
@@ -134,7 +118,7 @@ const trendLinePoints = computed(() => {
                     </div>
                 </div>
                 <div class="score-stats-graph-wrapper">
-                    <div>
+                    <div class="graph-y-axis-legend">
                         <div>100%</div>
                         <div>75%</div>
                         <div>50%</div>
@@ -160,14 +144,14 @@ const trendLinePoints = computed(() => {
                             ></Link>
                         </div>
 
-                        <div v-if="visible" :style="tooltipStyle" ref="tooltip" class="score-stats-graph-data">
-                            <div style="text-transform: capitalize">{{ scoreData.settings.quizType }}</div>
-                            <div>{{ formatter.format(scoreData.score) }}
-                                <span style="font-size: 1.2rem">({{
-                                        scoreData.results.filter(q => q.correct).length
-                                    }}/{{ scoreData.results.length }})</span>
+                        <div v-if="isVisible" :style="tooltipStyle" ref="tooltip" class="data-tooltip">
+                            <div style="text-transform: capitalize">{{ tooltipData.settings.quizType }}</div>
+                            <div>{{ formatter.format(tooltipData.score) }}
+                                <span style="font-size: 1.2rem">
+                                    ({{ tooltipData.results.filter(q => q.correct).length }}/{{ tooltipData.results.length }})
+                                </span>
                             </div>
-                            <div>{{ scoreData.created_at }}</div>
+                            <div>{{ tooltipData.created_at }}</div>
                         </div>
                     </div>
                 </div>
@@ -187,8 +171,8 @@ const trendLinePoints = computed(() => {
                 </div>
             </div>
         </div>
-        <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id })">See
-            Score History
+        <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id })">
+            See Score History
         </Link>
     </div>
 </template>

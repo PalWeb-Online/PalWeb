@@ -45,22 +45,21 @@ watch(() => props.model, loadAudio, {immediate: true});
                 class="audio-button material-symbols-rounded" :class="{'active': isPlaying}">
             music_note
         </button>
-
+        <img v-if="!model.speaker.user.private"
+             class="speaker-avatar" alt="User Avatar"
+             @click="router.get(route('speaker.show', model.speaker))"
+             :src="`/img/avatars/${model.speaker.user.avatar}`"/>
         <div class="audio-item-data">
-            <div class="audio-item-speaker">
-                <template v-if="model.speaker.user.private">
-                    <div>by
-                        <Link :href="route('speaker.show', model.speaker)">Speaker #{{ model.speaker.id }}</Link>
-                    </div>
-                </template>
-                <template v-else>
-                    <div>by
-                        <Link :href="route('speaker.show', model.speaker)">{{ model.speaker.user.name }}</Link>
-                    </div>
-                    <img class="avatar" alt="User Avatar" :src="`/img/avatars/${model.speaker.user.avatar}`"/>
-                </template>
+            <div>by
+                <Link :href="route('speaker.show', model.speaker)">
+                    <template v-if="model.speaker.user.private">
+                        Speaker #{{ model.speaker.id }}
+                    </template>
+                    <template v-else>
+                        {{ model.speaker.user.name }}
+                    </template>
+                </Link>
             </div>
-
             <div class="audio-item-info">
                 {{ model.speaker.fluency_alias }}
                 <span style="text-transform: capitalize">{{
@@ -78,3 +77,61 @@ watch(() => props.model, loadAudio, {immediate: true});
         </button>
     </div>
 </template>
+
+<style scoped lang="scss">
+.audio-item {
+    width: 100%;
+    display: flex;
+    white-space: nowrap;
+    font-size: 1.4rem;
+    height: 3.6rem;
+
+    .speaker-avatar {
+        width: 3.6rem;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .audio-item-data {
+        background: var(--color-pastel-light);
+        padding-inline: 1.2rem;
+        gap: 0.8rem;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        overflow: auto;
+        line-height: 1;
+
+        a {
+            color: var(--color-medium-primary);
+            font-weight: 700;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .audio-item-date {
+        display: none;
+        font-size: 1.2rem;
+        font-style: italic;
+    }
+
+    button, button.audio-button {
+        color: white;
+        background: var(--color-medium-primary);
+        font-size: 2.0rem;
+        height: 100%;
+        width: 3.6rem;
+        border-radius: 0;
+        flex-shrink: 0;
+    }
+
+    @media (min-width: 720px) {
+        .audio-item-date {
+            display: block;
+        }
+    }
+}
+</style>

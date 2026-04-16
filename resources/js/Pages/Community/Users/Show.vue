@@ -7,15 +7,25 @@ import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
+import Paginator from "../../../Shared/Paginator.vue";
+import {ref} from "vue";
+import {useQueryFilters} from "../../../composables/QueryFilters.js";
 
 const props = defineProps({
     user: Object,
     decks: Array,
     badges: Array,
     speaker: Object,
+    filters: Object,
 });
 
 const UserStore = useUserStore();
+
+const filters = ref({
+    sort: props.filters.sort || 'latest',
+});
+
+const { updateFilter } = useQueryFilters(filters);
 
 const unlockedBadges = props.badges.map(badge => ({
     ...badge,
@@ -61,10 +71,19 @@ defineOptions({
             <div class="window-section-head">
                 <h2>decks</h2>
             </div>
-            <template v-if="decks.length > 0">
-                <div class="model-list index-list">
-                    <DeckItem v-for="deck in decks" :model="deck"/>
+            <div class="search-filters-container">
+                <div class="search-filters">
+                    <select v-model="filters.sort">
+                        <option value="latest">by Latest</option>
+                        <option value="alphabetical">Alphabetical</option>
+                    </select>
                 </div>
+            </div>
+            <template v-if="decks.data.length > 0">
+                <div class="model-list index-list">
+                    <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
+                </div>
+                <Paginator :links="decks.meta.links"/>
             </template>
             <template v-else>
                 <AppTip>

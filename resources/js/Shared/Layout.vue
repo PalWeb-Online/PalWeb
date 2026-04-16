@@ -11,6 +11,7 @@ import {onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import i18n from "../i18n.js";
+import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
 
 defineProps({
     section: {
@@ -58,6 +59,10 @@ watch(
     <NavSidebar/>
 
     <div id="app-container" :class="section">
+        <div class="app-container-pattern" aria-hidden="true">
+            <BackgroundPattern :section="section" />
+        </div>
+
         <slot/>
         <Footer/>
     </div>
@@ -75,3 +80,55 @@ watch(
         />
     </div>
 </template>
+
+<style scoped lang="scss">
+#app-container {
+    display: grid;
+    min-height: calc(100vh - 4.8rem);
+    grid-template-rows: min-content 1fr;
+    align-content: start;
+
+    position: relative;
+    overflow: hidden;
+
+    @media (min-width: 960px) {
+        min-height: calc(100vh - 3.6rem);
+    }
+
+    > *:not(.app-container-pattern) {
+        position: relative;
+        z-index: 1;
+    }
+
+    &.academy {
+        background: var(--color-accent-medium);
+    }
+
+    &.community, &.office {
+        background: var(--color-accent-light);
+    }
+
+    &.library {
+        background: linear-gradient(90deg, #f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, linear-gradient(#f6f6f6 calc(2.4rem - 0.3rem), transparent 1%) center / 2.4rem 2.4rem, var(--color-pastel-medium);
+        background-attachment: fixed;
+    }
+
+    &.workbench {
+        background: var(--color-medium-primary);
+    }
+
+    &.wiki, &.account {
+        background: var(--color-pastel-light);
+    }
+
+    &.account {
+        @media (max-width: 959px) {
+            #app-body > .app-tip {
+                border-radius: 0;
+                border: none;
+                box-shadow: 0 0.2rem 0 rgba(black, 0.1);
+            }
+        }
+    }
+}
+</style>

@@ -58,6 +58,10 @@
                 "title": "deckMaster",
                 "subtitle": "build & study Decks"
             },
+            "card-dealer": {
+                "title": "cardDealer",
+                "subtitle": "spaced-repetition study"
+            },
             "sound-booth": {
                 "title": "soundBooth",
                 "subtitle": "immortalize Palestinian Arabic"
