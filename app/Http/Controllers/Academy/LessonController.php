@@ -26,8 +26,9 @@ class LessonController extends Controller
 
         $lesson->load([
             'unit',
-            'deck.scores',
+            'deck.terms' => fn ($q) => $q->withUserCard(),
             'deck.terms.pronunciations',
+            'deck.scores',
             'activity.scores',
             'dialog.sentences'
         ]);

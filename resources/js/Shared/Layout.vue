@@ -59,12 +59,12 @@ watch(
     <NavSidebar/>
 
     <div id="app-container" :class="section">
+        <slot/>
+        <Footer/>
+
         <div class="app-container-pattern" aria-hidden="true">
             <BackgroundPattern :section="section" />
         </div>
-
-        <slot/>
-        <Footer/>
     </div>
 
     <ModalWrapper v-model="SearchStore.data.isOpen">

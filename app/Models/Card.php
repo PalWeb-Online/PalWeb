@@ -282,6 +282,8 @@ class Card extends Model
             return $query->where('repetitions', 0);
         }
 
+        $query->where('repetitions', '>', 0);
+
         $current = MasteryLevel::from($rank);
         $next = MasteryLevel::tryFrom($rank + 1);
 

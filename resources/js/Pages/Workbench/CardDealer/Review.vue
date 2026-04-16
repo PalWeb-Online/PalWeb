@@ -269,8 +269,8 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                 </template>
                 <template #content>
                     <div class="model-list index-list">
-                        <TermItem :model="cards[currentSlideIndex].term"
-                                  :glossId="cards[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
+                        <TermItem :model="queue[currentSlideIndex].term"
+                                  :glossId="queue[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
                     </div>
                     <div class="settings-wrapper">
                         <AppButton @click="dismissCard('master')" label="master"
