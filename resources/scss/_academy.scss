@@ -864,6 +864,16 @@ div.activity-image .image-card {
     }
 }
 
+.scope-selection-container .score-stats-wrapper {
+    width: 100%;
+    margin: 0;
+
+    & > a, & > button {
+        color: white;
+        justify-self: center;
+    }
+}
+
 .score-stats-wrapper {
     display: grid;
     gap: 0.8rem;

@@ -17,11 +17,11 @@ final readonly class ReviewOptions
     ) {
     }
 
-    public static function forUser(User $user, ?Deck $deck = null): self
+    public static function forUser(User $user, string $scope = 'all', ?Deck $deck = null): self
     {
         return new self(
-            scope: $deck ? 'deck' : 'all',
-            deckId: $deck?->id,
+            scope: $scope,
+            deckId: $scope === 'deck' ? $deck?->id : null,
             newLimit: $user->getSrsPreference('new_limit', config('preferences.srs.new_limit')),
             reviewLimit: $user->getSrsPreference('review_limit', config('preferences.srs.review_limit')),
             learningSteps: $user->getSrsPreference('learning_steps', config('preferences.srs.learning_steps')),

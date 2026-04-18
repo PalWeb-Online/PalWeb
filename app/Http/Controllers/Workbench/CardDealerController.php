@@ -7,9 +7,11 @@ use App\Http\Resources\CardResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Deck;
+use App\Models\Lesson;
 use App\Models\Term;
 use App\Services\CardDealer\ReviewOptions;
 use App\Services\CardDealer\ReviewService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,9 +19,14 @@ use Inertia\Inertia;
 
 class CardDealerController extends Controller
 {
-    public function index(ReviewService $reviewService, ?Deck $deck = null): \Inertia\Response
+    public function index(Request $request, ReviewService $reviewService): \Inertia\Response
     {
         $user = auth()->user();
+        $options = $this->makeReviewOptions($request, $user);
+
+        $deck = $options->scope === 'deck'
+            ? Deck::findOrFail($options->deckId)
+            : null;
 
         $reviewHistory = $user->cardReviews()
             ->where('reviewed_at', '>=', now()->subDays(30))
@@ -39,6 +46,7 @@ class CardDealerController extends Controller
 
         return Inertia::render('Workbench/CardDealer/Index', [
             'section' => 'academy',
+            'scope' => $options->scope,
             'deck' => $deck ? new DeckResource($deck) : null,
             'cards' => CardResource::collection(Card::forUser($user->id)->get()),
             'terms_count' => Term::count(),
@@ -47,10 +55,14 @@ class CardDealerController extends Controller
         ]);
     }
 
-    public function review(ReviewService $reviewService, ?Deck $deck = null): \Inertia\Response|RedirectResponse
+    public function review(Request $request, ReviewService $reviewService): \Inertia\Response|RedirectResponse
     {
         $user = auth()->user();
-        $options = ReviewOptions::forUser($user, $deck);
+        $options = $this->makeReviewOptions($request, $user);
+
+        $deck = $options->scope === 'deck'
+            ? Deck::findOrFail($options->deckId)
+            : null;
 
         $cards = $reviewService->buildSession($user, $options);
 
@@ -94,20 +106,56 @@ class CardDealerController extends Controller
         ]);
     }
 
-    public function getDeckCards(ReviewService $reviewService, $deckId): JsonResponse
+    public function getScopeCards(Request $request, ReviewService $reviewService): JsonResponse
     {
         try {
             $user = auth()->user();
-            $deck = Deck::findOrFail($deckId);
+            $options = $this->makeReviewOptions($request, $user);
+
+            $count = 0;
+            if ($options->scope === 'deck') {
+                $count += Deck::findOrFail($options->deckId)?->terms_count;
+
+            } elseif ($options->scope === 'pinned') {
+                 $decks = Deck::whereHasBookmark($user)->get();
+
+                 foreach ($decks as $deck) {
+                     $count += $deck->terms_count;
+                 }
+
+            } elseif ($options->scope === 'lesson') {
+                $lessons = Lesson::whereHas('users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))->get();
+
+                foreach ($lessons as $lesson) {
+                    $count += $lesson->deck->terms_count;
+                }
+            }
+
+            $cards = Card::query()
+                ->forUser($user->id)
+                ->forReviewOptions($options, $user)
+                ->get();
 
             return response()->json([
-                'cards' => CardResource::collection(Card::forUser($user->id)->inDeck($deck->id)->get()),
-                'terms_count' => $deck->terms_count,
-                'session_stats' => $reviewService->getSessionStats($user, ReviewOptions::forUser($user, $deck)),
+                'cards' => CardResource::collection($cards),
+                'terms_count' => $count,
+                'session_stats' => $reviewService->getSessionStats($user, $options),
             ]);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch Deck Cards.'], 500);
         }
+    }
+
+    private function makeReviewOptions(Request $request, $user): ReviewOptions
+    {
+        $scope = $request->string('scope')->toString() ?: 'all';
+        $deckId = $request->integer('deck');
+
+        $deck = $scope === 'deck' && $deckId
+            ? Deck::findOrFail($deckId)
+            : null;
+
+        return ReviewOptions::forUser($user, $scope, $deck);
     }
 }

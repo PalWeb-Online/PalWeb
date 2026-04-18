@@ -276,10 +276,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
-            Route::get('/home/{deck?}', 'index')->name('card-dealer.index');
+            Route::get('/', 'index')->name('card-dealer.index');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
-            Route::get('/review/{deck?}', 'review')->name('card-dealer.review');
-            Route::post('/decks/{deck}', 'getDeckCards')->name('card-dealer.get.deck');
+            Route::get('/review', 'review')->name('card-dealer.review');
+            Route::post('/get/cards', 'getScopeCards')->name('card-dealer.get.cards');
         });
 
         Route::prefix('/cards')->controller(CardController::class)->group(function () {

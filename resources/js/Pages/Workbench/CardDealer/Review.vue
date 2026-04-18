@@ -191,7 +191,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="deck ? route('card-dealer.index', deck) : route('card-dealer.index')" class="material-symbols-rounded">
+                <Link :href="route('card-dealer.index', {scope: options.scope, deck: options.deckId})" class="material-symbols-rounded">
                     arrow_back
                 </Link>
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>

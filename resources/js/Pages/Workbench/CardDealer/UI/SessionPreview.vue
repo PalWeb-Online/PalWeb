@@ -82,6 +82,18 @@ const purgeNew = () => {
     }
 }
 
+const startReview = () => {
+    const payload = {
+        scope: props.scope,
+    };
+
+    if (props.scope === 'deck' && props.deckId) {
+        payload.deck = props.deckId;
+    }
+
+    router.get(route('card-dealer.review'), payload);
+};
+
 const sessionSettings = ref({
     new_limit: UserStore.user?.preferences?.srs?.new_limit ?? 25,
     review_limit: UserStore.user?.preferences?.srs?.review_limit ?? 100,
@@ -135,7 +147,7 @@ const sessionSettings = ref({
                     <div class="score-highlight">
                         <div class="score-highlight-title">Total Due</div>
                         <div style="display: grid; justify-items: center">
-                            <div v-if="scope === 'deck'" class="featured-title s"
+                            <div v-if="scope !== 'all'" class="featured-title s"
                                  style="font-size: 3.2rem; color: var(--color-pastel-dark)">
                                 {{ allStats.remainingDue }}
                             </div>
@@ -159,7 +171,7 @@ const sessionSettings = ref({
                     <div class="score-highlight">
                         <div class="score-highlight-title">New</div>
                         <div style="display: grid; justify-items: center">
-                            <div v-if="scope === 'deck'" class="featured-title s"
+                            <div v-if="scope !== 'all'" class="featured-title s"
                                  style="font-size: 3.2rem; color: var(--color-pastel-dark)">
                                 {{ allStats.remainingNew }}
                             </div>
@@ -189,7 +201,7 @@ const sessionSettings = ref({
                     </div>
                     <div class="score-highlight">
                         <div class="score-highlight-title">Review</div>
-                        <div v-if="scope === 'deck'" class="featured-title s"
+                        <div v-if="scope !== 'all'" class="featured-title s"
                              style="font-size: 3.2rem; color: var(--color-pastel-dark)">
                             {{ allStats.remainingReviews }}
                         </div>
@@ -213,21 +225,18 @@ const sessionSettings = ref({
                                       @mousemove="appTooltip.showTooltip('Your Due Cards are over your Review Limit! Priority will be given to Review Cards, then to all Owned Cards; New Cards will be added last.', $event);"
                                       @mouseleave="appTooltip.hideTooltip()"
                                 >help
-                                    </span>
+                                </span>
                             </div>
                         </template>
                     </div>
                 </div>
-                <Link class="featured-title s session-start-button"
-                      v-if="scope === 'all'" :href="route('card-dealer.review')">start
-                </Link>
-                <Link class="featured-title s session-start-button"
-                      v-else-if="scope === 'deck' && deckId" :href="route('card-dealer.review', deckId)">start
-                </Link>
+                <SessionSettings :settings="sessionSettings"/>
+                <button v-if="props.scope !== 'deck' || (props.scope === 'deck' && props.deckId)"
+                        class="featured-title s session-start-button" type="button" @click="startReview">
+                    start
+                </button>
             </div>
         </div>
-
-        <SessionSettings :settings="sessionSettings"/>
     </div>
 
     <AppTooltip ref="appTooltip"/>

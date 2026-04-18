@@ -232,10 +232,12 @@ class Term extends Model
     }
 
     #[Scope]
-    public function forReviewOptions(Builder $query, ReviewOptions $options): Builder
+    public function forReviewOptions(Builder $query, ReviewOptions $options, User $user): Builder
     {
         return match ($options->scope) {
-            'deck' => $query->whereHas('decks', fn ($q) => $q->where('decks.id', $options->deckId)),
+            'deck' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereKey($options->deckId)),
+            'pinned' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereHasBookmark($user)),
+            'lesson' => $query->whereHas('decks.lesson', fn (Builder $lessonQuery) => $lessonQuery->whereHas('users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))),
             default => $query,
         };
     }
