@@ -3,6 +3,7 @@ import {useSearchStore} from "../../../../stores/SearchStore.js";
 import {inject, ref, watch} from "vue";
 import SentenceItem from "../../../../components/SentenceItem.vue";
 import SentenceBlock from "../../../Academy/Lessons/UI/SentenceBlock.vue";
+import Draggable from "vuedraggable";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -89,15 +90,22 @@ watch(
         </div>
 
         <template v-if="block.custom">
-            <div class="sentence-fields">
-                <div v-for="(term, i) in block.custom.terms" class="sentence-term">
-                    <input v-model="block.custom.terms[i].term" placeholder="Term"/>
-                    <input v-model="block.custom.terms[i].transc" style="direction: ltr" placeholder="Transcription"/>
-                    <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded"
-                            @click="removeTerm(i)">delete
-                    </button>
-                </div>
-            </div>
+            <Draggable class="sentence-fields"
+                       :list="block.custom.terms"
+                       itemKey="id"
+                       handle=".handle"
+            >
+                <template #item="{ element: term, index: i }">
+                    <div class="sentence-term">
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
+                        <input v-model="term.term" placeholder="Term"/>
+                        <input v-model="term.transc" style="direction: ltr" placeholder="Transcription"/>
+                        <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded"
+                                @click="removeTerm(i)">delete
+                        </button>
+                    </div>
+                </template>
+            </Draggable>
             <div class="field-item">
                 <input v-model="block.custom.transl" style="direction: ltr" placeholder="Translation"/>
             </div>
@@ -130,6 +138,7 @@ watch(
 
     .sentence-term {
         display: flex;
+        align-items: center;
         gap: 0.8rem;
     }
 }

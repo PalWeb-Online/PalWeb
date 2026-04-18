@@ -228,7 +228,7 @@ const isPublishable = computed(() => publishIssues.value.length === 0);
             <div class="featured-title m">blocks</div>
 
             <DocumentBlocksManager :document-blocks="activity.document.blocks"
-                                   :block-types="['text', 'audio', 'table', 'exercises']"
+                                   :block-types="['text', 'image', 'audio', 'table', 'exercises']"
             />
         </div>
 

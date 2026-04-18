@@ -6,6 +6,7 @@ import {inject, provide} from "vue";
 import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockEditor.vue";
 import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
 import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
+import ImageBlockEditor from "../Pages/Office/LessonPlanner/UI/ImageBlockEditor.vue";
 
 const symbol = Symbol('document-builder');
 
@@ -37,6 +38,7 @@ export function useDocumentBuilder(documentBlocks = null) {
     const blockEditors = {
         container: ContainerBlockEditor,
         text: TextBlockEditor,
+        image: ImageBlockEditor,
         audio: AudioBlockEditor,
         table: TableBlockEditor,
         exercises: ExercisesBlockEditor,
@@ -49,6 +51,7 @@ export function useDocumentBuilder(documentBlocks = null) {
     const blockFactories = {
         container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
         text: () => ({id: uid(), type: 'text', content: ''}),
+        image: () => ({id: uid(), type: 'image', media: ''}),
         audio: () => ({id: uid(), type: 'audio', media: ''}),
         table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
         chart: () => ({id: uid(), type: 'chart', title: '', rows: []}),

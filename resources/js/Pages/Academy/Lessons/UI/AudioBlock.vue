@@ -5,8 +5,8 @@ defineProps({
 </script>
 
 <template>
-    <div class="block--audio">
-        <p>Listen to the following recording to answer the subsequent exercises.</p>
+    <div class="block--audio" style="width: 100%">
+<!--        <p>Listen to the following recording to answer the subsequent exercises.</p>-->
         <audio :src="block.media" controls/>
     </div>
 </template>
