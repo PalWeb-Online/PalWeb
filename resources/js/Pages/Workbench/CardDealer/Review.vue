@@ -191,7 +191,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="deck ? route('card-dealer.index', deck) : route('card-dealer.index')" class="material-symbols-rounded">
+                <Link :href="route('card-dealer.index', {scope: options.scope, deck: options.deckId})" class="material-symbols-rounded">
                     arrow_back
                 </Link>
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>
@@ -269,8 +269,8 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                 </template>
                 <template #content>
                     <div class="model-list index-list">
-                        <TermItem :model="cards[currentSlideIndex].term"
-                                  :glossId="cards[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
+                        <TermItem :model="queue[currentSlideIndex].term"
+                                  :glossId="queue[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
                     </div>
                     <div class="settings-wrapper">
                         <AppButton @click="dismissCard('master')" label="master"

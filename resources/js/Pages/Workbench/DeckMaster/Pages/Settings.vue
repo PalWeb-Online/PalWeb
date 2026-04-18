@@ -12,6 +12,7 @@ import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import ReviewProgress from "../../CardDealer/UI/ReviewProgress.vue";
+import {route} from "ziggy-js";
 
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
@@ -149,6 +150,11 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p v-if="UserStore.isStudent">Select the type of Quiz & adjust how you'd like for it to be generated.</p>
             <p v-else><b>You must be a Student to enable Quizzes.</b></p>
         </AppTip>
+        <Link class="quiz-settings-type card-dealer"
+              :href="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
+            <div>load in Card Dealer</div>
+        </Link>
+
         <div class="quiz-settings-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'practice'
             }"
@@ -228,3 +234,27 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
         </div>
     </QuizzerWindow>
 </template>
+
+<style scoped lang="scss">
+.card-dealer {
+    justify-content: center;
+    background: var(--color-medium-secondary);
+    box-shadow: 0 0.8rem 0 0 var(--color-dark-primary);
+    border-radius: 1.2rem;
+    cursor: pointer;
+
+    &:hover {
+        outline: none;
+        box-shadow: none;
+        transform: translateY(0.8rem);
+    }
+
+    div {
+        color: white;
+        padding: 0;
+        font-size: 2.0rem;
+        text-transform: uppercase;
+        font-family: var(--mono-font), monospace;
+    }
+}
+</style>

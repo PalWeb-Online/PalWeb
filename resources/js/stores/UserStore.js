@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {usePage} from "@inertiajs/vue3";
 import {route} from 'ziggy-js';
 
@@ -9,6 +9,20 @@ export const useUserStore = defineStore('UserStore', () => {
 
     const decks = ref([]);
     const hasFetchedDecks = ref(false);
+
+    const resetUserState = () => {
+        decks.value = [];
+        hasFetchedDecks.value = false;
+    };
+
+    watch(
+        () => user.value?.id,
+        (newId, oldId) => {
+            if (newId !== oldId) {
+                resetUserState();
+            }
+        }
+    );
 
     const fetchDecks = async () => {
         if (!hasFetchedDecks.value) {

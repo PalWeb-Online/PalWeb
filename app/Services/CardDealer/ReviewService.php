@@ -48,7 +48,7 @@ class ReviewService
 
         $newTerms = $remainingSessionCapacity > 0 && $remainingNewLimit > 0
             ? Term::query()
-                ->forReviewOptions($options)
+                ->forReviewOptions($options, $user)
                 ->orderByDesc('usage_count')
                 ->when($options->promptType === 'audio', fn (Builder $query) => $query->hasFluentAudio())
                 ->whereDoesntHave('cards', fn ($q) => $q->where('user_id', $user->id))
@@ -120,7 +120,7 @@ class ReviewService
     private function countAvailableNewTerms(User $user, ReviewOptions $options): int
     {
         return Term::query()
-            ->forReviewOptions($options)
+            ->forReviewOptions($options, $user)
             ->whereDoesntHave('cards', fn ($q) => $q->where('user_id', $user->id))
             ->count();
     }
@@ -129,7 +129,7 @@ class ReviewService
     {
         return Card::query()
             ->forUser($user->id)
-            ->forReviewOptions($options)
+            ->forReviewOptions($options, $user)
             ->active()
             ->due()
             ->orderByRaw("
