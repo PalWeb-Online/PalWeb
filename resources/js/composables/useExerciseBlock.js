@@ -1,6 +1,6 @@
-import { computed } from 'vue';
-import { useActivityStore } from '../Pages/Academy/Activities/Stores/ActivityStore.js';
-import { shuffle } from 'lodash';
+import {computed} from 'vue';
+import {useActivityStore} from '../Pages/Academy/Activities/Stores/ActivityStore.js';
+import {shuffle} from 'lodash';
 
 export function useExerciseBlock(props) {
     const ActivityStore = useActivityStore();
@@ -11,11 +11,14 @@ export function useExerciseBlock(props) {
     });
 
     const processedItems = computed(() => {
-        let items = props.block.items.map(item => {
-            if (!isViewingResults.value && props.block.exerciseType === 'select' && item.shuffleOptions) {
-                return {...item, displayOptions: shuffle([...item.options])};
+        let items = props.block.items.map(ex => {
+            if (props.block.exerciseType === 'select' && ex.shuffleOptions) {
+                return isViewingResults.value
+                    ? {...ex, displayOptions: ex.options}
+                    : {...ex, displayOptions: shuffle([...ex.options])};
             }
-            return {...item, displayOptions: item.options};
+
+            return {...ex};
         });
 
         if (!isViewingResults.value && props.block.shuffle) {
