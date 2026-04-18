@@ -10,6 +10,7 @@ import SentenceBlock from "./SentenceBlock.vue";
 import InputExercisesBlock from "./InputExercisesBlock.vue";
 import MatchExercisesBlock from "./MatchExercisesBlock.vue";
 import SelectExercisesBlock from "./SelectExercisesBlock.vue";
+import SortExercisesBlock from "./SortExercisesBlock.vue";
 
 const props = defineProps({
     blocks: {
@@ -42,6 +43,7 @@ const props = defineProps({
             <InputExercisesBlock v-if="block.exerciseType === 'input'" :block="block"/>
             <MatchExercisesBlock v-else-if="block.exerciseType === 'match'" :block="block"/>
             <SelectExercisesBlock v-else-if="block.exerciseType === 'select'" :block="block"/>
+            <SortExercisesBlock v-else-if="block.exerciseType === 'sort'" :block="block"/>
             <p v-else>Unsupported Exercise Block type: {{ block.exerciseType }}</p>
         </template>
 

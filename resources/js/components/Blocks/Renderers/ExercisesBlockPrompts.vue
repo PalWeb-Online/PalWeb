@@ -16,6 +16,8 @@ const instructionText = computed(() => {
             return "Answer the prompt with a complete sentence, following the format of the example.";
         case "match":
             return "Match the two columns based on the prompt. Only one distribution of answers is possible.";
+        case "sort":
+            return "Put the items in the correct order to build the sentence or dialog.";
         case "select":
         default:
             return "Select the most appropriate answer in response to the prompt.";

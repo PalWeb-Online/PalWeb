@@ -29,10 +29,19 @@ export function createActivitySession() {
 
         exercises.value = activity.value?.document?.blocks
             .filter(b => b.type === "exercises")
-            .flatMap(b => b.items.map(item => ({
-                ...item,
-                response: item.type === "match" ? [] : null,
-            })));
+            .flatMap(b => b.items.map(item => {
+                const runtimeExercise = {
+                    ...item,
+                    response: ['match', 'sort'].includes(item.type) ? [] : null,
+                };
+
+                if (item.type === 'sort') {
+                    runtimeExercise.shuffledItems = shuffle([...item.items]);
+                    runtimeExercise.response = runtimeExercise.shuffledItems;
+                }
+
+                return runtimeExercise;
+            }));
 
         isLoadingSession.value = false;
     };
@@ -42,28 +51,36 @@ export function createActivitySession() {
 
         activity.value?.document?.blocks.forEach(block => {
             if (block.type === "exercises") {
-                block.items.forEach(item => {
-                    const userExercise = getExerciseById(item.id);
+                block.items.forEach(ex => {
+                    const userExercise = getExerciseById(ex.id);
                     if (!userExercise) return;
 
-                    item.response = userExercise.response;
+                    ex.response = userExercise.response;
 
                     if (block.exerciseType === "match") {
-                        item.correct = userExercise.response.length === item.pairs.length;
+                        ex.correct = userExercise.response.length === ex.pairs.length;
 
-                        item.pairs.forEach(pair => {
+                        ex.pairs.forEach(pair => {
                             pair.correct = userExercise.response.some(r =>
                                 r.start === pair.start && r.end === pair.end
                             );
                         });
 
                     } else if (block.exerciseType === "input") {
-                        item.correct = item.answers.some(a =>
+                        ex.correct = ex.answers.some(a =>
                             a.trim().toLowerCase() === userExercise.response?.trim().toLowerCase()
                         );
 
                     } else if (block.exerciseType === "select") {
-                        item.correct = item.answerId === userExercise.response;
+                        ex.correct = ex.answerId === userExercise.response;
+
+                    } else if (block.exerciseType === 'sort') {
+                        const correctOrder = ex.items.map(item => item.id);
+                        const userOrder = userExercise.response.map(item => item.id);
+
+                        ex.correct =
+                            correctOrder.length === userOrder.length &&
+                            correctOrder.every((id, index) => id === userOrder[index]);
                     }
                 });
             }
