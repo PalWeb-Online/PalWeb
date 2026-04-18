@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {nextTick, reactive, ref} from 'vue';
 import {useScoreManager} from "../../../../composables/useScoreManager.js";
 import {router} from "@inertiajs/vue3";
+import {shuffle} from 'lodash';
 
 export const useActivityStore = defineStore('ActivityStore', () => {
     const scoreManager = useScoreManager();
@@ -23,10 +24,19 @@ export const useActivityStore = defineStore('ActivityStore', () => {
 
         exercises.value = data.activity.document.blocks
             .filter(b => b.type === 'exercises')
-            .flatMap(b => b.items.map(item => ({
-                ...item,
-                response: item.type === 'match' ? [] : null,
-            })));
+            .flatMap(b => b.items.map(item => {
+                const runtimeExercise = {
+                    ...item,
+                    response: ['match', 'sort'].includes(item.type) ? [] : null,
+                };
+
+                if (item.type === 'sort') {
+                    runtimeExercise.shuffledItems = shuffle([...item.items]);
+                    runtimeExercise.response = runtimeExercise.shuffledItems;
+                }
+
+                return runtimeExercise;
+            }));
 
         data.isLoading = false;
     };
@@ -34,27 +44,35 @@ export const useActivityStore = defineStore('ActivityStore', () => {
     const submitActivity = () => {
         data.activity.document.blocks.forEach(block => {
             if (block.type === 'exercises') {
-                block.items.forEach(item => {
-                    const userExercise = getExerciseById(item.id);
-                    item.response = userExercise.response;
+                block.items.forEach(ex => {
+                    const userExercise = getExerciseById(ex.id);
+                    ex.response = userExercise.response;
 
                     if (block.exerciseType === 'match') {
                         // todo: hacky solution so that match block items have a `correct` key
-                        item.correct = userExercise.response.length === item.pairs.length;
+                        ex.correct = userExercise.response.length === ex.pairs.length;
 
-                        item.pairs.forEach(pair => {
+                        ex.pairs.forEach(pair => {
                             pair.correct = userExercise.response.some(r =>
                                 r.start === pair.start && r.end === pair.end
                             );
                         });
 
                     } else if (block.exerciseType === 'input') {
-                        item.correct = item.answers.some(a =>
+                        ex.correct = ex.answers.some(a =>
                             a.trim().toLowerCase() === userExercise.response?.trim().toLowerCase()
                         );
 
                     } else if (block.exerciseType === 'select') {
-                        item.correct = item.answerId === userExercise.response;
+                        ex.correct = ex.answerId === userExercise.response;
+
+                    } else if (block.exerciseType === 'sort') {
+                        const correctOrder = ex.items.map(item => item.id);
+                        const userOrder = userExercise.response.map(item => item.id);
+
+                        ex.correct =
+                            correctOrder.length === userOrder.length &&
+                            correctOrder.every((id, index) => id === userOrder[index]);
                     }
                 });
             }

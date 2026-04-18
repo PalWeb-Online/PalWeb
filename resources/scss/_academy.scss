@@ -350,14 +350,16 @@
 
 .exercise--input,
 .exercise--select,
-.exercise--match {
+.exercise--match,
+.exercise--sort {
     margin-block-start: 3.2rem;
     display: grid;
     direction: rtl;
 }
 
 .exercise--input,
-.exercise--select {
+.exercise--select,
+.exercise--sort {
     justify-items: start;
     gap: 1.6rem;
     white-space: nowrap;

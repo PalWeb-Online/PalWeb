@@ -9,7 +9,9 @@ const {
     removeExercise,
     duplicateExercise,
     addSelectOption,
-    removeSelectOption
+    removeSelectOption,
+    addSortableItem,
+    removeSortableItem
 } = useDocumentBuilder();
 
 const props = defineProps({
@@ -45,9 +47,9 @@ const addMatchPair = (ex) => {
     });
 };
 
-const removeMatchPair = (ex, pairIndex) => {
+const removeMatchPair = (ex, index) => {
     if (ex.pairs.length <= 2) return;
-    ex.pairs.splice(pairIndex, 1);
+    ex.pairs.splice(index, 1);
 };
 </script>
 
@@ -55,7 +57,7 @@ const removeMatchPair = (ex, pairIndex) => {
     <div class="block-editor--exercises">
         <ExercisePromptsEditor v-if="props.block.exerciseType" :owner="props.block" title="Block Prompts"/>
         <div class="block-add-buttons">
-            <div v-if="!props.block.exerciseType" v-for="exerciseType in ['match', 'select', 'input']"
+            <div v-if="!props.block.exerciseType" v-for="exerciseType in ['match', 'select', 'input', 'sort']"
                  :key="exerciseType">
                 <div class="add-button"
                      @click="addExercise({ blockId: props.block.id, type: exerciseType, atStart: true })">+
@@ -229,6 +231,34 @@ const removeMatchPair = (ex, pairIndex) => {
                             </div>
                             <div class="exercise-select-buttons">
                                 <div class="add-button" @click="addMatchPair(ex)">+</div>
+                            </div>
+                        </template>
+
+                        <template v-else-if="ex.type === 'sort'">
+                            <div class="exercise-answers">
+                                <div
+                                    class="exercise-select-option"
+                                    v-for="(item, i) in ex.items" :key="i"
+                                    style="gap: 0.8rem;"
+                                >
+                                    <input
+                                        v-model="item.text"
+                                        :class="{ 'invalid': !item.text }"
+                                        style="flex: 1;"
+                                        placeholder="Item"
+                                    />
+                                    <button
+                                        v-if="ex.items.length > 2"
+                                        type="button"
+                                        class="material-symbols-rounded"
+                                        @click="removeSortableItem(ex, i)"
+                                    >
+                                        delete
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="exercise-select-buttons">
+                                <div class="add-button" @click="addSortableItem(ex)">+</div>
                             </div>
                         </template>
                     </div>

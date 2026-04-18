@@ -197,6 +197,14 @@ export function useDocumentBuilder(documentBlocks = null) {
                         {start: '', end: ''},
                     ],
                 };
+            case 'sort':
+                return {
+                    ...base,
+                    items: [
+                        {id: uid(), text: ''},
+                        {id: uid(), text: ''}
+                    ]
+                }
             case 'select':
             default:
                 return {
@@ -312,6 +320,18 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
     };
 
+    const addSortableItem = (ex) => {
+        ex.items.push({
+            id: uid(),
+            text: ''
+        });
+    };
+
+    const removeSortableItem = (ex, index) => {
+        if (ex.items.length <= 2) return;
+        ex.items.splice(index, 1);
+    };
+
     return {
         uid,
         provideBuilder,
@@ -330,6 +350,8 @@ export function useDocumentBuilder(documentBlocks = null) {
         addPrompt,
         removePrompt,
         addSelectOption,
-        removeSelectOption
+        removeSelectOption,
+        addSortableItem,
+        removeSortableItem
     };
 }

@@ -6,7 +6,7 @@ import AudioBlock from "../../Lessons/UI/AudioBlock.vue";
 import InputExercisesBlock from "./InputExercisesBlock.vue";
 import MatchExercisesBlock from "./MatchExercisesBlock.vue";
 import SelectExercisesBlock from "./SelectExercisesBlock.vue";
-// import SortExercisesBlock from "./SortExercisesBlock.vue";
+import SortExercisesBlock from "./SortExercisesBlock.vue";
 
 const props = defineProps({
     blocks: {type: Object, required: true},
@@ -25,7 +25,7 @@ const props = defineProps({
                 <InputExercisesBlock v-if="block.exerciseType === 'input'" :block="block"/>
                 <MatchExercisesBlock v-if="block.exerciseType === 'match'" :block="block"/>
                 <SelectExercisesBlock v-if="block.exerciseType === 'select'" :block="block"/>
-<!--                <SortExercisesBlock v-if="block.exerciseType === 'sort'" :block="block"/>-->
+                <SortExercisesBlock v-if="block.exerciseType === 'sort'" :block="block"/>
             </template>
         </template>
     </div>
