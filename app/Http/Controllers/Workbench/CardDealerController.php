@@ -112,24 +112,9 @@ class CardDealerController extends Controller
             $user = auth()->user();
             $options = $this->makeReviewOptions($request, $user);
 
-            $count = 0;
-            if ($options->scope === 'deck') {
-                $count += Deck::findOrFail($options->deckId)?->terms_count;
-
-            } elseif ($options->scope === 'pinned') {
-                 $decks = Deck::whereHasBookmark($user)->get();
-
-                 foreach ($decks as $deck) {
-                     $count += $deck->terms_count;
-                 }
-
-            } elseif ($options->scope === 'lesson') {
-                $lessons = Lesson::whereHas('users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))->get();
-
-                foreach ($lessons as $lesson) {
-                    $count += $lesson->deck->terms_count;
-                }
-            }
+            $count = Term::query()
+                ->forReviewOptions($options, $user)
+                ->count();
 
             $cards = Card::query()
                 ->forUser($user->id)
