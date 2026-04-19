@@ -35,6 +35,8 @@
 
     <link rel="icon" href="{{ asset('img/map.svg') }}">
 
+    <link rel="manifest" href="/build/manifest.webmanifest">
+
     @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @inertiaHead

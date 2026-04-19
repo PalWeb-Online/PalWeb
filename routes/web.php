@@ -54,6 +54,10 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/offline', function () {
+    return Inertia::render('Error', ['status' => 911]);
+})->name('offline');
+
 Route::get('/', function () {
     return Inertia::render('Home', [
         'count' => [

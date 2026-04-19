@@ -1,6 +1,10 @@
 palweb.test {
-    reverse_proxy /app/* laravel.test:8080
+    @serviceWorker path /build/sw.js
+    header @serviceWorker {
+                              Service-Worker-Allowed /
+                          }
 
+    reverse_proxy /app/* laravel.test:8080
     reverse_proxy laravel.test:80
 
     tls internal

@@ -5,7 +5,9 @@ import axios from 'axios';
 import i18n from './i18n';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import { registerSW } from 'virtual:pwa-register'
 
+registerSW({immediate: true});
 const pinia = createPinia();
 
 window.axios = axios;
