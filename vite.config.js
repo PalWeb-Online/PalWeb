@@ -26,6 +26,9 @@ export default defineConfig({
             base: '/',
             registerType: 'autoUpdate',
             injectRegister: 'auto',
+            strategies: 'injectManifest',
+            srcDir: 'resources/js',
+            filename: 'sw.js',
             devOptions: { enabled: false },
             manifest: {
                 name: 'PalWeb',

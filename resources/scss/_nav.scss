@@ -8,83 +8,69 @@ nav {
     font-weight: 700;
 }
 
-.nav-sticky {
-    position: sticky;
-    top: 0;
+.nav-sticky-buttons {
     display: flex;
-    justify-content: space-between;
-    color: white;
-    background: var(--color-medium-secondary);
-    width: 100%;
-    height: 3em;
-    font-size: 1.6rem;
-    z-index: 999;
-    user-select: none;
+    justify-content: flex-end;
 
-    .nav-sticky-buttons {
-        display: flex;
-        justify-content: flex-end;
+    & > button,
+    .app-hint-wrapper > button,
+    .popup-menu-wrapper > button
+    {
+        color: white;
+        font-size: 1.5em;
+        width: 2em;
+        height: 100%;
 
-        & > button, .popup-menu-wrapper > button {
-            color: white;
-            font-size: 1.5em;
-            width: 2em;
-
-            &:hover {
-                color: var(--color-dark-primary);
-                background: var(--color-accent-medium);
-            }
-        }
-
-        .popup-menu-wrapper {
-            display: flex;
-            justify-content: center;
+        &:hover {
+            color: var(--color-dark-primary);
+            background: var(--color-accent-medium);
         }
     }
 
-    @media (min-width: 960px) {
-        font-size: 1.2rem;
+    .popup-menu-wrapper {
+        display: flex;
+        justify-content: center;
     }
 }
 
-.nav-sticky-info {
+.app-hint-wrapper {
+    position: relative;
     display: flex;
-    font-family: $monoFont;
+    align-items: center;
+    justify-content: center;
+}
 
-    & > * {
-        align-items: center;
+.app-tooltip.app-hint {
+    width: 24rem;
+    display: grid;
+    gap: 0.4rem;
+    padding: 0;
+    pointer-events: auto;
+    animation: float-up-down 1s ease-in-out infinite;
+
+    .app-hint__text {
+        padding: 0.8rem 1.2rem;
     }
 
-    & > *:nth-child(1) {
-        background: var(--color-dark-secondary);
-        padding-inline: 1.6rem;
-
-        display: none;
-
-        @media (min-width: 960px) {
-            display: flex;
-        }
-    }
-
-    .connection-status {
-        display: flex;
-        color: var(--color-medium-primary);
+    .app-hint__dismiss {
+        border: 0;
+        padding: 0.4rem 0.8rem;
         background: var(--color-dark-primary);
-        padding-inline: 1.2rem;
-        font-size: 2.0rem;
-
-        @media (min-width: 960px) {
-            font-size: 1.6rem;
-        }
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        font-family: var(--mono-font), monospace;
+        text-transform: uppercase;
+        cursor: pointer;
     }
+}
 
-    a {
-        display: flex;
-        padding-inline: 1.6rem;
+@keyframes float-up-down {
+    0%, 100% {
+        translate: 0 -0.4rem;
     }
-
-    a:hover {
-        text-decoration: 0.1rem solid underline;
+    50% {
+        translate: 0 0;
     }
 }
 

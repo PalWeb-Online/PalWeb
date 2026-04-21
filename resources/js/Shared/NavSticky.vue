@@ -9,6 +9,8 @@ import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useConnectionStatus} from '../composables/useConnectionStatus.js';
 import {useActions} from "../composables/Actions.js";
 import {useI18n} from "vue-i18n";
+import InstallButton from "./InstallButton.vue";
+import NotificationBell from "./NotificationBell.vue";
 
 const {locale} = useI18n();
 
@@ -127,6 +129,7 @@ onMounted(() => {
                 <span v-else-if="status === 'connecting'">wifi_find</span>
                 <span v-else>wifi_off</span>
             </div>
+            <InstallButton/>
             <Link :href="route('homepage')">PalWeb 2.3 (Falastin)</Link>
         </div>
         <div class="nav-sticky-buttons">
@@ -158,6 +161,7 @@ onMounted(() => {
             >
                 search
             </button>
+            <NotificationBell/>
             <button
                 class="material-symbols-rounded"
                 @click.stop="NavigationStore.toggleSidebar"
@@ -170,3 +174,65 @@ onMounted(() => {
         <ThemePicker/>
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.nav-sticky {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    background: var(--color-medium-secondary);
+    width: 100%;
+    height: 3em;
+    font-size: 1.6rem;
+    z-index: 999;
+    user-select: none;
+
+    @media (min-width: 960px) {
+        font-size: 1.2rem;
+    }
+}
+
+.nav-sticky-info {
+    display: flex;
+    font-family: var(--mono-font), monospace;
+
+    & > * {
+        align-items: center;
+    }
+
+    & > *:nth-child(1) {
+        background: var(--color-dark-secondary);
+        padding-inline: 1.6rem;
+
+        display: none;
+
+        @media (min-width: 960px) {
+            display: flex;
+        }
+    }
+
+    .material-symbols-rounded {
+        display: flex;
+        justify-content: center;
+        color: var(--color-medium-primary);
+        background: var(--color-dark-primary);
+        font-size: 2.0rem;
+        width: 3.6rem;
+
+        @media (min-width: 960px) {
+            font-size: 1.6rem;
+        }
+    }
+
+    a {
+        display: flex;
+        padding-inline: 1.6rem;
+    }
+
+    a:hover {
+        text-decoration: 0.1rem solid underline;
+    }
+}
+</style>
