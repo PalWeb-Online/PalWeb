@@ -12,10 +12,10 @@ export function useExerciseBlock(props) {
 
     const processedItems = computed(() => {
         let items = props.block.items.map(ex => {
-            if (props.block.exerciseType === 'select' && ex.shuffleOptions) {
-                return isViewingResults.value
-                    ? {...ex, displayOptions: ex.options}
-                    : {...ex, displayOptions: shuffle([...ex.options])};
+            if (props.block.exerciseType === 'select') {
+                return ex.shuffleOptions && !isViewingResults.value
+                    ? {...ex, displayOptions: shuffle([...ex.options])}
+                    : {...ex, displayOptions: ex.options};
             }
 
             return {...ex};
