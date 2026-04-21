@@ -11,12 +11,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 use Spark\Billable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Billable, HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use Billable, HasApiTokens, HasFactory, HasRoles, Notifiable, HasPushSubscriptions;
 
     protected $fillable = [
         'email',
