@@ -29,7 +29,7 @@ class CardReviewReminder extends Notification
 
         return (new WebPushMessage)
             ->title('The Card Dealer is waiting!')
-            ->icon('/icons/icon192.png')
+            ->icon('/icons/icon-192.png')
             ->body($body)
             ->action('Go to Card Dealer', 'card_dealer')
             ->options([

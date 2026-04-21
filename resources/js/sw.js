@@ -6,7 +6,7 @@ self.addEventListener('push', (event) => {
     let data = {
         title: 'PalWeb',
         body: 'You have a new notification.',
-        icon: '/icons/icon192.png',
+        icon: '/icons/icon-192.png',
         url: '/',
     };
 
@@ -21,7 +21,7 @@ self.addEventListener('push', (event) => {
     const promise = self.registration.showNotification(data.title, {
         body: data.body,
         icon: data.icon,
-        badge: data.badge || '/icons/icon192.png',
+        badge: data.badge || '/icons/icon-192.png',
         data: {
             url: data.url,
         },
