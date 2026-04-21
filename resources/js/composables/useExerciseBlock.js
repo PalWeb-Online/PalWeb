@@ -6,11 +6,14 @@ export function useExerciseBlock(props) {
     const ActivitySession = useActivitySession();
 
     const processedItems = computed(() => {
-        let items = props.block.items.map(item => {
-            if (!ActivitySession.isViewingResults && props.block.exerciseType === 'select' && item.shuffleOptions) {
-                return {...item, displayOptions: shuffle([...item.options])};
+        let items = props.block.items.map(ex => {
+            if (props.block.exerciseType === 'select') {
+                return ex.shuffleOptions && !ActivitySession.isViewingResults
+                    ? {...ex, displayOptions: shuffle([...ex.options])}
+                    : {...ex, displayOptions: ex.options};
             }
-            return {...item, displayOptions: item.options};
+
+            return {...ex};
         });
 
         if (!ActivitySession.isViewingResults && props.block.shuffle) {
