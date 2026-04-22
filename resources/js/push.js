@@ -4,7 +4,7 @@ export async function enableWebPush() {
     }
 
     if (!('PushManager' in window)) {
-        throw new Error('Push notifications are not supported in this browser.');
+        throw new Error('Push notifications are not supported in this browser. If you are using Safari, download the app via "Add to Home Screen" to enable push notifications.');
     }
 
     const permission = await Notification.requestPermission();

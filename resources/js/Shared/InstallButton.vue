@@ -23,6 +23,12 @@ const {floatingStyles} = useFloating(reference, floating, {
     ],
 });
 
+const isAppInstalled = () => {
+    return window.matchMedia('(display-mode: window-controls-overlay)').matches
+        || window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true;
+};
+
 const dismissInstallHint = () => {
     showInstallHint.value = false;
 };
@@ -45,6 +51,12 @@ const installApp = async () => {
 };
 
 onMounted(() => {
+    if (isAppInstalled()) {
+        showInstallButton.value = false;
+        showInstallHint.value = false;
+        return;
+    }
+
     const handleBeforeInstallPrompt = (event) => {
         event.preventDefault();
         deferredInstallPrompt = event;
@@ -52,10 +64,18 @@ onMounted(() => {
         showInstallHint.value = true;
     };
 
+    const handleAppInstalled = () => {
+        deferredInstallPrompt = null;
+        showInstallButton.value = false;
+        showInstallHint.value = false;
+    };
+
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
 
     onBeforeUnmount(() => {
         window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+        window.removeEventListener("appinstalled", handleAppInstalled);
     });
 });
 </script>

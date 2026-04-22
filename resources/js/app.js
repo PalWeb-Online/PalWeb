@@ -26,6 +26,28 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+const echoConnection = window.Echo?.connector?.pusher?.connection;
+
+if (echoConnection) {
+    echoConnection.bind('state_change', ({ previous, current }) => {
+        console.debug('[Echo] state_change:', previous, '→', current);
+    });
+
+    echoConnection.bind('connected', () => {
+        console.debug('[Echo] connected');
+    });
+
+    echoConnection.bind('disconnected', () => {
+        console.debug('[Echo] disconnected');
+    });
+
+    echoConnection.bind('error', (error) => {
+        console.debug('[Echo] error:', error);
+    });
+
+    console.debug('[Echo] initial state:', echoConnection.state);
+}
+
 createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', {eager: true})
