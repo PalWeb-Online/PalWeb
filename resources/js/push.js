@@ -10,7 +10,7 @@ export async function enableWebPush() {
     const permission = await Notification.requestPermission();
 
     if (permission !== 'granted') {
-        throw new Error('Notification permission was not granted.');
+        throw new Error('Permission to send notifications was not granted. If you are using Safari & were never prompted, you may need to explicitly allow websites to ask for permission in the browser settings.');
     }
 
     const registration = await navigator.serviceWorker.ready;
