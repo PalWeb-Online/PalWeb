@@ -1,3 +1,5 @@
+import {route} from 'ziggy-js';
+
 export async function enableWebPush() {
     if (!('serviceWorker' in navigator)) {
         throw new Error('Service workers are not supported in this browser.');
@@ -26,7 +28,7 @@ export async function enableWebPush() {
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
     });
 
-    const response = await fetch('/push-subscriptions', {
+    const response = await fetch(route('push-subscriptions.store'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -60,12 +62,10 @@ export async function disableWebPush() {
     const subscription = await registration.pushManager.getSubscription();
 
     if (!subscription) {
-        return { message: 'No active push subscription found.' };
+        return {message: 'No active push subscription found.'};
     }
 
-    const endpoint = subscription.endpoint;
-
-    const response = await fetch('/push-subscriptions', {
+    const response = await fetch(route('push-subscriptions.destroy'), {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export async function disableWebPush() {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
         },
-        body: JSON.stringify({ endpoint }),
+        body: JSON.stringify({endpoint: subscription.endpoint}),
     });
 
     const contentType = response.headers.get('content-type') || '';

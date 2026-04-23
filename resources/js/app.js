@@ -1,12 +1,11 @@
 import {createApp, h} from "vue/dist/vue.esm-bundler";
-import {createInertiaApp, Head, Link} from "@inertiajs/vue3";
+import {createInertiaApp, Head, Link, router} from "@inertiajs/vue3";
 import {createPinia} from 'pinia';
 import axios from 'axios';
 import i18n from './i18n';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { registerSW } from 'virtual:pwa-register'
-import { router } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
 registerSW({immediate: true});
@@ -26,6 +25,22 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+function syncCsrfToken(token) {
+    if (!token) {
+        return;
+    }
+
+    let meta = document.querySelector('meta[name="csrf-token"]');
+
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'csrf-token';
+        document.head.appendChild(meta);
+    }
+
+    meta.setAttribute('content', token);
+}
+
 createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', {eager: true})
@@ -33,6 +48,12 @@ createInertiaApp({
     },
     setup({el, App, props, plugin}) {
         i18n.global.locale.value = props.initialPage.props.locale;
+
+        syncCsrfToken(props.initialPage.props.csrfToken);
+
+        router.on('success', (event) => {
+            syncCsrfToken(event.detail.page.props.csrfToken);
+        });
 
         createApp({render: () => h(App, props)})
             .use(plugin)

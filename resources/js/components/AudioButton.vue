@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const isUserAudio = computed(() =>
-    UserStore.user.dialects.includes(props.pronunciation.dialect.id)
+    UserStore.user?.dialects.includes(props.pronunciation.dialect.id)
 );
 
 const appTooltip = ref(null);
@@ -39,7 +39,7 @@ const showDialectTooltip = (event) => {
             @mouseleave="appTooltip.hideTooltip()"
     >
         music_note
-        <span v-if="!isUserAudio">change_circle</span>
+        <span v-if="UserStore.user && !isUserAudio">change_circle</span>
     </button>
     <AppTooltip ref="appTooltip"/>
 </template>
