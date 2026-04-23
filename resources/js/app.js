@@ -5,7 +5,11 @@ import axios from 'axios';
 import i18n from './i18n';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import { registerSW } from 'virtual:pwa-register'
+import { router } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 
+registerSW({immediate: true});
 const pinia = createPinia();
 
 window.axios = axios;
@@ -39,4 +43,23 @@ createInertiaApp({
             .mount(el);
     },
     title: title => "PalWeb | " + title
+});
+
+router.on('before', (event) => {
+    if (navigator.onLine) {
+        return;
+    }
+
+    const url = event.detail.visit.url;
+
+    if (typeof url === 'string' && url.includes(route('offline'))) {
+        return;
+    }
+
+    event.preventDefault();
+
+    router.visit(route('offline'), {
+        replace: true,
+        preserveState: true,
+    });
 });

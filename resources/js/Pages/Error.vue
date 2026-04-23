@@ -1,8 +1,13 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
-import {computed} from "vue";
+import {computed, watch} from "vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 
 const props = defineProps({status: Number})
+
+const {browserOnline} = useConnectionStatus(Echo);
 
 const title = computed(() => {
     return {
@@ -10,6 +15,7 @@ const title = computed(() => {
         500: 'Server Error',
         404: 'Not Found',
         403: 'Forbidden!',
+        911: 'Offline'
     }[props.status]
 })
 
@@ -19,8 +25,22 @@ const message = computed(() => {
         500: 'Oops! Something went wrong.',
         404: 'What you\'re looking for doesn\'t exist.',
         403: 'Whatever you just did — don\'t.',
+        911: 'Womp womp. Try again later.',
     }[props.status]
 })
+
+watch(browserOnline, (isOnline) => {
+    if (props.status !== 911) {
+        return;
+    }
+
+    if (isOnline) {
+        router.visit(route('homepage'), {
+            replace: true,
+            preserveScroll: true,
+        });
+    }
+}, {immediate: true});
 
 defineOptions({
     layout: Layout

@@ -26,6 +26,11 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PalWeb">
+    <link rel="apple-touch-icon" href="/icons/icon-180.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://use.typekit.net" crossorigin>
@@ -34,6 +39,8 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Vazirmatn:wght@400;700;900&family=Lalezar&display=swap" rel="stylesheet">
 
     <link rel="icon" href="{{ asset('img/map.svg') }}">
+
+    <link rel="manifest" href="/build/manifest.webmanifest">
 
     @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])

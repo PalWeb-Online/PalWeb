@@ -10,3 +10,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('select:wordoftheday')->daily();
 Schedule::command('select:featureddeck')->weekly();
+
+Schedule::command('cards:send-review-reminder')->dailyAt('15:00');

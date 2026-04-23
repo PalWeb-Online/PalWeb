@@ -17,6 +17,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Office\LessonPlannerController;
 use App\Http\Controllers\Office\SpeechMakerController;
 use App\Http\Controllers\Office\WordLoggerController;
+use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
@@ -53,6 +54,10 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/offline', function () {
+    return Inertia::render('Error', ['status' => 911]);
+})->name('offline');
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -275,7 +280,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
+        ) {
             Route::get('/', 'index')->name('card-dealer.index');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
             Route::get('/review', 'review')->name('card-dealer.review');
@@ -355,5 +361,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
+
+Route::middleware('auth')
+    ->prefix('/push-subscriptions')
+    ->controller(PushSubscriptionController::class)
+    ->group(function () {
+        Route::post('/', 'store')->name('push-subscriptions.store');
+        Route::delete('/', 'destroy')->name('push-subscriptions.destroy');
+    });
 
 require __DIR__.'/auth.php';

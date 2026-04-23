@@ -12,6 +12,7 @@ import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import i18n from "../i18n.js";
 import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
+import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 
 defineProps({
     section: {
@@ -25,6 +26,10 @@ const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const page = usePage();
+const {browserOnline} = useConnectionStatus(Echo);
+
+let lastBrowserOnlineState = browserOnline.value;
+let hasSeenInitialConnectionState = false;
 
 onMounted(() => {
     const userId = UserStore.user?.id ?? null;
@@ -36,6 +41,31 @@ onMounted(() => {
             });
     }
 });
+
+watch(browserOnline, (isOnline) => {
+    if (!hasSeenInitialConnectionState) {
+        hasSeenInitialConnectionState = true;
+        lastBrowserOnlineState = isOnline;
+        return;
+    }
+
+    if (isOnline === lastBrowserOnlineState) {
+        return;
+    }
+
+    lastBrowserOnlineState = isOnline;
+
+    if (!isOnline) {
+        NotificationStore.addNotification(
+            "You've gone offline. While offline, the site won't work as expected. Please wait until you're back online to continue using PalWeb.",
+            'warning',
+            5000
+        );
+        return;
+    }
+
+    NotificationStore.addNotification("You're back online!", 'success', 3000);
+}, {immediate: true});
 
 watch(() => page.props.flash.notification,
     (notification) => {

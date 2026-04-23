@@ -13,6 +13,7 @@ class AuthUserResource extends UserResource
 
         return array_merge(parent::toArray($request), [
             'email' => $this->email,
+            'language' => $this->language,
             'roles' => $this->getEffectiveRoles(),
             'dialects' => $dialectIds,
             'is_superuser' => $this->isSuperuser(),
