@@ -8,7 +8,28 @@ import Pusher from 'pusher-js';
 import { registerSW } from 'virtual:pwa-register'
 import { route } from 'ziggy-js';
 
-registerSW({immediate: true});
+registerSW({
+    immediate: true,
+    onNeedRefresh() {
+        window.location.reload();
+    },
+    onRegisteredSW(_swUrl, registration) {
+        if (!registration) {
+            return;
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                registration.update();
+            }
+        });
+
+        setInterval(() => {
+            registration.update();
+        }, 60 * 60 * 1000);
+    },
+});
+
 const pinia = createPinia();
 
 window.axios = axios;
