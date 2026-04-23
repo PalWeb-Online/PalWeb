@@ -54,6 +54,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->setStatusCode($response->getStatusCode());
 
             } elseif ($response->getStatusCode() === 419) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'CSRF token mismatch.',
+                    ], 419);
+                }
+
                 session()->flash('notification', ['type' => 'error', 'message' => 'The page expired, please try again.']);
 
                 return back();

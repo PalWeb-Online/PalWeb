@@ -25,55 +25,17 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         }
     };
 
-    const setBrowserSubscriptionEnabled = async (enabled) => {
-        if (isUpdatingBrowserSubscription.value) {
-            return currentBrowserSubscribed.value;
-        }
-
-        isUpdatingBrowserSubscription.value = true;
-
-        const previousSubscribed = currentBrowserSubscribed.value;
-        const previousSubscription = currentBrowserSubscription.value;
-
-        currentBrowserSubscribed.value = enabled;
-        currentBrowserSubscription.value = enabled ? previousSubscription : null;
-
-        try {
-            if (enabled) {
-                await enableWebPush();
-                showPushSubscribeHint.value = false;
-            } else {
-                await disableWebPush();
-            }
-
-            await refreshCurrentBrowserSubscriptionState();
-
-            return currentBrowserSubscribed.value;
-        } catch (error) {
-            currentBrowserSubscribed.value = previousSubscribed;
-            currentBrowserSubscription.value = previousSubscription;
-
-            try {
-                await refreshCurrentBrowserSubscriptionState();
-            } catch (refreshError) {
-                console.error(refreshError);
-            }
-
-            throw error;
-        } finally {
-            isUpdatingBrowserSubscription.value = false;
-        }
-    };
-
-    const refreshCurrentBrowserSubscriptionState = async () => {
+    const refreshBrowserSubscriptionState = async () => {
         currentBrowserSubscribed.value = false;
         currentBrowserSubscription.value = null;
 
         if (!('serviceWorker' in navigator)) {
+            showPushSubscribeHint.value = false;
             return false;
         }
 
         if (!('PushManager' in window)) {
+            showPushSubscribeHint.value = false;
             return false;
         }
 
@@ -83,12 +45,50 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         currentBrowserSubscription.value = subscription;
         currentBrowserSubscribed.value = !!subscription;
 
+        showPushSubscribeHint.value = !currentBrowserSubscribed.value;
+
         return currentBrowserSubscribed.value;
     };
 
+    const toggleBrowserSubscription = async (enabled) => {
+        if (isUpdatingBrowserSubscription.value) {
+            return currentBrowserSubscribed.value;
+        }
+
+        isUpdatingBrowserSubscription.value = true;
+
+        const previousSubscribed = currentBrowserSubscribed.value;
+        const previousSubscription = currentBrowserSubscription.value;
+        const previousHintVisible = showPushSubscribeHint.value;
+
+        currentBrowserSubscribed.value = enabled;
+        currentBrowserSubscription.value = enabled ? previousSubscription : null;
+
+        try {
+            enabled ? await enableWebPush() : await disableWebPush();
+            await refreshBrowserSubscriptionState();
+
+            return currentBrowserSubscribed.value;
+        } catch (error) {
+            currentBrowserSubscribed.value = previousSubscribed;
+            currentBrowserSubscription.value = previousSubscription;
+            showPushSubscribeHint.value = previousHintVisible;
+
+            try {
+                await refreshBrowserSubscriptionState();
+            } catch (refreshError) {
+                console.error(refreshError);
+            }
+
+            throw error;
+
+        } finally {
+            isUpdatingBrowserSubscription.value = false;
+        }
+    };
+
     onMounted(async () => {
-        await refreshCurrentBrowserSubscriptionState();
-        showPushSubscribeHint.value = !currentBrowserSubscribed.value;
+        await refreshBrowserSubscriptionState();
     });
 
     return {
@@ -98,7 +98,7 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         currentBrowserSubscribed,
         currentBrowserSubscription,
         showPushSubscribeHint,
-        refreshCurrentBrowserSubscriptionState,
-        setBrowserSubscriptionEnabled,
+        refreshBrowserSubscriptionState,
+        toggleBrowserSubscription,
     };
 });

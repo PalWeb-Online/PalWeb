@@ -56,7 +56,7 @@ const changeLanguage = (lang) => {
 
 const toggleNotifications = async (nextValue) => {
     try {
-        await NotificationStore.setBrowserSubscriptionEnabled(nextValue);
+        await NotificationStore.toggleBrowserSubscription(nextValue);
     } catch (error) {
         console.error(error);
         alert(error.message || (nextValue ? 'Could not enable notifications.' : 'Could not disable notifications.'));

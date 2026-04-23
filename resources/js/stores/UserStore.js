@@ -2,10 +2,13 @@ import {defineStore} from 'pinia';
 import {computed, ref, watch} from 'vue';
 import {usePage} from "@inertiajs/vue3";
 import {route} from 'ziggy-js';
+import {useNotificationStore} from "./NotificationStore.js";
 
 export const useUserStore = defineStore('UserStore', () => {
     const page = usePage();
     const user = computed(() => page.props.auth.user || null);
+
+    const NotificationStore = useNotificationStore();
 
     const decks = ref([]);
     const hasFetchedDecks = ref(false);
@@ -17,9 +20,10 @@ export const useUserStore = defineStore('UserStore', () => {
 
     watch(
         () => user.value?.id,
-        (newId, oldId) => {
+        async (newId, oldId) => {
             if (newId !== oldId) {
                 resetUserState();
+                await NotificationStore.refreshBrowserSubscriptionState();
             }
         }
     );
