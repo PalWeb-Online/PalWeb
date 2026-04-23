@@ -3,7 +3,7 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import {autoUpdate, offset, flip, shift, useFloating} from "@floating-ui/vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 
-const showInstallButton = ref(true);
+const showInstallButton = ref(false);
 const showInstallHint = ref(false);
 let deferredInstallPrompt = null;
 
