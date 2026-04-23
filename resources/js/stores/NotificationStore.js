@@ -1,10 +1,13 @@
 import {defineStore} from 'pinia';
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
+import {disableWebPush, enableWebPush} from "../push.js";
 
 export const useNotificationStore = defineStore('NotificationStore', () => {
     const notifications = reactive([]);
     const currentBrowserSubscribed = ref(false);
     const currentBrowserSubscription = ref(null);
+    const showPushSubscribeHint = ref(false);
+    const isUpdatingBrowserSubscription = ref(false);
 
     const addNotification = (message, type = 'success', duration = 3000) => {
         const id = Date.now();
@@ -19,6 +22,46 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         const index = notifications.findIndex((notification) => notification.id === id);
         if (index !== -1) {
             notifications.splice(index, 1);
+        }
+    };
+
+    const setBrowserSubscriptionEnabled = async (enabled) => {
+        if (isUpdatingBrowserSubscription.value) {
+            return currentBrowserSubscribed.value;
+        }
+
+        isUpdatingBrowserSubscription.value = true;
+
+        const previousSubscribed = currentBrowserSubscribed.value;
+        const previousSubscription = currentBrowserSubscription.value;
+
+        currentBrowserSubscribed.value = enabled;
+        currentBrowserSubscription.value = enabled ? previousSubscription : null;
+
+        try {
+            if (enabled) {
+                await enableWebPush();
+                showPushSubscribeHint.value = false;
+            } else {
+                await disableWebPush();
+            }
+
+            await refreshCurrentBrowserSubscriptionState();
+
+            return currentBrowserSubscribed.value;
+        } catch (error) {
+            currentBrowserSubscribed.value = previousSubscribed;
+            currentBrowserSubscription.value = previousSubscription;
+
+            try {
+                await refreshCurrentBrowserSubscriptionState();
+            } catch (refreshError) {
+                console.error(refreshError);
+            }
+
+            throw error;
+        } finally {
+            isUpdatingBrowserSubscription.value = false;
         }
     };
 
@@ -43,12 +86,19 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         return currentBrowserSubscribed.value;
     };
 
+    onMounted(async () => {
+        await refreshCurrentBrowserSubscriptionState();
+        showPushSubscribeHint.value = !currentBrowserSubscribed.value;
+    });
+
     return {
         notifications,
         addNotification,
         removeNotification,
         currentBrowserSubscribed,
         currentBrowserSubscription,
+        showPushSubscribeHint,
         refreshCurrentBrowserSubscriptionState,
+        setBrowserSubscriptionEnabled,
     };
 });

@@ -1,8 +1,9 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import {autoUpdate, offset, flip, shift, useFloating} from "@floating-ui/vue";
+import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 
-const showInstallButton = ref(false);
+const showInstallButton = ref(true);
 const showInstallHint = ref(false);
 let deferredInstallPrompt = null;
 
@@ -22,6 +23,8 @@ const {floatingStyles} = useFloating(reference, floating, {
         }),
     ],
 });
+
+const {status} = useConnectionStatus(Echo);
 
 const isAppInstalled = () => {
     return window.matchMedia('(display-mode: window-controls-overlay)').matches
@@ -114,6 +117,11 @@ onMounted(() => {
             </div>
         </Teleport>
     </div>
+    <div v-else class="material-symbols-rounded connection-status">
+        <span v-if="status === 'online'" style="color: var(--color-accent-medium)">wifi</span>
+        <span v-else-if="status === 'connecting'">wifi_find</span>
+        <span v-else>wifi_off</span>
+    </div>
 </template>
 
 <style scoped lang="scss">
@@ -122,9 +130,14 @@ onMounted(() => {
 }
 
 .install-button {
-    font-size: 2.0rem;
     color: var(--color-dark-primary);
-    width: 3.6rem;
     height: 100%;
+
+    font-size: 2.4rem;
+    width: 2em;
+
+    @media (min-width: 960px) {
+        font-size: 1.8rem;
+    }
 }
 </style>

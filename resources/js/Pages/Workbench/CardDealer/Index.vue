@@ -207,40 +207,39 @@ onMounted(async () => {
             <div class="featured-title m">scope</div>
             <div>
                 <div class="scope-button-wrapper">
-                    <button class="scope-button" :class="{selected: scope === 'all'}"
+                    <button class="scope-button material-symbols-rounded" :class="{selected: scope === 'all'}"
                             @click="() => {scope = 'all'}">
-                        all
+                        all_inclusive
                     </button>
-                    <button class="scope-button" :class="{selected: scope === 'lesson'}"
+                    <button class="scope-button material-symbols-rounded" :class="{selected: scope === 'lesson'}"
                             @click="() => {scope = 'lesson'}">
-                        academy
+                        school
                     </button>
-                    <button class="scope-button" :class="{selected: scope === 'pinned'}"
+                    <button class="scope-button material-symbols-rounded" :class="{selected: scope === 'pinned'}"
                             @click="() => {scope = 'pinned'}">
-                        pins
+                        keep
                     </button>
-                    <button class="scope-button" :class="{selected: scope === 'deck'}"
+                    <button class="scope-button material-symbols-rounded" :class="{selected: scope === 'deck'}"
                             @click="openDeckSelector">
-                        deck
+                        cards_stack
                     </button>
                 </div>
                 <p v-if="scope === 'all'">
-                    See Cards from among all Terms in the Dictionary. Select this option if you're a true completionist.
-                    Cards will be created in order of usage frequency (i.e. how many times the Term appears in
-                    Sentences).
+                    See Cards from among <b>all Terms in the Dictionary</b>. Select this option if you're a true
+                    completionist. Cards will be created in order of usage frequency (i.e. how many times the Term
+                    appears in Sentences).
                 </p>
                 <p v-if="scope === 'lesson'">
-                    Limit Cards to the Terms present across all Decks you've unlocked in the Academy. Select this option
-                    if
-                    you're following the main course.
+                    Limit Cards to the Terms present across <b>all Decks you've unlocked in the Academy</b>. Select this
+                    option if you're following the main course.
                 </p>
                 <p v-if="scope === 'pinned'">
-                    Limit Cards to the Terms present across all your Pinned Decks. If you're curating your own
+                    Limit Cards to the Terms present across <b>all your Pinned Decks</b>. If you're curating your own
                     vocabulary
                     sets, this option is for you.
                 </p>
                 <p v-if="scope === 'deck'">
-                    Limit Cards to the Terms present in a given Deck if you want to target a specific set of Terms.
+                    Limit Cards to the Terms present in <b>a single Deck</b> if you want to target a specific set of Terms.
                 </p>
             </div>
 
@@ -291,9 +290,12 @@ onMounted(async () => {
     width: min(96rem, 100%);
     display: grid;
     gap: 0.8rem;
-    border-radius: 2.4rem;
     background: var(--color-medium-secondary);
     padding: 0.8rem;
+
+    @media (min-width: 960px) {
+        border-radius: 2.4rem;
+    }
 
     .featured-title {
         justify-self: end;
@@ -309,12 +311,9 @@ onMounted(async () => {
 
     .scope-button {
         color: white;
-        font-size: 2.0rem;
-        font-weight: 700;
-        min-width: 12.8rem;
+        min-width: min(12.8rem, 20%);
         border-radius: 1.6rem 1.6rem 0 0;
-        padding: 0.4rem 3.2rem;
-        font-family: var(--head-font), sans-serif;
+        padding: 0.8rem 3.2rem;
 
         &.selected {
             color: var(--color-dark-primary);
@@ -323,7 +322,6 @@ onMounted(async () => {
     }
 
     p {
-        //width: 100%;
         color: var(--color-dark-primary);
         background: var(--color-pastel-light);
         border-radius: 1.6rem;
