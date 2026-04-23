@@ -30,7 +30,7 @@ const description = computed(() => {
 });
 
 const {locale} = useI18n();
-const selectedLocale = ref(UserStore.user.language ?? 'en');
+const selectedLocale = ref(UserStore.user?.language ?? 'en');
 const availableLocales = [
     {
         value: 'en',
