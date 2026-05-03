@@ -6,6 +6,7 @@ import {inject, provide} from "vue";
 import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockEditor.vue";
 import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
 import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
+import HeadingBlockEditor from "../components/Blocks/Editors/HeadingBlockEditor.vue";
 
 export const documentBuilderContextKey = Symbol('document-builder-context');
 
@@ -41,22 +42,24 @@ export function useDocumentBuilder(documentBlocks = null) {
 
     const blockEditors = {
         container: ContainerBlockEditor,
+        heading: HeadingBlockEditor,
         text: TextBlockEditor,
         audio: AudioBlockEditor,
-        table: TableBlockEditor,
-        exercises: ExercisesBlockEditor,
         chart: ChartBlockEditor,
+        table: TableBlockEditor,
         sentence: SentenceBlockEditor,
+        exercises: ExercisesBlockEditor,
     };
 
     const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
 
     const blockFactories = {
         container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
+        heading: () => ({id: uid(), type: 'heading', title: '', level: 'h1'}),
         text: () => ({id: uid(), type: 'text', content: ''}),
         audio: () => ({id: uid(), type: 'audio', media: ''}),
-        table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
         chart: () => ({id: uid(), type: 'chart', title: '', rows: []}),
+        table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
         sentence: () => ({id: uid(), type: 'sentence', model: null, custom: null}),
         exercises: () => ({
             id: uid(),
