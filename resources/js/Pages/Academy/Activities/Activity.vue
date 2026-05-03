@@ -3,7 +3,7 @@ import Layout from "../../../Shared/Layout.vue";
 import {computed, onBeforeUnmount, onMounted, watch} from "vue";
 import Results from "./Pages/Results.vue";
 import {useActivityStore} from "./Stores/ActivityStore.js";
-import ActivityBlocksWrapper from "./UI/ActivityBlocksWrapper.vue";
+import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import {route} from "ziggy-js";
@@ -67,8 +67,9 @@ watch(() => props.activity, (newActivity) => {
     </div>
     <div id="app-body">
         <div class="activity-container" v-if="ActivityStore.data.step === 'activity'">
-            <ActivityBlocksWrapper v-if="!ActivityStore.data.isLoading"
-                                   :blocks="ActivityStore.data.activity.document.blocks"/>
+            <div v-if="!ActivityStore.data.isLoading" class="activity-blocks-wrapper">
+                <DocumentBlocksRenderer :blocks="ActivityStore.data.activity.document.blocks"/>
+            </div>
             <button class="material-symbols-rounded" :disabled="!isValidRequest"
                     @click="ActivityStore.submitActivity">
                 check

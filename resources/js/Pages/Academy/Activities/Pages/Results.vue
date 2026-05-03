@@ -7,7 +7,7 @@ import ScoreStats from "../../../../components/ScoreStats.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
 import {useActivityStore} from "../Stores/ActivityStore.js";
-import ActivityBlocksWrapper from "../UI/ActivityBlocksWrapper.vue";
+import DocumentBlocksRenderer from "../../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {route} from "ziggy-js";
 import ActivityActions from "../../../../components/Actions/ActivityActions.vue";
 import AppTip from "../../../../components/AppTip.vue";
@@ -81,7 +81,9 @@ const handleSave = () => {
     </div>
 
     <div class="activity-container">
-        <ActivityBlocksWrapper :blocks="ActivityStore.data.activity.document.blocks"/>
+        <div class="activity-blocks-wrapper">
+            <DocumentBlocksRenderer :blocks="ActivityStore.data.activity.document.blocks"/>
+        </div>
     </div>
 
     <ModalWrapper v-model="showAlert">

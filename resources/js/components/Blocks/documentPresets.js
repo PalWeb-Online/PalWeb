@@ -1,7 +1,7 @@
 export const documentPresets = {
     lesson: {
         schemaVersion: 1,
-        allowedBlockTypes: ['container', 'text', 'audio', 'chart', 'table', 'sentence'],
+        allowedBlockTypes: ['container', 'text', 'chart', 'sentence'],
         createDocument: () => ({
             schemaVersion: 1,
             skills: [],

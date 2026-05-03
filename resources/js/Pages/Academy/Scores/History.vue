@@ -14,7 +14,7 @@ import ScoreDetail from "../../../components/ScoreDetail.vue";
 import {router} from "@inertiajs/vue3";
 import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
 import ActivityActions from "../../../components/Actions/ActivityActions.vue";
-import ActivityBlocksWrapper from "../Activities/UI/ActivityBlocksWrapper.vue";
+import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {useScoreManager} from "../../../composables/useScoreManager.js";
 
 defineOptions({
@@ -142,7 +142,9 @@ watch(() => props.selectedScore, (newVal) => {
             </template>
         </div>
 
-        <ActivityBlocksWrapper v-if="selectedScore && scorable_type === 'activity'" :blocks="selectedScore.results"/>
+        <div v-if="selectedScore && scorable_type === 'activity'" class="activity-blocks-wrapper">
+            <DocumentBlocksRenderer :blocks="selectedScore.results"/>
+        </div>
     </div>
 
     <ModalWrapper v-model="showPurgeScores">
