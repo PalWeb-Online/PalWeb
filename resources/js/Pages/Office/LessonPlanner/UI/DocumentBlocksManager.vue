@@ -1,17 +1,34 @@
 <script setup>
 import AppTip from "../../../../components/AppTip.vue";
 import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import {computed} from "vue";
 
 const props = defineProps({
     documentBlocks: {type: Array, required: true},
-    blockTypes: {type: Array, required: true},
+    blockTypes: {type: Array, default: null},
     isNested: {type: Boolean, default: false}
 });
 
-const builder = useDocumentBuilder(props.documentBlocks);
+const {
+    inheritedContext,
+    provideBuilder,
+    addBlock,
+    removeBlock,
+    moveBlock,
+    getBlockEditor,
+} = useDocumentBuilder(props.documentBlocks);
+
+const resolvedBlockTypes = computed(() => {
+    return props.blockTypes
+        ?? inheritedContext?.blockTypes?.value
+        ?? inheritedContext?.blockTypes
+        ?? [];
+});
 
 if (!props.isNested) {
-    builder.provideBuilder();
+    provideBuilder({
+        blockTypes: resolvedBlockTypes,
+    });
 }
 
 const handleRemoveBlock = (documentBlocks, blockId) => {
@@ -36,13 +53,11 @@ const handleFlattenContainer = (containerId) => {
 
     container.blocks = [];
 };
-
-const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(props.documentBlocks);
 </script>
 
 <template>
     <div class="block-add-buttons">
-        <div v-for="blockType in blockTypes">
+        <div v-for="blockType in resolvedBlockTypes">
             <div class="add-button"
                  @click="addBlock(documentBlocks, { type: blockType, atStart: true })">+
             </div>
@@ -90,7 +105,7 @@ const { addBlock, removeBlock, moveBlock, getBlockEditor } = useDocumentBuilder(
         </div>
         <div class="block-add-buttons">
             <span>Insert --></span>
-            <div v-for="blockType in blockTypes">
+            <div v-for="blockType in resolvedBlockTypes">
                 <div class="add-button"
                      @click="addBlock(documentBlocks, { afterBlockId: block.id, type: blockType })">+
                 </div>

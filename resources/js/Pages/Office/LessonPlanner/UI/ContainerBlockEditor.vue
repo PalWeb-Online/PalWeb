@@ -23,7 +23,6 @@ const flattenContainer = () => {
 
         <DocumentBlocksManager
             :document-blocks="block.blocks"
-            :block-types="['text', 'chart', 'sentence']"
             :is-nested="true"
         />
 

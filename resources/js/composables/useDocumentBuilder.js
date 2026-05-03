@@ -7,13 +7,18 @@ import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockE
 import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
 import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
 
-const symbol = Symbol('document-builder');
+export const documentBuilderContextKey = Symbol('document-builder-context');
 
 export function useDocumentBuilder(documentBlocks = null) {
-    const blocksArray = documentBlocks || inject(symbol, null);
+    const inheritedContext = inject(documentBuilderContextKey, null);
 
-    const provideBuilder = () => {
-        provide(symbol, blocksArray);
+    const blocksArray = documentBlocks ?? inheritedContext?.blocksArray ?? null;
+
+    const provideBuilder = (context = {}) => {
+        provide(documentBuilderContextKey, {
+            blocksArray,
+            blockTypes: context.blockTypes ?? inheritedContext?.blockTypes ?? null,
+        });
     };
 
     const uid = () => (globalThis.crypto?.randomUUID?.() ?? `id_${Date.now()}_${Math.random().toString(16).slice(2)}`);
@@ -310,6 +315,7 @@ export function useDocumentBuilder(documentBlocks = null) {
     };
 
     return {
+        inheritedContext,
         uid,
         provideBuilder,
         addBlock,
