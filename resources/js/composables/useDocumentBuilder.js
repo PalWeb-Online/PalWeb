@@ -1,12 +1,12 @@
-import TextBlockEditor from "../Pages/Office/LessonPlanner/UI/TextBlockEditor.vue";
-import AudioBlockEditor from "../Pages/Office/LessonPlanner/UI/AudioBlockEditor.vue";
-import TableBlockEditor from "../Pages/Office/LessonPlanner/UI/TableBlockEditor.vue";
-import ExercisesBlockEditor from "../Pages/Office/LessonPlanner/UI/ExercisesBlockEditor.vue";
 import {inject, provide} from "vue";
-import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockEditor.vue";
-import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
-import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
 import HeadingBlockEditor from "../components/Blocks/Editors/HeadingBlockEditor.vue";
+import ContainerBlockEditor from "../components/Blocks/Editors/ContainerBlockEditor.vue";
+import TextBlockEditor from "../components/Blocks/Editors/TextBlockEditor.vue";
+import AudioBlockEditor from "../components/Blocks/Editors/AudioBlockEditor.vue";
+import ChartBlockEditor from "../components/Blocks/Editors/ChartBlockEditor.vue";
+import TableBlockEditor from "../components/Blocks/Editors/TableBlockEditor.vue";
+import SentenceBlockEditor from "../components/Blocks/Editors/SentenceBlockEditor.vue";
+import ExercisesBlockEditor from "../components/Blocks/Editors/ExercisesBlockEditor.vue";
 
 export const documentBuilderContextKey = Symbol('document-builder-context');
 

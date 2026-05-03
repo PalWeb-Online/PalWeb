@@ -1,8 +1,9 @@
 <script setup>
-import {useSearchStore} from "../../../../stores/SearchStore.js";
-import {inject, ref, watch} from "vue";
-import SentenceItem from "../../../../components/SentenceItem.vue";
-import SentenceBlock from "../../../Academy/Lessons/UI/SentenceBlock.vue";
+import {computed, inject, ref, watch} from "vue";
+import {useSearchStore} from "../../../stores/SearchStore.js";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import SentenceItem from "../../SentenceItem.vue";
+import SentenceBlock from "../Renderers/SentenceBlock.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},

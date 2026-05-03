@@ -1,6 +1,5 @@
 <script setup>
 import {computed} from 'vue';
-import AppTip from "../../../../components/AppTip.vue";
 
 const props = defineProps({
     block: {type: Object, required: true}

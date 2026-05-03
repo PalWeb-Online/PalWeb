@@ -1,7 +1,7 @@
 <script setup>
 import Draggable from "vuedraggable";
-import ToggleSingle from "../../../../components/ToggleSingle.vue";
-import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
+import ToggleSingle from "../../ToggleSingle.vue";
 import ExercisePromptsEditor from "./ExercisePromptsEditor.vue";
 
 const {

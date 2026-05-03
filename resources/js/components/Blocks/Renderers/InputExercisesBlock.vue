@@ -1,6 +1,6 @@
 <script setup>
-import DialogLine from "../../../../components/Charts/DialogLine.vue";
-import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
+import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
+import DialogLine from "../../Charts/DialogLine.vue";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 

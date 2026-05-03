@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {shuffle} from "lodash";
-import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
+import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 

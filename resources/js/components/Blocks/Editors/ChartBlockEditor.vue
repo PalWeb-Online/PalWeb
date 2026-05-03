@@ -1,7 +1,7 @@
 <script setup>
 import Draggable from "vuedraggable";
-import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
-import ChartBlock from "../../../Academy/Lessons/UI/ChartBlock.vue";
+import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
+import ChartBlock from "../Renderers/ChartBlock.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useDocumentBuilder } from "../../../../composables/useDocumentBuilder.js";
+import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
 
 const props = defineProps({
     owner: { type: Object, required: true },

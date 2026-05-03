@@ -1,8 +1,8 @@
 <script setup>
-import AppTip from "../../../../components/AppTip.vue";
+import AppTip from "../../AppTip.vue";
 import {computed} from "vue";
 import Draggable from "vuedraggable";
-import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
 
 const {addTableColumn, removeTableColumn, addTableRow, removeTableRow} = useDocumentBuilder();
 
