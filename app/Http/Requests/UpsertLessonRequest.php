@@ -103,9 +103,6 @@ class UpsertLessonRequest extends FormRequest
         $blockValidator = new BlockValidator(
             allowedBlockTypes: ['container', 'text', 'chart', 'sentence'],
             recursive: true,
-            validateContainerIsNotEmpty: true,
-            validateFullChartRows: true,
-            validateFullCustomSentences: true,
         );
 
         foreach ($skills as $si => $skill) {

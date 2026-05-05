@@ -7,9 +7,6 @@ readonly class BlockValidator
     public function __construct(
         private array $allowedBlockTypes,
         private bool $recursive = true,
-        private bool $validateContainerIsNotEmpty = true,
-        private bool $validateFullChartRows = true,
-        private bool $validateFullCustomSentences = true,
     ) {
     }
 
@@ -51,7 +48,7 @@ readonly class BlockValidator
             return;
         }
 
-        if ($this->validateContainerIsNotEmpty && count($nestedBlocks) === 0) {
+        if (count($nestedBlocks) === 0) {
             $errors["$path.blocks"] = ['Container cannot be empty.'];
             return;
         }
@@ -133,7 +130,7 @@ readonly class BlockValidator
             return;
         }
 
-        if (! $this->validateFullCustomSentences || empty($block['custom'])) {
+        if (empty($block['custom'])) {
             return;
         }
 
@@ -165,10 +162,6 @@ readonly class BlockValidator
 
         if (! is_array($rows) || count($rows) === 0) {
             $errors["$path.rows"] = ['Chart must have at least one row.'];
-            return;
-        }
-
-        if (! $this->validateFullChartRows) {
             return;
         }
 

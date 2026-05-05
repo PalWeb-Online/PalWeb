@@ -73,9 +73,6 @@ class UpsertPageRequest extends FormRequest
         $blockValidator = new BlockValidator(
             allowedBlockTypes: ['container', 'heading', 'text', 'chart', 'sentence'],
             recursive: true,
-            validateContainerIsNotEmpty: true,
-            validateFullChartRows: false,
-            validateFullCustomSentences: false,
         );
 
         $blockValidator->validateBlocks($blocks, 'document.blocks', $errors);
