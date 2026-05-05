@@ -2,19 +2,28 @@ import {computed} from "vue";
 import {useDocumentValidation} from "./useDocumentValidation.js";
 
 export function useLessonValidation({
-    form,
-    lesson,
-}) {
+                                        form,
+                                        selectedDeck = null,
+                                        selectedDialog = null,
+                                        selectedActivity = null,
+                                        allowedBlockTypes,
+                                    }) {
     const {
         isNonEmptyString,
         validateBlocks,
     } = useDocumentValidation({
-        allowedBlockTypes: ['container', 'text', 'chart', 'sentence'],
+        allowedBlockTypes,
         recursive: true,
     });
 
+    const getValue = (value) => value?.value ?? value ?? null;
+
     const publishIssues = computed(() => {
         const issues = [];
+
+        const deck = getValue(selectedDeck);
+        const dialog = getValue(selectedDialog);
+        const activity = getValue(selectedActivity);
 
         if (form.group === 'extra') {
             const conditions = form.unlock_conditions || [];
@@ -66,24 +75,30 @@ export function useLessonValidation({
             }
         });
 
-        if (!lesson?.deck?.id && !form.deck_id) {
+        if (!form.deck_id) {
             issues.push('Lesson must have an assigned Deck.');
 
-        } else if (lesson?.deck && lesson.deck?.private) {
+        } else if (!deck) {
+            issues.push('Selected Deck could not be validated.');
+
+        } else if (deck.private) {
             issues.push('The Deck must be public before the Lesson can be published.');
         }
 
-        if (!lesson?.dialog?.id && !form.dialog_id) {
+        if (!form.dialog_id) {
             issues.push('Lesson must have an assigned Dialog.');
 
-        } else if (lesson?.dialog && !lesson.dialog?.published) {
+        } else if (!dialog) {
+            issues.push('Selected Dialog could not be validated.');
+
+        } else if (!dialog.published) {
             issues.push('The Dialog must be published before the Lesson can be published.');
         }
 
-        if (!lesson?.activity?.id) {
+        if (!activity?.id) {
             issues.push('Lesson must have an assigned Activity.');
 
-        } else if (!lesson.activity.published) {
+        } else if (!activity.published) {
             issues.push('The Activity must be published before the Lesson can be published.');
         }
 

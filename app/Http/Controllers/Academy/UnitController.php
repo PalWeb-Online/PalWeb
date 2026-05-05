@@ -8,6 +8,7 @@ use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,5 +138,37 @@ class UnitController extends Controller
         session()->flash('notification',
             ['type' => 'success', 'message' => __('deleted', ['thing' => $unit->title])]);
         return to_route('lesson-planner.index');
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $q = trim($validated['q'] ?? '');
+
+        $units = Unit::query()
+            ->withCount('lessons')
+            ->having('lessons_count', '<', 9)
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where('title', 'like', $q.'%');
+            })
+            ->orderBy('position')
+            ->orderBy('title')
+            ->limit(10)
+            ->get()
+            ->map(fn (Unit $unit) => [
+                'id' => $unit->id,
+                'title' => $unit->title,
+                'position' => $unit->position,
+                'published' => (bool) $unit->published,
+                'lessons_count' => $unit->lessons_count,
+            ])
+            ->values();
+
+        return response()->json([
+            'data' => $units,
+        ]);
     }
 }

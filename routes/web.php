@@ -17,6 +17,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Office\LessonPlannerController;
 use App\Http\Controllers\Office\SpeechMakerController;
 use App\Http\Controllers\Office\WordLoggerController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
@@ -345,10 +346,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');
         });
 
-        Route::controller(LessonController::class)->group(function () {
-            Route::get('/lessons/search', 'search')->name('lessons.search');
-        });
-
         Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
             Route::get('/', 'index')->name('feedback.index');
             Route::post('/', 'store')->name('todo.store');
@@ -360,6 +357,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/update-preferences', [UserController::class, 'updatePreferences'])->name('users.preferences.update');
 
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
+});
+
+Route::prefix('/api')->group(function () {
+    Route::prefix('/decks')->controller(DeckController::class)->group(function () {
+        Route::get('/search', 'search')->name('api.decks.search');
+    });
+
+    Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
+        Route::get('/search', 'search')->name('api.dialogs.search');
+    });
+
+    Route::prefix('/lessons')->controller(LessonController::class)->group(function () {
+        Route::get('/{lesson}', 'fetch')->name('api.lessons.fetch');
+    });
+
+    Route::prefix('/wiki')->controller(PageController::class)->group(function () {
+        Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
+        Route::get('/search', 'search')->name('api.wiki.search');
+        Route::get('/{page}', 'fetch')->name('api.wiki.fetch');
+    });
+
+    Route::prefix('/units')->controller(UnitController::class)->group(function () {
+        Route::get('/search', 'search')->name('api.units.search');
+    });
 });
 
 Route::middleware('auth')

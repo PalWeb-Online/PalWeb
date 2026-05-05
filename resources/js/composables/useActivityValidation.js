@@ -2,12 +2,13 @@ import {computed} from "vue";
 import {useDocumentValidation} from "./useDocumentValidation.js";
 
 export function useActivityValidation({
-    form,
-}) {
+                                          form,
+                                          allowedBlockTypes,
+                                      }) {
     const {
         validateBlocks,
     } = useDocumentValidation({
-        allowedBlockTypes: ['text', 'audio', 'table', 'exercises'],
+        allowedBlockTypes,
         recursive: false,
     });
 

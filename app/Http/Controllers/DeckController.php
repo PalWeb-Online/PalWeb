@@ -13,6 +13,7 @@ use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
@@ -245,5 +246,37 @@ class DeckController extends Controller
 
         fclose($output);
         exit;
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:255'],
+            'lesson_id' => ['nullable', 'integer', 'exists:lessons,id'],
+        ]);
+
+        $q = trim($validated['q'] ?? '');
+        $lessonId = $validated['lesson_id'] ?? null;
+
+        $decks = Deck::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where('decks.name', 'like', $q.'%');
+            })
+            ->whereNotExists(function ($sub) use ($lessonId) {
+                $sub->select(DB::raw(1))
+                    ->from('lessons')
+                    ->whereColumn('lessons.deck_id', 'decks.id');
+
+                if ($lessonId) {
+                    $sub->where('lessons.id', '!=', $lessonId);
+                }
+            })
+            ->orderBy('decks.name')
+            ->limit(10)
+            ->get();
+
+        return response()->json([
+            'data' => DeckResource::collection($decks),
+        ]);
     }
 }
