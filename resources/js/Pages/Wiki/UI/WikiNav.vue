@@ -3,7 +3,7 @@ import {reactive, watch} from "vue";
 import WikiNavItem from "./WikiNavItem.vue";
 
 const props = defineProps({
-    pages: {
+    pageTree: {
         type: Array,
         default: () => [],
     },
@@ -19,8 +19,8 @@ const hasChildren = (page) => {
     return Array.isArray(page.children) && page.children.length > 0;
 };
 
-const findPagePath = (pages, slug, path = []) => {
-    for (const page of pages) {
+const findPagePath = (pageTree, slug, path = []) => {
+    for (const page of pageTree) {
         const nextPath = [...path, page];
 
         if (page.slug === slug) {
@@ -44,7 +44,7 @@ const resetOpenSections = () => {
         delete openSections[slug];
     });
 
-    const currentPath = findPagePath(props.pages, props.currentSlug) ?? [];
+    const currentPath = findPagePath(props.pageTree, props.currentSlug) ?? [];
 
     currentPath.forEach((page) => {
         if (hasChildren(page)) {
@@ -54,7 +54,7 @@ const resetOpenSections = () => {
 };
 
 watch(
-    () => [props.pages, props.currentSlug],
+    () => [props.pageTree, props.currentSlug],
     resetOpenSections,
     {immediate: true, deep: true}
 );
@@ -63,7 +63,7 @@ watch(
 <template>
     <div class="wiki-nav">
         <WikiNavItem
-            v-for="page in pages"
+            v-for="page in pageTree"
             :key="page.slug"
             :page="page"
             :current-slug="currentSlug"

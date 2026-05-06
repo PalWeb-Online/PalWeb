@@ -44,7 +44,7 @@ const removeItem = (row, index) => row.items.splice(index, 1);
             </div>
         </div>
 
-        <ChartBlock :chart="block"/>
+        <ChartBlock :block="block"/>
 
         <Draggable v-if="block.rows.length" :list="block.rows" item-key="id" handle=".handle" class="chart-editor-grid">
             <template #item="{ element: row, index: ri }">

@@ -2,7 +2,7 @@
 import {ref} from "vue";
 
 defineProps({
-    container: Object
+    block: Object
 })
 
 const isOpen = ref(false);
@@ -14,7 +14,7 @@ const isOpen = ref(false);
             <button class="material-symbols-rounded" @click="isOpen = !isOpen">
                 {{ isOpen ? 'collapse_content' : 'expand_content' }}
             </button>
-            <h2>{{ container.title }}</h2>
+            <h2>{{ block.title }}</h2>
         </div>
         <template v-if="isOpen">
             <slot/>

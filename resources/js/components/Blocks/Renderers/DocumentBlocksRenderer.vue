@@ -21,7 +21,7 @@ const props = defineProps({
 
 <template>
     <template v-for="block in blocks" :key="block.id">
-        <ContainerBlock v-if="block.type === 'container'" :container="block">
+        <ContainerBlock v-if="block.type === 'container'" :block="block">
             <DocumentBlocksRenderer
                 :blocks="block.blocks ?? []"
             />
@@ -30,8 +30,8 @@ const props = defineProps({
         <HeadingBlock v-else-if="block.type === 'heading'" :block="block"/>
         <TextBlock v-else-if="block.type === 'text'" :block="block"/>
         <AudioBlock v-else-if="block.type === 'audio'" :block="block"/>
-        <ChartBlock v-else-if="block.type === 'chart'" :chart="block"/>
-        <TableBlock v-else-if="block.type === 'table'" :table="block"/>
+        <ChartBlock v-else-if="block.type === 'chart'" :block="block"/>
+        <TableBlock v-else-if="block.type === 'table'" :block="block"/>
 
         <template v-else-if="block.type === 'sentence'">
             <SentenceItem v-if="block.model" :model="block.model"/>
