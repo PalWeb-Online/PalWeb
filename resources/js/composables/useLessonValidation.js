@@ -5,7 +5,7 @@ export function useLessonValidation({
                                         form,
                                         selectedDeck = null,
                                         selectedDialog = null,
-                                        selectedActivity = null,
+                                        lessonActivity = null,
                                         allowedBlockTypes,
                                     }) {
     const {
@@ -23,7 +23,7 @@ export function useLessonValidation({
 
         const deck = getValue(selectedDeck);
         const dialog = getValue(selectedDialog);
-        const activity = getValue(selectedActivity);
+        const activity = getValue(lessonActivity);
 
         if (form.group === 'extra') {
             const conditions = form.unlock_conditions || [];

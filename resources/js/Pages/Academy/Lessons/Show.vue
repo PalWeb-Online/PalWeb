@@ -1,140 +1,131 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
-import {provide, ref, watch} from "vue";
-import {route} from "ziggy-js";
+import {onMounted, ref, watch} from "vue";
 import UnitNav from "../Units/UI/UnitNav.vue";
 import SkillContainer from "../Lessons/UI/SkillContainer.vue";
 import DeckContainer from "../../../components/DeckContainer.vue";
 import ActivityContainer from "../../../components/ActivityContainer.vue";
 import AppTip from "../../../components/AppTip.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useLessonViewer} from "../../../composables/lessons/useLessonViewer.js";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
-    unit: {type: Object, required: false},
-    lesson: {type: Object, required: true},
+    lessonId: {
+        type: Number,
+        required: true,
+    },
 })
 
-const lessonSentences = ref({});
-const isLoadingSentences = ref(true);
-
-provide('lessonSentences', lessonSentences);
+const {
+    lesson,
+    lessonNotFound,
+    isLoadingLesson,
+    unit,
+    loadLesson,
+    reloadLesson,
+} = useLessonViewer();
 
 const currentTab = ref('deck');
 
-const loadSkillSentences = async () => {
-    const ids = new Set();
-    props.lesson.document?.skills.forEach(skill => {
-        skill.blocks.forEach(block => {
-            if (block.type === 'sentence' && block.model?.id) {
-                ids.add(block.model.id);
-            }
-        });
-    });
+onMounted(async () => {
+    await loadLesson(props.lessonId);
+});
 
-    if (ids.size === 0) {
-        isLoadingSentences.value = false;
-        return;
-    }
-
-    try {
-        const response = await axios.post(route('sentences.get-many'), {
-            ids: Array.from(ids)
-        });
-        lessonSentences.value = response.data;
-
-    } catch (error) {
-        console.error("Failed to fetch Skill Sentences", error);
-
-    } finally {
-        isLoadingSentences.value = false;
-    }
-}
-
-watch(currentTab, (newTab) => {
-    if (newTab === 'skills') loadSkillSentences();
+watch(() => props.lessonId, async () => {
+    currentTab.value = 'deck';
+    await reloadLesson(props.lessonId);
 });
 </script>
 <template>
-    <Head :title="`Academy: Lesson ${lesson.global_position}`"/>
+    <Head :title="`Academy: Lesson ${lesson?.global_position}`"/>
 
-    <div id="lesson-nav">
-        <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
-        <div class="lesson-data-container">
-            <div class="lesson-data-head">
-                <div class="featured-title s">Lesson {{ lesson.global_position }}:</div>
-                <div class="lesson-head-title">{{ lesson.title }}</div>
+    <LoadingSpinner v-if="isLoadingLesson"/>
+    <div v-else-if="lessonNotFound" id="app-body">
+        <AppTip>
+            <p>Sorry, but the requested Lesson could not be found.</p>
+        </AppTip>
+    </div>
+    <template v-else-if="lesson">
+        <div id="lesson-nav">
+            <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
+            <div class="lesson-data-container">
+                <div class="lesson-data-head">
+                    <div class="featured-title s">Lesson {{ lesson.global_position }}:</div>
+                    <div class="lesson-head-title">{{ lesson.title }}</div>
+                </div>
+                <div class="lesson-data-body">
+                    <div>{{ lesson.description ?? '(No description has been written for the Lesson yet.)' }}</div>
+                    <div v-if="lesson.document" class="lesson-skill-summary">
+                        <div style="font-weight: 700">In this Lesson, you'll learn to:</div>
+                        <ul style="margin-block: 1.6rem">
+                            <li v-for="skill in lesson.document.skills">
+                                {{ skill.description }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="lesson-data-body">
-                <div>{{ lesson.description ?? '(No description has been written for the Lesson yet.)' }}</div>
-                <div v-if="lesson.document" class="lesson-skill-summary">
-                    <div style="font-weight: 700">In this Lesson, you'll learn to:</div>
-                    <ul style="margin-block: 1.6rem">
-                        <li v-for="skill in lesson.document.skills">
-                            {{ skill.description }}
-                        </li>
-                    </ul>
+
+            <div class="lesson-stages">
+                <div class="lesson-stage-wrapper" @click="currentTab = 'deck'"
+                     :class="{active: currentTab === 'deck'}">
+                    <div class="lesson-stage-index">1</div>
+                    <div class="featured-title m">deck</div>
+                </div>
+                <div class="lesson-stage-wrapper" @click="currentTab = 'skills'"
+                     :class="{active: currentTab === 'skills', disabled: lesson.progress.stage < 2}">
+                    <div v-if="lesson.progress.stage < 2" class="lesson-stage-index">
+                        <span class="material-symbols-rounded">lock</span>
+                    </div>
+                    <template v-else>
+                        <div class="lesson-stage-index">2</div>
+                        <div class="featured-title m">skills</div>
+                    </template>
+                </div>
+                <div class="lesson-stage-wrapper" @click="currentTab = 'dialog'"
+                     :class="{active: currentTab === 'dialog', disabled: lesson.progress.stage < 3}">
+                    <div v-if="lesson.progress.stage < 3" class="lesson-stage-index">
+                        <span class="material-symbols-rounded">lock</span>
+                    </div>
+                    <template v-else>
+                        <div class="lesson-stage-index">3</div>
+                        <div class="featured-title m">dialog</div>
+                    </template>
                 </div>
             </div>
         </div>
 
-        <div class="lesson-stages">
-            <div class="lesson-stage-wrapper" @click="currentTab = 'deck'"
-                 :class="{active: currentTab === 'deck'}">
-                <div class="lesson-stage-index">1</div>
-                <div class="featured-title m">deck</div>
-            </div>
-            <div class="lesson-stage-wrapper" @click="currentTab = 'skills'"
-                 :class="{active: currentTab === 'skills', disabled: lesson.progress.stage < 2}">
-                <div v-if="lesson.progress.stage < 2" class="lesson-stage-index">
-                    <span class="material-symbols-rounded">lock</span>
-                </div>
-                <template v-else>
-                    <div class="lesson-stage-index">2</div>
-                    <div class="featured-title m">skills</div>
-                </template>
-            </div>
-            <div class="lesson-stage-wrapper" @click="currentTab = 'dialog'"
-                 :class="{active: currentTab === 'dialog', disabled: lesson.progress.stage < 3}">
-                <div v-if="lesson.progress.stage < 3" class="lesson-stage-index">
-                    <span class="material-symbols-rounded">lock</span>
-                </div>
-                <template v-else>
-                    <div class="lesson-stage-index">3</div>
-                    <div class="featured-title m">dialog</div>
-                </template>
-            </div>
+        <div id="app-body" v-show="currentTab === 'deck'">
+            <template v-if="lesson.deck">
+                <DeckContainer :model="lesson.deck"/>
+            </template>
+            <AppTip v-else>
+                <p>No Deck available for this Lesson yet.</p>
+            </AppTip>
         </div>
-    </div>
+        <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
+            <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill" :key="skill.id"/>
 
-    <div id="app-body" v-show="currentTab === 'deck'">
-        <template v-if="lesson.deck">
-            <DeckContainer :model="lesson.deck"/>
-        </template>
-        <AppTip v-else>
-            <p>No Deck available for this Lesson yet.</p>
-        </AppTip>
-    </div>
-    <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
-        <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill" :key="skill.id"/>
-
-        <template v-if="lesson.activity">
-            <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
-            <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
-        </template>
-        <AppTip v-else>
-            <p>No Activity available for this Lesson yet.</p>
-        </AppTip>
-    </div>
-    <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
-        <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
-        <AppTip v-else>
-            <p>No Dialog available for this Lesson yet.</p>
-        </AppTip>
-    </div>
+            <template v-if="lesson.activity">
+                <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
+                <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
+            </template>
+            <AppTip v-else>
+                <p>No Activity available for this Lesson yet.</p>
+            </AppTip>
+        </div>
+        <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
+            <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
+            <AppTip v-else>
+                <p>No Dialog available for this Lesson yet.</p>
+            </AppTip>
+        </div>
+    </template>
 </template>
 
 <style lang="scss" scoped>
