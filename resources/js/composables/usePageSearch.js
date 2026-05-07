@@ -8,7 +8,7 @@ export function usePageSearch({
         const response = await axios.get(route('api.wiki.search'), {
             params: {
                 q,
-                page_id: currentPageId?.value ?? currentPageId ?? null,
+                page_id: currentPageId.value ?? null,
             },
         });
 

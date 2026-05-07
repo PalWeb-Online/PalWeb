@@ -1,7 +1,6 @@
 <script setup>
-import {computed, inject, ref, watch} from "vue";
+import {inject, ref, watch} from "vue";
 import {useSearchStore} from "../../../stores/SearchStore.js";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import SentenceItem from "../../SentenceItem.vue";
 import SentenceBlock from "../Renderers/SentenceBlock.vue";
 
@@ -9,7 +8,7 @@ const props = defineProps({
     block: {type: Object, required: true},
 });
 
-const lessonSentences = inject('lessonSentences');
+const documentSentenceModels = inject('documentSentenceModels', ref({}));
 
 const SearchStore = useSearchStore();
 const isSearchingForMe = ref(false);
@@ -20,7 +19,7 @@ const openSearch = () => {
 };
 
 const insertSentence = (model) => {
-    lessonSentences.value[model.id] = model;
+    documentSentenceModels.value[model.id] = model;
 
     props.block.model = {id: model.id};
     props.block.custom = null;
@@ -85,7 +84,7 @@ watch(
 
         <div v-if="block.model || block.custom" class="sentence-preview">
             <button class="material-symbols-rounded" @click="clearSentence">mop</button>
-            <SentenceItem v-if="block.model" :model="lessonSentences[block.model.id]"/>
+            <SentenceItem v-if="block.model" :model="documentSentenceModels[block.model.id]"/>
             <SentenceBlock v-else-if="block.custom" :sentence="block.custom"/>
         </div>
 

@@ -47,59 +47,69 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 </script>
 
 <template>
-    <template v-if="! isLoading">
-        <div class="model-item-container sentence-item-container">
-            <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
-                <Link v-if="dialog && sentence.dialog"
-                      :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
-                      target="_blank">
-                    <div>dialog</div>
-                    <div>{{ sentence.dialog.title }}</div>
-                </Link>
-                <div v-if="speaker">
-                    <div>speaker</div>
-                    <div>{{ sentence.speaker }}</div>
-                </div>
-            </div>
-            <div class="model-item sentence-item">
-                <PinButton modelType="sentence" :model="sentence"/>
-                <div class="model-item-content">
-                    <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
-                        <div v-if="!showTerms && term.sentencePivot.toggleable" class="sentence-term">
-                            <div>
-                                {{ parseToggleableTerm(term.sentencePivot.sent_term) }}
-                            </div>
-                            <div v-if="showTranscription">[]</div>
-                        </div>
-                        <template v-else>
-                            <Link v-if="term.id"
-                                  :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
-                                  :target="isCurrentTerm(term) ? '' : '_blank'"
-                                  :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                            </Link>
-                            <div v-else class="sentence-term">
-                                <div>{{ term.sentencePivot.sent_term }}</div>
-                                <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                            </div>
-                        </template>
-                    </template>
-                    <div v-else class="sentence-term" style="background: none">
-                        <div>{{ sentence.sentence }}</div>
-                        <div v-if="showTranscription">{{ sentence.translit }}</div>
-                    </div>
-                </div>
-                <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
-                <div v-else class="popup-menu-wrapper">
-                    <button class="material-symbols-rounded" @click="router.get(route('sentences.show', sentence.id))">
-                        visibility
-                    </button>
-                </div>
-            </div>
-            <div v-if="showTerms" class="model-item-description">
-                {{ sentence.trans }}
+    <div v-if="! isLoading && sentence.sentence" class="model-item-container sentence-item-container">
+        <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
+            <Link v-if="dialog && sentence.dialog"
+                  :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
+                  target="_blank">
+                <div>dialog</div>
+                <div>{{ sentence.dialog.title }}</div>
+            </Link>
+            <div v-if="speaker">
+                <div>speaker</div>
+                <div>{{ sentence.speaker }}</div>
             </div>
         </div>
-    </template>
+        <div class="model-item sentence-item">
+            <PinButton modelType="sentence" :model="sentence"/>
+            <div class="model-item-content">
+                <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
+                    <div v-if="!showTerms && term.sentencePivot.toggleable" class="sentence-term">
+                        <div>
+                            {{ parseToggleableTerm(term.sentencePivot.sent_term) }}
+                        </div>
+                        <div v-if="showTranscription">[]</div>
+                    </div>
+                    <template v-else>
+                        <Link v-if="term.id"
+                              :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                              :target="isCurrentTerm(term) ? '' : '_blank'"
+                              :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
+                        </Link>
+                        <div v-else class="sentence-term">
+                            <div>{{ term.sentencePivot.sent_term }}</div>
+                            <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
+                        </div>
+                    </template>
+                </template>
+                <div v-else class="sentence-term" style="background: none">
+                    <div>{{ sentence.sentence }}</div>
+                    <div v-if="showTranscription">{{ sentence.translit }}</div>
+                </div>
+            </div>
+            <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
+            <div v-else class="popup-menu-wrapper">
+                <button class="material-symbols-rounded" @click="router.get(route('sentences.show', sentence.id))">
+                    visibility
+                </button>
+            </div>
+        </div>
+        <div v-if="showTerms" class="model-item-description">
+            {{ sentence.trans }}
+        </div>
+    </div>
+    <div v-else class="model-item-container sentence-item-container is-loading">
+        <div class="model-item sentence-item">
+            <div class="model-item-content" style="height: 4.2rem">
+                <div class="sentence-term" style="background: none">
+                    <div>يتمّ تحميل الجملة</div>
+                </div>
+            </div>
+        </div>
+        <div class="model-item-description" style="height: 2.8rem">
+            Loading Sentence...
+        </div>
+    </div>
 </template>
