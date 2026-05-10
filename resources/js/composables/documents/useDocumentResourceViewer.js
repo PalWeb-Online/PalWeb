@@ -1,11 +1,11 @@
-import {useDocumentLoader} from "../useDocumentLoader.js";
+import {useDocumentResourceLoader} from "./useDocumentResourceLoader.js";
 
 export function useDocumentResourceViewer({
                                               fetchModel,
                                               resetModel,
                                               getBlocks,
                                           }) {
-    const documentLoader = useDocumentLoader();
+    const documentLoader = useDocumentResourceLoader();
 
     const load = async (...args) => {
         const model = await fetchModel(...args);

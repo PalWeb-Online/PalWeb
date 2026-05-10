@@ -2,8 +2,8 @@ import {ref} from "vue";
 import {route} from "ziggy-js";
 import {usePageLoader} from "./usePageLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 
 export function usePageEditor({
                                   pageId = null,
@@ -36,7 +36,7 @@ export function usePageEditor({
         clearErrors();
     };
 
-    const editor = useResourceEditor({
+    const editor = useDocumentResourceEditor({
         initialForm: {
             slug: '',
             title: '',

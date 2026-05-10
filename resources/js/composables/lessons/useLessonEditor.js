@@ -2,8 +2,8 @@ import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useLessonLoader} from "./useLessonLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 
 export function useLessonEditor({
                                     lessonId = null,
@@ -71,7 +71,7 @@ export function useLessonEditor({
         clearErrors();
     };
 
-    const editor = useResourceEditor({
+    const editor = useDocumentResourceEditor({
         initialForm: {
             group: 'main',
             unit_id: null,

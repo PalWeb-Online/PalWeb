@@ -1,5 +1,5 @@
 import {computed} from "vue";
-import {useDocumentValidation} from "./useDocumentValidation.js";
+import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
 
 export function useActivityValidation({
                                           form,
@@ -7,7 +7,7 @@ export function useActivityValidation({
                                       }) {
     const {
         validateBlocks,
-    } = useDocumentValidation({
+    } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: false,
     });

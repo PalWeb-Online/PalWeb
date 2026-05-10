@@ -1,10 +1,9 @@
-import axios from "axios";
-import {useDocumentLoader} from "../useDocumentLoader.js";
 import {useForm} from "../useForm.js";
 import {useValidationErrors} from "../useValidationErrors.js";
 import {ref} from "vue";
+import {useDocumentResourceLoader} from "./useDocumentResourceLoader.js";
 
-export function useResourceEditor({
+export function useDocumentResourceEditor({
                                       initialForm,
                                       populateForm,
                                       extractSavedModel,
@@ -28,7 +27,7 @@ export function useResourceEditor({
                                       onDeleteSuccess = null,
                                       onDeleteError = null,
                                   }) {
-    const documentLoader = useDocumentLoader();
+    const documentLoader = useDocumentResourceLoader();
 
     const isSaving = ref(false);
     const isDeleting = ref(false);

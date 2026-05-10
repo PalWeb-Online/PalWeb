@@ -8,7 +8,6 @@ import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import DocumentBlocksManager from "./UI/DocumentBlocksManager.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useLessonValidation} from "../../../composables/useLessonValidation.js";
 import {useDialogSearch} from "../../../composables/useDialogSearch.js";
 import {useUnitSearch} from "../../../composables/useUnitSearch.js";
 import {useDeckSearch} from "../../../composables/useDeckSearch.js";
@@ -16,6 +15,7 @@ import SearchSelect from "../../../components/SearchSelect.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import {useLessonEditor} from "../../../composables/lessons/useLessonEditor.js";
+import {useLessonValidation} from "../../../composables/lessons/useLessonValidation.js";
 
 defineOptions({
     layout: Layout,

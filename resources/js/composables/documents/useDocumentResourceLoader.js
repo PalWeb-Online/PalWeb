@@ -1,8 +1,7 @@
-import axios from "axios";
 import {ref} from "vue";
 import {route} from "ziggy-js";
 
-export function useDocumentLoader() {
+export function useDocumentResourceLoader() {
     const sentenceModels = ref({});
 
     const collectSentenceIds = (blocks, ids = new Set()) => {

@@ -10,8 +10,8 @@ import DocumentBlocksManager from "../Office/LessonPlanner/UI/DocumentBlocksMana
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import SearchSelect from "../../components/SearchSelect.vue";
 import {usePageSearch} from "../../composables/usePageSearch.js";
-import {usePageValidation} from "../../composables/usePageValidation.js";
 import {usePageEditor} from "../../composables/pages/usePageEditor.js";
+import {usePageValidation} from "../../composables/pages/usePageValidation.js";
 
 defineOptions({
     layout: Layout,

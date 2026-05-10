@@ -1,4 +1,4 @@
-export function useDocumentValidation({
+export function useDocumentResourceValidation({
     allowedBlockTypes = [],
     recursive = true,
 } = {}) {

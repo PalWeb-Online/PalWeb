@@ -1,5 +1,5 @@
 import {computed} from "vue";
-import {useDocumentValidation} from "./useDocumentValidation.js";
+import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
 
 export function usePageValidation({
     form,
@@ -10,7 +10,7 @@ export function usePageValidation({
     const {
         isNonEmptyString,
         validateBlocks,
-    } = useDocumentValidation({
+    } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: true,
     });
