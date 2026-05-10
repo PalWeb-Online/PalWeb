@@ -16,9 +16,9 @@ defineOptions({
 });
 
 const props = defineProps({
-    pageSlug: {
-        type: String,
-        default: 'about',
+    pageId: {
+        type: Number,
+        required: false,
     },
 });
 
@@ -35,9 +35,6 @@ const {
     loadPage,
     reloadPage,
 } = usePageViewer();
-// todo: here I pass the identifier to the load method, not to the composable
-
-const pageTitle = computed(() => page.value?.title ?? (props.pageSlug === 'about' ? 'About' : props.pageSlug));
 
 const headingLevelNumber = (level) => {
     return {
@@ -92,17 +89,17 @@ onMounted(async () => {
     // todo: is the Wiki tree blocking render? what about loading the page?
     await Promise.all([
         fetchWikiTree(),
-        loadPage(props.pageSlug),
+        loadPage(props.pageId),
     ]);
 });
 
-watch(() => props.pageSlug, async () => {
-    await reloadPage(props.pageSlug)
+watch(() => props.pageId, async () => {
+    await reloadPage(props.pageId)
 });
 </script>
 
 <template>
-    <Head :title="page ? `Wiki: ${pageTitle}` : 'Wiki'"/>
+    <Head :title="page ? `Wiki: ${page?.title}` : 'Wiki'"/>
 
     <div id="app-head">
         <h1>wiki</h1>
@@ -118,8 +115,8 @@ watch(() => props.pageSlug, async () => {
                 menu
             </button>
 
-            <h1>{{ pageTitle }}</h1>
-            <Link :href="route('wiki.edit', pageSlug)" class="material-symbols-rounded">edit</Link>
+            <h1>{{ page?.title }}</h1>
+            <Link :href="route('wiki.edit', page)" class="material-symbols-rounded">edit</Link>
             <Link :href="route('wiki.edit')" class="material-symbols-rounded">add</Link>
         </div>
 
@@ -134,7 +131,7 @@ watch(() => props.pageSlug, async () => {
         <div class="wiki-body" :class="{ 'nav-open': navOpen }">
             <WikiNav v-if="!isLoadingTree"
                      :page-tree="pageTree"
-                     :current-slug="pageSlug"
+                     :current-slug="page?.slug"
             />
 
             <LoadingSpinner v-if="isLoadingPage"/>
@@ -142,7 +139,7 @@ watch(() => props.pageSlug, async () => {
                 <p>Sorry, but the requested page does not exist.</p>
 
                 <p v-if="UserStore.isAdmin">
-                    <Link :href="route('wiki.edit', pageSlug)">Create this Page</Link>
+                    <Link :href="route('wiki.edit', page)">Create this Page</Link>
                 </p>
 
                 <p>

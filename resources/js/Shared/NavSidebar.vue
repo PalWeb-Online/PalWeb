@@ -272,7 +272,7 @@ onMounted(() => {
                             <img src="/img/globe-africa.svg" alt="Hub"/>
                             <div>hub</div>
                         </div>
-                        <Link :href="route('wiki.show', 'about')" class="nav-portal">
+                        <Link :href="route('wiki.index')" class="nav-portal">
                             <img src="/img/globe-america.svg" alt="Wiki"/>
                             <div>wiki</div>
                         </Link>

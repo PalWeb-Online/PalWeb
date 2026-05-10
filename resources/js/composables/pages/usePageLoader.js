@@ -14,8 +14,7 @@ export function usePageLoader() {
         setModel: setPage,
         fetchModel: fetchPage,
     } = useResourceLoader({
-        // todo: why am i fetching the model by slug?
-        getUrl: (pageSlug) => route('api.wiki.fetch', pageSlug),
+        getUrl: (pageId) => route('api.wiki.fetch', pageId),
         extractModel: (response) => response.data.page ?? null,
         extractMeta: (response) => ({
             descendantIds: response.data.descendant_ids ?? [],

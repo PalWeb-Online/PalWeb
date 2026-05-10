@@ -109,7 +109,7 @@ watch(() => props.lessonId, async () => {
             </AppTip>
         </div>
         <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
-            <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill" :key="skill.id"/>
+            <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill"/>
 
             <template v-if="lesson.activity">
                 <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
