@@ -375,14 +375,15 @@ Route::prefix('/api')->group(function () {
         Route::get('/{lesson}', 'fetch')->name('api.lessons.fetch');
     });
 
+    Route::prefix('/units')->controller(UnitController::class)->group(function () {
+        Route::get('/{unit}', 'fetch')->name('api.units.fetch');
+        Route::get('/search', 'search')->name('api.units.search');
+    });
+
     Route::prefix('/wiki')->controller(PageController::class)->group(function () {
         Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
         Route::get('/search', 'search')->name('api.wiki.search');
         Route::get('/{page}', 'fetch')->name('api.wiki.fetch');
-    });
-
-    Route::prefix('/units')->controller(UnitController::class)->group(function () {
-        Route::get('/search', 'search')->name('api.units.search');
     });
 });
 

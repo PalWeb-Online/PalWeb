@@ -35,12 +35,26 @@ class UnitController extends Controller
 
         return Inertia::render('Academy/Units/Show', [
             'section' => 'academy',
-            'unit' => new UnitResource($unit),
-            'lessons' => LessonResource::collection($unit->lessons),
+            'unitId' => $unit->id,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function fetch(Request $request, Unit $unit): JsonResponse
+    {
+        Gate::authorize('view', $unit);
+
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'unit' => new UnitResource($unit),
+            'lessons' => $includes->contains('show') ? LessonResource::collection($unit->lessons) : [],
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $unit = DB::transaction(function () use ($request) {
             $unit = Unit::create([
@@ -64,12 +78,23 @@ class UnitController extends Controller
             return $unit;
         });
 
+        $unit->load([
+            'lessons',
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'unit' => new UnitResource($unit),
+                'message' => 'Unit created successfully.',
+            ], 201);
+        }
+
         session()->flash('notification',
             ['type' => 'success', 'message' => __('created', ['thing' => $unit->title])]);
         return to_route('lesson-planner.unit', $unit);
     }
 
-    public function update(Request $request, Unit $unit): RedirectResponse
+    public function update(Request $request, Unit $unit): RedirectResponse|JsonResponse
     {
         if (count($request->lessons) > 9) {
             session()->flash('notification',
@@ -116,6 +141,17 @@ class UnitController extends Controller
             $unit->refresh();
             LessonService::reorderUnitLessons($unit);
         });
+
+        $unit->refresh()->load([
+            'lessons',
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'unit' => new UnitResource($unit),
+                'message' => 'Unit updated successfully.',
+            ]);
+        }
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => $unit->title])]);

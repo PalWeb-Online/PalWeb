@@ -69,7 +69,7 @@ class LessonPlannerController extends Controller
     {
         return Inertia::render('Office/LessonPlanner/Unit', [
             'section' => 'office',
-            'unit' => $unit ? new UnitResource($unit) : null,
+            'unitId' => $unit?->id,
         ]);
     }
 
