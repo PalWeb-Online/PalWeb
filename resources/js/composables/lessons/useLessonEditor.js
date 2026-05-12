@@ -53,19 +53,19 @@ export function useLessonEditor({
         lessonLoader.setLesson(model);
 
         // todo: what is more correct? `??` or `||`?
-        selectedUnit.value = model?.unit ?? null;
+        selectedUnit.value = model?.unit ?? initialUnit.value ?? null;
         selectedDeck.value = model?.deck ?? null;
         selectedDialog.value = model?.dialog ?? null;
 
-        form.group = model?.group || 'main';
-        form.unit_id = selectedUnit.value?.id || model?.unit_id || null;
-        form.title = model?.title || '';
-        form.description = model?.description || '';
-        form.document = model?.document || documentPreset.createDocument();
-        form.deck_id = model?.deck?.id || model?.deck_id || null;
-        form.dialog_id = model?.dialog?.id || model?.dialog_id || null;
-        form.unlock_conditions = model?.unlock_conditions || [];
-        form.published = model?.published || false;
+        form.group = model?.group ?? 'main';
+        form.unit_id = selectedUnit.value?.id ?? model?.unit_id ?? null;
+        form.title = model?.title ?? '';
+        form.description = model?.description ?? '';
+        form.document = model?.document ?? documentPreset.createDocument();
+        form.deck_id = model?.deck?.id ?? model?.deck_id ?? null;
+        form.dialog_id = model?.dialog?.id ?? model?.dialog_id ?? null;
+        form.unlock_conditions = model?.unlock_conditions ?? [];
+        form.published = model?.published ?? false;
 
         // ensureLessonSkillIds(form.document);
 

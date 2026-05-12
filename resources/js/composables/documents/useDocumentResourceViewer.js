@@ -1,4 +1,5 @@
 import {useDocumentResourceLoader} from "./useDocumentResourceLoader.js";
+import {useResourceViewer} from "../resources/useResourceViewer.js";
 
 export function useDocumentResourceViewer({
                                               fetchModel,
@@ -7,28 +8,27 @@ export function useDocumentResourceViewer({
                                           }) {
     const documentLoader = useDocumentResourceLoader();
 
-    const load = async (...args) => {
-        const model = await fetchModel(...args);
+    const {
+        load,
+        reload,
+    } = useResourceViewer({
+        fetchModel,
+        resetModel,
+        afterLoad: async (model) => {
+            if (!model) {
+                documentLoader.resetDocuments();
+                return null;
+            }
 
-        if (!model) {
+            const blocks = getBlocks(model.document) ?? [];
+
+            await documentLoader.loadSentenceModelsForBlocks(blocks);
+            documentLoader.hydrateBlocks(blocks);
+        },
+        beforeReload: () => {
             documentLoader.resetDocuments();
-            return null;
-        }
-
-        const blocks = getBlocks(model.document) ?? [];
-
-        await documentLoader.loadSentenceModelsForBlocks(blocks);
-        documentLoader.hydrateBlocks(blocks);
-
-        return model;
-    };
-
-    const reload = async (...args) => {
-        resetModel();
-        documentLoader.resetDocuments();
-
-        return await load(...args);
-    };
+        },
+    });
 
     return {
         load,

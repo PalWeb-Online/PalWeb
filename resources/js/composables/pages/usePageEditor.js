@@ -24,14 +24,14 @@ export function usePageEditor({
 
         selectedParent.value = model?.parent ?? null;
 
-        form.slug = model?.slug || '';
-        form.title = model?.title || '';
-        form.summary = model?.summary || '';
-        form.document = model?.document || documentPreset.createDocument();
-        form.status = model?.status || 'draft';
-        form.locale = model?.locale || 'en';
-        form.sort_order = model?.sort_order || 0;
-        form.parent_id = selectedParent.value?.id || model?.parent_id || null;
+        form.slug = model?.slug ?? '';
+        form.title = model?.title ?? '';
+        form.summary = model?.summary ?? '';
+        form.document = model?.document ?? documentPreset.createDocument();
+        form.status = model?.status ?? 'draft';
+        form.locale = model?.locale ?? 'en';
+        form.sort_order = model?.sort_order ?? 0;
+        form.parent_id = selectedParent.value?.id ?? model?.parent_id ?? null;
 
         defaults();
         clearErrors();
