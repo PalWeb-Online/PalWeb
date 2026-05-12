@@ -38,7 +38,7 @@ class UpsertLessonRequest extends FormRequest
             'deck_id' => ['nullable', 'integer', 'exists:decks,id'],
             'dialog_id' => ['nullable', 'integer', 'exists:dialogs,id'],
             'document' => ['required', 'array'],
-            'document.schemaVersion' => ['required', 'integer'],
+            'document.schemaVersion' => ['required', 'integer', 'min:1'],
             'document.skills' => ['present', 'array'],
             'published' => ['required', 'boolean'],
             'unlock_conditions' => ['nullable', 'array'],

@@ -37,6 +37,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialog;
+use App\Models\Page;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
@@ -103,7 +104,9 @@ Route::get('/', function () {
 
 Route::prefix('/wiki')->controller(PageController::class)->group(function () {
     Route::get('/', function () {
-        return to_route('wiki.show', 'about');
+        return Page::where('slug', 'about')->exists()
+            ? to_route('wiki.show', 'about')
+            : to_route('wiki.edit');
     })->name('wiki.index');
 
     Route::middleware('admin')->group(function () {
@@ -209,7 +212,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->middleware(['student'])->group(function () {
         Route::controller(UnitController::class)->group(function () {
-            Route::get('/', 'index')->name('units.index');
+            Route::get('/units', 'index')->name('units.index');
             Route::get('/units/{unit:position}', 'show')->name('units.show');
         });
 

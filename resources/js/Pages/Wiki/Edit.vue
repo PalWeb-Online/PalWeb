@@ -63,6 +63,8 @@ watch(() => props.pageId, async () => {
 });
 
 const {
+    validationIssues,
+    isValidRequest,
     publishIssues,
     isPublishable,
 } = usePageValidation({
@@ -85,15 +87,12 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-
         <div v-if="pageNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
             <p>Sorry, but the requested Page does not exist.</p>
-
             <Link :href="route('wiki.index')">
                 Back to Wiki
             </Link>
         </div>
-
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="featured-title l">
@@ -158,6 +157,12 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             <AppTip>
                 <p>The Wiki page is currently {{ form.status }}.</p>
 
+                <template v-if="!isValidRequest">
+                    <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
+                    <ul>
+                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                    </ul>
+                </template>
                 <template v-if="!isPublishable">
                     <p style="font-weight: 700">The page cannot be published in the current state.</p>
                     <ul>
@@ -171,7 +176,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     <button
                         type="button"
                         @click="savePage({ publish: form.status === 'published' })"
-                        :disabled="isSaving || !hasNavigationGuard || (form.status === 'published' && !isPublishable)"
+                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.status === 'published' && !isPublishable)"
                     >
                         Save
                     </button>
@@ -187,7 +192,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     <button
                         type="button"
                         @click="savePage({ publish: form.status !== 'published' })"
-                        :disabled="isSaving || (form.status !== 'published' && !isPublishable)"
+                        :disabled="isSaving || !isValidRequest || (form.status !== 'published' && !isPublishable)"
                     >
                         {{
                             hasNavigationGuard ? 'Save & ' : ''

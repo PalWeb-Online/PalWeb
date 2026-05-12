@@ -4,6 +4,7 @@ import {useLessonLoader} from "./useLessonLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
+import {router} from "@inertiajs/vue3";
 
 export function useLessonEditor({
                                     lessonId = null,
@@ -51,6 +52,7 @@ export function useLessonEditor({
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         lessonLoader.setLesson(model);
 
+        // todo: what is more correct? `??` or `||`?
         selectedUnit.value = model?.unit ?? null;
         selectedDeck.value = model?.deck ?? null;
         selectedDialog.value = model?.dialog ?? null;
@@ -63,7 +65,7 @@ export function useLessonEditor({
         form.deck_id = model?.deck?.id || model?.deck_id || null;
         form.dialog_id = model?.dialog?.id || model?.dialog_id || null;
         form.unlock_conditions = model?.unlock_conditions || [];
-        form.published = !!model?.published;
+        form.published = model?.published || false;
 
         // ensureLessonSkillIds(form.document);
 
@@ -98,7 +100,9 @@ export function useLessonEditor({
         beforeSave: ({publish}, {form}) => {
             const previousPublished = form.published;
 
-            form.published = !!publish;
+            if (publish !== undefined) {
+                form.published = !!publish;
+            }
 
             return () => {
                 form.published = previousPublished;
@@ -112,7 +116,7 @@ export function useLessonEditor({
         },
         onDeleteSuccess: () => {
             NotificationStore.addNotification('OK, the Lesson was successfully deleted.', 'success');
-            window.location.href = route('lesson-planner.index');
+            router.get(route('lesson-planner.index'));
         },
         onDeleteError: () => {
             NotificationStore.addNotification('Oops — the Lesson could not be deleted.', 'error');

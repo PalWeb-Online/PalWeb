@@ -28,7 +28,7 @@ class UpsertPageRequest extends FormRequest
             'summary' => ['nullable', 'string'],
             'document' => ['required', 'array'],
             'document.schemaVersion' => ['required', 'integer', 'min:1'],
-            'document.blocks' => ['required', 'array', 'min:1'],
+            'document.blocks' => ['present', 'array'],
             'status' => ['required', 'string', Rule::in(['draft', 'published', 'archived'])],
             'locale' => ['required', 'string', 'max:10'],
             'published_at' => ['nullable', 'date'],

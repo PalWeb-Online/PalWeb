@@ -86,6 +86,8 @@ watch(() => props.lessonId, async () => {
 });
 
 const {
+    validationIssues,
+    isValidRequest,
     publishIssues,
     isPublishable,
 } = useLessonValidation({
@@ -141,33 +143,31 @@ const removeUnlockCondition = (i) => {
 }
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
+    <Head :title="`Lesson Planner: Lesson ${lesson?.global_position}`"/>
+
     <div id="app-head">
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-
-        <div v-if="lessonNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
+        <div v-else-if="lessonNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
             <p>Sorry, but the requested Lesson does not exist.</p>
-
             <Link :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
         </div>
-
-        <template v-else>
+        <template v-else-if="lesson">
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link v-if="lesson?.unit?.id || initialUnit" :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
+                    <Link v-if="lesson.unit?.id || initialUnit" :href="route('lesson-planner.unit', lesson.unit?.id ?? initialUnit.id)">
                         <- to Unit
                     </Link>
-                    <Link v-if="lesson?.id" :href="route('lessons.show', lesson?.global_position)">
+                    <Link v-if="lesson.id" :href="route('lessons.show', lesson.global_position)">
                         View
                     </Link>
                 </div>
                 <div class="featured-title l">
-                    <span v-if="lesson?.id">Lesson {{ lesson?.global_position }}</span>
+                    <span v-if="lesson.id">Lesson {{ lesson.global_position }}</span>
                     <span v-else-if="initialUnit?.id">Lesson in Unit {{ initialUnit?.position }}</span>
                     <span v-else>New Lesson</span>
                 </div>
@@ -303,7 +303,7 @@ const removeUnlockCondition = (i) => {
                 </div>
                 <button v-if="form.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>
 
-                <Link v-if="lesson?.id" :href="route('lesson-planner.lesson-activity', lesson.id)"
+                <Link v-if="lesson.id" :href="route('lesson-planner.lesson-activity', lesson.id)"
                       class="portal-button" style="justify-self: center"
                 >
                     {{ lesson.activity?.id ? 'Edit' : 'Create' }} Activity
@@ -315,7 +315,12 @@ const removeUnlockCondition = (i) => {
 
             <AppTip>
                 <p>The Lesson is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-
+                <template v-if="!isValidRequest">
+                    <p style="font-weight: 700">The Lesson cannot be saved in the current state.</p>
+                    <ul>
+                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                    </ul>
+                </template>
                 <template v-if="!isPublishable">
                     <p style="font-weight: 700">The Lesson cannot be Published in the current state.</p>
                     <ul>
@@ -330,13 +335,13 @@ const removeUnlockCondition = (i) => {
                 <div class="app-nav-interact-buttons">
                     <button type="button"
                             @click="saveLesson({ publish: form.published })"
-                            :disabled="isSaving || !hasNavigationGuard || (form.published && !isPublishable)">
+                            :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.published && !isPublishable)">
                         Save
                     </button>
                     <button type="button" :disabled="!hasNavigationGuard" @click="reset()">Reset</button>
                     <button type="button"
                             @click="saveLesson({ publish: !form.published })"
-                            :disabled="isSaving || (!form.published && !isPublishable)"
+                            :disabled="isSaving || !isValidRequest || (!form.published && !isPublishable)"
                     >
                         {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
                     </button>

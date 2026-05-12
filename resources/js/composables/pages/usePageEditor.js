@@ -4,6 +4,7 @@ import {usePageLoader} from "./usePageLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
+import {router} from "@inertiajs/vue3";
 
 export function usePageEditor({
                                   pageId = null,
@@ -23,8 +24,8 @@ export function usePageEditor({
 
         selectedParent.value = model?.parent ?? null;
 
-        form.slug = model?.slug || 'page';
-        form.title = model?.title || 'Page';
+        form.slug = model?.slug || '';
+        form.title = model?.title || '';
         form.summary = model?.summary || '';
         form.document = model?.document || documentPreset.createDocument();
         form.status = model?.status || 'draft';
@@ -74,7 +75,7 @@ export function usePageEditor({
         },
         onDeleteSuccess: () => {
             NotificationStore.addNotification('OK, the Page was successfully deleted.', 'success');
-            window.location.href = route('wiki.show');
+            router.get(route('wiki.index'));
         },
         onDeleteError: () => {
             NotificationStore.addNotification('Oops — the Page could not be deleted.', 'error');

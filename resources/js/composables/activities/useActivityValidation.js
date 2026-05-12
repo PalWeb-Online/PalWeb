@@ -6,11 +6,24 @@ export function useActivityValidation({
                                           allowedBlockTypes,
                                       }) {
     const {
+        isNonEmptyString,
         validateBlocks,
     } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: false,
     });
+
+    const validationIssues = computed(() => {
+        const issues = [];
+
+        if (!isNonEmptyString(form.title)) {
+            issues.push('Title is required.');
+        }
+
+        return issues;
+    });
+
+    const isValidRequest = computed(() => validationIssues.value.length === 0);
 
     const publishIssues = computed(() => {
         const issues = [];
@@ -29,6 +42,8 @@ export function useActivityValidation({
     const isPublishable = computed(() => publishIssues.value.length === 0);
 
     return {
+        validationIssues,
+        isValidRequest,
         publishIssues,
         isPublishable,
     };

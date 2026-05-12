@@ -15,7 +15,7 @@ export function usePageValidation({
         recursive: true,
     });
 
-    const publishIssues = computed(() => {
+    const validationIssues = computed(() => {
         const issues = [];
 
         if (!isNonEmptyString(form.slug)) {
@@ -25,6 +25,14 @@ export function usePageValidation({
         if (!isNonEmptyString(form.title)) {
             issues.push('Title is required.');
         }
+
+        return issues;
+    });
+
+    const isValidRequest = computed(() => validationIssues.value.length === 0);
+
+    const publishIssues = computed(() => {
+        const issues = [];
 
         if (page.value?.id && Number(form.parent_id) === Number(page.value.id)) {
             issues.push('A page cannot be its own parent.');
@@ -52,6 +60,8 @@ export function usePageValidation({
     const isPublishable = computed(() => publishIssues.value.length === 0);
 
     return {
+        validationIssues,
+        isValidRequest,
         publishIssues,
         isPublishable,
     };

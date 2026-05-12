@@ -17,8 +17,8 @@ class UpsertActivityRequest extends FormRequest
             'lesson_id' => ['required', 'integer', 'exists:lessons,id'],
             'title' => ['required', 'string', 'max:255'],
             'document' => ['required', 'array'],
-            'document.schemaVersion' => ['required', 'integer'],
-            'document.blocks' => ['required', 'array'],
+            'document.schemaVersion' => ['required', 'integer', 'min:1'],
+            'document.blocks' => ['present', 'array'],
             'published' => ['required', 'boolean'],
         ];
     }
