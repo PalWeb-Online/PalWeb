@@ -363,6 +363,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::prefix('/api')->group(function () {
+    Route::prefix('/activities')->controller(ActivityController::class)->group(function () {
+        Route::get('/{activity}', 'fetch')->name('api.activities.fetch');
+    });
+
     Route::prefix('/decks')->controller(DeckController::class)->group(function () {
         Route::get('/search', 'search')->name('api.decks.search');
     });

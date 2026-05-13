@@ -106,8 +106,13 @@ class LessonPlannerController extends Controller
 
         return Inertia::render('Office/LessonPlanner/Activity', [
             'section' => 'office',
-            'lesson' => new LessonResource($lesson),
-            'activity' => $activity ? new ActivityResource($activity) : null,
+            'activityId' => $activity?->id,
+            'initialLesson' => [
+                'id' => $lesson->id,
+                'title' => $lesson->title,
+                'global_position' => $lesson->global_position,
+                'published' => $lesson->published,
+            ],
         ]);
     }
 }

@@ -27,9 +27,11 @@ class ActivityResource extends JsonResource
             'lesson' => $this->when($this->lesson, function () use ($request) {
                 return [
                     'id' => $this->lesson->id,
+                    'title' => $this->lesson->title,
                     'global_position' => $this->lesson->global_position,
                     'progress' => $request->user()?->getLessonProgress()[$this->lesson?->id] ?? null,
                     'scores_count' => $request->user()?->getScoreCounts() ?? null,
+                    'published' => $this->lesson->published,
                 ];
             }),
             'unlocked' => $request->user()?->can('view', $this->resource),
