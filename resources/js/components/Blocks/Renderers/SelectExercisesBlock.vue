@@ -8,13 +8,12 @@ const props = defineProps({
 });
 
 const {
-    ActivityStore,
-    isViewingResults,
+    ActivitySession,
     processedItems,
 } = useExerciseBlock(props);
 
 const selectOption = (itemId, optionId) => {
-    const exercise = ActivityStore.getExerciseById(itemId);
+    const exercise = ActivitySession.getExerciseById(itemId);
 
     exercise.response === optionId
         ? exercise.response = null
@@ -28,12 +27,12 @@ const selectOption = (itemId, optionId) => {
         <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems">
             <div class="exercise--select">
-                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
 
                 <div class="exercise--select-options">
                     <template v-for="option in item.displayOptions" :key="option.id">
-                        <button v-if="!isViewingResults"
-                                :class="{ 'selected': ActivityStore.getExerciseById(item.id)?.response === option.id }"
+                        <button v-if="!ActivitySession.isViewingResults"
+                                :class="{ 'selected': ActivitySession.getExerciseById(item.id)?.response === option.id }"
                                 @click="selectOption(item.id, option.id)"
                         >
                             {{ option.text }}

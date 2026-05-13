@@ -42,6 +42,8 @@ const polylinePoints = computed(() => {
     if (!props.model?.scores?.length) return "";
 
     const scores = graphScores?.map(s => s.score);
+    const n = scores.length;
+    if (n < 2) return "";
     const width = 100;
     const height = 100;
 

@@ -9,8 +9,7 @@ const props = defineProps({
 });
 
 const {
-    ActivityStore,
-    isViewingResults,
+    ActivitySession,
     processedItems,
 } = useExerciseBlock(props);
 </script>
@@ -26,25 +25,25 @@ const {
         </div>
         <template v-for="item in processedItems">
             <div class="exercise--input" :class="{
-                    'correct': isViewingResults && item.correct,
-                    'incorrect': isViewingResults && !item.correct
+                    'correct': ActivitySession.isViewingResults && item.correct,
+                    'incorrect': ActivitySession.isViewingResults && !item.correct
                 }">
-                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
 
                 <input type="text" placeholder="جواب"
-                       :disabled="isViewingResults"
-                       :value="isViewingResults ? item.response : ActivityStore.getExerciseById(item.id)?.response"
-                       @input="ActivityStore.getExerciseById(item.id).response = $event.target.value"
+                       :disabled="ActivitySession.isViewingResults"
+                       :value="ActivitySession.isViewingResults ? item.response : ActivitySession.getExerciseById(item.id)?.response"
+                       @input="ActivitySession.getExerciseById(item.id).response = $event.target.value"
                 >
-                <div class="exercise--input-answers" v-if="isViewingResults && !item.correct">
+                <div class="exercise--input-answers" v-if="ActivitySession.isViewingResults && !item.correct">
                     <div>
                         ->
                         <span v-for="answer in item.answers">
                                 {{ answer }}
                             </span>
                     </div>
-                    <button v-if="ActivityStore.data.activity"
-                            type="button" @click="ActivityStore.markCorrect(item.id)">Mark as Correct
+                    <button v-if="ActivitySession.activity"
+                            type="button" @click="ActivitySession.markCorrect(item.id)">Mark as Correct
                     </button>
                 </div>
             </div>

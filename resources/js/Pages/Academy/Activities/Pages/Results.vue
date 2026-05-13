@@ -6,48 +6,48 @@ import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ScoreStats from "../../../../components/ScoreStats.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
-import {useActivityStore} from "../Stores/ActivityStore.js";
 import DocumentBlocksRenderer from "../../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {route} from "ziggy-js";
 import ActivityActions from "../../../../components/Actions/ActivityActions.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
+import {useActivitySession} from "../../../../composables/activities/useActivitySession.js";
 
-const ActivityStore = useActivityStore();
+const ActivitySession = useActivitySession();
 
 const hasNavigationGuard = computed(() => {
-    return !ActivityStore.isSaved;
+    return !ActivitySession.isSaved;
 });
 
 const {showAlert, handleConfirm, handleCancel, skipNext} = useNavGuard(hasNavigationGuard);
 
 const handleSave = () => {
     skipNext();
-    ActivityStore.saveScore();
+    ActivitySession.saveScore();
 };
 </script>
 
 <template>
     <div class="window-container">
         <div class="window-header">
-            <Link :href="route('lessons.show', ActivityStore.data.activity.lesson.global_position)"
+            <Link :href="route('lessons.show', ActivitySession.activity.lesson.global_position)"
                   class="material-symbols-rounded">close
             </Link>
             <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}/activity</div>
         </div>
         <div class="window-section-head">
             <h1>activity</h1>
-            <ActivityActions :model="ActivityStore.data.activity"/>
+            <ActivityActions :model="ActivitySession.activity"/>
         </div>
         <div class="window-content-head">
-            <div class="window-content-head-title">{{ ActivityStore.data.activity?.title }}</div>
+            <div class="window-content-head-title">{{ ActivitySession.activity?.title }}</div>
         </div>
         <WindowSection :visible="false">
             <template #title>
                 <h2>stats</h2>
             </template>
             <template #content>
-                <ScoreStats :model="ActivityStore.data.activity"/>
+                <ScoreStats :model="ActivitySession.activity"/>
             </template>
         </WindowSection>
 
@@ -74,15 +74,15 @@ const handleSave = () => {
             </p>
         </AppTip>
 
-        <ScoreDetail :score="ActivityStore.score" :model="ActivityStore.data.activity"/>
+        <ScoreDetail :score="ActivitySession.score" :model="ActivitySession.activity"/>
         <div class="window-footer">
-            <button @click="handleSave" :disabled="ActivityStore.isSaved">save & quit</button>
+            <button @click="handleSave" :disabled="ActivitySession.isSaved">save & quit</button>
         </div>
     </div>
 
     <div class="activity-container">
         <div class="activity-blocks-wrapper">
-            <DocumentBlocksRenderer :blocks="ActivityStore.data.activity.document.blocks"/>
+            <DocumentBlocksRenderer :blocks="ActivitySession.activity.document.blocks"/>
         </div>
     </div>
 
