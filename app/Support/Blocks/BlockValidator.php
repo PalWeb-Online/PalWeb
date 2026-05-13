@@ -29,6 +29,7 @@ readonly class BlockValidator
                 'container' => $this->validateContainerBlock($block, $path, $errors),
                 'heading' => $this->validateHeadingBlock($block, $path, $errors),
                 'text' => $this->validateTextBlock($block, $path, $errors),
+                'image' => $this->validateImageBlock($block, $path, $errors),
                 'audio' => $this->validateAudioBlock($block, $path, $errors),
                 'chart' => $this->validateChartBlock($block, $path, $errors),
                 'table' => $this->validateTableBlock($block, $path, $errors),
@@ -73,6 +74,13 @@ readonly class BlockValidator
     {
         if (trim((string) ($block['content'] ?? '')) === '') {
             $errors["$path.content"] = ['Text Block content cannot be empty.'];
+        }
+    }
+
+    private function validateImageBlock(array $block, string $path, array &$errors): void
+    {
+        if (trim((string) ($block['media'] ?? '')) === '') {
+            $errors["$path.media"] = ['Image Block media cannot be empty.'];
         }
     }
 
@@ -248,6 +256,7 @@ readonly class BlockValidator
             'input' => $this->validateInputExercise($exercise, $path, $errors),
             'select' => $this->validateSelectExercise($exercise, $path, $errors),
             'match' => $this->validateMatchExercise($exercise, $path, $errors),
+            'sort' => $this->validateSortExercise($exercise, $path, $errors),
             default => $errors["$path.type"] = ['Exercise type must be input, select, or match.'],
         };
     }
@@ -261,31 +270,6 @@ readonly class BlockValidator
 
         if (! $hasAny) {
             $errors["$path.answers"] = ['At least one non-empty accepted answer is required.'];
-        }
-    }
-
-    private function validateSelectExercise(array $exercise, string $path, array &$errors): void
-    {
-        $options = $exercise['options'] ?? [];
-        $answerId = $exercise['answerId'] ?? null;
-
-        if (! is_array($options)) {
-            $errors["$path.options"] = ['Options must be an array.'];
-            return;
-        }
-
-        $optionIds = collect($options)->pluck('id')->toArray();
-
-        $anyEmpty = collect($options)->contains(fn ($option) => (
-            trim((string) ($option['text'] ?? '')) === ''
-        ));
-
-        if ($anyEmpty) {
-            $errors["$path.options"] = ['Options cannot be empty.'];
-        }
-
-        if (! $answerId || ! in_array($answerId, $optionIds, true)) {
-            $errors["$path.answerId"] = ['A valid correct answer must be selected.'];
         }
     }
 
@@ -309,6 +293,49 @@ readonly class BlockValidator
             if ($end === '') {
                 $errors["$path.pairs.$pairIndex.end"] = ['End side cannot be empty.'];
             }
+        }
+    }
+
+    private function validateSelectExercise(array $exercise, string $path, array &$errors): void
+    {
+        $options = $exercise['options'] ?? [];
+        $answerId = $exercise['answerId'] ?? null;
+
+        if (! is_array($options)) {
+            $errors["$path.options"] = ['Options must be an array.'];
+            return;
+        }
+
+        $optionIds = collect($options)->pluck('id')->toArray();
+
+        $anyEmpty = collect($options)->contains(fn ($option) => (
+            trim((string) ($option['text'] ?? '')) === ''
+        ));
+
+        if ($anyEmpty) {
+            $errors["$path.options"] = ['The Options array cannot contain empty text.'];
+        }
+
+        if (! $answerId || ! in_array($answerId, $optionIds, true)) {
+            $errors["$path.answerId"] = ['A valid correct answer must be selected.'];
+        }
+    }
+
+    private function validateSortExercise(array $exercise, string $path, array &$errors): void
+    {
+        $items = $exercise['items'] ?? [];
+
+        if (! is_array($items)) {
+            $errors["$path.items"] = ['Items must be an array.'];
+            return;
+        }
+
+        $anyEmpty = collect($items)->contains(fn ($option) => (
+            trim((string) ($option['text'] ?? '')) === ''
+        ));
+
+        if ($anyEmpty) {
+            $errors["$path.items"] = ['The Items array cannot contain empty text.'];
         }
     }
 }

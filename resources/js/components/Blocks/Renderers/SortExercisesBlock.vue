@@ -1,5 +1,5 @@
 <script setup>
-import {useExerciseBlock} from "../../../../composables/useExerciseBlock.js";
+import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 import Draggable from "vuedraggable";

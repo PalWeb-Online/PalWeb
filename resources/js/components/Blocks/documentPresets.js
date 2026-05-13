@@ -1,7 +1,7 @@
 export const documentPresets = {
     lesson: {
         schemaVersion: 1,
-        allowedBlockTypes: ['container', 'text', 'chart', 'sentence'],
+        allowedBlockTypes: ['container', 'text', 'image', 'chart', 'sentence'],
         createDocument: () => ({
             schemaVersion: 1,
             skills: [],
@@ -9,7 +9,7 @@ export const documentPresets = {
     },
     activity: {
         schemaVersion: 1,
-        allowedBlockTypes: ['text', 'audio', 'table', 'exercises'],
+        allowedBlockTypes: ['text', 'image', 'audio', 'table', 'exercises'],
         createDocument: () => ({
             schemaVersion: 1,
             blocks: [],
@@ -17,7 +17,7 @@ export const documentPresets = {
     },
     wiki: {
         schemaVersion: 1,
-        allowedBlockTypes: ['container', 'heading', 'text', 'chart', 'sentence'],
+        allowedBlockTypes: ['container', 'heading', 'text', 'image', 'chart', 'sentence'],
         createDocument: () => ({
             schemaVersion: 1,
             blocks: [],

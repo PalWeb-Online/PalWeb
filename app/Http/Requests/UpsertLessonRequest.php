@@ -101,7 +101,7 @@ class UpsertLessonRequest extends FormRequest
         }
 
         $blockValidator = new BlockValidator(
-            allowedBlockTypes: ['container', 'text', 'chart', 'sentence'],
+            allowedBlockTypes: ['container', 'text', 'image', 'chart', 'sentence'],
             recursive: true,
         );
 

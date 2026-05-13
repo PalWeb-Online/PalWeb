@@ -1,7 +1,7 @@
 export function useDocumentResourceValidation({
-    allowedBlockTypes = [],
-    recursive = true,
-} = {}) {
+                                                  allowedBlockTypes = [],
+                                                  recursive = true,
+                                              } = {}) {
     const isNonEmptyString = (value) => {
         return typeof value === 'string' && value.trim().length > 0;
     };
@@ -36,6 +36,10 @@ export function useDocumentResourceValidation({
 
             if (type === 'text') {
                 validateTextBlock(block, issues, where);
+            }
+
+            if (type === 'image') {
+                validateImageBlock(block, issues, where);
             }
 
             if (type === 'audio') {
@@ -93,6 +97,12 @@ export function useDocumentResourceValidation({
     const validateTextBlock = (block, issues, where) => {
         if (!isNonEmptyString(block.content)) {
             issues.push(`${where}: Text Block content cannot be empty.`);
+        }
+    };
+
+    const validateImageBlock = (block, issues, where) => {
+        if (!isNonEmptyString(block.media)) {
+            issues.push(`${where}: Image Block media cannot be empty.`);
         }
     };
 
@@ -201,7 +211,7 @@ export function useDocumentResourceValidation({
     };
 
     const validateExercisesBlock = (block, issues, where) => {
-       const examples = block.examples ?? [];
+        const examples = block.examples ?? [];
 
         if (Array.isArray(examples)) {
             examples.forEach((example, exampleIndex) => {
@@ -247,10 +257,12 @@ export function useDocumentResourceValidation({
 
         if (exercise?.type === 'input') {
             validateInputExercise(exercise, issues, where);
-        } else if (exercise?.type === 'select') {
-            validateSelectExercise(exercise, issues, where);
         } else if (exercise?.type === 'match') {
             validateMatchExercise(exercise, issues, where);
+        } else if (exercise?.type === 'select') {
+            validateSelectExercise(exercise, issues, where);
+        } else if (exercise?.type === 'sort') {
+            validateSortExercise(exercise, issues, where);
         } else {
             issues.push(`${where}: Exercise type must be input, select, or match.`);
         }
@@ -262,21 +274,6 @@ export function useDocumentResourceValidation({
 
         if (!hasAnyAnswer) {
             issues.push(`${where}: must have at least one non-empty accepted answer.`);
-        }
-    };
-
-    const validateSelectExercise = (exercise, issues, where) => {
-        const options = Array.isArray(exercise?.options) ? exercise.options : [];
-        const optionIds = options.map((option) => option.id);
-
-        const anyEmpty = options.some((option) => !isNonEmptyString(option?.text));
-
-        if (anyEmpty) {
-            issues.push(`${where}: option text cannot be empty.`);
-        }
-
-        if (!exercise?.answerId || !optionIds.includes(exercise.answerId)) {
-            issues.push(`${where}: a correct answer must be selected.`);
         }
     };
 
@@ -297,6 +294,31 @@ export function useDocumentResourceValidation({
                 issues.push(`${where}: pair ${pairIndex + 1} end side cannot be empty.`);
             }
         });
+    };
+
+    const validateSelectExercise = (exercise, issues, where) => {
+        const options = Array.isArray(exercise?.options) ? exercise.options : [];
+        const optionIds = options.map((option) => option.id);
+
+        const anyEmpty = options.some((option) => !isNonEmptyString(option?.text));
+
+        if (anyEmpty) {
+            issues.push(`${where}: options array cannot contain empty text.`);
+        }
+
+        if (!exercise?.answerId || !optionIds.includes(exercise.answerId)) {
+            issues.push(`${where}: a correct answer must be selected.`);
+        }
+    };
+
+    const validateSortExercise = (exercise, issues, where) => {
+        const items = Array.isArray(exercise?.items) ? exercise.items : [];
+
+        const anyEmpty = items.some((item) => !isNonEmptyString(item?.text));
+
+        if (anyEmpty) {
+            issues.push(`${where}: items array cannot contain empty text.`);
+        }
     };
 
     return {
