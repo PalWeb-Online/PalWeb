@@ -105,7 +105,7 @@ const removeLesson = (lesson) => {
                 Back to Lesson Planner
             </Link>
         </div>
-        <template v-else-if="unit">
+        <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
                     <Link :href="route('lesson-planner.index')">
@@ -165,6 +165,12 @@ const removeLesson = (lesson) => {
                     <p style="font-weight: 700">The Unit cannot be saved in the current state.</p>
                     <ul>
                         <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                    </ul>
+                </template>
+                <template v-if="Object.keys(errors).length">
+                    <p style="font-weight: 700">Oops — the Unit could not be saved.</p>
+                    <ul>
+                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
                     </ul>
                 </template>
             </AppTip>

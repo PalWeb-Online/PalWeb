@@ -40,8 +40,8 @@ const props = defineProps({
 
         <template v-else-if="block.type === 'exercises'">
             <InputExercisesBlock v-if="block.exerciseType === 'input'" :block="block"/>
-            <MatchExercisesBlock v-if="block.exerciseType === 'match'" :block="block"/>
-            <SelectExercisesBlock v-if="block.exerciseType === 'select'" :block="block"/>
+            <MatchExercisesBlock v-else-if="block.exerciseType === 'match'" :block="block"/>
+            <SelectExercisesBlock v-else-if="block.exerciseType === 'select'" :block="block"/>
             <p v-else>Unsupported Exercise Block type: {{ block.exerciseType }}</p>
         </template>
 

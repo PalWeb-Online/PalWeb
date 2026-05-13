@@ -1,7 +1,6 @@
 import {ref} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
-import {useValidationErrors} from "../useValidationErrors.js";
 
 export function useResourceEditor({
                                       initialForm,
@@ -91,12 +90,6 @@ export function useResourceEditor({
         setRecentlySuccessful,
     } = useForm(initialForm);
 
-    const {
-        handleValidationError,
-    } = useValidationErrors({
-        setErrors,
-    });
-
     const hasIdentifier = (identifier) => {
         return identifier !== null && identifier !== undefined && identifier !== '';
     };
@@ -184,9 +177,11 @@ export function useResourceEditor({
             } catch (error) {
                 rollback?.();
 
-                if (!handleValidationError(error)) {
-                    onSaveError?.(error);
+                if (error?.response?.status === 422) {
+                    setErrors?.(error.response.data.errors ?? {});
                 }
+
+                onSaveError?.(error);
 
                 return null;
 

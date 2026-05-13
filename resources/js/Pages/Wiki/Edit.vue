@@ -164,9 +164,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     </ul>
                 </template>
                 <template v-if="!isPublishable">
-                    <p style="font-weight: 700">The page cannot be published in the current state.</p>
+                    <p style="font-weight: 700">The Page cannot be published in the current state.</p>
                     <ul>
                         <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
+                    </ul>
+                </template>
+                <template v-if="Object.keys(errors).length">
+                    <p style="font-weight: 700">Oops — the Page could not be saved.</p>
+                    <ul>
+                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
                     </ul>
                 </template>
             </AppTip>

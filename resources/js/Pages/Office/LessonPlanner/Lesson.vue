@@ -298,7 +298,7 @@ const removeUnlockCondition = (i) => {
                     </div>
 
                     <DocumentBlocksManager :document-blocks="form.document.skills[si].blocks"
-                                           :block-types="['container', 'text', 'chart', 'sentence']"
+                                           :block-types="allowedBlockTypes"
                     />
                 </div>
                 <button v-if="form.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>
@@ -328,6 +328,12 @@ const removeUnlockCondition = (i) => {
                     </ul>
                     <p v-if="form.published" style="font-weight: 700">Because the Lesson is already Published, the
                         current state cannot be saved except by reverting it to Draft.</p>
+                </template>
+                <template v-if="Object.keys(errors).length">
+                    <p style="font-weight: 700">Oops — the Lesson could not be saved.</p>
+                    <ul>
+                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
+                    </ul>
                 </template>
             </AppTip>
 
