@@ -6,7 +6,7 @@ import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
-import DocumentBlocksManager from "./UI/DocumentBlocksManager.vue";
+import DocumentBlocksManager from "../../../components/Blocks/Editors/DocumentBlocksManager.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useDialogSearch} from "../../../composables/useDialogSearch.js";
 import {useUnitSearch} from "../../../composables/useUnitSearch.js";

@@ -1,5 +1,5 @@
 <script setup>
-import DocumentBlocksManager from "../../../Pages/Office/LessonPlanner/UI/DocumentBlocksManager.vue";
+import DocumentBlocksManager from "./DocumentBlocksManager.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},

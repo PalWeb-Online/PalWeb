@@ -7,6 +7,7 @@ import ChartBlockEditor from "../components/Blocks/Editors/ChartBlockEditor.vue"
 import TableBlockEditor from "../components/Blocks/Editors/TableBlockEditor.vue";
 import SentenceBlockEditor from "../components/Blocks/Editors/SentenceBlockEditor.vue";
 import ExercisesBlockEditor from "../components/Blocks/Editors/ExercisesBlockEditor.vue";
+import ImageBlockEditor from "../components/Blocks/Editors/ImageBlockEditor.vue";
 
 export const documentBuilderContextKey = Symbol('document-builder-context');
 
@@ -44,6 +45,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         container: ContainerBlockEditor,
         heading: HeadingBlockEditor,
         text: TextBlockEditor,
+        image: ImageBlockEditor,
         audio: AudioBlockEditor,
         chart: ChartBlockEditor,
         table: TableBlockEditor,
@@ -57,6 +59,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
         heading: () => ({id: uid(), type: 'heading', title: '', level: 'h1'}),
         text: () => ({id: uid(), type: 'text', content: ''}),
+        image: () => ({id: uid(), type: 'image', media: ''}),
         audio: () => ({id: uid(), type: 'audio', media: ''}),
         chart: () => ({id: uid(), type: 'chart', title: '', rows: []}),
         table: () => ({id: uid(), type: 'table', columns: [], rows: []}),

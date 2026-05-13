@@ -1,6 +1,6 @@
 <script setup>
-import AppTip from "../../../../components/AppTip.vue";
-import {useDocumentBuilder} from "../../../../composables/useDocumentBuilder.js";
+import AppTip from "../../AppTip.vue";
+import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
 import {computed} from "vue";
 
 const props = defineProps({
