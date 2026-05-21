@@ -62,43 +62,47 @@ Route::get('/offline', function () {
 })->name('offline');
 
 Route::get('/', function () {
-    return Inertia::render('Home', [
-        'count' => [
+    $counts = Cache::remember('public_model_counts', now()->addHour(), function () {
+        return [
             'terms' => Term::count(),
             'sentences' => Sentence::count(),
             'users' => User::count(),
             'decks' => Deck::where('private', false)->count(),
             'dialogs' => Dialog::count(),
             'audios' => Audio::count(),
-        ],
+        ];
+    });
+
+    return Inertia::render('Home', [
+        'count' => $counts,
         'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
         'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
         'sentences' => SentenceResource::collection(Sentence::orderByDesc('id')->find([256, 66, 54])->all()),
         'testimonials' => [
             [
-                'user' => new UserResource(User::find(243)),
+                'user' => User::find(243) ? new UserResource(User::find(243)) : null,
                 'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.',
             ],
             [
-                'user' => new UserResource(User::find(1317)),
+                'user' => User::find(1317) ? new UserResource(User::find(1317)) : null,
                 'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.',
             ],
             [
-                'user' => new UserResource(User::find(16)),
+                'user' => User::find(16) ? new UserResource(User::find(16)) : null,
                 'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.',
             ],
             [
-                'user' => new UserResource(User::find(18)),
+                'user' => User::find(18) ? new UserResource(User::find(18)) : null,
                 'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.',
             ],
             [
-                'user' => new UserResource(User::find(3)),
+                'user' => User::find(3) ? new UserResource(User::find(3)) : null,
                 'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
             ],
         ],
-        'featuredTerm' => new TermResource(Term::find(662))->additional(['detail' => true]),
-        'featuredUser' => new UserResource(User::find(1)->load(['dialect'])),
-        'featuredDeck' => new DeckResource(Deck::find(2)->load(['terms'])),
+        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662))->additional(['detail' => true]) : null,
+        'featuredUser' => User::find(1) ? new UserResource(User::find(1)->load(['dialect'])) : null,
+        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
     ]);
 })->name('homepage');
 

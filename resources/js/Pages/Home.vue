@@ -330,7 +330,7 @@ defineOptions({
                     </div>
                     <div class="feature-preview" style="margin-block: 3.2rem">
                         <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-                        <TermFlashcard
+                        <TermFlashcard v-if="featuredTerm"
                             :model="featuredTerm.data"
                             :showTranslit="showTranslit"
                             :flipDefault="flipDefault"
@@ -485,7 +485,7 @@ defineOptions({
                     <div class="window-section-head">
                         <h1>profile</h1>
                     </div>
-                    <UserItem :user="featuredUser" size="l" comment tags/>
+                    <UserItem v-if="featuredUser" :user="featuredUser" size="l" comment tags/>
                 </div>
             </div>
 

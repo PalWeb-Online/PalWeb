@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 <template>
     <div class="testimonial-container">
-        <UserItem :user="testimonial.user" size="l" comment>
+        <UserItem v-if="testimonial.user" :user="testimonial.user" size="l" comment>
             <template #comment>
                 {{ testimonial.comment }}
             </template>
