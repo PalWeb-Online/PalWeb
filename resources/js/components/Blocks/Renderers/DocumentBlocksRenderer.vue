@@ -11,6 +11,7 @@ import InputExercisesBlock from "./InputExercisesBlock.vue";
 import MatchExercisesBlock from "./MatchExercisesBlock.vue";
 import SelectExercisesBlock from "./SelectExercisesBlock.vue";
 import SortExercisesBlock from "./SortExercisesBlock.vue";
+import ImageBlock from "./ImageBlock.vue";
 
 const props = defineProps({
     blocks: {
@@ -30,6 +31,7 @@ const props = defineProps({
 
         <HeadingBlock v-else-if="block.type === 'heading'" :block="block"/>
         <TextBlock v-else-if="block.type === 'text'" :block="block"/>
+        <ImageBlock v-else-if="block.type === 'image'" :block="block"/>
         <AudioBlock v-else-if="block.type === 'audio'" :block="block"/>
         <ChartBlock v-else-if="block.type === 'chart'" :block="block"/>
         <TableBlock v-else-if="block.type === 'table'" :block="block"/>
@@ -50,7 +52,3 @@ const props = defineProps({
         <p v-else>Unsupported Block: {{ block.type }}</p>
     </template>
 </template>
-
-<style scoped lang="scss">
-
-</style>
