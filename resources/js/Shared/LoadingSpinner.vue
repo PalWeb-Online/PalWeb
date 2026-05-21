@@ -10,7 +10,8 @@
                       d="m39.3125,33.6813s-2.8222,2.0175-.1707,4.5474c0,0-2.0336-.5557-6.3872.0707,0,0,2.7562-2.0985-.094-4.7294l6.6519.1114Z"/>
                 <path class="color-accent-light"
                       d="m40.2139,31.1055c.0039-.002.0068-.002.0107-.002.0049-.0019.0088-.0039.0137-.0058,5.6543-1.4844,7.7617-7.7901,7.7617-11.4161v-1.6816h-24v1.6816c0,3.626,2.1074,9.9317,7.7617,11.4161.0049.0019.0088.0039.0137.0058.0039,0,.0068,0,.0107.002,1.792.4863,3.0996,1.5361,3.7491,2.8945h.9296c.6495-1.3584,1.9571-2.4082,3.7491-2.8945Z"/>
-                <path class="color-accent-light" d="m47,55c-6.0742,0-11-4.9258-11-11,0,6.0742-4.9258,11-11,11h-1v4h24v-4h-1Z"/>
+                <path class="color-accent-light"
+                      d="m47,55c-6.0742,0-11-4.9258-11-11,0,6.0742-4.9258,11-11,11h-1v4h24v-4h-1Z"/>
                 <path class="color-dark-primary"
                       d="m55,11c0,1.1001-.9004,2-2,2H19c-1.0996,0-2-.8999-2-2v-1c0-1.1001.9004-2,2-2h34c1.0996,0,2,.8999,2,2v1Z"/>
                 <path class="color-dark-primary"
@@ -47,13 +48,16 @@
 .color-accent-light {
     fill: var(--color-accent-light);
 }
+
 .color-accent-medium {
     fill: none;
     stroke: var(--color-accent-medium);
 }
+
 .color-dark-primary {
     fill: var(--color-dark-primary);
 }
+
 .color-dark-secondary {
     fill: none;
     stroke: var(--color-dark-secondary);

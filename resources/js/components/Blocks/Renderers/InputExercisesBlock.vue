@@ -69,7 +69,6 @@ const {
 
     span {
         font-size: 1.6rem;
-        background: white;
         padding: 0.8rem 2.4rem;
         border-radius: 6.4rem;
         color: white;

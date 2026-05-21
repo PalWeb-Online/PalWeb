@@ -176,7 +176,7 @@ watch(() => props.pageId, async () => {
             display: none;
         }
 
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             .wiki-nav {
                 flex-grow: 0;
                 max-width: 25%;
@@ -194,7 +194,7 @@ watch(() => props.pageId, async () => {
     max-width: 128rem;
     justify-self: center;
 
-    @media (min-width: 1280px) {
+    @media (width >= 1280px) {
         margin-block-end: 9.6rem;
         overflow: hidden;
     }
@@ -234,7 +234,7 @@ watch(() => props.pageId, async () => {
         margin-block-end: 9.6rem;
     }
 
-    @media (min-width: 1280px) {
+    @media (width >= 1280px) {
         &:last-child {
             margin-block-end: 0;
         }

@@ -179,7 +179,7 @@
     align-items: center;
     row-gap: 1.6rem;
 
-    @media (min-width: 720px) {
+    @media (width >= 720px) {
         grid-template-columns: calc(9.6rem * 1.25) 1fr;
     }
 
@@ -358,7 +358,7 @@
         margin-top: 2.4rem;
     }
 
-    @media (min-width: 800px) {
+    @media (width >= 800px) {
         .model-item-content {
             grid-template-columns: 70% 30%;
         }
@@ -375,7 +375,7 @@
         object-fit: cover;
     }
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         grid-template-columns: 1fr 2fr;
     }
 }
@@ -436,7 +436,7 @@
                 padding: 0.4rem;
                 font-family: $monoFont;
                 border: 0.1rem solid var(--color-dark-primary);
-                box-shadow: -0.3rem 0.3rem rgba(black, 0.25);
+                box-shadow: -0.3rem 0.3rem rgb(0 0 0 / 0.25);
                 background: var(--color-pastel-light);
                 display: flex;
                 align-items: center;
@@ -498,7 +498,7 @@
     align-content: start;
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
     .term-editor {
         grid-template-columns: repeat(2, 1fr);
 

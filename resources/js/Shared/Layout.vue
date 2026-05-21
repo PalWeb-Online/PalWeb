@@ -117,11 +117,10 @@ watch(
     min-height: calc(100vh - 4.8rem);
     grid-template-rows: min-content 1fr;
     align-content: start;
-
     position: relative;
     overflow: hidden;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         min-height: calc(100vh - 3.6rem);
     }
 
@@ -152,11 +151,11 @@ watch(
     }
 
     &.account {
-        @media (max-width: 959px) {
+        @media (width <= 960px) {
             #app-body > .app-tip {
                 border-radius: 0;
                 border: none;
-                box-shadow: 0 0.2rem 0 rgba(black, 0.1);
+                box-shadow: 0 0.2rem 0 rgb(0 0 0 / 0.1);
             }
         }
     }

@@ -73,7 +73,7 @@ const appTooltip = ref(null);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: rgba(white, 0.9);
+        color: rgb(255 255 255 / 0.9);
         font-size: 0.75em;
         width: 1.25em;
         height: 1.25em;

@@ -43,7 +43,3 @@ const showDialectTooltip = (event) => {
     </button>
     <AppTooltip ref="appTooltip"/>
 </template>
-
-<style scoped lang="scss">
-
-</style>

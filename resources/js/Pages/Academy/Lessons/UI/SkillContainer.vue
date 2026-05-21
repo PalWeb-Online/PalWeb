@@ -34,7 +34,7 @@ const isOpen = ref(false);
     overflow: hidden;
     border-block-end: 0.4rem solid var(--color-accent-medium);
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         border: none;
         border-radius: 2.4rem;
     }

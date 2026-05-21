@@ -115,8 +115,7 @@ const toggleSection = (slug) => {
         align-items: center;
         flex-grow: 1;
         font-weight: 700;
-        padding-inline-start: calc(1.6rem + (var(--wiki-nav-depth) * 0.8rem));
-        padding-inline-end: 1.6rem;
+        padding-inline: calc(1.6rem + (var(--wiki-nav-depth) * 0.8rem)) 1.6rem;
     }
 
     a, button {

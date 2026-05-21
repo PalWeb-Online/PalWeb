@@ -49,7 +49,7 @@ const gridStyle = computed(() => ({
         background: var(--color-pastel-light);
     }
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         gap: 0.8rem;
         padding: 0.8rem;
         font-size: 2.0rem;

@@ -97,7 +97,7 @@ const isDraft = computed(() => {
     margin-block: 3.2rem;
     padding-inline: 1.6rem;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         padding-inline: 0;
     }
 
@@ -150,7 +150,6 @@ const isDraft = computed(() => {
         & > * {
             color: var(--color-medium-secondary);
             font-family: var(--head-font), serif;
-            //font-size: clamp(0.8rem, 2vw, 1.6rem);
             font-weight: 700;
             display: flex;
             align-items: center;

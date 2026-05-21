@@ -133,7 +133,7 @@ watch(() => props.lessonId, async () => {
     display: grid;
     overflow: hidden;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         border-radius: 3.2rem;
     }
 }
@@ -176,8 +176,7 @@ watch(() => props.lessonId, async () => {
 
     .lesson-stage-wrapper {
         display: grid;
-        justify-items: center;
-        align-items: center;
+        place-items: center;
         grid-template-areas: 'overlap';
         user-select: none;
         cursor: pointer;
@@ -249,6 +248,5 @@ watch(() => props.lessonId, async () => {
             cursor: not-allowed;
         }
     }
-
 }
 </style>

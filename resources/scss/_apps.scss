@@ -15,7 +15,7 @@
     background: white;
     font-size: 0.8rem;
     border: 0.25em solid var(--color-dark-primary);
-    box-shadow: -0.25em 0.25em 0 0 rgba(black, 0.25);
+    box-shadow: -0.25em 0.25em 0 0 rgb(0 0 0 / 0.25);
     border-radius: 1em;
     overflow: hidden;
     position: relative;
@@ -247,10 +247,10 @@
     position: relative;
     overflow: hidden;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         border: 0.2rem solid var(--color-dark-primary);
         border-radius: 0.8rem;
-        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+        box-shadow: -0.4rem 0.4rem 0 rgb(0 0 0 / 0.25);
     }
 
     .user-item {
@@ -542,7 +542,7 @@
             font-size: 1.6rem;
         }
 
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             top: 3.6rem;
             left: -2.4rem;
             right: auto;
@@ -565,7 +565,7 @@
     display: flex;
     flex-flow: column;
     border-radius: 0.8rem;
-    box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+    box-shadow: -0.4rem 0.4rem 0 rgb(0 0 0 / 0.25);
 
     .window-section-head {
         flex-shrink: 0;
@@ -649,7 +649,7 @@
     color: var(--color-dark-primary);
     background-color: white;
     border: 0.1rem solid var(--color-dark-primary);
-    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
+    box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.25);
     padding: 0.4rem 0.8rem;
     border-radius: 0.4rem;
     font-family: $monoFont;
@@ -666,7 +666,7 @@
     color: var(--color-dark-primary);
     background-color: white;
     border: 0.1rem solid var(--color-dark-primary);
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
+    box-shadow: -0.3rem 0.3rem 0 rgb(0 0 0 / 0.25);
     border-radius: 0.8rem;
     overflow: hidden;
     pointer-events: none;
@@ -770,7 +770,7 @@
         border-radius: 1.2rem;
         background: white;
         border: 0.2rem solid var(--color-dark-primary);
-        box-shadow: -0.4rem 0.4rem 0 rgba(black, 0.25);
+        box-shadow: -0.4rem 0.4rem 0 rgb(0 0 0 / 0.25);
         line-height: 1.5;
         color: black;
         user-select: none;
