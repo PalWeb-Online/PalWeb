@@ -101,9 +101,9 @@ class PageController extends Controller
     public function getWikiTree(): JsonResponse
     {
         $pages = Page::query()
-            ->orderBy('sort_order')
+            ->orderBy('position')
             ->orderBy('title')
-            ->get(['id', 'slug', 'title', 'sort_order', 'parent_id']);
+            ->get(['id', 'slug', 'title', 'status', 'position', 'parent_id']);
 
         return response()->json([
             'page_tree' => $this->buildWikiTree($pages),
@@ -120,6 +120,7 @@ class PageController extends Controller
                     'slug' => $page->slug,
                     'title' => $page->title,
                     'sort_order' => $page->sort_order,
+                    'position' => $page->position,
                     'parent_id' => $page->parent_id,
                     'children' => $this->buildWikiTree($pages, $page->id),
                 ];

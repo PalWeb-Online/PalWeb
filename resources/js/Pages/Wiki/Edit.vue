@@ -33,10 +33,13 @@ const {
     isLoadingForm,
     page,
     pageNotFound,
+    pageTree,
+    isLoadingTree,
     descendantIds,
     sentenceModels,
     allowedBlockTypes,
     selectedParent,
+    fetchWikiTree,
     loadForm,
     reloadForm,
     savePage,
@@ -55,7 +58,10 @@ const {
 provide('documentSentenceModels', sentenceModels);
 
 onMounted(async () => {
-    await loadForm();
+    await Promise.all([
+        fetchWikiTree(),
+        loadForm(),
+    ]);
 });
 
 watch(() => props.pageId, async () => {
@@ -131,7 +137,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
                 <SearchSelect
                     v-model="form.parent_id"
-                    label="Parent Page"
+                    label="Parent"
                     :initial-title="selectedParent?.title"
                     :search="searchPages"
                     :error="errors?.parent_id"

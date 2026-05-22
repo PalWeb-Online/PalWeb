@@ -42,7 +42,7 @@ class PageFactory extends Factory
             'status' => $this->faker->randomElement(['draft', 'published']),
             'locale' => $this->faker->randomElement(['en', 'ar']),
             'published_at' => $this->faker->boolean(70) ? $this->faker->dateTimeBetween('-1 year', 'now') : null,
-            'sort_order' => $this->faker->numberBetween(0, 100),
+            'position' => $this->faker->numberBetween(0, 25),
             'parent_id' => null,
         ];
     }

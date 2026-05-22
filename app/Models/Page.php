@@ -20,7 +20,7 @@ class Page extends Model
         'status',
         'locale',
         'published_at',
-        'sort_order',
+        'position',
         'parent_id',
     ];
 
@@ -29,7 +29,7 @@ class Page extends Model
         return [
             'document' => 'json',
             'published_at' => 'datetime',
-            'sort_order' => 'integer',
+            'position' => 'integer',
         ];
     }
 
@@ -41,7 +41,7 @@ class Page extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Page::class, 'parent_id')
-            ->orderBy('sort_order')
+            ->orderBy('position')
             ->orderBy('title');
     }
 }

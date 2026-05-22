@@ -30,7 +30,7 @@ export function usePageEditor({
         form.document = model?.document ?? documentPreset.createDocument();
         form.status = model?.status ?? 'draft';
         form.locale = model?.locale ?? 'en';
-        form.sort_order = model?.sort_order ?? 0;
+        form.position = Math.max(1, Number(model?.position ?? 1));
         form.parent_id = selectedParent.value?.id ?? model?.parent_id ?? null;
 
         defaults();
@@ -55,7 +55,7 @@ export function usePageEditor({
             document: documentPreset.createDocument(),
             status: 'draft',
             locale: 'en',
-            sort_order: 0,
+            position: 1,
             parent_id: null,
         },
         getLoadIdentifier: () => pageId.value,
@@ -77,7 +77,8 @@ export function usePageEditor({
                 form.status = previousStatus;
             };
         },
-        afterSave: (response, savedModel) => {
+        afterSave: async (response, savedModel) => {
+            await pageLoader.fetchWikiTree();
             redirectToEditRoute(savedModel);
         },
         onSaveSuccess: () => {
@@ -113,6 +114,9 @@ export function usePageEditor({
         page: pageLoader.page,
         pageNotFound: pageLoader.pageNotFound,
         isLoadingPage: pageLoader.isLoadingPage,
+        pageTree: pageLoader.pageTree,
+        isLoadingTree: pageLoader.isLoadingTree,
+        fetchWikiTree: pageLoader.fetchWikiTree,
         descendantIds: pageLoader.descendantIds,
         allowedBlockTypes: documentPreset.allowedBlockTypes,
         selectedParent,
