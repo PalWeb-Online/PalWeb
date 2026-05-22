@@ -83,9 +83,6 @@ class TermController extends Controller
             'featuredTerm' => $featuredTerm ?? null,
             'filters' => $filters,
         ]);
-
-        //        View::share('pageDescription',
-        //            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
 
     public function show(Term $term): \Inertia\Response
@@ -111,7 +108,6 @@ class TermController extends Controller
                 ])
                 ->loadCount(['pronunciations'])
                 ->loadSingleGlossSentence();
-            //            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
         }
 
         return Inertia::render('Library/Terms/Show', [
@@ -122,10 +118,78 @@ class TermController extends Controller
                 })
             ),
         ]);
-
-        //        View::share('pageDescription',
-        //            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
+
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
+        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+        ]));
+
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
+
+        $termsCollection = $searchService->search($filters)['terms'];
+        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+            $termsCollection->forPage($currentPage, $perPage)->values(),
+            $termsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        $featuredTerm = Cache::get('word-of-the-day');
+        $featuredTerm = $featuredTerm
+            ? new TermResource($featuredTerm)
+            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+
+        return response()->json([
+            'terms' => TermResource::collection($terms),
+            'totalCount' => $terms->total(),
+            'featuredTerm' => $featuredTerm ?? null,
+            'filters' => $filters,
+        ]);
+    }
+
+    public function apiShow(Term $term): JsonResponse
+    {
+        $likeTerms = $this->termRepository->getLikeTerms($term);
+        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
+
+        foreach ($terms as $model) {
+            $model
+                ->load([
+                    'root',
+                    'pronunciations.audios',
+                    'attributes',
+                    'spellings',
+                    'relatives',
+                    'patterns',
+                    'glosses.attributes',
+                    'inflections',
+                    'cards',
+                    'decks' => function ($query) {
+                        $query->limit(10);
+                    },
+                ])
+                ->loadCount(['pronunciations'])
+                ->loadSingleGlossSentence();
+        }
+
+        return response()->json([
+            'terms' => TermResource::collection(
+                $terms->map(function ($term) {
+                    return new TermResource($term)->additional(['detail' => true]);
+                })
+            ),
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
 
     public function getPronunciations(Term $term): AnonymousResourceCollection
     {
@@ -388,25 +452,6 @@ class TermController extends Controller
         }
 
         $existingDependents->except($requestItems)->each->delete();
-
-        //        $existingDependents = $existingDependents->keyBy('id');
-        //
-        //        foreach ($requestDependents as $dependentData) {
-        //            $id = $dependentData['id'] ?? null;
-        //
-        //            if ($id && $existingDependents->has($id)) {
-        //                $existingDependents[$id]->update($dependentData);
-        //
-        //            } else {
-        //                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
-        //            }
-        //        }
-        //
-        //        $existingDependents->each(function ($dependent) use ($requestDependents) {
-        //            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
-        //                $dependent->delete();
-        //            }
-        //        });
     }
 
     public function destroy(Term $term): RedirectResponse

@@ -77,16 +77,10 @@ class SentenceController extends Controller
             'totalCount' => $sentences->total(),
             'filters' => $filters,
         ]);
-
-        //        View::share('pageDescription',
-        //            'Discover the Corpus, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
     }
 
     public function show(Sentence $sentence): \Inertia\Response
     {
-        //        View::share('pageDescription',
-        //            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
-
         $sentence->load(['dialog']);
 
         return Inertia::render('Library/Sentences/Show', [
@@ -94,6 +88,50 @@ class SentenceController extends Controller
             'sentence' => new SentenceResource($sentence),
         ]);
     }
+
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned',
+        ]));
+
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
+
+        $sentencesCollection = $searchService->search($filters, true, false)['sentences'];
+        $sentences = new \Illuminate\Pagination\LengthAwarePaginator(
+            $sentencesCollection->forPage($currentPage, $perPage)->values(),
+            $sentencesCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return response()->json([
+            'sentences' => SentenceResource::collection(
+                $sentences->getCollection()->map(function ($sentence) {
+                    return new SentenceResource($sentence)->additional(['terms' => false]);
+                })
+            )->additional(['meta' => $sentences->toArray()]),
+            'totalCount' => $sentences->total(),
+            'filters' => $filters,
+        ]);
+    }
+
+    public function apiShow(Sentence $sentence): JsonResponse
+    {
+        $sentence->load(['dialog']);
+
+        return response()->json([
+            'sentence' => new SentenceResource($sentence),
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
 
     public function store(StoreSentenceRequest $request): RedirectResponse
     {

@@ -33,6 +33,30 @@ class SpeakerController extends Controller
         ]);
     }
 
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiShow(Speaker $speaker): JsonResponse
+    {
+        return response()->json([
+            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
+            'audios' => AudioResource::collection(
+                Audio::query()
+                    ->where('speaker_id', $speaker->id)
+                    ->with([
+                        'speaker',
+                        'pronunciation.term',
+                    ])
+                    ->orderByDesc('id')
+                    ->paginate(25)
+                    ->onEachSide(1)
+            ),
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $user = $request->user();

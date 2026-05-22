@@ -83,6 +83,52 @@ class DeckController extends Controller
         ]);
     }
 
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned',
+        ]));
+
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
+
+        $decksCollection = $searchService->search($filters, false, true)['decks'];
+        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+            $decksCollection->forPage($currentPage, $perPage)->values(),
+            $decksCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return response()->json([
+            'decks' => DeckResource::collection($decks),
+            'totalCount' => $decks->total(),
+            'filters' => $filters,
+        ]);
+    }
+
+    public function apiShow(Deck $deck): JsonResponse
+    {
+        Gate::authorize('interact', $deck);
+
+        $deck->load([
+            'terms' => fn ($q) => $q->withUserCard(),
+            'terms.pronunciations',
+            'scores'
+        ]);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+
     public function store(StoreDeckRequest $request): RedirectResponse
     {
         $user = $request->user();
