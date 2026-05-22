@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpsertPageRequest;
 use App\Models\Page;
+use App\Services\PageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,6 +16,8 @@ class PageController extends Controller
 {
     public function show(Page $page): Response
     {
+        Gate::authorize('view', $page);
+
         return Inertia::render('Wiki/Show', [
             'section' => 'wiki',
             'pageId' => $page->id,
@@ -119,7 +123,7 @@ class PageController extends Controller
                     'id' => $page->id,
                     'slug' => $page->slug,
                     'title' => $page->title,
-                    'sort_order' => $page->sort_order,
+                    'status' => $page->status,
                     'position' => $page->position,
                     'parent_id' => $page->parent_id,
                     'children' => $this->buildWikiTree($pages, $page->id),

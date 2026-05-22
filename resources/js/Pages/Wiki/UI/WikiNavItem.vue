@@ -34,7 +34,7 @@ const toggleSection = (slug) => {
 </script>
 
 <template>
-    <div class="wiki-nav-section">
+    <div class="wiki-nav-section" :class="{ draft: page.status === 'draft' }">
         <div
             class="wiki-nav-section-head"
             :class="{ active: currentSlug === page.slug }"
@@ -81,6 +81,11 @@ const toggleSection = (slug) => {
 .wiki-nav-section {
     display: grid;
     background: var(--color-medium-primary);
+
+    &.draft {
+        filter: grayscale(0.5);
+        opacity: 0.5;
+    }
 }
 
 
