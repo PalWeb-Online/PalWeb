@@ -15,6 +15,7 @@ import DialogLine from "./Charts/DialogLine.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 import CardItem from "./CardItem.vue";
 import {useUserStore} from "../stores/UserStore.js";
+import GlossItem from "./GlossItem.vue";
 
 const UserStore = useUserStore();
 
@@ -339,68 +340,56 @@ const etymology = computed(() => {
                 <h2>glosses</h2>
             </div>
             <div class="term-glosses">
-                <div v-for="(gloss, index) in term.glosses" class="gloss-li-container">
-                    <div class="gloss-li">
-                        <div class="gloss-li-label">
-                            {{ index + 1 }}
+                <GlossItem v-for="(gloss, index) in term.glosses" :key="gloss.id" :gloss="gloss" :position="index + 1">
+                    <template #relatives>
+                        <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
+                            syn.
+                            <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
+                                  :href="route('terms.show', synonym.slug)">
+                                {{ synonym.term }}
+                                ({{ synonym.translit }})
+                            </Link>
                         </div>
+                        <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
+                            ant.
+                            <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
+                                  :href="route('terms.show', antonym.slug)">
+                                {{ antonym.term }}
+                                ({{ antonym.translit }})
+                            </Link>
+                        </div>
+                        <div class="gloss-item-relatives"
+                             v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
+                             v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])"
+                             :key="pair.id"
+                        >
+                            {{ pair.type }}
+                            <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
+                                ({{ pair.translit }})
+                            </Link>
+                        </div>
+                    </template>
+                    <template #sentences>
+                        <div v-if="gloss.sentences.length > 0" class="model-list">
+                            <SentenceItem v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences"
+                                          :model="sentence"
+                                          :currentTerm="term.id" dialog/>
+                            <SentenceItem v-else :model="gloss.sentences[0]" :currentTerm="term.id" dialog/>
 
-                        <div class="gloss-li-content">
-                            <div v-for="attribute in gloss.attributes" class="gloss-li-attribute">
-                                <template v-if="attribute.category">[{{ attribute.category }}]</template>
-                                {{ attribute.attribute }}
+                            <div class="model-list-toggle-expand"
+                                 v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)">
+                                <button @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
+                                <LoadingSpinner v-show="loadingSentences.get(gloss.id)"/>
                             </div>
-                            <div class="gloss-li-content-gloss">
-                                {{ gloss.gloss }}
-                            </div>
-                            <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
-                                syn.
-                                <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
-                                      :href="route('terms.show', synonym.slug)">
-                                    {{ synonym.term }}
-                                    ({{ synonym.translit }})
-                                </Link>
-                            </div>
-                            <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
-                                ant.
-                                <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
-                                      :href="route('terms.show', antonym.slug)">
-                                    {{ antonym.term }}
-                                    ({{ antonym.translit }})
-                                </Link>
-                            </div>
-                            <div class="gloss-item-relatives"
-                                v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
-                                v-for="pair in glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject'])"
-                                :key="pair.id"
-                            >
-                                {{ pair.type }}
-                                <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
-                                    ({{ pair.translit }})
-                                </Link>
+
+                            <div class="model-list-toggle-expand" v-if="sentencesFetched.get(gloss.id)">
+                                <button @click="toggleShowSentences(gloss.id)">
+                                    {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <div v-if="gloss.sentences.length > 0" class="model-list">
-                        <SentenceItem v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences"
-                                      :model="sentence"
-                                      :currentTerm="term.id" dialog/>
-                        <SentenceItem v-else :model="gloss.sentences[0]" :currentTerm="term.id" dialog/>
-
-                        <div class="model-list-toggle-expand"
-                             v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)">
-                            <button @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
-                            <LoadingSpinner v-show="loadingSentences.get(gloss.id)"/>
-                        </div>
-
-                        <div class="model-list-toggle-expand" v-if="sentencesFetched.get(gloss.id)">
-                            <button @click="toggleShowSentences(gloss.id)">
-                                {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    </template>
+                </GlossItem>
             </div>
 
             <ChartConjugation
@@ -463,3 +452,125 @@ const etymology = computed(() => {
         </div>
     </template>
 </template>
+
+<style scoped lang="scss">
+.term-references {
+    display: flex;
+    flex-flow: row-reverse wrap;
+    align-items: center;
+    gap: 0.8rem 1.6rem;
+    padding: 1.2rem;
+    background: var(--color-pastel-light);
+
+    & > * {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+}
+
+.term-pronunciation {
+    display: grid;
+
+    .model-list {
+        padding: 1.6rem;
+    }
+
+    & > button {
+        color: var(--color-dark-primary);
+        background: var(--color-pastel-light);
+
+        &:hover {
+            text-decoration: none;
+            background: var(--color-pastel-medium);
+        }
+    }
+}
+
+.term-etymology {
+    display: grid;
+    grid-template-columns: min-content auto;
+    background: var(--color-pastel-light);
+
+    .term-root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        gap: 0.8rem;
+        direction: rtl;
+        padding: 0.8rem 1.6rem;
+        background: var(--color-pastel-light);
+        border-inline-start: 0.1rem solid var(--color-medium-primary);
+
+        &:hover {
+            color: var(--color-accent-medium);
+            background: var(--color-accent-light);
+            text-decoration: none;
+        }
+
+        .term-root-ar {
+            font-family: var(--ar-body-font);
+            font-size: 2.0rem;
+        }
+
+        .term-root-en {
+            font-family: var(--mono-font);
+            font-size: 1.6rem;
+        }
+    }
+
+    .term-data {
+        align-self: center;
+        grid-column: 2;
+        padding: 1.2rem 1.6rem;
+    }
+}
+
+.term-image {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+    }
+}
+
+.term-glosses {
+    margin-block: 3.2rem;
+    display: grid;
+    gap: 3.2rem;
+}
+
+.model-list-toggle-expand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+
+    button {
+        font-family: var(--body-font);
+        font-weight: 700;
+        color: var(--color-dark-primary);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .loading-spinner svg {
+        width: 3.2rem;
+    }
+}
+
+.term-container-decks {
+    background: var(--color-medium-primary);
+
+    .featured-title {
+        color: white;
+        padding: 3.6rem 2.4rem 1.2rem;
+    }
+}
+</style>
