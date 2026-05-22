@@ -1,4 +1,4 @@
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
 
@@ -6,6 +6,7 @@ export function useResourceEditor({
                                       initialForm,
                                       populateForm,
                                       extractSavedModel,
+                                      extractSavedIdentifier = (model) => model?.id ?? null,
                                       getLoadIdentifier,
                                       getSaveIdentifier = getLoadIdentifier,
                                       getDeleteIdentifier = getSaveIdentifier,
@@ -94,6 +95,28 @@ export function useResourceEditor({
         return identifier !== null && identifier !== undefined && identifier !== '';
     };
 
+    const savedIdentifier = ref(null);
+
+    watch(
+        () => getSaveIdentifier(),
+        (identifier) => {
+            savedIdentifier.value = hasIdentifier(identifier) ? identifier : null;
+        },
+        {immediate: true}
+    );
+
+    const resolveSaveIdentifier = () => {
+        const identifier = getSaveIdentifier();
+
+        return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
+    };
+
+    const resolveDeleteIdentifier = () => {
+        const identifier = getDeleteIdentifier();
+
+        return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
+    };
+
     const loadForm = async () => {
         let loadedModel = null;
 
@@ -144,7 +167,7 @@ export function useResourceEditor({
             });
 
             try {
-                const identifier = getSaveIdentifier();
+                const identifier = resolveSaveIdentifier();
                 const isUpdate = hasIdentifier(identifier);
 
                 const response = isUpdate
@@ -152,6 +175,11 @@ export function useResourceEditor({
                     : await axios.post(resolveStoreUrl(options), payload());
 
                 const savedModel = extractSavedModel(response);
+                const identifierFromSavedModel = extractSavedIdentifier(savedModel, response, options);
+
+                if (hasIdentifier(identifierFromSavedModel)) {
+                    savedIdentifier.value = identifierFromSavedModel;
+                }
 
                 if (savedModel) {
                     populateForm(savedModel, {
@@ -192,7 +220,7 @@ export function useResourceEditor({
     };
 
     const deleteResource = async () => {
-        const identifier = getDeleteIdentifier();
+        const identifier = resolveDeleteIdentifier();
 
         if (!hasIdentifier(identifier)) return null;
         if (!confirm('Are you sure you want to delete this model?')) return null;
@@ -204,6 +232,7 @@ export function useResourceEditor({
                 const response = await axios.delete(resolveDeleteUrl(identifier));
 
                 resetModel();
+                savedIdentifier.value = null;
 
                 await afterDelete?.(response);
 

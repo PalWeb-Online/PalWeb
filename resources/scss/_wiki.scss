@@ -1,7 +1,12 @@
 .wiki-blocks-wrapper {
-    .block--text p {
-        margin: 0;
-        font-size: 1.6rem
+    .block--text {
+        display: grid;
+        gap: 1.6rem;
+
+        p {
+            margin: 0;
+            font-size: 1.6rem;
+        }
     }
 
     a {

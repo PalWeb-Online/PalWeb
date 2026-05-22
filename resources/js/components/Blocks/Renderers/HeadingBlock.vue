@@ -31,7 +31,7 @@ h1, h2, h3 {
     font-weight: 700;
     text-box: trim-both cap alphabetic;
     background: var(--color-accent-light);
-    margin: 0;
+    margin: 1em 0 0;
     padding-block-start: 0.5em;
     padding-inline-start: 1.2rem;
 }

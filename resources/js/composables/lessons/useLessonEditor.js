@@ -73,6 +73,16 @@ export function useLessonEditor({
         clearErrors();
     };
 
+    const redirectToEditRoute = (lesson = null) => {
+        if (lessonId.value || !lesson?.id) return;
+
+        router.visit(route('lesson-planner.lesson', lesson.id), {
+            replace: true,
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     const editor = useDocumentResourceEditor({
         initialForm: {
             group: 'main',
@@ -107,6 +117,9 @@ export function useLessonEditor({
             return () => {
                 form.published = previousPublished;
             };
+        },
+        afterSave: (response, savedModel) => {
+            redirectToEditRoute(savedModel);
         },
         onSaveSuccess: () => {
             NotificationStore.addNotification('OK, the Lesson was successfully saved.', 'success');

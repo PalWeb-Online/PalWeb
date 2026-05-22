@@ -218,7 +218,7 @@ watch(() => props.pageId, async () => {
     gap: 0.8rem;
     padding: 3.2rem 3.2rem 1.6rem 1.6rem;
     background: var(--color-pastel-light);
-    margin-block: -4.8rem 3.2rem;
+    margin-block: -4.8rem 1.6rem;
     margin-inline: 1.6rem;
 }
 

@@ -37,6 +37,16 @@ export function usePageEditor({
         clearErrors();
     };
 
+    const redirectToEditRoute = (page = null) => {
+        if (pageId.value || !page?.id) return;
+
+        router.visit(route('wiki.edit', page.id), {
+            replace: true,
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     const editor = useDocumentResourceEditor({
         initialForm: {
             slug: '',
@@ -66,6 +76,9 @@ export function usePageEditor({
             return () => {
                 form.status = previousStatus;
             };
+        },
+        afterSave: (response, savedModel) => {
+            redirectToEditRoute(savedModel);
         },
         onSaveSuccess: () => {
             NotificationStore.addNotification('OK, the Page was successfully saved.', 'success');

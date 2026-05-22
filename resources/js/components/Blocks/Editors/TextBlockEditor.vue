@@ -14,8 +14,8 @@ const props = defineProps({
 .block-editor--text {
     textarea {
         padding: 1.2rem 1.6rem;
-        font-family: var(--body-font);
-        font-size: 1.6rem;
+        font-family: var(--mono-font);
+        font-size: 1.4rem;
         min-height: 16rem;
         resize: vertical;
     }
