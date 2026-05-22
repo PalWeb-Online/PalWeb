@@ -143,7 +143,7 @@ class PageController extends Controller
 
     public function store(UpsertPageRequest $request): JsonResponse | RedirectResponse
     {
-        $page = Page::create($request->validated());
+        $page = PageService::upsertWithSiblingPosition(null, $request->validated());
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -161,7 +161,7 @@ class PageController extends Controller
 
     public function update(UpsertPageRequest $request, Page $page): JsonResponse | RedirectResponse
     {
-        $page->update($request->validated());
+        $page = PageService::upsertWithSiblingPosition($page, $request->validated());
 
         if ($request->expectsJson()) {
             return response()->json([
