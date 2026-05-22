@@ -1,3 +1,5 @@
+@use "variables";
+
 .speaker-data {
     display: grid;
     overflow: hidden;
@@ -21,7 +23,7 @@
 
         & > div {
             padding-inline: 1.6rem;
-            font-family: $monoFont;
+            font-family: var(--mono-font);
             font-size: 1.8rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -50,7 +52,7 @@
         grid-template-columns: 1fr 3fr;
         align-items: center;
         padding-inline: 1.6rem;
-        font-family: $monoFont;
+        font-family: var(--mono-font);
         text-transform: capitalize;
 
         &:not(:last-child) {
@@ -65,7 +67,7 @@
 
         & > *:nth-child(2) {
             padding: 0;
-            font-family: $bodyFont;
+            font-family: var(--body-font);
             font-size: 1.6rem;
             background: none;
         }
@@ -147,7 +149,7 @@ button.audio-button {
 
         h1 {
             flex-grow: 0;
-            font-family: $displayFont;
+            font-family: var(--display-font);
             font-weight: 400;
         }
     }
@@ -217,7 +219,7 @@ button.audio-button {
 
         div:nth-child(1) {
             color: var(--color-dark-primary);
-            font-family: $headFont;
+            font-family: var(--head-font);
             font-weight: 700;
             font-size: 2.0rem;
             text-transform: capitalize;
@@ -267,7 +269,7 @@ button.audio-button {
     }
 
     button {
-        @include link-purple-deep;
+        @include variables.link-purple-deep;
         text-transform: capitalize;
 
         &[disabled] {
@@ -279,7 +281,7 @@ button.audio-button {
     .rw-item-counter {
         margin-block: 1.6rem;
         color: var(--color-medium-primary);
-        font-family: $headFont;
+        font-family: var(--head-font);
         font-size: 1.6rem;
         font-weight: 700;
         text-align: center;
@@ -299,11 +301,11 @@ button.audio-button {
         gap: 0.8rem;
         padding-block: 1.0rem;
         font-size: 1.2rem;
-        font-family: $monoFont;
+        font-family: var(--mono-font);
 
         div > span {
             font-size: 1.6rem;
-            font-family: $ar_bodyFont;
+            font-family: var(--ar-body-font);
             font-weight: 700;
         }
 
@@ -374,7 +376,7 @@ button.audio-button {
         user-select: none;
         padding: 0.8rem 3.2rem;
         border-radius: 0.8rem;
-        font-family: $ar_bodyFont;
+        font-family: var(--ar-body-font);
         white-space: nowrap;
 
         &.selected {
@@ -435,7 +437,7 @@ button.audio-button {
 
         & > div:nth-child(1) {
             font-size: 3.2rem;
-            font-family: $ar_bodyFont;
+            font-family: var(--ar-body-font);
             font-weight: 700;
         }
 
@@ -466,7 +468,7 @@ button.audio-button {
     .rw-actions-title {
         background: var(--color-pastel-light);
         color: var(--color-medium-primary);
-        font-family: $headFont;
+        font-family: var(--head-font);
         font-size: 1.6rem;
         font-weight: 700;
         padding: 0.6rem 1.2rem 0.4rem;
@@ -481,7 +483,7 @@ button.audio-button {
         height: 6.4rem;
 
         font-size: 1.4rem;
-        font-family: $headFont;
+        font-family: var(--head-font);
         color: var(--color-medium-primary);
 
         .rw-actions-bar {
@@ -551,7 +553,7 @@ button.audio-button {
 
 .wizard-button {
     justify-self: center;
-    font-family: $headFont;
+    font-family: var(--head-font);
     font-weight: 700;
     text-transform: uppercase;
     background: var(--color-medium-secondary);

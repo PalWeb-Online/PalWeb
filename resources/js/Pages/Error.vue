@@ -56,3 +56,35 @@ defineOptions({
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.error-container {
+    display: grid;
+    gap: 1.6rem;
+    text-align: center;
+    margin-block: 9.6rem;
+
+    .error-status {
+        font-family: var(--display-font);
+        font-size: 12.8rem;
+        color: var(--color-dark-primary);
+        line-height: 0.75;
+        padding-block-end: 1.6rem;
+    }
+
+    .error-title {
+        font-family: var(--head-font);
+        font-size: 6.4rem;
+        font-weight: 700;
+        color: var(--color-medium-primary);
+        padding-block-start: 0.8rem;
+    }
+
+    .error-message {
+        font-family: var(--mono-font);
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--color-dark-primary);
+    }
+}
+</style>

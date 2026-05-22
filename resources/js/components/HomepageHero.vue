@@ -69,3 +69,29 @@ watch(
         </h1>
     </div>
 </template>
+
+<style scoped lang="scss">
+.app-logo-wrapper {
+    width: 90%;
+    display: grid;
+
+    h1 {
+        text-align: center;
+        text-transform: none;
+        font-family: var(--head-font);
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        margin-inline-start: 17.5%;
+        margin-block-start: -1.5em;
+        padding: 0.75em;
+        line-height: 1.25;
+        color: var(--color-dark-primary);
+        background: white;
+        filter: drop-shadow(-0.25em 0.25em 0 rgb(0 0 0 / 0.25));
+        position: relative;
+
+        .typing-cursor {
+            transition: opacity 0.2s;
+        }
+    }
+}
+</style>

@@ -243,19 +243,4 @@ const masteryBarSegments = computed(() => {
         cursor: help
     }
 }
-
-.bar-wrapper {
-    display: grid;
-    justify-items: center;
-    text-align: center;
-    font-family: var(--head-font), sans-serif;
-    font-weight: 700;
-    color: var(--color-dark-primary);
-
-    .bar {
-        width: 50%;
-        background: var(--color-medium-primary);
-        border-radius: 3.2rem 3.2rem 0.8rem 0.8rem;
-    }
-}
 </style>

@@ -57,3 +57,94 @@ const isCorrect = computed(() => {
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.quiz-answer-wrapper {
+    display: grid;
+    gap: 0.8rem;
+
+    .quiz-answer-options {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 0.2rem 1.6rem;
+        margin-inline: 1.2rem;
+
+        a, button {
+            text-align: start;
+            font-weight: 700;
+            font-size: 1.4rem;
+            font-family: var(--body-font);
+            color: var(--color-accent-dark);
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        a {
+            color: var(--color-medium-primary);
+        }
+    }
+}
+
+.quiz-answer {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.6rem 2.0rem;
+    border-radius: 0.8rem;
+    background: var(--color-pastel-light);
+
+    &.incorrect {
+        background: var(--color-accent-light);
+
+        .quiz-answer-user {
+            color: var(--color-accent-dark);
+        }
+    }
+
+    .quiz-answer-correct {
+        display: flex;
+        flex-flow: row-reverse wrap;
+        align-items: center;
+        font-weight: 700;
+        color: var(--color-dark-primary);
+
+        & > *:first-child {
+            flex: 1 0 auto;
+            font-family: var(--mono-font);
+            font-size: 2.4rem;
+            direction: rtl;
+        }
+
+        & > *:last-child {
+            flex: 0 1 auto;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            font-family: var(--body-font);
+            font-size: 1.8rem;
+        }
+    }
+
+    .quiz-answer-correct.sentence {
+        & > *:first-child {
+            font-size: 1.6rem;
+        }
+
+        & > *:last-child {
+            font-size: 1.4rem;
+            justify-self: end;
+            font-family: var(--mono-font);
+        }
+    }
+
+    .quiz-answer-user {
+        display: grid;
+        gap: 0.4rem;
+        font-size: 1.4rem;
+        padding-block-start: 0.8rem;
+        color: var(--color-dark-primary);
+        border-block-start: 0.1rem dotted currentColor;
+    }
+}
+</style>

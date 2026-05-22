@@ -35,15 +35,33 @@ defineOptions({
                 {{ term.inflection }}
                 {{ term.translit }}
                 ({{ term.form }})
-
-                <!--                    <form method="POST" action="{{ route('missing.terms.destroy', $missingInflection) }}">-->
-                <!--                        @csrf-->
-                <!--                        @method('DELETE')-->
-                <!--                        <button onclick="return confirm('Are you sure you want to delete this sentence?')">-->
-                <!--                            <img src="{{ asset('/img/trash.svg') }}" alt="Delete"/>-->
-                <!--                        </button>-->
-                <!--                    </form>-->
             </div>
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.missing-terms {
+    display: grid;
+    gap: 0.2rem;
+
+    & > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.4rem;
+
+        &:hover {
+            background: var(--color-pastel-light);
+        }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        font-family: var(--body-font);
+        font-size: 1.6rem;
+    }
+}
+</style>

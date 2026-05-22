@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
@@ -18,7 +18,6 @@ import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
-import i18n from "../i18n.js";
 
 defineProps({
     count: Object,
@@ -502,6 +501,256 @@ defineOptions({
 </template>
 
 <style scoped lang="scss">
+.homepage-section {
+    width: 100%;
+    display: grid;
+    gap: 6.4rem;
+    justify-items: center;
+    padding: 6.4rem 3.2rem;
+    position: relative;
+
+    & > .popout {
+        position: absolute;
+
+        // Mobile
+        width: 6.4rem;
+        top: -3.2rem;
+        right: 5%;
+    }
+
+
+    div:has(.world) {
+        display: flex;
+        gap: 1.6rem;
+        position: absolute;
+        top: -3.2rem;
+
+        .world {
+            width: 6.4rem;
+            transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
+
+            &:hover {
+                transform: scale(1.05) rotate(-3deg);
+            }
+        }
+    }
+
+    &.pastel-light {
+        background: var(--color-pastel-light);
+    }
+
+    &.accent-light {
+        background: var(--color-accent-light);
+    }
+
+    @media (width >= 960px) {
+        gap: 12.8rem;
+        padding: 12.8rem 6.4rem 12.8rem;
+
+        & > .popout {
+            width: 9.6rem;
+            top: -4.8rem;
+            right: 10%;
+        }
+    }
+}
+
+.homepage-panel-wrapper {
+    width: min(100%, 128rem);
+    display: grid;
+    gap: 4.8rem 6.4rem;
+
+    &.inline {
+        grid-template-columns: auto;
+        max-width: 128rem;
+
+        @media (width >= 960px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &.reverse {
+        direction: rtl;
+    }
+
+    .homepage-panel-content {
+        width: 100%;
+        text-align: start;
+        font-size: clamp(3.6rem, 8vw, 4.8rem);
+
+        & > video, & > img {
+            width: 100%;
+            border-radius: 0.25em;
+        }
+    }
+
+    .carousel__slide img {
+        border-radius: 0.8rem;
+    }
+
+    .carousel__pagination {
+        justify-self: center;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin: 0 1.6rem 0;
+    }
+
+    .carousel__pagination-item {
+        padding: 0;
+        flex-grow: 1;
+        min-width: 1.6rem;
+    }
+
+    .carousel__pagination-button {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .carousel__pagination-button::after {
+        width: 100% !important;
+        height: 1.6rem !important;
+        border-radius: 3.2rem !important;
+        background: var(--color-accent-medium) !important;
+    }
+
+    .carousel__pagination-button--active::after {
+        background: var(--color-medium-primary) !important;
+    }
+}
+
+.homepage-panel-content {
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+    text-align: center;
+    position: relative;
+    direction: ltr;
+    font-size: clamp(5.6rem, 10vw, 6.4rem);
+
+    .feature-panel-title {
+        color: var(--color-dark-primary);
+        font-family: var(--display-font);
+        font-size: 1em;
+        line-height: 1em;
+        text-transform: uppercase;
+        padding-block-end: 0.0625em;
+        hyphens: none;
+    }
+
+    .feature-panel-subtitle {
+        font-family: var(--head-font);
+        font-size: 0.5em;
+        font-weight: 700;
+        line-height: 1.2em;
+        color: var(--color-medium-primary);
+        padding-block-start: 0.125em;
+        hyphens: none;
+    }
+
+    .feature-panel-description {
+        font-family: var(--body-font);
+        font-size: 0.4em;
+        line-height: 1.75;
+        margin-block-start: 0.5em;
+    }
+
+    .feature-preview {
+        display: none;
+    }
+
+    @media (width >= 960px) {
+        .feature-preview {
+            display: block;
+        }
+    }
+
+    .app-button {
+        font-size: 2.4rem;
+    }
+}
+
+.homepage-section:has(.faq-panel) {
+    padding: 0;
+}
+
+.faq-panel {
+    margin-block-start: -12.8rem;
+    width: min(100%, 96rem);
+    background: white;
+    text-align: start;
+    padding: 6.4rem 6.4rem 9.6rem;
+
+    .feature-panel-title {
+        text-align: center;
+    }
+
+    .feature-panel-subtitle {
+        font-size: 0.4em;
+        margin-block-start: 2em;
+    }
+
+    .feature-panel-description {
+        font-family: var(--body-font);
+        font-size: 0.3em;
+    }
+
+    @media (width >= 960px) {
+        border-radius: 1.6rem;
+        padding: 6.4rem 9.6rem 12.8rem;
+    }
+}
+
+.model-counter-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    font-size: clamp(6rem, 12vw, 8rem);
+    gap: 0.25em 0.5em;
+
+    @media (width >= 960px) {
+        gap: 1.6rem 9.6rem
+    }
+}
+
+.model-counter {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    height: 2.75em;
+    width: 2.75em;
+    border-radius: 50%;
+    background: white;
+    user-select: none;
+    transition: 0.1s ease-in-out;
+
+    &:hover {
+        translate: 0.1em -0.1em;
+        filter: drop-shadow(-0.1em 0.1em 0 var(--color-pastel-light));
+    }
+
+    .model-counter-count {
+        color: var(--color-dark-primary);
+        font-family: var(--display-font);
+        font-size: 1em;
+        line-height: 0.75;
+    }
+
+    .model-counter-body {
+        display: grid;
+        justify-items: center;
+
+        .model-counter-model {
+            color: var(--color-medium-primary);
+            font-family: var(--display-font);
+            font-size: 0.5em;
+            line-height: 1.25;
+            hyphens: none;
+        }
+    }
+}
+
 .homepage-head-container {
     display: grid;
     justify-items: center;

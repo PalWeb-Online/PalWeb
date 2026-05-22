@@ -30,7 +30,7 @@
 }
 
 @mixin link-primary {
-    font-family: $bodyFont;
+    font-family: var(--body-font);
     font-weight: 700;
     font-size: 1.6rem;
     color: var(--color-medium-primary);
@@ -41,7 +41,7 @@
 }
 
 @mixin link-purple-deep {
-    font-family: $bodyFont;
+    font-family: var(--body-font);
     font-weight: 700;
     font-size: 1.6rem;
     color: var(--color-dark-primary);
@@ -58,7 +58,7 @@
     border: 0.2rem solid var(--color-dark-primary);
     border-radius: 1.2rem;
     box-shadow: -0.3rem 0.3rem 0 rgb(0 0 0 / 0.33);
-    font-family: $headFont;
+    font-family: var(--head-font);
     font-size: 1.6rem;
     font-weight: 700;
     text-decoration: none;
@@ -72,31 +72,23 @@
     }
 }
 
-$displayFont: 'beastly', 'Lalezar', serif;
-$headFont: 'monotalic', 'greycliff-arabic-cf', sans-serif;
-$bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
-$monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
-$ar_bodyFont: 'Vazirmatn', sans-serif;
-
 :root {
-    --display-font: 'beastly', 'Lalezar';
-    --head-font: 'monotalic', 'greycliff-arabic-cf';
-    --body-font: 'komet', 'greycliff-arabic-cf';
-    --mono-font: 'JetBrains Mono', 'Vazirmatn';
-    --ar-body-font: 'JetBrains Mono', 'Vazirmatn';
+    --display-font: 'beastly', 'Lalezar', sans-serif;
+    --head-font: 'monotalic', 'greycliff-arabic-cf', sans-serif;
+    --body-font: 'komet', 'greycliff-arabic-cf', serif;
+    --mono-font: 'JetBrains Mono', 'Vazirmatn', monospace;
+    --ar-body-font: 'JetBrains Mono', 'Vazirmatn', serif;
     --mastery-level__0: #ccc;
     --mastery-level__1: #FAA719;
     --mastery-level__2: #F57C20;
     --mastery-level__3: #F04324;
     --mastery-level__4: #D61E4F;
     --mastery-level__5: #A61F70;
-}
 
-//$displayFont: 'digibop', 'greycliff-arabic-cf', serif;
-//$headFont: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
-//:root {
-//    font-variation-settings: 'wdth' 130, 'wght' 800;
-//}
+    //--display-font: 'digibop', 'Lalezar', sans-serif;
+    //--head-font: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
+    //font-variation-settings: 'wdth' 130;
+}
 
 :root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
@@ -237,7 +229,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     gap: 1.6rem;
     user-select: none;
 
-    font-family: $headFont;
+    font-family: var(--head-font);
     font-weight: 700;
     font-size: 3.6rem;
     color: var(--color-dark-primary);
@@ -266,7 +258,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         width: min(100%, 48rem);
         margin: 0;
         text-align: center;
-        font-family: $monoFont;
+        font-family: var(--mono-font);
         font-size: 1.4rem;
         hyphens: none;
     }

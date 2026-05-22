@@ -84,3 +84,80 @@ defineOptions({
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.community-portal-head {
+    display: grid;
+    margin-block-end: 4.8rem;
+
+    .community-portal-title {
+        display: grid;
+        align-items: end;
+        grid-template-areas: 'overlap';
+        font-size: clamp(4.8rem, 12vw, 9.6rem);
+
+        & > * {
+            grid-area: overlap;
+        }
+
+        img {
+            width: 2em;
+            justify-self: end;
+            transform: translateY(0.5em);
+        }
+
+        div {
+            justify-self: start;
+            font-family: var(--display-font);
+            padding-inline: 0.33em;
+            text-transform: uppercase;
+            color: var(--color-dark-primary);
+            background: var(--color-polar-light);
+        }
+    }
+
+    .community-portal-blurb {
+        text-align: start;
+        background: var(--color-dark-primary);
+        color: var(--color-polar-light);
+        font-size: clamp(1.4rem, 3vw, 2.0rem);
+        padding: 0.5em 1em;
+        margin-block-start: -0.25em;
+        font-weight: 700;
+        z-index: 1;
+        filter: drop-shadow(-0.4rem 0.4rem 0 var(--color-accent-medium));
+    }
+}
+
+.decks-featured {
+    display: grid;
+    gap: 4.8rem;
+    grid-template-columns: auto;
+    align-items: start;
+    margin-block-end: 3.2rem;
+
+    .deck-flashcard-grid {
+        display: none;
+    }
+
+    @media (width >= 960px) {
+        grid-template-columns: min-content auto;
+
+        .popular {
+            grid-row: 2;
+            grid-column: span 2;
+        }
+
+        .deck-flashcard-grid {
+            display: flex;
+        }
+    }
+}
+
+.users-featured {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 3.2rem;
+}
+</style>

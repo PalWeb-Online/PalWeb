@@ -365,3 +365,13 @@ const removeUnlockCondition = (i) => {
         />
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.lesson-planner--skill {
+    display: grid;
+    gap: 3.2rem;
+    border-block-start: 0.8rem solid var(--color-accent-medium);
+    padding-block: 3.2rem;
+}
+
+</style>

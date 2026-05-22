@@ -791,3 +791,23 @@ defineOptions({
         />
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.term-editor, .term-editor > * {
+    width: 100%;
+    max-width: 96rem;
+    display: grid;
+    gap: 3.2rem;
+    align-content: start;
+}
+
+@media (width >= 960px) {
+    .term-editor {
+        grid-template-columns: repeat(2, 1fr);
+
+        & > *:nth-child(3) {
+            grid-column: span 2;
+        }
+    }
+}
+</style>

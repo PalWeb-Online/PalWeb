@@ -72,3 +72,63 @@ const scoreMessage = computed(() => {
     </div>
     <slot/>
 </template>
+
+<style scoped lang="scss">
+.score-metadata {
+    background: var(--color-accent-light);
+    padding: 1.6rem;
+    color: var(--color-dark-primary);
+    display: grid;
+    gap: 0.8rem;
+
+    .score-metadata-row {
+        display: flex;
+        gap: 1.6rem;
+
+        & > div {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        & > div > *:first-child {
+            font-weight: 700;
+        }
+    }
+}
+
+.quiz-results {
+    margin: 3.2rem 3.2rem 3.2rem;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1.6rem 3.2rem;
+    align-items: center;
+
+    .score-figure {
+        font-size: 12.8rem;
+        animation: bounceIn 0.5s;
+        position: relative;
+
+        .quiz-results-callout {
+            position: absolute;
+            bottom: -0.6rem;
+            left: 0.8rem;
+            font-size: 2.4rem;
+            color: var(--color-accent-medium);
+        }
+    }
+
+    .score-feedback {
+        flex-grow: 1;
+        display: grid;
+        gap: 0.4rem;
+        color: var(--color-dark-primary);
+
+        & > *:nth-child(1) {
+            font-family: var(--head-font);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--color-medium-primary);
+        }
+    }
+}
+</style>

@@ -284,3 +284,53 @@ const {
         </template>
     </div>
 </template>
+
+<style scoped lang="scss">
+.history-bars-wrapper {
+    display: grid;
+    grid-template-areas: 'overlap';
+    align-items: end;
+    height: 100%;
+
+    .bar-wrapper {
+        grid-area: overlap;
+        z-index: 1;
+    }
+}
+
+.bar-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 0.4rem 0.4rem 0 0;
+    overflow: hidden;
+
+    .bar {
+        border-radius: 0;
+
+        &.review-bar {
+            background: var(--color-dark-primary);
+        }
+
+        &.lapses-bar {
+            background: var(--color-medium-primary);
+        }
+
+        &.relearning-bar {
+            background: var(--color-accent-light);
+        }
+
+        &.new-bar {
+            background: var(--color-pastel-dark);
+        }
+    }
+}
+
+.bar-legend {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+}
+</style>

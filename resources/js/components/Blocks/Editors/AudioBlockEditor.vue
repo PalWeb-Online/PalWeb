@@ -13,3 +13,12 @@ const props = defineProps({
                placeholder="URL"/>
     </div>
 </template>
+
+<style scoped lang="scss">
+.block-editor--audio {
+    audio {
+        width: 100%;
+        border-radius: 0.8rem;
+    }
+}
+</style>

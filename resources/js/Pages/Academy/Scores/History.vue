@@ -151,3 +151,39 @@ watch(() => props.selectedScore, (newVal) => {
         <PurgeScores :scorable_type="scorable_type" :scorable_id="model.id"/>
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.score-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 1.6rem;
+
+    .material-symbols-rounded {
+        font-size: 2.0rem;
+        color: var(--color-dark-primary);
+    }
+}
+
+.score-item {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    background: var(--color-pastel-light);
+    color: var(--color-dark-primary);
+    border-radius: 0.8rem;
+    padding: 1.2rem 2.4rem;
+    font-family: var(--body-font);
+    font-weight: 700;
+    font-size: 1.6rem;
+
+    &:hover {
+        background: var(--color-pastel-medium);
+    }
+
+    & > *:last-child {
+        justify-self: end;
+    }
+}
+</style>

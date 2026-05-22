@@ -1,55 +1,18 @@
-@import 'variables';
-@import 'layout';
-@import 'nav';
-@import 'apps';
-@import 'academy';
-@import 'decks';
-@import 'terms';
-@import 'sentences';
-@import 'users';
-@import 'record';
-@import 'utilities';
-@import 'wiki';
+@use 'variables';
+@use 'layout';
+@use 'apps';
+@use 'academy';
+@use 'decks';
+@use 'terms';
+@use 'sentences';
+@use 'users';
+@use 'record';
+@use 'utilities';
+@use 'wiki';
 
 /*
 Search Tools
  */
-
-.letters-array {
-    justify-items: center;
-    padding: 3.2rem;
-    background: var(--color-pastel-light);
-    width: 100%;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    gap: 1.6rem;
-    direction: rtl;
-
-    button {
-        width: 4.8rem;
-        height: 4.8rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: $monoFont;
-        font-size: 2.4rem;
-        font-weight: 700;
-        user-select: none;
-        color: var(--color-accent-medium);
-        background: white;
-
-        &:hover {
-            color: var(--color-dark-primary)
-        }
-
-        &.active {
-            color: white;
-            background: var(--color-dark-primary);
-        }
-    }
-}
 
 .search-filters-container {
     display: grid;
@@ -99,7 +62,7 @@ Search Tools
 
         input {
             flex-grow: 1;
-            font-family: $monoFont;
+            font-family: var(--mono-font);
             font-weight: 700;
             text-align: center;
             color: var(--color-dark-primary);
@@ -148,14 +111,14 @@ Search Tools
     display: grid;
     gap: 3.2rem;
     padding: 3.2rem 3.2rem 4.8rem;
-    font-family: $headFont;
+    font-family: var(--head-font);
     color: var(--color-dark-primary);
 
     p {
         background: var(--color-accent-light);
         border-radius: 0.8rem;
         padding: 1.6rem 2.0rem;
-        font-family: $bodyFont;
+        font-family: var(--body-font);
         text-transform: none;
         font-weight: 400;
         font-size: 1.6rem;
@@ -164,7 +127,7 @@ Search Tools
 
     button:not(.app-button):not(.material-symbols-rounded) {
         justify-self: start;
-        font-family: $monoFont;
+        font-family: var(--mono-font);
         font-weight: 700;
         color: var(--color-medium-primary);
         font-size: 1.4rem;
@@ -175,7 +138,7 @@ Search Tools
     }
 
     .form-errors {
-        @include box-accent-light;
+        @include variables.box-accent-light;
         font-size: 1.4rem;
         padding: 1.6rem;
 
@@ -198,7 +161,7 @@ Search Tools
             align-items: center;
             gap: 0.8rem;
             font-size: 1.6rem;
-            font-family: $monoFont;
+            font-family: var(--mono-font);
             color: var(--color-dark-primary);
         }
 
@@ -247,7 +210,7 @@ Search Tools
         gap: 1.6rem;
         align-items: center;
         justify-content: space-between;
-        font-family: $headFont;
+        font-family: var(--head-font);
         font-size: 2.4rem;
         font-weight: 700;
         text-transform: lowercase;
@@ -311,7 +274,7 @@ Search Tools
     gap: 0.4rem;
 
     label {
-        font-family: $headFont;
+        font-family: var(--head-font);
         font-size: 1.4rem;
         font-weight: 700;
         color: var(--color-dark-primary);
@@ -323,7 +286,7 @@ Search Tools
     align-items: center;
     gap: 1.6rem;
     color: var(--color-dark-primary);
-    font-family: $monoFont;
+    font-family: var(--mono-font);
     font-weight: 700;
     font-size: 1.6rem;
     text-transform: capitalize;
@@ -354,7 +317,7 @@ button.toggle-button {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: $displayFont;
+        font-family: var(--display-font);
         font-size: 2.4rem;
         text-transform: uppercase;
         user-select: none;
@@ -375,7 +338,7 @@ button.toggle-button {
 .field-error {
     color: var(--color-accent-dark);
     font-size: 1.2rem;
-    font-family: $monoFont;
+    font-family: var(--mono-font);
 }
 
 .field-input {

@@ -295,3 +295,29 @@ function generateArabicName() {
         />
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.avatar-grid {
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 1.6rem;
+
+    img {
+        border-radius: 2.0rem;
+        object-fit: cover;
+        min-height: 100%;
+        min-width: 100%;
+        border: 0.2rem solid var(--color-pastel-medium);
+
+        &:hover {
+            border: 0.2rem solid var(--color-medium-primary);
+        }
+    }
+
+    @media (width >= 960px) {
+        gap: 1.6rem;
+        padding: 3.2rem;
+    }
+}
+</style>
