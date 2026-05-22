@@ -9,8 +9,9 @@ export const slugifyHeadingTitle = (value) => {
 };
 
 export const getHeadingAnchorId = (block) => {
-    const titleSlug = slugifyHeadingTitle(block?.title) || 'heading';
-    const idSlug = slugifyHeadingTitle(block?.id) || 'unknown';
+    return slugifyHeadingTitle(block?.title) || 'heading';
 
-    return `${titleSlug}-${idSlug}`;
+    // const titleSlug = slugifyHeadingTitle(block?.title) || 'heading';
+    // const idSlug = slugifyHeadingTitle(block?.id) || 'unknown';
+    // return `${titleSlug}-${idSlug}`;
 };

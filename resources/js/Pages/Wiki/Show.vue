@@ -238,7 +238,7 @@ watch(() => props.pageId, async () => {
     background: white;
 
     &:last-child {
-        margin-block-end: 9.6rem;
+        margin-block-end: 12.8rem;
     }
 
     @media (width >= 1280px) {
