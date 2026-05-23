@@ -72,7 +72,7 @@
     }
 }
 
-:root {
+:root, .font-theme-GoldStar {
     --display-font: 'beastly', 'Lalezar', sans-serif;
     --head-font: 'monotalic', 'greycliff-arabic-cf', sans-serif;
     --body-font: 'komet', 'greycliff-arabic-cf', sans-serif;
@@ -84,10 +84,17 @@
     --mastery-level__3: #F04324;
     --mastery-level__4: #D61E4F;
     --mastery-level__5: #A61F70;
+}
 
-    //--display-font: 'digibop', 'Lalezar', sans-serif;
-    //--head-font: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
-    //font-variation-settings: 'wdth' 130;
+.font-theme-Banksy {
+    --display-font: 'cofo-kabeltouw-solid-0', 'Lalezar', sans-serif;
+    --head-font: 'new-science-serif', 'greycliff-arabic-cf', sans-serif;
+}
+
+.font-theme-Pal2K {
+    --display-font: 'digibop', 'Lalezar', sans-serif;
+    --head-font: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
+    font-variation-settings: 'wdth' 130;
 }
 
 :root, .theme-PalWebOS {
@@ -168,6 +175,25 @@
     --color-accent-dark: hsl(30, 25%, 25%);
     --color-accent-medium: hsl(30, 25%, 65%);
     --color-accent-light: hsl(30, 80%, 95%);
+}
+
+.theme-Pal2K {
+    --color-polar-dark: hsl(0, 0%, 0%);
+    --color-polar-light: hsl(0, 0%, 100%);
+    --color-dark-secondary: #1b0b4c;
+    --color-dark-primary: #3c2c8c;
+    --color-medium-secondary: #6b5acd;
+    --color-medium-primary: #b989d4;
+    --color-medium-primary: hsl(280, 50%, 68%);
+    --color-pastel-dark: hsl(350, 95%, 85%);
+    --color-pastel-medium: hsl(350, 95%, 90%);
+    --color-pastel-light: hsl(350, 92%, 97%);
+    --color-transparent: hsla(0, 0%, 92%, 0.75);
+    //--color-accent-dark: hsl(200, 95%, 25%);
+    //--color-accent-medium: hsl(200, 85%, 65%);
+    --color-accent-dark: #ff6f62;
+    --color-accent-medium: hsl(48, 90%, 60%);
+    --color-accent-light: hsl(50, 95%, 90%);
 }
 
 .theme-Sumac {

@@ -72,7 +72,7 @@ const toggleNotifications = async (nextValue) => {
 
         <div class="modal-container-body form-body">
             <div class="field-item">
-                <label>Theme</label>
+                <label>Color Theme</label>
                 <select
                     v-model="NavigationStore.activeTheme"
                     @change="NavigationStore.updateTheme(NavigationStore.activeTheme)"
@@ -82,17 +82,28 @@ const toggleNotifications = async (nextValue) => {
                     </option>
                 </select>
             </div>
-<!--            <div class="field-item">-->
-<!--                <label>Language</label>-->
-<!--                <select-->
-<!--                    v-model="selectedLocale"-->
-<!--                    @change="changeLanguage(selectedLocale)"-->
-<!--                >-->
-<!--                    <option v-for="(locale, i) in availableLocales" :key="i" :value="locale.value">-->
-<!--                        {{ locale.label }}-->
-<!--                    </option>-->
-<!--                </select>-->
-<!--            </div>-->
+            <!--            <div class="field-item">-->
+            <!--                <label>Font Theme</label>-->
+            <!--                <select-->
+            <!--                    v-model="NavigationStore.activeFontTheme"-->
+            <!--                    @change="NavigationStore.updateFontTheme(NavigationStore.activeFontTheme)"-->
+            <!--                >-->
+            <!--                    <option v-for="theme in NavigationStore.fontThemes" :key="theme" :value="theme">-->
+            <!--                        {{ theme }}-->
+            <!--                    </option>-->
+            <!--                </select>-->
+            <!--            </div>-->
+            <!--            <div class="field-item">-->
+            <!--                <label>Language</label>-->
+            <!--                <select-->
+            <!--                    v-model="selectedLocale"-->
+            <!--                    @change="changeLanguage(selectedLocale)"-->
+            <!--                >-->
+            <!--                    <option v-for="(locale, i) in availableLocales" :key="i" :value="locale.value">-->
+            <!--                        {{ locale.label }}-->
+            <!--                    </option>-->
+            <!--                </select>-->
+            <!--            </div>-->
             <ToggleSingle v-if="UserStore.isUser"
                           :model-value="NotificationStore.currentBrowserSubscribed"
                           @update:modelValue="toggleNotifications"
