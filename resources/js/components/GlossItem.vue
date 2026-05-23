@@ -43,11 +43,6 @@ defineProps({
         color: var(--color-dark-primary);
         font-weight: 700;
     }
-
-    .model-list {
-        justify-items: end;
-        padding-inline: 1.6rem;
-    }
 }
 
 .gloss-item {

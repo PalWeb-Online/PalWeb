@@ -538,12 +538,6 @@ const etymology = computed(() => {
     }
 }
 
-.term-glosses {
-    margin-block: 3.2rem;
-    display: grid;
-    gap: 3.2rem;
-}
-
 .model-list-toggle-expand {
     display: flex;
     flex-direction: column;

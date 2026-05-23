@@ -40,6 +40,17 @@
     }
 }
 
+.gloss-item-container .model-list {
+    justify-items: end;
+    padding-inline: 1.6rem;
+}
+
+.term-glosses {
+    margin-block: 3.2rem;
+    display: grid;
+    gap: 3.2rem;
+}
+
 .terms-count {
     font-family: var(--mono-font);
     font-weight: 700;
