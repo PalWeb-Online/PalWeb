@@ -1,16 +1,11 @@
 <script setup>
-import {inject, ref} from "vue";
-import SentenceItem from "../../../../components/SentenceItem.vue";
-import SentenceBlock from "./SentenceBlock.vue";
-import ChartBlock from "./ChartBlock.vue";
-import TextBlock from "./TextBlock.vue";
-import ContainerBlock from "./ContainerBlock.vue";
+import {ref} from "vue";
+import DocumentBlocksRenderer from "../../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 
 defineProps({
     skill: {type: Object, required: true}
 })
 
-const lessonSentences = inject('lessonSentences');
 const isOpen = ref(false);
 </script>
 <template>
@@ -23,20 +18,7 @@ const isOpen = ref(false);
             <h1>{{ skill.title }}</h1>
             <h2>{{ skill.description }}</h2>
 
-            <template v-for="block in skill.blocks">
-                <template v-if="block.type === 'text'">
-                    <TextBlock :block="block"/>
-                </template>
-                <template v-if="block.type === 'sentence'">
-                    <SentenceItem v-if="block.model" :model="lessonSentences[block.model.id]"/>
-                    <SentenceBlock v-else :sentence="block.custom"/>
-                </template>
-                <template v-if="block.type === 'chart'">
-                    <ChartBlock :chart="block"/>
-                </template>
-
-                <ContainerBlock :container="block" v-if="block.type === 'container'"/>
-            </template>
+            <DocumentBlocksRenderer :blocks="skill.blocks ?? []"/>
         </div>
     </div>
 </template>
@@ -52,7 +34,7 @@ const isOpen = ref(false);
     overflow: hidden;
     border-block-end: 0.4rem solid var(--color-accent-medium);
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         border: none;
         border-radius: 2.4rem;
     }

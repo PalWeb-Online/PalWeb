@@ -1,19 +1,26 @@
-import TextBlockEditor from "../Pages/Office/LessonPlanner/UI/TextBlockEditor.vue";
-import AudioBlockEditor from "../Pages/Office/LessonPlanner/UI/AudioBlockEditor.vue";
-import TableBlockEditor from "../Pages/Office/LessonPlanner/UI/TableBlockEditor.vue";
-import ExercisesBlockEditor from "../Pages/Office/LessonPlanner/UI/ExercisesBlockEditor.vue";
 import {inject, provide} from "vue";
-import SentenceBlockEditor from "../Pages/Office/LessonPlanner/UI/SentenceBlockEditor.vue";
-import ChartBlockEditor from "../Pages/Office/LessonPlanner/UI/ChartBlockEditor.vue";
-import ContainerBlockEditor from "../Pages/Office/LessonPlanner/UI/ContainerBlockEditor.vue";
+import HeadingBlockEditor from "../components/Blocks/Editors/HeadingBlockEditor.vue";
+import ContainerBlockEditor from "../components/Blocks/Editors/ContainerBlockEditor.vue";
+import TextBlockEditor from "../components/Blocks/Editors/TextBlockEditor.vue";
+import AudioBlockEditor from "../components/Blocks/Editors/AudioBlockEditor.vue";
+import ChartBlockEditor from "../components/Blocks/Editors/ChartBlockEditor.vue";
+import TableBlockEditor from "../components/Blocks/Editors/TableBlockEditor.vue";
+import SentenceBlockEditor from "../components/Blocks/Editors/SentenceBlockEditor.vue";
+import ExercisesBlockEditor from "../components/Blocks/Editors/ExercisesBlockEditor.vue";
+import ImageBlockEditor from "../components/Blocks/Editors/ImageBlockEditor.vue";
 
-const symbol = Symbol('document-builder');
+export const documentBuilderContextKey = Symbol('document-builder-context');
 
 export function useDocumentBuilder(documentBlocks = null) {
-    const blocksArray = documentBlocks || inject(symbol, null);
+    const inheritedContext = inject(documentBuilderContextKey, null);
 
-    const provideBuilder = () => {
-        provide(symbol, blocksArray);
+    const blocksArray = documentBlocks ?? inheritedContext?.blocksArray ?? null;
+
+    const provideBuilder = (context = {}) => {
+        provide(documentBuilderContextKey, {
+            blocksArray,
+            blockTypes: context.blockTypes ?? inheritedContext?.blockTypes ?? null,
+        });
     };
 
     const uid = () => (globalThis.crypto?.randomUUID?.() ?? `id_${Date.now()}_${Math.random().toString(16).slice(2)}`);
@@ -36,22 +43,26 @@ export function useDocumentBuilder(documentBlocks = null) {
 
     const blockEditors = {
         container: ContainerBlockEditor,
+        heading: HeadingBlockEditor,
         text: TextBlockEditor,
+        image: ImageBlockEditor,
         audio: AudioBlockEditor,
-        table: TableBlockEditor,
-        exercises: ExercisesBlockEditor,
         chart: ChartBlockEditor,
+        table: TableBlockEditor,
         sentence: SentenceBlockEditor,
+        exercises: ExercisesBlockEditor,
     };
 
     const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
 
     const blockFactories = {
         container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
+        heading: () => ({id: uid(), type: 'heading', title: '', level: 'h1'}),
         text: () => ({id: uid(), type: 'text', content: ''}),
+        image: () => ({id: uid(), type: 'image', media: ''}),
         audio: () => ({id: uid(), type: 'audio', media: ''}),
-        table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
         chart: () => ({id: uid(), type: 'chart', title: '', rows: []}),
+        table: () => ({id: uid(), type: 'table', columns: [], rows: []}),
         sentence: () => ({id: uid(), type: 'sentence', model: null, custom: null}),
         exercises: () => ({
             id: uid(),
@@ -194,6 +205,14 @@ export function useDocumentBuilder(documentBlocks = null) {
                         {start: '', end: ''},
                     ],
                 };
+            case 'sort':
+                return {
+                    ...base,
+                    items: [
+                        {id: uid(), text: ''},
+                        {id: uid(), text: ''}
+                    ]
+                }
             case 'select':
             default:
                 return {
@@ -309,7 +328,20 @@ export function useDocumentBuilder(documentBlocks = null) {
         }
     };
 
+    const addSortableItem = (ex) => {
+        ex.items.push({
+            id: uid(),
+            text: ''
+        });
+    };
+
+    const removeSortableItem = (ex, index) => {
+        if (ex.items.length <= 2) return;
+        ex.items.splice(index, 1);
+    };
+
     return {
+        inheritedContext,
         uid,
         provideBuilder,
         addBlock,
@@ -327,6 +359,8 @@ export function useDocumentBuilder(documentBlocks = null) {
         addPrompt,
         removePrompt,
         addSelectOption,
-        removeSelectOption
+        removeSelectOption,
+        addSortableItem,
+        removeSortableItem
     };
 }

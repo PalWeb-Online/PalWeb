@@ -67,9 +67,6 @@ function handleSelect(option) {
     button.active {
         background: var(--color-dark-primary);
     }
-
-    .toggle-option-label {
-    }
 }
 
 .toggle-multi-label, .toggle-option-label {

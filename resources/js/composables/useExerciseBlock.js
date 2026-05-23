@@ -1,24 +1,22 @@
 import { computed } from 'vue';
-import { useActivityStore } from '../Pages/Academy/Activities/Stores/ActivityStore.js';
+import { useActivitySession } from './activities/useActivitySession.js';
 import { shuffle } from 'lodash';
 
 export function useExerciseBlock(props) {
-    const ActivityStore = useActivityStore();
-
-    // todo: the problem with this is that matching block items don't have a `correct` key
-    const isViewingResults = computed(() => {
-        return props.block.items.length > 0 && Object.hasOwn(props.block.items[0], 'correct');
-    });
+    const ActivitySession = useActivitySession();
 
     const processedItems = computed(() => {
-        let items = props.block.items.map(item => {
-            if (!isViewingResults.value && props.block.exerciseType === 'select' && item.shuffleOptions) {
-                return {...item, displayOptions: shuffle([...item.options])};
+        let items = props.block.items.map(ex => {
+            if (props.block.exerciseType === 'select') {
+                return ex.shuffleOptions && !ActivitySession.isViewingResults
+                    ? {...ex, displayOptions: shuffle([...ex.options])}
+                    : {...ex, displayOptions: ex.options};
             }
-            return {...item, displayOptions: item.options};
+
+            return {...ex};
         });
 
-        if (!isViewingResults.value && props.block.shuffle) {
+        if (!ActivitySession.isViewingResults && props.block.shuffle) {
             items = shuffle(items);
         }
 
@@ -26,8 +24,7 @@ export function useExerciseBlock(props) {
     });
 
     return {
-        ActivityStore,
-        isViewingResults,
+        ActivitySession,
         processedItems,
     };
 }

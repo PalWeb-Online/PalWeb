@@ -69,7 +69,7 @@ class LessonPlannerController extends Controller
     {
         return Inertia::render('Office/LessonPlanner/Unit', [
             'section' => 'office',
-            'unit' => $unit ? new UnitResource($unit) : null,
+            'unitId' => $unit?->id,
         ]);
     }
 
@@ -77,12 +77,10 @@ class LessonPlannerController extends Controller
     {
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
-            'lesson' => [
-                'unit' => [
-                    'id' => $unit->id,
-                    'title' => $unit->title,
-                    'position' => $unit->position,
-                ],
+            'initialUnit' => [
+                'id' => $unit->id,
+                'title' => $unit->title,
+                'position' => $unit->position,
             ],
         ]);
     }
@@ -98,7 +96,7 @@ class LessonPlannerController extends Controller
 
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
-            'lesson' => $lesson ? new LessonResource($lesson) : null,
+            'lessonId' => $lesson?->id,
         ]);
     }
 
@@ -108,8 +106,13 @@ class LessonPlannerController extends Controller
 
         return Inertia::render('Office/LessonPlanner/Activity', [
             'section' => 'office',
-            'lesson' => new LessonResource($lesson),
-            'activity' => $activity ? new ActivityResource($activity) : null,
+            'activityId' => $activity?->id,
+            'initialLesson' => [
+                'id' => $lesson->id,
+                'title' => $lesson->title,
+                'global_position' => $lesson->global_position,
+                'published' => $lesson->published,
+            ],
         ]);
     }
 }

@@ -15,8 +15,6 @@ const props = defineProps({
 })
 
 const saveSettings = async () => {
-    console.log('attempting save');
-
     if (props.settings.new_limit > props.settings.review_limit) {
         props.settings.review_limit = props.settings.new_limit;
     }

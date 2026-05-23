@@ -10,7 +10,6 @@ import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
 import {useNavigationStore} from "../../../stores/NavigationStore.js";
-import WindowSection from "../../../components/WindowSection.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -111,3 +110,41 @@ const sortingMessage = computed(() => {
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.letters-array {
+    justify-items: center;
+    padding: 3.2rem;
+    background: var(--color-pastel-light);
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 1.6rem;
+    direction: rtl;
+
+    button {
+        width: 4.8rem;
+        height: 4.8rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono-font);
+        font-size: 2.4rem;
+        font-weight: 700;
+        user-select: none;
+        color: var(--color-accent-medium);
+        background: white;
+
+        &:hover {
+            color: var(--color-dark-primary)
+        }
+
+        &.active {
+            color: white;
+            background: var(--color-dark-primary);
+        }
+    }
+}
+</style>

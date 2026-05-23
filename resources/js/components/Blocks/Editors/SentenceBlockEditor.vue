@@ -1,0 +1,145 @@
+<script setup>
+import {inject, ref, watch} from "vue";
+import {useSearchStore} from "../../../stores/SearchStore.js";
+import SentenceItem from "../../SentenceItem.vue";
+import SentenceBlock from "../Renderers/SentenceBlock.vue";
+import Draggable from "vuedraggable";
+
+const props = defineProps({
+    block: {type: Object, required: true},
+});
+
+const documentSentenceModels = inject('documentSentenceModels', ref({}));
+
+const SearchStore = useSearchStore();
+const isSearchingForMe = ref(false);
+
+const openSearch = () => {
+    isSearchingForMe.value = true;
+    SearchStore.openSearchGenie('insert', 'sentences');
+};
+
+const insertSentence = (model) => {
+    documentSentenceModels.value[model.id] = model;
+
+    props.block.model = {id: model.id};
+    props.block.custom = null;
+}
+
+const addSentence = () => {
+    props.block.model = null;
+    props.block.custom = {
+        transl: '',
+        terms: [
+            {term: '', transc: ''}
+        ]
+    }
+}
+
+const clearSentence = () => {
+    props.block.model = null;
+    props.block.custom = null;
+}
+
+const addTerm = () => {
+    props.block.custom.terms.push({
+        term: '',
+        transc: '',
+    });
+}
+
+const removeTerm = (index) => {
+    props.block.custom.terms.splice(index, 1)
+}
+
+watch(
+    () => SearchStore.data.selectedModel,
+    (newModel) => {
+        if (newModel && isSearchingForMe.value) {
+            insertSentence(newModel);
+            isSearchingForMe.value = false;
+            SearchStore.deselectModel();
+        }
+    }
+);
+</script>
+
+<template>
+    <div class="block-editor--sentence">
+        <div class="block-add-buttons">
+            <template v-if="!block.model && !block.custom">
+                <div>
+                    <div class="add-button" @click="openSearch">+</div>
+                    <div>model</div>
+                </div>
+                <div>
+                    <div class="add-button" @click="addSentence">+</div>
+                    <div>custom</div>
+                </div>
+            </template>
+            <div v-else-if="block.custom">
+                <div class="add-button" @click="addTerm">+</div>
+                <div>term</div>
+            </div>
+        </div>
+
+        <div v-if="block.model || block.custom" class="sentence-preview">
+            <button class="material-symbols-rounded" @click="clearSentence">mop</button>
+            <SentenceItem v-if="block.model" :model="documentSentenceModels[block.model.id]"/>
+            <SentenceBlock v-else-if="block.custom" :sentence="block.custom"/>
+        </div>
+
+        <template v-if="block.custom">
+            <Draggable class="sentence-fields"
+                       :list="block.custom.terms"
+                       itemKey="id"
+                       handle=".handle"
+            >
+                <template #item="{ element: term, index: i }">
+                    <div class="sentence-term">
+                        <span class="handle material-symbols-rounded">drag_indicator</span>
+                        <input v-model="term.term" placeholder="Term"/>
+                        <input v-model="term.transc" style="direction: ltr" placeholder="Transcription"/>
+                        <button v-if="block.custom.terms.length > 1" class="material-symbols-rounded"
+                                @click="removeTerm(i)">delete
+                        </button>
+                    </div>
+                </template>
+            </Draggable>
+            <div class="field-item">
+                <input v-model="block.custom.transl" style="direction: ltr" placeholder="Translation"/>
+            </div>
+        </template>
+    </div>
+</template>
+
+<style lang="scss" scoped>
+.block-editor--sentence {
+    display: grid;
+    gap: 1.6rem;
+
+    .sentence-preview {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        direction: rtl;
+    }
+
+    .sentence-preview button,
+    .sentence-term button {
+        color: var(--color-medium-primary)
+    }
+
+    .sentence-fields {
+        display: grid;
+        gap: 0.8rem;
+        direction: rtl;
+    }
+
+    .sentence-term {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+}
+</style>

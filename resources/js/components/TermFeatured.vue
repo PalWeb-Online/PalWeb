@@ -2,6 +2,7 @@
 import {useTerm} from "../composables/Term.js";
 import TermActions from "./Actions/TermActions.vue";
 import PinButton from "./PinButton.vue";
+import GlossItem from "./GlossItem.vue";
 
 const props = defineProps({
     model: {
@@ -46,38 +47,26 @@ const {term, isLoading} = useTerm(props);
                     </div>
                 </div>
                 <div class="term-glosses">
-                    <div v-for="(gloss, index) in term.glosses" class="gloss-li-container">
-                        <div class="gloss-li">
-                            <div class="gloss-li-label">
-                                {{ index + 1 }}
-                            </div>
-
-                            <div class="gloss-li-content">
-                                <div v-for="attribute in gloss.attributes" class="gloss-li-attribute">
-                                    <template v-if="attribute.category">[{{ attribute.category }}]</template>
-                                    {{ attribute.attribute }}
-                                </div>
-                                <div class="gloss-li-content-gloss">
-                                    {{ gloss.gloss }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <GlossItem v-for="(gloss, index) in term.glosses" :key="gloss.id" :gloss="gloss" :position="index + 1"/>
                 </div>
-                <!--            <div class="term-item">-->
-                <!--                <div class="term-item-head">-->
-                <!--                    <div class="arb">{{ term.term }}</div>-->
-                <!--                    <img class="play" v-if="term.audio" src="/img/audio.svg" alt="play" @click="playAudio"/>-->
-                <!--                    <div class="translit">{{ term.translit }}</div>-->
-                <!--                </div>-->
-                <!--                <div class="term-item-body">-->
-                <!--                    <div class="eng">{{ glossId ? term.glosses.find((gloss) => gloss.id === props.glossId).gloss : term.glosses[0].gloss }}</div>-->
-                <!--                    <TermDeckToggleButton :model="term"/>-->
-                <!--                </div>-->
-                <!--                <PinButton modelType="term" :model="term"/>-->
-                <!--            </div>-->
-                <!--            <TermActions :model="term"/>-->
             </div>
         </section>
     </template>
 </template>
+
+<style scoped lang="scss">
+.featured-term {
+    display: grid;
+    overflow: hidden;
+    position: relative;
+
+    img {
+        min-height: 100%;
+        object-fit: cover;
+    }
+
+    @media (width >= 960px) {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+</style>

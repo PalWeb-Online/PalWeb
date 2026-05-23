@@ -5,8 +5,10 @@ import axios from 'axios';
 import i18n from './i18n';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import { registerSW } from 'virtual:pwa-register'
-import { route } from 'ziggy-js';
+import {registerSW} from 'virtual:pwa-register'
+import {route} from 'ziggy-js';
+import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
+import 'vue3-carousel/dist/carousel.css';
 
 registerSW({
     immediate: true,
@@ -63,10 +65,11 @@ function syncCsrfToken(token) {
 }
 
 createInertiaApp({
-    resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.vue', {eager: true})
-        return pages[`./Pages/${name}.vue`]
-    },
+    resolve: (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob('./Pages/**/*.vue')
+        ),
     setup({el, App, props, plugin}) {
         i18n.global.locale.value = props.initialPage.props.locale;
 

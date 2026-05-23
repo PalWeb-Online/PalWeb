@@ -128,7 +128,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         flex-shrink: 0;
     }
 
-    @media (min-width: 720px) {
+    @media (width >= 720px) {
         .audio-item-date {
             display: block;
         }

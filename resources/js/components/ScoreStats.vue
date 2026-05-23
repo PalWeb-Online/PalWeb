@@ -42,6 +42,8 @@ const polylinePoints = computed(() => {
     if (!props.model?.scores?.length) return "";
 
     const scores = graphScores?.map(s => s.score);
+    const n = scores.length;
+    if (n < 2) return "";
     const width = 100;
     const height = 100;
 
@@ -176,3 +178,35 @@ const trendLinePoints = computed(() => {
         </Link>
     </div>
 </template>
+
+<style scoped lang="scss">
+.score-stats-graph {
+    display: flex;
+    flex-flow: row;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    .score-stats-graph-item {
+        background: rgb(0 0 0 / 0.1);
+        height: 0;
+        transition: height 0.3s ease;
+        position: relative;
+
+        .interact-button {
+            position: absolute;
+            top: -1.2rem;
+            left: -1.2rem;
+            width: 2.4rem;
+            height: 2.4rem;
+            color: var(--color-dark-primary);
+            background: currentColor;
+            box-shadow: inset 0 0 0 0.3rem currentColor, inset 0 0 0 0.6rem white;
+            border-radius: 50%;
+
+            &:hover {
+                color: var(--color-accent-medium);
+            }
+        }
+    }
+}
+</style>

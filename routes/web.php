@@ -17,6 +17,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Office\LessonPlannerController;
 use App\Http\Controllers\Office\SpeechMakerController;
 use App\Http\Controllers\Office\WordLoggerController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
@@ -36,6 +37,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialog;
+use App\Models\Page;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
@@ -60,60 +62,66 @@ Route::get('/offline', function () {
 })->name('offline');
 
 Route::get('/', function () {
-    return Inertia::render('Home', [
-        'count' => [
+    $counts = Cache::remember('public_model_counts', now()->addHour(), function () {
+        return [
             'terms' => Term::count(),
             'sentences' => Sentence::count(),
             'users' => User::count(),
             'decks' => Deck::where('private', false)->count(),
             'dialogs' => Dialog::count(),
             'audios' => Audio::count(),
-        ],
+        ];
+    });
+
+    return Inertia::render('Home', [
+        'count' => $counts,
         'users' => UserResource::collection(User::find([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->all()),
         'decks' => DeckResource::collection(Deck::find([2, 3, 4, 12, 19, 83, 100, 118])->load(['terms'])->all()),
         'sentences' => SentenceResource::collection(Sentence::orderByDesc('id')->find([256, 66, 54])->all()),
         'testimonials' => [
             [
-                'user' => new UserResource(User::find(243)),
+                'user' => User::find(243) ? new UserResource(User::find(243)) : null,
                 'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.',
             ],
             [
-                'user' => new UserResource(User::find(1317)),
+                'user' => User::find(1317) ? new UserResource(User::find(1317)) : null,
                 'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.',
             ],
             [
-                'user' => new UserResource(User::find(16)),
+                'user' => User::find(16) ? new UserResource(User::find(16)) : null,
                 'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.',
             ],
             [
-                'user' => new UserResource(User::find(18)),
+                'user' => User::find(18) ? new UserResource(User::find(18)) : null,
                 'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.',
             ],
             [
-                'user' => new UserResource(User::find(3)),
+                'user' => User::find(3) ? new UserResource(User::find(3)) : null,
                 'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
             ],
         ],
-        'featuredTerm' => new TermResource(Term::find(662))->additional(['detail' => true]),
-        'featuredUser' => new UserResource(User::find(1)->load(['dialect'])),
-        'featuredDeck' => new DeckResource(Deck::find(2)->load(['terms'])),
+        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662))->additional(['detail' => true]) : null,
+        'featuredUser' => User::find(1) ? new UserResource(User::find(1)->load(['dialect'])) : null,
+        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
     ]);
 })->name('homepage');
 
-Route::get('/wiki/{page}', function ($page) {
-    //    View::share('pageDescription', 'Dive into the most detailed publicly-accessible descriptive grammar of Palestinian Arabic ever; practical enough for learners, rigorous enough for linguists. Everything you need to understand the intricacies of the language is right here.');
+Route::prefix('/wiki')->controller(PageController::class)->group(function () {
+    Route::get('/', function () {
+        return Page::where('slug', 'about')->exists()
+            ? to_route('wiki.show', 'about')
+            : to_route('wiki.edit');
+    })->name('wiki.index');
 
-    $componentPath = resource_path("js/Pages/Wiki/Pages/{$page}.vue");
+    Route::middleware('admin')->group(function () {
+        Route::get('/edit/{page?}', 'edit')->name('wiki.edit');
+        Route::post('/', 'store')->name('wiki.store');
+        Route::patch('/{page}', 'update')->name('wiki.update');
+        Route::delete('/{page}', 'destroy')->name('wiki.destroy');
+    });
 
-    if (file_exists($componentPath)) {
-        return Inertia::render("Wiki/Pages/{$page}", [
-            'section' => 'wiki',
-            'page' => $page,
-        ]);
-    }
-
-    return Inertia::render('Error', ['status' => 404]);
-})->name('wiki.show');
+    Route::get('/{page:slug}', 'show')->name('wiki.show');
+});
 
 Route::get('/coming-soon', function () {
     return Inertia::render('ComingSoon');
@@ -208,7 +216,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->middleware(['student'])->group(function () {
         Route::controller(UnitController::class)->group(function () {
-            Route::get('/', 'index')->name('units.index');
+            Route::get('/units', 'index')->name('units.index');
             Route::get('/units/{unit:position}', 'show')->name('units.show');
         });
 
@@ -345,10 +353,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');
         });
 
-        Route::controller(LessonController::class)->group(function () {
-            Route::get('/lessons/search', 'search')->name('lessons.search');
-        });
-
         Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
             Route::get('/', 'index')->name('feedback.index');
             Route::post('/', 'store')->name('todo.store');
@@ -360,6 +364,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/update-preferences', [UserController::class, 'updatePreferences'])->name('users.preferences.update');
 
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
+});
+
+Route::prefix('/api')->group(function () {
+    Route::prefix('/activities')->controller(ActivityController::class)->group(function () {
+        Route::get('/{activity}', 'fetch')->name('api.activities.fetch');
+    });
+
+    Route::prefix('/decks')->controller(DeckController::class)->group(function () {
+        Route::get('/search', 'search')->name('api.decks.search');
+    });
+
+    Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
+        Route::get('/search', 'search')->name('api.dialogs.search');
+    });
+
+    Route::prefix('/lessons')->controller(LessonController::class)->group(function () {
+        Route::get('/{lesson}', 'fetch')->name('api.lessons.fetch');
+    });
+
+    Route::prefix('/units')->controller(UnitController::class)->group(function () {
+        Route::get('/{unit}', 'fetch')->name('api.units.fetch');
+        Route::get('/search', 'search')->name('api.units.search');
+    });
+
+    Route::prefix('/wiki')->controller(PageController::class)->group(function () {
+        Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
+        Route::get('/search', 'search')->name('api.wiki.search');
+        Route::get('/{page}', 'fetch')->name('api.wiki.fetch');
+    });
 });
 
 Route::middleware('auth')

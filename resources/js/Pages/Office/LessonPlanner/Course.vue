@@ -7,6 +7,7 @@ import {computed, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
+import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({
     layout: Layout,
@@ -42,9 +43,21 @@ const hasNavigationGuard = computed(() => {
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
-const isValidRequest = computed(() => {
-    return form.units.every(unit => unit.title.trim().length > 0);
+const validationIssues = computed(() => {
+    const issues = [];
+
+    form.units.forEach((unit, index) => {
+        const name = `Unit ${index + 1}`;
+
+        if (!unit.title) {
+            issues.push(`${name}: Title is required.`);
+        }
+    });
+
+    return issues;
 });
+
+const isValidRequest = computed(() => validationIssues.value.length === 0);
 
 const saveCourse = async () => {
     isSaving.value = true;
@@ -125,7 +138,7 @@ watch(
                 <div class="featured-title m">
                     Lessons
                 </div>
-                <div class="unit-lessons-draggable">
+                <ul class="unit-lessons-draggable">
                     <li v-for="lesson in lessons" class="draggable-item" :class="{'hidden': !lesson.published}">
                         <div>
                             <div>{{ lesson.id }}</div>
@@ -134,14 +147,21 @@ watch(
                             </Link>
                         </div>
                     </li>
-                </div>
+                </ul>
             </template>
         </div>
+
+        <AppTip v-if="!isValidRequest">
+            <p style="font-weight: 700">The Course cannot be saved in the current state.</p>
+            <ul>
+                <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+            </ul>
+        </AppTip>
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">
-                <button class="app-button" @click="saveCourse"
+                <button type="button" @click="saveCourse"
                         :disabled="isSaving || !hasNavigationGuard || !isValidRequest">
-                    save
+                    Save
                 </button>
             </div>
         </div>

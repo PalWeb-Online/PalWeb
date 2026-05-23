@@ -14,7 +14,7 @@ import ScoreDetail from "../../../components/ScoreDetail.vue";
 import {router} from "@inertiajs/vue3";
 import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
 import ActivityActions from "../../../components/Actions/ActivityActions.vue";
-import ActivityBlocksWrapper from "../Activities/UI/ActivityBlocksWrapper.vue";
+import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {useScoreManager} from "../../../composables/useScoreManager.js";
 
 defineOptions({
@@ -142,10 +142,48 @@ watch(() => props.selectedScore, (newVal) => {
             </template>
         </div>
 
-        <ActivityBlocksWrapper v-if="selectedScore && scorable_type === 'activity'" :blocks="selectedScore.results"/>
+        <div v-if="selectedScore && scorable_type === 'activity'" class="activity-blocks-wrapper">
+            <DocumentBlocksRenderer :blocks="selectedScore.results"/>
+        </div>
     </div>
 
     <ModalWrapper v-model="showPurgeScores">
         <PurgeScores :scorable_type="scorable_type" :scorable_id="model.id"/>
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.score-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 1.6rem;
+
+    .material-symbols-rounded {
+        font-size: 2.0rem;
+        color: var(--color-dark-primary);
+    }
+}
+
+.score-item {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    background: var(--color-pastel-light);
+    color: var(--color-dark-primary);
+    border-radius: 0.8rem;
+    padding: 1.2rem 2.4rem;
+    font-family: var(--body-font);
+    font-weight: 700;
+    font-size: 1.6rem;
+
+    &:hover {
+        background: var(--color-pastel-medium);
+    }
+
+    & > *:last-child {
+        justify-self: end;
+    }
+}
+</style>

@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
     position: absolute;
     background-color: white;
     border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
     padding: 10px;
     z-index: 100;
 }

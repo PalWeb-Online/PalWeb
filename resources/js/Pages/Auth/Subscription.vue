@@ -101,7 +101,7 @@ const navigate = () => {
 .portal-button {
     margin-block: 3.2rem;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         margin: 0
     }
 }
@@ -121,21 +121,16 @@ const navigate = () => {
 .tier-item {
     border-radius: 0.8rem;
     border: 0.2rem solid var(--color-dark-primary);
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.25);
+    box-shadow: -0.3rem 0.3rem 0 rgb(0 0 0 / 0.25);
     max-width: 36rem;
 
     .tier-body {
         display: grid;
         text-align: left;
         color: var(--color-dark-primary);
-        //padding: 0.6rem 1.2rem;
-        //background: gray;
 
         & > * {
-            //padding: 1.2rem 0.6rem;
-            //border-block-end: 0.2rem dotted var(--color-pastel-dark);
             padding: 1.2rem;
-            //background: red;
         }
 
         & > *:not(:first-child) {
