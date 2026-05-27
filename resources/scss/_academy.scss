@@ -325,7 +325,7 @@
         border-radius: 0.75em;
         padding: 0.25em 1em 0.33em;
 
-        &.correct, &.selected {
+        &.correct, &.selected, &.incorrect {
             color: white;
             background: var(--color-medium-secondary);
         }
@@ -336,7 +336,7 @@
         }
 
         &.incorrect {
-            outline: 0.4rem solid var(--color-medium-primary);
+            opacity: 0.5;
         }
     }
 }

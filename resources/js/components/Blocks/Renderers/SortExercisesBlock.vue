@@ -9,13 +9,12 @@ const props = defineProps({
 });
 
 const {
-    ActivityStore,
-    isViewingResults,
+    ActivitySession,
     processedItems,
 } = useExerciseBlock(props);
 
 const handleDragEnd = (exerciseId) => {
-    const exercise = ActivityStore.getExerciseById(exerciseId);
+    const exercise = ActivitySession.getExerciseById(exerciseId);
     if (!exercise) return;
 
     exercise.response = exercise.shuffledItems;
@@ -29,15 +28,16 @@ const handleDragEnd = (exerciseId) => {
 
         <template v-for="ex in processedItems">
             <div class="exercise--sort" :class="{
-                    'correct': isViewingResults && ex.correct,
-                    'incorrect': isViewingResults && !ex.correct
+                    'correct': ActivitySession.isViewingResults && ex.correct,
+                    'incorrect': ActivitySession.isViewingResults && !ex.correct
                 }">
-                <ExerciseItemPrompts :exercise="ex" :isViewingResults="isViewingResults"/>
+                <ExerciseItemPrompts
+                    :exercise="ex" :isViewingResults="ActivitySession.isViewingResults"/>
 
                 <Draggable
-                    v-if="!isViewingResults"
+                    v-if="!ActivitySession.isViewingResults"
                     class="exercise--sort-items"
-                    :list="ActivityStore?.getExerciseById(ex.id)?.shuffledItems"
+                    :list="ActivitySession.getExerciseById(ex.id)?.shuffledItems"
                     item-key="id"
                     @end="handleDragEnd(ex.id)"
                 >
@@ -58,6 +58,7 @@ const handleDragEnd = (exerciseId) => {
                         </div>
                     </div>
                     <div v-if="!ex.correct" class="sort-items-wrapper correct">
+                        ->
                         <div v-for="(item, i) in ex.items" :key="item.id ?? i" class="sort-item">
                             {{ item.text }}
                         </div>
@@ -73,6 +74,7 @@ const handleDragEnd = (exerciseId) => {
     display: grid;
     justify-items: start;
     gap: 1.6rem;
+    font-family: var(--mono-font), monospace;
 
     &:not(.results) .sort-item {
         cursor: grab;
@@ -81,13 +83,11 @@ const handleDragEnd = (exerciseId) => {
     .sort-item {
         color: white;
         background: var(--color-medium-secondary);
-        box-shadow: 0 0.4rem 0 0 var(--color-dark-primary);
-        padding: 0.4rem 1.6rem;
-        border-radius: 0.8rem;
+        padding: 0.25em 1em 0.33em;
+        border-radius: 0.75em;
         display: flex;
         align-items: center;
         gap: 1.2rem;
-        font-family: var(--mono-font), monospace;
         font-size: 2.0rem;
         font-weight: 700;
         user-select: none;
@@ -97,7 +97,10 @@ const handleDragEnd = (exerciseId) => {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        gap: 1.6rem;
+        gap: 1.2rem;
+        font-size: 2.0rem;
+        font-weight: 700;
+        color: var(--color-medium-secondary);
 
         &.incorrect {
             opacity: 0.5;
