@@ -79,8 +79,9 @@
 
 .block-add-buttons {
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
-    gap: 3.2rem;
+    gap: 1.6rem 3.2rem;
     font-weight: 700;
 
     & > span {

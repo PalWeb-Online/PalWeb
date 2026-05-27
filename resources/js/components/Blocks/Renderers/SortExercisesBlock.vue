@@ -37,7 +37,7 @@ const handleDragEnd = (exerciseId) => {
                 <Draggable
                     v-if="!isViewingResults"
                     class="exercise--sort-items"
-                    :list="ActivityStore.getExerciseById(ex.id)?.shuffledItems"
+                    :list="ActivityStore?.getExerciseById(ex.id)?.shuffledItems"
                     item-key="id"
                     @end="handleDragEnd(ex.id)"
                 >

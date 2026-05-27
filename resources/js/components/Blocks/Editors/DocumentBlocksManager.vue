@@ -1,7 +1,7 @@
 <script setup>
 import AppTip from "../../AppTip.vue";
 import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
-import {computed} from "vue";
+import {computed, reactive} from "vue";
 
 const props = defineProps({
     documentBlocks: {type: Array, required: true},
@@ -17,6 +17,55 @@ const {
     moveBlock,
     getBlockEditor,
 } = useDocumentBuilder(props.documentBlocks);
+
+const collapsedBlockIds = reactive(new Set());
+
+const isBlockOpen = (blockId) => {
+    return !collapsedBlockIds.has(blockId);
+};
+
+const toggleBlock = (blockId) => {
+    if (collapsedBlockIds.has(blockId)) {
+        collapsedBlockIds.delete(blockId);
+        return;
+    }
+
+    collapsedBlockIds.add(blockId);
+};
+
+const getExerciseCount = (block) => {
+    if (block?.type !== 'exercises') {
+        return 0;
+    }
+
+    const items = Array.isArray(block.items) ? block.items : [];
+
+    if (block.exerciseType === 'match') {
+        return items.reduce((total, item) => {
+            return total + (Array.isArray(item.pairs) ? item.pairs.length : 0);
+        }, 0);
+    }
+
+    return items.length;
+};
+
+const getTotalExerciseCount = (blocks) => {
+    if (!Array.isArray(blocks)) {
+        return 0;
+    }
+
+    return blocks.reduce((total, block) => {
+        const nestedBlocks = Array.isArray(block?.blocks) ? block.blocks : [];
+
+        return total
+            + getExerciseCount(block)
+            + getTotalExerciseCount(nestedBlocks);
+    }, 0);
+};
+
+const totalExerciseCount = computed(() => {
+    return getTotalExerciseCount(props.documentBlocks);
+});
 
 const resolvedBlockTypes = computed(() => {
     return props.blockTypes
@@ -75,8 +124,14 @@ const handleFlattenContainer = (containerId) => {
                 <div class="featured-title s" style="flex-grow: 1">
                     <span>{{ bi + 1 }}: </span>
                     <span style="color: var(--color-dark-primary)">
-                        {{ block.type }}{{ block.exerciseType ? ': ' + block.exerciseType : '' }}
+                        {{ block.type }}
                     </span>
+                    <template v-if="block.type === 'exercises'">
+                        {{ block.exerciseType ? ': ' + block.exerciseType : '' }}
+                        <span style="color: var(--color-medium-secondary)">
+                            {{ getExerciseCount(block) }}
+                        </span>
+                    </template>
                 </div>
                 <button type="button"
                         class="material-symbols-rounded"
@@ -96,11 +151,17 @@ const handleFlattenContainer = (containerId) => {
                         @click="handleRemoveBlock(documentBlocks, block.id)">
                     delete
                 </button>
+                <button type="button"
+                        class="material-symbols-rounded"
+                        style="margin-inline-start: 0.8rem"
+                        @click="toggleBlock(block.id)">
+                    {{ isBlockOpen(block.id) ? 'expand_less' : 'expand_more' }}
+                </button>
             </div>
-            <component
-                :is="getBlockEditor(block.type)"
-                :block="block"
-                @flatten="handleFlattenContainer"
+            <component v-show="isBlockOpen(block.id)"
+                       :is="getBlockEditor(block.type)"
+                       :block="block"
+                       @flatten="handleFlattenContainer"
             />
         </div>
         <div class="block-add-buttons">
@@ -112,5 +173,12 @@ const handleFlattenContainer = (containerId) => {
                 <div>{{ blockType }}</div>
             </div>
         </div>
+    </div>
+
+    <div v-if="!isNested && documentBlocks.some(block => block.type === 'exercises')" class="featured-title s" style="margin-block-start: 1rem">
+        Total Exercises:
+        <span style="color: var(--color-dark-primary)">
+            {{ totalExerciseCount }}
+        </span>
     </div>
 </template>

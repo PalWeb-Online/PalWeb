@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted} from 'vue';
+import {onMounted, ref} from 'vue';
 import VanillaTilt from 'vanilla-tilt';
 import {useTooltip} from "../composables/useTooltip.js";
 
@@ -7,9 +7,11 @@ const props = defineProps({
     badge: Object,
 });
 
+const element = ref(null);
+
 onMounted(() => {
     if (props.badge.unlocked) {
-        VanillaTilt.init(reference.value, {
+        VanillaTilt.init(element.value, {
             max: 20,
             speed: 400,
             scale: 1,
@@ -28,7 +30,7 @@ const {
 </script>
 
 <template>
-    <div :class="['badge-item', badge.unlocked ? '' : 'disabled']"
+    <div ref="element" :class="['badge-item', badge.unlocked ? '' : 'disabled']"
          @mousemove="showTooltip({
              title: badge.unlocked ? badge.name : '???',
              description: badge.description

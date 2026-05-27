@@ -197,30 +197,30 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     :document-blocks="form.document.blocks"
                     :block-types="allowedBlockTypes"
                 />
+
+                <AppTip>
+                    <p>The Wiki page is currently {{ form.status }}.</p>
+
+                    <template v-if="!isValidRequest">
+                        <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                    </template>
+                    <template v-if="!isPublishable">
+                        <p style="font-weight: 700">The Page cannot be published in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                    </template>
+                    <template v-if="Object.keys(errors).length">
+                        <p style="font-weight: 700">Oops — the Page could not be saved.</p>
+                        <ul>
+                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
+                        </ul>
+                    </template>
+                </AppTip>
             </div>
-
-            <AppTip>
-                <p>The Wiki page is currently {{ form.status }}.</p>
-
-                <template v-if="!isValidRequest">
-                    <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="!isPublishable">
-                    <p style="font-weight: 700">The Page cannot be published in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="Object.keys(errors).length">
-                    <p style="font-weight: 700">Oops — the Page could not be saved.</p>
-                    <ul>
-                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                    </ul>
-                </template>
-            </AppTip>
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">
@@ -258,7 +258,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         Delete Page
                     </button>
 
-                    <Link :href="route('wiki.index')">
+                    <Link v-if="page" :href="route('wiki.show', page.slug)">
+                        View Page
+                    </Link>
+                    <Link v-else :href="route('wiki.index')">
                         Back to Wiki
                     </Link>
                 </div>

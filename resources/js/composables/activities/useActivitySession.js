@@ -2,6 +2,7 @@ import {inject, nextTick, provide, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useScoreManager} from "../useScoreManager.js";
+import {shuffle} from "lodash";
 
 const activitySessionKey = Symbol("ActivitySession");
 
