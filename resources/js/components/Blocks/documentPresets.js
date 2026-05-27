@@ -17,7 +17,7 @@ export const documentPresets = {
     },
     wiki: {
         schemaVersion: 1,
-        allowedBlockTypes: ['container', 'heading', 'text', 'image', 'chart', 'sentence'],
+        allowedBlockTypes: ['container', 'heading', 'text', 'image', 'table', 'chart', 'sentence'],
         createDocument: () => ({
             schemaVersion: 1,
             blocks: [],

@@ -112,31 +112,31 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 <DocumentBlocksManager :document-blocks="form.document.blocks"
                                        :block-types="allowedBlockTypes"
                 />
-            </div>
 
-            <AppTip>
-                <p>The Activity is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-                <template v-if="!isValidRequest">
-                    <p style="font-weight: 700">The Activity cannot be saved in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="!isPublishable">
-                    <p style="font-weight: 700">The Activity cannot be Published in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                    <p v-if="form.published" style="font-weight: 700">Because the Activity is already Published, the
-                        current state cannot be saved except by reverting it to Draft.</p>
-                </template>
-                <template v-if="Object.keys(errors).length">
-                    <p style="font-weight: 700">Oops — the Activity could not be saved.</p>
-                    <ul>
-                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                    </ul>
-                </template>
-            </AppTip>
+                <AppTip>
+                    <p>The Activity is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
+                    <template v-if="!isValidRequest">
+                        <p style="font-weight: 700">The Activity cannot be saved in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                    </template>
+                    <template v-if="!isPublishable">
+                        <p style="font-weight: 700">The Activity cannot be Published in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                        <p v-if="form.published" style="font-weight: 700">Because the Activity is already Published, the
+                            current state cannot be saved except by reverting it to Draft.</p>
+                    </template>
+                    <template v-if="Object.keys(errors).length">
+                        <p style="font-weight: 700">Oops — the Activity could not be saved.</p>
+                        <ul>
+                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
+                        </ul>
+                    </template>
+                </AppTip>
+            </div>
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">

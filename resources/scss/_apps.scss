@@ -180,10 +180,12 @@
     .app-nav-interact-buttons {
         grid-column: 2;
         display: flex;
+        align-items: center;
         justify-content: center;
-        gap: 1.6rem;
+        gap: 2.4rem;
 
-        button:not(.app-button) {
+        a, button:not(.app-button) {
+            font-size: 1.4rem;
             font-family: var(--mono-font);
             font-weight: 700;
             color: var(--color-medium-primary);

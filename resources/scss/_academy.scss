@@ -79,8 +79,9 @@
 
 .block-add-buttons {
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
-    gap: 3.2rem;
+    gap: 1.6rem 3.2rem;
     font-weight: 700;
 
     & > span {
@@ -324,7 +325,7 @@
         border-radius: 0.75em;
         padding: 0.25em 1em 0.33em;
 
-        &.correct, &.selected {
+        &.correct, &.selected, &.incorrect {
             color: white;
             background: var(--color-medium-secondary);
         }
@@ -335,7 +336,7 @@
         }
 
         &.incorrect {
-            outline: 0.4rem solid var(--color-medium-primary);
+            opacity: 0.5;
         }
     }
 }
