@@ -18,39 +18,9 @@ class AudioController extends Controller
         protected AudioService $audioService
     ) {}
 
-    public function index(Request $request): \Inertia\Response
+    public function index(): \Inertia\Response
     {
-        $filters = array_merge(['sort' => 'latest'], $request->only([
-            'location', 'dialect', 'gender', 'sort',
-        ]));
-
-        $query = Audio::query()
-            ->with([
-                'speaker',
-                'pronunciation.term',
-            ])
-            ->filter($filters);
-
-        if ($filters['sort'] === 'fluency') {
-            $query->orderByFluency();
-        } else {
-            $query->orderByDesc('id');
-        }
-
-        $audios = $query
-            ->paginate(25)
-            ->onEachSide(1)
-            ->appends($filters);
-        $totalCount = $audios->total();
-
-        return Inertia::render('Library/Audios/Index', [
-            'section' => 'library',
-            'audios' => AudioResource::collection($audios),
-            'dialects' => Dialect::whereHas('speakers.audios')->get(),
-            'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
-            'totalCount' => $totalCount,
-            'filters' => $filters,
-        ]);
+        return Inertia::render('Library/Audios/Index');
     }
 
     // -------------------------------------------------------------------------
@@ -58,37 +28,40 @@ class AudioController extends Controller
     // -------------------------------------------------------------------------
 
     public function apiIndex(Request $request): JsonResponse
-    {
-        $filters = array_merge(['sort' => 'latest'], $request->only([
-            'location', 'dialect', 'gender', 'sort',
-        ]));
+{
+    $filters = array_merge(['sort' => 'latest'], $request->only([
+        'location', 'dialect', 'gender', 'sort',
+    ]));
 
-        $query = Audio::query()
-            ->with([
-                'speaker',
-                'pronunciation.term',
-            ])
-            ->filter($filters);
+    $query = Audio::query()
+        ->with(['speaker', 'pronunciation.term'])
+        ->filter($filters);
 
-        if ($filters['sort'] === 'fluency') {
-            $query->orderByFluency();
-        } else {
-            $query->orderByDesc('id');
-        }
-
-        $audios = $query
-            ->paginate(25)
-            ->onEachSide(1)
-            ->appends($filters);
-
-        return response()->json([
-            'audios' => AudioResource::collection($audios),
-            'dialects' => Dialect::whereHas('speakers.audios')->get(),
-            'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
-            'totalCount' => $audios->total(),
-            'filters' => $filters,
-        ]);
+    if ($filters['sort'] === 'fluency') {
+        $query->orderByFluency();
+    } else {
+        $query->orderByDesc('id');
     }
+
+    $audios = $query->paginate(25)->onEachSide(1)->appends($filters);
+    $resource = AudioResource::collection($audios);
+
+    return response()->json([
+        'audios' => [
+            'data' => $resource->toArray($request),
+            'meta' => [
+                'links' => $audios->linkCollection()->toArray(),
+                'current_page' => $audios->currentPage(),
+                'last_page' => $audios->lastPage(),
+                'total' => $audios->total(),
+            ],
+        ],
+        'dialects' => Dialect::whereHas('speakers.audios')->get(),
+        'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
+        'totalCount' => $audios->total(),
+        'filters' => $filters,
+    ]);
+}
 
     // -------------------------------------------------------------------------
 

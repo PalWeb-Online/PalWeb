@@ -41,76 +41,54 @@ class DeckController extends Controller
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Inertia\Response
-    {
-        $filters = array_merge(['sort' => 'latest'], $request->only([
-            'search', 'match', 'sort', 'pinned',
-        ]));
+   public function index(): \Inertia\Response
+{
+    return Inertia::render('Library/Decks/Index');
+}
 
-        $perPage = 25;
-        $currentPage = $request->integer('page', 1);
-
-        $decksCollection = $searchService->search($filters, false, true)['decks'];
-        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
-            $decksCollection->forPage($currentPage, $perPage)->values(),
-            $decksCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        return Inertia::render('Library/Decks/Index', [
-            'section' => 'library',
-            'decks' => DeckResource::collection($decks),
-            'totalCount' => $decks->total(),
-            'filters' => $filters,
-        ]);
-    }
-
-    public function show(Deck $deck): \Inertia\Response
-    {
-        Gate::authorize('interact', $deck);
-
-        $deck->load([
-            'terms' => fn ($q) => $q->withUserCard(),
-            'terms.pronunciations',
-            'scores'
-        ]);
-
-        return Inertia::render('Library/Decks/Show', [
-            'section' => 'library',
-            'deck' => new DeckResource($deck),
-        ]);
-    }
+public function show(Deck $deck): \Inertia\Response
+{
+    return Inertia::render('Library/Decks/Show');
+}
 
     // -------------------------------------------------------------------------
     // API Methods
     // -------------------------------------------------------------------------
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
-    {
-        $filters = array_merge(['sort' => 'latest'], $request->only([
-            'search', 'match', 'sort', 'pinned',
-        ]));
+  public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+{
+    $filters = array_merge(['sort' => 'latest'], $request->only([
+        'search', 'match', 'sort', 'pinned',
+    ]));
 
-        $perPage = 25;
-        $currentPage = $request->integer('page', 1);
+    $perPage = 25;
+    $currentPage = $request->integer('page', 1);
 
-        $decksCollection = $searchService->search($filters, false, true)['decks'];
-        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
-            $decksCollection->forPage($currentPage, $perPage)->values(),
-            $decksCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+    $decksCollection = $searchService->search($filters, false, true)['decks'];
+    $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+        $decksCollection->forPage($currentPage, $perPage)->values(),
+        $decksCollection->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
 
-        return response()->json([
-            'decks' => DeckResource::collection($decks),
-            'totalCount' => $decks->total(),
-            'filters' => $filters,
-        ]);
-    }
+    $resource = DeckResource::collection($decks);
+
+    return response()->json([
+        'decks' => [
+            'data' => $resource->toArray($request),
+            'meta' => [
+                'links' => $decks->linkCollection()->toArray(),
+                'current_page' => $decks->currentPage(),
+                'last_page' => $decks->lastPage(),
+                'total' => $decks->total(),
+            ],
+        ],
+        'totalCount' => $decks->total(),
+        'filters' => $filters,
+    ]);
+}
 
     public function apiShow(Deck $deck): JsonResponse
     {

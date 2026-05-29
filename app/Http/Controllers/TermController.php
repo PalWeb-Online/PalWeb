@@ -32,129 +32,76 @@ class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository
-    ) {
-    }
+    ) {}
 
     public function pin(Request $request, Term $term): JsonResponse
     {
         $user = $request->user();
-
         Bookmark::toggle($term, $user);
-
         $term->isPinned() && event(new ModelPinned($user));
-
         $message = $term->isPinned()
             ? __('pin.added', ['thing' => $term->term])
             : __('pin.removed', ['thing' => $term->term]);
-
         return response()->json([
             'isPinned' => $term->isPinned(),
             'message' => $message,
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Inertia\Response
+    public function index(): \Inertia\Response
     {
-        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
-        ]));
-
-        $perPage = 25;
-        $currentPage = $request->integer('page', 1);
-
-        $termsCollection = $searchService->search($filters)['terms'];
-        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-            $termsCollection->forPage($currentPage, $perPage)->values(),
-            $termsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        $featuredTerm = Cache::get('word-of-the-day');
-        $featuredTerm = $featuredTerm
-            ? new TermResource($featuredTerm)
-            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
-
-        return Inertia::render('Library/Terms/Index', [
-            'section' => 'library',
-            'terms' => TermResource::collection($terms),
-            'totalCount' => $terms->total(),
-            'featuredTerm' => $featuredTerm ?? null,
-            'filters' => $filters,
-        ]);
+        return Inertia::render('Library/Terms/Index');
     }
 
     public function show(Term $term): \Inertia\Response
     {
-        $likeTerms = $this->termRepository->getLikeTerms($term);
-        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
-
-        foreach ($terms as $model) {
-            $model
-                ->load([
-                    'root',
-                    'pronunciations.audios',
-                    'attributes',
-                    'spellings',
-                    'relatives',
-                    'patterns',
-                    'glosses.attributes',
-                    'inflections',
-                    'cards',
-                    'decks' => function ($query) {
-                        $query->limit(10);
-                    },
-                ])
-                ->loadCount(['pronunciations'])
-                ->loadSingleGlossSentence();
-        }
-
-        return Inertia::render('Library/Terms/Show', [
-            'section' => 'library',
-            'terms' => TermResource::collection(
-                $terms->map(function ($term) {
-                    return new TermResource($term)->additional(['detail' => true]);
-                })
-            ),
-        ]);
+        return Inertia::render('Library/Terms/Show');
     }
 
     // -------------------------------------------------------------------------
     // API Methods
     // -------------------------------------------------------------------------
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
-    {
-        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
-        ]));
+   public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+{
+    $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+        'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+    ]));
 
-        $perPage = 25;
-        $currentPage = $request->integer('page', 1);
+    $perPage = 25;
+    $currentPage = $request->integer('page', 1);
 
-        $termsCollection = $searchService->search($filters)['terms'];
-        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-            $termsCollection->forPage($currentPage, $perPage)->values(),
-            $termsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+    $termsCollection = $searchService->search($filters)['terms'];
+    $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+        $termsCollection->forPage($currentPage, $perPage)->values(),
+        $termsCollection->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
 
-        $featuredTerm = Cache::get('word-of-the-day');
-        $featuredTerm = $featuredTerm
-            ? new TermResource($featuredTerm)
-            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+    $featuredTerm = Cache::get('word-of-the-day');
+    $featuredTerm = $featuredTerm
+        ? new TermResource($featuredTerm)
+        : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
 
-        return response()->json([
-            'terms' => TermResource::collection($terms),
-            'totalCount' => $terms->total(),
-            'featuredTerm' => $featuredTerm ?? null,
-            'filters' => $filters,
-        ]);
-    }
+    $resource = TermResource::collection($terms);
 
+    return response()->json([
+        'terms' => [
+            'data' => $resource->toArray($request),
+            'meta' => [
+                'links' => $terms->linkCollection()->toArray(),
+                'current_page' => $terms->currentPage(),
+                'last_page' => $terms->lastPage(),
+                'total' => $terms->total(),
+            ],
+        ],
+        'totalCount' => $terms->total(),
+        'featuredTerm' => $featuredTerm ?? null,
+        'filters' => $filters,
+    ]);
+}
     public function apiShow(Term $term): JsonResponse
     {
         $likeTerms = $this->termRepository->getLikeTerms($term);
@@ -270,7 +217,6 @@ class TermController extends Controller
             if ($formData['root']['root']) {
                 $formData = array_merge($formData,
                     ['root_id' => Root::firstOrCreate(['root' => $formData['root']['root']])->id]);
-
             } else {
                 $formData = array_merge($formData, ['root_id' => null]);
             }
@@ -296,15 +242,12 @@ class TermController extends Controller
 
             foreach ($requestGlosses as $glossData) {
                 $id = $glossData['id'] ?? null;
-
                 if ($id && $existingGlosses->has($id)) {
                     $existingGlosses[$id]->update($glossData);
                     $gloss = $existingGlosses[$id];
-
                 } else {
                     $gloss = Gloss::create(array_merge($glossData, ['term_id' => $term->id]));
                 }
-
                 $this->handleAttributes($gloss, $glossData['attributes'], 'glosses');
             }
 
@@ -335,7 +278,6 @@ class TermController extends Controller
         ]);
 
         $term && $duplicatesQuery = $duplicatesQuery->where('id', '!=', $term->id);
-
         $count = $duplicatesQuery->count();
 
         if ($count > 0) {
@@ -389,7 +331,6 @@ class TermController extends Controller
         $requestTerms = [];
         foreach ($relatives as $relative) {
             $relativeTerm = Term::firstWhere('slug', $relative['slug']);
-
             $requestTerms[] = $relativeTerm->slug;
 
             if (! in_array($relativeTerm->slug, $attachedTerms)) {
@@ -412,7 +353,6 @@ class TermController extends Controller
                         $relativeTerm->relatives()->attach($term, ['type' => 'source']);
                         break;
                 }
-
             } else {
                 $term->relatives()->updateExistingPivot($relativeTerm->id, [
                     'type' => $relative['type'],
@@ -422,10 +362,8 @@ class TermController extends Controller
         }
 
         $detachableSlugs = array_diff($attachedTerms, $requestTerms);
-
         foreach ($detachableSlugs as $slug) {
             $detachableTerm = Term::firstWhere('slug', $slug);
-
             $term->relatives()->detach($detachableTerm);
             $detachableTerm->relatives()->detach($term);
         }
@@ -469,7 +407,6 @@ class TermController extends Controller
 
         if (count($remainingTerms) == 1) {
             $remainingTerms->first()->update(['slug' => $category.'-'.$translit]);
-
         } elseif (count($remainingTerms) > 1) {
             foreach ($remainingTerms as $i => $remainingTerm) {
                 $remainingTerm->update(['slug' => $category.'-'.$translit.'-'.($i + 1)]);
