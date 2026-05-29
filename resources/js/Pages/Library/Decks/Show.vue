@@ -7,16 +7,31 @@ defineOptions({ layout: Layout });
 
 const deck    = ref(null);
 const loading = ref(true);
+const error   = ref(false);
 
 async function fetchDeck() {
     loading.value = true;
+    error.value = false;
     try {
         const id = window.location.pathname.split('/').pop();
-        const response = await fetch(`/api/library/decks/${id}`);
+        const response = await fetch(`/api/library/decks/${id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            error.value = true;
+            return;
+        }
+
         const data = await response.json();
         deck.value = data.deck;
-    } catch (error) {
-        console.error('Failed to fetch deck:', error);
+    } catch (err) {
+        console.error('Failed to fetch deck:', err);
+        error.value = true;
     } finally {
         loading.value = false;
     }
@@ -31,6 +46,9 @@ onMounted(() => fetchDeck());
         <div v-if="loading" class="loading-state">
             <p>Loading...</p>
         </div>
-        <DeckContainer v-else :model="deck"/>
+        <div v-else-if="error" class="loading-state">
+            <p>Unable to load deck. Please log in.</p>
+        </div>
+        <DeckContainer v-else-if="deck" :model="deck"/>
     </div>
 </template>

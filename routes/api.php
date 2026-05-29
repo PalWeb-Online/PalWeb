@@ -35,14 +35,14 @@ Route::prefix('/library')->group(function () {
         Route::get('/{sentence}', 'apiShow')->name('api.sentences.show');
     });
 
-    Route::prefix('/decks')->controller(DeckController::class)->group(function () {
-        Route::get('/', 'apiIndex')->name('api.decks.index');
-        Route::get('/{deck}', 'apiShow')->name('api.decks.show');
-    });
-
     Route::prefix('/audios')->group(function () {
         Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
         Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
     });
 
+    // Decks nécessitent auth
+    Route::middleware('auth:sanctum')->prefix('/decks')->controller(DeckController::class)->group(function () {
+        Route::get('/', 'apiIndex')->name('api.decks.index');
+        Route::get('/{deck}', 'apiShow')->name('api.decks.show');
+    });
 });

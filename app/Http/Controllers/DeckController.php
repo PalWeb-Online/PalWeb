@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
 
 class DeckController extends Controller
 {
@@ -57,6 +58,8 @@ public function show(Deck $deck): \Inertia\Response
 
   public function apiIndex(Request $request, SearchService $searchService): JsonResponse
 {
+        URL::forceScheme('https');
+
     $filters = array_merge(['sort' => 'latest'], $request->only([
         'search', 'match', 'sort', 'pinned',
     ]));

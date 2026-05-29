@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
 
 class TermController extends Controller
 {
@@ -64,6 +65,8 @@ class TermController extends Controller
 
    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
 {
+        URL::forceScheme('https');
+
     $filters = array_merge(['sort' => 'alphabetical'], $request->only([
         'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
     ]));

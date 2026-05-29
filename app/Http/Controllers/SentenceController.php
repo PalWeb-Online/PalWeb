@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
 
 class SentenceController extends Controller
 {
@@ -64,6 +65,8 @@ class SentenceController extends Controller
 
     public function apiIndex(Request $request, SearchService $searchService): JsonResponse
 {
+        URL::forceScheme('https');
+
     $filters = array_merge(['sort' => 'latest'], $request->only([
         'search', 'match', 'sort', 'pinned',
     ]));

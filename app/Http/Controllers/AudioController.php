@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\URL;
 
 class AudioController extends Controller
 {
@@ -26,9 +27,10 @@ class AudioController extends Controller
     // -------------------------------------------------------------------------
     // API Methods
     // -------------------------------------------------------------------------
-
     public function apiIndex(Request $request): JsonResponse
 {
+        URL::forceScheme('https');
+
     $filters = array_merge(['sort' => 'latest'], $request->only([
         'location', 'dialect', 'gender', 'sort',
     ]));
