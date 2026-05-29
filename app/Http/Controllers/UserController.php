@@ -26,7 +26,7 @@ class UserController extends Controller
 
         $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
 
-        $user->load(['dialect', 'badges', 'speaker']);
+        $user->load(['dialect', 'badges', 'speaker', 'teacher']);
 
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 

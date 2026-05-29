@@ -23,6 +23,9 @@ class UserResource extends JsonResource
             'home' => $this->home,
             'bio' => $this->bio,
             'private' => $this->private,
+            'teacher' => $this->whenLoaded('teacher', function () {
+                return new TeacherResource($this->teacher);
+            }),
             'dialect' => $this->whenLoaded('dialect'),
             'badges' => $this->whenLoaded('badges'),
             'created_at' => $this->created_at->format('j F Y'),
