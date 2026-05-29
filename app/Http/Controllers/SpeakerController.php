@@ -16,21 +16,7 @@ class SpeakerController extends Controller
 {
     public function show(Speaker $speaker): \Inertia\Response
     {
-        return Inertia::render('Library/Audios/Speaker', [
-            'section' => 'library',
-            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
-            'audios' => AudioResource::collection(
-                Audio::query()
-                    ->where('speaker_id', $speaker->id)
-                    ->with([
-                        'speaker',
-                        'pronunciation.term',
-                    ])
-                    ->orderByDesc('id')
-                    ->paginate(25)
-                    ->onEachSide(1)
-            ),
-        ]);
+        return Inertia::render('Library/Audios/Speaker');
     }
 
     // -------------------------------------------------------------------------
