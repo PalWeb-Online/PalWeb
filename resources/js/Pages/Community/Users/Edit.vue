@@ -7,6 +7,7 @@ import {route} from "ziggy-js";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
+import UserAvatarWrapper from "../../../components/UserAvatarWrapper.vue";
 
 const props = defineProps({
     user: Object,
@@ -195,9 +196,11 @@ function generateArabicName() {
                 <Link :href="route('users.show', user.username)" class="material-symbols-rounded">visibility</Link>
             </div>
             <div class="user-item l">
-                <button class="user-avatar">
-                    <img :src="`/img/avatars/${form.avatar}`" @click="showAvatarPicker = true" alt="Avatar"/>
-                </button>
+                <UserAvatarWrapper :user="form">
+                    <button type="button" @click="showAvatarPicker = true" class="material-symbols-rounded">
+                        photo
+                    </button>
+                </UserAvatarWrapper>
                 <div class="user-data-wrapper">
                     <div class="form-body">
                         <div class="field-item">
@@ -248,14 +251,14 @@ function generateArabicName() {
                     </div>
                     <div class="user-tag-wrapper">
                         <div class="user-tag">
-                            <img class="location" src="/img/location.svg" alt="location"/>
+                            <div class="material-symbols-rounded">location_on</div>
                             <input type="text" v-model="form.home"
                                    style="background: none"
                                    placeholder="Earth, probably."
                             />
                         </div>
                         <div class="user-tag">
-                            <img class="dialect" src="/img/mouth.svg" alt="dialect"/>
+                            <div class="material-symbols-rounded">lips</div>
                             <select v-model="form.dialect_id">
                                 <option :value="8">Central Urban Palestinian</option>
                                 <option :value="9">Northern Urban Palestinian</option>

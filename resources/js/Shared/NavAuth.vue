@@ -2,6 +2,7 @@
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import {router} from "@inertiajs/vue3";
+import UserNametag from "../components/UserNametag.vue";
 
 const UserStore = useUserStore();
 </script>
@@ -13,13 +14,7 @@ const UserStore = useUserStore();
                  :src="`/img/avatars/${UserStore.user.avatar}`"/>
         </Link>
 
-        <div class="user-name">
-            <div class="user-name-ar">{{ UserStore.user.ar_name }}</div>
-            <div class="user-name-en">
-                <div>{{ UserStore.user.name }}</div>
-                <div>{{ UserStore.user.username }}</div>
-            </div>
-        </div>
+        <UserNametag :user="UserStore.user"/>
     </div>
     <div class="auth-email">
         <div>{{ UserStore.user.email }}</div>
@@ -42,34 +37,25 @@ const UserStore = useUserStore();
 .auth-user {
     display: grid;
     grid-template-columns: 9.6rem 1fr;
-    background: var(--color-pastel-light);
+    background: white;
 
     .user-avatar {
-        font-size: 0.6rem;
+        margin: 0;
         border-radius: 0 0 1.6rem 0;
+        overflow: hidden;
+
+        img {
+            border-radius: 0;
+            padding: 0;
+        }
     }
 
     .user-name {
+        align-self: end;
+        font-size: 1.6rem;
         background: white;
-        padding: 0.4rem 1.2rem 0.8rem;
-        border-radius: 0 0 0 1.6rem;
+        padding: 1.6rem;
         z-index: 1;
-
-        .user-name-ar {
-            font-size: 3.2rem;
-        }
-
-        .user-name-en {
-            flex-basis: 100%;
-
-            & > *:nth-child(1) {
-                font-size: 1.8rem;
-            }
-
-            & > *:nth-child(2) {
-                font-size: 1.2rem;
-            }
-        }
     }
 }
 

@@ -3,6 +3,7 @@ import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed} from "vue";
+import CommentItem from "../CommentItem.vue";
 
 const emit = defineEmits(['close']);
 
@@ -31,22 +32,15 @@ const sendFeedback = () => {
         </div>
         <form @submit.prevent="sendFeedback">
             <div class="modal-container-body form-body">
-                <div class="user-item m">
-                    <div class="user-avatar">
-                        <img :src="`/img/avatars/${UserStore.user.avatar}`" alt="Avatar"/>
+                <CommentItem :user="UserStore.user">
+                    <textarea class="user-comment-content" v-model="form.comment"
+                              placeholder="Is something broken? Is a word missing from the Dictionary? Let us know!"
+                    />
+                    <div class="user-comment-data">
+                        — {{ UserStore.user.name }} ({{ UserStore.user.username }})
                     </div>
-                    <div class="user-data-wrapper">
-                        <div class="user-comment">
-                        <textarea class="user-comment-content" v-model="form.comment"
-                                  placeholder="Is something broken? Is a word missing from the Dictionary? Let us know!"
-                        />
-                            <div class="user-comment-data">
-                                — {{ UserStore.user.name }} ({{ UserStore.user.username }})
-                            </div>
-                            <div v-if="form.errors.comment" v-text="form.errors.comment" class="field-error"/>
-                        </div>
-                    </div>
-                </div>
+                    <div v-if="form.errors.comment" v-text="form.errors.comment" class="field-error"/>
+                </CommentItem>
             </div>
             <div class="window-footer">
                 <button type="submit" :disabled="form.processing || !isValidRequest">

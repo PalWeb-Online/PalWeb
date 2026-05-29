@@ -1,30 +1,36 @@
 <script setup>
-import {route} from "ziggy-js";
+import UserNametag from "./UserNametag.vue";
+import UserAvatarWrapper from "./UserAvatarWrapper.vue";
+import {useNotificationStore} from "../stores/NotificationStore.js";
 
-defineProps({
+const props = defineProps({
     user: Object,
     speaker: Object,
     size: {type: String, default: 'm'},
     comment: {type: Boolean, default: false},
     tags: {type: Boolean, default: false},
 })
+
+const NotificationStore = useNotificationStore();
+
+const copyText = (event) => {
+    event.preventDefault();
+
+    navigator.clipboard.writeText(props.user.teacher?.email).then(function () {
+        NotificationStore.addNotification('Copied to clipboard.');
+    }, function (err) {
+        alert('Could not copy text: ', err);
+    });
+};
 </script>
 
 <template>
     <div :class="['user-item', size]">
-        <Link class="user-avatar" :href="speaker?.user.private ? '#' : route('users.show', user.username)">
-            <img alt="Avatar"
-                 :src="`/img/avatars/${ speaker?.user.private ? 'palweb01.jpg' : user.avatar}`"/>
-        </Link>
-
+        <UserAvatarWrapper :user="!speaker?.user.private ? user : null">
+            <a v-if="user.teacher" class="material-symbols-rounded" :href="`mailto:${user.teacher.email}`">mail</a>
+        </UserAvatarWrapper>
         <div class="user-data-wrapper">
-            <div class="user-name">
-                <div class="user-name-ar">{{ speaker?.user.private ? 'مجهول' : user.ar_name }}</div>
-                <div class="user-name-en">
-                    <div>{{ speaker?.user.private ? 'Speaker #' + speaker.id : user.name }}</div>
-                    <div>{{ speaker?.user.private ? '[anonymous]' : user.username }}</div>
-                </div>
-            </div>
+            <UserNametag :user="user" :speaker="speaker"/>
             <div v-if="comment" class="user-comment">
                 <slot name="comment">
                     <div class="user-comment-content">
@@ -42,20 +48,34 @@ defineProps({
             </div>
             <div v-if="tags" class="user-tag-wrapper">
                 <div class="user-tag">
-                    <img class="location" src="/img/location.svg" alt="location"/>
-                    <template v-if="user.home">
-                        {{ user.home }}
-                    </template>
-                    <template v-else>
-                        Earth, probably.
-                    </template>
+                    <div class="material-symbols-rounded">location_on</div>
+                    <span v-if="user.home">{{ user.home }}</span>
+                    <span v-else>Earth, probably.</span>
                 </div>
                 <div class="user-tag">
-                    <img class="dialect" src="/img/mouth.svg" alt="dialect"/>
-                    {{ user.dialect.name }}
+                    <div class="material-symbols-rounded">lips</div>
+                    <span>{{ user.dialect.name }}</span>
+                </div>
+                <div class="user-tag" v-if="user.teacher">
+                    <div class="material-symbols-rounded">mail</div>
+                    <span @click="copyText">{{ user.teacher.email }}</span>
                 </div>
             </div>
             <slot/>
+
+            <div v-if="user.teacher" class="user-item comment-item l">
+                <div class="user-data-wrapper">
+                    <div class="user-comment">
+                        <div class="user-comment-title">
+                            <img class="popout" src="/img/star.svg" alt="Star"/>
+                            <span>teacher bio</span>
+                        </div>
+                        <div v-if="user.teacher.bio" class="user-comment-content">
+                            {{ user.teacher.bio }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

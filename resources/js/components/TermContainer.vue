@@ -16,6 +16,7 @@ import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 import CardItem from "./CardItem.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import GlossItem from "./GlossItem.vue";
+import UserAvatarWrapper from "./UserAvatarWrapper.vue";
 
 const UserStore = useUserStore();
 
@@ -417,18 +418,14 @@ const etymology = computed(() => {
             </div>
 
             <!--            note that my user is hard-coded -->
-            <div v-if="term.usage" class="user-item m">
-                <Link class="user-avatar" :href="route('users.show', 'permanent.intifada')">
-                    <img src="/img/avatars/character02.webp"
-                         alt="Profile Picture"/>
-                </Link>
+            <div v-if="term.usage" class="user-item comment-item l" style="padding: 2.4rem">
+                <UserAvatarWrapper :user="{username: 'permanent.intifada', avatar: 'character02.webp'}"/>
                 <div class="user-data-wrapper">
-                    <div class="user-name">
-                        <div class="user-name-en">
-                            <div>Editor’s Note</div>
-                        </div>
-                    </div>
                     <div class="user-comment">
+                        <div class="user-comment-title">
+                            <img class="popout" src="/img/star.svg" alt="Star"/>
+                            <span>editor’s note</span>
+                        </div>
                         <div class="user-comment-content">
                             {{ term.usage }}
                         </div>
