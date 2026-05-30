@@ -62,20 +62,6 @@ const copyText = (event) => {
                 </div>
             </div>
             <slot/>
-
-            <div v-if="user.teacher" class="user-item comment-item l">
-                <div class="user-data-wrapper">
-                    <div class="user-comment">
-                        <div class="user-comment-title">
-                            <img class="popout" src="/img/star.svg" alt="Star"/>
-                            <span>teacher bio</span>
-                        </div>
-                        <div v-if="user.teacher.bio" class="user-comment-content">
-                            {{ user.teacher.bio }}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>

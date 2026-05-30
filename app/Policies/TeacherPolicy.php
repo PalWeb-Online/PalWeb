@@ -7,28 +7,33 @@ use App\Models\User;
 
 class TeacherPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(User $actor): bool
     {
         return true;
     }
 
-    public function view(User $user, Teacher $teacher): bool
+    public function view(User $actor, Teacher $teacher): bool
     {
         return true;
     }
 
-    public function create(User $user): bool
+    public function create(User $actor, User $target): bool
     {
-        return ($user->isAdmin() || $user->hasRole('student')) && ! $user->teacher()->exists();
+        if ($target->teacher()->exists()) {
+            return false;
+        }
+
+        return $actor->isAdmin();
+//        return $actor->isAdmin() || $actor->is($target);
     }
 
-    public function update(User $user, Teacher $teacher): bool
+    public function update(User $actor, Teacher $teacher): bool
     {
-        return $user->isAdmin() || $user->id === $teacher->user_id;
+        return $actor->isAdmin() || $actor->id === $teacher->user_id;
     }
 
-    public function delete(User $user, Teacher $teacher): bool
+    public function delete(User $actor, Teacher $teacher): bool
     {
-        return $user->isAdmin() || $user->id === $teacher->user_id;
+        return $actor->isAdmin() || $actor->id === $teacher->user_id;
     }
 }

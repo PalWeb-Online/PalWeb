@@ -243,28 +243,6 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
     border-radius: 1.6rem;
     background: var(--color-pastel-light);
 
-    &.card-dealer {
-        justify-content: center;
-        background: var(--color-medium-secondary);
-        box-shadow: 0 0.8rem 0 0 var(--color-dark-primary);
-        border-radius: 1.2rem;
-        cursor: pointer;
-
-        &:hover {
-            outline: none;
-            box-shadow: none;
-            transform: translateY(0.8rem);
-        }
-
-        div {
-            color: white;
-            padding: 0;
-            font-size: 2.0rem;
-            text-transform: uppercase;
-            font-family: var(--mono-font), monospace;
-        }
-    }
-
     &.disabled {
         pointer-events: none;
         filter: opacity(0.33);
@@ -309,6 +287,28 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
         justify-self: center;
         border-radius: 1.6rem;
         margin-block-start: 1.6rem;
+    }
+
+    &.card-dealer {
+        justify-content: center;
+        background: var(--color-medium-secondary);
+        box-shadow: 0 0.8rem 0 0 var(--color-dark-primary);
+        border-radius: 1.2rem;
+        cursor: pointer;
+
+        &:hover {
+            outline: none;
+            box-shadow: none;
+            transform: translateY(0.8rem);
+        }
+
+        div {
+            color: white;
+            padding: 0;
+            font-size: 2.0rem;
+            text-transform: uppercase;
+            font-family: var(--mono-font), monospace;
+        }
     }
 }
 </style>

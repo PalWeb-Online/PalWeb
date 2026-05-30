@@ -25,7 +25,7 @@ const filters = ref({
     sort: props.filters.sort || 'latest',
 });
 
-const { updateFilter } = useQueryFilters(filters);
+const {updateFilter} = useQueryFilters(filters);
 
 const unlockedBadges = props.badges.map(badge => ({
     ...badge,
@@ -51,7 +51,9 @@ defineOptions({
             </div>
             <div class="window-section-head">
                 <h1>profile</h1>
-                <Link v-if="UserStore.isAdmin || user.id === UserStore.user.id" :href="route('users.edit', user.username)" class="material-symbols-rounded">edit</Link>
+                <Link v-if="UserStore.isAdmin || user.id === UserStore.user.id"
+                      :href="route('users.edit', user.username)" class="material-symbols-rounded">edit
+                </Link>
             </div>
             <AppTip v-if="user.id === UserStore.user.id && !UserStore.user.is_verified">
                 <p>Welcome to PalWeb! In order to to access all of the site's features, you must verify your email
@@ -65,6 +67,27 @@ defineOptions({
                     Anonymous.</p>
             </AppTip>
             <UserItem :user="user" size="l" comment tags>
+                <div v-if="user.teacher" class="user-item comment-item l">
+                    <div class="user-data-wrapper">
+                        <div class="user-comment">
+                            <div class="user-comment-title">
+                                <img class="popout" src="/img/star.svg" alt="Star"/>
+                                <span>teacher bio</span>
+                            </div>
+                            <div v-if="user.teacher.bio" class="user-comment-content">
+                                {{ user.teacher.bio }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--                only admins can create Teacher profiles for now -->
+                <Link v-else-if="UserStore.isAdmin" class="portal-button"
+                      :href="route('users.edit', user.username)"
+                      style="margin-block: 3.2rem; justify-self: center"
+                >
+                    Create Teacher Profile
+                </Link>
+
                 <SpeakerItem v-if="speaker" :speaker="speaker"/>
             </UserItem>
 

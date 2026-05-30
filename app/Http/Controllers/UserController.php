@@ -9,7 +9,6 @@ use App\Http\Resources\SpeakerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Badge;
 use App\Models\User;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,8 +17,6 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
-
     public function show(User $user, Request $request): \Inertia\Response
     {
         Gate::authorize('interact', $user);
@@ -60,7 +57,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
+    public function update(User $user, UpdateUserRequest $request): JsonResponse|RedirectResponse
     {
         Gate::authorize('modify', $user);
 
@@ -76,6 +73,12 @@ class UserController extends Controller
         ]);
 
         event(new ProfileChanged($user));
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'user' => new UserResource($user->fresh(['dialect', 'teacher'])),
+            ]);
+        }
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
