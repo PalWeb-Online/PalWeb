@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import DeckItem from "../../../components/DeckItem.vue";
-import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import { route } from "ziggy-js";
@@ -27,7 +26,7 @@ async function fetchDecks(params = {}) {
         decks.value      = data.decks;
         totalCount.value = data.totalCount;
         filters.value    = data.filters;
-        currentPage.value = data.decks.meta.current_page;  
+        currentPage.value = data.decks.meta.current_page;
         lastPage.value    = data.decks.meta.last_page;
     } catch (error) {
         console.error('Failed to fetch decks:', error);
@@ -38,6 +37,7 @@ async function fetchDecks(params = {}) {
 
 onMounted(() => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    currentPage.value = parseInt(params.page) || 1;
     fetchDecks(params);
 });
 
@@ -45,20 +45,35 @@ function updateFilter({ filter, value }) {
     const searchParams = new URLSearchParams(window.location.search);
     value ? searchParams.set(filter, value) : searchParams.delete(filter);
     searchParams.delete('page');
-    const params = Object.fromEntries(searchParams.entries());
+    currentPage.value = 1;
     window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchDecks(params);
+    fetchDecks(Object.fromEntries(searchParams.entries()));
 }
 
 function goToPage(page) {
-    if (page < 1 || page > lastPage.value) return;
-    currentPage.value = page;
+    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('page', page);
     window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchDecks(Object.fromEntries(searchParams.entries())); 
+    fetchDecks(Object.fromEntries(searchParams.entries()));
     window.scrollTo(0, 0);
 }
+
+const pageNumbers = computed(() => {
+    const pages = [];
+    const total = lastPage.value;
+    const current = currentPage.value;
+    if (total <= 7) {
+        for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+        pages.push(1);
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+        if (current < total - 2) pages.push('...');
+        pages.push(total);
+    }
+    return pages;
+});
 </script>
 
 <template>
@@ -71,27 +86,15 @@ function goToPage(page) {
                 <Link v-if="UserStore.isUser" :href="route('deck-master.build')" class="material-symbols-rounded">add</Link>
                 <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-            <div class="window-section-head">
-                <h1>deck library</h1>
-            </div>
-            <div class="window-section-head">
-                <h2>Index</h2>
-            </div>
+            <div class="window-section-head"><h1>deck library</h1></div>
+            <div class="window-section-head"><h2>Index</h2></div>
 
-            <div v-if="loading" class="loading-state">
-                <p>Loading...</p>
-            </div>
+            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
 
             <template v-else>
-                <SearchFilters
-                    :activeModel="'decks'"
-                    :filters="filters"
-                    @updateFilter="updateFilter"
-                />
+                <SearchFilters :activeModel="'decks'" :filters="filters" @updateFilter="updateFilter"/>
                 <AppTip>
-                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
-                        Displaying {{ totalCount }} Decks matching this query.
-                    </p>
+                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Decks matching this query.</p>
                     <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
                     <p v-else>No Decks matching this query.</p>
                 </AppTip>
@@ -99,12 +102,28 @@ function goToPage(page) {
                     <div class="model-list index-list">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
                     </div>
-                    <div class="pagination" style="display: flex; gap: 8px; justify-content: center; padding: 2rem;">
-                    <button @click="goToPage(currentPage - 1)" :disabled="currentPage <= 1">← Prev</button>
-                    <span style="padding: 0.5rem 1rem;">Page {{ currentPage }} / {{ lastPage }}</span>
-                    <button @click="goToPage(currentPage + 1)" :disabled="currentPage >= lastPage">Next →</button>
-                    </div>               
-              </template>
+                    <div id="paginator">
+                        <div class="pagination">
+
+                            <template v-for="page in pageNumbers" :key="page">
+
+                                <a
+                                    v-if="page !== '...'"
+                                    :class="{ active: page === currentPage }"
+                                    style="cursor: pointer"
+                                    @click="goToPage(page)"
+                                >
+                                    {{ page }}
+                                </a>
+
+                                <div v-else class="disabled">...</div>
+
+                            </template>
+
+                        </div>
+                    </div>
+
+                </template>
             </template>
         </div>
     </div>

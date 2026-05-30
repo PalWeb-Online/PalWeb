@@ -50,11 +50,6 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/offline', function () {
@@ -76,29 +71,21 @@ Route::get('/', function () {
         'sentences' => SentenceResource::collection(Sentence::orderByDesc('id')->find([256, 66, 54])->all()),
         'testimonials' => [
             [
-                'user' => new UserResource(User::find(243)),
-                'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.',
+                'user' => new UserResource(User::find(1)),
+                'comment' => 'PalWeb has made it so much easier to connect with real spoken Arabic.',
             ],
             [
-                'user' => new UserResource(User::find(1317)),
-                'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.',
+                'user' => new UserResource(User::find(1)),
+                'comment' => 'Finally — a resource that respects the richness of Palestinian Arabic.',
             ],
             [
-                'user' => new UserResource(User::find(16)),
-                'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.',
-            ],
-            [
-                'user' => new UserResource(User::find(18)),
-                'comment' => 'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.',
-            ],
-            [
-                'user' => new UserResource(User::find(3)),
-                'comment' => 'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
+                'user' => new UserResource(User::find(1)),
+                'comment' => 'Recording audio for PalWeb has been a powerful way to share my dialect.',
             ],
         ],
-        'featuredTerm' => new TermResource(Term::find(662))->additional(['detail' => true]),
+        'featuredTerm' => new TermResource(Term::first())->additional(['detail' => true]),
         'featuredUser' => new UserResource(User::find(1)->load(['dialect'])),
-        'featuredDeck' => new DeckResource(Deck::find(2)->load(['terms'])),
+        'featuredDeck' => new DeckResource(Deck::first()->load(['terms'])),
     ]);
 })->name('homepage');
 
@@ -164,7 +151,6 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
             return new TermResource(Term::findOrFail($term->id));
         })->name('terms.get');
 
-        //        todo: should these be API routes?
         Route::get('/{term}/get/sentences/{gloss}', 'getSentences')->name('terms.get.sentences');
         Route::get('/{term}/get/pronunciations', 'getPronunciations')->name('terms.get.pronunciations');
         Route::get('/{pronunciation}/get/audios', function (Pronunciation $pronunciation) {
@@ -284,8 +270,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
-        ) {
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
             Route::get('/', 'index')->name('card-dealer.index');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
             Route::get('/review', 'review')->name('card-dealer.review');
@@ -318,7 +303,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/office')->middleware(['admin'])->group(function () {
-        Route::resource('/terms', TermController::class)->except(['index', 'show', 'create', 'edit']);;
+        Route::resource('/terms', TermController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/units', UnitController::class)->except(['index', 'show', 'create', 'edit']);
@@ -358,7 +343,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-decks', [UserController::class, 'getDecks'])->name('users.decks.get');
     Route::patch('/update-preferences', [UserController::class, 'updatePreferences'])->name('users.preferences.update');
-
     Route::get('/toggle-view/{role?}', [UserController::class, 'toggleView'])->name('admin.toggle-view');
 });
 
@@ -388,6 +372,33 @@ Route::prefix('/api')->group(function () {
         Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
         Route::get('/search', 'search')->name('api.wiki.search');
         Route::get('/{page}', 'fetch')->name('api.wiki.fetch');
+    });
+
+    // -------------------------------------------------------------------------
+    // Library API Routes
+    // -------------------------------------------------------------------------
+
+    Route::prefix('/library')->group(function () {
+
+        Route::prefix('/terms')->controller(TermController::class)->group(function () {
+            Route::get('/', 'apiIndex')->name('api.terms.index');
+            Route::get('/{term:slug}', 'apiShow')->name('api.terms.show');
+        });
+
+        Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
+            Route::get('/', 'apiIndex')->name('api.sentences.index');
+            Route::get('/{sentence}', 'apiShow')->name('api.sentences.show');
+        });
+
+        Route::prefix('/audios')->group(function () {
+            Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
+            Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
+        });
+
+        Route::middleware('auth')->prefix('/decks')->controller(DeckController::class)->group(function () {
+            Route::get('/', 'apiIndex')->name('api.decks.index');
+            Route::get('/{deck}', 'apiShow')->name('api.decks.show');
+        });
     });
 });
 

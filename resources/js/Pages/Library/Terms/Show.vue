@@ -11,10 +11,25 @@ const loading = ref(true);
 async function fetchTerm() {
     loading.value = true;
     try {
-        const slug = window.location.pathname.split('/').pop();
+        const slug = window.location.pathname.replace('/library/terms/', '');
+        console.log('Fetching slug:', slug);
+
         const response = await fetch(`/api/library/terms/${slug}`);
+        console.log('Response status:', response.status);
+
         const data = await response.json();
-        terms.value = data.terms.data ?? [];
+        console.log('Data received:', data);
+
+        // La réponse peut être data.terms ou data.terms.data
+        if (data.terms && data.terms.data) {
+            terms.value = data.terms.data;
+        } else if (data.terms && Array.isArray(data.terms)) {
+            terms.value = data.terms;
+        } else if (data.terms) {
+            terms.value = Object.values(data.terms);
+        } else {
+            terms.value = [];
+        }
     } catch (error) {
         console.error('Failed to fetch term:', error);
         terms.value = [];

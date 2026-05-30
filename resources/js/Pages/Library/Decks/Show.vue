@@ -15,18 +15,16 @@ async function fetchDeck() {
     try {
         const id = window.location.pathname.split('/').pop();
         const response = await fetch(`/api/library/decks/${id}`, {
+            credentials: 'include',
             headers: {
                 'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            credentials: 'include',
         });
-
         if (!response.ok) {
             error.value = true;
             return;
         }
-
         const data = await response.json();
         deck.value = data.deck;
     } catch (err) {
@@ -43,12 +41,8 @@ onMounted(() => fetchDeck());
 <template>
     <Head :title="deck ? `Library: Decks: ${deck.name}` : 'Library: Decks'"/>
     <div id="app-body">
-        <div v-if="loading" class="loading-state">
-            <p>Loading...</p>
-        </div>
-        <div v-else-if="error" class="loading-state">
-            <p>Unable to load deck. Please log in.</p>
-        </div>
+        <div v-if="loading" class="loading-state"><p>Loading...</p></div>
+        <div v-else-if="error" class="loading-state"><p>Unable to load deck. Please log in.</p></div>
         <DeckContainer v-else-if="deck" :model="deck"/>
     </div>
 </template>

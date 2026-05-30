@@ -11,7 +11,6 @@ import { useNavigationStore } from "../../../stores/NavigationStore.js";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
-
 defineOptions({ layout: Layout });
 
 const terms        = ref(null);
@@ -26,7 +25,6 @@ const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
     'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
 ];
-
 const selectedLetter = ref(null);
 
 async function fetchTerms(params = {}) {
@@ -35,7 +33,6 @@ async function fetchTerms(params = {}) {
         const query = new URLSearchParams(params).toString();
         const response = await fetch(`/api/library/terms${query ? '?' + query : ''}`);
         const data = await response.json();
-
         terms.value        = data.terms;
         totalCount.value   = data.totalCount;
         featuredTerm.value = data.featuredTerm;
@@ -58,7 +55,6 @@ onMounted(() => {
 
 function updateFilter({ filter, value }) {
     const searchParams = new URLSearchParams(window.location.search);
-
     if (filter === 'letter') {
         const newLetter = selectedLetter.value === value ? null : value;
         newLetter ? searchParams.set(filter, newLetter) : searchParams.delete(filter);
@@ -68,24 +64,39 @@ function updateFilter({ filter, value }) {
     }
     searchParams.delete('page');
     currentPage.value = 1;
-
     const params = Object.fromEntries(searchParams.entries());
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchTerms(params);
 }
 
 function goToPage(page) {
-    if (page < 1 || page > lastPage.value) return;
-    currentPage.value = page;
-
+    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('page', page);
     window.history.pushState({}, '', '?' + searchParams.toString());
-
-    const params = Object.fromEntries(searchParams.entries());
-    fetchTerms(params);
+    fetchTerms(Object.fromEntries(searchParams.entries()));
     window.scrollTo(0, 0);
 }
+
+// Générer les numéros de page à afficher (style: 1 ... 4 5 6 ... 125)
+const pageNumbers = computed(() => {
+    const pages = [];
+    const total = lastPage.value;
+    const current = currentPage.value;
+
+    if (total <= 7) {
+        for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+        pages.push(1);
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+            pages.push(i);
+        }
+        if (current < total - 2) pages.push('...');
+        pages.push(total);
+    }
+    return pages;
+});
 
 const sortingMessage = computed(() => {
     if (filters.value.sort === 'latest') return 'sorted by most recent first';
@@ -125,11 +136,7 @@ const sortingMessage = computed(() => {
                         @click="updateFilter({ filter: 'letter', value: letter })"
                     >{{ letter }}</button>
                 </div>
-                <SearchFilters
-                    activeModel="terms"
-                    :filters="filters"
-                    @updateFilter="updateFilter"
-                />
+                <SearchFilters activeModel="terms" :filters="filters" @updateFilter="updateFilter"/>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
                         Displaying {{ totalCount }} Terms matching this query, {{ sortingMessage }}.
@@ -137,33 +144,32 @@ const sortingMessage = computed(() => {
                     <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
                     <p v-else>
                         No Terms matching this query. Is a term missing from the Dictionary?
-                        <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">
-                            Click here to let us know!
-                        </a>
+                        <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us know!</a>
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">
                     <div class="model-list index-list">
                         <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
                     </div>
+                    <div id="paginator">
+                        <div class="pagination">
 
-                    <!-- Pagination manuelle -->
-                    <div class="pagination" style="display: flex; gap: 8px; justify-content: center; padding: 2rem;">
-                        <button
-                            @click="goToPage(currentPage - 1)"
-                            :disabled="currentPage <= 1"
-                            class="pagination-btn"
-                        >← Prev</button>
+                            <template v-for="page in pageNumbers" :key="page">
 
-                        <span style="padding: 0.5rem 1rem;">
-                            Page {{ currentPage }} / {{ lastPage }}
-                        </span>
+                                <a
+                                    v-if="page !== '...'"
+                                    :class="{ active: page === currentPage }"
+                                    style="cursor: pointer"
+                                    @click="goToPage(page)"
+                                >
+                                    {{ page }}
+                                </a>
 
-                        <button
-                            @click="goToPage(currentPage + 1)"
-                            :disabled="currentPage >= lastPage"
-                            class="pagination-btn"
-                        >Next →</button>
+                                <div v-else class="disabled">...</div>
+
+                            </template>
+
+                        </div>
                     </div>
                 </template>
             </template>
