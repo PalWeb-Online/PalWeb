@@ -102,6 +102,13 @@
         resize: vertical
     }
 
+    .app-tip {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
     .popout {
         width: 4.8rem;
         position: absolute;
@@ -184,7 +191,7 @@
     }
 
     .user-comment {
-        margin-block-start: 2em;
+        margin-block-start: 0.5em;
         width: min(100%, 36rem);
 
         .user-name, .user-comment-title {
@@ -196,6 +203,10 @@
             font-size: 1.6rem;
             background: var(--color-pastel-medium);
             color: var(--color-dark-primary);
+        }
+
+        @media (width >= 720px) {
+            margin-block-start: 2em;
         }
     }
 

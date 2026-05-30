@@ -10,6 +10,8 @@ import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import {ref} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
+import UserActions from "../../../components/Actions/UserActions.vue";
+import {useUser} from "../../../composables/users/useUser.js";
 
 const props = defineProps({
     user: Object,
@@ -20,6 +22,7 @@ const props = defineProps({
 });
 
 const UserStore = useUserStore();
+const {isStudent, toggleStudentRole} = useUser(props.user);
 
 const filters = ref({
     sort: props.filters.sort || 'latest',
@@ -51,7 +54,8 @@ defineOptions({
             </div>
             <div class="window-section-head">
                 <h1>profile</h1>
-                <Link v-if="UserStore.isAdmin || user.id === UserStore.user.id"
+                <UserActions v-if="UserStore.isAdmin" :model="user"/>
+                <Link v-else-if="user.id === UserStore.user.id"
                       :href="route('users.edit', user.username)" class="material-symbols-rounded">edit
                 </Link>
             </div>
@@ -67,21 +71,31 @@ defineOptions({
                     Anonymous.</p>
             </AppTip>
             <UserItem :user="user" size="l" comment tags>
-                <div v-if="user.teacher" class="user-item comment-item l">
+                <div v-if="user.teacher && (isStudent || user.id === UserStore.user.id || UserStore.isAdmin)"
+                     class="user-item comment-item l">
                     <div class="user-data-wrapper">
                         <div class="user-comment">
                             <div class="user-comment-title">
                                 <img class="popout" src="/img/star.svg" alt="Star"/>
                                 <span>teacher bio</span>
                             </div>
-                            <div v-if="user.teacher.bio" class="user-comment-content">
-                                {{ user.teacher.bio }}
+                            <AppTip v-if="!isStudent && (user.id === UserStore.user.id || UserStore.isAdmin)">
+                                <p>You don't have a Student subscription, so your Teacher profile will not be visible to
+                                    others. Please renew your subscription to make your Teacher profile public.</p>
+                            </AppTip>
+                            <div class="user-comment-content">
+                                <template v-if="user.teacher.bio">
+                                    {{ user.teacher.bio }}
+                                </template>
+                                <template v-else>
+                                    <i>Sadly, {{ user.name }} hasn't told us anything about themselves as a Teacher
+                                        yet. They should probably fix that soon.</i>
+                                </template>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--                only admins can create Teacher profiles for now -->
-                <Link v-else-if="UserStore.isAdmin" class="portal-button"
+                <Link v-else-if="isStudent && UserStore.isAdmin" class="portal-button"
                       :href="route('users.edit', user.username)"
                       style="margin-block: 3.2rem; justify-self: center"
                 >

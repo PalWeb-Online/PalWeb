@@ -32,6 +32,7 @@ class UserResource extends JsonResource
             'created_ago' => $this->created_at->diffForHumans(),
             'decks_count' => $this->decks->count(),
             'audios_count' => $this->speaker?->audios->count() ?? 0,
+            'roles' => $this->whenLoaded('roles', $this->roles->pluck('name')->values()),
         ];
     }
 }

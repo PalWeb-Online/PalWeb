@@ -16,6 +16,14 @@ class CommunityController extends Controller
 {
     public function index(): \Inertia\Response
     {
+        $teachers = User::student()
+            ->join('teachers', 'teachers.user_id', '=', 'users.id')
+            ->with('teacher')
+            ->select('users.*')
+            ->orderByDesc('teachers.id')
+            ->paginate(5)
+            ->withQueryString();
+
         $latestDecks = Deck::query()
             ->orderByDesc('id')
             ->take(5)
@@ -62,6 +70,8 @@ class CommunityController extends Controller
 
         return Inertia::render('Community/Users/Index', [
             'section' => 'community',
+            'teachers' => UserResource::collection($teachers),
+            'teachersCount' => $teachers->total(),
             'latestDecks' => DeckResource::collection($latestDecks),
             'popularDecks' => DeckResource::collection($popularDecks),
             'featuredDeck' => new DeckResource($featuredDeck),

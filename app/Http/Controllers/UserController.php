@@ -8,6 +8,7 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\SpeakerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Badge;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,7 @@ class UserController extends Controller
 
         $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
 
-        $user->load(['dialect', 'badges', 'speaker', 'teacher']);
+        $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
 
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
@@ -49,11 +50,23 @@ class UserController extends Controller
     {
         Gate::authorize('modify', $user);
 
-        $user->load(['dialect']);
-
         return Inertia::render('Community/Users/Edit', [
             'section' => 'community',
+            'username' => $user->username,
+        ]);
+    }
+
+    public function fetch(User $user): JsonResponse
+    {
+        Gate::authorize('modify', $user);
+
+        $user->load(['dialect', 'teacher', 'roles']);
+
+        return response()->json([
             'user' => new UserResource($user),
+//            todo: instead of this, i could check the roles in the frontend;
+//        the gate will still be applied to the `store()` method.
+            'can_create_teacher' => Gate::allows('create', [Teacher::class, $user]),
         ]);
     }
 
@@ -114,6 +127,20 @@ class UserController extends Controller
     {
         return response()->json([
             'decks' => DeckResource::collection(auth()->user()->decks->load(['terms'])),
+        ]);
+    }
+
+    public function toggleStudentRole(User $user): JsonResponse
+    {
+        $user->hasRole('student')
+            ? $user->revokeStudentRole()
+            : $user->grantStudentRole();
+
+        $user->load('roles');
+
+        return response()->json([
+            'success' => true,
+            'user' => new UserResource($user)
         ]);
     }
 

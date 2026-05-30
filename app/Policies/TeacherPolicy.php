@@ -23,8 +23,8 @@ class TeacherPolicy
             return false;
         }
 
-        return $actor->isAdmin();
-//        return $actor->isAdmin() || $actor->is($target);
+        return $target->isStudent() && $actor->isAdmin();
+//        return $target->isStudent() && ($actor->isAdmin() || $actor->is($target));
     }
 
     public function update(User $actor, Teacher $teacher): bool

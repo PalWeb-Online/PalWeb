@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -248,5 +250,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->getLessonProgress()[$lesson->id]['stage'] ?? 1;
+    }
+
+    #[Scope]
+    protected function student(Builder $query): Builder
+    {
+        return $query->role('student');
     }
 }

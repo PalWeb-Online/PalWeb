@@ -23,6 +23,7 @@ use App\Http\Controllers\RootController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Workbench\CardDealerController;
@@ -197,11 +198,15 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
 });
 
 Route::middleware(['auth'])->prefix('/hub')->group(function () {
+    Route::patch('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
+    Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+
     Route::prefix('/users')->group(function () {
         Route::get('/', [CommunityController::class, 'index'])->name('users.index');
         Route::get('/{user:username}', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user:username}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
+        Route::post('/{user:username}/teacher', [TeacherController::class, 'store'])->name('users.teacher.store');
     });
 
     Route::get('/avatars/get', function () {
@@ -322,7 +327,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/office')->middleware(['admin'])->group(function () {
-        Route::resource('/terms', TermController::class)->except(['index', 'show', 'create', 'edit']);;
+        Route::resource('/terms', TermController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/sentences', SentenceController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/dialogs', DialogController::class)->except(['index', 'show', 'create', 'edit']);
         Route::resource('/units', UnitController::class)->except(['index', 'show', 'create', 'edit']);
@@ -367,6 +372,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::prefix('/api')->group(function () {
+    Route::prefix('/users')->controller(UserController::class)->group(function () {
+        Route::get('/{user:username}', 'fetch')->name('api.users.fetch');
+        Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggleStudent');
+    });
+
     Route::prefix('/activities')->controller(ActivityController::class)->group(function () {
         Route::get('/{activity}', 'fetch')->name('api.activities.fetch');
     });
