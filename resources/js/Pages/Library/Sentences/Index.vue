@@ -16,6 +16,8 @@ const sentences  = ref(null);
 const totalCount = ref(0);
 const filters    = ref({ sort: 'latest' });
 const loading    = ref(true);
+const currentPage = ref(1);
+const lastPage    = ref(1);
 
 // ── API fetch ────────────────────────────────────────────────────────────────
 async function fetchSentences(params = {}) {
@@ -27,6 +29,8 @@ async function fetchSentences(params = {}) {
         sentences.value  = data.sentences;
         totalCount.value = data.totalCount;
         filters.value    = data.filters;
+        currentPage.value = data.sentences.meta.current_page;  
+        lastPage.value    = data.sentences.meta.last_page;
     } catch (error) {
         console.error('Failed to fetch sentences:', error);
     } finally {
@@ -46,6 +50,16 @@ function updateFilter({ filter, value }) {
     const params = Object.fromEntries(searchParams.entries());
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchSentences(params);
+}
+
+function goToPage(page) {
+    if (page < 1 || page > lastPage.value) return;
+    currentPage.value = page;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('page', page);
+    window.history.pushState({}, '', '?' + searchParams.toString());
+    fetchSentences(Object.fromEntries(searchParams.entries())); // ou fetchDecks
+    window.scrollTo(0, 0);
 }
 </script>
 
@@ -87,7 +101,11 @@ function updateFilter({ filter, value }) {
                     <div class="model-list index-list">
                         <SentenceItem v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
                     </div>
-                    <Paginator :links="sentences.meta.links"/>
+                 <div class="pagination" style="display: flex; gap: 8px; justify-content: center; padding: 2rem;">
+                 <button @click="goToPage(currentPage - 1)" :disabled="currentPage <= 1">← Prev</button>
+                 <span style="padding: 0.5rem 1rem;">Page {{ currentPage }} / {{ lastPage }}</span>
+                 <button @click="goToPage(currentPage + 1)" :disabled="currentPage >= lastPage">Next →</button>
+                    </div>
                 </template>
             </template>
         </div>

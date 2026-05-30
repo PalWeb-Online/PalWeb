@@ -15,6 +15,8 @@ const decks      = ref(null);
 const totalCount = ref(0);
 const filters    = ref({ sort: 'latest' });
 const loading    = ref(true);
+const currentPage = ref(1);
+const lastPage    = ref(1);
 
 async function fetchDecks(params = {}) {
     loading.value = true;
@@ -25,6 +27,8 @@ async function fetchDecks(params = {}) {
         decks.value      = data.decks;
         totalCount.value = data.totalCount;
         filters.value    = data.filters;
+        currentPage.value = data.decks.meta.current_page;  
+        lastPage.value    = data.decks.meta.last_page;
     } catch (error) {
         console.error('Failed to fetch decks:', error);
     } finally {
@@ -44,6 +48,16 @@ function updateFilter({ filter, value }) {
     const params = Object.fromEntries(searchParams.entries());
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchDecks(params);
+}
+
+function goToPage(page) {
+    if (page < 1 || page > lastPage.value) return;
+    currentPage.value = page;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('page', page);
+    window.history.pushState({}, '', '?' + searchParams.toString());
+    fetchDecks(Object.fromEntries(searchParams.entries())); 
+    window.scrollTo(0, 0);
 }
 </script>
 
@@ -85,8 +99,12 @@ function updateFilter({ filter, value }) {
                     <div class="model-list index-list">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
                     </div>
-                    <Paginator :links="decks.meta.links"/>
-                </template>
+                    <div class="pagination" style="display: flex; gap: 8px; justify-content: center; padding: 2rem;">
+                    <button @click="goToPage(currentPage - 1)" :disabled="currentPage <= 1">← Prev</button>
+                    <span style="padding: 0.5rem 1rem;">Page {{ currentPage }} / {{ lastPage }}</span>
+                    <button @click="goToPage(currentPage + 1)" :disabled="currentPage >= lastPage">Next →</button>
+                    </div>               
+              </template>
             </template>
         </div>
     </div>
