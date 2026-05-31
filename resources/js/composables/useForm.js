@@ -19,8 +19,17 @@ export function useForm(initialValues = {}) {
         return !isEqual(payload(), original.value);
     });
 
+    const normalizeErrors = (newErrors = {}) => {
+        return Object.fromEntries(
+            Object.entries(newErrors ?? {}).map(([field, error]) => [
+                field,
+                Array.isArray(error) ? error[0] : error,
+            ])
+        );
+    };
+
     const setErrors = (newErrors = {}) => {
-        errors.value = newErrors ?? {};
+        errors.value = normalizeErrors(newErrors);
     };
 
     const clearErrors = (...fields) => {
