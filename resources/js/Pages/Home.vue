@@ -7,7 +7,6 @@ import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import UserScorecard from "../components/UserScorecard.vue";
-import Testimonial from "../components/Testimonial.vue";
 import RotatingWordColumn from "../components/RotatingWordColumn.vue";
 import TermFlashcard from "./Workbench/DeckMaster/UI/TermFlashcard.vue";
 import ToggleSingle from "../components/ToggleSingle.vue";
@@ -18,6 +17,8 @@ import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
+import CommentItem from "../components/CommentItem.vue";
+import InfiniteCarousel from "../components/InfiniteCarousel.vue";
 
 defineProps({
     count: Object,
@@ -47,37 +48,16 @@ const showSignUp = () => {
 const showTranslit = ref(false);
 const flipDefault = ref(false);
 
-const carousels = [];
-
-const duplicateCarouselItems = (carousel) => {
-    const items = Array.from(carousel.children);
-
-    if (items.length === 0) return;
-
-    for (let i = 0; i < 1; i++) {
-        items.forEach((item) => {
-            const clone = item.cloneNode(true);
-            clone.setAttribute("aria-hidden", "true");
-            carousel.appendChild(clone);
-        });
-    }
-};
-
-const imageSlides = []
-
 let intervalId = null;
 
 onMounted(async () => {
     await nextTick();
-    carousels.length = 0;
-    carousels.push(...document.querySelectorAll(".carousel-track"));
-    carousels.forEach((carousel) => duplicateCarouselItems(carousel));
 
     intervalId = setInterval(() => {
         flipDefault.value = !flipDefault.value;
     }, 2000);
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {passive: true})
 });
 
 onUnmounted(() => {
@@ -99,10 +79,6 @@ const handleScroll = () => {
 }
 
 onBeforeUnmount(() => {
-    carousels.forEach((carousel) => {
-        carousel.innerHTML = "";
-    });
-
     clearInterval(intervalId);
 });
 
@@ -138,11 +114,9 @@ defineOptions({
                 <div class="feature-panel-title">PalWeb is your hub</div>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track">
-                    <UserScorecard v-for="user in users" :user="user" :key="'user-carousel' + user.id" :scores="false"/>
-                </div>
-            </div>
+            <InfiniteCarousel>
+                <UserScorecard v-for="user in users" :user="user" :key="'user-carousel-' + user.id" :scores="false"/>
+            </InfiniteCarousel>
         </div>
 
         <div class="homepage-section pastel-light">
@@ -164,7 +138,6 @@ defineOptions({
                     </div>
                 </div>
             </div>
-
 
             <!--            <div-->
             <!--                style="display: flex; flex-flow: row wrap; align-items: flex-start; justify-content: center; gap: 1.6rem 6.4rem">-->
@@ -330,9 +303,9 @@ defineOptions({
                     <div class="feature-preview" style="margin-block: 3.2rem">
                         <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
                         <TermFlashcard v-if="featuredTerm"
-                            :model="featuredTerm.data"
-                            :showTranslit="showTranslit"
-                            :flipDefault="flipDefault"
+                                       :model="featuredTerm.data"
+                                       :showTranslit="showTranslit"
+                                       :flipDefault="flipDefault"
                         />
                     </div>
                 </div>
@@ -370,11 +343,9 @@ defineOptions({
                 </Carousel>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track" style="animation-direction: reverse">
-                    <DeckFlashcard v-for="deck in decks" :model="deck" :key="'deck-carousel' + deck.id"/>
-                </div>
-            </div>
+            <InfiniteCarousel direction="right">
+                <DeckFlashcard v-for="deck in decks" :model="deck" :key="'deck-carousel-' + deck.id"/>
+            </InfiniteCarousel>
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
@@ -430,7 +401,6 @@ defineOptions({
             </div>
         </div>
 
-
         <div class="homepage-section pastel-light">
             <div>
                 <img src="/img/globe-america.svg" class="world" alt="America"/>
@@ -464,11 +434,10 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track" style="animation: carousel-scroll 60s linear infinite">
-                    <Testimonial v-for="(testimonial, index) in testimonials" :testimonial="testimonial" :key="index"/>
-                </div>
-            </div>
+            <InfiniteCarousel gap="6.4rem">
+                <CommentItem v-for="(testimonial, index) in testimonials" :model="testimonial"
+                             :key="'testimonial-carousel-' + index" class="comment-testimonial"/>
+            </InfiniteCarousel>
 
             <div class="homepage-panel-wrapper" style="max-width: 96rem">
                 <div class="homepage-panel-content">
