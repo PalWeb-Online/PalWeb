@@ -8,7 +8,7 @@ import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
 import UserActions from "../../../components/Actions/UserActions.vue";
 import {useUser} from "../../../composables/users/useUser.js";
@@ -22,7 +22,11 @@ const props = defineProps({
 });
 
 const UserStore = useUserStore();
-const {isStudent, toggleStudentRole} = useUser(props.user);
+const {isStudent} = useUser(props.user);
+
+const canCreateTeacher = computed(() => {
+    return isStudent.value && UserStore.isAdmin
+});
 
 const filters = ref({
     sort: props.filters.sort || 'latest',
@@ -34,7 +38,6 @@ const unlockedBadges = props.badges.map(badge => ({
     ...badge,
     unlocked: props.user.badges.some(unlockedBadge => unlockedBadge.id === badge.id)
 }));
-
 
 defineOptions({
     layout: Layout
@@ -95,7 +98,7 @@ defineOptions({
                         </div>
                     </div>
                 </div>
-                <Link v-else-if="isStudent && UserStore.isAdmin" class="portal-button"
+                <Link v-else-if="canCreateTeacher" class="portal-button"
                       :href="route('users.edit', user.username)"
                       style="margin-block: 3.2rem; justify-self: center"
                 >

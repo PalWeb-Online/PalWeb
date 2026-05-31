@@ -64,9 +64,6 @@ class UserController extends Controller
 
         return response()->json([
             'user' => new UserResource($user),
-//            todo: instead of this, i could check the roles in the frontend;
-//        the gate will still be applied to the `store()` method.
-            'can_create_teacher' => Gate::allows('create', [Teacher::class, $user]),
         ]);
     }
 

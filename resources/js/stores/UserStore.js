@@ -3,10 +3,14 @@ import {computed, ref, watch} from 'vue';
 import {usePage} from "@inertiajs/vue3";
 import {route} from 'ziggy-js';
 import {useNotificationStore} from "./NotificationStore.js";
+import {useUser} from "../composables/users/useUser.js";
 
 export const useUserStore = defineStore('UserStore', () => {
     const page = usePage();
     const user = computed(() => page.props.auth.user || null);
+
+    const {isAdmin, isStudent, isUser, highestRole} = useUser(user);
+    const isSuperuser = computed(() => user.value?.is_superuser);
 
     const NotificationStore = useNotificationStore();
 
@@ -44,18 +48,6 @@ export const useUserStore = defineStore('UserStore', () => {
     const hasUnlockedLesson = (id) => {
         return user.value.unlocked_lessons.includes(id);
     }
-
-    const isSuperuser = computed(() => user.value?.is_superuser);
-    const isAdmin = computed(() => user.value?.roles?.includes('admin'));
-    const isStudent = computed(() => user.value?.roles?.includes('student') || user.value?.roles?.includes('admin'));
-    const isUser = computed(() => !!user.value);
-
-    const highestRole = computed(() => {
-        if (isAdmin.value) return 'admin';
-        if (isStudent.value) return 'student';
-        if (isUser.value) return 'pal';
-        return 'guest';
-    });
 
     return {
         user,
