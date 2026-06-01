@@ -58,13 +58,13 @@ export function usePageEditor({
             position: 1,
             parent_id: null,
         },
+        populateForm,
+        extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         getLoadIdentifier: () => pageId.value,
-        routeBase: 'wiki',
         fetchModel: pageLoader.fetchPage,
         resetModel: pageLoader.setPage,
-        populateForm,
+        routeBase: 'wiki',
         getBlocks: (document) => document?.blocks ?? [],
-        extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         beforeReload: () => {
             selectedParent.value = null;
         },
