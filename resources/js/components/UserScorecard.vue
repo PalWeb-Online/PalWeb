@@ -1,5 +1,6 @@
 <script setup>
 import {route} from "ziggy-js";
+import UserNametag from "./UserNametag.vue";
 
 defineProps({
     user: Object,
@@ -13,9 +14,7 @@ defineProps({
             <img alt="Avatar"
                  :src="`/img/avatars/${user.avatar}`"/>
         </Link>
-        <div class="user-name">
-            <div class="user-name-ar">{{ user.ar_name }}</div>
-        </div>
+        <UserNametag :user="user"/>
         <div v-if="scores" class="user-scorecard-body">
             <div class="user-creations">
                 <div>decks</div>
@@ -32,25 +31,34 @@ defineProps({
 <style scoped lang="scss">
 .user-scorecard {
     display: grid;
-    gap: 0.8rem;
-    background: white;
+    gap: 1.6rem;
     font-size: 1.2rem;
     font-weight: 700;
-    padding: 0.6rem 0.6rem 1.2rem;
+    background: white;
+    padding: 0.6rem 0.6rem 1.6rem;
     border-radius: 1.6rem;
     border: 0.2rem solid var(--color-dark-primary);
     filter: drop-shadow(-0.25em 0.25em 0 rgb(0 0 0 / 0.25));
+    width: 16em;
     z-index: 2;
 
     .user-avatar {
-        width: 16em;
-        height: 16em;
-        border-radius: 1.2rem;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: 0;
+
+        img {
+            border-radius: 1.2rem;
+        }
     }
 
     .user-name {
-        justify-self: center;
-        font-size: 2.4rem;
+        font-weight: 400;
+        font-size: 1.6rem;
+        padding-inline: 0.8rem;
         color: var(--color-dark-primary);
     }
 

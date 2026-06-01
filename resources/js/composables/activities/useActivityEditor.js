@@ -42,13 +42,13 @@ export function useActivityEditor({
             document: documentPreset.createDocument(),
             published: false,
         },
+        populateForm,
+        extractSavedModel: (response) => response.data.activity ?? response.data.data ?? null,
         getLoadIdentifier: () => activityId.value,
-        routeBase: 'activities',
         fetchModel: activityLoader.fetchActivity,
         resetModel: activityLoader.setActivity,
-        populateForm,
+        routeBase: 'activities',
         getBlocks: (document) => document?.blocks ?? [],
-        extractSavedModel: (response) => response.data.activity ?? response.data.data ?? null,
         beforeReload: () => {
             selectedLesson.value = initialLesson.value;
         },

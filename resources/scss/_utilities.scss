@@ -334,7 +334,6 @@ h3 {
 
 .popout {
     transition: 0.3s cubic-bezier(.18, .89, .32, 1.28);
-
 }
 
 *:hover > .popout {
@@ -526,22 +525,6 @@ h3 {
     }
 }
 
-.carousel-wrapper {
-    max-width: 100vw;
-    padding-block: 1.6rem;
-    overflow: hidden;
-
-    .carousel-track {
-        transform: translateX(0%);
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: flex-start;
-        gap: 3.2rem;
-        width: max-content;
-        animation: carousel-scroll 20s linear infinite;
-    }
-}
-
 .carousel {
     display: grid;
     gap: 1.6rem 0;
@@ -557,12 +540,6 @@ h3 {
 
 .carousel__slide {
     padding: 0 1.6rem;
-}
-
-@keyframes carousel-scroll {
-    to {
-        transform: translateX(calc(-50% - 1.6rem));
-    }
 }
 
 .draggable-item {

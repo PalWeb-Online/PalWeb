@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         (new UserSeeder)->run();
         (new SpeakerSeeder)->run();
         (new RoleSeeder)->run();
+        (new TeacherSeeder)->run();
 
         (new TermSeeder)->run();
         (new DeckSeeder)->run();

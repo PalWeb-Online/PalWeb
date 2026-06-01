@@ -1,88 +1,124 @@
-.window-container:not(.modal-container) > .user-item {
-    margin-block: 2.4rem 4.8rem;
+.window-container:not(.modal-container) .user-item:not(.comment-item) {
+    padding: 2.4rem 2.4rem 4.8rem;
+}
+
+.form-body .comment-item .user-comment {
+    width: 100%;
 }
 
 .user-item {
-    display: flex;
-    flex-flow: column;
-    gap: 1em 2em;
-    align-items: flex-start;
+    display: grid;
+    font-size: 1.6rem;
+
+    &.m {
+        font-size: 2.4rem;
+    }
+
+    &.l {
+        font-size: 3.2rem;
+    }
 
     @media (width >= 720px) {
+        display: flex;
         flex-flow: row;
+        align-items: flex-start;
+        gap: 1em;
     }
+}
 
-    &.l .user-avatar {
-        font-size: 1.2rem;
-    }
-
-    &.m .user-avatar {
-        font-size: 0.9rem;
-    }
-
-    .user-avatar {
-        flex-grow: 0;
-        filter: drop-shadow(-1em 1em 0 var(--color-pastel-medium));
-        margin-inline-start: 0.5em;
-    }
-
-    .user-name {
-        .user-name-ar {
-            font-size: 6.4rem;
-            padding-block-end: 1.2rem;
-        }
-
-        .user-name-en {
-            & > *:nth-child(1) {
-                font-size: 2.4rem;
-            }
-
-            & > *:nth-child(2) {
-                font-size: 1.6rem;
-            }
-        }
-    }
+.user-avatar-wrapper .user-interact-buttons a,
+.user-avatar-wrapper .user-interact-buttons button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    font-size: 1em;
+    color: var(--color-accent-light);
+    background: var(--color-dark-primary);
 }
 
 .user-avatar {
     flex-shrink: 0;
-    overflow: hidden;
-    width: 16em;
-    height: 16em;
-    border-radius: 2em;
+    width: 6em;
+    height: 6em;
+    margin: 1em;
+    border-radius: 50%;
+    position: relative;
 
     img {
         object-fit: cover;
         min-height: 100%;
+        background: white;
+        padding: 0.125em;
+        border-radius: 50%;
+        position: relative;
     }
 }
 
-.user-name {
-    flex-grow: 1;
-    display: flex;
-    flex-flow: row-reverse wrap;
-    align-items: flex-end;
-    gap: 1.2rem;
-    font-weight: 700;
-    line-break: anywhere;
-    color: var(--color-dark-primary);
+.user-comment {
+    display: grid;
+    background: var(--color-pastel-light);
+    border-radius: 0.4rem 3.2rem 3.2rem 3.2rem;
+    line-height: 2.4rem;
+    font-family: var(--body-font);
+    position: relative;
 
-    .user-name-ar {
-        direction: rtl;
-        line-height: 1;
+    .user-comment-title {
+        flex-flow: row wrap;
+        color: white;
+        background: var(--color-medium-primary);
+        font-family: var(--display-font);
+        font-size: 3.2rem;
+        text-transform: uppercase;
+        text-box: trim-both cap alphabetic;
+
+    }
+
+    .user-comment-content:before {
+        color: var(--color-accent-medium);
+        content: '“';
+        font-size: 3.6rem;
+        font-family: var(--head-font);
+    }
+
+    .user-comment-content {
+        width: auto;
+        margin: 2.4rem;
+        padding-block-start: 0.4rem;
+        font-size: 1.6rem;
         font-family: var(--body-font);
     }
 
-    .user-name-en {
-        flex-grow: 1;
+    .user-comment-data {
+        margin: -0.8rem 2.4rem 2.4rem;
+        font-size: 1.4rem;
+        text-align: right;
+        font-style: italic;
+    }
 
-        & > *:nth-child(1) {
-            font-family: var(--head-font);
-        }
+    textarea {
+        resize: vertical
+    }
 
-        & > *:nth-child(2) {
-            font-family: var(--mono-font);
-        }
+    .app-tip {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .popout {
+        width: 4.8rem;
+        position: absolute;
+        top: -1.6rem;
+        left: -2rem;
+        transition: 0.3s cubic-bezier(.18, .89, .32, 1.28);
+    }
+
+    &:hover .popout {
+        transform: scale(1.2) rotate(-15deg);
     }
 }
 
@@ -93,35 +129,6 @@
     margin-block-start: 2.4rem;
     width: 100%;
 
-    .user-comment {
-        display: grid;
-        gap: 1.6rem;
-        background: var(--color-pastel-light);
-        border-radius: 0.4rem 3.2rem 3.2rem 3.2rem;
-        padding: 2.4rem;
-        line-height: 2.4rem;
-        font-family: var(--body-font);
-
-        .user-comment-content:before {
-            color: var(--color-accent-medium);
-            content: '“';
-            font-size: 3.6rem;
-            font-family: var(--head-font);
-        }
-
-        .user-comment-content {
-            padding-block-start: 0.4rem;
-            font-size: 1.6rem;
-            font-family: var(--body-font);
-        }
-
-        .user-comment-data {
-            font-size: 1.4rem;
-            text-align: right;
-            font-style: italic;
-        }
-    }
-
     .user-tag-wrapper {
         display: flex;
         flex-flow: row wrap;
@@ -131,13 +138,25 @@
 
         .user-tag {
             display: flex;
-            gap: 0.8rem;
             align-items: center;
             background: var(--color-accent-light);
             border-radius: 3.2rem;
-            padding-inline: 1.6rem 2.0rem;
             font-size: 1.4rem;
-            height: 3.6rem;
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 3.6rem;
+                height: 3.6rem;
+                border-radius: 50%;
+                background: var(--color-accent-medium);
+                color: var(--color-dark-primary);
+            }
+
+            span {
+                padding-inline: 1.2rem 1.6rem;
+            }
 
             .location {
                 width: 1.6rem;
@@ -164,4 +183,47 @@
     width: min(100%, 96rem);
     display: grid;
     gap: 3.2rem;
+}
+
+.comment-item {
+    .user-data-wrapper {
+        margin: 0;
+    }
+
+    .user-comment {
+        margin-block-start: 0.5em;
+        width: min(100%, 36rem);
+
+        .user-name, .user-comment-title {
+            padding: 1.6rem 2.0rem;
+            border-radius: 0.4rem 3.2rem 0 0;
+        }
+
+        .user-name {
+            font-size: 1.6rem;
+            background: var(--color-pastel-medium);
+            color: var(--color-dark-primary);
+        }
+
+        @media (width >= 720px) {
+            margin-block-start: 2em;
+        }
+    }
+
+    &.l {
+        font-size: 2.4rem;
+
+        .user-comment {
+            width: 100%
+        }
+    }
+}
+
+.comment-testimonial {
+    width: 48rem;
+
+    .user-comment {
+        width: 100%;
+        background: var(--color-accent-light);
+    }
 }

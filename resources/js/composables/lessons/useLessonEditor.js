@@ -95,13 +95,13 @@ export function useLessonEditor({
             unlock_conditions: [],
             published: false,
         },
+        populateForm,
+        extractSavedModel: (response) => response.data.lesson ?? response.data.data ?? null,
         getLoadIdentifier: () => lessonId.value,
-        routeBase: 'lessons',
         fetchModel: lessonLoader.fetchLesson,
         resetModel: lessonLoader.setLesson,
-        populateForm,
+        routeBase: 'lessons',
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
-        extractSavedModel: (response) => response.data.lesson ?? response.data.data ?? null,
         beforeReload: () => {
             selectedUnit.value = initialUnit.value;
             selectedDeck.value = null;

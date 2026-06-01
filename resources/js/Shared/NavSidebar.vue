@@ -358,6 +358,7 @@ onMounted(() => {
         max-height: 100vh;
         transition: transform 0.3s ease-in-out;
         z-index: 999;
+        background: white;
 
         // Mobile
         width: 100%;

@@ -23,12 +23,16 @@ class UserResource extends JsonResource
             'home' => $this->home,
             'bio' => $this->bio,
             'private' => $this->private,
+            'teacher' => $this->whenLoaded('teacher', function () {
+                return new TeacherResource($this->teacher);
+            }),
             'dialect' => $this->whenLoaded('dialect'),
             'badges' => $this->whenLoaded('badges'),
             'created_at' => $this->created_at->format('j F Y'),
             'created_ago' => $this->created_at->diffForHumans(),
             'decks_count' => $this->decks->count(),
             'audios_count' => $this->speaker?->audios->count() ?? 0,
+            'roles' => $this->whenLoaded('roles', $this->roles->pluck('name')->values()),
         ];
     }
 }
