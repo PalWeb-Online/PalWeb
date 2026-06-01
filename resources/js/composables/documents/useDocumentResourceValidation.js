@@ -1,10 +1,12 @@
+import {useResourceValidation} from "../resources/useResourceValidation.js";
+
 export function useDocumentResourceValidation({
                                                   allowedBlockTypes = [],
                                                   recursive = true,
                                               } = {}) {
-    const isNonEmptyString = (value) => {
-        return typeof value === 'string' && value.trim().length > 0;
-    };
+    const {
+        isNonEmptyString,
+    } = useResourceValidation();
 
     const validateBlocks = (blocks = [], issues = [], path = 'Document') => {
         if (!Array.isArray(blocks)) {
