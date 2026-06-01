@@ -76,11 +76,11 @@ Route::get('/', function () {
 
     $isStaging = app()->environment('staging');
 
-    $users = $isStaging
+    $users = !$isStaging
         ? User::whereKey([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->get()
         : User::inRandomOrder()->limit(10)->get();
 
-    $decks = $isStaging
+    $decks = !$isStaging
         ? Deck::with('terms')->whereKey([2, 3, 4, 12, 19, 83, 100, 118])->get()
         : Deck::with('terms')
             ->where('private', false)
@@ -88,7 +88,7 @@ Route::get('/', function () {
             ->limit(8)
             ->get();
 
-    $sentences = $isStaging
+    $sentences = !$isStaging
         ? Sentence::whereKey([256, 66, 54])->get()
         : Sentence::inRandomOrder()->limit(3)->get();
 
@@ -100,7 +100,7 @@ Route::get('/', function () {
         'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
     ];
 
-    $testimonialUsers = $isStaging
+    $testimonialUsers = !$isStaging
         ? User::whereKey([243, 1317, 16, 18, 3])->get()
         : User::inRandomOrder()->limit(count($testimonialComments))->get();
 
