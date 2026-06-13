@@ -1,13 +1,13 @@
-import {computed} from "vue";
+import {computed, unref} from "vue";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 export function useUser(user) {
     const NotificationStore = useNotificationStore();
 
-    const resolvedUser = computed(() => user.value ?? user ?? null);
+    const resolvedUser = computed(() => unref(user) ?? null);
 
-    const isAdmin = computed(() => resolvedUser.value?.roles?.includes('admin'));
-    const isStudent = computed(() => resolvedUser.value?.roles?.includes('student'));
+    const isAdmin = computed(() => resolvedUser.value?.roles?.includes('admin') ?? false);
+    const isStudent = computed(() => resolvedUser.value?.roles?.includes('student') ?? false);
     const isUser = computed(() => !!resolvedUser.value);
 
     const highestRole = computed(() => {

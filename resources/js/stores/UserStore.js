@@ -10,7 +10,7 @@ export const useUserStore = defineStore('UserStore', () => {
     const user = computed(() => page.props.auth.user || null);
 
     const {isAdmin, isStudent, isUser, highestRole} = useUser(user);
-    const isSuperuser = computed(() => user.value?.is_superuser);
+    const isSuperuser = computed(() => !!user.value?.is_superuser);
 
     const NotificationStore = useNotificationStore();
 
@@ -46,7 +46,7 @@ export const useUserStore = defineStore('UserStore', () => {
     };
 
     const hasUnlockedLesson = (id) => {
-        return user.value.unlocked_lessons.includes(id);
+        return user.value?.unlocked_lessons?.includes(id) ?? false;
     }
 
     return {
