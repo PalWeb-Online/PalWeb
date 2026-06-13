@@ -16,8 +16,16 @@ class SpeakerController extends Controller
 {
     public function show(Speaker $speaker): \Inertia\Response
     {
-        return Inertia::render('Library/Audios/Speaker', [
-            'section' => 'library',
+        return Inertia::render('Library/Audios/Speaker');
+    }
+
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiShow(Speaker $speaker): JsonResponse
+    {
+        return response()->json([
             'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
             'audios' => AudioResource::collection(
                 Audio::query()
@@ -32,6 +40,8 @@ class SpeakerController extends Controller
             ),
         ]);
     }
+
+    // -------------------------------------------------------------------------
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {

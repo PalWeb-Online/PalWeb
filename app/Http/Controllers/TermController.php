@@ -27,68 +27,85 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
 
 class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository
-    ) {
-    }
+    ) {}
 
     public function pin(Request $request, Term $term): JsonResponse
     {
         $user = $request->user();
-
         Bookmark::toggle($term, $user);
-
         $term->isPinned() && event(new ModelPinned($user));
-
         $message = $term->isPinned()
             ? __('pin.added', ['thing' => $term->term])
             : __('pin.removed', ['thing' => $term->term]);
-
         return response()->json([
             'isPinned' => $term->isPinned(),
             'message' => $message,
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Inertia\Response
+    public function index(): \Inertia\Response
     {
-        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
-        ]));
-
-        $perPage = 25;
-        $currentPage = $request->integer('page', 1);
-
-        $termsCollection = $searchService->search($filters)['terms'];
-        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-            $termsCollection->forPage($currentPage, $perPage)->values(),
-            $termsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        $featuredTerm = Cache::get('word-of-the-day');
-        $featuredTerm = $featuredTerm
-            ? new TermResource($featuredTerm)
-            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
-
-        return Inertia::render('Library/Terms/Index', [
-            'section' => 'library',
-            'terms' => TermResource::collection($terms),
-            'totalCount' => $terms->total(),
-            'featuredTerm' => $featuredTerm ?? null,
-            'filters' => $filters,
-        ]);
-
-        //        View::share('pageDescription',
-        //            'Discover the PalWeb Dictionary, an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
+        return Inertia::render('Library/Terms/Index');
     }
 
     public function show(Term $term): \Inertia\Response
+    {
+        return Inertia::render('Library/Terms/Show');
+    }
+
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+   public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+{
+        URL::forceScheme('https');
+
+    $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+        'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+    ]));
+
+    $perPage = 25;
+    $currentPage = $request->integer('page', 1);
+
+    $termsCollection = $searchService->search($filters)['terms'];
+    $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+        $termsCollection->forPage($currentPage, $perPage)->values(),
+        $termsCollection->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    $featuredTerm = Cache::get('word-of-the-day');
+    $featuredTerm = $featuredTerm
+        ? new TermResource($featuredTerm)
+        : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+
+    $resource = TermResource::collection($terms);
+
+    return response()->json([
+        'terms' => [
+            'data' => $resource->toArray($request),
+            'meta' => [
+                'links' => $terms->linkCollection()->toArray(),
+                'current_page' => $terms->currentPage(),
+                'last_page' => $terms->lastPage(),
+                'total' => $terms->total(),
+            ],
+        ],
+        'totalCount' => $terms->total(),
+        'featuredTerm' => $featuredTerm ?? null,
+        'filters' => $filters,
+    ]);
+}
+    public function apiShow(Term $term): JsonResponse
     {
         $likeTerms = $this->termRepository->getLikeTerms($term);
         $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
@@ -111,21 +128,18 @@ class TermController extends Controller
                 ])
                 ->loadCount(['pronunciations'])
                 ->loadSingleGlossSentence();
-            //            sort Decks by popularity; could allow the user to manually load more Decks the Term appears in
         }
 
-        return Inertia::render('Library/Terms/Show', [
-            'section' => 'library',
+        return response()->json([
             'terms' => TermResource::collection(
                 $terms->map(function ($term) {
                     return new TermResource($term)->additional(['detail' => true]);
                 })
             ),
         ]);
-
-        //        View::share('pageDescription',
-        //            'Discover an extensive, practical & fun-to-use online dictionary for Levantine Arabic, complete with pronunciation audios & example sentences. Boost your Palestinian Arabic vocabulary now!');
     }
+
+    // -------------------------------------------------------------------------
 
     public function getPronunciations(Term $term): AnonymousResourceCollection
     {
@@ -206,7 +220,6 @@ class TermController extends Controller
             if ($formData['root']['root']) {
                 $formData = array_merge($formData,
                     ['root_id' => Root::firstOrCreate(['root' => $formData['root']['root']])->id]);
-
             } else {
                 $formData = array_merge($formData, ['root_id' => null]);
             }
@@ -232,15 +245,12 @@ class TermController extends Controller
 
             foreach ($requestGlosses as $glossData) {
                 $id = $glossData['id'] ?? null;
-
                 if ($id && $existingGlosses->has($id)) {
                     $existingGlosses[$id]->update($glossData);
                     $gloss = $existingGlosses[$id];
-
                 } else {
                     $gloss = Gloss::create(array_merge($glossData, ['term_id' => $term->id]));
                 }
-
                 $this->handleAttributes($gloss, $glossData['attributes'], 'glosses');
             }
 
@@ -271,7 +281,6 @@ class TermController extends Controller
         ]);
 
         $term && $duplicatesQuery = $duplicatesQuery->where('id', '!=', $term->id);
-
         $count = $duplicatesQuery->count();
 
         if ($count > 0) {
@@ -325,7 +334,6 @@ class TermController extends Controller
         $requestTerms = [];
         foreach ($relatives as $relative) {
             $relativeTerm = Term::firstWhere('slug', $relative['slug']);
-
             $requestTerms[] = $relativeTerm->slug;
 
             if (! in_array($relativeTerm->slug, $attachedTerms)) {
@@ -348,7 +356,6 @@ class TermController extends Controller
                         $relativeTerm->relatives()->attach($term, ['type' => 'source']);
                         break;
                 }
-
             } else {
                 $term->relatives()->updateExistingPivot($relativeTerm->id, [
                     'type' => $relative['type'],
@@ -358,10 +365,8 @@ class TermController extends Controller
         }
 
         $detachableSlugs = array_diff($attachedTerms, $requestTerms);
-
         foreach ($detachableSlugs as $slug) {
             $detachableTerm = Term::firstWhere('slug', $slug);
-
             $term->relatives()->detach($detachableTerm);
             $detachableTerm->relatives()->detach($term);
         }
@@ -388,25 +393,6 @@ class TermController extends Controller
         }
 
         $existingDependents->except($requestItems)->each->delete();
-
-        //        $existingDependents = $existingDependents->keyBy('id');
-        //
-        //        foreach ($requestDependents as $dependentData) {
-        //            $id = $dependentData['id'] ?? null;
-        //
-        //            if ($id && $existingDependents->has($id)) {
-        //                $existingDependents[$id]->update($dependentData);
-        //
-        //            } else {
-        //                $model::create(array_merge($dependentData, ['term_id' => $term->id]));
-        //            }
-        //        }
-        //
-        //        $existingDependents->each(function ($dependent) use ($requestDependents) {
-        //            if (!$requestDependents->pluck('id')->contains($dependent->id)) {
-        //                $dependent->delete();
-        //            }
-        //        });
     }
 
     public function destroy(Term $term): RedirectResponse
@@ -424,7 +410,6 @@ class TermController extends Controller
 
         if (count($remainingTerms) == 1) {
             $remainingTerms->first()->update(['slug' => $category.'-'.$translit]);
-
         } elseif (count($remainingTerms) > 1) {
             foreach ($remainingTerms as $i => $remainingTerm) {
                 $remainingTerm->update(['slug' => $category.'-'.$translit.'-'.($i + 1)]);
