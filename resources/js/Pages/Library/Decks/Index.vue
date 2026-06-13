@@ -1,35 +1,81 @@
 <script setup>
+import { ref, onMounted, computed } from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import DeckItem from "../../../components/DeckItem.vue";
-import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useUserStore} from "../../../stores/UserStore.js";
+import { route } from "ziggy-js";
+import { useUserStore } from "../../../stores/UserStore.js";
 
 const UserStore = useUserStore();
+defineOptions({ layout: Layout });
 
-defineOptions({
-    layout: Layout
+const decks      = ref(null);
+const totalCount = ref(0);
+const filters    = ref({ sort: 'latest' });
+const loading    = ref(true);
+const currentPage = ref(1);
+const lastPage    = ref(1);
+
+async function fetchDecks(params = {}) {
+    loading.value = true;
+    try {
+        const query = new URLSearchParams(params).toString();
+        const response = await fetch(`/api/library/decks${query ? '?' + query : ''}`);
+        const data = await response.json();
+        decks.value      = data.decks;
+        totalCount.value = data.totalCount;
+        filters.value    = data.filters;
+        currentPage.value = data.decks.meta.current_page;
+        lastPage.value    = data.decks.meta.last_page;
+    } catch (error) {
+        console.error('Failed to fetch decks:', error);
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(() => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    currentPage.value = parseInt(params.page) || 1;
+    fetchDecks(params);
 });
 
-defineProps({
-    decks: Object,
-    totalCount: Number,
-    filters: Object,
-});
-
-function updateFilter({filter, value}) {
+function updateFilter({ filter, value }) {
     const searchParams = new URLSearchParams(window.location.search);
-
     value ? searchParams.set(filter, value) : searchParams.delete(filter);
     searchParams.delete('page');
-
-    const params = Object.fromEntries(searchParams.entries());
-    router.get(window.location.pathname, params, {preserveState: true, preserveScroll: true});
+    currentPage.value = 1;
+    window.history.pushState({}, '', '?' + searchParams.toString());
+    fetchDecks(Object.fromEntries(searchParams.entries()));
 }
+
+function goToPage(page) {
+    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('page', page);
+    window.history.pushState({}, '', '?' + searchParams.toString());
+    fetchDecks(Object.fromEntries(searchParams.entries()));
+    window.scrollTo(0, 0);
+}
+
+const pageNumbers = computed(() => {
+    const pages = [];
+    const total = lastPage.value;
+    const current = currentPage.value;
+    if (total <= 7) {
+        for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+        pages.push(1);
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+        if (current < total - 2) pages.push('...');
+        pages.push(total);
+    }
+    return pages;
+});
 </script>
+
 <template>
     <Head title="Library: Decks"/>
     <div id="app-body">
@@ -40,32 +86,44 @@ function updateFilter({filter, value}) {
                 <Link v-if="UserStore.isUser" :href="route('deck-master.build')" class="material-symbols-rounded">add</Link>
                 <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-            <div class="window-section-head">
-                <h1>deck library</h1>
-            </div>
+            <div class="window-section-head"><h1>deck library</h1></div>
+            <div class="window-section-head"><h2>Index</h2></div>
 
-            <div class="window-section-head">
-                <h2>Index</h2>
-            </div>
+            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
 
-            <SearchFilters
-                :activeModel="'decks'"
-                :filters="filters"
-                @updateFilter="updateFilter"
-            />
-            <AppTip>
-                <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }}
-                    Decks
-                    matching this query.</p>
-                <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
-                <p v-else>No Decks matching this query.</p>
-            </AppTip>
+            <template v-else>
+                <SearchFilters :activeModel="'decks'" :filters="filters" @updateFilter="updateFilter"/>
+                <AppTip>
+                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{ totalCount }} Decks matching this query.</p>
+                    <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
+                    <p v-else>No Decks matching this query.</p>
+                </AppTip>
+                <template v-if="totalCount > 0">
+                    <div class="model-list index-list">
+                        <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
+                    </div>
+                    <div id="paginator">
+                        <div class="pagination">
 
-            <template v-if="totalCount > 0">
-                <div class="model-list index-list">
-                    <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-                </div>
-                <Paginator :links="decks.meta.links"/>
+                            <template v-for="page in pageNumbers" :key="page">
+
+                                <a
+                                    v-if="page !== '...'"
+                                    :class="{ active: page === currentPage }"
+                                    style="cursor: pointer"
+                                    @click="goToPage(page)"
+                                >
+                                    {{ page }}
+                                </a>
+
+                                <div v-else class="disabled">...</div>
+
+                            </template>
+
+                        </div>
+                    </div>
+
+                </template>
             </template>
         </div>
     </div>

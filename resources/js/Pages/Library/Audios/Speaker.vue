@@ -1,60 +1,82 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import Layout from "../../../Shared/Layout.vue";
-import Paginator from "../../../Shared/Paginator.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
-import {route} from "ziggy-js";
 import AppTip from "../../../components/AppTip.vue";
-import {useUserStore} from "../../../stores/UserStore.js";
+import { route } from "ziggy-js";
+import { useUserStore } from "../../../stores/UserStore.js";
 import UserItem from "../../../components/UserItem.vue";
 
 const UserStore = useUserStore();
+defineOptions({ layout: Layout });
 
-const props = defineProps({
-    speaker: Object,
+const speaker = ref(null);
+const audios  = ref([]);
+const loading = ref(true);
 
-    // todo: why is this an object?
-    audios: Object
-});
+async function fetchSpeaker() {
+    loading.value = true;
+    try {
+        const id = window.location.pathname.split('/').pop();
+        const response = await fetch(`/api/library/audios/${id}`);
+        const data = await response.json();
 
-defineOptions({
-    layout: Layout
-});
+        speaker.value = data.speaker;
+
+        if (Array.isArray(data.audios)) {
+            audios.value = data.audios;
+        } else if (data.audios && data.audios.data) {
+            audios.value = data.audios.data;
+        } else {
+            audios.value = [];
+        }
+
+    } catch (error) {
+        console.error('Failed to fetch speaker:', error);
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(() => fetchSpeaker());
 </script>
+
 <template>
-    <Head :title="`Library: Audios by ${speaker.user.name}`"/>
+    <Head :title="speaker ? `Library: Audios by ${speaker.user.name}` : 'Library: Audios'"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
                 <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
                 <div class="window-header-url">www.palweb.app/library/audios/{speaker}</div>
             </div>
-            <div class="window-section-head">
-                <h1>speaker</h1>
-            </div>
-            <AppTip v-if="speaker.user.id === UserStore.user.id && speaker.user.private">
-                <p>Your Profile is currently set to Private. Others may still interact with any Audios you have
-                    recorded, but your Speaker profile is anonymous & does not link to your user account.</p>
-            </AppTip>
+            <div class="window-section-head"><h1>speaker</h1></div>
 
-            <UserItem :user="speaker.user" size="l" :speaker="speaker">
-                <SpeakerItem :speaker="speaker"/>
-            </UserItem>
+            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
 
-            <div class="window-section-head">
-                <h2>audios</h2>
-            </div>
-            <template v-if="audios.data.length > 0">
-                <div class="model-list index-list">
-                    <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
-                </div>
-                <Paginator :links="audios.meta.links"/>
-            </template>
-            <template v-else>
-                <AppTip>
-                    <p>{{ speaker.user.private ? 'This Speaker' : speaker.user.name }} has not uploaded any Audios
-                        yet.</p>
+            <template v-else-if="speaker">
+                <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
+                    <p>Your Profile is currently set to Private.</p>
                 </AppTip>
+                <UserItem :user="speaker.user" size="l" :speaker="speaker">
+                    <SpeakerItem :speaker="speaker"/>
+                </UserItem>
+                <div class="window-section-head"><h2>audios</h2></div>
+                <template v-if="audios.length > 0">
+                    <div class="model-list index-list">
+                        <PronunciationItem
+                            v-for="audio in audios"
+                            :key="audio.id"
+                            :model="audio.pronunciation"
+                            :audio="audio"
+                        />
+                    </div>
+                </template>
+                <template v-else>
+                    <AppTip>
+                        <p>{{ speaker.user.private ? 'This Speaker' : speaker.user.name }} has not uploaded any Audios yet.</p>
+                    </AppTip>
+                </template>
             </template>
         </div>
     </div>
