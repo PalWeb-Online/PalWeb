@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue";
-import {computed, onMounted, provide, watch} from "vue";
+import {computed, onMounted, provide, ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useNavGuard} from "../../composables/NavGuard.js";
 import NavGuard from "../../components/Modals/NavGuard.vue";
@@ -12,6 +12,7 @@ import SearchSelect from "../../components/SearchSelect.vue";
 import {usePageSearch} from "../../composables/usePageSearch.js";
 import {usePageEditor} from "../../composables/pages/usePageEditor.js";
 import {usePageValidation} from "../../composables/pages/usePageValidation.js";
+import PagePositionModal from "./UI/PagePositionModal.vue";
 
 defineOptions({
     layout: Layout,
@@ -33,10 +34,13 @@ const {
     isLoadingForm,
     page,
     pageNotFound,
+    pageTree,
+    isLoadingTree,
     descendantIds,
     sentenceModels,
     allowedBlockTypes,
     selectedParent,
+    fetchWikiTree,
     loadForm,
     reloadForm,
     savePage,
@@ -54,8 +58,38 @@ const {
 
 provide('documentSentenceModels', sentenceModels);
 
+const showPagePositionModal = ref(false);
+
+const findPageInTree = (pages, pageId) => {
+    if (!pageId) return null;
+
+    for (const page of pages ?? []) {
+        if (Number(page.id) === Number(pageId)) return page;
+
+        const childMatch = findPageInTree(page.children ?? [], pageId);
+        if (childMatch) return childMatch;
+    }
+
+    return null;
+};
+
+const pagePositionParentTitle = computed(() => {
+    if (!form.parent_id) return 'Root';
+
+    return selectedParent.value?.title
+        ?? findPageInTree(pageTree.value, form.parent_id)?.title
+        ?? 'Selected Parent';
+});
+
+const setPagePosition = (position) => {
+    form.position = position;
+};
+
 onMounted(async () => {
-    await loadForm();
+    await Promise.all([
+        fetchWikiTree(),
+        loadForm(),
+    ]);
 });
 
 watch(() => props.pageId, async () => {
@@ -124,14 +158,9 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     </select>
                 </div>
 
-                <div class="field-item">
-                    <label>Sort Order</label>
-                    <input type="number" v-model="form.sort_order" min="0">
-                </div>
-
                 <SearchSelect
                     v-model="form.parent_id"
-                    label="Parent Page"
+                    label="Parent"
                     :initial-title="selectedParent?.title"
                     :search="searchPages"
                     :error="errors?.parent_id"
@@ -141,41 +170,57 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     <template #option="{ option }">
                         <div>
                             <strong>{{ option.title }}</strong>
-                            <div style="font-size: 0.85em; opacity: 0.7">
+                            <div style="font-size: 0.85em; color: var(--color-medium-secondary)">
                                 /{{ option.slug }}
                             </div>
                         </div>
                     </template>
                 </SearchSelect>
 
+                <div class="field-item">
+                    <label>Position</label>
+                    <div class="page-position-field">
+                        <span>Page</span>
+                        <input type="number" v-model="form.position" min="1">
+                        <span>@ {{ pagePositionParentTitle }}</span>
+                        <button
+                            type="button"
+                            @click="showPagePositionModal = true"
+                            :disabled="isLoadingTree"
+                        >
+                            Select Position
+                        </button>
+                    </div>
+                </div>
+
                 <DocumentBlocksManager
                     :document-blocks="form.document.blocks"
                     :block-types="allowedBlockTypes"
                 />
+
+                <AppTip>
+                    <p>The Wiki page is currently {{ form.status }}.</p>
+
+                    <template v-if="!isValidRequest">
+                        <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                    </template>
+                    <template v-if="!isPublishable">
+                        <p style="font-weight: 700">The Page cannot be published in the current state.</p>
+                        <ul>
+                            <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
+                        </ul>
+                    </template>
+                    <template v-if="Object.keys(errors).length">
+                        <p style="font-weight: 700">Oops — the Page could not be saved.</p>
+                        <ul>
+                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
+                        </ul>
+                    </template>
+                </AppTip>
             </div>
-
-            <AppTip>
-                <p>The Wiki page is currently {{ form.status }}.</p>
-
-                <template v-if="!isValidRequest">
-                    <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="!isPublishable">
-                    <p style="font-weight: 700">The Page cannot be published in the current state.</p>
-                    <ul>
-                        <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="Object.keys(errors).length">
-                    <p style="font-weight: 700">Oops — the Page could not be saved.</p>
-                    <ul>
-                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                    </ul>
-                </template>
-            </AppTip>
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">
@@ -213,7 +258,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         Delete Page
                     </button>
 
-                    <Link :href="route('wiki.index')">
+                    <Link v-if="page" :href="route('wiki.show', page.slug)">
+                        View Page
+                    </Link>
+                    <Link v-else :href="route('wiki.index')">
                         Back to Wiki
                     </Link>
                 </div>
@@ -228,4 +276,28 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             @cancel="handleCancel"
         />
     </ModalWrapper>
+
+    <ModalWrapper v-model="showPagePositionModal">
+        <PagePositionModal
+            v-model="showPagePositionModal"
+            :page-tree="pageTree"
+            :parent-id="form.parent_id"
+            :current-page-id="page?.id"
+            :current-title="form.title"
+            :position="form.position"
+            :is-loading="isLoadingTree"
+            @select="setPagePosition"
+        />
+    </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.page-position-field {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    font-family: var(--mono-font);
+    font-size: 1.4rem;
+    color: var(--color-medium-primary);
+}
+</style>

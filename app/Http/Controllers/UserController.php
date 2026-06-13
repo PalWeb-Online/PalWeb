@@ -8,8 +8,8 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\SpeakerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Badge;
+use App\Models\Teacher;
 use App\Models\User;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,15 +18,13 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
-
     public function show(User $user, Request $request): \Inertia\Response
     {
         Gate::authorize('interact', $user);
 
         $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
 
-        $user->load(['dialect', 'badges', 'speaker']);
+        $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
 
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
@@ -52,15 +50,24 @@ class UserController extends Controller
     {
         Gate::authorize('modify', $user);
 
-        $user->load(['dialect']);
-
         return Inertia::render('Community/Users/Edit', [
             'section' => 'community',
+            'username' => $user->username,
+        ]);
+    }
+
+    public function fetch(User $user): JsonResponse
+    {
+        Gate::authorize('modify', $user);
+
+        $user->load(['dialect', 'teacher', 'roles']);
+
+        return response()->json([
             'user' => new UserResource($user),
         ]);
     }
 
-    public function update(User $user, UpdateUserRequest $request, FlasherInterface $flasher): RedirectResponse
+    public function update(User $user, UpdateUserRequest $request): JsonResponse|RedirectResponse
     {
         Gate::authorize('modify', $user);
 
@@ -76,6 +83,12 @@ class UserController extends Controller
         ]);
 
         event(new ProfileChanged($user));
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'user' => new UserResource($user->fresh(['dialect', 'teacher'])),
+            ]);
+        }
 
         session()->flash('notification',
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
@@ -111,6 +124,20 @@ class UserController extends Controller
     {
         return response()->json([
             'decks' => DeckResource::collection(auth()->user()->decks->load(['terms'])),
+        ]);
+    }
+
+    public function toggleStudentRole(User $user): JsonResponse
+    {
+        $user->hasRole('student')
+            ? $user->revokeStudentRole()
+            : $user->grantStudentRole();
+
+        $user->load('roles');
+
+        return response()->json([
+            'success' => true,
+            'user' => new UserResource($user)
         ]);
     }
 

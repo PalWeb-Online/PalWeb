@@ -1,47 +1,72 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import {offset, flip, shift, useFloating} from "@floating-ui/vue";
 import VanillaTilt from 'vanilla-tilt';
+import {useTooltip} from "../composables/useTooltip.js";
 
 const props = defineProps({
     badge: Object,
 });
 
-const isOpen = ref(false);
-const reference = ref(null);
-const floating = ref(null);
-const {floatingStyles} = useFloating(reference, floating, {
-    placement: 'top',
-    middleware: [offset(8), flip(), shift()]
-});
+const element = ref(null);
 
 onMounted(() => {
     if (props.badge.unlocked) {
-        VanillaTilt.init(reference.value, {
+        VanillaTilt.init(element.value, {
             max: 20,
             speed: 400,
             scale: 1,
             glare: true,
         });
     }
-
-    reference.value.addEventListener('mouseenter', () => {
-        isOpen.value = true;
-    });
-    reference.value.addEventListener('mouseleave', () => {
-        isOpen.value = false;
-    });
 });
 
+const {
+    isVisible,
+    tooltipStyle,
+    tooltipData,
+    showTooltip,
+    hideTooltip
+} = useTooltip();
 </script>
 
 <template>
-    <div ref="reference" :class="['badge', badge.unlocked ? '' : 'disabled']">
+    <div ref="element" :class="['badge-item', badge.unlocked ? '' : 'disabled']"
+         @mousemove="showTooltip({
+             title: badge.unlocked ? badge.name : '???',
+             description: badge.description
+         }, $event)"
+         @mouseleave="hideTooltip()"
+    >
         <img :alt="badge.name" :src="`/img/badges/${badge.image}`"/>
     </div>
-    <div ref="floating" v-if="isOpen" :style="floatingStyles" class="notification badge-data">
-        <div>{{ badge.unlocked ? badge.name : '???' }}</div>
-        <div>{{ badge.description }}</div>
+    <div v-if="isVisible" :style="tooltipStyle" class="data-tooltip">
+        <div style="font-weight: 700">{{ tooltipData.title }}</div>
+        <div style="font-size: 1.2rem">{{ tooltipData.description }}</div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.badge-item {
+    display: grid;
+    border-radius: 50%;
+    background: var(--color-accent-light);
+    transform-style: preserve-3d;
+    transform: perspective(960rem);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translateZ(1.6rem)
+    }
+
+    &.disabled {
+        filter: grayscale(1);
+
+        img {
+            transform: scale(1.1);
+        }
+    }
+}
+</style>
 

@@ -27,7 +27,7 @@ const instructionText = computed(() => {
 
 <template>
     <p>{{ instructionText }}</p>
-    <div class="block-prompt--images">
+    <div class="block-prompt-images">
         <img v-for="image in prompts.filter(p => p.type === 'image')" :key="image.id"
              :src="image.value" alt="Reference Image">
     </div>
@@ -36,3 +36,12 @@ const instructionText = computed(() => {
                :src="audio.value" controls/>
     </div>
 </template>
+
+<style scoped lang="scss">
+.block-prompt-images {
+    display: grid;
+    gap: 1.6rem;
+    margin-block: 1.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+}
+</style>

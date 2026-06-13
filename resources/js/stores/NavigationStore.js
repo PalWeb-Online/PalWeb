@@ -22,7 +22,6 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
     }
 
     const themes = ['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin'];
-
     const activeTheme = ref(localStorage.getItem('selectedTheme') || 'Falastin');
 
     const updateTheme = (theme) => {
@@ -34,14 +33,29 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
 
     updateTheme(activeTheme.value);
 
+    const fontThemes = ['GoldStar', 'Banksy', 'Pal2K'];
+    const activeFontTheme = ref(localStorage.getItem('selectedFontTheme') || 'GoldStar');
+
+    const updateFontTheme = (theme) => {
+        document.body.classList.remove(...fontThemes.map((t) => `font-theme-${t}`));
+        document.body.classList.add(`font-theme-${theme}`);
+        activeFontTheme.value = theme;
+        localStorage.setItem('selectedFontTheme', theme);
+    };
+
+    updateFontTheme(activeFontTheme.value);
+
     return {
         data,
         themes,
         activeTheme,
+        updateTheme,
+        fontThemes,
+        activeFontTheme,
+        updateFontTheme,
         showSignIn,
         showSignUp,
         showSendFeedback,
-        updateTheme,
         toggleSidebar,
         closeSidebar,
     };

@@ -11,6 +11,8 @@ import AppTip from "../../../../components/AppTip.vue";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
+import UserNametag from "../../../../components/UserNametag.vue";
+import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
 
 const UserStore = useUserStore();
 const SoundBoothStore = useSoundBoothStore();
@@ -178,12 +180,7 @@ onMounted(async () => {
         <div class="rw-page__speaker">
             <div class="user-item l">
                 <div class="rw-test-booth">
-                    <Link :disabled="!!RecordStore.recorder"
-                          :href="SoundBoothStore.speaker.id ? route('speaker.show', SoundBoothStore.speaker.id) : '#'"
-                          class="user-avatar">
-                        <img alt="Profile Picture"
-                             :src="`/img/avatars/${ UserStore.user.private ? 'palweb01.jpg' : UserStore.user.avatar }`"/>
-                    </Link>
+                    <UserAvatarWrapper :user="!UserStore.user.private ? UserStore.user : null"/>
                     <img
                         v-if="SoundBoothStore.data.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
@@ -193,19 +190,7 @@ onMounted(async () => {
                 </div>
 
                 <div class="user-data-wrapper">
-                    <div class="user-name">
-                        <div class="user-name-ar">{{ UserStore.user.private ? 'مجهول' : UserStore.user.ar_name }}</div>
-                        <div class="user-name-en">
-                            <div>
-                                {{
-                                    UserStore.user.private ? 'Speaker #' + SoundBoothStore.speaker.id : UserStore.user.name
-                                }}
-                            </div>
-                            <div>
-                                {{ UserStore.user.private ? '[anonymous]' : UserStore.user.username }}
-                            </div>
-                        </div>
-                    </div>
+                    <UserNametag :user="UserStore.user" :speaker="SoundBoothStore.speaker"/>
 
                     <div class="speaker-data">
                         <div class="speaker-data-head">

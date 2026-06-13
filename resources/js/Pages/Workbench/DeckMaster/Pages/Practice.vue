@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
-import 'vue3-carousel/dist/carousel.css';
 import TermFlashcard from "../UI/TermFlashcard.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import WindowSection from "../../../../components/WindowSection.vue";

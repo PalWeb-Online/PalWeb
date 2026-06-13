@@ -296,7 +296,7 @@ class Card extends Model
         return $query;
     }
 
-//    todo: new format doesn't work unless preceded by `query()`
+//    todo: use #[Scope]; these should all be protected to work! see User model
     public function scopeForUser(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);

@@ -293,7 +293,7 @@ onMounted(async () => {
     background: var(--color-medium-secondary);
     padding: 0.8rem;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         border-radius: 2.4rem;
     }
 

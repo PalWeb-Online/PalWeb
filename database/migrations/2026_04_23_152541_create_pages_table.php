@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status')->default('draft');
             $table->string('locale', 10)->default('en');
             $table->timestamp('published_at')->nullable();
-            $table->unsignedInteger('sort_order')->default(0);
+            $table->unsignedInteger('position')->default(0);
             $table->foreignId('parent_id')->nullable()->constrained('pages')->nullOnDelete();
             $table->timestamps();
         });

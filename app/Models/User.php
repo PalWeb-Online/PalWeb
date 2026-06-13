@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Billable, HasApiTokens, HasFactory, HasRoles, Notifiable, HasPushSubscriptions;
+    use Billable, HasApiTokens, HasFactory, HasPushSubscriptions, HasRoles, Notifiable;
 
     protected $fillable = [
         'email',
@@ -159,9 +161,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Badge::class);
     }
 
-    public function speaker(): hasOne
+    public function speaker(): HasOne
     {
         return $this->hasOne(Speaker::class);
+    }
+
+    public function teacher(): HasOne
+    {
+        return $this->hasOne(Teacher::class);
     }
 
     public function scores(): HasMany
@@ -177,6 +184,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     protected ?array $lessonProgressCache = null;
+
     protected ?array $scoreCountsCache = null;
 
     public function forgetLessonProgressCache(): void
@@ -190,7 +198,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $this->lessonProgressCache = $this->lessons()
                 ->get()
                 ->keyBy('id')
-                ->map(fn($lesson) => [
+                ->map(fn ($lesson) => [
                     'stage' => (int) $this->isAdmin() ? 3 : $lesson->pivot->stage,
                     'completed' => (bool) $this->isAdmin() ? true : $lesson->pivot->completed,
                 ])
@@ -219,22 +227,34 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasUnlockedLesson(Lesson $lesson): bool
     {
-        if ($this->isAdmin()) return true;
+        if ($this->isAdmin()) {
+            return true;
+        }
 
         return isset($this->getLessonProgress()[$lesson->id]);
     }
 
     public function hasCompletedLesson(Lesson $lesson): bool
     {
-        if ($this->isAdmin()) return true;
+        if ($this->isAdmin()) {
+            return true;
+        }
 
         return $this->getLessonProgress()[$lesson->id]['completed'] ?? false;
     }
 
     public function getLessonStage(Lesson $lesson): int
     {
-        if ($this->isAdmin()) return 3;
+        if ($this->isAdmin()) {
+            return 3;
+        }
 
         return $this->getLessonProgress()[$lesson->id]['stage'] ?? 1;
+    }
+
+    #[Scope]
+    protected function student(Builder $query): Builder
+    {
+        return $query->role('student');
     }
 }

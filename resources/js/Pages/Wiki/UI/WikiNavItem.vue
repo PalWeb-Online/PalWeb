@@ -34,7 +34,7 @@ const toggleSection = (slug) => {
 </script>
 
 <template>
-    <div class="wiki-nav-section">
+    <div class="wiki-nav-section" :class="{ draft: page.status === 'draft' }">
         <div
             class="wiki-nav-section-head"
             :class="{ active: currentSlug === page.slug }"
@@ -44,7 +44,7 @@ const toggleSection = (slug) => {
                 :href="route('wiki.show', page.slug)"
                 preserve-state
             >
-                {{ page.title }}
+                <span class="wiki-page-title">{{ page.title }}</span>
             </Link>
 
             <button
@@ -81,6 +81,11 @@ const toggleSection = (slug) => {
 .wiki-nav-section {
     display: grid;
     background: var(--color-medium-primary);
+
+    &.draft {
+        filter: grayscale(0.5);
+        opacity: 0.5;
+    }
 }
 
 
@@ -101,9 +106,10 @@ const toggleSection = (slug) => {
 
 .wiki-nav-section-head {
     display: flex;
+    min-width: 0;
+    height: 3.6rem;
     font-size: 1.6rem;
     font-weight: 500;
-    height: 3.6rem;
 
     &.active {
         color: white;
@@ -113,10 +119,18 @@ const toggleSection = (slug) => {
     a {
         display: flex;
         align-items: center;
-        flex-grow: 1;
+        flex: 1 1 auto;
+        min-width: 0;
         font-weight: 700;
-        padding-inline-start: calc(1.6rem + (var(--wiki-nav-depth) * 0.8rem));
-        padding-inline-end: 1.6rem;
+        padding-inline: calc(1.6rem + (var(--wiki-nav-depth) * 0.8rem)) 1.6rem;
+    }
+
+    .wiki-page-title {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     a, button {

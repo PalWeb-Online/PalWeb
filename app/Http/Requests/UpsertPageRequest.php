@@ -32,7 +32,7 @@ class UpsertPageRequest extends FormRequest
             'status' => ['required', 'string', Rule::in(['draft', 'published', 'archived'])],
             'locale' => ['required', 'string', 'max:10'],
             'published_at' => ['nullable', 'date'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
+            'position' => ['nullable', 'integer', 'min:0'],
             'parent_id' => [
                 'nullable',
                 'integer',
@@ -51,16 +51,10 @@ class UpsertPageRequest extends FormRequest
 
     protected function passedValidation(): void
     {
-        if (! $this->boolean('published')) {
-            return;
-        }
+        $errors = [];
 
-        $document = $this->input('document', []);
-        $blocks = $document['blocks'] ?? [];
         $pageId = $this->route('page')?->id;
         $parentId = $this->integer('parent_id') ?: null;
-
-        $errors = [];
 
         if ($pageId && $parentId) {
             $descendantIds = $this->getDescendantPageIds($pageId);
@@ -70,12 +64,17 @@ class UpsertPageRequest extends FormRequest
             }
         }
 
-        $blockValidator = new BlockValidator(
-            allowedBlockTypes: ['container', 'heading', 'text', 'image', 'chart', 'sentence'],
-            recursive: true,
-        );
+        $document = $this->input('document', []);
+        $blocks = $document['blocks'] ?? [];
 
-        $blockValidator->validateBlocks($blocks, 'document.blocks', $errors);
+        if ($this->input('status') === 'published') {
+            $blockValidator = new BlockValidator(
+                allowedBlockTypes: ['container', 'heading', 'text', 'image', 'chart', 'sentence'],
+                recursive: true,
+            );
+
+            $blockValidator->validateBlocks($blocks, 'document.blocks', $errors);
+        }
 
         if (! empty($errors)) {
             throw ValidationException::withMessages($errors);

@@ -453,8 +453,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     .progress-bar-values {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        align-items: center;
-        justify-items: center;
+        place-items: center;
 
         .featured-title {
             cursor: help;
@@ -473,15 +472,14 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 .bucket-wrapper {
     display: grid;
     grid-template-areas: 'icon' 'title';
-    justify-items: center;
-    align-items: center;
+    place-items: center;
     font-size: 3.2rem;
     user-select: none;
 
     .bucket-count-wrapper {
         display: flex;
         align-items: center;
-        justify-items: center;
+        justify-content: center;
         gap: 0.75em
     }
 
@@ -559,7 +557,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 }
 
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
     .session-stats {
         padding-inline: 0;
     }

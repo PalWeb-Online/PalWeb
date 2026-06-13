@@ -132,11 +132,10 @@ onMounted(() => {
 .install-button {
     color: var(--color-dark-primary);
     height: 100%;
-
     font-size: 2.4rem;
     width: 2em;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         font-size: 1.8rem;
     }
 }

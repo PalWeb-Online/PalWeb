@@ -25,3 +25,32 @@ defineProps({
         </div>
     </template>
 </template>
+
+<style scoped lang="scss">
+.exercise-prompt_render {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    .material-symbols-rounded {
+        font-size: 3.2rem;
+        color: var(--color-medium-primary);
+        user-select: none;
+
+        &.correct {
+            color: var(--color-medium-secondary);
+        }
+    }
+
+    p {
+        font-family: var(--ar-body-font);
+        font-size: 2.0rem;
+        margin: 0;
+        background: white;
+        border-radius: 1.6rem;
+        box-shadow: 0 0.8rem 0 var(--color-accent-light);
+        padding: 1.2rem 1.6rem;
+        margin-block-end: 0.8rem;
+    }
+}
+</style>

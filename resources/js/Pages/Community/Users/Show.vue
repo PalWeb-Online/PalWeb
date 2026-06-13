@@ -8,8 +8,10 @@ import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
+import UserActions from "../../../components/Actions/UserActions.vue";
+import {useUser} from "../../../composables/users/useUser.js";
 
 const props = defineProps({
     user: Object,
@@ -20,18 +22,22 @@ const props = defineProps({
 });
 
 const UserStore = useUserStore();
+const {isStudent} = useUser(props.user);
+
+const canCreateTeacher = computed(() => {
+    return isStudent.value && UserStore.isAdmin
+});
 
 const filters = ref({
     sort: props.filters.sort || 'latest',
 });
 
-const { updateFilter } = useQueryFilters(filters);
+const {updateFilter} = useQueryFilters(filters);
 
 const unlockedBadges = props.badges.map(badge => ({
     ...badge,
     unlocked: props.user.badges.some(unlockedBadge => unlockedBadge.id === badge.id)
 }));
-
 
 defineOptions({
     layout: Layout
@@ -51,7 +57,10 @@ defineOptions({
             </div>
             <div class="window-section-head">
                 <h1>profile</h1>
-                <Link v-if="UserStore.isAdmin || user.id === UserStore.user.id" :href="route('users.edit', user.username)" class="material-symbols-rounded">edit</Link>
+                <UserActions v-if="UserStore.isAdmin" :model="user"/>
+                <Link v-else-if="user.id === UserStore.user.id"
+                      :href="route('users.edit', user.username)" class="material-symbols-rounded">edit
+                </Link>
             </div>
             <AppTip v-if="user.id === UserStore.user.id && !UserStore.user.is_verified">
                 <p>Welcome to PalWeb! In order to to access all of the site's features, you must verify your email
@@ -65,6 +74,37 @@ defineOptions({
                     Anonymous.</p>
             </AppTip>
             <UserItem :user="user" size="l" comment tags>
+                <div v-if="user.teacher && (isStudent || user.id === UserStore.user.id || UserStore.isAdmin)"
+                     class="user-item comment-item l">
+                    <div class="user-data-wrapper">
+                        <div class="user-comment">
+                            <div class="user-comment-title">
+                                <img class="popout" src="/img/star.svg" alt="Star"/>
+                                <span>teacher bio</span>
+                            </div>
+                            <AppTip v-if="!isStudent && (user.id === UserStore.user.id || UserStore.isAdmin)">
+                                <p>You don't have a Student subscription, so your Teacher profile will not be visible to
+                                    others. Please renew your subscription to make your Teacher profile public.</p>
+                            </AppTip>
+                            <div class="user-comment-content">
+                                <template v-if="user.teacher.bio">
+                                    {{ user.teacher.bio }}
+                                </template>
+                                <template v-else>
+                                    <i>Sadly, {{ user.name }} hasn't told us anything about themselves as a Teacher
+                                        yet. They should probably fix that soon.</i>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <Link v-else-if="canCreateTeacher" class="portal-button"
+                      :href="route('users.edit', user.username)"
+                      style="margin-block: 3.2rem; justify-self: center"
+                >
+                    Create Teacher Profile
+                </Link>
+
                 <SpeakerItem v-if="speaker" :speaker="speaker"/>
             </UserItem>
 
@@ -102,3 +142,51 @@ defineOptions({
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.badges-container {
+    width: 100%;
+    max-width: 96rem;
+    display: grid;
+    gap: 1.6rem;
+    padding: 0.8rem;
+    position: relative;
+    background: var(--color-dark-primary);
+
+    .featured-title {
+        color: white;
+        margin-block-start: 0.8rem;
+    }
+
+    .badge-wrapper {
+        display: grid;
+        gap: 1.6rem;
+        grid-template-columns: repeat(4, 1fr);
+        background: white;
+        border-radius: 1.2rem;
+        padding: 1.6rem;
+    }
+
+    & > .popout {
+        width: 6.4rem;
+        position: absolute;
+        top: -2.0rem;
+        right: 3.2rem;
+        transition: 0.3s cubic-bezier(.18, .89, .32, 1.28);
+    }
+
+    &:hover > .popout {
+        transform: scale(1.2) rotate(-15deg);
+    }
+
+    @media (width >= 960px) {
+        border-radius: 1.6rem;
+        border: 0.2rem solid var(--color-accent-medium);
+        box-shadow: -0.6rem 0.6rem 0 0 var(--color-accent-medium);
+
+        .badge-wrapper {
+            grid-template-columns: repeat(8, 1fr);
+        }
+    }
+}
+</style>

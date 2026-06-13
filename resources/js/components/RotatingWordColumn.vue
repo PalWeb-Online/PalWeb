@@ -41,7 +41,7 @@ onBeforeUnmount(() => {
 .rotating-word-container {
     display: inline-block;
     font-size: clamp(1.8rem, 4vw, 3.2rem);
-    height: calc(1.5em + 0.25em*2);
+    height: calc(1.5em + 0.25em * 2);
     line-height: 1em;
     overflow: hidden;
     vertical-align: middle;

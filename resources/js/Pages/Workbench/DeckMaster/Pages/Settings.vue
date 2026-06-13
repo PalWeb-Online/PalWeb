@@ -150,12 +150,12 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p v-if="UserStore.isStudent">Select the type of Quiz & adjust how you'd like for it to be generated.</p>
             <p v-else><b>You must be a Student to enable Quizzes.</b></p>
         </AppTip>
-        <Link class="quiz-settings-type card-dealer"
+        <Link class="quiz-type card-dealer"
               :href="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
             <div>load in Card Dealer</div>
         </Link>
 
-        <div class="quiz-settings-type" :class="{
+        <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'practice'
             }"
              @click="DeckStudyStore.settings.quizType = 'practice'">
@@ -163,7 +163,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p>View your Decks as flashcards, without receiving a Score.</p>
         </div>
 
-        <div class="quiz-settings-type" :class="{
+        <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'glosses',
                 'disabled': !UserStore.isStudent
             }"
@@ -189,7 +189,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictTerms" label="strict terms"/>
             </div>
         </div>
-        <div class="quiz-settings-type" :class="{
+        <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'inflections',
                 'disabled': !UserStore.isStudent
             }"
@@ -200,7 +200,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p>(You will only be quizzed on Terms with Inflections, so the Quiz may have fewer questions than
                 there are Terms.)</p>
         </div>
-        <div class="quiz-settings-type" :class="{
+        <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'sentences',
                 'disabled': !UserStore.isStudent
             }"
@@ -236,25 +236,79 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
 </template>
 
 <style scoped lang="scss">
-.card-dealer {
-    justify-content: center;
-    background: var(--color-medium-secondary);
-    box-shadow: 0 0.8rem 0 0 var(--color-dark-primary);
-    border-radius: 1.2rem;
-    cursor: pointer;
+.quiz-type {
+    display: grid;
+    margin: 2.4rem;
+    padding: 2.4rem;
+    border-radius: 1.6rem;
+    background: var(--color-pastel-light);
 
-    &:hover {
-        outline: none;
-        box-shadow: none;
-        transform: translateY(0.8rem);
+    &.disabled {
+        pointer-events: none;
+        filter: opacity(0.33);
     }
 
-    div {
-        color: white;
-        padding: 0;
-        font-size: 2.0rem;
-        text-transform: uppercase;
-        font-family: var(--mono-font), monospace;
+    &.selected {
+        background: var(--color-accent-light);
+
+        &:hover {
+            outline: 0.2rem solid var(--color-accent-medium);
+        }
+    }
+
+    &:not(.selected) {
+        &:hover {
+            outline: 0.2rem solid var(--color-medium-primary);
+        }
+
+        .settings-wrapper {
+            filter: grayscale(1);
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    }
+
+    & > div:first-child {
+        padding-block-start: 0.8rem;
+        font-family: var(--head-font);
+        font-weight: 700;
+        font-size: 2.4rem;
+        color: var(--color-medium-primary)
+    }
+
+    & > p {
+        color: var(--color-dark-primary);
+        font-size: 1.6rem;
+    }
+
+    .settings-wrapper {
+        background: white;
+        justify-self: center;
+        border-radius: 1.6rem;
+        margin-block-start: 1.6rem;
+    }
+
+    &.card-dealer {
+        justify-content: center;
+        background: var(--color-medium-secondary);
+        box-shadow: 0 0.8rem 0 0 var(--color-dark-primary);
+        border-radius: 1.2rem;
+        cursor: pointer;
+
+        &:hover {
+            outline: none;
+            box-shadow: none;
+            transform: translateY(0.8rem);
+        }
+
+        div {
+            color: white;
+            padding: 0;
+            font-size: 2.0rem;
+            text-transform: uppercase;
+            font-family: var(--mono-font), monospace;
+        }
     }
 }
 </style>

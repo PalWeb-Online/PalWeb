@@ -56,6 +56,7 @@ class UpsertLessonRequest extends FormRequest
         }
 
         $errors = [];
+
         $lesson = $this->route('lesson');
 
         if (! $lesson || ! $lesson->activity_id) {

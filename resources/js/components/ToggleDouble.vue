@@ -68,10 +68,6 @@ const emit = defineEmits(['update:modelValue']);
 
     button.toggle-button {
         background: var(--color-medium-primary) !important;
-
-        .toggle-button-slider {
-            //background: var(--color-accent-medium);
-        }
     }
 }
 </style>

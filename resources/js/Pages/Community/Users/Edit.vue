@@ -1,262 +1,229 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {Link, useForm} from "@inertiajs/vue3";
-import {computed, onMounted, ref} from "vue";
+import {Link} from "@inertiajs/vue3";
+import {computed, onMounted, ref, watch} from "vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
+import UserAvatarWrapper from "../../../components/UserAvatarWrapper.vue";
+import AppTip from "../../../components/AppTip.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useUserEditor} from "../../../composables/users/useUserEditor.js";
+import {useTeacherEditor} from "../../../composables/teachers/useTeacherEditor.js";
+import {generateArabicName} from "../../../utils/NameGenerator.js";
+import {useUser} from "../../../composables/users/useUser.js";
+import {useUserStore} from "../../../stores/UserStore.js";
+import {useUserValidation} from "../../../composables/users/useUserValidation.js";
 
 const props = defineProps({
-    user: Object,
+    username: {
+        type: String,
+        required: true,
+    },
 });
 
-const NotificationStore = useNotificationStore();
+const UserStore = useUserStore();
+const {isStudent} = useUser(computed(() => user.value));
 
-const form = useForm({
-    name: props.user?.name || '',
-    username: props.user?.username || '',
-    ar_name: props.user?.ar_name || '',
-    home: props.user?.home || '',
-    bio: props.user?.bio || '',
-    avatar: props.user?.avatar || '',
-    private: props.user?.private || false,
-    dialect_id: props.user?.dialect.id || '',
+const {
+    form: userForm,
+    errors: userBackendErrors,
+    isDirty: isUserDirty,
+    reset: resetUser,
+    isSaving: isSavingUser,
+    isLoadingForm: isLoadingUserForm,
+    loadForm: loadUserForm,
+    saveUser,
+    user,
+    userNotFound,
+} = useUserEditor({
+    username: computed(() => props.username),
 });
 
-const isSaving = ref(false);
+const {
+    form: teacherForm,
+    errors: teacherBackendErrors,
+    isDirty: isTeacherDirty,
+    reset: resetTeacher,
+    isSaving: isSavingTeacher,
+    isDeleting: isDeletingTeacher,
+    loadForm: loadTeacherForm,
+    saveTeacher,
+    deleteTeacher,
+    clearTeacherForm,
+    teacherExists,
+} = useTeacherEditor({
+    user,
+});
 
 const hasNavigationGuard = computed(() => {
-    return form.isDirty && !isSaving.value;
+    return (isUserDirty.value || isTeacherDirty.value) && !isSavingUser.value && !isSavingTeacher.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
-const isValidRequest = computed(() => {
-    return form.name && form.username && form.ar_name;
+const {
+    userErrors,
+    teacherErrors,
+    isValidUserRequest,
+    isValidTeacherRequest,
+} = useUserValidation({
+    userForm,
+    userBackendErrors,
+    teacherForm,
+    teacherBackendErrors,
 });
 
-const saveUser = async () => {
-    isSaving.value = true;
+const showTeacherForm = ref(false);
 
-    form.patch(route('users.update', props.user.username),
-        {
-            onSuccess: () => {
-                form.defaults();
-            },
-            onError: () => {
-                NotificationStore.addNotification('Oh no! The Profile could not be saved.', 'error');
-            },
-            onFinish: () => {
-                isSaving.value = false;
-            }
-        }
-    );
-};
+const canCreateTeacher = computed(() => {
+    return isStudent.value && UserStore.isAdmin
+});
+
+const canManageTeacher = computed(() => {
+    return teacherExists.value || canCreateTeacher.value;
+});
+
+const teacherFormExists = computed(() => {
+    return teacherExists.value || showTeacherForm.value;
+});
 
 const showAvatarPicker = ref(false);
 const avatars = ref([]);
 
 onMounted(async () => {
-    await axios.get(route('avatars.get')).then(response => {
-        avatars.value = response.data;
-    });
+    await Promise.all([
+        loadUserForm().then(async () => {
+            await loadTeacherForm();
+            showTeacherForm.value = teacherExists.value;
+        }),
+        axios.get(route('avatars.get')).then(response => {
+            avatars.value = response.data;
+        }),
+    ]);
 });
+
+watch(teacherExists, (exists) => {
+    showTeacherForm.value = exists || showTeacherForm.value;
+});
+
+const initializeTeacherForm = () => {
+    showTeacherForm.value = true;
+};
+
+const removeTeacher = async () => {
+    const response = await deleteTeacher();
+
+    if (response) {
+        showTeacherForm.value = false;
+        clearTeacherForm();
+    }
+};
 
 defineOptions({
     layout: Layout
 });
-
-function generateArabicName() {
-    const names = [
-        'محمد',
-        'أحمد',
-        'علي',
-        'حسن',
-        'حسين',
-        'عبد',
-        'عمر',
-        'إبراهيم',
-        'يوسف',
-        'خالد',
-        'طارق',
-        'حمزة',
-        'مصطفى',
-        'محمود',
-        'كريم',
-        'أسامة',
-        'عادل',
-        'عمرو',
-        'ناصر',
-        'ياسين',
-        'هشام',
-        'سمير',
-        'وليد',
-        'موسى',
-        'عماد',
-        'يحيى',
-        'أنس',
-        'فيصل',
-        'ماجد',
-        'إسماعيل',
-        'راشد',
-        'زياد',
-        'فارس',
-        'جابر',
-        'بلال',
-        'زكريا',
-        'سامر',
-        'نبيل',
-        'أمين',
-        'طلال',
-        'سعيد',
-        'سليم',
-        'جمال',
-        'بسام',
-        'فادي',
-        'مروان',
-        'فارس',
-        'أيمن',
-        'مازن',
-        'رامي',
-        'عزيز',
-        'سليمان',
-        'علاء',
-        'إيهاب',
-        'عماد',
-        'رائد',
-        'نجيب',
-        'إسماعيل',
-        'هاني',
-        'وائل',
-        'عدنان',
-        'ممدوح',
-        'منير',
-        'نادر',
-        'مراد',
-        'عبد الرحمن',
-        'قاسم',
-        'غازي',
-        'داود',
-        'عاصم',
-        'هاشم',
-        'شادي',
-        'عمار',
-        'رياض',
-        'فهد',
-        'مختار',
-        'صبري',
-        'بدري',
-        'فؤاد',
-        'فاروق',
-        'عصام',
-        'زهير',
-        'نواف',
-        'ثامر',
-        'حكيم',
-        'صافي',
-        'معين',
-        'نزيه',
-        'سهيل',
-        'إياد',
-        'سنان',
-        'رفيق',
-        'بهاء',
-        'رفيق',
-    ];
-
-    const randomIndex = Math.floor(Math.random() * names.length);
-    return names[randomIndex];
-}
 </script>
 
 <template>
     <Head title="Edit Profile"/>
     <div id="app-body">
-        <div class="window-container">
+        <LoadingSpinner v-if="isLoadingUserForm"/>
+
+<!--        when do these *NotFound cases apply, given that nonexistent models trigger Laravel 404 errors anyway? -->
+        <div v-if="userNotFound" class="window-container">
+            <div class="window-section-head">
+                <h1>profile</h1>
+            </div>
+            <div class="window-section">
+                <p>Sorry, but the requested User does not exist.</p>
+                <Link :href="route('users.index')">Back to Users</Link>
+            </div>
+        </div>
+        <div v-else-if="user" class="window-container">
             <div class="window-header">
-                <Link class="material-symbols-rounded" :href="route('users.show', user.username)">arrow_back</Link>
-                <button @click="form.private = !form.private" class="material-symbols-rounded">
-                    {{ form.private ? 'lock' : 'public' }}
+                <Link class="material-symbols-rounded" :href="route('users.show', user?.username ?? props.username)">
+                    arrow_back
+                </Link>
+                <button @click="userForm.private = !userForm.private" class="material-symbols-rounded">
+                    {{ userForm.private ? 'lock' : 'public' }}
                 </button>
                 <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
-                <button :disabled="isSaving || !hasNavigationGuard || !isValidRequest" @click="saveUser"
-                        class="material-symbols-rounded">
-                    save
-                </button>
-                <button :disabled="isSaving || !hasNavigationGuard" @click="form.reset()"
-                        class="material-symbols-rounded">
-                    undo
-                </button>
             </div>
             <div class="window-section-head">
                 <h1>profile</h1>
-                <Link :href="route('users.show', user.username)" class="material-symbols-rounded">visibility</Link>
+                <Link :href="route('users.show', user?.username ?? props.username)" class="material-symbols-rounded">
+                    visibility
+                </Link>
             </div>
             <div class="user-item l">
-                <button class="user-avatar">
-                    <img :src="`/img/avatars/${form.avatar}`" @click="showAvatarPicker = true" alt="Avatar"/>
-                </button>
+                <UserAvatarWrapper :user="userForm">
+                    <button type="button" @click="showAvatarPicker = true" class="material-symbols-rounded">
+                        photo
+                    </button>
+                </UserAvatarWrapper>
                 <div class="user-data-wrapper">
                     <div class="form-body">
                         <div class="field-item">
                             <label>Name</label>
                             <div class="field-input">
-                                <input type="text" v-model="form.name" placeholder="Rafiq" required>
+                                <input type="text" v-model="userForm.name" placeholder="Rafiq" required>
                                 <div class="field-chars"
-                                     :class="{'invalid': form.name.length > 50}"
-                                     v-text="50 - form.name.length"
+                                     :class="{'invalid': userForm.name.length > 50}"
+                                     v-text="50 - userForm.name.length"
                                 />
                             </div>
-                            <div v-if="form.errors.name" v-text="form.errors.name" class="field-error"/>
+                            <div v-if="userErrors.name" v-text="userErrors.name" class="field-error"/>
                         </div>
                         <div class="field-item">
                             <label>Username</label>
                             <div class="field-input">
-                                <input type="text" v-model="form.username" placeholder="permanent.intifada" required>
+                                <input type="text" v-model="userForm.username" placeholder="permanent.intifada"
+                                       required>
                                 <div class="field-chars"
-                                     :class="{'invalid': form.username.length > 50}"
-                                     v-text="50 - form.username.length"
+                                     :class="{'invalid': userForm.username.length > 50}"
+                                     v-text="50 - userForm.username.length"
                                 />
                             </div>
-                            <div v-if="form.errors.username" v-text="form.errors.username" class="field-error"/>
+                            <div v-if="userErrors.username" v-text="userErrors.username" class="field-error"/>
                         </div>
                         <div class="field-item">
                             <div style="display: flex; align-items: center; gap: 3.2rem;">
                                 <label>Arabic Name</label>
-                                <button @click="form.ar_name = generateArabicName()">Randomize</button>
+                                <button type="button" @click="userForm.ar_name = generateArabicName()">Randomize</button>
                             </div>
                             <div class="field-input">
-                                <input type="text" v-model="form.ar_name" placeholder="رفيق" required>
+                                <input type="text" v-model="userForm.ar_name" placeholder="رفيق" required>
                                 <div class="field-chars"
-                                     :class="{'invalid': form.ar_name.length > 50}"
-                                     v-text="50 - form.ar_name.length"
+                                     :class="{'invalid': userForm.ar_name.length > 50}"
+                                     v-text="50 - userForm.ar_name.length"
                                 />
                             </div>
-                            <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
+                            <div v-if="userErrors.ar_name" v-text="userErrors.ar_name" class="field-error"/>
                         </div>
                     </div>
                     <div class="user-comment">
-                        <textarea class="user-comment-content" v-model="form.bio"
-                                  :placeholder="`Sadly, ${form.name} hasn't told us anything about themselves yet.`"
+                        <textarea class="user-comment-content" v-model="userForm.bio"
+                                  :placeholder="`Sadly, ${userForm.name} hasn't told us anything about themselves yet.`"
                         />
                         <div class="user-comment-data">
-                            Joined on {{ user.created_at }} ({{ user.created_ago }}).
+                            Joined on {{ user?.created_at }} ({{ user?.created_ago }}).
                         </div>
-                        <div v-if="form.errors.bio" v-text="form.errors.bio" class="field-error"/>
+                        <div v-if="userErrors.bio" v-text="userErrors.bio" class="field-error"/>
                     </div>
                     <div class="user-tag-wrapper">
                         <div class="user-tag">
-                            <img class="location" src="/img/location.svg" alt="location"/>
-                            <input type="text" v-model="form.home"
+                            <div class="material-symbols-rounded">location_on</div>
+                            <input type="text" v-model="userForm.home"
                                    style="background: none"
                                    placeholder="Earth, probably."
                             />
                         </div>
+                        <div v-if="userErrors.home" v-text="userErrors.home" class="field-error"/>
                         <div class="user-tag">
-                            <img class="dialect" src="/img/mouth.svg" alt="dialect"/>
-                            <select v-model="form.dialect_id">
+                            <div class="material-symbols-rounded">lips</div>
+                            <select v-model="userForm.dialect_id">
                                 <option :value="8">Central Urban Palestinian</option>
                                 <option :value="9">Northern Urban Palestinian</option>
                                 <option :value="10">Central Rural Palestinian</option>
@@ -268,6 +235,67 @@ function generateArabicName() {
                     </div>
                 </div>
             </div>
+            <div class="window-footer">
+                <button :disabled="isSavingUser || !isUserDirty || !isValidUserRequest" @click="saveUser">
+                    save
+                </button>
+                <button :disabled="isSavingUser || !isUserDirty" @click="resetUser()">
+                    reset
+                </button>
+            </div>
+
+            <div v-if="canManageTeacher" class="window-section-head">
+                <h2>teacher</h2>
+                <button v-if="!teacherFormExists" @click="initializeTeacherForm" class="material-symbols-rounded">add
+                </button>
+                <button v-else-if="teacherExists" @click="removeTeacher" :disabled="isDeletingTeacher"
+                        class="material-symbols-rounded">delete
+                </button>
+            </div>
+            <AppTip v-if="canCreateTeacher">
+                <p v-if="!teacherFormExists">You are eligible to create a Teacher profile. Click the + button to start
+                    creating one now.</p>
+                <p v-else>Fill out the following information to create your Teacher profile. It will only be created
+                    once you Save.</p>
+            </AppTip>
+            <template v-if="canManageTeacher && teacherFormExists">
+                <AppTip v-if="!isStudent">
+                    <p>You don't have a Student subscription. You may continue to manage your Teacher profile here, but
+                        it will not be visible to others. Please renew your subscription to make your Teacher profile
+                        public.</p>
+                </AppTip>
+                <div class="form-body">
+                    <div class="field-item">
+                        <label>Email</label>
+                        <div class="field-input">
+                            <input type="email" v-model="teacherForm.email" placeholder="teacher@example.com" required>
+                            <div class="field-chars" :class="{'invalid': teacherForm.email.length > 255}"
+                                 v-text="255 - teacherForm.email.length"/>
+                        </div>
+                        <div v-if="teacherErrors.email" v-text="teacherErrors.email" class="field-error"/>
+                    </div>
+
+                    <div class="field-item">
+                        <label>Bio</label>
+                        <div class="field-input">
+                            <textarea v-model="teacherForm.bio" rows="10"
+                                      placeholder="What would you like us to know about you as a teacher?"/>
+                            <div class="field-chars" :class="{'invalid': teacherForm.bio.length > 5000}"
+                                 v-text="5000 - teacherForm.bio.length"/>
+                        </div>
+                        <div v-if="teacherErrors.bio" v-text="teacherErrors.bio" class="field-error"/>
+                    </div>
+                </div>
+                <div class="window-footer">
+                    <button :disabled="isSavingTeacher || !isTeacherDirty || !isValidTeacherRequest"
+                            @click="saveTeacher">
+                        save
+                    </button>
+                    <button :disabled="isSavingTeacher || !isTeacherDirty" @click="resetTeacher()">
+                        reset
+                    </button>
+                </div>
+            </template>
         </div>
     </div>
 
@@ -280,7 +308,7 @@ function generateArabicName() {
                 <div class="avatar-grid">
                     <img v-for="avatar in avatars"
                          :src="`/img/avatars/${avatar}`"
-                         @click="() => {form.avatar = avatar; showAvatarPicker = false}"
+                         @click="() => {userForm.avatar = avatar; showAvatarPicker = false}"
                          alt="Avatar"/>
                 </div>
             </div>
@@ -295,3 +323,29 @@ function generateArabicName() {
         />
     </ModalWrapper>
 </template>
+
+<style scoped lang="scss">
+.avatar-grid {
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 1.6rem;
+
+    img {
+        border-radius: 2.0rem;
+        object-fit: cover;
+        min-height: 100%;
+        min-width: 100%;
+        border: 0.2rem solid var(--color-pastel-medium);
+
+        &:hover {
+            border: 0.2rem solid var(--color-medium-primary);
+        }
+    }
+
+    @media (width >= 960px) {
+        gap: 1.6rem;
+        padding: 3.2rem;
+    }
+}
+</style>

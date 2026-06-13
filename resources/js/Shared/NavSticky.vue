@@ -166,7 +166,7 @@ onMounted(() => {
     z-index: 999;
     user-select: none;
 
-    @media (min-width: 960px) {
+    @media (width >= 960px) {
         font-size: 1.2rem;
     }
 }
@@ -180,12 +180,11 @@ onMounted(() => {
     }
 
     & > *:nth-child(1) {
+        display: none;
         background: var(--color-dark-secondary);
         padding-inline: 1.6rem;
 
-        display: none;
-
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             display: flex;
         }
     }
@@ -199,7 +198,7 @@ onMounted(() => {
         width: 2em;
         flex-shrink: 0;
 
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             font-size: 1.8rem;
         }
     }

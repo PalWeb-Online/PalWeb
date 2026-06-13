@@ -30,11 +30,21 @@ export function usePageEditor({
         form.document = model?.document ?? documentPreset.createDocument();
         form.status = model?.status ?? 'draft';
         form.locale = model?.locale ?? 'en';
-        form.sort_order = model?.sort_order ?? 0;
+        form.position = Math.max(1, Number(model?.position ?? 1));
         form.parent_id = selectedParent.value?.id ?? model?.parent_id ?? null;
 
         defaults();
         clearErrors();
+    };
+
+    const redirectToEditRoute = (page = null) => {
+        if (pageId.value || !page?.id) return;
+
+        router.visit(route('wiki.edit', page.id), {
+            replace: true,
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     const editor = useDocumentResourceEditor({
@@ -45,16 +55,16 @@ export function usePageEditor({
             document: documentPreset.createDocument(),
             status: 'draft',
             locale: 'en',
-            sort_order: 0,
+            position: 1,
             parent_id: null,
         },
+        populateForm,
+        extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         getLoadIdentifier: () => pageId.value,
-        routeBase: 'wiki',
         fetchModel: pageLoader.fetchPage,
         resetModel: pageLoader.setPage,
-        populateForm,
+        routeBase: 'wiki',
         getBlocks: (document) => document?.blocks ?? [],
-        extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         beforeReload: () => {
             selectedParent.value = null;
         },
@@ -66,6 +76,10 @@ export function usePageEditor({
             return () => {
                 form.status = previousStatus;
             };
+        },
+        afterSave: async (response, savedModel) => {
+            await pageLoader.fetchWikiTree();
+            redirectToEditRoute(savedModel);
         },
         onSaveSuccess: () => {
             NotificationStore.addNotification('OK, the Page was successfully saved.', 'success');
@@ -100,6 +114,9 @@ export function usePageEditor({
         page: pageLoader.page,
         pageNotFound: pageLoader.pageNotFound,
         isLoadingPage: pageLoader.isLoadingPage,
+        pageTree: pageLoader.pageTree,
+        isLoadingTree: pageLoader.isLoadingTree,
+        fetchWikiTree: pageLoader.fetchWikiTree,
         descendantIds: pageLoader.descendantIds,
         allowedBlockTypes: documentPreset.allowedBlockTypes,
         selectedParent,

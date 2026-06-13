@@ -1,22 +1,38 @@
 <script setup>
+import UserNametag from "./UserNametag.vue";
+import UserAvatarWrapper from "./UserAvatarWrapper.vue";
 import {route} from "ziggy-js";
+import {computed} from "vue";
 
-defineProps({
-    model: Object
+const props = defineProps({
+    user: Object,
+    model: Object,
 })
+
+const resolvedUser = computed(() => props.user ?? props.model.user);
 </script>
 
 <template>
-    <div class="comment-item">
-        <Link :href="route('users.show', model.user.username)">
-            <img alt="Avatar" :src="`/img/avatars/${model.user.avatar}`"/>
-        </Link>
-        <div class="comment-item-body">
-            <div style="display: flex; align-items: center; gap: 0.8rem">
-                <div class="comment-item-user">{{ model.user.name }}</div>
-                <div class="comment-item-username">· {{ model.user.username }}</div>
+    <div class="user-item comment-item">
+        <UserAvatarWrapper :user="resolvedUser">
+            <Link class="material-symbols-rounded" :href="route('users.show', resolvedUser.username)">
+                account_circle
+            </Link>
+
+            <a v-if="resolvedUser.teacher?.email" class="material-symbols-rounded" :href="`mailto:${resolvedUser.teacher?.email}`">mail</a>
+        </UserAvatarWrapper>
+        <div class="user-data-wrapper">
+            <div class="user-comment">
+                <UserNametag :user="resolvedUser"/>
+                <slot>
+                    <div class="user-comment-content">
+                        {{ model.comment }}
+                    </div>
+                    <div v-if="model.created_at" class="user-comment-data">
+                        on {{ model.created_at }}.
+                    </div>
+                </slot>
             </div>
-            <div>{{ model.comment }}</div>
         </div>
     </div>
 </template>

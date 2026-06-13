@@ -5,8 +5,14 @@ import DeckItem from "../../../components/DeckItem.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import {route} from "ziggy-js";
 import UserScorecard from "../../../components/UserScorecard.vue";
+import Paginator from "../../../Shared/Paginator.vue";
+import CommentItem from "../../../components/CommentItem.vue";
+import AppHeading from "../../../components/AppHeading.vue";
+import AppTip from "../../../components/AppTip.vue";
 
 defineProps({
+    teachers: Object,
+    teachersCount: Number,
     latestDecks: Array,
     popularDecks: Array,
     featuredDeck: Object,
@@ -27,18 +33,33 @@ defineOptions({
 
     <div id="app-body">
         <div class="app-body-section">
-            <div class="community-portal-head">
-                <div class="community-portal-title">
-                    <img src="/img/tomato.svg" alt="Icon"/>
-                    <div>Decks</div>
-                </div>
-                <div class="community-portal-blurb">
-                    What everyone has been studying lately. How about you?
-                </div>
+            <AppHeading>
+                teachers
+            </AppHeading>
+            <AppTip>
+                <p v-if="teachersCount <= 0">Sadly, there are no Teachers on PalWeb yet.</p>
+                <p>Do you teach Spoken Arabic & would like to see yourself on this page? Reach out to <b>adrian@palweb.app</b>!</p>
+            </AppTip>
+            <div class="comment-list" v-if="teachersCount > 0">
+                <CommentItem v-for="user in teachers.data" :key="user.id" :user="user"
+                             class="l"
+                >
+                    <div class="user-comment-content">
+                        <template v-if="user.teacher.bio">
+                            {{ user.teacher.bio }}
+                        </template>
+                        <template v-else>
+                            <i>Sadly, {{ user.name }} hasn't told us anything about themselves as a Teacher
+                                yet. They should probably fix that soon.</i>
+                        </template>
+                    </div>
+                </CommentItem>
             </div>
-            <!--            <a href="{{ route('decks.index') }}" class="portal-button">Browse</a>-->
-            <!--            <a href="{{ route('decks.create') }}" class="portal-button">Create</a>-->
+            <Paginator v-if="teachers.meta.links.length > 3" :links="teachers.meta.links"/>
 
+            <AppHeading>
+                decks
+            </AppHeading>
             <div class="decks-featured">
                 <DeckFlashcard :model="featuredDeck"/>
                 <div class="model-list">
@@ -50,37 +71,63 @@ defineOptions({
                     <DeckItem v-for="deck in popularDecks" :model="deck" size="l"/>
                 </div>
             </div>
+            <Link class="portal-button" style="justify-self: center"
+                  :href="route('deck-master.build')"
+            >create your own!
+            </Link>
 
-            <div class="community-portal-head">
-                <div class="community-portal-title">
-                    <img src="/img/olive.svg" alt="Icon"/>
-                    <div>Audios</div>
-                </div>
-                <div class="community-portal-blurb">
-                    Hear it from the horse's mouth.
-                </div>
-            </div>
-            <!--            <a href="{{ route('audios.index') }}" class="portal-button">Browse</a>-->
-            <!--            <a href="{{ route('record-wizard.index') }}" class="portal-button">Create</a>-->
-
+            <AppHeading>
+                audios
+            </AppHeading>
             <div v-if="latestAudios.length > 0" class="model-list">
                 <div class="featured-title m" style="text-transform: none">Latest</div>
                 <PronunciationItem v-for="audio in latestAudios" :model="audio.pronunciation" :audio="audio"/>
             </div>
+            <Link class="portal-button" style="justify-self: center"
+                  :href="route('sound-booth.index')"
+            >record your own!
+            </Link>
 
-            <div class="community-portal-head">
-                <div class="community-portal-title">
-                    <img src="/img/orange.svg" alt="Icon"/>
-                    <div>Pals</div>
-                </div>
-                <div class="community-portal-blurb">
-                    Shout-out to the most helpful & prolific Pals in the PalWeb Community!
-                </div>
-            </div>
-
+            <AppHeading>
+                creators
+            </AppHeading>
             <div class="users-featured">
                 <UserScorecard v-for="user in topUsers" :user="user"/>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.decks-featured {
+    display: grid;
+    gap: 4.8rem;
+    grid-template-columns: auto;
+    align-items: start;
+    margin-block-end: 3.2rem;
+
+    .deck-flashcard-grid {
+        display: none;
+    }
+
+    @media (width >= 960px) {
+        grid-template-columns: min-content auto;
+
+        .popular {
+            grid-row: 2;
+            grid-column: span 2;
+        }
+
+        .deck-flashcard-grid {
+            display: flex;
+        }
+    }
+}
+
+.users-featured {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 3.2rem;
+}
+</style>

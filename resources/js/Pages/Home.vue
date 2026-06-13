@@ -1,13 +1,12 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import UserScorecard from "../components/UserScorecard.vue";
-import Testimonial from "../components/Testimonial.vue";
 import RotatingWordColumn from "../components/RotatingWordColumn.vue";
 import TermFlashcard from "./Workbench/DeckMaster/UI/TermFlashcard.vue";
 import ToggleSingle from "../components/ToggleSingle.vue";
@@ -18,7 +17,8 @@ import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
-import i18n from "../i18n.js";
+import CommentItem from "../components/CommentItem.vue";
+import InfiniteCarousel from "../components/InfiniteCarousel.vue";
 
 defineProps({
     count: Object,
@@ -48,37 +48,16 @@ const showSignUp = () => {
 const showTranslit = ref(false);
 const flipDefault = ref(false);
 
-const carousels = [];
-
-const duplicateCarouselItems = (carousel) => {
-    const items = Array.from(carousel.children);
-
-    if (items.length === 0) return;
-
-    for (let i = 0; i < 1; i++) {
-        items.forEach((item) => {
-            const clone = item.cloneNode(true);
-            clone.setAttribute("aria-hidden", "true");
-            carousel.appendChild(clone);
-        });
-    }
-};
-
-const imageSlides = []
-
 let intervalId = null;
 
 onMounted(async () => {
     await nextTick();
-    carousels.length = 0;
-    carousels.push(...document.querySelectorAll(".carousel-track"));
-    carousels.forEach((carousel) => duplicateCarouselItems(carousel));
 
     intervalId = setInterval(() => {
         flipDefault.value = !flipDefault.value;
     }, 2000);
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {passive: true})
 });
 
 onUnmounted(() => {
@@ -100,10 +79,6 @@ const handleScroll = () => {
 }
 
 onBeforeUnmount(() => {
-    carousels.forEach((carousel) => {
-        carousel.innerHTML = "";
-    });
-
     clearInterval(intervalId);
 });
 
@@ -139,11 +114,9 @@ defineOptions({
                 <div class="feature-panel-title">PalWeb is your hub</div>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track">
-                    <UserScorecard v-for="user in users" :user="user" :key="'user-carousel' + user.id" :scores="false"/>
-                </div>
-            </div>
+            <InfiniteCarousel>
+                <UserScorecard v-for="user in users" :user="user" :key="'user-carousel-' + user.id" :scores="false"/>
+            </InfiniteCarousel>
         </div>
 
         <div class="homepage-section pastel-light">
@@ -165,7 +138,6 @@ defineOptions({
                     </div>
                 </div>
             </div>
-
 
             <!--            <div-->
             <!--                style="display: flex; flex-flow: row wrap; align-items: flex-start; justify-content: center; gap: 1.6rem 6.4rem">-->
@@ -330,10 +302,10 @@ defineOptions({
                     </div>
                     <div class="feature-preview" style="margin-block: 3.2rem">
                         <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-                        <TermFlashcard
-                            :model="featuredTerm.data"
-                            :showTranslit="showTranslit"
-                            :flipDefault="flipDefault"
+                        <TermFlashcard v-if="featuredTerm"
+                                       :model="featuredTerm.data"
+                                       :showTranslit="showTranslit"
+                                       :flipDefault="flipDefault"
                         />
                     </div>
                 </div>
@@ -371,11 +343,9 @@ defineOptions({
                 </Carousel>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track" style="animation-direction: reverse">
-                    <DeckFlashcard v-for="deck in decks" :model="deck" :key="'deck-carousel' + deck.id"/>
-                </div>
-            </div>
+            <InfiniteCarousel direction="right">
+                <DeckFlashcard v-for="deck in decks" :model="deck" :key="'deck-carousel-' + deck.id"/>
+            </InfiniteCarousel>
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
@@ -431,7 +401,6 @@ defineOptions({
             </div>
         </div>
 
-
         <div class="homepage-section pastel-light">
             <div>
                 <img src="/img/globe-america.svg" class="world" alt="America"/>
@@ -465,11 +434,10 @@ defineOptions({
                 </div>
             </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel-track" style="animation: carousel-scroll 60s linear infinite">
-                    <Testimonial v-for="(testimonial, index) in testimonials" :testimonial="testimonial" :key="index"/>
-                </div>
-            </div>
+            <InfiniteCarousel gap="6.4rem">
+                <CommentItem v-for="(testimonial, index) in testimonials" :model="testimonial"
+                             :key="'testimonial-carousel-' + index" class="comment-testimonial"/>
+            </InfiniteCarousel>
 
             <div class="homepage-panel-wrapper" style="max-width: 96rem">
                 <div class="homepage-panel-content">
@@ -485,7 +453,7 @@ defineOptions({
                     <div class="window-section-head">
                         <h1>profile</h1>
                     </div>
-                    <UserItem :user="featuredUser" size="l" comment tags/>
+                    <UserItem v-if="featuredUser" :user="featuredUser" size="l" comment tags/>
                 </div>
             </div>
 
@@ -502,6 +470,222 @@ defineOptions({
 </template>
 
 <style scoped lang="scss">
+.homepage-section {
+    width: 100%;
+    display: grid;
+    gap: 6.4rem;
+    justify-items: center;
+    padding: 6.4rem 3.2rem;
+    position: relative;
+
+    & > .popout {
+        position: absolute;
+
+        // Mobile
+        width: 6.4rem;
+        top: -3.2rem;
+        right: 5%;
+    }
+
+
+    div:has(.world) {
+        display: flex;
+        gap: 1.6rem;
+        position: absolute;
+        top: -3.2rem;
+
+        .world {
+            width: 6.4rem;
+            transition: 0.2s cubic-bezier(.68, -0.55, .27, 1.55);
+
+            &:hover {
+                transform: scale(1.05) rotate(-3deg);
+            }
+        }
+    }
+
+    &.pastel-light {
+        background: var(--color-pastel-light);
+    }
+
+    &.accent-light {
+        background: var(--color-accent-light);
+    }
+
+    @media (width >= 960px) {
+        gap: 12.8rem;
+        padding: 12.8rem 6.4rem 12.8rem;
+
+        & > .popout {
+            width: 9.6rem;
+            top: -4.8rem;
+            right: 10%;
+        }
+    }
+}
+
+.homepage-panel-wrapper {
+    width: min(100%, 128rem);
+    display: grid;
+    gap: 4.8rem 6.4rem;
+
+    &.inline {
+        grid-template-columns: auto;
+        max-width: 128rem;
+
+        @media (width >= 960px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &.reverse {
+        direction: rtl;
+    }
+
+    .homepage-panel-content {
+        width: 100%;
+        text-align: start;
+        font-size: clamp(3.6rem, 8vw, 4.8rem);
+
+        & > video, & > img {
+            width: 100%;
+            border-radius: 0.25em;
+        }
+    }
+}
+
+.homepage-panel-content {
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+    text-align: center;
+    position: relative;
+    direction: ltr;
+    font-size: clamp(5.6rem, 10vw, 6.4rem);
+
+    .feature-panel-title {
+        color: var(--color-dark-primary);
+        font-family: var(--display-font);
+        font-size: 1em;
+        line-height: 1em;
+        text-transform: uppercase;
+        padding-block-end: 0.0625em;
+        hyphens: none;
+    }
+
+    .feature-panel-subtitle {
+        font-family: var(--head-font);
+        font-size: 0.5em;
+        font-weight: 700;
+        line-height: 1.2em;
+        color: var(--color-medium-primary);
+        padding-block-start: 0.125em;
+        hyphens: none;
+    }
+
+    .feature-panel-description {
+        font-family: var(--body-font);
+        font-size: 0.4em;
+        line-height: 1.75;
+        margin-block-start: 0.5em;
+    }
+
+    .feature-preview {
+        display: none;
+    }
+
+    @media (width >= 960px) {
+        .feature-preview {
+            display: block;
+        }
+    }
+
+    .app-button {
+        font-size: 2.4rem;
+    }
+}
+
+.homepage-section:has(.faq-panel) {
+    padding: 0;
+}
+
+.faq-panel {
+    margin-block-start: -12.8rem;
+    width: min(100%, 96rem);
+    background: white;
+    text-align: start;
+    padding: 6.4rem 6.4rem 9.6rem;
+
+    .feature-panel-title {
+        text-align: center;
+    }
+
+    .feature-panel-subtitle {
+        font-size: 0.4em;
+        margin-block-start: 2em;
+    }
+
+    .feature-panel-description {
+        font-family: var(--body-font);
+        font-size: 0.3em;
+    }
+
+    @media (width >= 960px) {
+        border-radius: 1.6rem;
+        padding: 6.4rem 9.6rem 12.8rem;
+    }
+}
+
+.model-counter-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    font-size: clamp(6rem, 12vw, 8rem);
+    gap: 0.25em 0.5em;
+
+    @media (width >= 960px) {
+        gap: 1.6rem 9.6rem
+    }
+}
+
+.model-counter {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    height: 2.75em;
+    width: 2.75em;
+    border-radius: 50%;
+    background: white;
+    user-select: none;
+    transition: 0.1s ease-in-out;
+
+    &:hover {
+        translate: 0.1em -0.1em;
+        filter: drop-shadow(-0.1em 0.1em 0 var(--color-pastel-light));
+    }
+
+    .model-counter-count {
+        color: var(--color-dark-primary);
+        font-family: var(--display-font);
+        font-size: 1em;
+        line-height: 0.75;
+    }
+
+    .model-counter-body {
+        display: grid;
+        justify-items: center;
+
+        .model-counter-model {
+            color: var(--color-medium-primary);
+            font-family: var(--display-font);
+            font-size: 0.5em;
+            line-height: 1.25;
+            hyphens: none;
+        }
+    }
+}
+
 .homepage-head-container {
     display: grid;
     justify-items: center;

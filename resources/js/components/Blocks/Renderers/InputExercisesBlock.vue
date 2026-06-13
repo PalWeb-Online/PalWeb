@@ -52,6 +52,27 @@ const {
 </template>
 
 <style scoped lang="scss">
+.exercise--input {
+    input {
+        direction: rtl;
+        font-size: 2.0rem;
+        font-weight: 700;
+        width: 100%;
+        background: var(--color-accent-light);
+
+        &[disabled] {
+            opacity: 1;
+        }
+    }
+
+    &.correct {
+        input {
+            color: white;
+            background: var(--color-medium-secondary);
+        }
+    }
+}
+
 .exercise--input-answers {
     display: flex;
     align-items: center;
@@ -69,7 +90,6 @@ const {
 
     span {
         font-size: 1.6rem;
-        background: white;
         padding: 0.8rem 2.4rem;
         border-radius: 6.4rem;
         color: white;

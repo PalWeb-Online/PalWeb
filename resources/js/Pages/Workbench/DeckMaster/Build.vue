@@ -33,9 +33,11 @@ const deck = useForm({
     description: props.deck?.description || '',
     private: props.deck?.private || false,
     created_at: props.deck?.created_at || null,
+    // todo: author probably shouldn't be in this form anyway
     author: {
         id: UserStore.user.id,
         name: UserStore.user.name,
+        ar_name: UserStore.user.ar_name,
         username: UserStore.user.username,
         avatar: UserStore.user.avatar,
     },

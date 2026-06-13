@@ -73,6 +73,16 @@ export function useLessonEditor({
         clearErrors();
     };
 
+    const redirectToEditRoute = (lesson = null) => {
+        if (lessonId.value || !lesson?.id) return;
+
+        router.visit(route('lesson-planner.lesson', lesson.id), {
+            replace: true,
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     const editor = useDocumentResourceEditor({
         initialForm: {
             group: 'main',
@@ -85,13 +95,13 @@ export function useLessonEditor({
             unlock_conditions: [],
             published: false,
         },
+        populateForm,
+        extractSavedModel: (response) => response.data.lesson ?? response.data.data ?? null,
         getLoadIdentifier: () => lessonId.value,
-        routeBase: 'lessons',
         fetchModel: lessonLoader.fetchLesson,
         resetModel: lessonLoader.setLesson,
-        populateForm,
+        routeBase: 'lessons',
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
-        extractSavedModel: (response) => response.data.lesson ?? response.data.data ?? null,
         beforeReload: () => {
             selectedUnit.value = initialUnit.value;
             selectedDeck.value = null;
@@ -107,6 +117,9 @@ export function useLessonEditor({
             return () => {
                 form.published = previousPublished;
             };
+        },
+        afterSave: (response, savedModel) => {
+            redirectToEditRoute(savedModel);
         },
         onSaveSuccess: () => {
             NotificationStore.addNotification('OK, the Lesson was successfully saved.', 'success');

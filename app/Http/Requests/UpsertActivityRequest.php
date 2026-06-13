@@ -29,10 +29,10 @@ class UpsertActivityRequest extends FormRequest
             return;
         }
 
+        $errors = [];
+
         $document = $this->input('document', []);
         $blocks = $document['blocks'] ?? [];
-
-        $errors = [];
 
         if (!collect($blocks)->contains(fn ($b) => ($b['type'] ?? null) === 'exercises')) {
             $errors['document.blocks'] = ['At least one Exercises Block is required.'];

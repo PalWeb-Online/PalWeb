@@ -125,7 +125,7 @@ const isValidRequest = computed(() => {
         line-height: 0.75;
         padding-block-end: 1.2rem;
 
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             font-size: 9.6rem;
         }
     }

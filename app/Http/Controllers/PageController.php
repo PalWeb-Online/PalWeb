@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpsertPageRequest;
 use App\Models\Page;
+use App\Services\PageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,6 +16,8 @@ class PageController extends Controller
 {
     public function show(Page $page): Response
     {
+        Gate::authorize('view', $page);
+
         return Inertia::render('Wiki/Show', [
             'section' => 'wiki',
             'pageId' => $page->id,
@@ -101,9 +105,9 @@ class PageController extends Controller
     public function getWikiTree(): JsonResponse
     {
         $pages = Page::query()
-            ->orderBy('sort_order')
+            ->orderBy('position')
             ->orderBy('title')
-            ->get(['id', 'slug', 'title', 'sort_order', 'parent_id']);
+            ->get(['id', 'slug', 'title', 'status', 'position', 'parent_id']);
 
         return response()->json([
             'page_tree' => $this->buildWikiTree($pages),
@@ -119,7 +123,8 @@ class PageController extends Controller
                     'id' => $page->id,
                     'slug' => $page->slug,
                     'title' => $page->title,
-                    'sort_order' => $page->sort_order,
+                    'status' => $page->status,
+                    'position' => $page->position,
                     'parent_id' => $page->parent_id,
                     'children' => $this->buildWikiTree($pages, $page->id),
                 ];
@@ -138,7 +143,7 @@ class PageController extends Controller
 
     public function store(UpsertPageRequest $request): JsonResponse | RedirectResponse
     {
-        $page = Page::create($request->validated());
+        $page = PageService::upsertWithSiblingPosition(null, $request->validated());
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -156,7 +161,7 @@ class PageController extends Controller
 
     public function update(UpsertPageRequest $request, Page $page): JsonResponse | RedirectResponse
     {
-        $page->update($request->validated());
+        $page = PageService::upsertWithSiblingPosition($page, $request->validated());
 
         if ($request->expectsJson()) {
             return response()->json([

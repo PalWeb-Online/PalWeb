@@ -16,7 +16,7 @@
     background: white;
     color: var(--color-dark-primary);
     border: 0.1rem solid var(--color-dark-primary);
-    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.25);
+    box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.25);
     border-radius: 1.2rem;
     padding: 0.8rem 1.2rem;
 }
@@ -26,11 +26,11 @@
     background: var(--color-accent-light);
     border: 0.1rem solid var(--color-accent-medium);
     border-radius: 0.8rem;
-    box-shadow: -0.2rem 0.2rem 0 rgba(black, 0.1);
+    box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.1);
 }
 
 @mixin link-primary {
-    font-family: $bodyFont;
+    font-family: var(--body-font);
     font-weight: 700;
     font-size: 1.6rem;
     color: var(--color-medium-primary);
@@ -41,7 +41,7 @@
 }
 
 @mixin link-purple-deep {
-    font-family: $bodyFont;
+    font-family: var(--body-font);
     font-weight: 700;
     font-size: 1.6rem;
     color: var(--color-dark-primary);
@@ -57,8 +57,8 @@
     background: white;
     border: 0.2rem solid var(--color-dark-primary);
     border-radius: 1.2rem;
-    box-shadow: -0.3rem 0.3rem 0 rgba(black, 0.33);
-    font-family: $headFont;
+    box-shadow: -0.3rem 0.3rem 0 rgb(0 0 0 / 0.33);
+    font-family: var(--head-font);
     font-size: 1.6rem;
     font-weight: 700;
     text-decoration: none;
@@ -72,18 +72,12 @@
     }
 }
 
-$displayFont: 'beastly', 'Lalezar', serif;
-$headFont: 'monotalic', 'greycliff-arabic-cf', sans-serif;
-$bodyFont: 'komet', 'greycliff-arabic-cf', sans-serif;
-$monoFont: 'JetBrains Mono', 'Vazirmatn', monospace;
-$ar_bodyFont: 'Vazirmatn', sans-serif;
-
-:root {
-    --display-font: 'beastly', 'Lalezar';
-    --head-font: 'monotalic', 'greycliff-arabic-cf';
-    --body-font: 'komet', 'greycliff-arabic-cf';
-    --mono-font: 'JetBrains Mono', 'Vazirmatn';
-    --ar-body-font: 'JetBrains Mono', 'Vazirmatn';
+:root, .font-theme-GoldStar {
+    --display-font: 'beastly', 'Lalezar', sans-serif;
+    --head-font: 'monotalic', 'greycliff-arabic-cf', sans-serif;
+    --body-font: 'komet', 'greycliff-arabic-cf', sans-serif;
+    --mono-font: 'JetBrains Mono', 'Vazirmatn', monospace;
+    --ar-body-font: 'JetBrains Mono', 'Vazirmatn', serif;
     --mastery-level__0: #ccc;
     --mastery-level__1: #FAA719;
     --mastery-level__2: #F57C20;
@@ -92,11 +86,16 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --mastery-level__5: #A61F70;
 }
 
-//$displayFont: 'digibop', 'greycliff-arabic-cf', serif;
-//$headFont: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
-//:root {
-//    font-variation-settings: 'wdth' 130, 'wght' 800;
-//}
+.font-theme-Banksy {
+    --display-font: 'cofo-kabeltouw-solid-0', 'Lalezar', sans-serif;
+    --head-font: 'new-science-serif', 'greycliff-arabic-cf', sans-serif;
+}
+
+.font-theme-Pal2K {
+    --display-font: 'digibop', 'Lalezar', sans-serif;
+    --head-font: 'hyperspace-race-variable', 'greycliff-arabic-cf', sans-serif;
+    font-variation-settings: 'wdth' 130;
+}
 
 :root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
@@ -178,6 +177,25 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     --color-accent-light: hsl(30, 80%, 95%);
 }
 
+.theme-Pal2K {
+    --color-polar-dark: hsl(0, 0%, 0%);
+    --color-polar-light: hsl(0, 0%, 100%);
+    --color-dark-secondary: #1b0b4c;
+    --color-dark-primary: #3c2c8c;
+    --color-medium-secondary: #6b5acd;
+    --color-medium-primary: #b989d4;
+    --color-medium-primary: hsl(280, 50%, 68%);
+    --color-pastel-dark: hsl(350, 95%, 85%);
+    --color-pastel-medium: hsl(350, 95%, 90%);
+    --color-pastel-light: hsl(350, 92%, 97%);
+    --color-transparent: hsla(0, 0%, 92%, 0.75);
+    //--color-accent-dark: hsl(200, 95%, 25%);
+    //--color-accent-medium: hsl(200, 85%, 65%);
+    --color-accent-dark: #ff6f62;
+    --color-accent-medium: hsl(48, 90%, 60%);
+    --color-accent-light: hsl(50, 95%, 90%);
+}
+
 .theme-Sumac {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
@@ -237,7 +255,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
     gap: 1.6rem;
     user-select: none;
 
-    font-family: $headFont;
+    font-family: var(--head-font);
     font-weight: 700;
     font-size: 3.6rem;
     color: var(--color-dark-primary);
@@ -266,7 +284,7 @@ $ar_bodyFont: 'Vazirmatn', sans-serif;
         width: min(100%, 48rem);
         margin: 0;
         text-align: center;
-        font-family: $monoFont;
+        font-family: var(--mono-font);
         font-size: 1.4rem;
         hyphens: none;
     }

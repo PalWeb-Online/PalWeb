@@ -1,6 +1,9 @@
 <script setup>
 import {reactive, watch} from "vue";
 import WikiNavItem from "./WikiNavItem.vue";
+import {useUserStore} from "../../../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     pageTree: {
@@ -62,13 +65,14 @@ watch(
 
 <template>
     <div class="wiki-nav">
-        <WikiNavItem
-            v-for="page in pageTree"
-            :key="page.slug"
-            :page="page"
-            :current-slug="currentSlug"
-            :open-sections="openSections"
-        />
+        <template v-for="page in pageTree" :key="page.slug">
+            <WikiNavItem
+                v-if="page.status === 'published' || UserStore.isAdmin"
+                :page="page"
+                :current-slug="currentSlug"
+                :open-sections="openSections"
+            />
+        </template>
     </div>
 </template>
 

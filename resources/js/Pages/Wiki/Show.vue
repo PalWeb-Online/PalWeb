@@ -116,8 +116,11 @@ watch(() => props.pageId, async () => {
             </button>
 
             <h1>{{ page?.title }}</h1>
-            <Link :href="route('wiki.edit', page)" class="material-symbols-rounded">edit</Link>
-            <Link :href="route('wiki.edit')" class="material-symbols-rounded">add</Link>
+
+            <template v-if="UserStore.isAdmin">
+                <Link :href="route('wiki.edit', page)" class="material-symbols-rounded">edit</Link>
+                <Link :href="route('wiki.edit')" class="material-symbols-rounded">add</Link>
+            </template>
         </div>
 
         <AppTip dismissable>
@@ -147,6 +150,10 @@ watch(() => props.pageId, async () => {
                 </p>
             </div>
             <div v-else-if="page" class="wiki-blocks-wrapper">
+                <AppTip v-if="page.status === 'draft'">
+                    This Page is a draft. It is only visible to administrators.
+                </AppTip>
+
                 <div class="featured-title l" style="z-index: 1">{{ page.title }}</div>
 
                 <nav v-if="tableOfContents.length" class="wiki-toc" aria-label="Table of Contents">
@@ -176,7 +183,7 @@ watch(() => props.pageId, async () => {
             display: none;
         }
 
-        @media (min-width: 960px) {
+        @media (width >= 960px) {
             .wiki-nav {
                 flex-grow: 0;
                 max-width: 25%;
@@ -194,7 +201,7 @@ watch(() => props.pageId, async () => {
     max-width: 128rem;
     justify-self: center;
 
-    @media (min-width: 1280px) {
+    @media (width >= 1280px) {
         margin-block-end: 9.6rem;
         overflow: hidden;
     }
@@ -218,7 +225,7 @@ watch(() => props.pageId, async () => {
     gap: 0.8rem;
     padding: 3.2rem 3.2rem 1.6rem 1.6rem;
     background: var(--color-pastel-light);
-    margin-block: -4.8rem 3.2rem;
+    margin-block: -4.8rem 1.6rem;
     margin-inline: 1.6rem;
 }
 
@@ -231,10 +238,10 @@ watch(() => props.pageId, async () => {
     background: white;
 
     &:last-child {
-        margin-block-end: 9.6rem;
+        margin-block-end: 12.8rem;
     }
 
-    @media (min-width: 1280px) {
+    @media (width >= 1280px) {
         &:last-child {
             margin-block-end: 0;
         }
