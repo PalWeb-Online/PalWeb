@@ -419,22 +419,18 @@ Route::prefix('/api')->group(function () {
     // -------------------------------------------------------------------------
 
     Route::prefix('/library')->group(function () {
-
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.terms.index');
             Route::get('/{term:slug}', 'apiShow')->name('api.terms.show');
         });
-
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.sentences.index');
             Route::get('/{sentence}', 'apiShow')->name('api.sentences.show');
         });
-
         Route::prefix('/audios')->group(function () {
             Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
             Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
         });
-
         Route::middleware('auth')->prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.decks.index');
             Route::get('/{deck}', 'apiShow')->name('api.decks.show');
