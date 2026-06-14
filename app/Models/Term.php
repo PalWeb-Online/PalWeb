@@ -104,7 +104,7 @@ class Term extends Model
             ?? $pronunciations->first()?->translit;
 
         return [
-            'audio' => $selectedPronunciation?->audios?->first()?->filename,
+            'audio' => $selectedPronunciation?->audios?->first()?->url,
             'translit' => $selectedTranscription,
             'pronunciations' => collect([$selectedPronunciation])->filter()->values(),
         ];

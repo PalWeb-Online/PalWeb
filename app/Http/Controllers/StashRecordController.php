@@ -74,7 +74,7 @@ class StashRecordController extends Controller
             return response()->json([
                 'message' => 'File uploaded successfully',
                 'id' => $audio->id,
-                'url' => $audio->url(),
+                'url' => $audio->url,
             ]);
 
         } catch (\Exception $e) {
