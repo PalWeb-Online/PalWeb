@@ -27,7 +27,7 @@ class DeckScope implements Scope
             );
 
         $builder
-            ->with(['author', 'lesson'])
+            ->with(['author.selectedAvatar', 'lesson'])
             ->withCount('terms');
     }
 }

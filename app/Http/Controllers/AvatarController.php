@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AvatarResource;
-use App\Http\Resources\UserEditorResource;
+use App\Http\Resources\UserEditResource;
 use App\Models\Avatar;
 use App\Models\User;
 use Illuminate\Http\File;
@@ -107,7 +107,7 @@ class AvatarController extends Controller
         $avatar->delete();
 
         return response()->json([
-            'user' => new UserEditorResource($user->fresh(['dialect', 'teacher', 'roles', 'uploadedAvatars'])),
+            'user' => new UserEditResource($user->fresh(['dialect', 'teacher', 'roles', 'uploadedAvatars'])),
         ]);
     }
 

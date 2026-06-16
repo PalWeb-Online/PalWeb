@@ -6,8 +6,8 @@ use App\Events\ProfileChanged;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\SpeakerResource;
-use App\Http\Resources\UserEditorResource;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\UserEditResource;
+use App\Http\Resources\UserShowResource;
 use App\Models\Avatar;
 use App\Models\Badge;
 use App\Models\User;
@@ -40,7 +40,7 @@ class UserController extends Controller
         return Inertia::render('Community/Users/Show', [
             'section' => 'community',
             'filters' => $filters,
-            'user' => new UserResource($user),
+            'user' => new UserShowResource($user),
             'decks' => DeckResource::collection($decks),
             'badges' => Badge::all(),
             'speaker' => $speaker ? new SpeakerResource($speaker) : null,
@@ -64,7 +64,7 @@ class UserController extends Controller
         $user->load(['dialect', 'teacher', 'roles', 'uploadedAvatars']);
 
         return response()->json([
-            'user' => new UserEditorResource($user),
+            'user' => new UserEditResource($user),
         ]);
     }
 
@@ -90,7 +90,7 @@ class UserController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'user' => new UserEditorResource($user->fresh(['dialect', 'teacher', 'uploadedAvatars'])),
+                'user' => new UserEditResource($user->fresh(['dialect', 'teacher', 'uploadedAvatars'])),
             ]);
         }
 
@@ -160,7 +160,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'user' => new UserResource($user)
+            'user' => new UserShowResource($user)
         ]);
     }
 

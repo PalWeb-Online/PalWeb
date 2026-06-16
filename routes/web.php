@@ -35,6 +35,7 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
 use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
+use App\Http\Resources\UserShowResource;
 use App\Http\Resources\UserResource;
 use App\Models\Audio;
 use App\Models\Deck;
@@ -116,7 +117,7 @@ Route::get('/', function () {
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
         'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662))->additional(['detail' => true]) : null,
-        'featuredUser' => User::find(1) ? new UserResource(User::find(1)->load(['dialect'])) : null,
+        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load(['dialect'])) : null,
         'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
     ]);
 })->name('homepage');

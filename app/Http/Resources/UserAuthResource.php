@@ -4,14 +4,16 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
-class AuthUserResource extends UserResource
+class UserAuthResource extends UserResource
 {
     public function toArray(Request $request): array
     {
         $dialect = auth()->user()?->dialect;
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
-        return array_merge(parent::toArray($request), [
+        return [
+            ...parent::toArray($request),
+
             'email' => $this->email,
             'language' => $this->language,
             'roles' => $this->getEffectiveRoles(),
@@ -26,7 +28,7 @@ class AuthUserResource extends UserResource
                 $request->user()?->id === $this->id,
                 fn () => array_keys($this->getLessonProgress())
             ),
-        ]);
+        ];
     }
 
     protected function getEffectiveRoles(): array

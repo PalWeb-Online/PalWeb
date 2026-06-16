@@ -39,7 +39,7 @@ class HandleInertiaRequests extends Middleware
             'csrfToken' => csrf_token(),
             'auth' => [
                 'user' => $request->user()
-                    ? new \App\Http\Resources\AuthUserResource($request->user()->load(['roles']))
+                    ? new \App\Http\Resources\UserAuthResource($request->user()->load(['roles']))
                     : null,
             ],
             'locale' => app()->getLocale(),
