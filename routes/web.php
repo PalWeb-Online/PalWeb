@@ -7,6 +7,7 @@ use App\Http\Controllers\Academy\ScoreController;
 use App\Http\Controllers\Academy\UnitController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
@@ -218,14 +219,21 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
         Route::get('/{user:username}', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user:username}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
+        Route::get('/{user:username}/avatars', [AvatarController::class, 'index'])->name('users.avatars.index');
+        Route::post('/{user:username}/avatars', [AvatarController::class, 'store'])->name('users.avatars.store');
         Route::post('/{user:username}/teacher', [TeacherController::class, 'store'])->name('users.teacher.store');
     });
+
+    Route::delete('/avatars/{avatar}', [AvatarController::class, 'destroy'])->name('avatars.destroy');
 
     Route::get('/avatars/get', function () {
         $avatars = File::files(public_path('img/avatars'));
 
         return array_map(function ($file) {
-            return basename($file);
+            return [
+                'url' => asset('img/avatars/' . $file->getFilename()),
+                'filename' => $file->getFilename(),
+            ];
         }, $avatars);
     })->name('avatars.get');
 });

@@ -6,9 +6,10 @@ use App\Events\ProfileChanged;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\SpeakerResource;
+use App\Http\Resources\UserEditorResource;
 use App\Http\Resources\UserResource;
+use App\Models\Avatar;
 use App\Models\Badge;
-use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -60,16 +61,18 @@ class UserController extends Controller
     {
         Gate::authorize('modify', $user);
 
-        $user->load(['dialect', 'teacher', 'roles']);
+        $user->load(['dialect', 'teacher', 'roles', 'uploadedAvatars']);
 
         return response()->json([
-            'user' => new UserResource($user),
+            'user' => new UserEditorResource($user),
         ]);
     }
 
     public function update(User $user, UpdateUserRequest $request): JsonResponse|RedirectResponse
     {
         Gate::authorize('modify', $user);
+
+        $selectedAvatarId = $this->resolveAvatarSelection($user, $request);
 
         $user->update([
             'name' => $request->name,
@@ -78,6 +81,7 @@ class UserController extends Controller
             'home' => $request->home,
             'bio' => $request->bio,
             'avatar' => $request->avatar,
+            'avatar_id' => $selectedAvatarId,
             'private' => $request->private,
             'dialect_id' => $request->dialect_id,
         ]);
@@ -86,7 +90,7 @@ class UserController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'user' => new UserResource($user->fresh(['dialect', 'teacher'])),
+                'user' => new UserEditorResource($user->fresh(['dialect', 'teacher', 'uploadedAvatars'])),
             ]);
         }
 
@@ -94,6 +98,25 @@ class UserController extends Controller
             ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
 
         return to_route('users.show', $user);
+    }
+
+    private function resolveAvatarSelection(User $user, UpdateUserRequest $request): ?int
+    {
+        if (Avatar::whereKey($request->integer('avatar_id'))->exists()) {
+            Gate::authorize('select', [Avatar::class, $user]);
+
+            $avatar = $user->uploadedAvatars()
+                ->whereKey($request->integer('avatar_id'))
+                ->first();
+
+            if (! $avatar) {
+                abort(422, 'The selected Avatar does not belong to this user.');
+            }
+
+            return $avatar->id;
+        }
+
+        return null;
     }
 
     public function updatePreferences(Request $request): JsonResponse

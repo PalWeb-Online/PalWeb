@@ -18,6 +18,7 @@ export function useUserEditor({
         form.home = model?.home ?? '';
         form.bio = model?.bio ?? '';
         form.avatar = model?.avatar ?? '';
+        form.avatar_id = model?.avatar_id ?? null;
         form.private = model?.private ?? false;
         form.dialect_id = model?.dialect?.id ?? '';
 
@@ -33,6 +34,7 @@ export function useUserEditor({
             home: '',
             bio: '',
             avatar: '',
+            avatar_id: null,
             private: false,
             dialect_id: '',
         },
