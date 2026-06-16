@@ -143,7 +143,7 @@ class UserController extends Controller
 
     public function toggleView(Request $request, string $role = 'student')
     {
-        if (!$request->user()->isSuperuser()) {
+        if (! $request->user()->isSuperuser()) {
             abort(403);
         }
 

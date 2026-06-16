@@ -61,7 +61,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
                 <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
                      class="deck-author-avatar" alt="Avatar"
-                     :src="`/img/avatars/${deck.author.avatar}`"/>
+                     :src="deck.author.avatar_url"/>
                 <DeckActions :model="deck"/>
             </div>
 

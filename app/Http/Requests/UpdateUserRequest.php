@@ -34,6 +34,14 @@ class UpdateUserRequest extends FormRequest
                 'regex:/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/',
                 Rule::unique('users')->ignore($this->route('user')),
             ],
+            'avatar' => [
+                'string',
+                'max:255'
+            ],
+            'avatar_id' => [
+                'nullable',
+                'integer',
+            ],
             'home' => [
                 'nullable',
                 'string',

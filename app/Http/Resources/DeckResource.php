@@ -28,7 +28,7 @@ class DeckResource extends JsonResource
                 'name' => $this->author->name,
                 'ar_name' => $this->author->ar_name,
                 'username' => $this->author->username,
-                'avatar' => $this->author->avatar,
+                'avatar_url' => $this->author->avatar_url,
                 'private' => $this->author->private,
             ]),
             'terms' => $this->whenLoaded('terms', function () {
