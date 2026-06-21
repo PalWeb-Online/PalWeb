@@ -155,9 +155,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function avatarUrl(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                return $this->selectedAvatar?->url ?? asset('img/avatars/'.($this->avatar ?? 'palweb01.webp'));
-            },
+            get: fn () => $this->selectedAvatar?->url ?? asset('img/avatars/'.($this->avatar ?? 'palweb01.webp')),
         );
     }
 

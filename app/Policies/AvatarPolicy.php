@@ -44,7 +44,7 @@ class AvatarPolicy
 
     private function canCreateCustomAvatar(User $actor, User $target): bool
     {
-        return $target->uploadedAvatars()->count() >= self::MAX_AVATARS_PER_USER;
+        return $target->uploadedAvatars()->count() < self::MAX_AVATARS_PER_USER;
     }
 
     private function canSelectCustomAvatar(User $actor, User $target): bool

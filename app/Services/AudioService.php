@@ -27,7 +27,7 @@ class AudioService
         try {
             $this->convertToMp3($wavPath, $mp3Path);
 
-            if (app()->environment(['production'])) {
+            if (app()->isProduction()) {
                 Storage::disk('s3')->putFileAs('audios', new \Illuminate\Http\File($mp3Path), $filename, 'public');
 
             } else {
@@ -70,7 +70,7 @@ class AudioService
                 throw new \Exception("File not found: {$currentPath}");
             }
 
-            if (app()->environment(['production'])) {
+            if (app()->isProduction()) {
                 Storage::disk('s3')->copy($currentPath, $newPath);
                 Storage::disk('s3')->delete($currentPath);
 
@@ -89,7 +89,7 @@ class AudioService
         $filePath = 'audios/'.$filename;
 
         try {
-            if (app()->environment(['production'])) {
+            if (app()->isProduction()) {
                 if (! Storage::disk('s3')->exists($filePath)) {
                     throw new \Exception("File not found: {$filePath}");
                 }

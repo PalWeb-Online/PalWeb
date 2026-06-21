@@ -52,7 +52,7 @@ class AvatarController extends Controller
                 'filename' => $filename,
             ]);
 
-            if (app()->environment(['production'])) {
+            if (app()->isProduction()) {
                 Storage::disk('s3')->putFileAs(
                     self::STORAGE_PATH,
                     new File($processedAvatarPath),
@@ -90,7 +90,7 @@ class AvatarController extends Controller
                 throw new \Exception("File not found: {$path}");
             }
 
-            if (app()->environment(['production'])) {
+            if (app()->isProduction()) {
                 Storage::disk('s3')->delete($path);
             } else {
                 Log::info('Simulating avatar file deletion from s3: '.$filename);
