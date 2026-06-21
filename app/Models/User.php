@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -189,6 +190,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Speaker::class);
     }
 
+    public function audios(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Audio::class,
+            Speaker::class,
+            'user_id',
+            'speaker_id',
+            'id',
+            'id',
+        );
+    }
+
     public function teacher(): HasOne
     {
         return $this->hasOne(Teacher::class);
@@ -279,5 +292,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function student(Builder $query): Builder
     {
         return $query->role('student');
+    }
+
+    #[Scope]
+    protected function public(Builder $query): Builder
+    {
+        return $query->where('users.private', false);
     }
 }

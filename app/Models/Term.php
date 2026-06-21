@@ -7,14 +7,13 @@ use App\Services\CardDealer\ReviewOptions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute as AttributeCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
@@ -93,7 +92,7 @@ class Term extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
-    public function getSortedAttributesAttribute(): Collection
+    public function sortedTags(): AttributeCast
     {
         $priority = [
             'collective' => 1,
@@ -107,9 +106,11 @@ class Term extends Model
             'clitic' => 3,
         ];
 
-        return $this->attributes()->get()->sortBy(function ($attribute) use ($priority) {
-            return $priority[$attribute->attribute] ?? PHP_INT_MAX;
-        })->values();
+        return AttributeCast::make(
+            get: fn () => $this->attributes()->get()
+                ->sortBy(fn ($attribute) => $priority[$attribute->attribute] ?? PHP_INT_MAX)
+                ->values()
+        );
     }
 
     public function patterns(): BelongsToMany
@@ -167,9 +168,8 @@ class Term extends Model
     #[Scope]
     public function withUserCard($query)
     {
-        return $query->with(['cards' => function ($query) {
-            $query->where('user_id', auth()->id());
-        }]);
+//        this is currently redundant, but it may be better later to stop
+//        scoping the default `cards()` relation to the auth user anyway
         return $query->with([
             'cards' => fn ($q) => $q
                 ->where('user_id', auth()->id())

@@ -16,9 +16,11 @@ class CommunityController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $teachers = User::student()
+        $teachers = User::query()
+            ->public()
+            ->student()
+            ->with(['selectedAvatar', 'teacher'])
             ->join('teachers', 'teachers.user_id', '=', 'users.id')
-            ->with('teacher')
             ->select('users.*')
             ->orderByDesc('teachers.id')
             ->paginate(5)
@@ -55,14 +57,25 @@ class CommunityController extends Controller
             ->take(10)
             ->get();
 
-        $topUsers = User::where('users.private', false)
+        $topUsers = User::query()
+            ->public()
             ->whereNotIn('users.id', [1, 2])
+            ->with(['selectedAvatar'])
+            ->withCount([
+                'decks' => fn ($query) => $query->where('private', false),
+                'audios',
+            ])
             ->leftJoin('decks', function ($join) {
                 $join->on('decks.user_id', 'users.id')->where('decks.private', false);
             })
             ->leftJoin('speakers', 'speakers.user_id', '=', 'users.id')
             ->leftJoin('audios', 'audios.speaker_id', '=', 'speakers.id')
-            ->selectRaw('users.*, (COUNT(decks.id) * 5) + COUNT(audios.id) as weighted_score')
+            ->selectRaw('
+                users.*,
+                COUNT(DISTINCT decks.id) as decks_count,
+                COUNT(DISTINCT audios.id) as audios_count,
+                (COUNT(DISTINCT decks.id) * 10) + COUNT(DISTINCT audios.id) as weighted_score
+            ')
             ->groupBy('users.id')
             ->orderByDesc('weighted_score')
             ->take(5)

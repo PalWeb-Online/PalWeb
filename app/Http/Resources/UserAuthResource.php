@@ -2,22 +2,20 @@
 
 namespace App\Http\Resources;
 
+use App\Services\DialectService;
 use Illuminate\Http\Request;
 
 class UserAuthResource extends UserResource
 {
     public function toArray(Request $request): array
     {
-        $dialect = auth()->user()?->dialect;
-        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
-
         return [
             ...parent::toArray($request),
 
             'email' => $this->email,
             'language' => $this->language,
             'roles' => $this->getEffectiveRoles(),
-            'dialects' => $dialectIds,
+            'dialects' => app(DialectService::class)->dialectIds(),
             'is_superuser' => $this->isSuperuser(),
             'is_verified' => (bool) $this->email_verified_at,
             'has_discord' => (bool) $this->discord_id,
