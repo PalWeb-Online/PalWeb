@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Http\Resources\TermResource;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use App\Models\Scopes\PinnedScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
+#[ScopedBy([PinnedScope::class])]
 class Sentence extends Model
 {
     use HasFactory;
@@ -44,16 +47,6 @@ class Sentence extends Model
     public function bookmarks(): MorphMany
     {
         return $this->morphMany(Bookmark::class, 'markable');
-    }
-
-    public function isPinned(): bool
-    {
-        $user = auth()->user();
-        if ($user) {
-            return Bookmark::has($this, $user);
-        } else {
-            return false;
-        }
     }
 
     public function getAudio(): ?string

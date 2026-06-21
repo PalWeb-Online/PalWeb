@@ -20,7 +20,7 @@ class DeckResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'private' => $this->private,
-            'isPinned' => $this->isPinned(),
+            'isPinned' => $this->is_pinned,
             'pinCount' => \Maize\Markable\Models\Bookmark::count($this->resource),
             'created_at' => $this->created_at->format('j F Y'),
             'author' => new UserResource($this->author),

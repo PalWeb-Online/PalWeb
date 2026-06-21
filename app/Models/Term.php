@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\Pinnable;
+use App\Models\Scopes\PinnedScope;
 use App\Services\CardDealer\ReviewOptions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
+#[ScopedBy([PinnedScope::class])]
 class Term extends Model
 {
     use HasFactory;
@@ -57,15 +61,6 @@ class Term extends Model
         return $this->morphMany(Bookmark::class, 'markable');
     }
 
-    public function isPinned(): bool
-    {
-        $user = auth()->user();
-        if ($user) {
-            return Bookmark::has($this, $user);
-        } else {
-            return false;
-        }
-    }
 
     public function getUserPronunciationData(): array
     {

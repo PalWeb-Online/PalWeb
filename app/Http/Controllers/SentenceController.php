@@ -23,18 +23,19 @@ class SentenceController extends Controller
     public function pin(Request $request, Sentence $sentence): JsonResponse
     {
         $user = $request->user();
-
         Bookmark::toggle($sentence, $user);
 
-        $sentence->isPinned() && event(new ModelPinned($user));
+        $isPinned = Bookmark::has($sentence, $user);
 
-        $message = $sentence->isPinned()
-            ? __('pin.added', ['thing' => $sentence->sentence])
-            : __('pin.removed', ['thing' => $sentence->sentence]);
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
 
         return response()->json([
-            'isPinned' => $sentence->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $sentence->sentence])
+                : __('pin.removed', ['thing' => $sentence->sentence]),
         ]);
     }
 

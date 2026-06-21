@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\DeckScope;
+use App\Models\Scopes\PinnedScope;
 use App\Models\Traits\HasScoreStats;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -16,6 +17,7 @@ use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
 #[ScopedBy([DeckScope::class])]
+#[ScopedBy([PinnedScope::class])]
 class Deck extends Model
 {
     use HasFactory;
@@ -51,16 +53,6 @@ class Deck extends Model
     public function bookmarks(): MorphMany
     {
         return $this->morphMany(Bookmark::class, 'markable');
-    }
-
-    public function isPinned(): bool
-    {
-        $user = auth()->user();
-        if ($user) {
-            return Bookmark::has($this, $user);
-        } else {
-            return false;
-        }
     }
 
     public function author(): BelongsTo

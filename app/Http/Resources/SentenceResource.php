@@ -40,6 +40,7 @@ class SentenceResource extends JsonResource
             'audio' => $this->getAudio(),
             'isPinned' => $this->isPinned(),
             'terms' => $this->withTerms() ? $this->getTerms() : [],
+            'isPinned' => $this->is_pinned,
         ];
     }
 }

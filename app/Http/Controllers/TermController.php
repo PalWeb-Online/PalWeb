@@ -39,13 +39,18 @@ class TermController extends Controller
     {
         $user = $request->user();
         Bookmark::toggle($term, $user);
-        $term->isPinned() && event(new ModelPinned($user));
-        $message = $term->isPinned()
-            ? __('pin.added', ['thing' => $term->term])
-            : __('pin.removed', ['thing' => $term->term]);
+
+        $isPinned = Bookmark::has($term, $user);
+
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
+
         return response()->json([
-            'isPinned' => $term->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $term->term])
+                : __('pin.removed', ['thing' => $term->term]),
         ]);
     }
 

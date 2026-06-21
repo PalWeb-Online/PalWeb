@@ -26,19 +26,20 @@ class DeckController extends Controller
         Gate::authorize('interact', $deck);
 
         $user = $request->user();
-
         Bookmark::toggle($deck, $user);
 
-        $deck->isPinned() && event(new ModelPinned($user));
+        $isPinned = Bookmark::has($deck, $user);
 
-        $message = $deck->isPinned()
-            ? __('pin.added', ['thing' => $deck->name])
-            : __('pin.removed', ['thing' => $deck->name]);
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
-            'isPinned' => $deck->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
