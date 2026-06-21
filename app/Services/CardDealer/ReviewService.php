@@ -8,6 +8,7 @@ use App\Models\Term;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class ReviewService
 {
@@ -23,7 +24,6 @@ class ReviewService
 
         $ownedDueCards = (clone $dueQuery)
             ->owned()
-            ->with(['term'])
             ->limit($sessionCapacity)
             ->get();
 
@@ -33,7 +33,6 @@ class ReviewService
         if ($remainingSessionCapacity > 0) {
             $existingNewDueCards = (clone $dueQuery)
                 ->new()
-                ->with(['term'])
                 ->limit(min($remainingSessionCapacity, $options->newLimit))
                 ->get();
         }
@@ -61,6 +60,14 @@ class ReviewService
         $cards = $ownedDueCards
             ->concat($existingNewDueCards)
             ->concat($newCards);
+
+        $cards = new EloquentCollection($cards->all());
+
+        $cards->load([
+            'term' => fn ($query) => $query
+                ->withItemData()
+                ->with(['inflections']),
+        ]);
 
         $cards->each(function ($card) use ($options) {
             $card->next_intervals = [

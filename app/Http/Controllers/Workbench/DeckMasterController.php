@@ -78,7 +78,7 @@ class DeckMasterController extends Controller
 
     public function getQuiz(Request $request, Deck $deck): JsonResponse
     {
-        $settings = $request->get('settings', []);
+        $settings = $request->input('settings', []);
 
         $quiz = $this->quizService->generateQuiz($deck, $settings);
 
@@ -113,6 +113,7 @@ class DeckMasterController extends Controller
     {
         Gate::authorize('interact', $deck);
 
+//        todo: is this relation loaded?
         $terms = $deck->terms->load([
             'pronunciations',
             'glosses',

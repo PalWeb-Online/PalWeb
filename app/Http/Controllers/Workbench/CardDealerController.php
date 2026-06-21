@@ -7,11 +7,10 @@ use App\Http\Resources\CardResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Deck;
-use App\Models\Lesson;
 use App\Models\Term;
 use App\Services\CardDealer\ReviewOptions;
 use App\Services\CardDealer\ReviewService;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +18,11 @@ use Inertia\Inertia;
 
 class CardDealerController extends Controller
 {
+    public function __construct(
+        protected TermService $termService,
+    ) {
+    }
+
     public function index(Request $request, ReviewService $reviewService): \Inertia\Response
     {
         $user = auth()->user();
@@ -66,6 +70,10 @@ class CardDealerController extends Controller
 
         $cards = $reviewService->buildSession($user, $options);
 
+        $terms = $cards
+            ->pluck('term')
+            ->filter();
+
         if ($cards->isEmpty()) {
             session()->flash('notification', [
                 'type' => 'info',
@@ -73,15 +81,16 @@ class CardDealerController extends Controller
             ]);
 
             return redirect()->route('card-dealer.index');
-
-        } else {
-            return Inertia::render('Workbench/CardDealer/Review', [
-                'section' => 'academy',
-                'deck' => $deck ? new DeckResource($deck) : null,
-                'cards' => CardResource::collection($cards),
-                'options' => $options,
-            ]);
         }
+
+        $this->termService->hydratePronunciations($terms);
+
+        return Inertia::render('Workbench/CardDealer/Review', [
+            'section' => 'academy',
+            'deck' => $deck ? new DeckResource($deck) : null,
+            'cards' => CardResource::collection($cards),
+            'options' => $options,
+        ]);
     }
 
     public function cards(Request $request): \Inertia\Response
@@ -90,13 +99,22 @@ class CardDealerController extends Controller
 
         $cards = Card::query()
             ->forUser(auth()->id())
-            ->with(['term.root', 'term.glosses', 'term.pronunciations'])
+            ->with([
+                'term' => fn ($q) => $q->withItemData(),
+            ])
             ->filterStatus($filters['status'] ?? null)
             ->filterLevel($filters['level'] ?? null)
             ->sort($filters['sort'] ?? 'due')
             ->latest()
             ->paginate(25)
             ->withQueryString();
+
+        $terms = $cards
+            ->getCollection()
+            ->pluck('term')
+            ->filter();
+
+        $this->termService->hydratePronunciations($terms);
 
         return Inertia::render('Workbench/CardDealer/Cards', [
             'section' => 'academy',

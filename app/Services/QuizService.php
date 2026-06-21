@@ -23,23 +23,6 @@ class QuizService
         }
     }
 
-    private function getQuizTerms(Deck $deck, bool $promptTerm = true)
-    {
-        $termsQuery = $deck->terms()->with(['pronunciations.audios', 'inflections', 'sentences']);
-        $termsQuery = $deck->terms()
-            ->withItemData()
-            ->with([
-                'inflections',
-                'sentences'
-            ]);
-
-        if (! $promptTerm) {
-            $termsQuery->whereHas('pronunciations.audios');
-        }
-
-        return $termsQuery->get()->shuffle()->values();
-    }
-
     private function generateGlossesQuiz(Deck $deck, array $settings): array
     {
         $promptTerm = $settings['options']['promptTerm'] ?? true;
@@ -48,7 +31,12 @@ class QuizService
 
         $quiz = [];
 
-        $terms = $this->getQuizTerms($deck, $promptTerm);
+        $terms = $deck->terms()
+            ->withItemData()
+            ->when($promptTerm, fn ($q) => $q->whereHas('pronunciations.audios'))
+            ->get()
+            ->shuffle()
+            ->values();
 
         foreach ($terms as $term) {
             if (count($quiz) >= 50) {
@@ -94,7 +82,11 @@ class QuizService
     private function generateInflectionsQuiz(Deck $deck, array $settings): array
     {
         $quiz = [];
-        $terms = $this->getQuizTerms($deck);
+        $terms = $deck->terms()
+            ->with('inflections')
+            ->get()
+            ->shuffle()
+            ->values();
 
         foreach ($terms as $term) {
             if (count($quiz) >= 50) {
@@ -132,7 +124,11 @@ class QuizService
         $withTranslation = $settings['options']['withTranslation'] ?? true;
 
         $quiz = [];
-        $terms = $this->getQuizTerms($deck);
+        $terms = $deck->terms()
+            ->with('sentences')
+            ->get()
+            ->shuffle()
+            ->values();
 
         foreach ($terms as $term) {
             if (count($quiz) >= 25) {

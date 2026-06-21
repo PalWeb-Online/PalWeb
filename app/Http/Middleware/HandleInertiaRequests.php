@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserAuthResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -39,7 +40,7 @@ class HandleInertiaRequests extends Middleware
             'csrfToken' => csrf_token(),
             'auth' => [
                 'user' => $request->user()
-                    ? new \App\Http\Resources\UserAuthResource($request->user()->load(['roles']))
+                    ? new UserAuthResource($request->user())
                     : null,
             ],
             'locale' => app()->getLocale(),

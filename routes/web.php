@@ -77,6 +77,7 @@ Route::get('/', function () {
     $users = !$isStaging
         ? User::whereKey([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->get()
         : User::inRandomOrder()->limit(10)->get();
+    $users->load('selectedAvatar');
 
     $decks = !$isStaging
         ? Deck::with('terms')->whereKey([2, 3, 4, 12, 19, 83, 100, 118])->get()
@@ -101,6 +102,7 @@ Route::get('/', function () {
     $testimonialUsers = !$isStaging
         ? User::whereKey([243, 1317, 16, 18, 3])->get()
         : User::inRandomOrder()->limit(count($testimonialComments))->get();
+    $testimonialUsers->load('selectedAvatar');
 
     $testimonials = collect($testimonialComments)
         ->map(fn (string $comment, int $index) => [
@@ -117,8 +119,8 @@ Route::get('/', function () {
         'decks' => DeckResource::collection($decks),
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
-        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662))->additional(['detail' => true]) : null,
-        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load(['dialect'])) : null,
+        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662)->load(['pronunciations', 'inflections'])) : null,
+        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load(['selectedAvatar', 'dialect'])) : null,
         'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
     ]);
 })->name('homepage');
