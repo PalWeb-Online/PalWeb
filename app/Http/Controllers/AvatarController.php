@@ -86,12 +86,13 @@ class AvatarController extends Controller
         try {
             $path = self::STORAGE_PATH.'/'.$filename;
 
-            if (! Storage::disk('s3')->exists($path)) {
-                throw new \Exception("File not found: {$path}");
-            }
-
             if (app()->isProduction()) {
+                if (! Storage::disk('s3')->exists($path)) {
+                    throw new \Exception("File not found: {$path}");
+                }
+
                 Storage::disk('s3')->delete($path);
+
             } else {
                 Log::info('Simulating avatar file deletion from s3: '.$filename);
             }
