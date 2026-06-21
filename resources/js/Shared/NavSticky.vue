@@ -109,7 +109,7 @@ onMounted(() => {
                 (UTC +{{ utcOffsetHours }})
             </div>
             <InstallButton/>
-            <Link :href="route('homepage')">PalWeb 2.3 (Falastin)</Link>
+            <Link :href="route('homepage')">PalWeb 2.4 (Msaxxan)</Link>
         </div>
         <div class="nav-sticky-buttons">
             <button

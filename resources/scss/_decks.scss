@@ -46,13 +46,6 @@
     }
 }
 
-.dm-mode-study #dm-select .deck-item-grid-wrapper {
-    & > button {
-        color: white;
-        background: var(--color-medium-secondary);
-    }
-}
-
 #dm-select {
     display: grid;
     gap: 3.2rem;
