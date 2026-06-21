@@ -26,6 +26,12 @@ class QuizService
     private function getQuizTerms(Deck $deck, bool $promptTerm = true)
     {
         $termsQuery = $deck->terms()->with(['pronunciations.audios', 'inflections', 'sentences']);
+        $termsQuery = $deck->terms()
+            ->withItemData()
+            ->with([
+                'inflections',
+                'sentences'
+            ]);
 
         if (! $promptTerm) {
             $termsQuery->whereHas('pronunciations.audios');
@@ -74,7 +80,7 @@ class QuizService
             $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
 
             $quiz[] = [
-                'term' => new TermResource($term)->additional(['detail' => true]),
+                'term' => new TermResource($term),
                 'answer' => $answer->id,
                 'options' => $options,
                 'response' => null,
@@ -106,7 +112,7 @@ class QuizService
             $inflection = $validInflections->random();
 
             $quiz[] = [
-                'term' => new TermResource($term)->additional(['detail' => true]),
+                'term' => new TermResource($term),
                 'prompt' => $inflection->form,
                 'answer' => $term->inflections
                     ->where('form', $inflection->form)
@@ -143,7 +149,7 @@ class QuizService
 
             $sentence = $term->sentences->random();
 
-            $sentenceTerms = collect($sentence->getTerms());
+            $sentenceTerms = app(SentenceService::class)->getSentenceTerms($sentence);
 
             $excludedDecoys = Term::query()
                 ->whereHas('relatives', fn ($q) => $q

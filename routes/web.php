@@ -45,6 +45,7 @@ use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
 use App\Models\User;
+use App\Services\SentenceService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -365,7 +366,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
             Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
             Route::get('/get-terms/{id}', function (string $sentenceId) {
-                return response()->json(['terms' => Sentence::findOrFail($sentenceId)->getTerms()]);
+                return response()->json(['terms' => app(SentenceService::class)->getSentenceTerms(Sentence::findOrFail($sentenceId))->toArray()]);
             })->name('speech-maker.get-terms');
         });
 

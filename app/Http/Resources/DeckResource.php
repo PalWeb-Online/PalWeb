@@ -24,7 +24,7 @@ class DeckResource extends JsonResource
             'pinCount' => \Maize\Markable\Models\Bookmark::count($this->resource),
             'created_at' => $this->created_at->format('j F Y'),
             'author' => new UserResource($this->author),
-            'terms' => $this->whenLoaded('terms', fn () => TermResource::collection($this->terms->sortBy('position')->values())),
+            'terms' => $this->whenLoaded('terms', fn () => TermResource::collection($this->terms)),
             'terms_count' => $this->terms_count ?? 0,
             'scores' => ScoreResource::collection($this->whenLoaded('scores')),
             'stats' => $this->whenLoaded('scores', fn () => $this->score_stats),

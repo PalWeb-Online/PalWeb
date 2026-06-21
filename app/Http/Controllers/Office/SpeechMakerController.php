@@ -17,7 +17,7 @@ class SpeechMakerController extends Controller
     {
         $termsMissingSentences = [];
 
-        Gloss::inRandomOrder()->chunk(250, function ($glosses) use (&$termsMissingSentences) {
+        Gloss::with(['term'])->inRandomOrder()->chunk(250, function ($glosses) use (&$termsMissingSentences) {
             foreach ($glosses as $gloss) {
                 if (count($gloss->term->sentences($gloss->id)->get()) < 1) {
                     $gloss->term->gloss = $gloss->gloss;

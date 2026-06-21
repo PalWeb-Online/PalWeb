@@ -9,6 +9,7 @@ use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,10 @@ use Inertia\Inertia;
 
 class LessonController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {}
+
     public function show(Lesson $lesson): \Inertia\Response
     {
         Gate::authorize('view', $lesson);
@@ -41,12 +46,15 @@ class LessonController extends Controller
         if ($includes->contains('show')) {
             $lesson->load([
                 'unit',
-                'deck.terms' => fn ($q) => $q->withUserCard(),
-                'deck.terms.pronunciations',
+                'deck.terms' => fn ($q) => $q
+                    ->withItemData()
+                    ->withUserCard(),
                 'deck.scores',
                 'activity.scores',
                 'dialog.sentences'
             ]);
+
+            $this->termService->hydratePronunciations($lesson->deck->terms);
 
         } else {
             $lesson->load([

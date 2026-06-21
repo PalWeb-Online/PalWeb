@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\SentenceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -40,6 +41,9 @@ class SentenceResource extends JsonResource
             'audio' => $this->getAudio(),
             'isPinned' => $this->isPinned(),
             'terms' => $this->withTerms() ? $this->getTerms() : [],
+            'terms' => $this->withTerms()
+                ? app(SentenceService::class)->getSentenceTerms($this->resource)->toArray()
+                : [],
             'isPinned' => $this->is_pinned,
         ];
     }

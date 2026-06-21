@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Resources\TermResource;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use App\Models\Scopes\PinnedScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -12,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
@@ -56,45 +54,6 @@ class Sentence extends Model
         $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
 
         return null;
-    }
-
-    public function getTerms(): array
-    {
-        $allTerms = DB::table('sentence_term')
-            ->leftJoin('terms', 'sentence_term.term_id', '=', 'terms.id')
-            ->where('sentence_term.sentence_id', $this->id)
-            ->select('sentence_term.*', 'terms.*')
-            ->orderBy('sentence_term.position')
-            ->get();
-
-        return $allTerms->map(function ($sentenceTerm) {
-            if ($sentenceTerm->id) {
-                $term = Term::find($sentenceTerm->id);
-                $term->load(['pronunciations', 'cards']);
-
-                $termResource = new TermResource($term)->toArray(request());
-                $termResource['sentencePivot'] = [
-                    'uuid' => $sentenceTerm->uuid,
-                    'gloss_id' => $sentenceTerm->gloss_id,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                    'toggleable' => $sentenceTerm->toggleable,
-                ];
-
-                return $termResource;
-            }
-
-            return [
-                'sentencePivot' => [
-                    'uuid' => $sentenceTerm->uuid,
-                    'sent_term' => $sentenceTerm->sent_term,
-                    'sent_translit' => $sentenceTerm->sent_translit,
-                    'position' => $sentenceTerm->position,
-                    'toggleable' => $sentenceTerm->toggleable,
-                ],
-            ];
-        })->values()->toArray();
     }
 
     public function terms(): BelongsToMany

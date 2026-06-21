@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Office;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TermResource;
+use App\Http\Resources\TermShowResource;
 use App\Models\FeedbackComment;
 use App\Models\Inflection;
 use App\Models\Term;
@@ -45,9 +45,7 @@ class WordLoggerController extends Controller
 
         return Inertia::render('Office/WordLogger/Term', [
             'section' => 'office',
-            'term' => $term
-                ? new TermResource($term)->additional(['detail' => true])
-                : null
+            'term' => $term ? new TermShowResource($term) : null
         ]);
     }
 }

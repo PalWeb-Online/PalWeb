@@ -10,6 +10,7 @@ use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\URL;
 
 class DeckController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function pin(Request $request, Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
@@ -99,10 +105,13 @@ class DeckController extends Controller
         Gate::authorize('interact', $deck);
 
         $deck->load([
-            'terms' => fn ($q) => $q->withUserCard(),
-            'terms.pronunciations',
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard(),
             'scores'
         ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
             'deck' => new DeckResource($deck),

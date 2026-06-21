@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTermRequest;
 use App\Http\Resources\PronunciationResource;
 use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
+use App\Http\Resources\TermShowResource;
 use App\Models\Attribute;
 use App\Models\Gloss;
 use App\Models\Inflection;
@@ -18,6 +19,7 @@ use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
 use App\Services\SearchService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,8 +34,10 @@ use Illuminate\Support\Facades\URL;
 class TermController extends Controller
 {
     public function __construct(
-        protected TermRepository $termRepository
-    ) {}
+        protected TermRepository $termRepository,
+        protected TermService $termService
+    ) {
+    }
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -68,79 +72,74 @@ class TermController extends Controller
     // API Methods
     // -------------------------------------------------------------------------
 
-   public function apiIndex(Request $request, SearchService $searchService): JsonResponse
-{
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
         URL::forceScheme('https');
 
-    $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-        'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
-    ]));
+        $filters = array_merge(['sort' => 'alphabetical'], $request->only([
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+        ]));
 
-    $perPage = 25;
-    $currentPage = $request->integer('page', 1);
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-    $termsCollection = $searchService->search($filters)['terms'];
-    $terms = new \Illuminate\Pagination\LengthAwarePaginator(
-        $termsCollection->forPage($currentPage, $perPage)->values(),
-        $termsCollection->count(),
-        $perPage,
-        $currentPage,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+        $termsCollection = $searchService->search($filters)['terms'];
+        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+            $termsCollection->forPage($currentPage, $perPage)->values(),
+            $termsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-    $featuredTerm = Cache::get('word-of-the-day');
-    $featuredTerm = $featuredTerm
-        ? new TermResource($featuredTerm)
-        : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
+        $featuredTerm = Cache::get('word-of-the-day');
+        $featuredTerm = $featuredTerm
+            ? new TermResource($featuredTerm)
+            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
 
-    $resource = TermResource::collection($terms);
-
-    return response()->json([
-        'terms' => [
-            'data' => $resource->toArray($request),
-            'meta' => [
-                'links' => $terms->linkCollection()->toArray(),
-                'current_page' => $terms->currentPage(),
-                'last_page' => $terms->lastPage(),
-                'total' => $terms->total(),
-            ],
-        ],
-        'totalCount' => $terms->total(),
-        'featuredTerm' => $featuredTerm ?? null,
-        'filters' => $filters,
-    ]);
-}
-    public function apiShow(Term $term): JsonResponse
-    {
-        $likeTerms = $this->termRepository->getLikeTerms($term);
-        $terms = collect([$term, ...$likeTerms->duplicates, ...$likeTerms->homophones])->filter();
-
-        foreach ($terms as $model) {
-            $model
-                ->load([
-                    'root',
-                    'pronunciations.audios',
-                    'attributes',
-                    'spellings',
-                    'relatives',
-                    'patterns',
-                    'glosses.attributes',
-                    'inflections',
-                    'cards',
-                    'decks' => function ($query) {
-                        $query->limit(10);
-                    },
-                ])
-                ->loadCount(['pronunciations'])
-                ->loadSingleGlossSentence();
-        }
+        $resource = TermResource::collection($terms);
 
         return response()->json([
-            'terms' => TermResource::collection(
-                $terms->map(function ($term) {
-                    return new TermResource($term)->additional(['detail' => true]);
-                })
-            ),
+            'terms' => [
+                'data' => $resource->toArray($request),
+                'meta' => [
+                    'links' => $terms->linkCollection()->toArray(),
+                    'current_page' => $terms->currentPage(),
+                    'last_page' => $terms->lastPage(),
+                    'total' => $terms->total(),
+                ],
+            ],
+            'totalCount' => $terms->total(),
+            'featuredTerm' => $featuredTerm ?? null,
+            'filters' => $filters,
+        ]);
+    }
+
+    public function apiShow(Term $term): JsonResponse
+    {
+        $termIds = $this->termRepository->getLikeTermIds($term);
+
+        $terms = Term::query()
+            ->whereIn('id', $termIds)
+            ->with([
+                'root',
+                'pronunciations.audios.speaker',
+                'attributes',
+                'spellings',
+                'relatives',
+                'patterns',
+                'glosses.attributes',
+                'inflections',
+                'cards',
+                'decks' => fn ($q) => $q->limit(10),
+            ])
+            ->withCount('pronunciations')
+            ->get();
+
+        $this->termService->hydrateGlossSentences($terms);
+
+        return response()->json([
+            'terms' => TermShowResource::collection($terms)
         ]);
     }
 
@@ -152,7 +151,7 @@ class TermController extends Controller
             ->with([
                 'audios' => fn ($query) => $query
                     ->limit(1)
-                    ->with(['speaker.user']),
+                    ->with(['speaker']),
             ])
             ->withCount('audios')
             ->get();
@@ -162,9 +161,7 @@ class TermController extends Controller
 
     public function getSentences(Term $term, $glossId): AnonymousResourceCollection
     {
-        $sentences = $term->sentences()
-            ->where('gloss_id', $glossId)
-            ->get();
+        $sentences = $term->sentences($glossId)->get();
 
         return SentenceResource::collection($sentences);
     }
