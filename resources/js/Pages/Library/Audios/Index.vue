@@ -7,6 +7,7 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 defineOptions({layout: Layout});
@@ -69,38 +70,42 @@ function updateFilter(key, value) {
             <div class="window-section-head"><h1>audio library</h1></div>
             <div class="window-section-head"><h2>Index</h2></div>
 
-            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
-
-            <template v-else>
-                <div class="search-filters-container">
-                    <div class="search-filters">
-                        <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''"
-                                @change="updateFilter('dialect', filters.dialect)">
-                            <option value="">Dialect</option>
-                            <option v-for="dialect in dialects" :key="dialect.id" :value="dialect.id">{{
-                                    dialect.name
-                                }}
-                            </option>
-                        </select>
-                        <select v-model="filters.location" :class="filters.location ? 'persisting' : ''"
-                                @change="updateFilter('location', filters.location)">
-                            <option value="">Location</option>
-                            <option v-for="location in locations" :key="location.id" :value="location.id">
-                                {{ location.name_ar }}
-                            </option>
-                        </select>
-                        <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''"
-                                @change="updateFilter('gender', filters.gender)">
-                            <option value="">Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                        <select v-model="filters.sort" @change="updateFilter('sort', filters.sort)">
-                            <option value="latest">by Latest</option>
-                            <option value="fluency">by Fluency</option>
-                        </select>
-                    </div>
+            <div class="search-filters-container">
+                <div class="search-filters">
+                    <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''"
+                            @change="updateFilter('dialect', filters.dialect)">
+                        <option value="">Dialect</option>
+                        <option v-for="dialect in dialects" :key="dialect.id" :value="dialect.id">
+                            {{ dialect.name }}
+                        </option>
+                    </select>
+                    <select v-model="filters.location" :class="filters.location ? 'persisting' : ''"
+                            @change="updateFilter('location', filters.location)">
+                        <option value="">Location</option>
+                        <option v-for="location in locations" :key="location.id" :value="location.id">
+                            {{ location.name_ar }}
+                        </option>
+                    </select>
+                    <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''"
+                            @change="updateFilter('gender', filters.gender)">
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <select v-model="filters.sort" @change="updateFilter('sort', filters.sort)">
+                        <option value="latest">by Latest</option>
+                        <option value="fluency">by Fluency</option>
+                    </select>
                 </div>
+            </div>
+
+            <template v-if="loading">
+                <AppTip>
+                    <p>Loading...</p>
+                </AppTip>
+                <LoadingSpinner/>
+            </template>
+            <template v-else>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{
                             totalCount

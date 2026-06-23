@@ -10,14 +10,21 @@ import TermFeatured from "../../../components/TermFeatured.vue";
 import {useNavigationStore} from "../../../stores/NavigationStore.js";
 import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
-defineOptions({layout: Layout});
+
+defineOptions({
+    layout: Layout
+});
+
+const props = defineProps({
+    featuredTerm: Object,
+})
 
 const terms = ref(null);
 const totalCount = ref(0);
-const featuredTerm = ref(null);
 const filters = ref({sort: 'alphabetical'});
 const loading = ref(true);
 
@@ -36,7 +43,6 @@ async function fetchTerms(params = {}) {
         const data = await response.json();
         terms.value = data.terms;
         totalCount.value = data.totalCount;
-        featuredTerm.value = data.featuredTerm;
         filters.value = data.filters;
         updatePagination(data.terms.meta);
     } catch (error) {
@@ -88,21 +94,27 @@ const sortingMessage = computed(() => {
             </div>
             <div class="window-section-head"><h1>dictionary</h1></div>
 
-            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
+            <TermFeatured :model="featuredTerm"/>
+            <div class="window-section-head"><h2>index</h2></div>
 
+            <div class="letters-array">
+                <button
+                    v-for="letter in letters"
+                    :key="letter"
+                    :class="{ 'active': selectedLetter === letter }"
+                    @click="updateFilter({ filter: 'letter', value: letter })"
+                >{{ letter }}
+                </button>
+            </div>
+            <SearchFilters activeModel="terms" :filters="filters" @updateFilter="updateFilter"/>
+
+            <template v-if="loading">
+                <AppTip>
+                    <p>Loading...</p>
+                </AppTip>
+                <LoadingSpinner/>
+            </template>
             <template v-else>
-                <TermFeatured :model="featuredTerm"/>
-                <div class="window-section-head"><h2>index</h2></div>
-                <div class="letters-array">
-                    <button
-                        v-for="letter in letters"
-                        :key="letter"
-                        :class="{ 'active': selectedLetter === letter }"
-                        @click="updateFilter({ filter: 'letter', value: letter })"
-                    >{{ letter }}
-                    </button>
-                </div>
-                <SearchFilters activeModel="terms" :filters="filters" @updateFilter="updateFilter"/>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
                         Displaying {{ totalCount }} Terms matching this query, {{ sortingMessage }}.

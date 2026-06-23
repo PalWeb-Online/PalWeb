@@ -60,7 +60,12 @@ class TermController extends Controller
 
     public function index(): \Inertia\Response
     {
-        return Inertia::render('Library/Terms/Index');
+        $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
+        $featuredTerm?->load(['attributes', 'glosses.attributes']);
+
+        return Inertia::render('Library/Terms/Index', [
+            'featuredTerm' => new TermShowResource($featuredTerm),
+        ]);
     }
 
     public function show(Term $term): \Inertia\Response
@@ -92,9 +97,6 @@ class TermController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
-        $featuredTerm?->load(['attributes', 'glosses.attributes']);
-
         return response()->json([
             'terms' => [
                 'data' => TermResource::collection($terms)->toArray($request),
@@ -106,7 +108,6 @@ class TermController extends Controller
                 ],
             ],
             'totalCount' => $terms->total(),
-            'featuredTerm' => new TermShowResource($featuredTerm),
             'filters' => $filters,
         ]);
     }

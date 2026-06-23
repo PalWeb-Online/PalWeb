@@ -8,6 +8,7 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 defineOptions({layout: Layout});
@@ -67,10 +68,15 @@ function updateFilter({filter, value}) {
             <div class="window-section-head"><h1>corpus</h1></div>
             <div class="window-section-head"><h2>Index</h2></div>
 
-            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
+            <SearchFilters :activeModel="'sentences'" :filters="filters" @updateFilter="updateFilter"/>
 
+            <template v-if="loading">
+                <AppTip>
+                    <p>Loading...</p>
+                </AppTip>
+                <LoadingSpinner/>
+            </template>
             <template v-else>
-                <SearchFilters :activeModel="'sentences'" :filters="filters" @updateFilter="updateFilter"/>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
                         Displaying {{ totalCount }} Sentences matching this query.

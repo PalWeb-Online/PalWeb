@@ -8,6 +8,7 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 defineOptions({layout: Layout});
@@ -65,14 +66,18 @@ function updateFilter({filter, value}) {
             <div class="window-section-head"><h1>deck library</h1></div>
             <div class="window-section-head"><h2>Index</h2></div>
 
-            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
+            <SearchFilters :activeModel="'decks'" :filters="filters" @updateFilter="updateFilter"/>
 
-            <template v-else>
-                <SearchFilters :activeModel="'decks'" :filters="filters" @updateFilter="updateFilter"/>
+            <template v-if="loading">
                 <AppTip>
-                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{
-                            totalCount
-                        }} Decks matching this query.</p>
+                    <p>Loading...</p>
+                </AppTip>
+                <LoadingSpinner/>
+            </template>
+            <template v-else>
+                <AppTip>
+                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
+                        Displaying {{ totalCount }} Decks matching this query.</p>
                     <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
                     <p v-else>No Decks matching this query.</p>
                 </AppTip>
