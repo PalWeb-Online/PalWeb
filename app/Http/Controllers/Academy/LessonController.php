@@ -46,15 +46,10 @@ class LessonController extends Controller
         if ($includes->contains('show')) {
             $lesson->load([
                 'unit',
-                'deck.terms' => fn ($q) => $q
-                    ->withItemData()
-                    ->withUserCard(),
                 'deck.scores',
                 'activity.scores',
                 'dialog.sentences'
             ]);
-
-            $this->termService->hydratePronunciations($lesson->deck->terms);
 
         } else {
             $lesson->load([

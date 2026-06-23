@@ -1,5 +1,5 @@
 <script setup>
-import {useDeck} from "../composables/Deck.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import DeckActions from "./Actions/DeckActions.vue";
 import PinButton from "./PinButton.vue";
 import TermItem from "./TermItem.vue";
@@ -10,6 +10,7 @@ import ScoreStats from "./ScoreStats.vue";
 import WindowSection from "./WindowSection.vue";
 import LessonStatus from "./LessonStatus.vue";
 import ReviewProgress from "../Pages/Workbench/CardDealer/UI/ReviewProgress.vue";
+import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     model: {
@@ -19,7 +20,7 @@ const props = defineProps({
     },
 });
 
-const {deck, isLoading} = useDeck(props);
+const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTerms: true});
 </script>
 
 <template>
@@ -67,7 +68,8 @@ const {deck, isLoading} = useDeck(props);
                     <h2>stats</h2>
                 </template>
                 <template #content>
-                    <ReviewProgress :cards="deck.terms.map(t => t.card).filter(c => c !== null)" :terms_count="deck.terms_count"/>
+                    <ReviewProgress :cards="deck.terms.map(t => t.card).filter(c => c !== null)"
+                                    :terms_count="deck.terms_count"/>
                     <ScoreStats :model="deck"/>
                 </template>
             </WindowSection>
@@ -75,7 +77,11 @@ const {deck, isLoading} = useDeck(props);
             <div class="window-section-head">
                 <h2>terms</h2>
             </div>
-            <template v-if="deck.terms.length > 0">
+            <LoadingSpinner v-if="isLoadingTerms"/>
+            <AppTip v-else-if="loadTermsError">
+                <p>Unable to load Deck Terms.</p>
+            </AppTip>
+            <template v-else-if="deck.terms.length > 0">
                 <div class="model-list index-list">
                     <TermItem v-for="term in deck.terms"
                               :key="term.id"

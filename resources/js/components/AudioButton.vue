@@ -1,6 +1,6 @@
 <script setup>
-import {computed, onMounted, ref} from "vue";
-import {useAudio} from "../composables/Audio.js";
+import {computed, ref} from "vue";
+import {useAudio} from "../composables/audios/useAudio.js";
 import AppTooltip from "./AppTooltip.vue";
 import {useUserStore} from "../stores/UserStore.js";
 
@@ -13,17 +13,13 @@ const props = defineProps({
     }
 })
 
-const isUserAudio = computed(() =>
-    UserStore.user?.dialects.includes(props.pronunciation.dialect.id)
-);
+const {isPlaying, playAudio} = useAudio(() => props.pronunciation.audios[0]?.url);
 
 const appTooltip = ref(null);
 
-const {isPlaying, createAudio, playAudio} = useAudio(props);
-
-onMounted(() => {
-    createAudio(props.pronunciation.audios[0].url);
-});
+const isUserAudio = computed(() =>
+    UserStore.user?.dialects.includes(props.pronunciation.dialect.id)
+);
 
 const showDialectTooltip = (event) => {
     if (!isUserAudio.value) {

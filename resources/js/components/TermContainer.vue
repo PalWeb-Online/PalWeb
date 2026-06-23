@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import {route} from 'ziggy-js';
-import {useTerm} from "../composables/Term.js";
+import {useTerm} from "../composables/terms/useTerm.js";
 import TermActions from "./Actions/TermActions.vue";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";

@@ -1,20 +1,33 @@
 import {onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
+import {useResourceActions} from "../resources/useResourceActions.js";
 
-export function useDialog(props) {
+export function useDialog(props = {}) {
     const dialog = reactive({});
     const isLoading = ref(true);
     const isLoadingTerms = ref(true);
 
+    const {
+        deleteResource: deleteDialog
+    } = useResourceActions({
+        routeBase: 'dialogs',
+        label: 'Dialog',
+    });
+
     const initDialog = (model) => {
         if (!model) return;
-        Object.assign(dialog, props.model);
+        Object.assign(dialog, model);
 
         fetchSentenceTerms();
     }
 
     onMounted(() => {
-        if (props?.model) initDialog(props.model);
+        if (props?.model) {
+            initDialog(props.model);
+        } else {
+            isLoadingTerms.value = false;
+        }
+
         isLoading.value = false;
     });
 
@@ -51,5 +64,5 @@ export function useDialog(props) {
         }
     }
 
-    return {dialog, isLoading, isLoadingTerms};
+    return {dialog, isLoading, isLoadingTerms, deleteDialog};
 }

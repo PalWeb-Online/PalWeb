@@ -1,7 +1,7 @@
 import {nextTick, onBeforeUnmount, ref, watch} from "vue";
 import {autoPlacement, autoUpdate, offset, shift, size, useFloating} from "@floating-ui/vue";
 
-export function useActions() {
+export function useDropdown() {
     const isOpen = ref(false);
     const reference = ref(null);
     const floating = ref(null);

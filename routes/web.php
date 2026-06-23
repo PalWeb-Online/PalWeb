@@ -74,12 +74,12 @@ Route::get('/', function () {
 
     $isStaging = app()->environment('staging');
 
-    $users = !$isStaging
+    $users = ! $isStaging
         ? User::whereKey([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->get()
         : User::inRandomOrder()->limit(10)->get();
     $users->load('selectedAvatar');
 
-    $decks = !$isStaging
+    $decks = ! $isStaging
         ? Deck::with('terms')->whereKey([2, 3, 4, 12, 19, 83, 100, 118])->get()
         : Deck::with('terms')
             ->where('private', false)
@@ -87,7 +87,7 @@ Route::get('/', function () {
             ->limit(8)
             ->get();
 
-    $sentences = !$isStaging
+    $sentences = ! $isStaging
         ? Sentence::whereKey([256, 66, 54])->get()
         : Sentence::inRandomOrder()->limit(3)->get();
 
@@ -99,7 +99,7 @@ Route::get('/', function () {
         'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
     ];
 
-    $testimonialUsers = !$isStaging
+    $testimonialUsers = ! $isStaging
         ? User::whereKey([243, 1317, 16, 18, 3])->get()
         : User::inRandomOrder()->limit(count($testimonialComments))->get();
     $testimonialUsers->load('selectedAvatar');
@@ -119,8 +119,12 @@ Route::get('/', function () {
         'decks' => DeckResource::collection($decks),
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
-        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662)->load(['pronunciations', 'inflections'])) : null,
-        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load(['selectedAvatar', 'dialect'])) : null,
+        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662)->load([
+            'pronunciations', 'inflections'
+        ])) : null,
+        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
+            'selectedAvatar', 'dialect'
+        ])) : null,
         'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
     ]);
 })->name('homepage');
@@ -235,7 +239,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 
         return array_map(function ($file) {
             return [
-                'url' => asset('img/avatars/' . $file->getFilename()),
+                'url' => asset('img/avatars/'.$file->getFilename()),
                 'filename' => $file->getFilename(),
             ];
         }, $avatars);
@@ -317,7 +321,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function () {
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
+        ) {
             Route::get('/', 'index')->name('card-dealer.index');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
             Route::get('/review', 'review')->name('card-dealer.review');
@@ -439,13 +444,17 @@ Route::prefix('/api')->group(function () {
             Route::get('/', 'apiIndex')->name('api.sentences.index');
             Route::get('/{sentence}', 'apiShow')->name('api.sentences.show');
         });
-        Route::prefix('/audios')->group(function () {
-            Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
-            Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
-        });
-        Route::middleware('auth')->prefix('/decks')->controller(DeckController::class)->group(function () {
-            Route::get('/', 'apiIndex')->name('api.decks.index');
-            Route::get('/{deck}', 'apiShow')->name('api.decks.show');
+
+        Route::middleware(['auth', 'verified'])->group(function () {
+            Route::prefix('/audios')->group(function () {
+                Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
+                Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
+            });
+            Route::prefix('/decks')->controller(DeckController::class)->group(function () {
+                Route::get('/', 'apiIndex')->name('api.decks.index');
+                Route::get('/{deck}', 'apiShow')->name('api.decks.show');
+                Route::get('/{deck}/get/terms', 'getDeckTerms')->name('api.decks.get.terms');
+            });
         });
     });
 });

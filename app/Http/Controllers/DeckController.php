@@ -104,11 +104,21 @@ class DeckController extends Controller
     {
         Gate::authorize('interact', $deck);
 
+        $deck->load(['scores']);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+        ]);
+    }
+
+    public function getDeckTerms(Deck $deck): JsonResponse
+    {
+        Gate::authorize('interact', $deck);
+
         $deck->load([
             'terms' => fn ($q) => $q
                 ->withItemData()
                 ->withUserCard(),
-            'scores'
         ]);
 
         $this->termService->hydratePronunciations($deck->terms);

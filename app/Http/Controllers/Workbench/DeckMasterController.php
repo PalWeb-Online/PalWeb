@@ -113,16 +113,17 @@ class DeckMasterController extends Controller
     {
         Gate::authorize('interact', $deck);
 
-//        todo: is this relation loaded?
-        $terms = $deck->terms->load([
-            'pronunciations',
-            'glosses',
-            'cards',
-            'inflections'
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard()
+                ->with('inflections'),
         ]);
 
+        $this->termService->hydratePronunciations($deck->terms);
+
         return response()->json([
-            'terms' => TermResource::collection($terms),
+            'terms' => TermResource::collection($deck->terms),
         ]);
     }
 }

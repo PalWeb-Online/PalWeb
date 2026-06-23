@@ -1,21 +1,16 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {router} from '@inertiajs/vue3'
 import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 import CardActions from "./CardActions.vue";
+import {useTerm} from "../../composables/terms/useTerm.js";
 
 const UserStore = useUserStore();
+const {deleteTerm} = useTerm();
 
 const props = defineProps({
     model: Object,
 });
-
-const deleteTerm = () => {
-    if (!confirm('Are you sure you want to delete this Term?')) return;
-
-    router.delete(route('terms.destroy', props.model.id));
-};
 </script>
 
 <template>
@@ -31,7 +26,7 @@ const deleteTerm = () => {
             <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
                 Edit Term
             </Link>
-            <button @click="deleteTerm" role="menuitem" tabindex="-1">
+            <button @click="deleteTerm(model)" role="menuitem" tabindex="-1">
                 Delete Term
             </button>
         </template>

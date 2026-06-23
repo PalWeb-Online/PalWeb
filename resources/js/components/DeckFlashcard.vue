@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import {useDeck} from "../composables/Deck.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";

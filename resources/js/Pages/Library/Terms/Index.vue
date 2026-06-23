@@ -15,9 +15,7 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 
-defineOptions({
-    layout: Layout
-});
+defineOptions({layout: Layout});
 
 const props = defineProps({
     featuredTerm: Object,

@@ -1,11 +1,19 @@
-import {onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, toValue, watch} from "vue";
 import {Howl} from "howler";
+import {useResourceActions} from "../resources/useResourceActions.js";
 
-export function useAudio() {
+export function useAudio(url = null) {
     const audio = ref(null);
     const isPlaying = ref(false);
 
-    const destroyAudio = () => {
+    const {
+        deleteResource: deleteAudio
+    } = useResourceActions({
+        routeBase: 'audios',
+        label: 'Audio',
+    });
+
+    const unmountAudio = () => {
         if (audio.value) {
             audio.value.unload();
             audio.value = null;
@@ -14,8 +22,8 @@ export function useAudio() {
         isPlaying.value = false;
     };
 
-    const createAudio = (url) => {
-        destroyAudio();
+    const mountAudio = (url) => {
+        unmountAudio();
 
         if (!url) {
             return;
@@ -31,20 +39,29 @@ export function useAudio() {
     };
 
     const playAudio = () => {
-        if (audio.value) {
-            audio.value.play();
-        }
+        audio.value?.play();
     };
 
+    onMounted(() => {
+        mountAudio(toValue(url));
+    });
+
+    watch(() => toValue(url),
+        (newUrl) => {
+            console.log('newUrl', newUrl);
+            mountAudio(newUrl);
+        },
+        {deep: true}
+    );
+
     onUnmounted(() => {
-        destroyAudio();
+        unmountAudio();
     });
 
     return {
         audio,
         isPlaying,
-        createAudio,
-        destroyAudio,
         playAudio,
+        deleteAudio,
     };
 }

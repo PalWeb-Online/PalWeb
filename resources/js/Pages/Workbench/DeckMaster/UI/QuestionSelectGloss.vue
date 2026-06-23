@@ -1,7 +1,6 @@
 <script setup>
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
-import {onMounted, ref} from "vue";
-import {useAudio} from "../../../../composables/Audio.js";
+import {ref} from "vue";
 import AudioButton from "../../../../components/AudioButton.vue";
 
 const DeckStudyStore = useDeckStudyStore();
@@ -44,12 +43,6 @@ const startTypingEffect = (text) => {
         }
     }, 25);
 };
-
-const {isPlaying, createAudio, playAudio} = useAudio();
-
-onMounted(() => {
-    createAudio(props.question.term.audio);
-});
 </script>
 <template>
     <div class="quiz-question">

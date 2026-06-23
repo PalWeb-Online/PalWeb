@@ -2,7 +2,6 @@
 import {onMounted, onUnmounted, ref, watch} from 'vue';
 import VanillaTilt from "vanilla-tilt";
 import AppButton from "../../../../components/AppButton.vue";
-import {useAudio} from "../../../../composables/Audio.js";
 import AudioButton from "../../../../components/AudioButton.vue";
 
 const props = defineProps({
@@ -45,8 +44,6 @@ const handleKeydown = (event) => {
     }
 };
 
-const {isPlaying, createAudio, playAudio} = useAudio();
-
 onMounted(() => {
     VanillaTilt.init(flashcard.value, {
         max: 10,
@@ -54,16 +51,10 @@ onMounted(() => {
         scale: 1,
     });
 
-    createAudio(props.model?.audio);
-
     if (props.active) {
         window.addEventListener('keydown', handleKeydown);
     }
 });
-
-watch(() => props.model, (newModel) => {
-    createAudio(newModel?.audio);
-}, {deep: true});
 
 onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown);

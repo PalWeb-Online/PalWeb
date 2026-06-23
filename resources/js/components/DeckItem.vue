@@ -1,7 +1,7 @@
 <script setup>
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
-import {useDeck} from "../composables/Deck.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {computed, ref} from "vue";

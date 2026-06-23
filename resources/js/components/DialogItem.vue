@@ -1,5 +1,5 @@
 <script setup>
-import {useDialog} from "../composables/Dialog.js";
+import {useDialog} from "../composables/dialogs/useDialog.js";
 import DialogActions from "./Actions/DialogActions.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
