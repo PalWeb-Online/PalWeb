@@ -2,11 +2,13 @@
 import { ref, onMounted } from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
+import Paginator from "../../../Shared/Paginator.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";
 import UserItem from "../../../components/UserItem.vue";
+import { usePaginator } from "../../../composables/usePaginator.js";
 
 const UserStore = useUserStore();
 defineOptions({ layout: Layout });
@@ -15,23 +17,25 @@ const speaker = ref(null);
 const audios  = ref([]);
 const loading = ref(true);
 
-async function fetchSpeaker() {
+const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchSpeaker);
+
+async function fetchSpeaker(params = {}) {
     loading.value = true;
     try {
         const id = window.location.pathname.split('/').pop();
-        const response = await fetch(`/api/library/audios/${id}`);
+        const query = new URLSearchParams(params).toString();
+        const response = await fetch(`/api/library/audios/${id}${query ? '?' + query : ''}`);
         const data = await response.json();
-
         speaker.value = data.speaker;
 
         if (Array.isArray(data.audios)) {
             audios.value = data.audios;
         } else if (data.audios && data.audios.data) {
             audios.value = data.audios.data;
+            if (data.audios.meta) updatePagination(data.audios.meta);
         } else {
             audios.value = [];
         }
-
     } catch (error) {
         console.error('Failed to fetch speaker:', error);
     } finally {
@@ -71,6 +75,11 @@ onMounted(() => fetchSpeaker());
                             :audio="audio"
                         />
                     </div>
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
                 </template>
                 <template v-else>
                     <AppTip>

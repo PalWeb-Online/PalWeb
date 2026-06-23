@@ -5,6 +5,7 @@ import PronunciationItem from "../../../components/PronunciationItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";
+import { usePaginator } from "../../../composables/usePaginator.js";
 
 const UserStore = useUserStore();
 defineOptions({ layout: Layout });
@@ -14,9 +15,9 @@ const dialects   = ref([]);
 const locations  = ref([]);
 const totalCount = ref(0);
 const loading    = ref(true);
-const currentPage = ref(1);
-const lastPage    = ref(1);
 const filters    = ref({ sort: 'latest', dialect: '', location: '', gender: '' });
+
+const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchAudios);
 
 async function fetchAudios(params = {}) {
     loading.value = true;
@@ -29,8 +30,7 @@ async function fetchAudios(params = {}) {
         locations.value  = data.locations;
         totalCount.value = data.totalCount;
         filters.value    = { ...filters.value, ...data.filters };
-        currentPage.value = data.audios.meta.current_page;
-        lastPage.value    = data.audios.meta.last_page;
+        updatePagination(data.audios.meta);
     } catch (error) {
         console.error('Failed to fetch audios:', error);
     } finally {
@@ -54,31 +54,6 @@ function updateFilter(key, value) {
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchAudios(Object.fromEntries(searchParams.entries()));
 }
-
-function goToPage(page) {
-    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchAudios(Object.fromEntries(searchParams.entries()));
-    window.scrollTo(0, 0);
-}
-
-const pageNumbers = computed(() => {
-    const pages = [];
-    const total = lastPage.value;
-    const current = currentPage.value;
-    if (total <= 7) {
-        for (let i = 1; i <= total; i++) pages.push(i);
-    } else {
-        pages.push(1);
-        if (current > 3) pages.push('...');
-        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
-        if (current < total - 2) pages.push('...');
-        pages.push(total);
-    }
-    return pages;
-});
 </script>
 
 <template>
@@ -126,27 +101,11 @@ const pageNumbers = computed(() => {
                     <div class="model-list index-list" style="padding: 3.2rem 1.6rem">
                         <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
                     </div>
-                    <div id="paginator">
-                        <div class="pagination">
-
-                            <template v-for="page in pageNumbers" :key="page">
-
-                                <a
-                                    v-if="page !== '...'"
-                                    :class="{ active: page === currentPage }"
-                                    style="cursor: pointer"
-                                    @click="goToPage(page)"
-                                >
-                                    {{ page }}
-                                </a>
-
-                                <div v-else class="disabled">...</div>
-
-                            </template>
-
-                        </div>
-                    </div>
-
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
                 </template>
             </template>
         </div>

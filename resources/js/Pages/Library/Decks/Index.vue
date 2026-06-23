@@ -6,6 +6,7 @@ import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";
+import { usePaginator } from "../../../composables/usePaginator.js";
 
 const UserStore = useUserStore();
 defineOptions({ layout: Layout });
@@ -14,8 +15,8 @@ const decks      = ref(null);
 const totalCount = ref(0);
 const filters    = ref({ sort: 'latest' });
 const loading    = ref(true);
-const currentPage = ref(1);
-const lastPage    = ref(1);
+
+const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchDecks);
 
 async function fetchDecks(params = {}) {
     loading.value = true;
@@ -26,8 +27,7 @@ async function fetchDecks(params = {}) {
         decks.value      = data.decks;
         totalCount.value = data.totalCount;
         filters.value    = data.filters;
-        currentPage.value = data.decks.meta.current_page;
-        lastPage.value    = data.decks.meta.last_page;
+        updatePagination(data.decks.meta);
     } catch (error) {
         console.error('Failed to fetch decks:', error);
     } finally {
@@ -48,15 +48,6 @@ function updateFilter({ filter, value }) {
     currentPage.value = 1;
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchDecks(Object.fromEntries(searchParams.entries()));
-}
-
-function goToPage(page) {
-    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchDecks(Object.fromEntries(searchParams.entries()));
-    window.scrollTo(0, 0);
 }
 
 const pageNumbers = computed(() => {
@@ -102,27 +93,11 @@ const pageNumbers = computed(() => {
                     <div class="model-list index-list">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
                     </div>
-                    <div id="paginator">
-                        <div class="pagination">
-
-                            <template v-for="page in pageNumbers" :key="page">
-
-                                <a
-                                    v-if="page !== '...'"
-                                    :class="{ active: page === currentPage }"
-                                    style="cursor: pointer"
-                                    @click="goToPage(page)"
-                                >
-                                    {{ page }}
-                                </a>
-
-                                <div v-else class="disabled">...</div>
-
-                            </template>
-
-                        </div>
-                    </div>
-
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
                 </template>
             </template>
         </div>

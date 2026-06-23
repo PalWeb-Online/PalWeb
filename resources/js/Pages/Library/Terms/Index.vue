@@ -7,7 +7,8 @@ import SearchFilters from "../../../Shared/SearchFilters.vue";
 import { useUserStore } from "../../../stores/UserStore.js";
 import { route } from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
-import {useNavigationStore} from "../../../stores/NavigationStore.js";
+import { useNavigationStore } from "../../../stores/NavigationStore.js";
+import { usePaginator } from "../../../composables/usePaginator.js";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -18,14 +19,14 @@ const totalCount   = ref(0);
 const featuredTerm = ref(null);
 const filters      = ref({ sort: 'alphabetical' });
 const loading      = ref(true);
-const currentPage  = ref(1);
-const lastPage     = ref(1);
 
 const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
     'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
 ];
 const selectedLetter = ref(null);
+
+const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchTerms);
 
 async function fetchTerms(params = {}) {
     loading.value = true;
@@ -37,8 +38,7 @@ async function fetchTerms(params = {}) {
         totalCount.value   = data.totalCount;
         featuredTerm.value = data.featuredTerm;
         filters.value      = data.filters;
-        currentPage.value  = data.terms.meta.current_page;
-        lastPage.value     = data.terms.meta.last_page;
+        updatePagination(data.terms.meta);
     } catch (error) {
         console.error('Failed to fetch terms:', error);
     } finally {
@@ -64,39 +64,9 @@ function updateFilter({ filter, value }) {
     }
     searchParams.delete('page');
     currentPage.value = 1;
-    const params = Object.fromEntries(searchParams.entries());
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchTerms(params);
-}
-
-function goToPage(page) {
-    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchTerms(Object.fromEntries(searchParams.entries()));
-    window.scrollTo(0, 0);
 }
-
-// Générer les numéros de page à afficher (style: 1 ... 4 5 6 ... 125)
-const pageNumbers = computed(() => {
-    const pages = [];
-    const total = lastPage.value;
-    const current = currentPage.value;
-
-    if (total <= 7) {
-        for (let i = 1; i <= total; i++) pages.push(i);
-    } else {
-        pages.push(1);
-        if (current > 3) pages.push('...');
-        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
-            pages.push(i);
-        }
-        if (current < total - 2) pages.push('...');
-        pages.push(total);
-    }
-    return pages;
-});
 
 const sortingMessage = computed(() => {
     if (filters.value.sort === 'latest') return 'sorted by most recent first';
@@ -115,19 +85,13 @@ const sortingMessage = computed(() => {
                 <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add</Link>
                 <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-            <div class="window-section-head">
-                <h1>dictionary</h1>
-            </div>
+            <div class="window-section-head"><h1>dictionary</h1></div>
 
-            <div v-if="loading" class="loading-state">
-                <p>Loading...</p>
-            </div>
+            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
 
             <template v-else>
                 <TermFeatured :model="featuredTerm"/>
-                <div class="window-section-head">
-                    <h2>index</h2>
-                </div>
+                <div class="window-section-head"><h2>index</h2></div>
                 <div class="letters-array">
                     <button
                         v-for="letter in letters"
@@ -151,66 +115,13 @@ const sortingMessage = computed(() => {
                     <div class="model-list index-list">
                         <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
                     </div>
-                    <div id="paginator">
-                        <div class="pagination">
-
-                            <template v-for="page in pageNumbers" :key="page">
-
-                                <a
-                                    v-if="page !== '...'"
-                                    :class="{ active: page === currentPage }"
-                                    style="cursor: pointer"
-                                    @click="goToPage(page)"
-                                >
-                                    {{ page }}
-                                </a>
-
-                                <div v-else class="disabled">...</div>
-
-                            </template>
-
-                        </div>
-                    </div>
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
                 </template>
             </template>
         </div>
     </div>
 </template>
-
-<style scoped lang="scss">
-.letters-array {
-    justify-items: center;
-    padding: 3.2rem;
-    background: var(--color-pastel-light);
-    width: 100%;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    gap: 1.6rem;
-    direction: rtl;
-
-    button {
-        width: 4.8rem;
-        height: 4.8rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--mono-font);
-        font-size: 2.4rem;
-        font-weight: 700;
-        user-select: none;
-        color: var(--color-accent-medium);
-        background: white;
-
-        &:hover {
-            color: var(--color-dark-primary)
-        }
-
-        &.active {
-            color: white;
-            background: var(--color-dark-primary);
-        }
-    }
-}
-</style>

@@ -6,6 +6,7 @@ import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";
+import { usePaginator } from "../../../composables/usePaginator.js";
 
 const UserStore = useUserStore();
 defineOptions({ layout: Layout });
@@ -14,8 +15,8 @@ const sentences  = ref(null);
 const totalCount = ref(0);
 const filters    = ref({ sort: 'latest' });
 const loading    = ref(true);
-const currentPage = ref(1);
-const lastPage    = ref(1);
+
+const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchSentences);
 
 async function fetchSentences(params = {}) {
     loading.value = true;
@@ -26,8 +27,7 @@ async function fetchSentences(params = {}) {
         sentences.value  = data.sentences;
         totalCount.value = data.totalCount;
         filters.value    = data.filters;
-        currentPage.value = data.sentences.meta.current_page;
-        lastPage.value    = data.sentences.meta.last_page;
+        updatePagination(data.sentences.meta);
     } catch (error) {
         console.error('Failed to fetch sentences:', error);
     } finally {
@@ -48,15 +48,6 @@ function updateFilter({ filter, value }) {
     currentPage.value = 1;
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchSentences(Object.fromEntries(searchParams.entries()));
-}
-
-function goToPage(page) {
-    if (page < 1 || page > lastPage.value || page === currentPage.value) return;
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchSentences(Object.fromEntries(searchParams.entries()));
-    window.scrollTo(0, 0);
 }
 
 const pageNumbers = computed(() => {
@@ -102,27 +93,11 @@ const pageNumbers = computed(() => {
                     <div class="model-list index-list">
                         <SentenceItem v-for="sentence in sentences.data" :key="sentence.id" :model="sentence"/>
                     </div>
-                    <div id="paginator">
-                        <div class="pagination">
-
-                            <template v-for="page in pageNumbers" :key="page">
-
-                                <a
-                                    v-if="page !== '...'"
-                                    :class="{ active: page === currentPage }"
-                                    style="cursor: pointer"
-                                    @click="goToPage(page)"
-                                >
-                                    {{ page }}
-                                </a>
-
-                                <div v-else class="disabled">...</div>
-
-                            </template>
-
-                        </div>
-                    </div>
-
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
                 </template>
             </template>
         </div>
