@@ -5,10 +5,16 @@ namespace App\Repositories;
 use App\Models\Gloss;
 use App\Models\Root;
 use App\Models\Term;
+use App\Services\TermService;
 use Illuminate\Support\Collection;
 
 class TermRepository
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function findMatchingTerms(?string $search): Collection
     {
         return Term::query()
@@ -42,42 +48,39 @@ class TermRepository
     public function allTerms(array $filters = []): Collection
     {
         return Term::query()
+            ->withItemData()
             ->withUserCard()
-            ->with(['root', 'glosses', 'pronunciations'])
+            ->with(['root'])
             ->select('terms.*')
             ->filter($filters)
-            ->get();
+            ->get()
+            ->tap(fn ($terms) => $this->termService->hydratePronunciations($terms));
     }
 
     public function searchTerms(Collection $matches, array $filters = []): Collection
     {
         return Term::query()
+            ->withItemData()
             ->withUserCard()
-            ->with(['root', 'glosses', 'pronunciations'])
+            ->with(['root'])
             ->select('terms.*')
             ->whereIn('terms.id', $matches->pluck('term_id'))
             ->filter($filters)
-            ->get();
+            ->get()
+            ->tap(fn ($terms) => $this->termService->hydratePronunciations($terms));
     }
 
-    public function getLikeTerms(Term $mainTerm): object
+    public function getLikeTermIds(Term $term): object
     {
-        // Get like terms belonging to the same category (e.g. ريحة rīħa & ريحا rīħa).
-        $duplicates = Term::query()
-            ->where('translit', '=', $mainTerm->translit)
-            ->where('category', '=', $mainTerm->category)
-            ->where('terms.id', '!=', $mainTerm->id)
-            ->get();
+        $likeTermIds = Term::query()
+            ->where('translit', $term->translit)
+            ->where('id', '!=', $term->id)
+            ->orderByRaw('CASE WHEN category = ? THEN 0 ELSE 1 END', [$term->category])
+            ->pluck('id');
 
-        // Get like terms belonging to other categories (e.g. adj كثير & adv كثير).
-        $homophones = Term::query()
-            ->where('translit', '=', $mainTerm->translit)
-            ->where('category', '!=', $mainTerm->category)
-            ->get();
-
-        return (object) [
-            'duplicates' => $duplicates,
-            'homophones' => $homophones,
-        ];
+        return collect([$term->id])
+            ->merge($likeTermIds)
+            ->unique()
+            ->values();
     }
 }

@@ -19,8 +19,7 @@ class CardResource extends JsonResource
         return [
             'id' => $this->id,
             'term' => $this->whenLoaded('term', function () {
-                return new TermResource($this->term->loadMissing('pronunciations'))
-                    ->additional(['detail' => true]);
+                return new TermResource($this->term);
             }),
             'repetitions' => $this->repetitions,
             'lapses' => $this->lapses,

@@ -48,7 +48,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         <img v-if="!model.speaker.user.private"
              class="speaker-avatar" alt="User Avatar"
              @click="router.get(route('speaker.show', model.speaker))"
-             :src="`/img/avatars/${model.speaker.user.avatar}`"/>
+             :src="model.speaker.user.avatar_url"/>
         <div class="audio-item-data">
             <div>by
                 <Link :href="route('speaker.show', model.speaker)">

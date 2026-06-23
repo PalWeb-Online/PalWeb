@@ -23,7 +23,7 @@ export const useSoundBoothStore = defineStore('SoundBoothStore', () => {
         user: {
             id: null,
             name: '',
-            avatar: '',
+            avatar_url: '',
         },
         dialect: {
             id: null,

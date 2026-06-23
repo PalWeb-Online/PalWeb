@@ -303,7 +303,7 @@ defineOptions({
                     <div class="feature-preview" style="margin-block: 3.2rem">
                         <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
                         <TermFlashcard v-if="featuredTerm"
-                                       :model="featuredTerm.data"
+                                       :model="featuredTerm"
                                        :showTranslit="showTranslit"
                                        :flipDefault="flipDefault"
                         />

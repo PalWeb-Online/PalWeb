@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class SpeakerScope implements Scope
+class CommentScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -14,6 +14,6 @@ class SpeakerScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
-            ->with(['user.selectedAvatar', 'location']);
+            ->with(['user.selectedAvatar']);
     }
 }

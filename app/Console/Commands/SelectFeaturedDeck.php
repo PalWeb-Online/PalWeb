@@ -20,14 +20,14 @@ class SelectFeaturedDeck extends Command
      *
      * @var string
      */
-    protected $description = 'Selects the Featured Deck.';
+    protected $description = 'Selects a Deck to feature.';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $deck = Deck::inRandomOrder()->first();
+        $deck = Deck::inRandomOrder()->with(['terms'])->first();
         Cache::put('featured-deck', $deck, now()->addWeek());
 
         return Command::SUCCESS;

@@ -20,25 +20,14 @@ class DeckResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'private' => $this->private,
-            'isPinned' => $this->isPinned(),
+            'isPinned' => $this->is_pinned,
             'pinCount' => \Maize\Markable\Models\Bookmark::count($this->resource),
             'created_at' => $this->created_at->format('j F Y'),
-            'author' => $this->whenLoaded('author', [
-                'id' => $this->author->id,
-                'name' => $this->author->name,
-                'ar_name' => $this->author->ar_name,
-                'username' => $this->author->username,
-                'avatar' => $this->author->avatar,
-                'private' => $this->author->private,
-            ]),
-            'terms' => $this->whenLoaded('terms', function () {
-                return TermResource::collection($this->terms->sortBy('position')->values());
-            }),
+            'author' => new UserResource($this->author),
+            'terms' => $this->whenLoaded('terms', fn () => TermResource::collection($this->terms)),
             'terms_count' => $this->terms_count ?? 0,
             'scores' => ScoreResource::collection($this->whenLoaded('scores')),
-            'stats' => $this->whenLoaded('scores', function () {
-                return $this->score_stats;
-            }),
+            'stats' => $this->whenLoaded('scores', fn () => $this->score_stats),
             'lesson' => $this->when($this->lesson, function() use ($request) {
                 return [
                     'id' => $this->lesson?->id,

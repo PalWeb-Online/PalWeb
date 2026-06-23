@@ -14,7 +14,7 @@ const slots = useSlots()
     <div class="user-avatar-wrapper">
         <Link class="user-avatar" :href="user ? route('users.show', user.username) : '#'">
             <UserAvatarFrame/>
-            <img alt="Avatar" :src="`/img/avatars/${user ? user.avatar : 'palweb01.webp'}`"/>
+            <img alt="Avatar" :src="user?.avatar_url ?? '/img/avatars/palweb01.webp'"/>
         </Link>
         <div v-if="slots.default" class="user-interact-buttons">
             <slot/>

@@ -1,8 +1,6 @@
 import {onUnmounted, ref} from "vue";
 import {Howl} from "howler";
 
-const AUDIO_BASE_URL = "https://abdulbaha.fra1.digitaloceanspaces.com/audios";
-
 export function useAudio() {
     const audio = ref(null);
     const isPlaying = ref(false);
@@ -16,15 +14,15 @@ export function useAudio() {
         isPlaying.value = false;
     };
 
-    const createAudio = (audioFile) => {
+    const createAudio = (url) => {
         destroyAudio();
 
-        if (!audioFile) {
+        if (!url) {
             return;
         }
 
         audio.value = new Howl({
-            src: [`${AUDIO_BASE_URL}/${audioFile}`],
+            src: [url],
             onplay: () => isPlaying.value = true,
             onend: () => isPlaying.value = false,
             onstop: () => isPlaying.value = false,

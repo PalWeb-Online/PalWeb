@@ -19,25 +19,25 @@ const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 
 const term = useForm({
-    id: props.term?.data.id || null,
-    term: props.term?.data.term || '',
-    category: props.term?.data.category || '',
-    pronunciations: props.term?.data.pronunciations || [],
-    root: props.term?.data.root || {
+    id: props.term?.id || null,
+    term: props.term?.term || '',
+    category: props.term?.category || '',
+    pronunciations: props.term?.pronunciations || [],
+    root: props.term?.root || {
         root: ''
     },
-    etymology: props.term?.data.etymology || {
+    etymology: props.term?.etymology || {
         type: '',
         source: '',
     },
-    attributes: props.term?.data.attributes || [],
-    spellings: props.term?.data.spellings || [],
-    relatives: props.term?.data.relatives || [],
-    patterns: props.term?.data.patterns || [],
-    glosses: props.term?.data.glosses || [],
-    inflections: props.term?.data.inflections || [],
-    image: props.term?.data.image || '',
-    usage: props.term?.data.usage || '',
+    attributes: props.term?.attributes || [],
+    spellings: props.term?.spellings || [],
+    relatives: props.term?.relatives || [],
+    patterns: props.term?.patterns || [],
+    glosses: props.term?.glosses || [],
+    inflections: props.term?.inflections || [],
+    image: props.term?.image || '',
+    usage: props.term?.usage || '',
 });
 
 const isSaving = ref(false);

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AudioResource extends JsonResource
+class AvatarResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,6 @@ class AudioResource extends JsonResource
         return [
             'id' => $this->id,
             'url' => $this->url,
-            'filename' => $this->filename,
-            'speaker' => new SpeakerResource($this->whenLoaded('speaker')),
-            'pronunciation' => new PronunciationResource($this->whenLoaded('pronunciation')),
-            'created_at' => $this->created_at->format('j F Y'),
         ];
     }
 }

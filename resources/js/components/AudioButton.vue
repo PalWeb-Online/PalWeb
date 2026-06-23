@@ -22,7 +22,7 @@ const appTooltip = ref(null);
 const {isPlaying, createAudio, playAudio} = useAudio(props);
 
 onMounted(() => {
-    createAudio(props.pronunciation.audios[0].filename);
+    createAudio(props.pronunciation.audios[0].url);
 });
 
 const showDialectTooltip = (event) => {

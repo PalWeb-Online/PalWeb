@@ -39,7 +39,7 @@ const deck = useForm({
         name: UserStore.user.name,
         ar_name: UserStore.user.ar_name,
         username: UserStore.user.username,
-        avatar: UserStore.user.avatar,
+        avatar_url: UserStore.user.avatar_url,
     },
     terms: props.deck?.terms || [],
 });

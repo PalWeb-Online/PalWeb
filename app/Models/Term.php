@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PinnedScope;
 use App\Services\CardDealer\ReviewOptions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute as AttributeCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 
+#[ScopedBy([PinnedScope::class])]
 class Term extends Model
 {
     use HasFactory;
@@ -57,89 +59,6 @@ class Term extends Model
         return $this->morphMany(Bookmark::class, 'markable');
     }
 
-    public function isPinned(): bool
-    {
-        $user = auth()->user();
-        if ($user) {
-            return Bookmark::has($this, $user);
-        } else {
-            return false;
-        }
-    }
-
-    public function getUserPronunciationData(): array
-    {
-        $dialect = auth()->user()?->dialect ?? Dialect::find(8);
-        $dialectIds = $dialect->ancestors->sortDesc()->pluck('id')->prepend($dialect->id);
-
-        $pronunciations = $this->relationLoaded('pronunciations')
-            ? $this->pronunciations
-            : $this->pronunciations()
-                ->with([
-                    'audios' => fn ($query) => $query
-                        ->limit(1)
-                        ->with(['speaker.user']),
-                ])
-                ->get();
-
-        if ($pronunciations->isEmpty()) {
-            return [
-                'audio' => null,
-                'translit' => null,
-                'pronunciations' => collect(),
-            ];
-        }
-
-        $userPronunciations = $pronunciations->whereIn('dialect_id', $dialectIds);
-        $pronunciationsWithAudio = $pronunciations->filter(fn ($pronunciation) => $pronunciation->audios->isNotEmpty());
-
-        $selectedPronunciation =
-            $userPronunciations->first(fn ($pronunciation) => $pronunciation->audios->isNotEmpty())
-            ?? $pronunciationsWithAudio->first()
-            ?? $userPronunciations->first()
-            ?? $pronunciations->first();
-
-        $selectedTranscription =
-            $userPronunciations->first()?->translit
-            ?? $pronunciations->first()?->translit;
-
-        return [
-            'audio' => $selectedPronunciation?->audios?->first()?->filename,
-            'translit' => $selectedTranscription,
-            'pronunciations' => collect([$selectedPronunciation])->filter()->values(),
-        ];
-    }
-
-    public function loadSingleGlossSentence(): void
-    {
-        $sentenceData = DB::table('sentence_term')
-            ->where('sentence_term.term_id', $this->id)
-            ->groupBy('gloss_id')
-            ->selectRaw('gloss_id, MIN(sentence_term.sentence_id) AS sentence_id, COUNT(*) as sentences_count')
-            ->get();
-
-        $sentenceCounts = collect();
-        $sentenceIds = collect();
-
-        $sentenceData->each(function ($row) use ($sentenceCounts, $sentenceIds) {
-            $sentenceIds[$row->gloss_id] = $row->sentence_id;
-            $sentenceCounts[$row->gloss_id] = $row->sentences_count;
-        });
-
-        $sentences = Sentence::whereIn('id', $sentenceIds->values())
-            ->with(['dialog'])
-            ->get();
-
-        $this->gloss_sentences = $sentences->groupBy(function ($sentence) use ($sentenceIds) {
-            return $sentenceIds->flip()[$sentence->id];
-        })->map(function ($group, $glossId) use ($sentenceCounts) {
-            return [
-                'sentences' => $group,
-                'sentences_count' => $sentenceCounts[$glossId],
-            ];
-        });
-    }
-
     public function sentences(?int $gloss_id = null): BelongsToMany
     {
         $relationship = $this->belongsToMany(Sentence::class)
@@ -173,7 +92,7 @@ class Term extends Model
         return $this->belongsToMany(Attribute::class);
     }
 
-    public function getSortedAttributesAttribute(): Collection
+    public function sortedTags(): AttributeCast
     {
         $priority = [
             'collective' => 1,
@@ -187,9 +106,11 @@ class Term extends Model
             'clitic' => 3,
         ];
 
-        return $this->attributes()->get()->sortBy(function ($attribute) use ($priority) {
-            return $priority[$attribute->attribute] ?? PHP_INT_MAX;
-        })->values();
+        return AttributeCast::make(
+            get: fn () => $this->attributes()->get()
+                ->sortBy(fn ($attribute) => $priority[$attribute->attribute] ?? PHP_INT_MAX)
+                ->values()
+        );
     }
 
     public function patterns(): BelongsToMany
@@ -237,7 +158,9 @@ class Term extends Model
         return match ($options->scope) {
             'deck' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereKey($options->deckId)),
             'pinned' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereHasBookmark($user)),
-            'lesson' => $query->whereHas('decks.lesson', fn (Builder $lessonQuery) => $lessonQuery->whereHas('users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))),
+            'lesson' => $query->whereHas('decks.lesson', fn (Builder $lessonQuery) => $lessonQuery
+                ->whereHas('users', fn (Builder $userQuery) => $userQuery
+                    ->whereKey($user->id))),
             default => $query,
         };
     }
@@ -245,9 +168,21 @@ class Term extends Model
     #[Scope]
     public function withUserCard($query)
     {
-        return $query->with(['cards' => function ($query) {
-            $query->where('user_id', auth()->id());
-        }]);
+//        this is currently redundant, but it may be better later to stop
+//        scoping the default `cards()` relation to the auth user anyway
+        return $query->with([
+            'cards' => fn ($q) => $q
+                ->where('user_id', auth()->id())
+        ]);
+    }
+
+    #[Scope]
+    public function withItemData($query)
+    {
+        return $query->with([
+            'pronunciations.audios',
+            'glosses'
+        ]);
     }
 
     #[Scope]

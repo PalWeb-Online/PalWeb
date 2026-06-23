@@ -6,14 +6,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class SpeakerScope implements Scope
+class PinnedScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
      */
     public function apply(Builder $builder, Model $model): void
     {
+        if (! auth()->check()) {
+            return;
+        }
+
         $builder
-            ->with(['user.selectedAvatar', 'location']);
+            ->withExists([
+                'bookmarks as is_pinned' => fn ($query) => $query
+                    ->where('user_id', auth()->id())
+                    ->whereNull('value'),
+            ]);
     }
 }

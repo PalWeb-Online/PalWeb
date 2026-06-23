@@ -11,7 +11,7 @@ const UserStore = useUserStore();
     <div class="auth-user">
         <Link class="user-avatar" :href="route('users.show', UserStore.user.username)">
             <img alt="User Avatar"
-                 :src="`/img/avatars/${UserStore.user.avatar}`"/>
+                 :src="UserStore.user.avatar_url"/>
         </Link>
 
         <UserNametag :user="UserStore.user"/>

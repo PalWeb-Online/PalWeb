@@ -10,6 +10,7 @@ use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,87 +22,96 @@ use Illuminate\Support\Facades\URL;
 
 class DeckController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function pin(Request $request, Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
         $user = $request->user();
-
         Bookmark::toggle($deck, $user);
 
-        $deck->isPinned() && event(new ModelPinned($user));
+        $isPinned = Bookmark::has($deck, $user);
 
-        $message = $deck->isPinned()
-            ? __('pin.added', ['thing' => $deck->name])
-            : __('pin.removed', ['thing' => $deck->name]);
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
-            'isPinned' => $deck->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
-   public function index(): \Inertia\Response
-{
-    return Inertia::render('Library/Decks/Index');
-}
+    public function index(): \Inertia\Response
+    {
+        return Inertia::render('Library/Decks/Index');
+    }
 
-public function show(Deck $deck): \Inertia\Response
-{
-    return Inertia::render('Library/Decks/Show');
-}
+    public function show(Deck $deck): \Inertia\Response
+    {
+        return Inertia::render('Library/Decks/Show');
+    }
 
     // -------------------------------------------------------------------------
     // API Methods
     // -------------------------------------------------------------------------
 
-  public function apiIndex(Request $request, SearchService $searchService): JsonResponse
-{
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
         URL::forceScheme('https');
 
-    $filters = array_merge(['sort' => 'latest'], $request->only([
-        'search', 'match', 'sort', 'pinned',
-    ]));
+        $filters = array_merge(['sort' => 'latest'], $request->only([
+            'search', 'match', 'sort', 'pinned',
+        ]));
 
-    $perPage = 25;
-    $currentPage = $request->integer('page', 1);
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
 
-    $decksCollection = $searchService->search($filters, false, true)['decks'];
-    $decks = new \Illuminate\Pagination\LengthAwarePaginator(
-        $decksCollection->forPage($currentPage, $perPage)->values(),
-        $decksCollection->count(),
-        $perPage,
-        $currentPage,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+        $decksCollection = $searchService->search($filters, false, true)['decks'];
+        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+            $decksCollection->forPage($currentPage, $perPage)->values(),
+            $decksCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-    $resource = DeckResource::collection($decks);
+        $resource = DeckResource::collection($decks);
 
-    return response()->json([
-        'decks' => [
-            'data' => $resource->toArray($request),
-            'meta' => [
-                'links' => $decks->linkCollection()->toArray(),
-                'current_page' => $decks->currentPage(),
-                'last_page' => $decks->lastPage(),
-                'total' => $decks->total(),
+        return response()->json([
+            'decks' => [
+                'data' => $resource->toArray($request),
+                'meta' => [
+                    'links' => $decks->linkCollection()->toArray(),
+                    'current_page' => $decks->currentPage(),
+                    'last_page' => $decks->lastPage(),
+                    'total' => $decks->total(),
+                ],
             ],
-        ],
-        'totalCount' => $decks->total(),
-        'filters' => $filters,
-    ]);
-}
+            'totalCount' => $decks->total(),
+            'filters' => $filters,
+        ]);
+    }
 
     public function apiShow(Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
         $deck->load([
-            'terms' => fn ($q) => $q->withUserCard(),
-            'terms.pronunciations',
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard(),
             'scores'
         ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
             'deck' => new DeckResource($deck),

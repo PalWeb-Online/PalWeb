@@ -127,6 +127,7 @@ defineOptions({
 .users-featured {
     display: flex;
     flex-flow: row wrap;
+    align-items: flex-start;
     justify-content: center;
     gap: 3.2rem;
 }
