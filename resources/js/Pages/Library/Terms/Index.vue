@@ -1,24 +1,25 @@
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import {computed, ref, onMounted} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
-import { useUserStore } from "../../../stores/UserStore.js";
-import { route } from "ziggy-js";
+import {useUserStore} from "../../../stores/UserStore.js";
+import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
-import { useNavigationStore } from "../../../stores/NavigationStore.js";
-import { usePaginator } from "../../../composables/usePaginator.js";
+import {useNavigationStore} from "../../../stores/NavigationStore.js";
+import {usePaginator} from "../../../composables/usePaginator.js";
+import Paginator from "../../../Shared/Paginator.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
-defineOptions({ layout: Layout });
+defineOptions({layout: Layout});
 
-const terms        = ref(null);
-const totalCount   = ref(0);
+const terms = ref(null);
+const totalCount = ref(0);
 const featuredTerm = ref(null);
-const filters      = ref({ sort: 'alphabetical' });
-const loading      = ref(true);
+const filters = ref({sort: 'alphabetical'});
+const loading = ref(true);
 
 const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
@@ -26,18 +27,17 @@ const letters = [
 ];
 const selectedLetter = ref(null);
 
-const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchTerms);
+const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchTerms);
 
 async function fetchTerms(params = {}) {
     loading.value = true;
     try {
-        const query = new URLSearchParams(params).toString();
-        const response = await fetch(`/api/library/terms${query ? '?' + query : ''}`);
+        const response = await fetch(route('api.terms.index', params));
         const data = await response.json();
-        terms.value        = data.terms;
-        totalCount.value   = data.totalCount;
+        terms.value = data.terms;
+        totalCount.value = data.totalCount;
         featuredTerm.value = data.featuredTerm;
-        filters.value      = data.filters;
+        filters.value = data.filters;
         updatePagination(data.terms.meta);
     } catch (error) {
         console.error('Failed to fetch terms:', error);
@@ -53,7 +53,7 @@ onMounted(() => {
     fetchTerms(params);
 });
 
-function updateFilter({ filter, value }) {
+function updateFilter({filter, value}) {
     const searchParams = new URLSearchParams(window.location.search);
     if (filter === 'letter') {
         const newLetter = selectedLetter.value === value ? null : value;
@@ -82,7 +82,8 @@ const sortingMessage = computed(() => {
             <div class="window-header">
                 <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
                 <div class="window-header-url">www.palweb.app/library/terms</div>
-                <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add</Link>
+                <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add
+                </Link>
                 <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
             <div class="window-section-head"><h1>dictionary</h1></div>
@@ -98,7 +99,8 @@ const sortingMessage = computed(() => {
                         :key="letter"
                         :class="{ 'active': selectedLetter === letter }"
                         @click="updateFilter({ filter: 'letter', value: letter })"
-                    >{{ letter }}</button>
+                    >{{ letter }}
+                    </button>
                 </div>
                 <SearchFilters activeModel="terms" :filters="filters" @updateFilter="updateFilter"/>
                 <AppTip>
@@ -108,7 +110,8 @@ const sortingMessage = computed(() => {
                     <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
                     <p v-else>
                         No Terms matching this query. Is a term missing from the Dictionary?
-                        <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us know!</a>
+                        <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us
+                            know!</a>
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">
@@ -125,3 +128,41 @@ const sortingMessage = computed(() => {
         </div>
     </div>
 </template>
+
+<style scoped lang="scss">
+.letters-array {
+    justify-items: center;
+    padding: 3.2rem;
+    background: var(--color-pastel-light);
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 1.6rem;
+    direction: rtl;
+
+    button {
+        width: 4.8rem;
+        height: 4.8rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono-font);
+        font-size: 2.4rem;
+        font-weight: 700;
+        user-select: none;
+        color: var(--color-accent-medium);
+        background: white;
+
+        &:hover {
+            color: var(--color-dark-primary)
+        }
+
+        &.active {
+            color: white;
+            background: var(--color-dark-primary);
+        }
+    }
+}
+</style>
