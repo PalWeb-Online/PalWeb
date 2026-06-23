@@ -92,16 +92,12 @@ class TermController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        $featuredTerm = Cache::get('word-of-the-day');
-        $featuredTerm = $featuredTerm
-            ? new TermResource($featuredTerm)
-            : new TermResource(Term::whereNotNull('image')->inRandomOrder()->first());
-
-        $resource = TermResource::collection($terms);
+        $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
+        $featuredTerm?->load(['attributes', 'glosses.attributes']);
 
         return response()->json([
             'terms' => [
-                'data' => $resource->toArray($request),
+                'data' => TermResource::collection($terms)->toArray($request),
                 'meta' => [
                     'links' => $terms->linkCollection()->toArray(),
                     'current_page' => $terms->currentPage(),
@@ -110,7 +106,7 @@ class TermController extends Controller
                 ],
             ],
             'totalCount' => $terms->total(),
-            'featuredTerm' => $featuredTerm ?? null,
+            'featuredTerm' => new TermShowResource($featuredTerm),
             'filters' => $filters,
         ]);
     }

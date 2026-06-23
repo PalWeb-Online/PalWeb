@@ -20,15 +20,15 @@ class SelectWordOfTheDay extends Command
      *
      * @var string
      */
-    protected $description = 'Selects the Word of the Day.';
+    protected $description = 'Selects a Term to feature.';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $wordOfTheDay = Term::whereNotNull('image')->with(['pronunciations'])->inRandomOrder()->first();
-        Cache::put('word-of-the-day', $wordOfTheDay, now()->addDay());
+        $featuredTerm = Term::whereNotNull('image')->with(['pronunciations'])->inRandomOrder()->first();
+        Cache::put('word-of-the-day', $featuredTerm, now()->addDay());
 
         return Command::SUCCESS;
     }

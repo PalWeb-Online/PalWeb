@@ -43,10 +43,7 @@ class CommunityController extends Controller
             ->take(5)
             ->get();
 
-        $featuredDeck = Cache::get('featured-deck');
-        if (! $featuredDeck) {
-            $featuredDeck = Deck::inRandomOrder()->with(['terms'])->first();
-        }
+        $featuredDeck = Cache::get('featured-deck') ?? Deck::inRandomOrder()->with(['terms'])->first();
 
         $latestAudios = Audio::query()
             ->with([
