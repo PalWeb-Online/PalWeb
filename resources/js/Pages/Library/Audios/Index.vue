@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
-import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";

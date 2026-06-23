@@ -10,6 +10,7 @@ use App\Services\AudioService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\URL;
 
@@ -69,22 +70,20 @@ class AudioController extends Controller
 
     public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
     {
-        if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
-            return $request->expectsJson()
-                ? response()->json(['error' => 'Unauthorized.'], 403)
-                : abort(403, 'Unauthorized');
-        }
+        Gate::authorize('update', $audio);
 
         try {
             $this->audioService->deleteAudio($audio->filename);
             $audio->delete();
 
-            session()->flash('notification', ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
+            session()->flash('notification',
+                ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
 
             return back();
 
         } catch (\Exception $e) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
+            session()->flash('notification',
+                ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
 
             return back();
         }

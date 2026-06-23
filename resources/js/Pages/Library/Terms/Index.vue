@@ -2,7 +2,6 @@
 import { computed, ref, onMounted } from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
-import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import { useUserStore } from "../../../stores/UserStore.js";
@@ -20,12 +19,12 @@ const totalCount   = ref(0);
 const featuredTerm = ref(null);
 const filters      = ref({ sort: 'alphabetical' });
 const loading      = ref(true);
-const selectedLetter = ref(null);
 
 const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
     'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
 ];
+const selectedLetter = ref(null);
 
 const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchTerms);
 
