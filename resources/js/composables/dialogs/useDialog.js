@@ -8,7 +8,8 @@ export function useDialog(props = {}) {
     const isLoadingTerms = ref(true);
 
     const {
-        deleteResource: deleteDialog
+        isDeleting: isDeletingDialog,
+        deleteResource: deleteDialog,
     } = useResourceActions({
         routeBase: 'dialogs',
         label: 'Dialog',
@@ -64,5 +65,11 @@ export function useDialog(props = {}) {
         }
     }
 
-    return {dialog, isLoading, isLoadingTerms, deleteDialog};
+    return {
+        dialog,
+        isLoading,
+        isLoadingTerms,
+        isDeletingDialog,
+        deleteDialog
+    };
 }

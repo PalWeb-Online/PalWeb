@@ -7,7 +7,8 @@ export function useAudio(url = null) {
     const isPlaying = ref(false);
 
     const {
-        deleteResource: deleteAudio
+        isDeleting: isDeletingAudio,
+        deleteResource: deleteAudio,
     } = useResourceActions({
         routeBase: 'audios',
         label: 'Audio',
@@ -48,7 +49,6 @@ export function useAudio(url = null) {
 
     watch(() => toValue(url),
         (newUrl) => {
-            console.log('newUrl', newUrl);
             mountAudio(newUrl);
         },
         {deep: true}
@@ -61,6 +61,7 @@ export function useAudio(url = null) {
     return {
         audio,
         isPlaying,
+        isDeletingAudio,
         playAudio,
         deleteAudio,
     };

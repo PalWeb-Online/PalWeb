@@ -6,7 +6,8 @@ export function useSentence(props = {}) {
     const isLoading = ref(true);
 
     const {
-        deleteResource: deleteSentence
+        isDeleting: isDeletingSentence,
+        deleteResource: deleteSentence,
     } = useResourceActions({
         routeBase: 'sentences',
         label: 'Sentence',
@@ -35,5 +36,11 @@ export function useSentence(props = {}) {
         {deep: true}
     );
 
-    return {sentence, isLoading, isCurrentTerm, deleteSentence};
+    return {
+        sentence,
+        isLoading,
+        isDeletingSentence,
+        isCurrentTerm,
+        deleteSentence
+    };
 }

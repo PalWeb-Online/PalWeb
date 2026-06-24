@@ -6,7 +6,8 @@ export function useTerm(props = {}) {
     const isLoading = ref(true);
 
     const {
-        deleteResource: deleteTerm
+        isDeleting: isDeletingTerm,
+        deleteResource: deleteTerm,
     } = useResourceActions({
         routeBase: 'terms',
         label: 'Term',
@@ -31,5 +32,10 @@ export function useTerm(props = {}) {
         {deep: true}
     );
 
-    return {term, isLoading, deleteTerm};
+    return {
+        term,
+        isLoading,
+        isDeletingTerm,
+        deleteTerm
+    };
 }

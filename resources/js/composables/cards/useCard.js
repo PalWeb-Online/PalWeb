@@ -7,7 +7,8 @@ export function useCard() {
     const NotificationStore = useNotificationStore();
 
     const {
-        deleteResource: deleteCard
+        isDeleting: isDeletingCard,
+        deleteResource: deleteCard,
     } = useResourceActions({
         routeBase: 'cards',
         label: 'Card',
@@ -38,5 +39,11 @@ export function useCard() {
         NotificationStore.addNotification('Reset Card!', 'info');
     };
 
-    return {deleteCard, masterCard, toggleSuspend, resetCard};
+    return {
+        isDeletingCard,
+        toggleSuspend,
+        masterCard,
+        resetCard,
+        deleteCard,
+    };
 }

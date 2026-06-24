@@ -2,11 +2,15 @@ import {useResourceActions} from "../resources/useResourceActions.js";
 
 export function useActivity() {
     const {
-        deleteResource: deleteActivity
+        isDeleting: isDeletingActivity,
+        deleteResource: deleteActivity,
     } = useResourceActions({
         routeBase: 'activities',
         label: 'Activity',
     });
 
-    return {deleteActivity};
+    return {
+        isDeletingActivity,
+        deleteActivity,
+    };
 }

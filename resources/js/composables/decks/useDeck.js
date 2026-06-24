@@ -8,7 +8,8 @@ export function useDeck(props = {}, options = {}) {
     const NotificationStore = useNotificationStore();
 
     const {
-        deleteResource: deleteDeck
+        isDeleting: isDeletingDeck,
+        deleteResource: deleteDeck,
     } = useResourceActions({
         routeBase: 'decks',
         label: 'Deck',
@@ -124,10 +125,11 @@ export function useDeck(props = {}, options = {}) {
         isLoadingTerms,
         hasLoadedTerms,
         loadTermsError,
+        isDeletingDeck,
         loadTerms,
         toggleTerm,
-        deleteDeck,
         copyDeck,
         copyLink,
+        deleteDeck,
     };
 }
