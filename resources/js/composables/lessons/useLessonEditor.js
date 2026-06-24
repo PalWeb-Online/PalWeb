@@ -52,7 +52,6 @@ export function useLessonEditor({
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         lessonLoader.setLesson(model);
 
-        // todo: what is more correct? `??` or `||`?
         selectedUnit.value = model?.unit ?? initialUnit.value ?? null;
         selectedDeck.value = model?.deck ?? null;
         selectedDialog.value = model?.dialog ?? null;
@@ -100,6 +99,7 @@ export function useLessonEditor({
         getLoadIdentifier: () => lessonId.value,
         fetchModel: lessonLoader.fetchLesson,
         resetModel: lessonLoader.setLesson,
+        label: 'Lesson',
         routeBase: 'lessons',
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
         beforeReload: () => {

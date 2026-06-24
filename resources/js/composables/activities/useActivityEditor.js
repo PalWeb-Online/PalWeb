@@ -47,6 +47,7 @@ export function useActivityEditor({
         getLoadIdentifier: () => activityId.value,
         fetchModel: activityLoader.fetchActivity,
         resetModel: activityLoader.setActivity,
+        label: 'Activity',
         routeBase: 'activities',
         getBlocks: (document) => document?.blocks ?? [],
         beforeReload: () => {

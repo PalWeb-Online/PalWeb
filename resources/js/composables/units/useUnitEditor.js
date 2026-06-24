@@ -34,6 +34,7 @@ export function useUnitEditor({
         getLoadIdentifier: () => unitId.value,
         fetchModel: unitLoader.fetchUnit,
         resetModel: unitLoader.setUnit,
+        label: 'Unit',
         routeBase: 'units',
         beforeSave: ({publish}, {form}) => {
             const previousPublished = form.published;

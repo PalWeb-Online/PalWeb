@@ -39,11 +39,9 @@ export function useTeacherEditor({
         populateForm,
         extractSavedModel: (response) => response.data.teacher ?? response.data.data ?? null,
         getLoadIdentifier: () => user.value?.teacher?.id ?? null,
-
-        // model is already loaded in & setting is done here
         fetchModel: async () => user.value?.teacher ?? null,
         resetModel: setTeacher,
-
+        label: 'Teacher',
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
         onSaveSuccess: () => {
