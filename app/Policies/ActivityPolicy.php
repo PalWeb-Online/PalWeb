@@ -28,4 +28,14 @@ class ActivityPolicy
 
         return false;
     }
+
+    public function update(User $user, Activity $activity): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function delete(User $user, Activity $activity): bool
+    {
+        return $user->isAdmin();
+    }
 }

@@ -16,9 +16,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class DeckController extends Controller
 {
@@ -182,15 +184,30 @@ class DeckController extends Controller
         }
     }
 
-    public function destroy(Deck $deck): RedirectResponse
+    public function destroy(Deck $deck): JsonResponse
     {
-        Gate::authorize('modify', $deck);
+        try {
+            Gate::authorize('delete', $deck);
 
-        $deck->delete();
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
+            $deletedDeck = $deck->name;
 
-        return to_route('decks.index');
+            DB::transaction(function () use ($deck) {
+                $deck->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedDeck]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Deck.', [
+                'deck_id' => $deck->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Deck.', $e);
+        }
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse

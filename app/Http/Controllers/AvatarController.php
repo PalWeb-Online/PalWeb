@@ -10,12 +10,14 @@ use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Throwable;
 
 class AvatarController extends Controller
 {
@@ -78,38 +80,44 @@ class AvatarController extends Controller
 
     public function destroy(Avatar $avatar): JsonResponse
     {
-        Gate::authorize('delete', $avatar);
-
-        $user = $avatar->user;
-        $filename = $avatar->filename;
-
         try {
-            $path = self::STORAGE_PATH.'/'.$filename;
+            Gate::authorize('delete', $avatar);
 
-            if (app()->isProduction()) {
-                if (! Storage::disk('s3')->exists($path)) {
-                    throw new \Exception("File not found: {$path}");
+            $userId = $avatar->user_id;
+            $filename = $avatar->filename;
+
+            DB::transaction(function () use ($avatar, $filename) {
+                $path = self::STORAGE_PATH.'/'.$filename;
+
+                if (app()->isProduction()) {
+                    if (! Storage::disk('s3')->exists($path)) {
+                        throw new \RuntimeException("File not found: {$path}");
+                    }
+
+                    Storage::disk('s3')->delete($path);
+
+                } else {
+                    Log::info('Simulating avatar file deletion from s3: '.$filename);
                 }
 
-                Storage::disk('s3')->delete($path);
+                $avatar->delete();
+            });
 
-            } else {
-                Log::info('Simulating avatar file deletion from s3: '.$filename);
-            }
+            return response()->json([
+                'success' => true,
+                'user' => new UserEditResource(
+                    User::with(['dialect', 'teacher', 'roles', 'uploadedAvatars'])->findOrFail($userId)
+                ),
+            ]);
 
-        } catch (\Exception $e) {
-            throw new \Exception(
-                "Failed to delete file: ".self::STORAGE_PATH."/{$filename}. Error: ".$e->getMessage(),
-                0,
-                $e
-            );
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Avatar.', [
+                'avatar_id' => $avatar->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete avatar.', $e);
         }
-
-        $avatar->delete();
-
-        return response()->json([
-            'user' => new UserEditResource($user->fresh(['dialect', 'teacher', 'roles', 'uploadedAvatars'])),
-        ]);
     }
 
     private function processAvatar(UploadedFile $avatar): string

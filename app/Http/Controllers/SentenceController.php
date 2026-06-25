@@ -13,10 +13,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class SentenceController extends Controller
 {
@@ -274,23 +277,41 @@ class SentenceController extends Controller
             ->all();
     }
 
-    public function destroy(Sentence $sentence): RedirectResponse
+    public function destroy(Sentence $sentence): JsonResponse
     {
-        $affectedTermIds = DB::table('sentence_term')
-            ->where('sentence_id', $sentence->id)
-            ->whereNotNull('term_id')
-            ->pluck('term_id')
-            ->unique()
-            ->values()
-            ->all();
+        try {
+            Gate::authorize('delete', $sentence);
 
-        $sentence->delete();
+            $deletedSentence = $sentence->sentence;
 
-        UpdateTermUsageCount::dispatch($affectedTermIds);
+            $affectedTermIds = DB::transaction(function () use ($sentence) {
+                $affectedTermIds = DB::table('sentence_term')
+                    ->where('sentence_id', $sentence->id)
+                    ->whereNotNull('term_id')
+                    ->pluck('term_id')
+                    ->unique()
+                    ->values()
+                    ->all();
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $sentence->sentence])]);
+                $sentence->delete();
 
-        return to_route('sentences.index');
+                return $affectedTermIds;
+            });
+
+            UpdateTermUsageCount::dispatch($affectedTermIds);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedSentence]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Sentence.', [
+                'sentence_id' => $sentence->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Sentence.', $e);
+        }
     }
 }

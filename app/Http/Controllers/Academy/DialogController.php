@@ -14,7 +14,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class DialogController extends Controller
 {
@@ -89,13 +91,30 @@ class DialogController extends Controller
         }
     }
 
-    public function destroy(Dialog $dialog): RedirectResponse
+    public function destroy(Dialog $dialog): JsonResponse
     {
-        $dialog->delete();
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $dialog->title])]);
+        try {
+            Gate::authorize('delete', $dialog);
 
-        return to_route('dialogs.index');
+            $deletedDialog = $dialog->title;
+
+            DB::transaction(function () use ($dialog) {
+                $dialog->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedDialog]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Dialog.', [
+                'dialog_id' => $dialog->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Dialog.', $e);
+        }
     }
 
     public function search(Request $request): JsonResponse

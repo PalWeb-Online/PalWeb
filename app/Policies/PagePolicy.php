@@ -16,4 +16,9 @@ class PagePolicy
     {
         return $page->status === 'published' || $user?->isAdmin() === true;
     }
+
+    public function delete(User $user, Page $page): bool
+    {
+        return $user->isAdmin();
+    }
 }

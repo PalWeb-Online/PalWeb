@@ -9,7 +9,10 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TeacherController extends Controller
 {
@@ -49,22 +52,27 @@ class TeacherController extends Controller
         return to_route('users.show', $teacher->user);
     }
 
-    public function destroy(Teacher $teacher): JsonResponse|RedirectResponse
+    public function destroy(Teacher $teacher): JsonResponse
     {
-        Gate::authorize('delete', $teacher);
+        try {
+            Gate::authorize('delete', $teacher);
 
-        $user = $teacher->user;
-        $teacher->delete();
+            DB::transaction(function () use ($teacher) {
+                $teacher->delete();
+            });
 
-        if (request()->expectsJson()) {
             return response()->json([
-                'deleted' => true,
+                'success' => true,
+                'message' => __('deleted', ['thing' => 'your Teacher profile'])
             ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Teacher.', [
+                'teacher_id' => $teacher->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Teacher profile.', $e);
         }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => 'your Teacher profile'])]);
-
-        return to_route('users.show', $user);
     }
 }

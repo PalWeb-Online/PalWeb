@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CardController extends Controller
 {
@@ -75,16 +79,28 @@ class CardController extends Controller
         ]);
     }
 
-    public function destroy(Card $card): RedirectResponse
+    public function destroy(Card $card): JsonResponse
     {
-        Gate::authorize('delete', $card);
+        try {
+            Gate::authorize('delete', $card);
 
-        $card->delete();
+            DB::transaction(function () use ($card) {
+                $card->delete();
+            });
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => 'Card'])]);
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => 'Card']),
+            ]);
 
-        return back();
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Card.', [
+                'card_id' => $card->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Card.', $e);
+        }
     }
 
     public function purge(): RedirectResponse

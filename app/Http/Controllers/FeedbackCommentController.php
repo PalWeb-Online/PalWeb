@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFeedbackCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\FeedbackComment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class FeedbackCommentController extends Controller
 {
@@ -32,12 +37,29 @@ class FeedbackCommentController extends Controller
         return back();
     }
 
-    public function destroy(FeedbackComment $feedbackComment): RedirectResponse
+    public function destroy(FeedbackComment $feedbackComment): JsonResponse
     {
-        $feedbackComment->delete();
+        try {
+            Gate::authorize('delete', $feedbackComment);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $feedbackComment->comment])]);
-        return to_route('feedback.index');
+            $deletedComment = $feedbackComment->comment;
+
+            DB::transaction(function () use ($feedbackComment) {
+                $feedbackComment->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedComment]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Comment.', [
+                'feedback_comment_id' => $feedbackComment->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Feedback Comment.', $e);
+        }
     }
 }

@@ -27,9 +27,12 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class TermController extends Controller
 {
@@ -394,30 +397,46 @@ class TermController extends Controller
         $existingDependents->except($requestItems)->each->delete();
     }
 
-    public function destroy(Term $term): RedirectResponse
+    public function destroy(Term $term): JsonResponse
     {
-        $category = $term->category;
-        $translit = $term->translit;
+        try {
+            Gate::authorize('delete', $term);
 
-        $term->delete();
-        Root::doesntHave('terms')->delete();
+            $deletedTerm = $term->term;
 
-        $remainingTerms = Term::where([
-            'category' => $category,
-            'translit' => $translit,
-        ])->get();
+            DB::transaction(function () use ($term) {
+                $category = $term->category;
+                $translit = $term->translit;
 
-        if (count($remainingTerms) == 1) {
-            $remainingTerms->first()->update(['slug' => $category.'-'.$translit]);
-        } elseif (count($remainingTerms) > 1) {
-            foreach ($remainingTerms as $i => $remainingTerm) {
-                $remainingTerm->update(['slug' => $category.'-'.$translit.'-'.($i + 1)]);
-            }
+                $term->delete();
+                Root::doesntHave('terms')->delete();
+
+                $remainingTerms = Term::where([
+                    'category' => $category,
+                    'translit' => $translit,
+                ])->get();
+
+                if (count($remainingTerms) == 1) {
+                    $remainingTerms->first()->update(['slug' => $category.'-'.$translit]);
+                } elseif (count($remainingTerms) > 1) {
+                    foreach ($remainingTerms as $i => $remainingTerm) {
+                        $remainingTerm->update(['slug' => $category.'-'.$translit.'-'.($i + 1)]);
+                    }
+                }
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedTerm]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Term.', [
+                'term_id' => $term->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Term.', $e);
         }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $term->term])]);
-
-        return to_route('terms.index');
     }
 }

@@ -8,11 +8,13 @@ use App\Models\Dialect;
 use App\Models\Location;
 use App\Services\AudioService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class AudioController extends Controller
 {
@@ -68,24 +70,30 @@ class AudioController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
+    public function destroy(Audio $audio): JsonResponse
     {
-        Gate::authorize('update', $audio);
-
         try {
-            $this->audioService->deleteAudio($audio->filename);
-            $audio->delete();
+            Gate::authorize('delete', $audio);
 
-            session()->flash('notification',
-                ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
+            $deletedAudio = $audio->filename;
 
-            return back();
+            DB::transaction(function () use ($audio) {
+                $this->audioService->deleteAudio($audio->filename);
+                $audio->delete();
+            });
 
-        } catch (\Exception $e) {
-            session()->flash('notification',
-                ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedAudio]),
+            ]);
 
-            return back();
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Audio.', [
+                'audio_id' => $audio->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Audio.', $e);
         }
     }
 }
