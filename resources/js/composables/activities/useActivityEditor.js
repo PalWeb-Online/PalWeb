@@ -1,7 +1,6 @@
 import {route} from "ziggy-js";
 import {useActivityLoader} from "./useActivityLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 import {ref} from "vue";
@@ -10,7 +9,6 @@ export function useActivityEditor({
                                       activityId = null,
                                       initialLesson = null,
                                   } = {}) {
-    const NotificationStore = useNotificationStore();
     const documentPreset = getDocumentPreset('activity');
     const activityLoader = useActivityLoader();
 
@@ -64,18 +62,8 @@ export function useActivityEditor({
                 form.published = previousPublished;
             };
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Activity was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Activity could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Activity was successfully deleted.', 'success');
             router.get(route('activity-planner.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Activity could not be deleted.', 'error');
         },
     });
 

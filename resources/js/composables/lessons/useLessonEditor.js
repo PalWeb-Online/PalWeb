@@ -2,7 +2,6 @@ import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useLessonLoader} from "./useLessonLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 
@@ -10,7 +9,6 @@ export function useLessonEditor({
                                     lessonId = null,
                                     initialUnit = null,
                                 } = {}) {
-    const NotificationStore = useNotificationStore();
     const documentPreset = getDocumentPreset('lesson');
     const lessonLoader = useLessonLoader();
 
@@ -121,18 +119,8 @@ export function useLessonEditor({
         afterSave: (response, savedModel) => {
             redirectToEditRoute(savedModel);
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Lesson was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Lesson could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Lesson was successfully deleted.', 'success');
             router.get(route('lesson-planner.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Lesson could not be deleted.', 'error');
         },
     });
 

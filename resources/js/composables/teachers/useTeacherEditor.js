@@ -1,13 +1,10 @@
 import {computed, ref} from "vue";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 
 export function useTeacherEditor({
                                       user,
                                   }) {
-    const NotificationStore = useNotificationStore();
-
     // normally there would be a use*Loader composable here, but the Teacher model is loaded in
     // with the User model, so we just need to provide the ref & set method
 
@@ -44,18 +41,6 @@ export function useTeacherEditor({
         label: 'Teacher',
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, your Teacher profile was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — your Teacher profile could not be saved.', 'error');
-        },
-        onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, your Teacher profile was successfully deleted.', 'success');
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — your Teacher profile could not be deleted.', 'error');
-        },
     });
 
     const teacherExists = computed(() => !!teacher.value?.id);

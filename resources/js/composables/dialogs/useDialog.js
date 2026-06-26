@@ -1,6 +1,6 @@
 import {onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
-import {useResourceActions} from "../resources/useResourceActions.js";
+import {useResourceDelete} from "../resources/useResourceDelete.js";
 
 export function useDialog(props = {}) {
     const dialog = reactive({});
@@ -10,7 +10,7 @@ export function useDialog(props = {}) {
     const {
         isDeleting: isDeletingDialog,
         deleteResource: deleteDialog,
-    } = useResourceActions({
+    } = useResourceDelete({
         routeBase: 'dialogs',
         label: 'Dialog',
     });

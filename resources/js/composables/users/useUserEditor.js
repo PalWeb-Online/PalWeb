@@ -1,12 +1,10 @@
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserLoader} from "./useUserLoader.js";
 
 export function useUserEditor({
                                   username,
                               }) {
-    const NotificationStore = useNotificationStore();
     const userLoader = useUserLoader();
 
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
@@ -42,6 +40,7 @@ export function useUserEditor({
         extractSavedModel: (response) => response.data.user ?? response.data.data ?? null,
         fetchModel: userLoader.fetchUser,
         resetModel: userLoader.setUser,
+        label: 'User',
         getUpdateUrl: (identifier) => route('users.update', identifier),
 
         // todo: saving based on the username works, but it requires a soft redirect after saving
@@ -52,13 +51,6 @@ export function useUserEditor({
             if (!savedUser?.username || savedUser.username === username.value) return;
 
             window.history.replaceState({}, '', route('users.edit', savedUser.username));
-        },
-
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, your Profile was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oh no! The Profile could not be saved.', 'error');
         },
     });
 

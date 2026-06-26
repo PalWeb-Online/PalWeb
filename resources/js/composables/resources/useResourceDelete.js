@@ -1,7 +1,9 @@
 import {route} from "ziggy-js";
 import {ref} from "vue";
+import {router} from "@inertiajs/vue3";
+import {useNotificationStore} from "../../stores/NotificationStore.js";
 
-export function useResourceActions({
+export function useResourceDelete({
                                        routeBase,
                                        label = 'Model',
                                        getIdentifier = (model) => model?.id,
@@ -11,6 +13,8 @@ export function useResourceActions({
                                        onDeleteSuccess = null,
                                        onDeleteError = null,
                                    } = {}) {
+    const NotificationStore = useNotificationStore();
+
     const isDeleting = ref(false);
 
     const hasIdentifier = (identifier) => {
@@ -60,12 +64,16 @@ export function useResourceActions({
 
                 await onDeleteSuccess?.(response, model, identifier, options);
                 await options.onSuccess?.(response, model, identifier, options);
+                NotificationStore.addNotification(`${label} was successfully deleted.`, 'success');
+
+                router.visit(route('homepage'));
 
                 return response;
 
             } catch (error) {
                 await onDeleteError?.(error, model, identifier, options);
                 await options.onError?.(error, model, identifier, options);
+                NotificationStore.addNotification(`Oops — ${label} could not be deleted.`, 'error');
 
                 return null;
             }

@@ -2,7 +2,7 @@ import {reactive, ref, watch} from "vue";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useResourceActions} from "../resources/useResourceActions.js";
+import {useResourceDelete} from "../resources/useResourceDelete.js";
 
 export function useDeck(props = {}, options = {}) {
     const NotificationStore = useNotificationStore();
@@ -10,7 +10,7 @@ export function useDeck(props = {}, options = {}) {
     const {
         isDeleting: isDeletingDeck,
         deleteResource: deleteDeck,
-    } = useResourceActions({
+    } = useResourceDelete({
         routeBase: 'decks',
         label: 'Deck',
     });

@@ -1,7 +1,7 @@
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
-import {useResourceActions} from "../resources/useResourceActions.js";
+import {useResourceDelete} from "../resources/useResourceDelete.js";
 
 export function useCard() {
     const NotificationStore = useNotificationStore();
@@ -9,7 +9,7 @@ export function useCard() {
     const {
         isDeleting: isDeletingCard,
         deleteResource: deleteCard,
-    } = useResourceActions({
+    } = useResourceDelete({
         routeBase: 'cards',
         label: 'Card',
     });

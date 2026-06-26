@@ -2,14 +2,12 @@ import {ref} from "vue";
 import {route} from "ziggy-js";
 import {usePageLoader} from "./usePageLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 
 export function usePageEditor({
                                   pageId = null,
                               } = {}) {
-    const NotificationStore = useNotificationStore();
     const documentPreset = getDocumentPreset('wiki');
     const pageLoader = usePageLoader();
 
@@ -82,18 +80,8 @@ export function usePageEditor({
             await pageLoader.fetchWikiTree();
             redirectToEditRoute(savedModel);
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Page was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Page could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Page was successfully deleted.', 'success');
             router.get(route('wiki.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Page could not be deleted.', 'error');
         },
     });
 

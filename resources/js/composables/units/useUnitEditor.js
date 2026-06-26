@@ -1,13 +1,11 @@
 import {route} from "ziggy-js";
 import {useUnitLoader} from "./useUnitLoader.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 
 export function useUnitEditor({
                                   unitId = null,
                               } = {}) {
-    const NotificationStore = useNotificationStore();
     const unitLoader = useUnitLoader();
 
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
@@ -47,18 +45,8 @@ export function useUnitEditor({
                 form.published = previousPublished;
             };
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Unit was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Unit could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Unit was successfully deleted.', 'success');
             router.get(route('lesson-planner.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Unit could not be deleted.', 'error');
         },
     });
 

@@ -1,5 +1,5 @@
 import {onMounted, reactive, ref, watch} from "vue";
-import {useResourceActions} from "../resources/useResourceActions.js";
+import {useResourceDelete} from "../resources/useResourceDelete.js";
 
 export function useSentence(props = {}) {
     const sentence = reactive({});
@@ -8,7 +8,7 @@ export function useSentence(props = {}) {
     const {
         isDeleting: isDeletingSentence,
         deleteResource: deleteSentence,
-    } = useResourceActions({
+    } = useResourceDelete({
         routeBase: 'sentences',
         label: 'Sentence',
     });

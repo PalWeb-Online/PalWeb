@@ -1,7 +1,8 @@
 import {ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
-import {useResourceActions} from "./useResourceActions.js";
+import {useResourceDelete} from "./useResourceDelete.js";
+import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 export function useResourceEditor({
                                       initialForm,
@@ -31,6 +32,8 @@ export function useResourceEditor({
                                       onDeleteSuccess = null,
                                       onDeleteError = null,
                                   }) {
+    const NotificationStore = useNotificationStore();
+
     const isSaving = ref(false);
     const isLoadingForm = ref(false);
 
@@ -179,7 +182,9 @@ export function useResourceEditor({
                 });
 
                 setRecentlySuccessful();
+
                 onSaveSuccess?.(response, savedModel, options);
+                NotificationStore.addNotification(`${label} was successfully saved.`, 'success');
 
                 return response;
 
@@ -191,6 +196,7 @@ export function useResourceEditor({
                 }
 
                 onSaveError?.(error);
+                NotificationStore.addNotification(`Oops — ${label} could not be saved.`, 'error');
 
                 return null;
 
@@ -200,7 +206,7 @@ export function useResourceEditor({
         });
     };
 
-    const actions = useResourceActions({
+    const actions = useResourceDelete({
         routeBase,
         label,
         getIdentifier: () => {

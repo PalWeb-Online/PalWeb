@@ -1,6 +1,6 @@
 import {onMounted, onUnmounted, ref, toValue, watch} from "vue";
 import {Howl} from "howler";
-import {useResourceActions} from "../resources/useResourceActions.js";
+import {useResourceDelete} from "../resources/useResourceDelete.js";
 
 export function useAudio(url = null) {
     const audio = ref(null);
@@ -9,7 +9,7 @@ export function useAudio(url = null) {
     const {
         isDeleting: isDeletingAudio,
         deleteResource: deleteAudio,
-    } = useResourceActions({
+    } = useResourceDelete({
         routeBase: 'audios',
         label: 'Audio',
     });
