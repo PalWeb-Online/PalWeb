@@ -1,38 +1,27 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import {ref, onMounted, computed} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermContainer from "../../../components/TermContainer.vue";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
-defineOptions({ layout: Layout });
+defineOptions({layout: Layout});
 
-const terms   = ref([]);
+const terms = ref([]);
 const loading = ref(true);
+const error = ref(false);
 
 async function fetchTerm() {
     loading.value = true;
+    error.value = false;
     try {
-        const slug = window.location.pathname.replace('/library/terms/', '');
-        console.log('Fetching slug:', slug);
-
-        const response = await fetch(`/api/library/terms/${slug}`);
-        console.log('Response status:', response.status);
-
+        const slug = window.location.pathname.split('/').pop();
+        const response = await fetch(route('api.terms.show', slug));
         const data = await response.json();
-        console.log('Data received:', data);
-
-        // La réponse peut être data.terms ou data.terms.data
-        if (data.terms && data.terms.data) {
-            terms.value = data.terms.data;
-        } else if (data.terms && Array.isArray(data.terms)) {
-            terms.value = data.terms;
-        } else if (data.terms) {
-            terms.value = Object.values(data.terms);
-        } else {
-            terms.value = [];
-        }
+        terms.value = data.terms;
     } catch (error) {
-        console.error('Failed to fetch term:', error);
+        console.error('Failed to fetch model:', error);
         terms.value = [];
+        error.value = true;
     } finally {
         loading.value = false;
     }
@@ -51,14 +40,8 @@ const pageTitle = computed(() => {
 <template>
     <Head :title="pageTitle"/>
     <div id="app-body">
-        <div v-if="loading" class="loading-state">
-            <p>Loading...</p>
-        </div>
-        <template v-else-if="terms.length > 0">
-            <TermContainer v-for="term in terms" :key="term.id" :model="term"/>
-        </template>
-        <template v-else>
-            <p>Term not found.</p>
-        </template>
+        <LoadingSpinner v-if="loading"/>
+        <TermContainer v-else-if="terms.length > 0" v-for="term in terms" :key="term.id" :model="term"/>
+        <div v-else-if="error" class="loading-state"><p>Unable to load Term.</p></div>
     </div>
 </template>

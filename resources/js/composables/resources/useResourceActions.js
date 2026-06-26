@@ -1,28 +1,81 @@
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {ref} from "vue";
 
 export function useResourceActions({
                                        routeBase,
-                                       label = 'model',
+                                       label = 'Model',
                                        getIdentifier = (model) => model?.id,
-                                       getDestroyRouteName = () => `${routeBase}.destroy`,
                                        getDestroyUrl = null,
-                                   }) {
+                                       beforeDelete = null,
+                                       afterDelete = null,
+                                       onDeleteSuccess = null,
+                                       onDeleteError = null,
+                                   } = {}) {
+    const isDeleting = ref(false);
+
+    const hasIdentifier = (identifier) => {
+        return identifier !== null && identifier !== undefined && identifier !== '';
+    };
+
+    const withDeleting = async (callback) => {
+        if (isDeleting.value) return null;
+
+        isDeleting.value = true;
+
+        try {
+            return await callback();
+        } finally {
+            isDeleting.value = false;
+        }
+    };
+
     const resolveDestroyUrl = (model, options = {}) => {
         const identifier = getIdentifier(model, options);
 
-        return getDestroyUrl?.(model, identifier, options)
-            ?? route(getDestroyRouteName(model, options), identifier);
+        return getDestroyUrl?.(model, identifier, options) ?? route(`${routeBase}.destroy`, identifier);
     };
 
-    const deleteResource = (model, options = {}) => {
-        if (!getIdentifier(model, options)) return;
-        if (!confirm(`Are you sure you want to delete this ${label}?`)) return;
+    const deleteResource = async (model = null, options = {}) => {
+        if (isDeleting.value) return null;
 
-        router.delete(resolveDestroyUrl(model, options), options);
+        const identifier = getIdentifier(model, options);
+
+        if (!hasIdentifier(identifier)) return null;
+
+        if (!confirm(`Are you sure you want to delete this ${label}?`)) {
+            return null;
+        }
+
+        return await withDeleting(async () => {
+            await beforeDelete?.(model, identifier, options);
+            await options.beforeDelete?.(model, identifier, options);
+
+            try {
+                const url = resolveDestroyUrl(model, options);
+
+                const response = await axios.delete(url, options);
+
+                await afterDelete?.(response, model, identifier, options);
+                await options.afterDelete?.(response, model, identifier, options);
+
+                await onDeleteSuccess?.(response, model, identifier, options);
+                await options.onSuccess?.(response, model, identifier, options);
+
+                return response;
+
+            } catch (error) {
+                await onDeleteError?.(error, model, identifier, options);
+                await options.onError?.(error, model, identifier, options);
+
+                return null;
+            }
+        });
     };
 
     return {
-        deleteResource
+        isDeleting,
+        withDeleting,
+        deleteResource,
+        resolveDestroyUrl,
     };
 }

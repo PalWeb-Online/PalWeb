@@ -1,6 +1,7 @@
 import {ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
+import {useResourceActions} from "./useResourceActions.js";
 
 export function useResourceEditor({
                                       initialForm,
@@ -12,6 +13,7 @@ export function useResourceEditor({
                                       getDeleteIdentifier = getSaveIdentifier,
                                       fetchModel,
                                       resetModel,
+                                      label = 'Model',
                                       routeBase = null,
                                       getStoreUrl = null,
                                       getUpdateUrl = null,
@@ -30,7 +32,6 @@ export function useResourceEditor({
                                       onDeleteError = null,
                                   }) {
     const isSaving = ref(false);
-    const isDeleting = ref(false);
     const isLoadingForm = ref(false);
 
     const withSaving = async (callback) => {
@@ -42,16 +43,6 @@ export function useResourceEditor({
             return await callback();
         } finally {
             isSaving.value = false;
-        }
-    };
-
-    const withDeleting = async (callback) => {
-        isDeleting.value = true;
-
-        try {
-            return await callback();
-        } finally {
-            isDeleting.value = false;
         }
     };
 
@@ -71,10 +62,6 @@ export function useResourceEditor({
 
     const resolveUpdateUrl = (identifier, options = {}) => {
         return getUpdateUrl?.(identifier, options) ?? route(`${routeBase}.update`, identifier);
-    };
-
-    const resolveDeleteUrl = (identifier) => {
-        return getDeleteUrl?.(identifier) ?? route(`${routeBase}.destroy`, identifier);
     };
 
     const {
@@ -107,12 +94,6 @@ export function useResourceEditor({
 
     const resolveSaveIdentifier = () => {
         const identifier = getSaveIdentifier();
-
-        return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
-    };
-
-    const resolveDeleteIdentifier = () => {
-        const identifier = getDeleteIdentifier();
 
         return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
     };
@@ -219,34 +200,33 @@ export function useResourceEditor({
         });
     };
 
-    const deleteResource = async () => {
-        const identifier = resolveDeleteIdentifier();
+    const actions = useResourceActions({
+        routeBase,
+        label,
+        getIdentifier: () => {
+            const identifier = getDeleteIdentifier();
 
-        if (!hasIdentifier(identifier)) return null;
-        if (!confirm('Are you sure you want to delete this model?')) return null;
+            return hasIdentifier(identifier)
+                ? identifier
+                : savedIdentifier.value;
+        },
+        getDestroyUrl: (_, identifier, options) => {
+            return getDeleteUrl?.(identifier, options);
+        },
+        beforeDelete,
+        afterDelete: async (response, model, identifier, options) => {
+            resetModel();
+            savedIdentifier.value = null;
 
-        return await withDeleting(async () => {
-            beforeDelete?.(identifier);
-
-            try {
-                const response = await axios.delete(resolveDeleteUrl(identifier));
-
-                resetModel();
-                savedIdentifier.value = null;
-
-                await afterDelete?.(response);
-
-                onDeleteSuccess?.(response);
-
-                return response;
-
-            } catch (error) {
-                onDeleteError?.(error);
-
-                return null;
-            }
-        });
-    };
+            await afterDelete?.(response, model, identifier, options, {
+                form,
+                defaults,
+                clearErrors,
+            });
+        },
+        onDeleteSuccess,
+        onDeleteError,
+    });
 
     return {
         form,
@@ -258,11 +238,11 @@ export function useResourceEditor({
         defaults,
         clearErrors,
         isSaving,
-        isDeleting,
+        isDeleting: actions.isDeleting,
         isLoadingForm,
         loadForm,
         reloadForm,
         saveResource,
-        deleteResource,
+        deleteResource: actions.deleteResource,
     };
 }

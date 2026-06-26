@@ -9,6 +9,7 @@ import { route } from "ziggy-js";
 import { useUserStore } from "../../../stores/UserStore.js";
 import UserItem from "../../../components/UserItem.vue";
 import { usePaginator } from "../../../composables/usePaginator.js";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 defineOptions({ layout: Layout });
@@ -16,15 +17,16 @@ defineOptions({ layout: Layout });
 const speaker = ref(null);
 const audios  = ref([]);
 const loading = ref(true);
+const error = ref(false);
 
 const { currentPage, pageNumbers, goToPage, updatePagination } = usePaginator(fetchSpeaker);
 
 async function fetchSpeaker(params = {}) {
     loading.value = true;
+    error.value = false;
     try {
         const id = window.location.pathname.split('/').pop();
-        const query = new URLSearchParams(params).toString();
-        const response = await fetch(`/api/library/audios/${id}${query ? '?' + query : ''}`);
+        const response = await fetch(route('api.speaker.show', { speaker: id, ...params }));
         const data = await response.json();
         speaker.value = data.speaker;
 
@@ -38,6 +40,7 @@ async function fetchSpeaker(params = {}) {
         }
     } catch (error) {
         console.error('Failed to fetch speaker:', error);
+        error.value = true;
     } finally {
         loading.value = false;
     }
@@ -56,8 +59,7 @@ onMounted(() => fetchSpeaker());
             </div>
             <div class="window-section-head"><h1>speaker</h1></div>
 
-            <div v-if="loading" class="loading-state"><p>Loading...</p></div>
-
+            <LoadingSpinner v-if="loading"/>
             <template v-else-if="speaker">
                 <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
                     <p>Your Profile is currently set to Private.</p>
@@ -87,6 +89,7 @@ onMounted(() => fetchSpeaker());
                     </AppTip>
                 </template>
             </template>
+            <div v-else-if="error" class="loading-state"><p>Unable to load Speaker.</p></div>
         </div>
     </div>
 </template>
