@@ -83,7 +83,7 @@ class Deck extends Model
         $query->when($filters['sort'] === 'popular', fn ($query) => $query
             ->leftJoin('markable_bookmarks', function ($join) {
                 $join->on('markable_bookmarks.markable_id', '=', 'decks.id')
-                    ->where('markable_bookmarks.markable_type', '=', self::class);
+                    ->where('markable_bookmarks.markable_type', '=', 'deck');
             })
             ->selectRaw('decks.*, COUNT(markable_bookmarks.id) as pins_count')
             ->groupBy('decks.id')
