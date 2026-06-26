@@ -73,7 +73,9 @@ class TermController extends Controller
 
     public function show(Term $term): \Inertia\Response
     {
-        return Inertia::render('Library/Terms/Show');
+        return Inertia::render('Library/Terms/Show', [
+            'termId' => $term->id,
+        ]);
     }
 
     // -------------------------------------------------------------------------
@@ -115,13 +117,20 @@ class TermController extends Controller
         ]);
     }
 
-    public function apiShow(Term $term): JsonResponse
+    public function fetch(Request $request, Term $term): JsonResponse
     {
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
         $termIds = $this->termRepository->getLikeTermIds($term);
 
-        $terms = Term::query()
-            ->whereIn('id', $termIds)
-            ->with([
+        $query = Term::query()
+            ->whereIn('id', $termIds);
+
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            $query->with([
                 'root',
                 'pronunciations.audios.speaker',
                 'attributes',
@@ -133,8 +142,10 @@ class TermController extends Controller
                 'cards',
                 'decks' => fn ($q) => $q->limit(10),
             ])
-            ->withCount('pronunciations')
-            ->get();
+                ->withCount('pronunciations');
+        }
+
+        $terms = $query->get();
 
         $this->termService->hydrateGlossSentences($terms);
 

@@ -61,7 +61,9 @@ class SentenceController extends Controller
 
     public function show(Sentence $sentence): \Inertia\Response
     {
-        return Inertia::render('Library/Sentences/Show');
+        return Inertia::render('Library/Sentences/Show', [
+            'sentenceId' => $sentence->id,
+        ]);
     }
     // -------------------------------------------------------------------------
     // API Methods
@@ -108,9 +110,16 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function apiShow(Sentence $sentence): JsonResponse
+    public function fetch(Request $request, Sentence $sentence): JsonResponse
     {
-        $sentence->load(['dialog']);
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            $sentence->load(['dialog']);
+        }
 
         return response()->json([
             'sentence' => new SentenceResource($sentence),

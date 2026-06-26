@@ -58,7 +58,9 @@ class DeckController extends Controller
 
     public function show(Deck $deck): \Inertia\Response
     {
-        return Inertia::render('Library/Decks/Show');
+        return Inertia::render('Library/Decks/Show', [
+            'deckId' => $deck->id,
+        ]);
     }
 
     // -------------------------------------------------------------------------
@@ -102,11 +104,18 @@ class DeckController extends Controller
         ]);
     }
 
-    public function apiShow(Deck $deck): JsonResponse
+    public function fetch(Request $request, Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
-        $deck->load(['scores']);
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            $deck->load(['scores']);
+        }
 
         return response()->json([
             'deck' => new DeckResource($deck),

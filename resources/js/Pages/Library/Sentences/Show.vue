@@ -1,39 +1,40 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import {onMounted, watch} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import SentenceContainer from "../../../components/SentenceContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useSentenceViewer} from "../../../composables/sentences/useSentenceViewer.js";
 
-defineOptions({ layout: Layout });
+defineOptions({layout: Layout});
 
-const sentence = ref(null);
-const loading  = ref(true);
-const error = ref(false);
+const props = defineProps({
+    sentenceId: {
+        type: Number,
+        required: true,
+    },
+});
 
-async function fetchSentence() {
-    loading.value = true;
-    error.value = false;
-    try {
-        const id = window.location.pathname.split('/').pop();
-        const response = await fetch(route('api.sentences.show', id));
-        const data = await response.json();
-        sentence.value = data.sentence;
-    } catch (error) {
-        console.error('Failed to fetch sentence:', error);
-        error.value = true;
-    } finally {
-        loading.value = false;
-    }
-}
+const {
+    sentence,
+    sentenceNotFound,
+    isLoadingSentence,
+    loadSentence,
+    reloadSentence,
+} = useSentenceViewer();
 
-onMounted(() => fetchSentence());
+onMounted(() => loadSentence(props.sentenceId));
+
+watch(
+    () => props.sentenceId,
+    () => reloadSentence(props.sentenceId)
+);
 </script>
 
 <template>
     <Head :title="sentence ? `Library: Corpus: ${sentence.sentence}` : 'Library: Corpus'"/>
     <div id="app-body">
-        <LoadingSpinner v-if="loading"/>
+        <LoadingSpinner v-if="isLoadingSentence"/>
         <SentenceContainer v-else-if="sentence" :model="sentence"/>
-        <div v-else-if="error" class="loading-state"><p>Unable to load Sentence.</p></div>
+        <div v-else-if="sentenceNotFound" class="loading-state"><p>Unable to load Sentence.</p></div>
     </div>
 </template>

@@ -414,6 +414,7 @@ Route::prefix('/api')->group(function () {
 
     Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
         Route::get('/search', 'search')->name('api.dialogs.search');
+        Route::get('/{dialog}', 'fetch')->name('api.dialogs.fetch');
     });
 
     Route::prefix('/lessons')->controller(LessonController::class)->group(function () {
@@ -438,21 +439,22 @@ Route::prefix('/api')->group(function () {
     Route::prefix('/library')->group(function () {
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.terms.index');
-            Route::get('/{term:slug}', 'apiShow')->name('api.terms.show');
+            Route::get('/{term:slug}', 'fetch')->name('api.terms.fetch');
+//            Route::get('/{term}', 'fetch')->name('api.terms.fetch');
         });
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.sentences.index');
-            Route::get('/{sentence}', 'apiShow')->name('api.sentences.show');
+            Route::get('/{sentence}', 'fetch')->name('api.sentences.fetch');
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('/audios')->group(function () {
                 Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
-                Route::get('/{speaker}', [SpeakerController::class, 'apiShow'])->name('api.speaker.show');
+                Route::get('/{speaker}', [SpeakerController::class, 'fetch'])->name('api.speakers.fetch');
             });
             Route::prefix('/decks')->controller(DeckController::class)->group(function () {
                 Route::get('/', 'apiIndex')->name('api.decks.index');
-                Route::get('/{deck}', 'apiShow')->name('api.decks.show');
+                Route::get('/{deck}', 'fetch')->name('api.decks.fetch');
                 Route::get('/{deck}/get/terms', 'getDeckTerms')->name('api.decks.get.terms');
             });
         });

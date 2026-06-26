@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDialogRequest;
 use App\Http\Requests\UpdateDialogRequest;
 use App\Http\Resources\DialogResource;
-use App\Http\Resources\SentenceResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\JsonResponse;
@@ -34,18 +33,26 @@ class DialogController extends Controller
 
         return Inertia::render('Academy/Dialogs/Show', [
             'section' => 'academy',
-            'dialog' => new DialogResource(
-                $dialog->load('sentences')
-                    ->setRelation('sentences',
-                        $dialog->sentences->map(function ($sentence) {
-                            return new SentenceResource($sentence)->additional(['terms' => false]);
-                        })
-                    )
-            ),
+            'dialogId' => $dialog->id,
         ]);
+    }
 
-        //        View::share('pageDescription',
-        //            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
+    public function fetch(Request $request, Dialog $dialog): JsonResponse
+    {
+        Gate::authorize('view', $dialog);
+
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            $dialog->load('sentences');
+        }
+
+        return response()->json([
+            'dialog' => new DialogResource($dialog),
+        ]);
     }
 
     public function store(StoreDialogRequest $request): RedirectResponse
