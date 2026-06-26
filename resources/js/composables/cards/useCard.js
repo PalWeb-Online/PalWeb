@@ -12,6 +12,9 @@ export function useCard() {
     } = useResourceDelete({
         routeBase: 'cards',
         label: 'Card',
+        onDeleteSuccess: () => {
+            router.get(route('card-dealer.cards'));
+        },
     });
 
     const masterCard = (card) => {

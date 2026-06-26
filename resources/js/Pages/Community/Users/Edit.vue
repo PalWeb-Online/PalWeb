@@ -133,7 +133,7 @@ const initializeTeacherForm = () => {
 const removeTeacher = async () => {
     const response = await deleteTeacher();
 
-    if (response) {
+    if (response.data.success) {
         showTeacherForm.value = false;
         clearTeacherForm();
     }

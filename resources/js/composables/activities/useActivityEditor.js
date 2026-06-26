@@ -63,7 +63,7 @@ export function useActivityEditor({
             };
         },
         onDeleteSuccess: () => {
-            router.get(route('activity-planner.index'));
+            router.get(route('lesson-planner.index'));
         },
     });
 

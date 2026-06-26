@@ -4,15 +4,15 @@ import {router} from "@inertiajs/vue3";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 export function useResourceDelete({
-                                       routeBase,
-                                       label = 'Model',
-                                       getIdentifier = (model) => model?.id,
-                                       getDestroyUrl = null,
-                                       beforeDelete = null,
-                                       afterDelete = null,
-                                       onDeleteSuccess = null,
-                                       onDeleteError = null,
-                                   } = {}) {
+                                      routeBase,
+                                      label = 'Model',
+                                      getIdentifier = (model) => model?.id,
+                                      getDestroyUrl = null,
+                                      beforeDelete = null,
+                                      afterDelete = null,
+                                      onDeleteSuccess = null,
+                                      onDeleteError = null,
+                                  } = {}) {
     const NotificationStore = useNotificationStore();
 
     const isDeleting = ref(false);
@@ -62,11 +62,15 @@ export function useResourceDelete({
                 await afterDelete?.(response, model, identifier, options);
                 await options.afterDelete?.(response, model, identifier, options);
 
-                await onDeleteSuccess?.(response, model, identifier, options);
-                await options.onSuccess?.(response, model, identifier, options);
-                NotificationStore.addNotification(`${label} was successfully deleted.`, 'success');
+                if (onDeleteSuccess || options.onSuccess) {
+                    await onDeleteSuccess?.(response, model, identifier, options);
+                    await options.onSuccess?.(response, model, identifier, options);
 
-                router.visit(route('homepage'));
+                } else {
+                    router.get(route('homepage'));
+                }
+
+                NotificationStore.addNotification(`${label} was successfully deleted.`, 'success');
 
                 return response;
 

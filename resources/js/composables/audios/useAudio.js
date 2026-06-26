@@ -1,6 +1,8 @@
 import {onMounted, onUnmounted, ref, toValue, watch} from "vue";
 import {Howl} from "howler";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 export function useAudio(url = null) {
     const audio = ref(null);
@@ -12,6 +14,9 @@ export function useAudio(url = null) {
     } = useResourceDelete({
         routeBase: 'audios',
         label: 'Audio',
+        onDeleteSuccess: () => {
+            router.get(route('audios.index'));
+        },
     });
 
     const unmountAudio = () => {

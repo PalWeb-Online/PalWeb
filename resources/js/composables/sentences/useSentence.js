@@ -1,5 +1,7 @@
 import {onMounted, reactive, ref, watch} from "vue";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 export function useSentence(props = {}) {
     const sentence = reactive({});
@@ -11,6 +13,9 @@ export function useSentence(props = {}) {
     } = useResourceDelete({
         routeBase: 'sentences',
         label: 'Sentence',
+        onDeleteSuccess: () => {
+            router.get(route('sentences.index'));
+        },
     });
 
     const isCurrentTerm = (term) => {

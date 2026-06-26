@@ -1,6 +1,7 @@
 import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
+import {router} from "@inertiajs/vue3";
 
 export function useTeacherEditor({
                                       user,
@@ -41,6 +42,9 @@ export function useTeacherEditor({
         label: 'Teacher',
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
+        onDeleteSuccess: () => {
+            router.get(route('users.show', user.value?.username));
+        },
     });
 
     const teacherExists = computed(() => !!teacher.value?.id);

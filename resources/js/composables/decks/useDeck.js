@@ -13,6 +13,9 @@ export function useDeck(props = {}, options = {}) {
     } = useResourceDelete({
         routeBase: 'decks',
         label: 'Deck',
+        onDeleteSuccess: () => {
+            router.get(route('decks.index'));
+        },
     });
 
     const deck = reactive({});

@@ -1,6 +1,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
+import {router} from "@inertiajs/vue3";
 
 export function useDialog(props = {}) {
     const dialog = reactive({});
@@ -13,6 +14,9 @@ export function useDialog(props = {}) {
     } = useResourceDelete({
         routeBase: 'dialogs',
         label: 'Dialog',
+        onDeleteSuccess: () => {
+            router.get(route('dialogs.index'));
+        },
     });
 
     const initDialog = (model) => {
