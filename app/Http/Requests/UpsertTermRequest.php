@@ -6,7 +6,7 @@ use App\Rules\ArabicScript;
 use App\Rules\LatinScript;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTermRequest extends FormRequest
+class UpsertTermRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

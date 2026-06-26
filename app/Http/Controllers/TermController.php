@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
-use App\Http\Requests\StoreTermRequest;
-use App\Http\Requests\UpdateTermRequest;
+use App\Http\Requests\UpsertTermRequest;
 use App\Http\Resources\PronunciationResource;
 use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
@@ -177,7 +176,7 @@ class TermController extends Controller
         return SentenceResource::collection($sentences);
     }
 
-    public function store(StoreTermRequest $request): RedirectResponse
+    public function store(UpsertTermRequest $request): RedirectResponse
     {
         $term = DB::transaction(function () use ($request) {
             $formData = $request->all();
@@ -225,7 +224,7 @@ class TermController extends Controller
         return to_route('terms.show', $term);
     }
 
-    public function update(Term $term, UpdateTermRequest $request): RedirectResponse
+    public function update(Term $term, UpsertTermRequest $request): RedirectResponse
     {
         $term = DB::transaction(function () use ($term, $request) {
             $formData = $request->all();

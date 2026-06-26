@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
-use App\Http\Requests\StoreDeckRequest;
-use App\Http\Requests\UpdateDeckRequest;
+use App\Http\Requests\UpsertDeckRequest;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
@@ -141,7 +140,7 @@ class DeckController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function store(StoreDeckRequest $request): RedirectResponse
+    public function store(UpsertDeckRequest $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -158,7 +157,7 @@ class DeckController extends Controller
         return to_route('decks.show', $deck);
     }
 
-    public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
+    public function update(UpsertDeckRequest $request, Deck $deck): RedirectResponse
     {
         Gate::authorize('modify', $deck);
 

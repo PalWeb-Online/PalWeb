@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDialogRequest;
-use App\Http\Requests\UpdateDialogRequest;
+use App\Http\Requests\UpsertDialogRequest;
 use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
@@ -55,7 +54,7 @@ class DialogController extends Controller
         ]);
     }
 
-    public function store(StoreDialogRequest $request): RedirectResponse
+    public function store(UpsertDialogRequest $request): RedirectResponse
     {
         $dialog = Dialog::create($request->all());
         $this->linkSentences($dialog, $request->sentences);
@@ -66,7 +65,7 @@ class DialogController extends Controller
         return to_route('speech-maker.dialog', $dialog);
     }
 
-    public function update(UpdateDialogRequest $request, Dialog $dialog): RedirectResponse
+    public function update(UpsertDialogRequest $request, Dialog $dialog): RedirectResponse
     {
         $dialog->update($request->all());
         $this->linkSentences($dialog, $request->sentences);

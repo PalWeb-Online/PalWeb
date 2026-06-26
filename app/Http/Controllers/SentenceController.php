@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
-use App\Http\Requests\StoreSentenceRequest;
-use App\Http\Requests\UpdateSentenceRequest;
+use App\Http\Requests\UpsertSentenceRequest;
 use App\Http\Resources\SentenceResource;
 use App\Jobs\UpdateTermUsageCount;
 use App\Models\Sentence;
@@ -128,7 +127,7 @@ class SentenceController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function store(StoreSentenceRequest $request): RedirectResponse
+    public function store(UpsertSentenceRequest $request): RedirectResponse
     {
         $sentence = Sentence::create($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
@@ -141,7 +140,7 @@ class SentenceController extends Controller
         return to_route('speech-maker.sentence', $sentence);
     }
 
-    public function update(UpdateSentenceRequest $request, Sentence $sentence): RedirectResponse
+    public function update(UpsertSentenceRequest $request, Sentence $sentence): RedirectResponse
     {
         $sentence->update($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
