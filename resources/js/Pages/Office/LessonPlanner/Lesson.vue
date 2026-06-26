@@ -351,7 +351,7 @@ const removeUnlockCondition = (i) => {
                     >
                         {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
                     </button>
-                    <button type="button" @click="deleteLesson">Delete Lesson</button>
+                    <button type="button" @click="deleteLesson()">Delete Lesson</button>
                 </div>
             </div>
         </template>

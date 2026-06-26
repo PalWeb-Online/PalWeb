@@ -250,11 +250,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         }}{{ form.status === 'published' ? 'Revert to Draft' : 'Publish' }}
                     </button>
 
-                    <button
-                        v-if="pageId"
-                        type="button"
-                        @click="deletePage"
-                    >
+                    <button v-if="pageId" type="button" @click="deletePage()">
                         Delete Page
                     </button>
 

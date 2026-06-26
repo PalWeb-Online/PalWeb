@@ -189,7 +189,7 @@ const removeLesson = (lesson) => {
                     >
                         {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
                     </button>
-                    <button type="button" @click="deleteUnit">Delete Unit</button>
+                    <button type="button" @click="deleteUnit()">Delete Unit</button>
                 </div>
             </div>
         </template>

@@ -154,7 +154,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                             form?.published ? 'Revert to Draft' : 'Publish'
                         }}
                     </button>
-                    <button type="button" @click="deleteActivity">Delete Activity</button>
+                    <button type="button" @click="deleteActivity()">Delete Activity</button>
                 </div>
             </div>
         </template>
