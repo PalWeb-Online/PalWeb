@@ -10,7 +10,15 @@ export function useUserLoader() {
         setModel: setUser,
         fetchModel: fetchUser,
     } = useResourceLoader({
-        getUrl: (username) => route('api.users.fetch', username),
+        getUrl: (userId, options = {}) => route(options.routeName ?? 'api.users.fetch', {
+            user: userId,
+            ...(options.params ?? {}),
+        }),
+        getRequestConfig: (options = {}) => ({
+            params: {
+                include: options.include ?? null,
+            },
+        }),
         extractModel: (response) => response.data.user ?? null,
     });
 

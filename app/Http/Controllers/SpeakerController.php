@@ -16,29 +16,63 @@ class SpeakerController extends Controller
 {
     public function show(Speaker $speaker): \Inertia\Response
     {
-        return Inertia::render('Library/Audios/Speaker');
+        return Inertia::render('Library/Audios/Speaker', [
+            'speakerId' => $speaker->id,
+        ]);
     }
 
     // -------------------------------------------------------------------------
     // API Methods
     // -------------------------------------------------------------------------
 
-    public function apiShow(Speaker $speaker): JsonResponse
+    public function fetch(Request $request, Speaker $speaker): JsonResponse
     {
-        return response()->json([
-            'speaker' => new SpeakerResource($speaker->load(['dialect'])->loadCount(['audios'])),
-            'audios' => AudioResource::collection(
-                Audio::query()
-                    ->where('speaker_id', $speaker->id)
-                    ->with([
-                        'speaker',
-                        'pronunciation.term',
-                    ])
-                    ->orderByDesc('id')
-                    ->paginate(25)
-                    ->onEachSide(1)
-            ),
-        ]);
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        $speaker->load(['dialect'])->loadCount(['audios']);
+
+        $payload = [
+            'speaker' => new SpeakerResource($speaker),
+        ];
+
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            $perPage = 25;
+            $currentPage = $request->integer('page', 1);
+
+            $audiosCollection = Audio::query()
+                ->where('speaker_id', $speaker->id)
+                ->with([
+                    'speaker',
+                    'pronunciation.term',
+                ])
+                ->orderByDesc('id')
+                ->get();
+
+            $audios = new \Illuminate\Pagination\LengthAwarePaginator(
+                $audiosCollection->forPage($currentPage, $perPage)->values(),
+                $audiosCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+            $resource = AudioResource::collection($audios);
+
+            $payload['audios'] = [
+                'data' => $resource->toArray($request),
+                'meta' => [
+                    'links' => $audios->linkCollection()->toArray(),
+                    'current_page' => $audios->currentPage(),
+                    'last_page' => $audios->lastPage(),
+                    'total' => $audios->total(),
+                ],
+            ];
+        }
+
+        return response()->json($payload);
     }
 
     // -------------------------------------------------------------------------
