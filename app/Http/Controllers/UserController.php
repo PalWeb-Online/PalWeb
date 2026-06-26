@@ -53,6 +53,7 @@ class UserController extends Controller
 
         return Inertia::render('Community/Users/Edit', [
             'section' => 'community',
+            'userId' => $user->id,
             'username' => $user->username,
         ]);
     }

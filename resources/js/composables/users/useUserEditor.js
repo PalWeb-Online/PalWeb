@@ -3,6 +3,7 @@ import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserLoader} from "./useUserLoader.js";
 
 export function useUserEditor({
+                                  userId,
                                   username,
                               }) {
     const userLoader = useUserLoader();
@@ -45,7 +46,8 @@ export function useUserEditor({
 
         // todo: saving based on the username works, but it requires a soft redirect after saving
         //  since you can change your username; it also requires custom extraction of the identifier
-        getLoadIdentifier: () => username.value,
+        getLoadIdentifier: () => userId.value,
+        getSaveIdentifier: () => userLoader.user.value?.username ?? username.value,
         extractSavedIdentifier: (model) => model?.username ?? null,
         afterSave: (response, savedUser) => {
             if (!savedUser?.username || savedUser.username === username.value) return;

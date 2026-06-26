@@ -400,7 +400,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::prefix('/api')->group(function () {
     Route::prefix('/users')->controller(UserController::class)->group(function () {
-        Route::get('/{user:username}', 'fetch')->name('api.users.fetch');
+        Route::get('/{user}', 'fetch')->name('api.users.fetch');
         Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggleStudent');
     });
 

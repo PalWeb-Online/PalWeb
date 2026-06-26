@@ -18,6 +18,10 @@ import {useUserValidation} from "../../../composables/users/useUserValidation.js
 import AvatarPicker from "../../../components/AvatarPicker.vue";
 
 const props = defineProps({
+    userId: {
+        type: Number,
+        required: true,
+    },
     username: {
         type: String,
         required: true,
@@ -39,6 +43,7 @@ const {
     user,
     userNotFound,
 } = useUserEditor({
+    userId: computed(() => props.userId),
     username: computed(() => props.username),
 });
 
