@@ -439,8 +439,7 @@ Route::prefix('/api')->group(function () {
     Route::prefix('/library')->group(function () {
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.terms.index');
-            Route::get('/{term:slug}', 'fetch')->name('api.terms.fetch');
-//            Route::get('/{term}', 'fetch')->name('api.terms.fetch');
+            Route::get('/{term}', 'fetch')->name('api.terms.fetch');
         });
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.sentences.index');
