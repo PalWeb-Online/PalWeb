@@ -9,7 +9,6 @@ use App\Jobs\UpdateTermUsageCount;
 use App\Models\Sentence;
 use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -116,7 +115,7 @@ class SentenceController extends Controller
             ->filter()
             ->values();
 
-        if ($includes->contains('show') || $includes->isEmpty()) {
+        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
             $sentence->load(['dialog']);
         }
 
@@ -127,30 +126,34 @@ class SentenceController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function store(UpsertSentenceRequest $request): RedirectResponse
+    public function store(UpsertSentenceRequest $request): JsonResponse
     {
         $sentence = Sentence::create($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
 
         UpdateTermUsageCount::dispatch($affectedTermIds);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $sentence->sentence])]);
+        $sentence->load(['dialog']);
 
-        return to_route('speech-maker.sentence', $sentence);
+        return response()->json([
+            'sentence' => new SentenceResource($sentence),
+            'message' => __('created', ['thing' => $sentence->sentence]),
+        ], 201);
     }
 
-    public function update(UpsertSentenceRequest $request, Sentence $sentence): RedirectResponse
+    public function update(UpsertSentenceRequest $request, Sentence $sentence): JsonResponse
     {
         $sentence->update($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
 
         UpdateTermUsageCount::dispatch($affectedTermIds);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $sentence->sentence])]);
+        $sentence->refresh()->load(['dialog']);
 
-        return to_route('speech-maker.sentence', $sentence);
+        return response()->json([
+            'sentence' => new SentenceResource($sentence),
+            'message' => __('updated', ['thing' => $sentence->sentence]),
+        ]);
     }
 
     private function buildSentence($sentenceData): array

@@ -20,7 +20,6 @@ use App\Repositories\TermRepository;
 use App\Services\SearchService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
@@ -123,33 +122,51 @@ class TermController extends Controller
             ->filter()
             ->values();
 
-        $termIds = $this->termRepository->getLikeTermIds($term);
-
-        $query = Term::query()
-            ->whereIn('id', $termIds);
+        $payload = [];
 
         if ($includes->contains('show') || $includes->isEmpty()) {
-            $query->with([
-                'root',
-                'pronunciations.audios.speaker',
-                'attributes',
-                'spellings',
-                'relatives',
-                'patterns',
-                'glosses.attributes',
-                'inflections',
-                'cards',
-                'decks' => fn ($q) => $q->limit(10),
-            ])
-                ->withCount('pronunciations');
+            $termIds = $this->termRepository->getLikeTermIds($term);
+
+            $terms = Term::query()
+                ->whereIn('id', $termIds)
+                ->with([
+                    'root',
+                    'pronunciations.audios.speaker',
+                    'attributes',
+                    'spellings',
+                    'relatives',
+                    'patterns',
+                    'glosses.attributes',
+                    'inflections',
+                    'cards',
+                    'decks' => fn ($q) => $q->limit(10),
+                ])
+                ->withCount('pronunciations')
+                ->get();
+
+            $this->termService->hydrateGlossSentences($terms);
+
+            $payload = TermShowResource::collection($terms);
+
+        } else {
+            if ($includes->contains('edit')) {
+                $term->load([
+                    'root',
+                    'pronunciations',
+                    'attributes',
+                    'spellings',
+                    'relatives',
+                    'patterns',
+                    'glosses.attributes',
+                    'inflections',
+                ]);
+
+                $payload[] = new TermShowResource($term);
+            }
         }
 
-        $terms = $query->get();
-
-        $this->termService->hydrateGlossSentences($terms);
-
         return response()->json([
-            'terms' => TermShowResource::collection($terms)
+            'terms' => $payload
         ]);
     }
 
@@ -176,7 +193,7 @@ class TermController extends Controller
         return SentenceResource::collection($sentences);
     }
 
-    public function store(UpsertTermRequest $request): RedirectResponse
+    public function store(UpsertTermRequest $request): JsonResponse
     {
         $term = DB::transaction(function () use ($request) {
             $formData = $request->all();
@@ -218,13 +235,24 @@ class TermController extends Controller
             return $term;
         });
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $term->term])]);
+        $term->load([
+            'root',
+            'pronunciations',
+            'attributes',
+            'spellings',
+            'relatives',
+            'patterns',
+            'glosses.attributes',
+            'inflections',
+        ]);
 
-        return to_route('terms.show', $term);
+        return response()->json([
+            'term' => new TermShowResource($term),
+            'message' => __('created', ['thing' => $term->term]),
+        ], 201);
     }
 
-    public function update(Term $term, UpsertTermRequest $request): RedirectResponse
+    public function update(Term $term, UpsertTermRequest $request): JsonResponse
     {
         $term = DB::transaction(function () use ($term, $request) {
             $formData = $request->all();
@@ -277,10 +305,21 @@ class TermController extends Controller
             return $term;
         });
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $term->term])]);
+        $term->refresh()->load([
+            'root',
+            'pronunciations',
+            'attributes',
+            'spellings',
+            'relatives',
+            'patterns',
+            'glosses.attributes',
+            'inflections',
+        ]);
 
-        return to_route('terms.show', $term);
+        return response()->json([
+            'term' => new TermShowResource($term),
+            'message' => __('updated', ['thing' => $term->term]),
+        ]);
     }
 
     public function handleSlug($category, $translit, ?Term $term = null): string

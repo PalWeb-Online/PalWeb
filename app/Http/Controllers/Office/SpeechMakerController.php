@@ -71,13 +71,11 @@ class SpeechMakerController extends Controller
 
     public function sentence(?Sentence $sentence = null): \Inertia\Response
     {
-        $sentence?->load(['dialog']);
-
         return Inertia::render('Office/SpeechMaker/SpeechMaker', [
             'section' => 'office',
             'step' => 'build',
             'mode' => 'sentence',
-            'sentence' => $sentence ? new SentenceResource($sentence) : null,
+            'sentenceId' => $sentence?->id,
         ]);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Workbench;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Services\QuizService;
@@ -34,18 +33,11 @@ class DeckMasterController extends Controller
     {
         if ($deck) {
             Gate::authorize('modify', $deck);
-
-            $deck->load([
-                'terms' => fn ($q) => $q
-                    ->withItemData()
-            ]);
-
-            $this->termService->hydratePronunciations($deck->terms);
         }
 
         return Inertia::render('Workbench/DeckMaster/Build', [
             'section' => 'workbench',
-            'deck' => $deck ? new DeckResource($deck) : null,
+            'deckId' => $deck?->id,
         ]);
     }
 

@@ -105,15 +105,27 @@ class DeckController extends Controller
 
     public function fetch(Request $request, Deck $deck): JsonResponse
     {
-        Gate::authorize('interact', $deck);
-
         $includes = collect(explode(',', (string) $request->query('include')))
             ->map(fn (string $include) => trim($include))
             ->filter()
             ->values();
 
         if ($includes->contains('show') || $includes->isEmpty()) {
+            Gate::authorize('interact', $deck);
+
             $deck->load(['scores']);
+
+        } else {
+            if ($includes->contains('edit')) {
+                Gate::authorize('modify', $deck);
+
+                $deck->load([
+                    'terms' => fn ($q) => $q
+                        ->withItemData(),
+                ]);
+
+                $this->termService->hydratePronunciations($deck->terms);
+            }
         }
 
         return response()->json([
@@ -140,7 +152,7 @@ class DeckController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function store(UpsertDeckRequest $request): RedirectResponse
+    public function store(UpsertDeckRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -151,23 +163,37 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
 
-        return to_route('decks.show', $deck);
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+            'message' => __('created', ['thing' => $deck->name]),
+        ], 201);
     }
 
-    public function update(UpsertDeckRequest $request, Deck $deck): RedirectResponse
+    public function update(UpsertDeckRequest $request, Deck $deck): JsonResponse
     {
         Gate::authorize('modify', $deck);
 
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
+        $deck->refresh()->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
 
-        return to_route('decks.show', $deck);
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+            'message' => __('updated', ['thing' => $deck->name]),
+        ]);
     }
 
     private function linkTerms($deck, $terms): void
