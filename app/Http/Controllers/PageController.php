@@ -77,7 +77,7 @@ class PageController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $pages,
+            'results' => $pages,
         ]);
     }
 

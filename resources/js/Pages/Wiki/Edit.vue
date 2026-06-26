@@ -9,7 +9,7 @@ import AppTip from "../../components/AppTip.vue";
 import DocumentBlocksManager from "../../components/Blocks/Editors/DocumentBlocksManager.vue";
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import SearchSelect from "../../components/SearchSelect.vue";
-import {usePageSearch} from "../../composables/usePageSearch.js";
+import {usePageSearch} from "../../composables/pages/usePageSearch.js";
 import {usePageEditor} from "../../composables/pages/usePageEditor.js";
 import {usePageValidation} from "../../composables/pages/usePageValidation.js";
 import PagePositionModal from "./UI/PagePositionModal.vue";

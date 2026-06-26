@@ -221,7 +221,7 @@ class UnitController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $units,
+            'results' => $units,
         ]);
     }
 }

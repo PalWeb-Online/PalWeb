@@ -156,7 +156,7 @@ class DialogController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $dialogs,
+            'results' => $dialogs,
         ]);
     }
 }

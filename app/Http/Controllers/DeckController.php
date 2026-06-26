@@ -340,7 +340,7 @@ class DeckController extends Controller
             ->get();
 
         return response()->json([
-            'data' => DeckResource::collection($decks),
+            'results' => DeckResource::collection($decks),
         ]);
     }
 }
