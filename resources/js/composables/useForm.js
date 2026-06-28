@@ -6,7 +6,6 @@ export function useForm(initialValues = {}) {
     const form = reactive(cloneDeep(initialValues));
     const original = ref(cloneDeep(initialValues));
     const errors = ref({});
-    const processing = ref(false);
     const recentlySuccessful = ref(false);
 
     let recentlySuccessfulTimeout = null;
@@ -84,7 +83,6 @@ export function useForm(initialValues = {}) {
         form,
         errors,
         isDirty,
-        processing,
         recentlySuccessful,
         reset,
         payload,

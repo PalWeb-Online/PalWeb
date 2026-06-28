@@ -70,7 +70,6 @@ export function useResourceEditor({
     const {
         form,
         errors,
-        processing,
         recentlySuccessful,
         isDirty,
         payload,
@@ -143,7 +142,6 @@ export function useResourceEditor({
 
     const saveResource = async (options = {}) => {
         return await withSaving(async () => {
-            processing.value = true;
             clearErrors();
 
             const rollback = beforeSave?.(options, {
@@ -199,9 +197,6 @@ export function useResourceEditor({
                 NotificationStore.addNotification(`Oops — ${label} could not be saved.`, 'error');
 
                 return null;
-
-            } finally {
-                processing.value = false;
             }
         });
     };
@@ -238,7 +233,6 @@ export function useResourceEditor({
         form,
         errors,
         isDirty,
-        processing,
         recentlySuccessful,
         reset,
         defaults,

@@ -54,7 +54,6 @@ export function useUnitEditor({
         form: editor.form,
         errors: editor.errors,
         isDirty: editor.isDirty,
-        processing: editor.processing,
         recentlySuccessful: editor.recentlySuccessful,
         reset: editor.reset,
         isSaving: editor.isSaving,
