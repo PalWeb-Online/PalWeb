@@ -73,6 +73,7 @@ input, textarea, select {
         opacity: 33%;
         cursor: not-allowed;
         pointer-events: none;
+        user-select: none;
     }
 
     &.invalid {

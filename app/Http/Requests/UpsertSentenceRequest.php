@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\LatinScript;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpsertSentenceRequest extends FormRequest
@@ -15,7 +16,7 @@ class UpsertSentenceRequest extends FormRequest
             'trans' => ['required'],
             'terms' => ['required', 'array'],
             'terms.*.sentencePivot.sent_term' => ['required'],
-            'terms.*.sentencePivot.sent_translit' => ['required'],
+            'terms.*.sentencePivot.sent_translit' => ['required', new LatinScript],
         ];
     }
 }
