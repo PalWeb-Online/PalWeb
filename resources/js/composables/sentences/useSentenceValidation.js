@@ -13,7 +13,7 @@ export function useSentenceValidation({
 
     const latinScriptPattern = /^[\p{Script=Latin}\s-]+$/u;
 
-    const validationErrors = computed(() => {
+    const frontendErrors = computed(() => {
         const errors = {};
 
         if (!isNonEmptyString(form.trans)) {
@@ -25,29 +25,31 @@ export function useSentenceValidation({
         }
 
         (form.terms ?? []).forEach((term, index) => {
+            const termName = `Term ${index + 1}`;
+
             if (!isNonEmptyString(term.sentencePivot?.sent_term)) {
-                errors[`terms.${index}.sentencePivot.sent_term`] = 'Sentence term is required.';
+                errors[`terms.${index}.sentencePivot.sent_term`] = `${termName}: Sentence term is required.`;
             }
 
             if (!isNonEmptyString(term.sentencePivot?.sent_translit)) {
-                errors[`terms.${index}.sentencePivot.sent_translit`] = 'Sentence transliteration is required.';
+                errors[`terms.${index}.sentencePivot.sent_translit`] = `${termName}: Sentence transcription is required.`;
 
             } else if (!matchesPattern(term.sentencePivot.sent_translit, latinScriptPattern)) {
-                errors[`terms.${index}.sentencePivot.sent_translit`] = 'Transcription may only contain Latin-script characters.';
+                errors[`terms.${index}.sentencePivot.sent_translit`] = `${termName}: Transcription may only contain Latin-script characters.`;
             }
         });
 
         return errors;
     });
 
-    const errors = computed(() => {
-        return mergeFieldErrors(validationErrors.value, backendErrors?.value ?? {});
+    const isValidRequest = computed(() => Object.keys(frontendErrors.value).length === 0);
+
+    const validationErrors = computed(() => {
+        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
     });
 
-    const isValidRequest = computed(() => Object.keys(validationErrors.value).length === 0);
-
     return {
-        errors,
         isValidRequest,
+        validationErrors,
     };
 }

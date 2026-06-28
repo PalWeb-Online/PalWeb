@@ -11,7 +11,7 @@ export function useDeckValidation({
         mergeFieldErrors,
     } = useResourceValidation();
 
-    const validationErrors = computed(() => {
+    const frontendErrors = computed(() => {
         const errors = {};
 
         if (!isNonEmptyString(form.name)) {
@@ -28,14 +28,14 @@ export function useDeckValidation({
         return errors;
     });
 
-    const errors = computed(() => {
-        return mergeFieldErrors(validationErrors.value, backendErrors?.value ?? {});
+    const isValidRequest = computed(() => Object.keys(frontendErrors.value).length === 0);
+
+    const validationErrors = computed(() => {
+        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
     });
 
-    const isValidRequest = computed(() => Object.keys(validationErrors.value).length === 0);
-
     return {
-        errors,
         isValidRequest,
+        validationErrors,
     };
 }

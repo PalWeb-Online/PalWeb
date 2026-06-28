@@ -18,7 +18,7 @@ export function useTermValidation({
 
     const isEmpty = (value) => value === null || value === undefined || value === '';
 
-    const validationErrors = computed(() => {
+    const frontendErrors = computed(() => {
         const errors = {};
 
         if (!isNonEmptyString(form.term)) {
@@ -133,12 +133,12 @@ export function useTermValidation({
         return errors;
     });
 
-    const errors = computed(() => {
-        return mergeFieldErrors(validationErrors.value, backendErrors?.value ?? {});
+    const isValidRequest = computed(() => {
+        return Object.keys(frontendErrors.value).length === 0;
     });
 
-    const isValidRequest = computed(() => {
-        return Object.keys(validationErrors.value).length === 0;
+    const validationErrors = computed(() => {
+        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
     });
 
     const confirmableIssues = computed(() => {
@@ -174,8 +174,8 @@ export function useTermValidation({
     });
 
     return {
-        errors,
         isValidRequest,
+        validationErrors,
         confirmableIssues,
     };
 }
