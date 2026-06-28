@@ -169,17 +169,15 @@ defineOptions({
     <Head title="Edit Profile"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingUserForm"/>
+        <template v-if="userNotFound">
+            <AppTip>
+                <p>Sorry, the requested User could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('users.index')">
+                Back to Community
+            </Link>
+        </template>
 
-        <!--        when do these *NotFound cases apply, given that nonexistent models trigger Laravel 404 errors anyway? -->
-        <div v-if="userNotFound" class="window-container">
-            <div class="window-section-head">
-                <h1>profile</h1>
-            </div>
-            <div class="window-section">
-                <p>Sorry, but the requested User does not exist.</p>
-                <Link :href="route('users.index')">Back to Users</Link>
-            </div>
-        </div>
         <div v-else-if="user" class="window-container">
             <div class="window-header">
                 <Link class="material-symbols-rounded" :href="route('users.show', user?.username ?? props.username)">

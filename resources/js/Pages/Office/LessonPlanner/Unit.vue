@@ -99,12 +99,15 @@ const removeLesson = (lesson) => {
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-else-if="unitNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Lesson does not exist.</p>
-            <Link :href="route('lesson-planner.index')">
+        <template v-else-if="unitNotFound">
+            <AppTip>
+                <p>Sorry, the requested Unit could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">

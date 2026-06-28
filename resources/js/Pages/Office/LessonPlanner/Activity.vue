@@ -73,12 +73,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-else-if="activityNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Activity does not exist.</p>
-            <Link :href="route('lesson-planner.index')">
+        <template v-else-if="activityNotFound">
+            <AppTip>
+                <p>Sorry, the requested Activity could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">

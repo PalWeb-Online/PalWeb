@@ -144,22 +144,25 @@ const removeUnlockCondition = (i) => {
 </script>
 <template>
     <Head :title="`Lesson Planner: Lesson ${lesson?.global_position}`"/>
-
     <div id="app-head">
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-else-if="lessonNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Lesson does not exist.</p>
-            <Link :href="route('lesson-planner.index')">
+        <template v-else-if="lessonNotFound">
+            <AppTip>
+                <p>Sorry, but the requested Lesson does not exist.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link v-if="lesson?.unit?.id || initialUnit" :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
+                    <Link v-if="lesson?.unit?.id || initialUnit"
+                          :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
                         <- to Unit
                     </Link>
                     <Link v-if="lesson?.id" :href="route('lessons.show', lesson.global_position)">
@@ -196,7 +199,7 @@ const removeUnlockCondition = (i) => {
                     <button @click="addUnlockCondition">Add</button>
                 </div>
 
-<!--                selected* is only used explicitly for the SearchSelect components -->
+                <!--                selected* is only used explicitly for the SearchSelect components -->
                 <SearchSelect
                     v-model="form.unit_id"
                     label="Unit"

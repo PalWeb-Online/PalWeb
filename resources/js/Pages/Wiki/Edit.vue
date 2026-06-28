@@ -121,12 +121,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-if="pageNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Page does not exist.</p>
-            <Link :href="route('wiki.index')">
+        <template v-if="pageNotFound">
+            <AppTip>
+                <p>Sorry, the requested Page could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('wiki.index')">
                 Back to Wiki
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="featured-title l">
