@@ -26,6 +26,8 @@ const description = computed(() => {
             return 'Most influential newspaper in Ottoman & Mandatory Palestine, a symbol of Palestinian national identity.';
         case 'Msaxxan':
             return 'Roasted chicken baked with caramelized onion, saffron, sumac & fried pine nuts over taboon bread.';
+        // case 'Zatoon':
+        //     return 'Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives';
     }
 });
 

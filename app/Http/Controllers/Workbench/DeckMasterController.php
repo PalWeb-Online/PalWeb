@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Workbench;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Services\QuizService;

@@ -46,6 +46,7 @@ use App\Models\Sentence;
 use App\Models\Term;
 use App\Models\User;
 use App\Services\SentenceService;
+use App\Services\TermService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -113,15 +114,23 @@ Route::get('/', function () {
         ])
         ->all();
 
+    $featuredTerm = Term::whereKey(662)
+        ->withItemData()
+        ->with(['inflections'])
+        ->get();
+
+    if ($featuredTerm) {
+        app(TermService::class)->hydratePronunciations($featuredTerm);
+        $featuredTerm = new TermResource($featuredTerm->first());
+    }
+
     return Inertia::render('Home', [
         'count' => $counts,
         'users' => UserResource::collection($users),
         'decks' => DeckResource::collection($decks),
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
-        'featuredTerm' => Term::find(662) ? new TermResource(Term::find(662)->load([
-            'pronunciations', 'inflections'
-        ])) : null,
+        'featuredTerm' => $featuredTerm,
         'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
             'selectedAvatar', 'dialect'
         ])) : null,
