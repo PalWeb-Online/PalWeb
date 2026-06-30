@@ -14,8 +14,8 @@ export function useUserValidation({
         mergeFieldErrors,
     } = useResourceValidation();
 
-    const latinScriptPattern = /^[\p{Script=Latin}\s-]+$/u;
-    const arabicScriptPattern = /^[\p{Script=Arabic}\s]+$/u;
+    const latinScriptPattern = /^[\p{scx=Latin}\s-]+$/u;
+    const arabicScriptPattern = /^[\p{scx=Arabic}\s]+$/u;
     const usernamePattern = /^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

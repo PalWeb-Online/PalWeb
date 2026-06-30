@@ -130,14 +130,14 @@ class TermController extends Controller
             $terms = Term::query()
                 ->whereIn('id', $termIds)
                 ->with([
-                    'root',
-                    'pronunciations.audios.speaker',
-                    'attributes',
                     'spellings',
-                    'relatives',
+                    'attributes',
+                    'root',
                     'patterns',
+                    'pronunciations.audios.speaker',
                     'glosses.attributes',
                     'inflections',
+                    'relatives',
                     'cards',
                     'decks' => fn ($q) => $q->limit(10),
                 ])
@@ -151,14 +151,14 @@ class TermController extends Controller
         } else {
             if ($includes->contains('edit')) {
                 $term->load([
-                    'root',
-                    'pronunciations',
-                    'attributes',
                     'spellings',
-                    'relatives',
+                    'attributes',
+                    'root',
                     'patterns',
+                    'pronunciations',
                     'glosses.attributes',
                     'inflections',
+                    'relatives',
                 ]);
 
                 $payload[] = new TermShowResource($term);
@@ -212,6 +212,7 @@ class TermController extends Controller
 
             $attributes = array_map(fn ($item) => $item['attribute'], $request->input('attributes'));
             foreach ($attributes as $attribute) {
+                // todo: these should be found based on the ID, not the string
                 Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
             }
 

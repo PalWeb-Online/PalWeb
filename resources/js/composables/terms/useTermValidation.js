@@ -11,8 +11,8 @@ export function useTermValidation({
         mergeFieldErrors,
     } = useResourceValidation();
 
-    const arabicScriptPattern = /^[\p{Script=Arabic}\s]+$/u;
-    const latinScriptPattern = /^[\p{Script=Latin}\s-]+$/u;
+    const arabicScriptPattern = /^[\p{scx=Arabic}\s]+$/u;
+    const latinScriptPattern = /^[\p{scx=Latin}\s-]+$/u;
 
     const glossRelativeTypes = ['synonym', 'antonym', 'isPatient', 'noPatient', 'hasObject'];
 
