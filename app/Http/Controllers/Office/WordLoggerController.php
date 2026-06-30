@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Office;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attribute;
+use App\Models\Dialect;
 use App\Models\FeedbackComment;
 use App\Models\Inflection;
 use App\Models\Term;
@@ -34,6 +36,16 @@ class WordLoggerController extends Controller
         return Inertia::render('Office/WordLogger/Term', [
             'section' => 'office',
             'termId' => $term?->id,
+            'editorData' => [
+                'attributes' => Attribute::query()
+                    ->select(['id', 'model', 'attribute', 'category'])
+                    ->orderBy('id')
+                    ->get(),
+                'dialects' => Dialect::query()
+                    ->select(['id', 'name'])
+                    ->orderBy('id')
+                    ->get(),
+            ],
         ]);
     }
 }
