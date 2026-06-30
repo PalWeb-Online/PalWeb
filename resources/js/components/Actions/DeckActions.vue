@@ -35,7 +35,7 @@ const tooltip = ref(null);
             :href="route('decks.show', model.id)" role="menuitem" tabindex="-1">
             View Deck
         </Link>
-        <template v-if="isAuthor">
+        <template v-if="isAuthor || UserStore.isAdmin">
             <Link :href="route('deck-master.build', model.id)" role="menuitem" tabindex="-1">
                 Edit Deck
             </Link>

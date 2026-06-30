@@ -158,7 +158,6 @@ export function useTermEditor({
         recentlySuccessful: editor.recentlySuccessful,
         reset: editor.reset,
         isSaving: editor.isSaving,
-        isDeleting: editor.isDeleting,
         isLoadingForm: editor.isLoadingForm,
         loadForm: editor.loadForm,
         reloadForm: editor.reloadForm,

@@ -238,11 +238,12 @@ export function useResourceEditor({
         defaults,
         clearErrors,
         isSaving,
-        isDeleting: actions.isDeleting,
         isLoadingForm,
         loadForm,
         reloadForm,
         saveResource,
+        // todo: either both of these are exposed or neither
+        isDeleting: actions.isDeleting,
         deleteResource: actions.deleteResource,
     };
 }
