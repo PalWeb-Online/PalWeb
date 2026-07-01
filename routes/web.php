@@ -114,7 +114,7 @@ Route::get('/', function () {
         ])
         ->all();
 
-    $featuredTerm = ! $isStaging
+    $termCollection = ! $isStaging
         ? Term::whereKey(662)
             ->withItemData()
             ->with(['inflections'])
@@ -125,9 +125,9 @@ Route::get('/', function () {
             ->limit(1)
             ->get();
 
-    if ($featuredTerm->isNotEmpty()) {
-        app(TermService::class)->hydratePronunciations($featuredTerm);
-        $featuredTerm = new TermResource($featuredTerm->first());
+    if ($termCollection->isNotEmpty()) {
+        app(TermService::class)->hydratePronunciations($termCollection);
+        $featuredTerm = new TermResource($termCollection->first());
     }
 
     return Inertia::render('Home', [
@@ -136,7 +136,7 @@ Route::get('/', function () {
         'decks' => DeckResource::collection($decks),
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
-        'featuredTerm' => $featuredTerm->isNotEmpty() ? $featuredTerm : null,
+        'featuredTerm' => $termCollection->isNotEmpty() ? $featuredTerm : null,
         'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
             'selectedAvatar', 'dialect'
         ])) : null,
