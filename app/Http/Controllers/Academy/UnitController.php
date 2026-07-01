@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpsertUnitRequest;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
@@ -13,8 +14,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Throwable;
 
 class UnitController extends Controller
 {
@@ -54,7 +57,7 @@ class UnitController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function store(UpsertUnitRequest $request): RedirectResponse|JsonResponse
     {
         $unit = DB::transaction(function () use ($request) {
             $unit = Unit::create([
@@ -94,7 +97,7 @@ class UnitController extends Controller
         return to_route('lesson-planner.unit', $unit);
     }
 
-    public function update(Request $request, Unit $unit): RedirectResponse|JsonResponse
+    public function update(UpsertUnitRequest $request, Unit $unit): RedirectResponse|JsonResponse
     {
         if (count($request->lessons) > 9) {
             session()->flash('notification',
@@ -158,22 +161,37 @@ class UnitController extends Controller
         return to_route('lesson-planner.unit', $unit);
     }
 
-    public function destroy(Unit $unit): RedirectResponse
+    public function destroy(Unit $unit): JsonResponse
     {
-        DB::transaction(function () use ($unit) {
-            $unit->lessons()->each(function (Lesson $lesson) {
-                $lesson->update([
-                    'position' => 0,
-                    'slug' => 'id'.$lesson->id,
-                ]);
-            });
-            $unit->delete();
-            LessonService::reorderAllUnitsAndLessons();
-        });
+        try {
+            Gate::authorize('delete', $unit);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $unit->title])]);
-        return to_route('lesson-planner.index');
+            $deletedUnit = $unit->title;
+
+            DB::transaction(function () use ($unit) {
+                $unit->lessons()->each(function (Lesson $lesson) {
+                    $lesson->update([
+                        'position' => 0,
+                        'slug' => 'id'.$lesson->id,
+                    ]);
+                });
+                $unit->delete();
+                LessonService::reorderAllUnitsAndLessons();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedUnit]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Unit.', [
+                'unit_id' => $unit->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Unit.', $e);
+        }
     }
 
     public function search(Request $request): JsonResponse
@@ -204,7 +222,7 @@ class UnitController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $units,
+            'results' => $units,
         ]);
     }
 }

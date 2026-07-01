@@ -14,7 +14,6 @@ class PronunciationScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
-            ->with(['dialect'])
-            ->withCount('audios');
+            ->with(['dialect']);
     }
 }

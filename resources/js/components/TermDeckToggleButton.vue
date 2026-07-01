@@ -1,12 +1,12 @@
 <script setup>
 import {useUserStore} from "../stores/UserStore.js";
-import {useActions} from "../composables/Actions.js";
-import {useDeck} from "../composables/Deck.js";
+import {useDropdown} from "../composables/useDropdown.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 
 const UserStore = useUserStore();
 const {toggleTerm} = useDeck();
-const {toggleMenu, floatingStyles, isOpen, reference, floating} = useActions();
+const {toggleMenu, floatingStyles, isOpen, reference, floating} = useDropdown();
 
 const props = defineProps({
     model: Object,

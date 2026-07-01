@@ -2,7 +2,6 @@ import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useLessonLoader} from "./useLessonLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 
@@ -10,7 +9,6 @@ export function useLessonEditor({
                                     lessonId = null,
                                     initialUnit = null,
                                 } = {}) {
-    const NotificationStore = useNotificationStore();
     const documentPreset = getDocumentPreset('lesson');
     const lessonLoader = useLessonLoader();
 
@@ -52,7 +50,6 @@ export function useLessonEditor({
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         lessonLoader.setLesson(model);
 
-        // todo: what is more correct? `??` or `||`?
         selectedUnit.value = model?.unit ?? initialUnit.value ?? null;
         selectedDeck.value = model?.deck ?? null;
         selectedDialog.value = model?.dialog ?? null;
@@ -100,6 +97,7 @@ export function useLessonEditor({
         getLoadIdentifier: () => lessonId.value,
         fetchModel: lessonLoader.fetchLesson,
         resetModel: lessonLoader.setLesson,
+        label: 'Lesson',
         routeBase: 'lessons',
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
         beforeReload: () => {
@@ -121,18 +119,8 @@ export function useLessonEditor({
         afterSave: (response, savedModel) => {
             redirectToEditRoute(savedModel);
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Lesson was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Lesson could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Lesson was successfully deleted.', 'success');
             router.get(route('lesson-planner.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Lesson could not be deleted.', 'error');
         },
     });
 
@@ -140,7 +128,6 @@ export function useLessonEditor({
         form: editor.form,
         errors: editor.errors,
         isDirty: editor.isDirty,
-        processing: editor.processing,
         recentlySuccessful: editor.recentlySuccessful,
         reset: editor.reset,
         isSaving: editor.isSaving,
@@ -153,7 +140,6 @@ export function useLessonEditor({
         sentenceModels: editor.documentLoader.sentenceModels,
         lesson: lessonLoader.lesson,
         lessonNotFound: lessonLoader.lessonNotFound,
-        isLoadingLesson: lessonLoader.isLoadingLesson,
         allowedBlockTypes: documentPreset.allowedBlockTypes,
         isUnitLocked,
         selectedUnit,

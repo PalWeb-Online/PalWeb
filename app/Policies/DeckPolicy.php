@@ -62,7 +62,7 @@ class DeckPolicy
      */
     public function update(User $user, Deck $deck): bool
     {
-        //
+        return $this->modify($user, $deck);
     }
 
     /**
@@ -72,7 +72,7 @@ class DeckPolicy
      */
     public function delete(User $user, Deck $deck): bool
     {
-        //
+        return $this->modify($user, $deck);
     }
 
     /**

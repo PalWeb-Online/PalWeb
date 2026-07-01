@@ -9,75 +9,72 @@ use App\Http\Resources\TermResource;
 use App\Models\Dialog;
 use App\Models\Gloss;
 use App\Models\Sentence;
+use App\Models\Term;
+use App\Services\TermService;
 use Inertia\Inertia;
 
 class SpeechMakerController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function index(): \Inertia\Response
     {
-        $termsMissingSentences = [];
+        $termsMissingSentences = collect();
 
-        Gloss::inRandomOrder()->chunk(250, function ($glosses) use (&$termsMissingSentences) {
-            foreach ($glosses as $gloss) {
-                if (count($gloss->term->sentences($gloss->id)->get()) < 1) {
-                    $gloss->term->gloss = $gloss->gloss;
-                    $termsMissingSentences[] = $gloss->term;
+        Term::query()
+            ->withItemData()
+            ->with('glosses')
+            ->inRandomOrder()
+            ->chunk(250, function ($terms) use ($termsMissingSentences) {
+                foreach ($terms as $term) {
+                    foreach ($term->glosses as $gloss) {
+                        if (! $term->sentences($gloss->id)->exists()) {
+                            $termsMissingSentences->push($term);
+                            if ($termsMissingSentences->count() >= 25) {
+                                return false;
+                            }
+                            break;
+                        }
+                    }
                 }
+            });
 
-                if (count($termsMissingSentences) === 25) {
-                    return false;
-                }
-            }
-        });
+        $this->termService->hydratePronunciations($termsMissingSentences);
 
-        return Inertia::render('Office/SpeechMaker/SpeechMaker', [
+        return Inertia::render('Office/SpeechMaker/Index', [
             'section' => 'office',
-            'step' => 'select',
-            'mode' => 'dialog',
-            'allDialogs' => DialogResource::collection(Dialog::orderByDesc('id')->take(10)->get()),
-            'termsMissingSentences' => TermResource::collection($termsMissingSentences),
+            'dialogs' => DialogResource::collection(Dialog::orderByDesc('id')->take(10)->get()),
+            'terms' => TermResource::collection($termsMissingSentences),
         ]);
     }
 
     public function dialog(?Dialog $dialog = null): \Inertia\Response
     {
-        $dialog?->load(['sentences'])
-            ->setRelation(
-                'sentences',
-                $dialog->sentences->map(function ($sentence) {
-                    return new SentenceResource($sentence)->additional(['terms' => false]);
-                })
-            );
-
-        return Inertia::render('Office/SpeechMaker/SpeechMaker', [
+        return Inertia::render('Office/SpeechMaker/Dialog', [
             'section' => 'office',
-            'step' => 'build',
-            'mode' => 'dialog',
-            'dialog' => $dialog ? new DialogResource($dialog) : null,
+            'dialogId' => $dialog?->id,
         ]);
     }
 
     public function dialogSentence(Dialog $dialog): \Inertia\Response
     {
-        $dialog->loadCount(['sentences']);
-
-        return Inertia::render('Office/SpeechMaker/SpeechMaker', [
+        return Inertia::render('Office/SpeechMaker/Sentence', [
             'section' => 'office',
-            'step' => 'build',
-            'mode' => 'sentence',
-            'dialog' => new DialogResource($dialog),
+            'initialDialog' => [
+                'id' => $dialog->id,
+                'title' => $dialog->title,
+            ]
         ]);
     }
 
     public function sentence(?Sentence $sentence = null): \Inertia\Response
     {
-        $sentence?->load(['dialog']);
-
-        return Inertia::render('Office/SpeechMaker/SpeechMaker', [
+        return Inertia::render('Office/SpeechMaker/Sentence', [
             'section' => 'office',
-            'step' => 'build',
-            'mode' => 'sentence',
-            'sentence' => $sentence ? new SentenceResource($sentence) : null,
+            'sentenceId' => $sentence?->id,
         ]);
     }
 }

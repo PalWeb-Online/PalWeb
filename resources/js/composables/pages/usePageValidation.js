@@ -2,34 +2,34 @@ import {computed} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
 
 export function usePageValidation({
-    form,
-    page,
-    descendantIds,
-    allowedBlockTypes,
-}) {
+                                      form,
+                                      page,
+                                      backendErrors,
+                                      descendantIds,
+                                      allowedBlockTypes,
+                                  }) {
     const {
         isNonEmptyString,
         validateBlocks,
+        useValidationState,
     } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: true,
     });
 
-    const validationIssues = computed(() => {
-        const issues = [];
+    const frontendErrors = computed(() => {
+        const errors = {};
 
         if (!isNonEmptyString(form.slug)) {
-            issues.push('Slug is required.');
+            errors.slug = 'Slug is required.';
         }
 
         if (!isNonEmptyString(form.title)) {
-            issues.push('Title is required.');
+            errors.title = 'Title is required.';
         }
 
-        return issues;
+        return errors;
     });
-
-    const isValidRequest = computed(() => validationIssues.value.length === 0);
 
     const publishIssues = computed(() => {
         const issues = [];
@@ -59,9 +59,17 @@ export function usePageValidation({
 
     const isPublishable = computed(() => publishIssues.value.length === 0);
 
-    return {
-        validationIssues,
+    const {
         isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
+    });
+
+    return {
+        isValidRequest,
+        validationErrors,
         publishIssues,
         isPublishable,
     };

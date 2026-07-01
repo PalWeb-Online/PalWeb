@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'ar_name',
         'username',
         'avatar',
+        'avatar_id',
         'bio',
         'home',
         'private',
@@ -128,12 +131,33 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->removeRole('student');
 
+        $this->update([
+            'avatar_id' => null
+        ]);
+
         return $this;
     }
 
     public function getSrsPreference(string $key, mixed $default = null): mixed
     {
         return $this->preferences['srs'][$key] ?? $default;
+    }
+
+    public function uploadedAvatars(): HasMany
+    {
+        return $this->hasMany(Avatar::class);
+    }
+
+    public function selectedAvatar(): BelongsTo
+    {
+        return $this->belongsTo(Avatar::class, 'avatar_id');
+    }
+
+    protected function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->selectedAvatar?->url ?? asset('img/avatars/'.($this->avatar ?? 'palweb01.webp')),
+        );
     }
 
     public function dialect(): BelongsTo
@@ -164,6 +188,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function speaker(): HasOne
     {
         return $this->hasOne(Speaker::class);
+    }
+
+    public function audios(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Audio::class,
+            Speaker::class,
+            'user_id',
+            'speaker_id',
+            'id',
+            'id',
+        );
     }
 
     public function teacher(): HasOne
@@ -256,5 +292,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function student(Builder $query): Builder
     {
         return $query->role('student');
+    }
+
+    #[Scope]
+    protected function public(Builder $query): Builder
+    {
+        return $query->where('users.private', false);
     }
 }

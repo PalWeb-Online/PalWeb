@@ -39,7 +39,10 @@ export function useNavGuard(hasNavigationGuard) {
         pendingVisit.value = null;
     };
 
-    onMounted(async () => {
+    onMounted(() => {
+        // Blocks browser unloads and Inertia GET navigations while the form is dirty.
+        // It does not block Axios requests, and it does not show the custom modal for non-Inertia navigations.
+
         const handleBeforeUnload = (event) => {
             if (hasNavigationGuard.value) {
                 event.preventDefault();
@@ -50,6 +53,7 @@ export function useNavGuard(hasNavigationGuard) {
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         const unsubscribe = router.on('before', (event) => {
+            // Since Axios, rather than Inertia, is used for POST/DELETE submissions, this line is purely defensive.
             if (isSkippingGuard.value  || event.detail.visit.method !== 'get') {
                 return;
             }

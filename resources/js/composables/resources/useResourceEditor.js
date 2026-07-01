@@ -1,6 +1,8 @@
 import {ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
+import {useResourceDelete} from "./useResourceDelete.js";
+import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 export function useResourceEditor({
                                       initialForm,
@@ -12,6 +14,7 @@ export function useResourceEditor({
                                       getDeleteIdentifier = getSaveIdentifier,
                                       fetchModel,
                                       resetModel,
+                                      label = 'Model',
                                       routeBase = null,
                                       getStoreUrl = null,
                                       getUpdateUrl = null,
@@ -29,8 +32,9 @@ export function useResourceEditor({
                                       onDeleteSuccess = null,
                                       onDeleteError = null,
                                   }) {
+    const NotificationStore = useNotificationStore();
+
     const isSaving = ref(false);
-    const isDeleting = ref(false);
     const isLoadingForm = ref(false);
 
     const withSaving = async (callback) => {
@@ -42,16 +46,6 @@ export function useResourceEditor({
             return await callback();
         } finally {
             isSaving.value = false;
-        }
-    };
-
-    const withDeleting = async (callback) => {
-        isDeleting.value = true;
-
-        try {
-            return await callback();
-        } finally {
-            isDeleting.value = false;
         }
     };
 
@@ -73,14 +67,9 @@ export function useResourceEditor({
         return getUpdateUrl?.(identifier, options) ?? route(`${routeBase}.update`, identifier);
     };
 
-    const resolveDeleteUrl = (identifier) => {
-        return getDeleteUrl?.(identifier) ?? route(`${routeBase}.destroy`, identifier);
-    };
-
     const {
         form,
         errors,
-        processing,
         recentlySuccessful,
         isDirty,
         payload,
@@ -107,12 +96,6 @@ export function useResourceEditor({
 
     const resolveSaveIdentifier = () => {
         const identifier = getSaveIdentifier();
-
-        return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
-    };
-
-    const resolveDeleteIdentifier = () => {
-        const identifier = getDeleteIdentifier();
 
         return hasIdentifier(identifier) ? identifier : savedIdentifier.value;
     };
@@ -159,7 +142,6 @@ export function useResourceEditor({
 
     const saveResource = async (options = {}) => {
         return await withSaving(async () => {
-            processing.value = true;
             clearErrors();
 
             const rollback = beforeSave?.(options, {
@@ -198,7 +180,9 @@ export function useResourceEditor({
                 });
 
                 setRecentlySuccessful();
+
                 onSaveSuccess?.(response, savedModel, options);
+                NotificationStore.addNotification(`${label} was successfully saved.`, 'success');
 
                 return response;
 
@@ -210,59 +194,56 @@ export function useResourceEditor({
                 }
 
                 onSaveError?.(error);
-
-                return null;
-
-            } finally {
-                processing.value = false;
-            }
-        });
-    };
-
-    const deleteResource = async () => {
-        const identifier = resolveDeleteIdentifier();
-
-        if (!hasIdentifier(identifier)) return null;
-        if (!confirm('Are you sure you want to delete this model?')) return null;
-
-        return await withDeleting(async () => {
-            beforeDelete?.(identifier);
-
-            try {
-                const response = await axios.delete(resolveDeleteUrl(identifier));
-
-                resetModel();
-                savedIdentifier.value = null;
-
-                await afterDelete?.(response);
-
-                onDeleteSuccess?.(response);
-
-                return response;
-
-            } catch (error) {
-                onDeleteError?.(error);
+                NotificationStore.addNotification(`Oops — ${label} could not be saved.`, 'error');
 
                 return null;
             }
         });
     };
+
+    const actions = useResourceDelete({
+        routeBase,
+        label,
+        getIdentifier: () => {
+            const identifier = getDeleteIdentifier();
+
+            return hasIdentifier(identifier)
+                ? identifier
+                : savedIdentifier.value;
+        },
+        getDestroyUrl: (_, identifier, options) => {
+            return getDeleteUrl?.(identifier, options);
+        },
+        beforeDelete,
+        afterDelete: async (response, model, identifier, options) => {
+            resetModel();
+            savedIdentifier.value = null;
+
+            await afterDelete?.(response, model, identifier, options, {
+                form,
+                defaults,
+                clearErrors,
+            });
+        },
+        onDeleteSuccess,
+        onDeleteError,
+    });
 
     return {
         form,
         errors,
         isDirty,
-        processing,
         recentlySuccessful,
         reset,
         defaults,
         clearErrors,
         isSaving,
-        isDeleting,
         isLoadingForm,
         loadForm,
         reloadForm,
         saveResource,
-        deleteResource,
+        // todo: either both of these are exposed or neither
+        isDeleting: actions.isDeleting,
+        deleteResource: actions.deleteResource,
     };
 }

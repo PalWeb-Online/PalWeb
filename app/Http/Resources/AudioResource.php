@@ -16,6 +16,7 @@ class AudioResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'url' => $this->url,
             'filename' => $this->filename,
             'speaker' => new SpeakerResource($this->whenLoaded('speaker')),
             'pronunciation' => new PronunciationResource($this->whenLoaded('pronunciation')),

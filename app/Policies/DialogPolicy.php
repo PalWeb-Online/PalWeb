@@ -28,4 +28,9 @@ class DialogPolicy
 
         return false;
     }
+
+    public function delete(User $user, Dialog $dialog): bool
+    {
+        return $user->isAdmin();
+    }
 }

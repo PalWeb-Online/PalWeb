@@ -3,27 +3,27 @@ import {useDocumentResourceValidation} from "../documents/useDocumentResourceVal
 
 export function useActivityValidation({
                                           form,
+                                          backendErrors,
                                           allowedBlockTypes,
                                       }) {
     const {
         isNonEmptyString,
         validateBlocks,
+        useValidationState,
     } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: false,
     });
 
-    const validationIssues = computed(() => {
-        const issues = [];
+    const frontendErrors = computed(() => {
+        const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            issues.push('Title is required.');
+            errors.title = 'Title is required.';
         }
 
-        return issues;
+        return errors;
     });
-
-    const isValidRequest = computed(() => validationIssues.value.length === 0);
 
     const publishIssues = computed(() => {
         const issues = [];
@@ -41,9 +41,17 @@ export function useActivityValidation({
 
     const isPublishable = computed(() => publishIssues.value.length === 0);
 
-    return {
-        validationIssues,
+    const {
         isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
+    });
+
+    return {
+        isValidRequest,
+        validationErrors,
         publishIssues,
         isPublishable,
     };

@@ -9,16 +9,24 @@ use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Throwable;
 
 class LessonController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function show(Lesson $lesson): \Inertia\Response
     {
         Gate::authorize('view', $lesson);
@@ -41,8 +49,6 @@ class LessonController extends Controller
         if ($includes->contains('show')) {
             $lesson->load([
                 'unit',
-                'deck.terms' => fn ($q) => $q->withUserCard(),
-                'deck.terms.pronunciations',
                 'deck.scores',
                 'activity.scores',
                 'dialog.sentences'
@@ -164,25 +170,34 @@ class LessonController extends Controller
         return to_route('lesson-planner.lesson', $lesson);
     }
 
-    public function destroy(Lesson $lesson): RedirectResponse|JsonResponse
+    public function destroy(Lesson $lesson): JsonResponse
     {
-        DB::transaction(function () use ($lesson) {
-            $unit = $lesson->unit;
-            $lesson->delete();
+        try {
+            Gate::authorize('delete', $lesson);
 
-            if ($unit) {
-                LessonService::reorderUnitLessons($unit);
-            }
-        });
+            $deletedLesson = $lesson->title;
 
-        if (request()->expectsJson()) {
+            DB::transaction(function () use ($lesson) {
+                $unit = $lesson->unit;
+                $lesson->delete();
+
+                if ($unit) {
+                    LessonService::reorderUnitLessons($unit);
+                }
+            });
+
             return response()->json([
-                'message' => 'Lesson deleted successfully.',
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedLesson]),
             ]);
-        }
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $lesson->title])]);
-        return to_route('lesson-planner.index');
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Lesson.', [
+                'lesson_id' => $lesson->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Lesson.', $e);
+        }
     }
 }

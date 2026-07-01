@@ -15,8 +15,13 @@ import {generateArabicName} from "../../../utils/NameGenerator.js";
 import {useUser} from "../../../composables/users/useUser.js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useUserValidation} from "../../../composables/users/useUserValidation.js";
+import AvatarPicker from "../../../components/AvatarPicker.vue";
 
 const props = defineProps({
+    userId: {
+        type: Number,
+        required: true,
+    },
     username: {
         type: String,
         required: true,
@@ -38,6 +43,7 @@ const {
     user,
     userNotFound,
 } = useUserEditor({
+    userId: computed(() => props.userId),
     username: computed(() => props.username),
 });
 
@@ -48,6 +54,7 @@ const {
     reset: resetTeacher,
     isSaving: isSavingTeacher,
     isDeleting: isDeletingTeacher,
+// isLoadingTeacherForm is possible but pointless because loading simply means instantaneously mounting `user.teacher`;
     loadForm: loadTeacherForm,
     saveTeacher,
     deleteTeacher,
@@ -57,9 +64,7 @@ const {
     user,
 });
 
-const hasNavigationGuard = computed(() => {
-    return (isUserDirty.value || isTeacherDirty.value) && !isSavingUser.value && !isSavingTeacher.value;
-});
+const hasNavigationGuard = computed(() => isUserDirty.value || isTeacherDirty.value);
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
@@ -90,18 +95,35 @@ const teacherFormExists = computed(() => {
 });
 
 const showAvatarPicker = ref(false);
-const avatars = ref([]);
+const uploadedAvatars = ref([]);
+
+const selectedAvatarUrl = computed(() => {
+    if (userForm.avatar_id) {
+        const uploadedAvatar = uploadedAvatars.value.find((avatar) => avatar.id === userForm.avatar_id);
+
+        if (uploadedAvatar) {
+            return uploadedAvatar.url;
+        }
+    }
+
+    if (userForm.avatar) {
+        return `/img/avatars/${userForm.avatar}`;
+    }
+
+    return '/img/avatars/palweb01.webp';
+});
+
+const avatarPreviewUser = computed(() => ({
+    ...userForm,
+    avatar_url: selectedAvatarUrl.value,
+}));
 
 onMounted(async () => {
-    await Promise.all([
-        loadUserForm().then(async () => {
-            await loadTeacherForm();
-            showTeacherForm.value = teacherExists.value;
-        }),
-        axios.get(route('avatars.get')).then(response => {
-            avatars.value = response.data;
-        }),
-    ]);
+    await loadUserForm().then(async (loadedUser) => {
+        uploadedAvatars.value = loadedUser?.uploaded_avatars ?? [];
+        await loadTeacherForm();
+        showTeacherForm.value = teacherExists.value;
+    });
 });
 
 watch(teacherExists, (exists) => {
@@ -115,10 +137,26 @@ const initializeTeacherForm = () => {
 const removeTeacher = async () => {
     const response = await deleteTeacher();
 
-    if (response) {
+    if (response.data.success) {
         showTeacherForm.value = false;
         clearTeacherForm();
     }
+};
+
+const selectAvatar = (avatar) => {
+    userForm.avatar_id = avatar?.id ?? null;
+
+    if (avatar?.filename) {
+        userForm.avatar = avatar.filename;
+    }
+};
+
+const updateUploadedAvatars = (avatars) => {
+    uploadedAvatars.value = avatars;
+};
+
+const updateUser = (updatedUser) => {
+    user.value = updatedUser;
 };
 
 defineOptions({
@@ -130,18 +168,16 @@ defineOptions({
     <Head title="Edit Profile"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingUserForm"/>
+        <template v-else-if="userNotFound">
+            <AppTip>
+                <p>Sorry, the requested User could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('users.index')">
+                Back to Community
+            </Link>
+        </template>
 
-<!--        when do these *NotFound cases apply, given that nonexistent models trigger Laravel 404 errors anyway? -->
-        <div v-if="userNotFound" class="window-container">
-            <div class="window-section-head">
-                <h1>profile</h1>
-            </div>
-            <div class="window-section">
-                <p>Sorry, but the requested User does not exist.</p>
-                <Link :href="route('users.index')">Back to Users</Link>
-            </div>
-        </div>
-        <div v-else-if="user" class="window-container">
+        <div v-else class="window-container">
             <div class="window-header">
                 <Link class="material-symbols-rounded" :href="route('users.show', user?.username ?? props.username)">
                     arrow_back
@@ -158,7 +194,7 @@ defineOptions({
                 </Link>
             </div>
             <div class="user-item l">
-                <UserAvatarWrapper :user="userForm">
+                <UserAvatarWrapper :user="avatarPreviewUser">
                     <button type="button" @click="showAvatarPicker = true" class="material-symbols-rounded">
                         photo
                     </button>
@@ -191,7 +227,9 @@ defineOptions({
                         <div class="field-item">
                             <div style="display: flex; align-items: center; gap: 3.2rem;">
                                 <label>Arabic Name</label>
-                                <button type="button" @click="userForm.ar_name = generateArabicName()">Randomize</button>
+                                <button type="button" @click="userForm.ar_name = generateArabicName()">
+                                    Randomize
+                                </button>
                             </div>
                             <div class="field-input">
                                 <input type="text" v-model="userForm.ar_name" placeholder="رفيق" required>
@@ -299,21 +337,14 @@ defineOptions({
         </div>
     </div>
 
-    <ModalWrapper v-model="showAvatarPicker">
-        <div class="window-container modal-container">
-            <div class="window-section-head">
-                <h1>avatar</h1>
-            </div>
-            <div class="modal-container-body">
-                <div class="avatar-grid">
-                    <img v-for="avatar in avatars"
-                         :src="`/img/avatars/${avatar}`"
-                         @click="() => {userForm.avatar = avatar; showAvatarPicker = false}"
-                         alt="Avatar"/>
-                </div>
-            </div>
-        </div>
-    </ModalWrapper>
+    <AvatarPicker v-model="showAvatarPicker"
+                  :user="user"
+                  :default-avatar="userForm.avatar"
+                  :selected-avatar-id="userForm.avatar_id"
+                  :uploaded-avatars="uploadedAvatars"
+                  @select="selectAvatar"
+                  @uploaded-avatars-updated="updateUploadedAvatars"
+                  @user-updated="updateUser"/>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
@@ -323,29 +354,3 @@ defineOptions({
         />
     </ModalWrapper>
 </template>
-
-<style scoped lang="scss">
-.avatar-grid {
-    display: grid;
-    gap: 1.6rem;
-    grid-template-columns: repeat(4, 1fr);
-    padding: 1.6rem;
-
-    img {
-        border-radius: 2.0rem;
-        object-fit: cover;
-        min-height: 100%;
-        min-width: 100%;
-        border: 0.2rem solid var(--color-pastel-medium);
-
-        &:hover {
-            border: 0.2rem solid var(--color-medium-primary);
-        }
-    }
-
-    @media (width >= 960px) {
-        gap: 1.6rem;
-        padding: 3.2rem;
-    }
-}
-</style>

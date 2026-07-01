@@ -8,14 +8,14 @@ export function useUserValidation({
                                       teacherBackendErrors,
                                   }) {
     const {
+        latinScriptPattern,
+        arabicScriptPattern,
         isNonEmptyString,
         hasMaxLength,
         matchesPattern,
         mergeFieldErrors,
     } = useResourceValidation();
 
-    const latinScriptPattern = /^[\p{Script=Latin}\s-]+$/u;
-    const arabicScriptPattern = /^[\p{Script=Arabic}\s]+$/u;
     const usernamePattern = /^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

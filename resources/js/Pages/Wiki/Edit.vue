@@ -9,7 +9,7 @@ import AppTip from "../../components/AppTip.vue";
 import DocumentBlocksManager from "../../components/Blocks/Editors/DocumentBlocksManager.vue";
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import SearchSelect from "../../components/SearchSelect.vue";
-import {usePageSearch} from "../../composables/usePageSearch.js";
+import {usePageSearch} from "../../composables/pages/usePageSearch.js";
 import {usePageEditor} from "../../composables/pages/usePageEditor.js";
 import {usePageValidation} from "../../composables/pages/usePageValidation.js";
 import PagePositionModal from "./UI/PagePositionModal.vue";
@@ -27,7 +27,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -97,36 +97,38 @@ watch(() => props.pageId, async () => {
 });
 
 const {
-    validationIssues,
+    validationErrors,
     isValidRequest,
     publishIssues,
     isPublishable,
 } = usePageValidation({
     form,
     page,
+    backendErrors,
     descendantIds,
     allowedBlockTypes,
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 
 <template>
     <Head :title="page?.id ? `Edit Wiki: ${page?.title || 'Page'}` : 'Create Wiki Page'"/>
-
     <div id="app-head">
         <h1>wiki</h1>
     </div>
-
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-if="pageNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Page does not exist.</p>
-            <Link :href="route('wiki.index')">
+        <template v-else-if="pageNotFound">
+            <AppTip>
+                <p>Sorry, the requested Page could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('wiki.index')">
                 Back to Wiki
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="featured-title l">
@@ -163,7 +165,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     label="Parent"
                     :initial-title="selectedParent?.title"
                     :search="searchPages"
-                    :error="errors?.parent_id"
+                    :error="validationErrors[`parent_id`]"
                     @select="setSelectedParent"
                     @clear="setSelectedParent()"
                 >
@@ -201,22 +203,16 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 <AppTip>
                     <p>The Wiki page is currently {{ form.status }}.</p>
 
-                    <template v-if="!isValidRequest">
+                    <template v-if="Object.keys(validationErrors).length">
                         <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
                         <ul>
-                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                            <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
                         <p style="font-weight: 700">The Page cannot be published in the current state.</p>
                         <ul>
                             <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
-                        </ul>
-                    </template>
-                    <template v-if="Object.keys(errors).length">
-                        <p style="font-weight: 700">Oops — the Page could not be saved.</p>
-                        <ul>
-                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
                         </ul>
                     </template>
                 </AppTip>
@@ -250,11 +246,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         }}{{ form.status === 'published' ? 'Revert to Draft' : 'Publish' }}
                     </button>
 
-                    <button
-                        v-if="pageId"
-                        type="button"
-                        @click="deletePage"
-                    >
+                    <button v-if="pageId" type="button" @click="deletePage()">
                         Delete Page
                     </button>
 

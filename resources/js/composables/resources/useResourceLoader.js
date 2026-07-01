@@ -29,7 +29,7 @@ export function useResourceLoader({
 
         try {
             const response = await axios.get(
-                getUrl(identifier),
+                getUrl(identifier, options),
                 getRequestConfig(options),
             );
 

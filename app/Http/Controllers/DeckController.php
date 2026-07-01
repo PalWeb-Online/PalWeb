@@ -4,45 +4,72 @@ namespace App\Http\Controllers;
 
 use App\Events\DeckBuilt;
 use App\Events\ModelPinned;
-use App\Http\Requests\StoreDeckRequest;
-use App\Http\Requests\UpdateDeckRequest;
+use App\Http\Requests\UpsertDeckRequest;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Term;
 use App\Services\SearchService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class DeckController extends Controller
 {
+    public function __construct(
+        protected TermService $termService
+    ) {
+    }
+
     public function pin(Request $request, Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
         $user = $request->user();
-
         Bookmark::toggle($deck, $user);
 
-        $deck->isPinned() && event(new ModelPinned($user));
+        $isPinned = Bookmark::has($deck, $user);
 
-        $message = $deck->isPinned()
-            ? __('pin.added', ['thing' => $deck->name])
-            : __('pin.removed', ['thing' => $deck->name]);
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
 
         return response()->json([
             'pinCount' => Bookmark::count($deck),
-            'isPinned' => $deck->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $deck->name])
+                : __('pin.removed', ['thing' => $deck->name]),
         ]);
     }
 
-    public function index(Request $request, SearchService $searchService): \Inertia\Response
+    public function index(): \Inertia\Response
     {
+        return Inertia::render('Library/Decks/Index');
+    }
+
+    public function show(Deck $deck): \Inertia\Response
+    {
+        return Inertia::render('Library/Decks/Show', [
+            'deckId' => $deck->id,
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
+        URL::forceScheme('https');
+
         $filters = array_merge(['sort' => 'latest'], $request->only([
             'search', 'match', 'sort', 'pinned',
         ]));
@@ -59,31 +86,73 @@ class DeckController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        return Inertia::render('Library/Decks/Index', [
-            'section' => 'library',
-            'decks' => DeckResource::collection($decks),
+        $resource = DeckResource::collection($decks);
+
+        return response()->json([
+            'decks' => [
+                'data' => $resource->toArray($request),
+                'meta' => [
+                    'links' => $decks->linkCollection()->toArray(),
+                    'current_page' => $decks->currentPage(),
+                    'last_page' => $decks->lastPage(),
+                    'total' => $decks->total(),
+                ],
+            ],
             'totalCount' => $decks->total(),
             'filters' => $filters,
         ]);
     }
 
-    public function show(Deck $deck): \Inertia\Response
+    public function fetch(Request $request, Deck $deck): JsonResponse
     {
-        Gate::authorize('interact', $deck);
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
 
-        $deck->load([
-            'terms' => fn ($q) => $q->withUserCard(),
-            'terms.pronunciations',
-            'scores'
-        ]);
+        if ($includes->contains('show') || $includes->isEmpty()) {
+            Gate::authorize('interact', $deck);
 
-        return Inertia::render('Library/Decks/Show', [
-            'section' => 'library',
+            $deck->load(['scores']);
+
+        } else {
+            if ($includes->contains('edit')) {
+                Gate::authorize('modify', $deck);
+
+                $deck->load([
+                    'terms' => fn ($q) => $q
+                        ->withItemData(),
+                ]);
+
+                $this->termService->hydratePronunciations($deck->terms);
+            }
+        }
+
+        return response()->json([
             'deck' => new DeckResource($deck),
         ]);
     }
 
-    public function store(StoreDeckRequest $request): RedirectResponse
+    public function getDeckTerms(Deck $deck): JsonResponse
+    {
+        Gate::authorize('interact', $deck);
+
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard(),
+        ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+
+    public function store(UpsertDeckRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -94,23 +163,37 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $deck->name])]);
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
 
-        return to_route('decks.show', $deck);
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+            'message' => __('created', ['thing' => $deck->name]),
+        ], 201);
     }
 
-    public function update(UpdateDeckRequest $request, Deck $deck): RedirectResponse
+    public function update(UpsertDeckRequest $request, Deck $deck): JsonResponse
     {
         Gate::authorize('modify', $deck);
 
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $deck->name])]);
+        $deck->refresh()->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
 
-        return to_route('decks.show', $deck);
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+            'message' => __('updated', ['thing' => $deck->name]),
+        ]);
     }
 
     private function linkTerms($deck, $terms): void
@@ -135,15 +218,30 @@ class DeckController extends Controller
         }
     }
 
-    public function destroy(Deck $deck): RedirectResponse
+    public function destroy(Deck $deck): JsonResponse
     {
-        Gate::authorize('modify', $deck);
+        try {
+            Gate::authorize('delete', $deck);
 
-        $deck->delete();
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $deck->name])]);
+            $deletedDeck = $deck->name;
 
-        return to_route('decks.index');
+            DB::transaction(function () use ($deck) {
+                $deck->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedDeck]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Deck.', [
+                'deck_id' => $deck->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Deck.', $e);
+        }
     }
 
     public function toggleTerm(Deck $deck, Term $term): JsonResponse
@@ -276,7 +374,7 @@ class DeckController extends Controller
             ->get();
 
         return response()->json([
-            'data' => DeckResource::collection($decks),
+            'results' => DeckResource::collection($decks),
         ]);
     }
 }

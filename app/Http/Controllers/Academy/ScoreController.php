@@ -12,12 +12,17 @@ use App\Models\Activity;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Score;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Throwable;
 
 class ScoreController extends Controller
 {
@@ -200,15 +205,27 @@ class ScoreController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Score $score): RedirectResponse
+    public function destroy(Score $score): JsonResponse
     {
-        $score->delete();
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => 'Score'])]);
+        try {
+            Gate::authorize('delete', $score);
 
-        return to_route('scores.history', [
-            'scorable_type' => $score->scorable_type,
-            'scorable_id' => $score->scorable_id,
-        ]);
+            DB::transaction(function () use ($score) {
+                $score->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => 'Score']),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Score.', [
+                'score_id' => $score->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Score.', $e);
+        }
     }
 }

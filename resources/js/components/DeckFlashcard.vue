@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import {useDeck} from "../composables/Deck.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
@@ -88,7 +88,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                     <div class="model-item deck-item">
                         <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
                              class="deck-author-avatar" alt="Avatar"
-                             :src="`/img/avatars/${deck.author.avatar}`"/>
+                             :src="deck.author.avatar_url"/>
                         <DeckActions :model="deck"/>
                     </div>
                 </div>

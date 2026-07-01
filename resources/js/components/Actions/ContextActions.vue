@@ -1,8 +1,8 @@
 <script setup>
-import {useActions} from "../../composables/Actions.js";
+import {useDropdown} from "../../composables/useDropdown.js";
 import {useSlots, computed, Comment, Text, Fragment} from "vue";
 
-const {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu} = useActions();
+const {toggleMenu, onMenuKeydown, floatingStyles, isOpen, reference, floating, closeMenu} = useDropdown();
 
 const slots = useSlots();
 

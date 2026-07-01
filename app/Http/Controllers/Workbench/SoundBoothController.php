@@ -67,16 +67,24 @@ class SoundBoothController extends Controller
             $queued = $request->input('queuedItems', []);
             $queuedIds = collect($queued)->pluck('id');
 
-            $deck = Deck::firstWhere('id', $deckId)->load(['terms.pronunciations']);
+            $deck = Deck::with([
+                'terms.pronunciations' => fn ($q) => $q
+                    ->with([
+                        'audios' => fn ($q) => $q
+                            ->where('speaker_id', $speakerId)
+                    ])
+            ])->findOrFail($deckId);
+
             $pronunciationsToQueue = [];
 
             foreach ($deck->terms as $term) {
-                $termPronunciations = $term->pronunciations->load(['term']);
-
-                foreach ($termPronunciations as $pronunciation) {
+                foreach ($term->pronunciations as $pronunciation) {
                     if (count($queued) + count($pronunciationsToQueue) >= 100) {
                         session()->flash('notification',
-                            ['type' => 'success', 'message' => 'You\'ve reached the Queue max. Some items could not be added.']);
+                            [
+                                'type' => 'success',
+                                'message' => 'You\'ve reached the Queue max. Some items could not be added.'
+                            ]);
                         break 2;
                     }
 
@@ -84,11 +92,10 @@ class SoundBoothController extends Controller
                         in_array($pronunciation->dialect_id, $dialectIds) &&
                         ! $queuedIds->contains($pronunciation->id)
                     ) {
-                        $alreadyRecorded = $pronunciation->audios()
-                            ->where('speaker_id', $speakerId)
-                            ->exists();
+                        $alreadyRecorded = $pronunciation->audios->isNotEmpty();
 
                         if (! $alreadyRecorded) {
+                            $pronunciation->setRelation('term', $term);
                             $pronunciationsToQueue[] = $pronunciation;
                         }
                     }
@@ -100,7 +107,7 @@ class SoundBoothController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch deck items.'], 500);
+            return response()->json(['error' => 'Failed to fetch Deck items.'], 500);
         }
     }
 }

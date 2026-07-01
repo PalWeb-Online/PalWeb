@@ -100,15 +100,15 @@
 :root, .theme-PalWebOS {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(265, 90%, 30%);
-    --color-dark-primary: hsl(265, 85%, 35%);
-    --color-medium-secondary: hsl(260, 64%, 48%);
-    --color-medium-primary: hsl(255, 82%, 62%);
-    --color-pastel-dark: hsl(255, 75%, 83%);
-    --color-pastel-medium: hsl(255, 80%, 92%);
+    --color-dark-secondary: hsl(265, 85%, 24%);
+    --color-dark-primary: hsl(265, 85%, 33%);
+    --color-medium-secondary: hsl(260, 60%, 48%);
+    --color-medium-primary: hsl(255, 80%, 63%);
+    --color-pastel-dark: hsl(255, 75%, 89%);
+    --color-pastel-medium: hsl(255, 80%, 93%);
     --color-pastel-light: hsl(260, 90%, 97%);
     --color-transparent: hsla(255, 80%, 92%, 0.75);
-    --color-accent-dark: hsl(40, 96%, 32%);
+    --color-accent-dark: hsl(5, 32%, 30%);
     --color-accent-medium: hsl(40, 92%, 60%);
     --color-accent-light: hsl(40, 92%, 90%);
 }
@@ -116,31 +116,31 @@
 .theme-Watermelon {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(170, 80%, 12%);
-    --color-dark-primary: hsl(170, 100%, 16%);
-    --color-medium-secondary: hsl(165, 80%, 22%);
-    --color-medium-primary: hsl(160, 80%, 35%);
-    --color-pastel-dark: hsl(165, 40%, 77%);
-    --color-pastel-medium: hsl(165, 35%, 85%);
+    --color-dark-secondary: hsl(170, 100%, 12%);
+    --color-dark-primary: hsl(170, 100%, 15%);
+    --color-medium-secondary: hsl(165, 90%, 23%);
+    --color-medium-primary: hsl(160, 80%, 33%);
+    --color-pastel-dark: hsl(165, 35%, 80%);
+    --color-pastel-medium: hsl(165, 35%, 86%);
     --color-pastel-light: hsl(165, 32%, 94%);
     --color-transparent: hsla(165, 35%, 85%, 0.75);
-    --color-accent-dark: hsl(355, 60%, 45%);
-    --color-accent-medium: hsl(355, 100%, 82%);
+    --color-accent-dark: hsl(355, 52%, 52%);
+    --color-accent-medium: hsl(355, 90%, 82%);
     --color-accent-light: hsl(355, 100%, 96%);
 }
 
 .theme-Nabatean {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(5, 25%, 20%);
-    --color-dark-primary: hsl(2, 25%, 25%);
-    --color-medium-secondary: hsl(2, 55%, 45%);
-    --color-medium-primary: hsl(2, 58%, 54%);
-    --color-pastel-dark: hsl(195, 50%, 76%);
-    --color-pastel-medium: hsl(195, 40%, 84%);
-    --color-pastel-light: hsl(195, 30%, 95%);
+    --color-dark-secondary: hsl(2, 25%, 18%);
+    --color-dark-primary: hsl(2, 30%, 26%);
+    --color-medium-secondary: hsl(2, 50%, 45%);
+    --color-medium-primary: hsl(2, 58%, 55%);
+    --color-pastel-dark: hsl(195, 45%, 80%);
+    --color-pastel-medium: hsl(195, 45%, 87%);
+    --color-pastel-light: hsl(195, 40%, 95%);
     --color-transparent: hsla(195, 40%, 84%, 0.75);
-    --color-accent-dark: hsl(24, 35%, 40%);
+    --color-accent-dark: hsl(195, 45%, 32%);
     --color-accent-medium: hsl(36, 85%, 65%);
     --color-accent-light: hsl(36, 80%, 92%);
 }
@@ -148,96 +148,112 @@
 .theme-Jerusalem {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(240, 80%, 20%);
-    --color-dark-primary: hsl(240, 75%, 33%);
-    --color-medium-secondary: hsl(215, 90%, 45%);
-    --color-medium-primary: hsl(172, 100%, 34%);
-    --color-pastel-dark: hsl(200, 75%, 80%);
-    --color-pastel-medium: hsl(200, 90%, 88%);
-    --color-pastel-light: hsl(172, 50%, 92%);
+    --color-dark-secondary: hsl(240, 70%, 28%);
+    --color-dark-primary: hsl(240, 60%, 38%);
+    --color-medium-secondary: hsl(210, 90%, 40%);
+    --color-medium-primary: hsl(180, 65%, 40%);
+    --color-pastel-dark: hsl(200, 80%, 83%);
+    --color-pastel-medium: hsl(200, 80%, 90%);
+    --color-pastel-light: hsl(170, 50%, 95%);
     --color-transparent: hsla(200, 90%, 92%, 0.75);
-    --color-accent-dark: hsl(36, 80%, 35%);
-    --color-accent-medium: hsl(44, 97%, 57%);
-    --color-accent-light: hsl(44, 85%, 90%);
+    --color-accent-dark: hsl(22, 45%, 28%);
+    --color-accent-medium: hsl(42, 92%, 62%);
+    --color-accent-light: hsl(33, 90%, 93%);
 }
 
 .theme-Falastin {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(20, 8%, 8%);
-    --color-dark-primary: hsl(20, 8%, 18%);
-    --color-medium-secondary: hsl(20, 6%, 28%);
-    --color-medium-primary: hsl(20, 6%, 40%);
-    --color-pastel-dark: hsl(20, 8%, 80%);
+    --color-dark-secondary: hsl(20, 8%, 10%);
+    --color-dark-primary: hsl(20, 8%, 21%);
+    --color-medium-secondary: hsl(20, 6%, 31%);
+    --color-medium-primary: hsl(20, 6%, 44%);
+    --color-pastel-dark: hsl(20, 8%, 84%);
     --color-pastel-medium: hsl(20, 8%, 90%);
     --color-pastel-light: hsl(20, 8%, 95%);
     --color-transparent: hsla(0, 0%, 92%, 0.75);
-    --color-accent-dark: hsl(30, 25%, 25%);
-    --color-accent-medium: hsl(30, 25%, 65%);
-    --color-accent-light: hsl(30, 80%, 95%);
+    --color-accent-dark: hsl(30, 20%, 25%);
+    --color-accent-medium: hsl(30, 30%, 70%);
+    --color-accent-light: hsl(30, 60%, 93%);
 }
 
-.theme-Pal2K {
+.theme-Msaxxan {
     --color-polar-dark: hsl(0, 0%, 0%);
     --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: #1b0b4c;
-    --color-dark-primary: #3c2c8c;
-    --color-medium-secondary: #6b5acd;
-    --color-medium-primary: #b989d4;
-    --color-medium-primary: hsl(280, 50%, 68%);
-    --color-pastel-dark: hsl(350, 95%, 85%);
-    --color-pastel-medium: hsl(350, 95%, 90%);
-    --color-pastel-light: hsl(350, 92%, 97%);
-    --color-transparent: hsla(0, 0%, 92%, 0.75);
-    //--color-accent-dark: hsl(200, 95%, 25%);
-    //--color-accent-medium: hsl(200, 85%, 65%);
-    --color-accent-dark: #ff6f62;
-    --color-accent-medium: hsl(48, 90%, 60%);
-    --color-accent-light: hsl(50, 95%, 90%);
-}
-
-.theme-Sumac {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(300, 28%, 16%);
-    --color-dark-primary: hsl(300, 35%, 22%);
-    --color-medium-secondary: hsl(340, 40%, 35%);
-    --color-medium-primary: hsl(340, 40%, 45%);
-    --color-pastel-dark: hsl(340, 50%, 80%);
-    --color-pastel-medium: hsl(340, 50%, 92%);
-    --color-pastel-light: hsl(340, 50%, 97%);
+    --color-dark-secondary: hsl(300, 36%, 18%);
+    --color-dark-primary: hsl(300, 36%, 25%);
+    --color-medium-secondary: hsl(340, 46%, 38%);
+    --color-medium-primary: hsl(340, 42%, 50%);
+    --color-pastel-dark: hsl(340, 50%, 87%);
+    --color-pastel-medium: hsl(340, 55%, 92%);
+    --color-pastel-light: hsl(340, 60%, 97%);
     --color-transparent: hsla(195, 40%, 84%, 0.75);
-    --color-accent-dark: hsl(12, 30%, 30%);
-    --color-accent-medium: hsl(28, 50%, 62%);
-    --color-accent-light: hsl(28, 50%, 92%);
+    --color-accent-dark: hsl(12, 40%, 28%);
+    --color-accent-medium: hsl(25, 55%, 70%);
+    --color-accent-light: hsl(28, 75%, 92%);
 }
 
-.theme-Thobe {
-    --color-polar-dark: hsl(0, 0%, 0%);
-    --color-polar-light: hsl(0, 0%, 100%);
-    --color-dark-secondary: hsl(0, 0%, 10%);
-    --color-dark-primary: hsl(0, 0%, 20%);
-    --color-medium-secondary: hsl(90, 35%, 35%);
-    --color-medium-primary: hsl(90, 38%, 48%);
-    --color-pastel-dark: hsl(60, 50%, 80%);
-    --color-pastel-medium: hsl(60, 50%, 90%);
-    --color-pastel-light: hsl(60, 50%, 95%);
-    --color-transparent: hsla(0, 0%, 92%, 0.75);
-    --color-accent-dark: hsl(30, 45%, 28%);
-    --color-accent-medium: hsl(34, 90%, 60%);
-    --color-accent-light: hsl(34, 80%, 92%);
+//.theme-Zatoon {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(330, 28%, 16%);
+//    --color-dark-primary: hsl(330, 28%, 24%);
+//    --color-medium-secondary: hsl(70, 40%, 32%);
+//    --color-medium-primary: hsl(60, 40%, 42%);
+//    --color-pastel-dark: hsl(0, 60%, 82%);
+//    --color-pastel-medium: hsl(0, 60%, 92%);
+//    --color-pastel-light: hsl(0, 60%, 97%);
+//    --color-transparent: hsla(0, 0%, 92%, 0.75);
+//    --color-accent-dark: hsl(36, 45%, 28%);
+//    --color-accent-medium: hsl(42, 40%, 72%);
+//    --color-accent-light: hsl(42, 40%, 90%);
+//}
 
-    //--color-dark-secondary: hsl(220, 80%, 12%);
-    //--color-dark-primary: hsl(220, 100%, 25%);
-    //--color-medium-secondary: hsl(200, 95%, 38%);
-    //--color-medium-primary: hsl(190, 100%, 40%);
-    //--color-pastel-dark: hsl(160, 60%, 80%);
-    //--color-pastel-medium: hsl(160, 60%, 84%);
-    //--color-pastel-light: hsl(160, 60%, 95%);
-    //--color-transparent: hsla(65, 60%, 84%, 0.75);
-    //--color-accent-medium: hsl(355, 60%, 55%);
-    //--color-accent-light: hsl(32, 100%, 92%);
-}
+//.theme-Pal2K {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: #1b0b4c;
+//    --color-dark-primary: #3c2c8c;
+//    --color-medium-secondary: #6b5acd;
+//    --color-medium-primary: #b989d4;
+//    --color-medium-primary: hsl(280, 50%, 68%);
+//    --color-pastel-dark: hsl(350, 95%, 85%);
+//    --color-pastel-medium: hsl(350, 95%, 90%);
+//    --color-pastel-light: hsl(350, 92%, 97%);
+//    --color-transparent: hsla(0, 0%, 92%, 0.75);
+//    //--color-accent-dark: hsl(200, 95%, 25%);
+//    //--color-accent-medium: hsl(200, 85%, 65%);
+//    --color-accent-dark: #ff6f62;
+//    --color-accent-medium: hsl(48, 90%, 60%);
+//    --color-accent-light: hsl(50, 95%, 90%);
+//}
+//
+//.theme-Thobe {
+//    --color-polar-dark: hsl(0, 0%, 0%);
+//    --color-polar-light: hsl(0, 0%, 100%);
+//    --color-dark-secondary: hsl(0, 0%, 10%);
+//    --color-dark-primary: hsl(0, 0%, 20%);
+//    --color-medium-secondary: hsl(90, 35%, 35%);
+//    --color-medium-primary: hsl(90, 38%, 48%);
+//    --color-pastel-dark: hsl(60, 50%, 80%);
+//    --color-pastel-medium: hsl(60, 50%, 90%);
+//    --color-pastel-light: hsl(60, 50%, 95%);
+//    --color-transparent: hsla(0, 0%, 92%, 0.75);
+//    --color-accent-dark: hsl(30, 45%, 28%);
+//    --color-accent-medium: hsl(34, 90%, 60%);
+//    --color-accent-light: hsl(34, 80%, 92%);
+//
+//    --color-dark-secondary: hsl(220, 80%, 12%);
+//    --color-dark-primary: hsl(220, 100%, 25%);
+//    --color-medium-secondary: hsl(200, 95%, 38%);
+//    --color-medium-primary: hsl(190, 100%, 40%);
+//    --color-pastel-dark: hsl(160, 60%, 80%);
+//    --color-pastel-medium: hsl(160, 60%, 84%);
+//    --color-pastel-light: hsl(160, 60%, 95%);
+//    --color-transparent: hsla(65, 60%, 84%, 0.75);
+//    --color-accent-medium: hsl(355, 60%, 55%);
+//    --color-accent-light: hsl(32, 100%, 92%);
+//}
 
 .theme-picker-wrapper {
     display: grid;

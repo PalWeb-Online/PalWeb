@@ -1,5 +1,5 @@
 <script setup>
-import {useTerm} from "../composables/Term.js";
+import {useTerm} from "../composables/terms/useTerm.js";
 import TermActions from "./Actions/TermActions.vue";
 import PinButton from "./PinButton.vue";
 import GlossItem from "./GlossItem.vue";

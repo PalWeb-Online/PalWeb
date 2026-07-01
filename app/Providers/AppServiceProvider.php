@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use App\Listeners\AfterSubscriptionCreated;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (app()->environment('local')) {
+        if (app()->isLocal()) {
             URL::forceScheme('https');
 
 //            Lang::handleMissingKeysUsing(function ($key, $replace, $locale) {
@@ -48,6 +48,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         JsonResource::withoutWrapping();
+
+        Model::preventLazyLoading(! app()->isProduction());
 
         Relation::morphMap([
             'term' => \App\Models\Term::class,

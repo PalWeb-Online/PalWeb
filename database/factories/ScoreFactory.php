@@ -39,13 +39,13 @@ class ScoreFactory extends Factory
     public function configure(): static
     {
         return $this->afterMaking(function (Score $score) {
-            $deck = Deck::find($score->scorable_id);
+            $deck = Deck::with('terms.glosses')->get()->find($score->scorable_id);
             $results = [];
 
             foreach ($deck->terms as $term) {
                 $answers = [$term->glosses->firstWhere('id', $term->pivot->gloss_id)->gloss];
 
-                $isCorrect = fake()->boolean(50);
+                $isCorrect = fake()->boolean();
                 $response = $isCorrect
                     ? fake()->randomElement($answers)
                     : fake()->word();

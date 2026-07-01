@@ -15,9 +15,7 @@ import {useActivitySession} from "../../../../composables/activities/useActivity
 
 const ActivitySession = useActivitySession();
 
-const hasNavigationGuard = computed(() => {
-    return !ActivitySession.isSaved;
-});
+const hasNavigationGuard = computed(() => !ActivitySession.isSaved);
 
 const {showAlert, handleConfirm, handleCancel, skipNext} = useNavGuard(hasNavigationGuard);
 

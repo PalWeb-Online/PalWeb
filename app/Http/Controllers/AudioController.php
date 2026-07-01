@@ -8,9 +8,13 @@ use App\Models\Dialect;
 use App\Models\Location;
 use App\Services\AudioService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class AudioController extends Controller
 {
@@ -18,62 +22,78 @@ class AudioController extends Controller
         protected AudioService $audioService
     ) {}
 
-    public function index(Request $request): \Inertia\Response
+    public function index(): \Inertia\Response
     {
-        $filters = array_merge(['sort' => 'latest'], $request->only([
-            'location', 'dialect', 'gender', 'sort',
-        ]));
-
-        $query = Audio::query()
-            ->with([
-                'speaker',
-                'pronunciation.term',
-            ])
-            ->filter($filters);
-
-        if ($filters['sort'] === 'fluency') {
-            $query->orderByFluency();
-        } else {
-            $query->orderByDesc('id');
-        }
-
-        $audios = $query
-            ->paginate(25)
-            ->onEachSide(1)
-            ->appends($filters);
-        $totalCount = $audios->total();
-
-        return Inertia::render('Library/Audios/Index', [
-            'section' => 'library',
-            'audios' => AudioResource::collection($audios),
-            'dialects' => Dialect::whereHas('speakers.audios')->get(),
-            'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
-            'totalCount' => $totalCount,
-            'filters' => $filters,
-        ]);
+        return Inertia::render('Library/Audios/Index');
     }
 
-    public function destroy(Request $request, Audio $audio): RedirectResponse|JsonResponse
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+    public function apiIndex(Request $request): JsonResponse
+{
+        URL::forceScheme('https');
+
+    $filters = array_merge(['sort' => 'latest'], $request->only([
+        'location', 'dialect', 'gender', 'sort',
+    ]));
+
+    $query = Audio::query()
+        ->with(['speaker', 'pronunciation.term'])
+        ->filter($filters);
+
+    if ($filters['sort'] === 'fluency') {
+        $query->orderByFluency();
+    } else {
+        $query->orderByDesc('id');
+    }
+
+    $audios = $query->paginate(25)->onEachSide(1)->appends($filters);
+    $resource = AudioResource::collection($audios);
+
+    return response()->json([
+        'audios' => [
+            'data' => $resource->toArray($request),
+            'meta' => [
+                'links' => $audios->linkCollection()->toArray(),
+                'current_page' => $audios->currentPage(),
+                'last_page' => $audios->lastPage(),
+                'total' => $audios->total(),
+            ],
+        ],
+        'dialects' => Dialect::whereHas('speakers.audios')->get(),
+        'locations' => Location::whereHas('speakers.audios')->get()->makeHidden('coordinates'),
+        'totalCount' => $audios->total(),
+        'filters' => $filters,
+    ]);
+}
+
+    // -------------------------------------------------------------------------
+
+    public function destroy(Audio $audio): JsonResponse
     {
-        //        todo: create AudioPolicy
-        if (! $request->user() || $audio->speaker->user_id !== auth()->id()) {
-            return $request->expectsJson()
-                ? response()->json(['error' => 'Unauthorized.'], 403)
-                : abort(403, 'Unauthorized');
-        }
-
         try {
-            $this->audioService->deleteAudio($audio->filename);
-            $audio->delete();
+            Gate::authorize('delete', $audio);
 
-            session()->flash('notification', ['type' => 'success', 'message' => __('deleted', ['thing' => $audio->filename])]);
+            $deletedAudio = $audio->filename;
 
-            return back();
+            DB::transaction(function () use ($audio) {
+                $this->audioService->deleteAudio($audio->filename);
+                $audio->delete();
+            });
 
-        } catch (\Exception $e) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Unable to delete file from cloud storage.']);
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedAudio]),
+            ]);
 
-            return back();
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Audio.', [
+                'audio_id' => $audio->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Audio.', $e);
         }
     }
 }

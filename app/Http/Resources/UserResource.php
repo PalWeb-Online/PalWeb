@@ -17,22 +17,14 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'username' => $this->username,
             'ar_name' => $this->ar_name,
-            'avatar' => $this->avatar,
-            'home' => $this->home,
-            'bio' => $this->bio,
+            'username' => $this->username,
+            'avatar_url' => $this->avatar_url,
             'private' => $this->private,
-            'teacher' => $this->whenLoaded('teacher', function () {
-                return new TeacherResource($this->teacher);
-            }),
-            'dialect' => $this->whenLoaded('dialect'),
-            'badges' => $this->whenLoaded('badges'),
-            'created_at' => $this->created_at->format('j F Y'),
-            'created_ago' => $this->created_at->diffForHumans(),
-            'decks_count' => $this->decks->count(),
-            'audios_count' => $this->speaker?->audios->count() ?? 0,
-            'roles' => $this->whenLoaded('roles', $this->roles->pluck('name')->values()),
+            'decks_count' => $this->whenCounted('decks'),
+            'audios_count' => $this->whenCounted('audios'),
+            'teacher' => new TeacherResource($this->whenLoaded('teacher')),
+            'roles' => $this->whenLoaded('roles', fn () => $this->roles->pluck('name')->values()),
         ];
     }
 }

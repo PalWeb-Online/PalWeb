@@ -1,42 +1,17 @@
 <script setup>
-import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
-import {Howl} from "howler";
 import {useUserStore} from "../stores/UserStore.js";
 import {router} from "@inertiajs/vue3";
+import {useAudio} from "../composables/audios/useAudio.js";
 
 const UserStore = useUserStore();
+const {deleteAudio} = useAudio();
 
 const props = defineProps({
     model: Object,
 });
 
-const audio = ref(null);
-const isPlaying = ref(false);
-
-function loadAudio() {
-    audio.value = new Howl({
-        src: [`https://abdulbaha.fra1.digitaloceanspaces.com/audios/${props.model.filename}`],
-        onplay: () => isPlaying.value = true,
-        onend: () => isPlaying.value = false,
-        onstop: () => isPlaying.value = false,
-        onpause: () => isPlaying.value = false,
-    });
-}
-
-function playAudio() {
-    if (audio.value) {
-        audio.value.play();
-    }
-}
-
-const deleteAudio = () => {
-    if (!confirm('Are you sure you want to delete this Audio?')) return;
-
-    router.delete(route('audios.destroy', props.model.id), {preserveScroll: true});
-};
-
-watch(() => props.model, loadAudio, {immediate: true});
+const {isPlaying, playAudio} = useAudio(props.model.url);
 </script>
 
 <template>
@@ -48,7 +23,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         <img v-if="!model.speaker.user.private"
              class="speaker-avatar" alt="User Avatar"
              @click="router.get(route('speaker.show', model.speaker))"
-             :src="`/img/avatars/${model.speaker.user.avatar}`"/>
+             :src="model.speaker.user.avatar_url"/>
         <div class="audio-item-data">
             <div>by
                 <Link :href="route('speaker.show', model.speaker)">
@@ -73,7 +48,7 @@ watch(() => props.model, loadAudio, {immediate: true});
         </div>
 
         <button v-if="UserStore.user?.id === model.speaker.user.id || UserStore.isAdmin"
-                @click="deleteAudio" class="material-symbols-rounded">delete
+                @click="deleteAudio(model)" class="material-symbols-rounded">delete
         </button>
     </div>
 </template>
@@ -118,9 +93,12 @@ watch(() => props.model, loadAudio, {immediate: true});
         font-style: italic;
     }
 
-    button, button.audio-button {
+    button:not(.audio-button) {
         color: white;
         background: var(--color-medium-primary);
+    }
+
+    button {
         font-size: 2.0rem;
         height: 100%;
         width: 3.6rem;

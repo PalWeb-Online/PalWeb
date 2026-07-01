@@ -8,9 +8,12 @@ use App\Services\PageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class PageController extends Controller
 {
@@ -74,7 +77,7 @@ class PageController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $pages,
+            'results' => $pages,
         ]);
     }
 
@@ -141,7 +144,7 @@ class PageController extends Controller
         ]);
     }
 
-    public function store(UpsertPageRequest $request): JsonResponse | RedirectResponse
+    public function store(UpsertPageRequest $request): JsonResponse|RedirectResponse
     {
         $page = PageService::upsertWithSiblingPosition(null, $request->validated());
 
@@ -159,7 +162,7 @@ class PageController extends Controller
             ]);
     }
 
-    public function update(UpsertPageRequest $request, Page $page): JsonResponse | RedirectResponse
+    public function update(UpsertPageRequest $request, Page $page): JsonResponse|RedirectResponse
     {
         $page = PageService::upsertWithSiblingPosition($page, $request->validated());
 
@@ -177,20 +180,27 @@ class PageController extends Controller
             ]);
     }
 
-    public function destroy(Page $page): JsonResponse | RedirectResponse
+    public function destroy(Page $page): JsonResponse
     {
-        $page->delete();
+        try {
+            Gate::authorize('delete', $page);
 
-        if (request()->expectsJson()) {
+            DB::transaction(function () use ($page) {
+                $page->delete();
+            });
+
             return response()->json([
-                'message' => 'Page deleted successfully.',
+                'success' => true,
+                'message' => __('deleted', ['thing' => 'Page']),
             ]);
-        }
 
-        return to_route('wiki.show')
-            ->with('notification', [
-                'type' => 'success',
-                'message' => 'Page deleted successfully.',
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Page.', [
+                'page_id' => $page->id,
+                'exception' => $e,
             ]);
+
+            return $this->failureJsonResponse('Unable to delete Page.', $e);
+        }
     }
 }

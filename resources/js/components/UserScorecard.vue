@@ -12,7 +12,7 @@ defineProps({
     <div class="user-scorecard">
         <Link class="user-avatar" :href="route('users.show', user.username)">
             <img alt="Avatar"
-                 :src="`/img/avatars/${user.avatar}`"/>
+                 :src="user.avatar_url"/>
         </Link>
         <UserNametag :user="user"/>
         <div v-if="scores" class="user-scorecard-body">

@@ -8,9 +8,9 @@ import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import DocumentBlocksManager from "../../../components/Blocks/Editors/DocumentBlocksManager.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useDialogSearch} from "../../../composables/useDialogSearch.js";
-import {useUnitSearch} from "../../../composables/useUnitSearch.js";
-import {useDeckSearch} from "../../../composables/useDeckSearch.js";
+import {useDeckSearch} from "../../../composables/decks/useDeckSearch.js";
+import {useDialogSearch} from "../../../composables/dialogs/useDialogSearch.js";
+import {useUnitSearch} from "../../../composables/units/useUnitSearch.js";
 import SearchSelect from "../../../components/SearchSelect.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import DialogItem from "../../../components/DialogItem.vue";
@@ -34,7 +34,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -86,19 +86,20 @@ watch(() => props.lessonId, async () => {
 });
 
 const {
-    validationIssues,
     isValidRequest,
+    validationErrors,
     publishIssues,
     isPublishable,
 } = useLessonValidation({
     form,
+    backendErrors,
     selectedDeck,
     selectedDialog,
     lessonActivity: computed(() => lesson.value?.activity ?? null),
     allowedBlockTypes,
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 watch(() => form.group, (newGroup) => {
@@ -144,22 +145,25 @@ const removeUnlockCondition = (i) => {
 </script>
 <template>
     <Head :title="`Lesson Planner: Lesson ${lesson?.global_position}`"/>
-
     <div id="app-head">
         <h1>lesson planner</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-else-if="lessonNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Lesson does not exist.</p>
-            <Link :href="route('lesson-planner.index')">
+        <template v-else-if="lessonNotFound">
+            <AppTip>
+                <p>Sorry, but the requested Lesson does not exist.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link v-if="lesson?.unit?.id || initialUnit" :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
+                    <Link v-if="lesson?.unit?.id || initialUnit"
+                          :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
                         <- to Unit
                     </Link>
                     <Link v-if="lesson?.id" :href="route('lessons.show', lesson.global_position)">
@@ -196,13 +200,13 @@ const removeUnlockCondition = (i) => {
                     <button @click="addUnlockCondition">Add</button>
                 </div>
 
-<!--                selected* is only used explicitly for the SearchSelect components -->
+                <!--                selected* is only used explicitly for the SearchSelect components -->
                 <SearchSelect
                     v-model="form.unit_id"
                     label="Unit"
                     :initial-title="selectedUnit?.title || ''"
                     :search="searchUnits"
-                    :error="errors?.unit_id"
+                    :error="validationErrors[`unit_id`]"
                     :disabled="isUnitLocked"
                     @select="setSelectedUnit"
                     @clear="setSelectedUnit()"
@@ -232,7 +236,7 @@ const removeUnlockCondition = (i) => {
                     label="Deck"
                     :initial-title="selectedDeck?.name || ''"
                     :search="searchDecks"
-                    :error="errors?.deck_id"
+                    :error="validationErrors[`deck_id`]"
                     @select="setSelectedDeck"
                     @clear="setSelectedDeck()"
                 >
@@ -256,7 +260,7 @@ const removeUnlockCondition = (i) => {
                     label="Dialog"
                     :initial-title="selectedDialog?.title || ''"
                     :search="searchDialogs"
-                    :error="errors?.dialog_id"
+                    :error="validationErrors[`dialog_id`]"
                     @select="setSelectedDialog"
                     @clear="setSelectedDialog()"
                 >
@@ -314,10 +318,10 @@ const removeUnlockCondition = (i) => {
 
                 <AppTip>
                     <p>The Lesson is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-                    <template v-if="!isValidRequest">
+                    <template v-if="Object.keys(validationErrors).length">
                         <p style="font-weight: 700">The Lesson cannot be saved in the current state.</p>
                         <ul>
-                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                            <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
@@ -327,12 +331,6 @@ const removeUnlockCondition = (i) => {
                         </ul>
                         <p v-if="form.published" style="font-weight: 700">Because the Lesson is already Published, the
                             current state cannot be saved except by reverting it to Draft.</p>
-                    </template>
-                    <template v-if="Object.keys(errors).length">
-                        <p style="font-weight: 700">Oops — the Lesson could not be saved.</p>
-                        <ul>
-                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                        </ul>
                     </template>
                 </AppTip>
             </div>
@@ -351,7 +349,7 @@ const removeUnlockCondition = (i) => {
                     >
                         {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
                     </button>
-                    <button type="button" @click="deleteLesson">Delete Lesson</button>
+                    <button type="button" @click="deleteLesson()">Delete Lesson</button>
                 </div>
             </div>
         </template>

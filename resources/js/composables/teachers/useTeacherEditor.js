@@ -1,13 +1,11 @@
 import {computed, ref} from "vue";
 import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
+import {router} from "@inertiajs/vue3";
 
 export function useTeacherEditor({
                                       user,
                                   }) {
-    const NotificationStore = useNotificationStore();
-
     // normally there would be a use*Loader composable here, but the Teacher model is loaded in
     // with the User model, so we just need to provide the ref & set method
 
@@ -39,24 +37,13 @@ export function useTeacherEditor({
         populateForm,
         extractSavedModel: (response) => response.data.teacher ?? response.data.data ?? null,
         getLoadIdentifier: () => user.value?.teacher?.id ?? null,
-
-        // model is already loaded in & setting is done here
         fetchModel: async () => user.value?.teacher ?? null,
         resetModel: setTeacher,
-
+        label: 'Teacher',
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, your Teacher profile was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — your Teacher profile could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, your Teacher profile was successfully deleted.', 'success');
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — your Teacher profile could not be deleted.', 'error');
+            router.get(route('users.show', user.value?.username));
         },
     });
 
@@ -75,7 +62,6 @@ export function useTeacherEditor({
         form: editor.form,
         errors: editor.errors,
         isDirty: editor.isDirty,
-        processing: editor.processing,
         recentlySuccessful: editor.recentlySuccessful,
         reset: editor.reset,
         isSaving: editor.isSaving,

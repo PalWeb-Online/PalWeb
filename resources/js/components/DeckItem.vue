@@ -1,7 +1,7 @@
 <script setup>
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
-import {useDeck} from "../composables/Deck.js";
+import {useDeck} from "../composables/decks/useDeck.js";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {computed, ref} from "vue";
@@ -61,7 +61,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 </div>
                 <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
                      class="deck-author-avatar" alt="Avatar"
-                     :src="`/img/avatars/${deck.author.avatar}`"/>
+                     :src="deck.author.avatar_url"/>
                 <DeckActions :model="deck"/>
             </div>
 

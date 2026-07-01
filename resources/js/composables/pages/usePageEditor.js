@@ -2,14 +2,12 @@ import {ref} from "vue";
 import {route} from "ziggy-js";
 import {usePageLoader} from "./usePageLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
 import {router} from "@inertiajs/vue3";
 
 export function usePageEditor({
                                   pageId = null,
                               } = {}) {
-    const NotificationStore = useNotificationStore();
     const documentPreset = getDocumentPreset('wiki');
     const pageLoader = usePageLoader();
 
@@ -63,6 +61,7 @@ export function usePageEditor({
         getLoadIdentifier: () => pageId.value,
         fetchModel: pageLoader.fetchPage,
         resetModel: pageLoader.setPage,
+        label: 'Page',
         routeBase: 'wiki',
         getBlocks: (document) => document?.blocks ?? [],
         beforeReload: () => {
@@ -81,18 +80,8 @@ export function usePageEditor({
             await pageLoader.fetchWikiTree();
             redirectToEditRoute(savedModel);
         },
-        onSaveSuccess: () => {
-            NotificationStore.addNotification('OK, the Page was successfully saved.', 'success');
-        },
-        onSaveError: () => {
-            NotificationStore.addNotification('Oops — the Page could not be saved.', 'error');
-        },
         onDeleteSuccess: () => {
-            NotificationStore.addNotification('OK, the Page was successfully deleted.', 'success');
             router.get(route('wiki.index'));
-        },
-        onDeleteError: () => {
-            NotificationStore.addNotification('Oops — the Page could not be deleted.', 'error');
         },
     });
 
@@ -100,7 +89,6 @@ export function usePageEditor({
         form: editor.form,
         errors: editor.errors,
         isDirty: editor.isDirty,
-        processing: editor.processing,
         recentlySuccessful: editor.recentlySuccessful,
         reset: editor.reset,
         isSaving: editor.isSaving,
@@ -113,7 +101,6 @@ export function usePageEditor({
         sentenceModels: editor.documentLoader.sentenceModels,
         page: pageLoader.page,
         pageNotFound: pageLoader.pageNotFound,
-        isLoadingPage: pageLoader.isLoadingPage,
         pageTree: pageLoader.pageTree,
         isLoadingTree: pageLoader.isLoadingTree,
         fetchWikiTree: pageLoader.fetchWikiTree,

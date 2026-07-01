@@ -3,37 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Events\ModelPinned;
-use App\Http\Requests\StoreSentenceRequest;
-use App\Http\Requests\UpdateSentenceRequest;
+use App\Http\Requests\UpsertSentenceRequest;
 use App\Http\Resources\SentenceResource;
 use App\Jobs\UpdateTermUsageCount;
 use App\Models\Sentence;
 use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
+use Illuminate\Support\Facades\URL;
+use Throwable;
 
 class SentenceController extends Controller
 {
     public function pin(Request $request, Sentence $sentence): JsonResponse
     {
         $user = $request->user();
-
         Bookmark::toggle($sentence, $user);
 
-        $sentence->isPinned() && event(new ModelPinned($user));
+        $isPinned = Bookmark::has($sentence, $user);
 
-        $message = $sentence->isPinned()
-            ? __('pin.added', ['thing' => $sentence->sentence])
-            : __('pin.removed', ['thing' => $sentence->sentence]);
+        if ($isPinned) {
+            event(new ModelPinned($user));
+        }
 
         return response()->json([
-            'isPinned' => $sentence->isPinned(),
-            'message' => $message,
+            'isPinned' => $isPinned,
+            'message' => $isPinned
+                ? __('pin.added', ['thing' => $sentence->sentence])
+                : __('pin.removed', ['thing' => $sentence->sentence]),
         ]);
     }
 
@@ -49,8 +52,25 @@ class SentenceController extends Controller
         return SentenceResource::collection($sentences)->keyBy('id');
     }
 
-    public function index(Request $request, SearchService $searchService): \Inertia\Response
+    public function index(): \Inertia\Response
     {
+        return Inertia::render('Library/Sentences/Index');
+    }
+
+    public function show(Sentence $sentence): \Inertia\Response
+    {
+        return Inertia::render('Library/Sentences/Show', [
+            'sentenceId' => $sentence->id,
+        ]);
+    }
+    // -------------------------------------------------------------------------
+    // API Methods
+    // -------------------------------------------------------------------------
+
+    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    {
+        URL::forceScheme('https');
+
         $filters = array_merge(['sort' => 'latest'], $request->only([
             'search', 'match', 'sort', 'pinned',
         ]));
@@ -67,58 +87,73 @@ class SentenceController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        return Inertia::render('Library/Sentences/Index', [
-            'section' => 'library',
-            'sentences' => SentenceResource::collection(
-                $sentences->getCollection()->map(function ($sentence) {
-                    return new SentenceResource($sentence)->additional(['terms' => false]);
-                })
-            )->additional(['meta' => $sentences->toArray()]),
+        $collection = SentenceResource::collection(
+            $sentences->getCollection()->map(function ($sentence) {
+                return new SentenceResource($sentence)->additional(['terms' => false]);
+            })
+        );
+
+        return response()->json([
+            'sentences' => [
+                'data' => $collection->toArray($request),
+                'meta' => [
+                    'links' => $sentences->linkCollection()->toArray(),
+                    'current_page' => $sentences->currentPage(),
+                    'last_page' => $sentences->lastPage(),
+                    'total' => $sentences->total(),
+                ],
+            ],
             'totalCount' => $sentences->total(),
             'filters' => $filters,
         ]);
-
-        //        View::share('pageDescription',
-        //            'Discover the Corpus, a vast corpus of Palestinian Arabic within the PalWeb Dictionary. Search and learn from real-life examples, seeing words in action for effective language mastery.');
     }
 
-    public function show(Sentence $sentence): \Inertia\Response
+    public function fetch(Request $request, Sentence $sentence): JsonResponse
     {
-        //        View::share('pageDescription',
-        //            'Discover the Sentence Library, a vast corpus of Palestinian Arabic. Search and learn from real-life examples, seeing words in action for effective language mastery.');
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
 
-        $sentence->load(['dialog']);
+        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
+            $sentence->load(['dialog']);
+        }
 
-        return Inertia::render('Library/Sentences/Show', [
-            'section' => 'library',
+        return response()->json([
             'sentence' => new SentenceResource($sentence),
         ]);
     }
 
-    public function store(StoreSentenceRequest $request): RedirectResponse
+    // -------------------------------------------------------------------------
+
+    public function store(UpsertSentenceRequest $request): JsonResponse
     {
         $sentence = Sentence::create($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
 
         UpdateTermUsageCount::dispatch($affectedTermIds);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $sentence->sentence])]);
+        $sentence->load(['dialog']);
 
-        return to_route('speech-maker.sentence', $sentence);
+        return response()->json([
+            'sentence' => new SentenceResource($sentence),
+            'message' => __('created', ['thing' => $sentence->sentence]),
+        ], 201);
     }
 
-    public function update(UpdateSentenceRequest $request, Sentence $sentence): RedirectResponse
+    public function update(UpsertSentenceRequest $request, Sentence $sentence): JsonResponse
     {
         $sentence->update($this->buildSentence($request->all()));
         $affectedTermIds = $this->linkTerms($sentence, $request->terms);
 
         UpdateTermUsageCount::dispatch($affectedTermIds);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $sentence->sentence])]);
+        $sentence->refresh()->load(['dialog']);
 
-        return to_route('speech-maker.sentence', $sentence);
+        return response()->json([
+            'sentence' => new SentenceResource($sentence),
+            'message' => __('updated', ['thing' => $sentence->sentence]),
+        ]);
     }
 
     private function buildSentence($sentenceData): array
@@ -253,23 +288,41 @@ class SentenceController extends Controller
             ->all();
     }
 
-    public function destroy(Sentence $sentence): RedirectResponse
+    public function destroy(Sentence $sentence): JsonResponse
     {
-        $affectedTermIds = DB::table('sentence_term')
-            ->where('sentence_id', $sentence->id)
-            ->whereNotNull('term_id')
-            ->pluck('term_id')
-            ->unique()
-            ->values()
-            ->all();
+        try {
+            Gate::authorize('delete', $sentence);
 
-        $sentence->delete();
+            $deletedSentence = $sentence->sentence;
 
-        UpdateTermUsageCount::dispatch($affectedTermIds);
+            $affectedTermIds = DB::transaction(function () use ($sentence) {
+                $affectedTermIds = DB::table('sentence_term')
+                    ->where('sentence_id', $sentence->id)
+                    ->whereNotNull('term_id')
+                    ->pluck('term_id')
+                    ->unique()
+                    ->values()
+                    ->all();
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $sentence->sentence])]);
+                $sentence->delete();
 
-        return to_route('sentences.index');
+                return $affectedTermIds;
+            });
+
+            UpdateTermUsageCount::dispatch($affectedTermIds);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedSentence]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Sentence.', [
+                'sentence_id' => $sentence->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Sentence.', $e);
+        }
     }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {useSentence} from "../composables/Sentence.js";
+import {useSentence} from "../composables/sentences/useSentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import TermItem from "./TermItem.vue";

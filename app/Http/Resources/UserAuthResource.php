@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Services\DialectService;
+use Illuminate\Http\Request;
+
+class UserAuthResource extends UserResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            ...parent::toArray($request),
+
+            'email' => $this->email,
+            'language' => $this->language,
+            'roles' => $this->getEffectiveRoles(),
+            'dialects' => app(DialectService::class)->dialectIds(),
+            'is_superuser' => $this->isSuperuser(),
+            'is_verified' => (bool) $this->email_verified_at,
+            'has_discord' => (bool) $this->discord_id,
+            'preferences' => $this->preferences ?? [
+                    'srs' => config('preferences.srs')
+                ],
+            'unlocked_lessons' => $this->when(
+                $request->user()?->id === $this->id,
+                fn () => array_keys($this->getLessonProgress())
+            ),
+        ];
+    }
+
+    protected function getEffectiveRoles(): array
+    {
+        $viewAsRole = session()->get('view_as_role');
+
+        if ($viewAsRole) {
+            return [$viewAsRole, 'pal'];
+        }
+
+        $roles = $this->roles->pluck('name')->toArray();
+        $roles[] = 'pal';
+
+        return array_values(array_unique($roles));
+    }
+}

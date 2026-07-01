@@ -7,6 +7,7 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Services\QuizService;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,11 @@ use Inertia\Inertia;
 
 class DeckMasterController extends Controller
 {
-    public function __construct(private readonly QuizService $quizService) {}
+    public function __construct(
+        protected TermService $termService,
+        private readonly QuizService $quizService
+    ) {
+    }
 
     public function index(Request $request): \Inertia\Response
     {
@@ -29,25 +34,24 @@ class DeckMasterController extends Controller
     {
         if ($deck) {
             Gate::authorize('modify', $deck);
-            $deck->load(['terms.pronunciations']);
         }
 
         return Inertia::render('Workbench/DeckMaster/Build', [
             'section' => 'workbench',
-            'deck' => $deck ? new DeckResource($deck) : null,
+            'deckId' => $deck?->id,
         ]);
     }
 
     public function study(Deck $deck): \Inertia\Response|RedirectResponse
     {
         $deck->load([
-            'terms' => fn ($q) => $q->withUserCard(),
-            'terms.pronunciations',
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard(),
             'scores'
         ]);
-        $isEmpty = $deck->terms->isEmpty();
 
-        if ($isEmpty) {
+        if ($deck->terms->isEmpty()) {
             session()->flash('notification',
                 [
                     'type' => 'warning',
@@ -57,6 +61,8 @@ class DeckMasterController extends Controller
             return to_route('deck-master.index', ['mode' => 'study']);
         }
 
+        $this->termService->hydratePronunciations($deck->terms);
+
         return Inertia::render('Workbench/DeckMaster/Study', [
             'section' => 'academy',
             'deck' => new DeckResource($deck),
@@ -65,7 +71,7 @@ class DeckMasterController extends Controller
 
     public function getQuiz(Request $request, Deck $deck): JsonResponse
     {
-        $settings = $request->get('settings', []);
+        $settings = $request->input('settings', []);
 
         $quiz = $this->quizService->generateQuiz($deck, $settings);
 
@@ -76,20 +82,20 @@ class DeckMasterController extends Controller
 
     public function getDecks(Request $request): JsonResponse
     {
-        $mode = $request->query('mode', 'build');
+        $user = $request->user();
 
-        if ($mode === 'study') {
-            $decks = Deck::query()
-                ->whereHasBookmark($request->user())
+        $decks = $request->query('mode') === 'study'
+            ? Deck::query()
+                ->whereHasBookmark($user)
                 ->with([
-                    'terms' => fn ($q) => $q->withUserCard(),
+                    'terms' => fn ($q) => $q
+                        ->withUserCard(),
                     'scores'
                 ])
+                ->get()
+            : $user->decks()
+                ->with(['terms'])
                 ->get();
-
-        } else {
-            $decks = $request->user()->decks->load(['terms']);
-        }
 
         return response()->json([
             'decks' => DeckResource::collection($decks),
@@ -100,12 +106,17 @@ class DeckMasterController extends Controller
     {
         Gate::authorize('interact', $deck);
 
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData()
+                ->withUserCard()
+                ->with('inflections'),
+        ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
+
         return response()->json([
-            'terms' => TermResource::collection(
-                $deck->terms->load(['pronunciations', 'cards'])->map(function ($term) {
-                    return new TermResource($term)->additional(['detail' => true]);
-                })
-            ),
+            'terms' => TermResource::collection($deck->terms),
         ]);
     }
 }

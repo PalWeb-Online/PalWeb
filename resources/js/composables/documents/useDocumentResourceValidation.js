@@ -4,9 +4,11 @@ export function useDocumentResourceValidation({
                                                   allowedBlockTypes = [],
                                                   recursive = true,
                                               } = {}) {
+    const resourceValidation = useResourceValidation();
+
     const {
         isNonEmptyString,
-    } = useResourceValidation();
+    } = resourceValidation;
 
     const validateBlocks = (blocks = [], issues = [], path = 'Document') => {
         if (!Array.isArray(blocks)) {
@@ -324,7 +326,7 @@ export function useDocumentResourceValidation({
     };
 
     return {
-        isNonEmptyString,
+        ...resourceValidation,
         validateBlocks,
     };
 }

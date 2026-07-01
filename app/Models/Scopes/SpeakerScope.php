@@ -14,6 +14,6 @@ class SpeakerScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $builder
-            ->with(['user', 'location']);
+            ->with(['user.selectedAvatar', 'location']);
     }
 }

@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CardController extends Controller
 {
     public function update(Request $request, Card $card)
     {
+        Gate::authorize('update', $card);
+
         $grade = $request->integer('grade');
         $secondSpent = $request->integer('seconds_spent');
         $nextInterval = $request->integer('next_interval');
@@ -26,6 +33,8 @@ class CardController extends Controller
 
     public function master(Request $request, Card $card)
     {
+        Gate::authorize('update', $card);
+
         $card->master();
 
         if ($request->header('X-Inertia')) {
@@ -40,6 +49,8 @@ class CardController extends Controller
 
     public function suspend(Request $request, Card $card)
     {
+        Gate::authorize('update', $card);
+
         $card->suspended_at ? $card->restore() : $card->suspend();
 
         if ($request->header('X-Inertia')) {
@@ -54,6 +65,8 @@ class CardController extends Controller
 
     public function reset(Request $request, Card $card)
     {
+        Gate::authorize('update', $card);
+
         $card->reset();
 
         if ($request->header('X-Inertia')) {
@@ -66,14 +79,28 @@ class CardController extends Controller
         ]);
     }
 
-    public function destroy(Card $card): RedirectResponse
+    public function destroy(Card $card): JsonResponse
     {
-        $card->delete();
+        try {
+            Gate::authorize('delete', $card);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => 'Card'])]);
+            DB::transaction(function () use ($card) {
+                $card->delete();
+            });
 
-        return back();
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => 'Card']),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Card.', [
+                'card_id' => $card->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Card.', $e);
+        }
     }
 
     public function purge(): RedirectResponse

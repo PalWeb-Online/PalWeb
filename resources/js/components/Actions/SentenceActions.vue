@@ -1,20 +1,15 @@
 <script setup>
 import {route} from 'ziggy-js';
-import {router} from '@inertiajs/vue3';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
+import {useSentence} from "../../composables/sentences/useSentence.js";
 
 const UserStore = useUserStore();
+const {deleteSentence} = useSentence();
 
 const props = defineProps({
     model: Object,
 });
-
-const deleteSentence = () => {
-    if (!confirm('Are you sure you want to delete this Sentence?')) return;
-
-    router.delete(route('sentences.destroy', props.model.id));
-};
 </script>
 
 <template>
@@ -27,7 +22,7 @@ const deleteSentence = () => {
             <Link :href="route('speech-maker.sentence', model.id)" role="menuitem" tabindex="-1">
                 Edit Sentence
             </Link>
-            <button @click="deleteSentence" role="menuitem" tabindex="-1">
+            <button @click="deleteSentence(model)" role="menuitem" tabindex="-1">
                 Delete Sentence
             </button>
         </template>

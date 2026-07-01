@@ -12,12 +12,13 @@ class PagePolicy
      *
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Page $page): bool
+    public function view(?User $user, Page $page): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        return $page->status === 'published' || $user?->isAdmin() === true;
+    }
 
-        return $page->status === 'published';
+    public function delete(User $user, Page $page): bool
+    {
+        return $user->isAdmin();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Lesson;
 use App\Models\Unit;
 use App\Models\User;
 
@@ -24,5 +23,10 @@ class UnitPolicy
         }
 
         return false;
+    }
+
+    public function delete(User $user, Unit $unit): bool
+    {
+        return $user->isAdmin();
     }
 }

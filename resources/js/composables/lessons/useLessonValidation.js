@@ -1,8 +1,9 @@
-import {computed} from "vue";
+import {computed, unref} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
 
 export function useLessonValidation({
                                         form,
+                                        backendErrors,
                                         selectedDeck = null,
                                         selectedDialog = null,
                                         lessonActivity = null,
@@ -11,31 +12,28 @@ export function useLessonValidation({
     const {
         isNonEmptyString,
         validateBlocks,
+        useValidationState,
     } = useDocumentResourceValidation({
         allowedBlockTypes,
         recursive: true,
     });
 
-    const getValue = (value) => value?.value ?? value ?? null;
-
-    const validationIssues = computed(() => {
-        const issues = [];
+    const frontendErrors = computed(() => {
+        const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            issues.push('Title is required.');
+            errors.title = 'Title is required.';
         }
 
-        return issues;
+        return errors;
     });
-
-    const isValidRequest = computed(() => validationIssues.value.length === 0);
 
     const publishIssues = computed(() => {
         const issues = [];
 
-        const deck = getValue(selectedDeck);
-        const dialog = getValue(selectedDialog);
-        const activity = getValue(lessonActivity);
+        const deck = unref(selectedDeck);
+        const dialog = unref(selectedDialog);
+        const activity = unref(lessonActivity);
 
         if (form.group === 'extra') {
             const conditions = form.unlock_conditions || [];
@@ -119,9 +117,17 @@ export function useLessonValidation({
 
     const isPublishable = computed(() => publishIssues.value.length === 0);
 
-    return {
-        validationIssues,
+    const {
         isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
+    });
+
+    return {
+        isValidRequest,
+        validationErrors,
         publishIssues,
         isPublishable,
     };

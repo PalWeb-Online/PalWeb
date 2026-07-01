@@ -12,7 +12,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class ActivityController extends Controller
 {
@@ -115,14 +117,30 @@ class ActivityController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Activity $activity)
+    public function destroy(Activity $activity): JsonResponse
     {
-        $lesson = $activity->lesson;
-        $activity->delete();
+        try {
+            Gate::authorize('delete', $activity);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => 'Activity'])]);
-        return to_route('lesson-planner.lesson', $lesson);
+            $deletedActivity = $activity->title;
+
+            DB::transaction(function () use ($activity) {
+                $activity->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedActivity]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Activity.', [
+                'activity_id' => $activity->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Activity.', $e);
+        }
     }
 
     private function requestedActivityIncludes(Request $request): array

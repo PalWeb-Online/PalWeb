@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDialogRequest;
-use App\Http\Requests\UpdateDialogRequest;
+use App\Http\Requests\UpsertDialogRequest;
 use App\Http\Resources\DialogResource;
-use App\Http\Resources\SentenceResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +12,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class DialogController extends Controller
 {
@@ -32,21 +32,29 @@ class DialogController extends Controller
 
         return Inertia::render('Academy/Dialogs/Show', [
             'section' => 'academy',
-            'dialog' => new DialogResource(
-                $dialog->load('sentences')
-                    ->setRelation('sentences',
-                        $dialog->sentences->map(function ($sentence) {
-                            return new SentenceResource($sentence)->additional(['terms' => false]);
-                        })
-                    )
-            ),
+            'dialogId' => $dialog->id,
         ]);
-
-        //        View::share('pageDescription',
-        //            'Explore our collection of Dialogs in Spoken Arabic! Ideal for language learners & enthusiasts of Palestinian Arabic to improve their listening comprehension, speaking ability & fluency!');
     }
 
-    public function store(StoreDialogRequest $request): RedirectResponse
+    public function fetch(Request $request, Dialog $dialog): JsonResponse
+    {
+        Gate::authorize('view', $dialog);
+
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
+
+        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
+            $dialog->load('sentences');
+        }
+
+        return response()->json([
+            'dialog' => new DialogResource($dialog),
+        ]);
+    }
+
+    public function store(UpsertDialogRequest $request): RedirectResponse
     {
         $dialog = Dialog::create($request->all());
         $this->linkSentences($dialog, $request->sentences);
@@ -57,7 +65,7 @@ class DialogController extends Controller
         return to_route('speech-maker.dialog', $dialog);
     }
 
-    public function update(UpdateDialogRequest $request, Dialog $dialog): RedirectResponse
+    public function update(UpsertDialogRequest $request, Dialog $dialog): RedirectResponse
     {
         $dialog->update($request->all());
         $this->linkSentences($dialog, $request->sentences);
@@ -89,13 +97,30 @@ class DialogController extends Controller
         }
     }
 
-    public function destroy(Dialog $dialog): RedirectResponse
+    public function destroy(Dialog $dialog): JsonResponse
     {
-        $dialog->delete();
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deleted', ['thing' => $dialog->title])]);
+        try {
+            Gate::authorize('delete', $dialog);
 
-        return to_route('dialogs.index');
+            $deletedDialog = $dialog->title;
+
+            DB::transaction(function () use ($dialog) {
+                $dialog->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => __('deleted', ['thing' => $deletedDialog]),
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to delete Dialog.', [
+                'dialog_id' => $dialog->id,
+                'exception' => $e,
+            ]);
+
+            return $this->failureJsonResponse('Unable to delete Dialog.', $e);
+        }
     }
 
     public function search(Request $request): JsonResponse
@@ -137,7 +162,7 @@ class DialogController extends Controller
             ->values();
 
         return response()->json([
-            'data' => $dialogs,
+            'results' => $dialogs,
         ]);
     }
 }

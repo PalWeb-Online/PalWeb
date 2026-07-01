@@ -2,7 +2,7 @@
 import {computed} from "vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
-import {useDeck} from "../../../../composables/Deck.js";
+import {useDeck} from "../../../../composables/decks/useDeck.js";
 
 const UserStore = useUserStore();
 const {toggleTerm} = useDeck();

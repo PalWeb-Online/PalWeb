@@ -22,4 +22,9 @@ class LessonPolicy
 
         return false;
     }
+
+    public function delete(User $user, Lesson $lesson): bool
+    {
+        return $user->isAdmin();
+    }
 }

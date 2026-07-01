@@ -1,5 +1,5 @@
 <script setup>
-import {useSentence} from "../composables/Sentence.js";
+import {useSentence} from "../composables/sentences/useSentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";

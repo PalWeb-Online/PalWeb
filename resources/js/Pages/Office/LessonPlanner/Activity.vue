@@ -28,7 +28,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -54,16 +54,17 @@ watch(() => props.activityId, async () => {
 });
 
 const {
-    validationIssues,
     isValidRequest,
+    validationErrors,
     publishIssues,
     isPublishable,
 } = useActivityValidation({
     form,
+    backendErrors,
     allowedBlockTypes,
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 <template>
@@ -73,12 +74,15 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <div v-else-if="activityNotFound" class="form-body" style="width: min(96rem, 100%); padding: 0">
-            <p>Sorry, but the requested Activity does not exist.</p>
-            <Link :href="route('lesson-planner.index')">
+        <template v-else-if="activityNotFound">
+            <AppTip>
+                <p>Sorry, the requested Activity could not be found.</p>
+            </AppTip>
+            <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
             </Link>
-        </div>
+        </template>
+
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
@@ -115,10 +119,10 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
                 <AppTip>
                     <p>The Activity is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-                    <template v-if="!isValidRequest">
+                    <template v-if="Object.keys(validationErrors).length">
                         <p style="font-weight: 700">The Activity cannot be saved in the current state.</p>
                         <ul>
-                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                            <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
@@ -128,12 +132,6 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         </ul>
                         <p v-if="form.published" style="font-weight: 700">Because the Activity is already Published, the
                             current state cannot be saved except by reverting it to Draft.</p>
-                    </template>
-                    <template v-if="Object.keys(errors).length">
-                        <p style="font-weight: 700">Oops — the Activity could not be saved.</p>
-                        <ul>
-                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                        </ul>
                     </template>
                 </AppTip>
             </div>
@@ -154,7 +152,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                             form?.published ? 'Revert to Draft' : 'Publish'
                         }}
                     </button>
-                    <button type="button" @click="deleteActivity">Delete Activity</button>
+                    <button type="button" @click="deleteActivity()">Delete Activity</button>
                 </div>
             </div>
         </template>

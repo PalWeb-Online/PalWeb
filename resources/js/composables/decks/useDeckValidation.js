@@ -1,0 +1,43 @@
+import {computed} from "vue";
+import {useResourceValidation} from "../resources/useResourceValidation.js";
+
+export function useDeckValidation({
+                                      form,
+                                      backendErrors,
+                                  }) {
+    const {
+        isNonEmptyString,
+        hasMaxLength,
+        useValidationState,
+    } = useResourceValidation();
+
+    const frontendErrors = computed(() => {
+        const errors = {};
+
+        if (!isNonEmptyString(form.name)) {
+            errors.name = 'Title is required.';
+
+        } else if (!hasMaxLength(form.name, 50)) {
+            errors.name = 'Title must not be greater than 50 characters.';
+        }
+
+        if (!hasMaxLength(form.description, 500)) {
+            errors.description = 'Description must not be greater than 500 characters.';
+        }
+
+        return errors;
+    });
+
+    const {
+        isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
+    });
+
+    return {
+        isValidRequest,
+        validationErrors,
+    };
+}
