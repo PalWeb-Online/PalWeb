@@ -95,7 +95,7 @@ defineOptions({
         <div class="homepage-hero-wrapper"
              :style="{ transform: `translateY(${heroOffset}px)` }"
         >
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.3 Release Notes -></Link>
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.4 Release Notes -></Link>
             <HomepageHero/>
         </div>
     </div>
