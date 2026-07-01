@@ -114,12 +114,18 @@ Route::get('/', function () {
         ])
         ->all();
 
-    $featuredTerm = Term::whereKey(662)
-        ->withItemData()
-        ->with(['inflections'])
-        ->get();
+    $featuredTerm = ! $isStaging
+        ? Term::whereKey(662)
+            ->withItemData()
+            ->with(['inflections'])
+            ->get()
+        : Term::query()
+            ->withItemData()
+            ->with(['inflections'])
+            ->limit(1)
+            ->get();
 
-    if ($featuredTerm) {
+    if ($featuredTerm->isNotEmpty()) {
         app(TermService::class)->hydratePronunciations($featuredTerm);
         $featuredTerm = new TermResource($featuredTerm->first());
     }
@@ -130,7 +136,7 @@ Route::get('/', function () {
         'decks' => DeckResource::collection($decks),
         'sentences' => SentenceResource::collection($sentences),
         'testimonials' => $testimonials,
-        'featuredTerm' => $featuredTerm,
+        'featuredTerm' => $featuredTerm->isNotEmpty() ? $featuredTerm : null,
         'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
             'selectedAvatar', 'dialect'
         ])) : null,

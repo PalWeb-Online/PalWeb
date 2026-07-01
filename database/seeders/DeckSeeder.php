@@ -16,7 +16,7 @@ class DeckSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        $terms = Term::all();
+        $terms = Term::with('glosses')->get();
 
         foreach ($users as $user) {
             Deck::factory(3)->create(['user_id' => $user->id])->each(function ($deck) use ($user, $terms) {
@@ -26,7 +26,7 @@ class DeckSeeder extends Seeder
                 foreach ($randomTerms as $index => $term) {
                     $termsWithPivot[$term->id] = [
                         'position' => $index + 1,
-                        'gloss_id' => $term->glosses->first()->id,
+                        'gloss_id' => $term->glosses()->first()->id,
                     ];
                 }
 

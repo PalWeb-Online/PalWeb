@@ -13,7 +13,7 @@ class ScoreSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::find([1, 2]);
+        $users = User::with('decks.terms')->get()->find([1, 2]);
 
         foreach ($users as $user) {
             foreach ($users[0]->decks as $deck) {

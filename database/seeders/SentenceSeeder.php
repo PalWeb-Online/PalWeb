@@ -13,7 +13,7 @@ class SentenceSeeder extends Seeder
      */
     public function run(): void
     {
-        $terms = Term::all();
+        $terms = Term::with('glosses')->get();
 
         Sentence::factory(50)->create()->each(function ($sentence) use ($terms) {
             $randomTerms = $terms->random(rand(3, 8))->values();
