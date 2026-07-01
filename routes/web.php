@@ -469,6 +469,10 @@ Route::prefix('/api')->group(function () {
     });
 });
 
+Route::middleware('admin')->get('/theme-testing', function () {
+    return Inertia::render('ThemeTesting');
+});
+
 Route::middleware('auth')
     ->prefix('/push-subscriptions')
     ->controller(PushSubscriptionController::class)
