@@ -54,6 +54,7 @@ const {
     reset: resetTeacher,
     isSaving: isSavingTeacher,
     isDeleting: isDeletingTeacher,
+// isLoadingTeacherForm is possible but pointless because loading simply means instantaneously mounting `user.teacher`;
     loadForm: loadTeacherForm,
     saveTeacher,
     deleteTeacher,
@@ -63,9 +64,7 @@ const {
     user,
 });
 
-const hasNavigationGuard = computed(() => {
-    return (isUserDirty.value || isTeacherDirty.value) && !isSavingUser.value && !isSavingTeacher.value;
-});
+const hasNavigationGuard = computed(() => isUserDirty.value || isTeacherDirty.value);
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
@@ -169,7 +168,7 @@ defineOptions({
     <Head title="Edit Profile"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingUserForm"/>
-        <template v-if="userNotFound">
+        <template v-else-if="userNotFound">
             <AppTip>
                 <p>Sorry, the requested User could not be found.</p>
             </AppTip>
@@ -178,7 +177,7 @@ defineOptions({
             </Link>
         </template>
 
-        <div v-else-if="user" class="window-container">
+        <div v-else class="window-container">
             <div class="window-header">
                 <Link class="material-symbols-rounded" :href="route('users.show', user?.username ?? props.username)">
                     arrow_back

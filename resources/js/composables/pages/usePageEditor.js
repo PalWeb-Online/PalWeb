@@ -101,7 +101,6 @@ export function usePageEditor({
         sentenceModels: editor.documentLoader.sentenceModels,
         page: pageLoader.page,
         pageNotFound: pageLoader.pageNotFound,
-        isLoadingPage: pageLoader.isLoadingPage,
         pageTree: pageLoader.pageTree,
         isLoadingTree: pageLoader.isLoadingTree,
         fetchWikiTree: pageLoader.fetchWikiTree,

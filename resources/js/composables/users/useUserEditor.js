@@ -69,7 +69,6 @@ export function useUserEditor({
         saveUser: editor.saveResource,
         user: userLoader.user,
         userNotFound: userLoader.userNotFound,
-        isLoadingUser: userLoader.isLoadingUser,
         canCreateTeacher: userLoader.canCreateTeacher,
     };
 }

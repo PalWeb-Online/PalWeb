@@ -64,7 +64,7 @@ const {
     allowedBlockTypes,
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 <template>

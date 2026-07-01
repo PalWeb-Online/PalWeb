@@ -65,7 +65,6 @@ export function useUnitEditor({
         deleteUnit: editor.deleteResource,
         unit: unitLoader.unit,
         unitNotFound: unitLoader.unitNotFound,
-        isLoadingUnit: unitLoader.isLoadingUnit,
         descendantIds: unitLoader.descendantIds,
     };
 }

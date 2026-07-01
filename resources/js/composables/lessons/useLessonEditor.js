@@ -140,7 +140,6 @@ export function useLessonEditor({
         sentenceModels: editor.documentLoader.sentenceModels,
         lesson: lessonLoader.lesson,
         lessonNotFound: lessonLoader.lessonNotFound,
-        isLoadingLesson: lessonLoader.isLoadingLesson,
         allowedBlockTypes: documentPreset.allowedBlockTypes,
         isUnitLocked,
         selectedUnit,

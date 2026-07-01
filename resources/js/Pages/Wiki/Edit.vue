@@ -109,20 +109,18 @@ const {
     allowedBlockTypes,
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 
 <template>
     <Head :title="page?.id ? `Edit Wiki: ${page?.title || 'Page'}` : 'Create Wiki Page'"/>
-
     <div id="app-head">
         <h1>wiki</h1>
     </div>
-
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
-        <template v-if="pageNotFound">
+        <template v-else-if="pageNotFound">
             <AppTip>
                 <p>Sorry, the requested Page could not be found.</p>
             </AppTip>

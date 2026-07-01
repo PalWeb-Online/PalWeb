@@ -82,7 +82,6 @@ export function useActivityEditor({
         deleteActivity: editor.deleteResource,
         activity: activityLoader.activity,
         activityNotFound: activityLoader.activityNotFound,
-        isLoadingActivity: activityLoader.isLoadingActivity,
         allowedBlockTypes: documentPreset.allowedBlockTypes,
     };
 }
