@@ -10,9 +10,9 @@ export function useDeckEditor({
                                   deckId = null,
                               } = {}) {
     const deckLoader = useDeckLoader();
-    const UserStore = useUserStore();
     const NotificationStore = useNotificationStore();
 
+    const UserStore = useUserStore();
     const author = computed(() => ({
         id: UserStore.user?.id ?? null,
         name: UserStore.user?.name ?? '',

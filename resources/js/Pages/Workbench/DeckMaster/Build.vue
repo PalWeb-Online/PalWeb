@@ -80,7 +80,7 @@ watch(() => props.deckId, async () => {
 </script>
 
 <template>
-    <Head title="Deck Master: Build"/>
+    <Head title="Deck Master: Build Deck"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="deckNotFound">
@@ -126,15 +126,11 @@ watch(() => props.deckId, async () => {
                 <PinButton v-if="deck?.id" modelType="deck" :model="deck"/>
                 <DeckActions v-if="deck?.id" :model="deck"/>
             </div>
-
-            <section>
-                <div class="window-content-head">
-                    <input class="window-content-head-title" v-model="form.name"
-                           placeholder="Required: Deck Name"
-                    />
-                </div>
-            </section>
-
+            <div class="window-content-head">
+                <input class="window-content-head-title" v-model="form.name"
+                       placeholder="Required: Deck Name"
+                />
+            </div>
             <UserItem :user="form.author" size="m" comment>
                 <template #comment>
                         <textarea class="user-comment-content" v-model="form.description"
@@ -154,9 +150,9 @@ watch(() => props.deckId, async () => {
                        class="model-list index-list draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                            <span class="delete material-symbols-rounded"
-                                  v-show="form.terms.length > 0"
-                                  @click="removeTerm(index)">delete</span>
+                        <span class="delete material-symbols-rounded"
+                              v-show="form.terms.length > 0"
+                              @click="removeTerm(index)">delete</span>
                         <TermItem :term="element"/>
                         <span class="handle material-symbols-rounded">drag_indicator</span>
                     </div>

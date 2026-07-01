@@ -110,7 +110,7 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Dictionary: Build Term"/>
+    <Head title="Word Logger: Build Term"/>
     <div id="app-head">
         <h1>Word Logger</h1>
     </div>

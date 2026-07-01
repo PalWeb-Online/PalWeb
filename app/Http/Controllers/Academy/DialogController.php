@@ -45,7 +45,7 @@ class DialogController extends Controller
             ->filter()
             ->values();
 
-        if ($includes->contains('show') || $includes->isEmpty()) {
+        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
             $dialog->load('sentences');
         }
 
