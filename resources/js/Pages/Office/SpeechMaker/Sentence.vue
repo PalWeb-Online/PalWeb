@@ -120,7 +120,7 @@ watch(() => props.sentenceId, async () => {
             </div>
             <AppTip>
                 <p>The Sentence is currently {{ sentence?.id ? 'Published' : 'a Draft' }}.</p>
-                <template v-if="!isValidRequest">
+                <template v-if="Object.keys(validationErrors).length">
                     <p style="font-weight: 700">The Sentence cannot be saved in the current state.</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>

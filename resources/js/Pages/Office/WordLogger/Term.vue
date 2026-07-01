@@ -139,7 +139,7 @@ defineOptions({
                 </div>
                 <AppTip>
                     <p>The Term is currently {{ term?.id ? 'Published' : 'a Draft' }}.</p>
-                    <p v-if="!isValidRequest">
+                    <p v-if="Object.keys(validationErrors).length">
                         <b>The Term cannot be saved in the current state.</b> Please review the form inputs.
                     </p>
                     <template v-if="confirmableIssues.length">

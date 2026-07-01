@@ -1,14 +1,13 @@
 import {computed} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
 
-export function useActivityValidation({
+export function useUnitValidation({
                                           form,
                                           backendErrors,
                                           allowedBlockTypes,
                                       }) {
     const {
         isNonEmptyString,
-        validateBlocks,
         useValidationState,
     } = useDocumentResourceValidation({
         allowedBlockTypes,
@@ -22,24 +21,16 @@ export function useActivityValidation({
             errors.title = 'Title is required.';
         }
 
+        (form.lessons ?? []).forEach((lesson, index) => {
+            const lessonIndex = `Lesson ${form.position}0${index + 1}`;
+
+            if (!lesson.title) {
+                errors[`lesson.${index}.title`] = `${lessonIndex}: Title is required.`;
+            }
+        });
+
         return errors;
     });
-
-    const publishIssues = computed(() => {
-        const issues = [];
-        const blocks = form.document?.blocks ?? [];
-        const exerciseBlocks = blocks.filter((block) => block?.type === 'exercises');
-
-        if (exerciseBlocks.length === 0) {
-            issues.push('At least one Exercises Block is required.');
-        }
-
-        validateBlocks(blocks, issues, 'Activity');
-
-        return issues;
-    });
-
-    const isPublishable = computed(() => publishIssues.value.length === 0);
 
     const {
         isValidRequest,
@@ -52,7 +43,5 @@ export function useActivityValidation({
     return {
         isValidRequest,
         validationErrors,
-        publishIssues,
-        isPublishable,
     };
 }

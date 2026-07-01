@@ -6,12 +6,11 @@ export function useSentenceValidation({
                                           backendErrors,
                                       }) {
     const {
+        latinScriptPattern,
         isNonEmptyString,
         matchesPattern,
-        mergeFieldErrors,
+        useValidationState,
     } = useResourceValidation();
-
-    const latinScriptPattern = /^[\p{Script=Latin}\s-]+$/u;
 
     const frontendErrors = computed(() => {
         const errors = {};
@@ -42,10 +41,12 @@ export function useSentenceValidation({
         return errors;
     });
 
-    const isValidRequest = computed(() => Object.keys(frontendErrors.value).length === 0);
-
-    const validationErrors = computed(() => {
-        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
+    const {
+        isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
     });
 
     return {

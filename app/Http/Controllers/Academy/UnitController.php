@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Academy;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpsertUnitRequest;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Lesson;
@@ -56,7 +57,7 @@ class UnitController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function store(UpsertUnitRequest $request): RedirectResponse|JsonResponse
     {
         $unit = DB::transaction(function () use ($request) {
             $unit = Unit::create([
@@ -96,7 +97,7 @@ class UnitController extends Controller
         return to_route('lesson-planner.unit', $unit);
     }
 
-    public function update(Request $request, Unit $unit): RedirectResponse|JsonResponse
+    public function update(UpsertUnitRequest $request, Unit $unit): RedirectResponse|JsonResponse
     {
         if (count($request->lessons) > 9) {
             session()->flash('notification',

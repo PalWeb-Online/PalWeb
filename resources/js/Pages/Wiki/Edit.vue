@@ -27,7 +27,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -97,13 +97,14 @@ watch(() => props.pageId, async () => {
 });
 
 const {
-    validationIssues,
+    validationErrors,
     isValidRequest,
     publishIssues,
     isPublishable,
 } = usePageValidation({
     form,
     page,
+    backendErrors,
     descendantIds,
     allowedBlockTypes,
 });
@@ -166,7 +167,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     label="Parent"
                     :initial-title="selectedParent?.title"
                     :search="searchPages"
-                    :error="errors?.parent_id"
+                    :error="validationErrors[`parent_id`]"
                     @select="setSelectedParent"
                     @clear="setSelectedParent()"
                 >
@@ -204,22 +205,16 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 <AppTip>
                     <p>The Wiki page is currently {{ form.status }}.</p>
 
-                    <template v-if="!isValidRequest">
+                    <template v-if="Object.keys(validationErrors).length">
                         <p style="font-weight: 700">The Page cannot be saved in the current state.</p>
                         <ul>
-                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                            <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
                         <p style="font-weight: 700">The Page cannot be published in the current state.</p>
                         <ul>
                             <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
-                        </ul>
-                    </template>
-                    <template v-if="Object.keys(errors).length">
-                        <p style="font-weight: 700">Oops — the Page could not be saved.</p>
-                        <ul>
-                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
                         </ul>
                     </template>
                 </AppTip>

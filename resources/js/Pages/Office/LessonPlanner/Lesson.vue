@@ -34,7 +34,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -86,12 +86,13 @@ watch(() => props.lessonId, async () => {
 });
 
 const {
-    validationIssues,
     isValidRequest,
+    validationErrors,
     publishIssues,
     isPublishable,
 } = useLessonValidation({
     form,
+    backendErrors,
     selectedDeck,
     selectedDialog,
     lessonActivity: computed(() => lesson.value?.activity ?? null),
@@ -205,7 +206,7 @@ const removeUnlockCondition = (i) => {
                     label="Unit"
                     :initial-title="selectedUnit?.title || ''"
                     :search="searchUnits"
-                    :error="errors?.unit_id"
+                    :error="validationErrors[`unit_id`]"
                     :disabled="isUnitLocked"
                     @select="setSelectedUnit"
                     @clear="setSelectedUnit()"
@@ -235,7 +236,7 @@ const removeUnlockCondition = (i) => {
                     label="Deck"
                     :initial-title="selectedDeck?.name || ''"
                     :search="searchDecks"
-                    :error="errors?.deck_id"
+                    :error="validationErrors[`deck_id`]"
                     @select="setSelectedDeck"
                     @clear="setSelectedDeck()"
                 >
@@ -259,7 +260,7 @@ const removeUnlockCondition = (i) => {
                     label="Dialog"
                     :initial-title="selectedDialog?.title || ''"
                     :search="searchDialogs"
-                    :error="errors?.dialog_id"
+                    :error="validationErrors[`dialog_id`]"
                     @select="setSelectedDialog"
                     @clear="setSelectedDialog()"
                 >
@@ -317,10 +318,10 @@ const removeUnlockCondition = (i) => {
 
                 <AppTip>
                     <p>The Lesson is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-                    <template v-if="!isValidRequest">
+                    <template v-if="Object.keys(validationErrors).length">
                         <p style="font-weight: 700">The Lesson cannot be saved in the current state.</p>
                         <ul>
-                            <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
+                            <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
@@ -330,12 +331,6 @@ const removeUnlockCondition = (i) => {
                         </ul>
                         <p v-if="form.published" style="font-weight: 700">Because the Lesson is already Published, the
                             current state cannot be saved except by reverting it to Draft.</p>
-                    </template>
-                    <template v-if="Object.keys(errors).length">
-                        <p style="font-weight: 700">Oops — the Lesson could not be saved.</p>
-                        <ul>
-                            <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
-                        </ul>
                     </template>
                 </AppTip>
             </div>

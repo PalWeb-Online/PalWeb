@@ -6,13 +6,12 @@ export function useTermValidation({
                                       backendErrors,
                                   }) {
     const {
+        latinScriptPattern,
+        arabicScriptPattern,
         isNonEmptyString,
         matchesPattern,
-        mergeFieldErrors,
+        useValidationState,
     } = useResourceValidation();
-
-    const arabicScriptPattern = /^[\p{scx=Arabic}\s]+$/u;
-    const latinScriptPattern = /^[\p{scx=Latin}\s-]+$/u;
 
     const glossRelativeTypes = ['synonym', 'antonym', 'isPatient', 'noPatient', 'hasObject'];
 
@@ -133,14 +132,6 @@ export function useTermValidation({
         return errors;
     });
 
-    const isValidRequest = computed(() => {
-        return Object.keys(frontendErrors.value).length === 0;
-    });
-
-    const validationErrors = computed(() => {
-        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
-    });
-
     const confirmableIssues = computed(() => {
         const messages = [];
 
@@ -171,6 +162,14 @@ export function useTermValidation({
         }
 
         return messages;
+    });
+
+    const {
+        isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
     });
 
     return {

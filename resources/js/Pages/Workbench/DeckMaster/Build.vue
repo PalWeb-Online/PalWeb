@@ -114,7 +114,7 @@ watch(() => props.deckId, async () => {
             </div>
             <AppTip>
                 <p>The Deck is currently {{ deck?.private ? 'Private' : 'Public' }}.</p>
-                <template v-if="!isValidRequest">
+                <template v-if="Object.keys(validationErrors).length">
                     <p style="font-weight: 700">The Deck cannot be saved in the current state.</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>

@@ -8,7 +8,7 @@ export function useDialogValidation({
     const {
         isNonEmptyString,
         hasMaxLength,
-        mergeFieldErrors,
+        useValidationState,
     } = useResourceValidation();
 
     const frontendErrors = computed(() => {
@@ -35,10 +35,12 @@ export function useDialogValidation({
         return errors;
     });
 
-    const isValidRequest = computed(() => Object.keys(frontendErrors.value).length === 0);
-
-    const validationErrors = computed(() => {
-        return mergeFieldErrors(frontendErrors.value, backendErrors?.value ?? {});
+    const {
+        isValidRequest,
+        validationErrors,
+    } = useValidationState({
+        frontendErrors,
+        backendErrors,
     });
 
     return {

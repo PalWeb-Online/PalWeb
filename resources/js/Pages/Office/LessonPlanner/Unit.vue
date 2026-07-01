@@ -9,6 +9,7 @@ import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {useUnitEditor} from "../../../composables/units/useUnitEditor.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useUnitValidation} from "../../../composables/units/useUnitValidation.js";
 
 defineOptions({
     layout: Layout,
@@ -23,7 +24,7 @@ const props = defineProps({
 
 const {
     form,
-    errors,
+    errors: backendErrors,
     isDirty,
     reset,
     isSaving,
@@ -46,28 +47,16 @@ watch(() => props.unitId, async () => {
     await reloadForm();
 });
 
-const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
-const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
-
-const validationIssues = computed(() => {
-    const issues = [];
-
-    if (!form.title) {
-        issues.push('Title is required.');
-    }
-
-    form.lessons.forEach((lesson, index) => {
-        const name = `Lesson ${form.position}0${index + 1}`;
-
-        if (!lesson.title) {
-            issues.push(`${name}: Title is required.`);
-        }
-    });
-
-    return issues;
+const {
+    isValidRequest,
+    validationErrors,
+} = useUnitValidation({
+    form,
+    backendErrors,
 });
 
-const isValidRequest = computed(() => validationIssues.value.length === 0);
+const hasNavigationGuard = computed(() => isDirty.value && !isSaving.value);
+const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const updateLessonPositions = () => {
     form.lessons.forEach((lesson, index) => {
@@ -132,8 +121,7 @@ const removeLesson = (lesson) => {
                     Lessons
                 </div>
                 <p>Removing a Lesson from this list will unlink it from this Unit. You must go to its edit page to
-                    delete
-                    the Lesson altogether.</p>
+                    delete the Lesson altogether.</p>
                 <draggable v-if="form.lessons.length > 0" class="unit-lessons-draggable"
                            :list="form.lessons" itemKey="id" handle=".handle"
                            @change="updateLessonPositions">
@@ -163,17 +151,10 @@ const removeLesson = (lesson) => {
 
             <AppTip>
                 <p>The Unit is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
-
-                <template v-if="!isValidRequest">
+                <template v-if="Object.keys(validationErrors).length">
                     <p style="font-weight: 700">The Unit cannot be saved in the current state.</p>
                     <ul>
-                        <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
-                    </ul>
-                </template>
-                <template v-if="Object.keys(errors).length">
-                    <p style="font-weight: 700">Oops — the Unit could not be saved.</p>
-                    <ul>
-                        <li v-for="(error, key) in errors" :key="key">{{ key }}: {{ error }}</li>
+                        <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>
                 </template>
             </AppTip>
