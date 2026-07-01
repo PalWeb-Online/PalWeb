@@ -57,12 +57,11 @@ onMounted(() => {
             <AudioItem v-else :model="model.audios[0]"/>
         </div>
 
-        <button v-if="!audio && model.audios_count > 1 && !audiosFetched" @click="fetchAudios">+
-        </button>
-        <button v-if="!audio && model.audios_count > 1 && audiosFetched && showAudios" @click="showAudios = false">-
-        </button>
-        <button v-if="!audio && model.audios_count > 1 && audiosFetched && !showAudios" @click="showAudios = true">+
-        </button>
+        <template v-if="!audio && model.audios.length > 1">
+            <button v-if="!audiosFetched" @click="fetchAudios">+</button>
+            <button v-if="audiosFetched && showAudios" @click="showAudios = false">-</button>
+            <button v-if="audiosFetched && !showAudios" @click="showAudios = true">+</button>
+        </template>
     </div>
 </template>
 
