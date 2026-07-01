@@ -1,4 +1,3 @@
-import {computed, onMounted, ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {router} from "@inertiajs/vue3";
 import {useDialogLoader} from "./useDialogLoader.js";
@@ -7,7 +6,6 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 export function useDialogEditor({
                                     dialogId = null,
-                                    initialDialog = null,
                                 } = {}) {
     const dialogLoader = useDialogLoader();
     const NotificationStore = useNotificationStore();

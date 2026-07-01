@@ -49,7 +49,7 @@ watch(() => props.activityId, () => {
     void openActivity(reloadActivity);
 });
 
-const hasNavigationGuard = computed(() => ActivitySession.isViewingResults);
+const hasNavigationGuard = computed(() => !ActivitySession.isViewingResults);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const isValidRequest = computed(() => {

@@ -43,7 +43,7 @@ export const useSoundBoothStore = defineStore('SoundBoothStore', () => {
             backStep: null,
             nextStep: 'queue',
             canMoveBack: () => false,
-            canMoveNext: () => speaker.id,
+            canMoveNext: () => speaker.id && data.hasPermission,
         },
         queue: {
             backStep: null,
