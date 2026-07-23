@@ -25,7 +25,7 @@
 .app-heading-wrapper {
     display: inline-block;
     justify-self: start;
-    margin-block: 0.66em 0.33em;
+    margin-block: 0.75em 0.5em;
     margin-inline: 0.33em;
     position: relative;
     font-size: clamp(4.8rem, 8vw, 7.2rem);

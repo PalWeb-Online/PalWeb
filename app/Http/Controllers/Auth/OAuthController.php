@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserNotificationSent;
 use App\Http\Controllers\Controller;
 use App\Models\Badge;
 use App\Models\User;
@@ -96,7 +97,7 @@ class OAuthController extends Controller
 
     protected function checkMembership($user, $token)
     {
-        $badge = Badge::where('name', 'No FOMO')->first();
+        $badge = Badge::where('key', 'joined_discord')->first();
 
         $client = new Client;
         $response = $client->get('https://discord.com/api/users/@me/guilds', [
@@ -107,9 +108,13 @@ class OAuthController extends Controller
         $guilds = json_decode($response->getBody()->getContents(), true);
         $isMember = collect($guilds)->contains('id', '808771806945214474');
 
-        if ($isMember && ! $user->badges->contains($badge->id)) {
+        if ($isMember && $badge && ! $user->badges()->whereKey($badge->id)->exists()) {
             $user->badges()->attach($badge);
-            $this->flasher->addInfo(__('badges.get', ['badge' => $badge->name]));
+
+            UserNotificationSent::dispatch(
+                $user->id,
+                __('badges.get', ['badge' => $badge->title]),
+            );
         }
     }
 

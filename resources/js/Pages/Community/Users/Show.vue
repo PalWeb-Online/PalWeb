@@ -12,6 +12,7 @@ import {computed, ref} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
 import UserActions from "../../../components/Actions/UserActions.vue";
 import {useUser} from "../../../composables/users/useUser.js";
+import AppHeading from "../../../components/AppHeading.vue";
 
 const props = defineProps({
     user: Object,
@@ -132,61 +133,22 @@ defineOptions({
             </template>
         </div>
 
-        <div class="badges-container">
-            <div class="featured-title l">Badges</div>
+        <div class="app-body-section">
+            <AppHeading>
+                badges
+            </AppHeading>
             <div class="badge-wrapper">
                 <BadgeItem v-for="badge in unlockedBadges" :badge="badge" :key="badge.id"/>
             </div>
-
-            <img class="popout" src="/img/star.svg" alt="Star"/>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
-.badges-container {
-    width: 100%;
-    max-width: 96rem;
+.badge-wrapper {
     display: grid;
     gap: 1.6rem;
-    padding: 0.8rem;
-    position: relative;
-    background: var(--color-dark-primary);
-
-    .featured-title {
-        color: white;
-        margin-block-start: 0.8rem;
-    }
-
-    .badge-wrapper {
-        display: grid;
-        gap: 1.6rem;
-        grid-template-columns: repeat(4, 1fr);
-        background: white;
-        border-radius: 1.2rem;
-        padding: 1.6rem;
-    }
-
-    & > .popout {
-        width: 6.4rem;
-        position: absolute;
-        top: -2.0rem;
-        right: 3.2rem;
-        transition: 0.3s cubic-bezier(.18, .89, .32, 1.28);
-    }
-
-    &:hover > .popout {
-        transform: scale(1.2) rotate(-15deg);
-    }
-
-    @media (width >= 960px) {
-        border-radius: 1.6rem;
-        border: 0.2rem solid var(--color-accent-medium);
-        box-shadow: -0.6rem 0.6rem 0 0 var(--color-accent-medium);
-
-        .badge-wrapper {
-            grid-template-columns: repeat(8, 1fr);
-        }
-    }
+    grid-template-columns: repeat(auto-fit, minmax(9.6rem, 1fr));
+    margin-block-end: 6.4rem;
 }
 </style>

@@ -2,9 +2,9 @@
 
 namespace App\Listeners;
 
+use App\Events\UserNotificationSent;
 use App\Mail\UserVerified;
 use App\Models\Badge;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -12,26 +12,20 @@ use Illuminate\Support\Facades\Mail;
 class AfterEmailVerified
 {
     /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct(
-        protected FlasherInterface $flasher
-    ) {
-    }
-
-    /**
      * Handle the event.
      */
     public function handle(Verified $event): void
     {
-        $badge = Badge::where('name', 'I\'m Just Happy to Be Here')->first();
+        $badge = Badge::where('key', 'user_verified')->first();
 
-        $event->user->badges()->attach($badge);
+        if ($badge && ! $event->user->badges()->whereKey($badge->id)->exists()) {
+            $event->user->badges()->attach($badge);
 
-        session()->flash('notification',
-            ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
+            UserNotificationSent::dispatch(
+                $event->user->id,
+                __('badges.get', ['badge' => $badge->title]),
+            );
+        }
 
         try {
             Mail::to($event->user)->send(new UserVerified($event->user));

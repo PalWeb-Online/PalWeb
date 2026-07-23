@@ -15,7 +15,6 @@ onMounted(() => {
             max: 20,
             speed: 400,
             scale: 1,
-            glare: true,
         });
     }
 });
@@ -30,14 +29,14 @@ const {
 </script>
 
 <template>
-    <div ref="element" :class="['badge-item', badge.unlocked ? '' : 'disabled']"
+    <div :class="['badge-item', badge.unlocked ? '' : 'disabled']"
          @mousemove="showTooltip({
-             title: badge.unlocked ? badge.name : '???',
+             title: badge.unlocked ? badge.title : '???',
              description: badge.description
          }, $event)"
          @mouseleave="hideTooltip()"
     >
-        <img :alt="badge.name" :src="`/img/badges/${badge.image}`"/>
+        <img ref="element" :alt="badge.title" :src="`/img/badges/${badge.key}.svg`"/>
     </div>
     <div v-if="isVisible" :style="tooltipStyle" class="data-tooltip">
         <div style="font-weight: 700">{{ tooltipData.title }}</div>
@@ -49,23 +48,18 @@ const {
 .badge-item {
     display: grid;
     border-radius: 50%;
-    background: var(--color-accent-light);
     transform-style: preserve-3d;
     transform: perspective(960rem);
+    filter: drop-shadow(0 0.4rem 0.4rem rgb(0 0 0 / 0.33));
 
     img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transform: translateZ(1.6rem)
     }
 
     &.disabled {
         filter: grayscale(1);
-
-        img {
-            transform: scale(1.1);
-        }
+        opacity: 0.5;
     }
 }
 </style>

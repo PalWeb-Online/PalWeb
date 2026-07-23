@@ -3,33 +3,25 @@
 namespace App\Listeners;
 
 use App\Events\DeckBuilt;
+use App\Events\UserNotificationSent;
 use App\Models\Badge;
-use Flasher\Prime\FlasherInterface;
 
 class AwardDeckBuiltBadge
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct(
-        protected FlasherInterface $flasher
-    ) {}
-
     /**
      * Handle the event.
      */
     public function handle(DeckBuilt $event): void
     {
-        $badge = Badge::where('name', 'Word Collector')->first();
+        $badge = Badge::where('key', 'created_deck')->first();
 
-        if (! $event->user->badges->contains($badge->id)) {
+        if ($badge && ! $event->user->badges()->whereKey($badge->id)->exists() && $event->user->decks->count() >= 1) {
+            $event->user->badges()->attach($badge);
 
-            if ($event->user->decks->count() >= 1) {
-                $event->user->badges()->attach($badge);
-                session()->flash('notification', ['type' => 'congrats', 'message' => __('badges.get', ['badge' => $badge->name])]);
-            }
+            UserNotificationSent::dispatch(
+                $event->user->id,
+                __('badges.get', ['badge' => $badge->title]),
+            );
         }
     }
 }

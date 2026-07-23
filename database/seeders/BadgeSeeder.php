@@ -15,58 +15,58 @@ class BadgeSeeder extends Seeder
     {
         // AfterEmailVerified
         DB::table('badges')->insert([
-            'name' => 'I\'m Just Happy to Be Here',
+            'title' => 'I\'m Just Happy to Be Here',
             'description' => 'Verified your email.',
-            'image' => 'ImJustHappyToBeHere.svg',
+            'key' => 'user_verified',
         ]);
 
         // ProfileChanged & AwardProfileChangedBadge
         DB::table('badges')->insert([
-            'name' => 'We\'re Happy to Have You',
+            'title' => 'We\'re Happy to Have You',
             'description' => 'Told us about yourself.',
-            'image' => 'WereHappyToHaveYou.svg',
+            'key' => 'user_profile_updated',
         ]);
 
         // awarded by bot
         DB::table('badges')->insert([
-            'name' => 'No FOMO',
+            'title' => 'No FOMO',
             'description' => 'Joined the Discord server.',
-            'image' => 'NoFOMO.svg',
+            'key' => 'joined_discord',
         ]);
 
         // DonatedMoney & AwardDonatedMoneyBadge
         DB::table('badges')->insert([
-            'name' => 'Pay It Forward',
+            'title' => 'Pay It Forward',
             'description' => 'Bought us a coffee.',
-            'image' => 'PayItForward.svg',
+            'key' => 'user_subscribed',
         ]);
 
         // TermBookmarked & AwardTermBookmarkedBadge
         DB::table('badges')->insert([
-            'name' => 'Baby\'s First Words',
+            'title' => 'Baby\'s First Words',
             'description' => 'Pinned 10 Terms to Workbench.',
-            'image' => 'BabysFirstWords.svg',
+            'key' => 'pinned_terms',
         ]);
 
         // SentenceBookmarked & AwardSentenceBookmarkedBadge
         DB::table('badges')->insert([
-            'name' => 'Loquacious',
+            'title' => 'Loquacious',
             'description' => 'Pinned 5 Sentences to Workbench.',
-            'image' => 'Loquacious.svg',
-        ]);
-
-        // DeckCreated & AwardDeckCreatedBadge
-        DB::table('badges')->insert([
-            'name' => 'Word Collector',
-            'description' => 'Built a Deck.',
-            'image' => 'WordCollector.svg',
+            'key' => 'pinned_sentences',
         ]);
 
         // DeckSaved & AwardDeckSavedBadge
         DB::table('badges')->insert([
-            'name' => 'Mine!',
+            'title' => 'Mine!',
             'description' => 'Pinned 5 Decks to Workbench.',
-            'image' => 'Mine.svg',
+            'key' => 'pinned_decks',
+        ]);
+
+        // DeckCreated & AwardDeckCreatedBadge
+        DB::table('badges')->insert([
+            'title' => 'Word Collector',
+            'description' => 'Built a Deck.',
+            'key' => 'created_deck',
         ]);
     }
 }
