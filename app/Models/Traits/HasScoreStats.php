@@ -52,10 +52,10 @@ trait HasScoreStats
 
         return [
             'latest' => $latest?->score,
-            'latest_date' => $latest?->created_at?->format('j F Y'),
+            'latest_date' => $latest?->created_at?->translatedFormat('j F Y'),
             'latest_trend' => $latestTrend,
             'highest' => $highest?->score,
-            'highest_date' => $highest?->created_at?->format('j F Y'),
+            'highest_date' => $highest?->created_at?->translatedFormat('j F Y'),
             'highest_trend' => $highestTrend,
             'average' => round($average, 2),
             'average_trend' => $averageTrend,

@@ -1,73 +1,78 @@
 <script setup>
 import {computed} from "vue";
 import {useScoreManager} from "../composables/useScoreManager.js";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     model: {type: Object, required: false},
     score: {type: Object, required: true},
 });
 
-const { getScoreStats } = useScoreManager();
+const {getScoreStats} = useScoreManager();
+const {t} = useI18n();
 
 const scoreMessage = computed(() => {
     if (props.score.score >= 1) {
-        return "Flawless!";
+        return t('components.score.feedback.highest');
     }
     if (props.score.score >= 0.85) {
-        return "Impressive!";
+        return t('components.score.feedback.high');
     }
     if (props.score.score >= 0.7) {
-        return "You’re getting there!";
+        return t('components.score.feedback.medium');
     }
     if (props.score.score >= 0.5) {
-        return "Off to a great start!";
+        return t('components.score.feedback.low');
     }
-    return "Better keep practicing!";
+    return t('components.score.feedback.lowest');
 });
 </script>
 <template>
     <div class="score-metadata" v-if="score.id || score.scorable_type === 'deck'">
         <div class="score-metadata-row" v-if="score.scorable_type === 'deck'">
             <div>
-                <span style="font-weight: 700">Quiz Type</span>
-                <span style="text-transform: capitalize">{{ score.settings.quizType }}</span>
+                <span style="font-weight: 700">{{ $t('components.score.quiz.type') }}</span>
+                <span style="text-transform: capitalize">
+                    {{ $t(`components.score.quiz.types.${score.settings.quizType}`) }}
+                </span>
             </div>
             <template v-for="(option, key) in score.settings.options">
                 <div v-if="key === 'strictTerms' && score.settings.quizType === 'glosses'">
-                    <span>{{ key }}</span>
-                    <span>{{ option }}</span>
+                    <span>{{ $t(`components.score.quiz.options.${key}`) }}</span>
+                    <span>{{ $t(`components.common.boolean.${option}`) }}</span>
                 </div>
                 <div v-if="key === 'strictGloss' && ['glosses', 'sentences'].includes(score.settings.quizType)">
-                    <span>{{ key }}</span>
-                    <span>{{ option }}</span>
+                    <span>{{ $t(`components.score.quiz.options.${key}`) }}</span>
+                    <span>{{ $t(`components.common.boolean.${option}`) }}</span>
                 </div>
                 <div v-if="key === 'withTranslation' && score.settings.quizType === 'sentences'">
-                    <span>{{ key }}</span>
-                    <span>{{ option }}</span>
+                    <span>{{ $t(`components.score.quiz.options.${key}`) }}</span>
+                    <span>{{ $t(`components.common.boolean.${option}`) }}</span>
                 </div>
             </template>
         </div>
         <div v-if="score.id" style="font-size: 1.4rem; font-style: italic; text-align: right">
-            Quizzed on {{ score.created_at }}.
+            {{ $t('components.score.quizzed-on', {date: score.created_at}) }}
         </div>
     </div>
     <div class="quiz-results">
         <div class="score-figure featured-title">
             <div>{{ getScoreStats(score).formatted }}</div>
             <div v-if="!score.id && score.score > model?.stats.highest" class="quiz-results-callout">
-                new record!
+                {{ $t('components.score.new-record') }}
             </div>
         </div>
         <div class="score-feedback">
             <div>{{ scoreMessage }}</div>
             <div style="font-weight: 700">
-                You answered
-                {{ getScoreStats(score).correct }}
-                out of
-                {{ getScoreStats(score).total }}
-                questions correctly.
+                {{
+                    $t('components.score.answered-correctly', {
+                        correct: getScoreStats(score).correct,
+                        total: getScoreStats(score).total
+                    })
+                }}
             </div>
-            <div>Review your answers below.</div>
+            <div>{{ $t('components.score.review-answers') }}</div>
         </div>
     </div>
     <slot/>

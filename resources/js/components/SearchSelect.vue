@@ -185,13 +185,12 @@ onBeforeUnmount(() => {
             <input
                 type="text"
                 :class="{ persisting: modelValue }"
-                placeholder="Search"
+                :placeholder="$t('components.search-select.placeholder')"
                 :disabled="disabled"
                 v-model="displayValue"
                 @focus="openDropdown"
                 @click="openDropdown"
             >
-
             <button
                 v-if="modelValue && !disabled"
                 type="button"
@@ -207,11 +206,11 @@ onBeforeUnmount(() => {
         <div v-if="isOpen && !disabled" class="search-select-dropdown">
             <ul class="search-select-list">
                 <li v-if="isLoading" class="search-select-item status">
-                    Searching...
+                    {{ $t('components.search-select.searching') }}
                 </li>
 
                 <li v-else-if="options.length === 0" class="search-select-item status">
-                    No results.
+                    {{ $t('components.search-select.no-results') }}
                 </li>
 
                 <li
@@ -236,9 +235,9 @@ onBeforeUnmount(() => {
 }
 
 .search-select-bar {
-    position: relative;
     display: flex;
     align-items: center;
+    gap: 0.8rem;
 
     input {
         width: 100%;
@@ -250,10 +249,8 @@ onBeforeUnmount(() => {
     }
 
     .search-select-clear {
-        position: absolute;
-        right: 0.8rem;
         cursor: pointer;
-        font-size: 1.8rem;
+        font-size: 2.4rem;
         color: var(--color-medium-primary);
     }
 }

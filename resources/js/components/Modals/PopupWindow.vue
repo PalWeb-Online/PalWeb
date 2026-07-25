@@ -30,7 +30,7 @@ defineExpose({
     <ModalWrapper v-model="isDialogVisible">
         <div class="window-container modal-container help-container">
             <div class="window-section-head">
-                <h2>{{ type }}: {{ title }}</h2>
+                <h2>{{ $t('modals.popup.types.' + type) }}: {{ title }}</h2>
                 <button class="material-symbols-rounded" @click="isDialogVisible = false">close</button>
             </div>
             <div class="modal-container-body">

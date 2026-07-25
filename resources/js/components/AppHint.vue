@@ -64,7 +64,7 @@ const dismiss = () => {
                     class="app-hint__dismiss"
                     @click="dismiss"
                 >
-                    Dismiss
+                    {{ $t('components.hint.dismiss') }}
                 </button>
             </div>
         </Teleport>

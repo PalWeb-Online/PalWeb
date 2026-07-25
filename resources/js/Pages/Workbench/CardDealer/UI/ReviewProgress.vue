@@ -4,6 +4,9 @@ import {route} from 'ziggy-js';
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useTooltip} from "../../../../composables/useTooltip.js";
 import AppTooltip from "../../../../components/AppTooltip.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const UserStore = useUserStore();
 
@@ -65,7 +68,7 @@ const masteryBarSegments = computed(() => {
         if (!acc[rank]) {
             acc[rank] = {
                 rank: rank,
-                label: card.mastery_label,
+                label: t(`card.mastery-level.${card.mastery_key}`),
                 count: 0,
                 points: 0
             };
@@ -105,15 +108,15 @@ const masteryBarSegments = computed(() => {
     <div class="score-stats-wrapper">
         <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
             <div class="score-stats-container__overlay">
-                <span>You must be a Student to enable SRS Review.</span>
+                <span>{{ $t('card-dealer.review-progress.messages.not-student') }}</span>
             </div>
             <div class="score-stats-container__content">
                 <div class="score-stats-highlight-wrapper">
                     <div class="score-highlight">
                         <div class="score-highlight-title">
-                            Exposure
+                            {{ $t('card-dealer.review-progress.exposure') }}
                             <span class="material-symbols-rounded"
-                                  @mousemove="appTooltip.showTooltip('% of Cards you have reviewed in the set.', $event);"
+                                  @mousemove="appTooltip.showTooltip($t('card-dealer.review-progress.tooltips.exposure'), $event);"
                                   @mouseleave="appTooltip.hideTooltip()"
                             >info</span>
                         </div>
@@ -121,26 +124,26 @@ const masteryBarSegments = computed(() => {
                     </div>
                     <div class="score-highlight">
                         <div class="score-highlight-title">
-                            Progress
+                            {{ $t('card-dealer.review-progress.progress') }}
                             <span class="material-symbols-rounded"
-                                  @mousemove="appTooltip.showTooltip('Mastery Score for the set, determined by adding up your Mastery Score for each Term.', $event);"
+                                  @mousemove="appTooltip.showTooltip($t('card-dealer.review-progress.tooltips.progress'), $event);"
                                   @mouseleave="appTooltip.hideTooltip()"
                             >info</span>
                         </div>
-                        <div class="featured-title">{{ progressStats?.progress ?? '—'}}</div>
+                        <div class="featured-title">{{ progressStats?.progress ?? '—' }}</div>
                     </div>
                 </div>
 
                 <div class="score-stats-detail-wrapper">
                     <div class="progress-bar-mode-tabs">
                         <button :class="{ active: viewMode === 'created' }" @click="viewMode = 'created'">
-                            Created
+                            {{ $t('card-dealer.review-progress.created') }}
                         </button>
                         <button :class="{ active: viewMode === 'mastery_active' }" @click="viewMode = 'mastery_active'">
-                            Mastery
+                            {{ $t('card-dealer.review-progress.mastery') }}
                         </button>
                         <button :class="{ active: viewMode === 'mastery_total' }" @click="viewMode = 'mastery_total'">
-                            Progress
+                            {{ $t('card-dealer.review-progress.progress') }}
                         </button>
                     </div>
                     <div class="total-progress-bar">
@@ -152,52 +155,56 @@ const masteryBarSegments = computed(() => {
                         ></div>
                     </div>
                     <div class="score-stats-detail">
-                        <div>Created</div>
+                        <div>{{ $t('card-dealer.review-progress.created') }}</div>
                         <div v-if="progressStats">
-                            {{ cards.length - progressStats?.total_suspended }}
-                            ({{ cards.length }})
-                            out of
-                            {{ terms_count - progressStats?.total_suspended }}
-                            ({{ terms_count }})
-                            available in the set
-                            ({{
-                                formatter.format((cards.length - progressStats?.total_suspended) / (terms_count - progressStats?.total_suspended))
-                            }})
+                            {{
+                                $t('card-dealer.review-progress.messages.created', {
+                                    createdActiveCount: cards.length - progressStats?.total_suspended,
+                                    createdTotalCount: cards.length,
+                                    activeCount: terms_count - progressStats?.total_suspended,
+                                    totalCount: terms_count,
+                                    percentCreated: formatter.format((cards.length - progressStats?.total_suspended) / (terms_count - progressStats?.total_suspended))
+                                })
+                            }}
                         </div>
                         <div v-else>—</div>
                     </div>
                     <div class="score-stats-detail">
-                        <div>Reviewed</div>
+                        <div>{{ $t('card-dealer.review-progress.reviewed') }}</div>
                         <div v-if="progressStats">
-                            {{ progressStats?.total_reviewed }}
-                            out of
-                            {{ progressStats?.total_active }}
-                            ({{
-                                progressStats?.total_active > 0
-                                    ? formatter.format(progressStats?.total_reviewed / progressStats?.total_active)
-                                    : '0%'
-                            }}),
-                            out of
-                            {{ progressStats?.total_potential }} available in the set ({{ progressStats?.exposure }})
+                            {{
+                                $t('card-dealer.review-progress.messages.reviewed', {
+                                    reviewedCount: progressStats?.total_reviewed,
+                                    activeCount: progressStats?.total_active,
+                                    percentOfActive: progressStats?.total_active > 0
+                                        ? formatter.format(progressStats?.total_reviewed / progressStats?.total_active)
+                                        : '0%',
+                                    potentialCount: progressStats?.total_potential,
+                                    percentOfTotal: progressStats?.exposure,
+                                })
+                            }}
                         </div>
                         <div v-else>—</div>
                     </div>
                     <div class="score-stats-detail">
-                        <div>Suspended</div>
+                        <div>{{ $t('card-dealer.review-progress.suspended') }}</div>
                         <div v-if="progressStats">
-                            {{ progressStats?.total_suspended }}
-                            out of
-                            {{ cards.length }}
-                            created Cards out of
-                            {{ terms_count }}
-                            total Terms in the set
+                            {{
+                                $t('card-dealer.review-progress.messages.suspended', {
+                                    suspendedCount: progressStats?.total_suspended,
+                                    createdCount: cards.length,
+                                    totalCount: terms_count,
+                                })
+                            }}
                         </div>
                         <div v-else>—</div>
                     </div>
                 </div>
             </div>
         </div>
-        <Link v-if="UserStore.isStudent" :href="route('card-dealer.cards')">Manage Cards</Link>
+        <Link v-if="UserStore.isStudent" :href="route('card-dealer.cards')">
+            {{ $t('card-dealer.review-progress.manage-cards') }}
+        </Link>
     </div>
 
     <AppTooltip ref="appTooltip"/>
@@ -210,7 +217,9 @@ const masteryBarSegments = computed(() => {
                 {{
                     tooltipData.count
                 }}/{{
-                    viewMode === 'created' ? progressStats?.total_potential + ' Total' : progressStats?.total_reviewed + ' Reviewed'
+                    viewMode === 'created'
+                        ? `${progressStats?.total_potential} ${$t('card-dealer.review-progress.total')}`
+                        : `${progressStats?.total_reviewed} ${$t('card-dealer.review-progress.reviewed')}`
                 }}
             </div>
         </template>
@@ -218,11 +227,11 @@ const masteryBarSegments = computed(() => {
             <div>
                 {{ Math.round(tooltipData.width) }}%
                 <span style="font-size: 1.2rem">
-                    ({{ tooltipData.count }} Cards)
+                    ({{ tooltipData.count }} {{ $t('models.cards') }})
                 </span>
             </div>
             <div>
-                {{ Number.parseFloat(tooltipData.points).toFixed(1) }}/{{ progressStats?.total_potential }} Points
+                {{ `${Number.parseFloat(tooltipData.points).toFixed(1)}/${progressStats?.total_potential} ${$t('card-dealer.review-progress.points')}` }}
             </div>
         </template>
     </div>

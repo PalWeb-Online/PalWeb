@@ -3,8 +3,10 @@ import {nextTick, reactive, ref} from 'vue';
 import {shuffle} from "lodash";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import {useScoreManager} from "../../../../composables/useScoreManager.js";
+import {useI18n} from "vue-i18n";
 
 export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
+    const { t } = useI18n();
     const scoreManager = useScoreManager();
     const NotificationStore = useNotificationStore();
 
@@ -53,7 +55,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
 
         generateQuiz().then(() => {
             if (quiz.value.length < 5) {
-                NotificationStore.addNotification('Couldn\'t generate a Quiz with at least 5 items.', 'warning');
+                NotificationStore.addNotification(t('pages.deck-master.notifications.insufficient-items'), 'error');
                 data.step = 'settings';
             }
         });

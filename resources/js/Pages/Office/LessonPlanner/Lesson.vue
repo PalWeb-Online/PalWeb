@@ -146,13 +146,13 @@ const removeUnlockCondition = (i) => {
 <template>
     <Head :title="`Lesson Planner: Lesson ${lesson?.global_position}`"/>
     <div id="app-head">
-        <h1>lesson planner</h1>
+        <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="lessonNotFound">
             <AppTip>
-                <p>Sorry, but the requested Lesson does not exist.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.lesson')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
@@ -166,14 +166,13 @@ const removeUnlockCondition = (i) => {
                           :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
                         <- to Unit
                     </Link>
-                    <Link v-if="lesson?.id" :href="route('lessons.show', lesson.global_position)">
-                        View
-                    </Link>
                 </div>
                 <div class="featured-title l">
-                    <span v-if="lesson?.id">Lesson {{ lesson.global_position }}</span>
+                    <span v-if="lesson?.id">{{
+                            $t('components.lesson.number', {number: lesson.global_position})
+                        }}</span>
                     <span v-else-if="initialUnit?.id">Lesson in Unit {{ initialUnit?.position }}</span>
-                    <span v-else>New Lesson</span>
+                    <span v-else>{{ $t('forms.actions.create', {title: $t('actions.models.lesson')}) }}</span>
                 </div>
 
                 <div class="field-item">
@@ -200,10 +199,9 @@ const removeUnlockCondition = (i) => {
                     <button @click="addUnlockCondition">Add</button>
                 </div>
 
-                <!--                selected* is only used explicitly for the SearchSelect components -->
                 <SearchSelect
                     v-model="form.unit_id"
-                    label="Unit"
+                    :label="$t('actions.models.unit')"
                     :initial-title="selectedUnit?.title || ''"
                     :search="searchUnits"
                     :error="validationErrors[`unit_id`]"
@@ -215,25 +213,26 @@ const removeUnlockCondition = (i) => {
                         <div>
                             <strong>{{ option.title }}</strong>
                             <div style="font-size: 0.85em; opacity: 0.7">
-                                Unit {{ option.position }} · {{ option.lessons_count }}/9 Lessons
-                                <span v-if="!option.published"> · Draft</span>
+                                {{ $t('unit.number', {number: option.position})}}
+                                · {{ option.lessons_count }}/9 {{ $t('models.lessons') }}
+                                <span v-if="!option.published"> · {{ $t('forms.status.draft') }}</span>
                             </div>
                         </div>
                     </template>
                 </SearchSelect>
 
                 <div class="field-item">
-                    <label>Title</label>
+                    <label>{{ $t('forms.fields.title') }}</label>
                     <input type="text" v-model="form.title" placeholder="Title" required>
                 </div>
                 <div class="field-item">
-                    <label>Description</label>
+                    <label>{{ $t('forms.fields.description') }}</label>
                     <textarea v-model="form.description"/>
                 </div>
 
                 <SearchSelect
                     v-model="form.deck_id"
-                    label="Deck"
+                    :label="$t('actions.models.deck')"
                     :initial-title="selectedDeck?.name || ''"
                     :search="searchDecks"
                     :error="validationErrors[`deck_id`]"
@@ -244,7 +243,7 @@ const removeUnlockCondition = (i) => {
                         <div>
                             <strong>{{ option.name }}</strong>
                             <div style="font-size: 0.85em; opacity: 0.7">
-                                {{ option.private ? 'Private' : 'Public' }}
+                                {{ option.private ? $t('forms.status.private') : $t('forms.status.public') }}
                             </div>
                         </div>
                     </template>
@@ -252,12 +251,12 @@ const removeUnlockCondition = (i) => {
                 <DeckItem v-if="selectedDeck" :model="selectedDeck"/>
 
                 <AppTip>
-                    <p>If you cannot find the desired Deck, make sure it doesn't already belong to another Lesson.</p>
+                    <p>{{ $t('pages.lesson-planner.messages.info-deck-search') }}</p>
                 </AppTip>
 
                 <SearchSelect
                     v-model="form.dialog_id"
-                    label="Dialog"
+                    :label="$t('actions.models.dialog')"
                     :initial-title="selectedDialog?.title || ''"
                     :search="searchDialogs"
                     :error="validationErrors[`dialog_id`]"
@@ -268,7 +267,7 @@ const removeUnlockCondition = (i) => {
                         <div>
                             <strong>{{ option.title }}</strong>
                             <div style="font-size: 0.85em; opacity: 0.7">
-                                {{ option.published ? 'Published' : 'Draft' }}
+                                {{ option.published ? $t('forms.status.published') : $t('forms.status.draft') }}
                             </div>
                         </div>
                     </template>
@@ -278,7 +277,9 @@ const removeUnlockCondition = (i) => {
                 <div class="lesson-planner--skill" v-for="(skill, si) in form.document.skills" :key="si">
                     <div class="field-item">
                         <div class="block-meta">
-                            <div class="featured-title m" style="flex-grow: 1">Skill {{ si + 1 }}</div>
+                            <div class="featured-title m" style="flex-grow: 1">
+                                {{ $t('components.lesson.skill', {number: si + 1}) }}
+                            </div>
                             <button type="button"
                                     class="material-symbols-rounded"
                                     @click="moveSkill(si, 'up')"
@@ -310,22 +311,34 @@ const removeUnlockCondition = (i) => {
                 <Link v-if="lesson?.id" :href="route('lesson-planner.lesson-activity', lesson.id)"
                       class="portal-button" style="justify-self: center"
                 >
-                    {{ lesson.activity?.id ? 'Edit' : 'Create' }} Activity
+                    {{
+                        lesson.activity?.id
+                            ? $t('forms.actions.edit', {title: $t('actions.models.activity')})
+                            : $t('forms.actions.create', {title: $t('actions.models.activity')})
+                    }}
                 </Link>
                 <AppTip v-else>
                     <p>You must create the Lesson first to create the Activity.</p>
                 </AppTip>
 
                 <AppTip>
-                    <p>The Lesson is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
+                    <p>{{
+                            $t('forms.messages.current-status', {
+                                model: $t('actions.models.lesson'),
+                                status: form.published ? $t('forms.status.published') : $t('forms.status.draft')
+                            })
+                        }}</p>
                     <template v-if="Object.keys(validationErrors).length">
-                        <p style="font-weight: 700">The Lesson cannot be saved in the current state.</p>
+                        <p style="font-weight: 700">{{
+                                $t('forms.messages.has-validation-errors', {model: $t('actions.models.lesson')})
+                            }}</p>
                         <ul>
                             <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
-                        <p style="font-weight: 700">The Lesson cannot be Published in the current state.</p>
+                        <p style="font-weight: 700">
+                            {{ $t('forms.messages.has-publish-issues', {model: $t('actions.models.lesson')}) }}</p>
                         <ul>
                             <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
                         </ul>
@@ -337,19 +350,37 @@ const removeUnlockCondition = (i) => {
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">
-                    <button type="button"
-                            @click="saveLesson({ publish: form.published })"
-                            :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.published && !isPublishable)">
-                        Save
-                    </button>
-                    <button type="button" :disabled="!hasNavigationGuard" @click="reset()">Reset</button>
-                    <button type="button"
-                            @click="saveLesson({ publish: !form.published })"
-                            :disabled="isSaving || !isValidRequest || (!form.published && !isPublishable)"
+                    <button
+                        type="button"
+                        @click="saveLesson({ publish: form.published })"
+                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.published && !isPublishable)"
                     >
-                        {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
+                        {{ $t('forms.actions.save') }}
                     </button>
-                    <button type="button" @click="deleteLesson()">Delete Lesson</button>
+                    <button
+                        type="button"
+                        @click="reset()"
+                        :disabled="!hasNavigationGuard"
+                    >
+                        {{ $t('forms.actions.reset') }}
+                    </button>
+                    <button
+                        type="button"
+                        @click="saveLesson({ publish: !form.published })"
+                        :disabled="isSaving || !isValidRequest || (!form.published && !isPublishable)"
+                    >
+                        {{
+                            hasNavigationGuard ? $t('forms.actions.save') + ' & ' : ''
+                        }} {{
+                            form?.published ? $t('forms.actions.set-status.draft') : $t('forms.actions.set-status.published')
+                        }}
+                    </button>
+                    <button type="button" @click="deleteLesson()">
+                        {{ $t('actions.common.delete', {model: $t('actions.models.lesson')}) }}
+                    </button>
+                    <Link v-if="lesson?.id" :href="route('lessons.show', lesson.global_position)">
+                        {{ $t('actions.common.view', {model: $t('actions.models.lesson')}) }}
+                    </Link>
                 </div>
             </div>
         </template>
@@ -357,7 +388,7 @@ const removeUnlockCondition = (i) => {
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

@@ -29,7 +29,7 @@ const resolvedUser = computed(() => props.user ?? props.model.user);
                         {{ model.comment }}
                     </div>
                     <div v-if="model.created_at" class="user-comment-data">
-                        on {{ model.created_at }}.
+                        {{ $t('components.comment.created-on', {date: model.created_at}) }}
                     </div>
                 </slot>
             </div>

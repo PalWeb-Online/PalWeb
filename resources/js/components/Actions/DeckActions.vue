@@ -33,14 +33,14 @@ const tooltip = ref(null);
     <ContextActions v-slot="{ closeMenu }">
         <Link v-if="$page.component !== 'Library/Decks/Show'"
             :href="route('decks.show', model.id)" role="menuitem" tabindex="-1">
-            View Deck
+            {{ $t('actions.common.view', { model: $t('actions.models.deck') }) }}
         </Link>
         <template v-if="isAuthor || UserStore.isAdmin">
             <Link :href="route('deck-master.build', model.id)" role="menuitem" tabindex="-1">
-                Edit Deck
+                {{ $t('actions.common.edit', { model: $t('actions.models.deck') }) }}
             </Link>
             <button @click="deleteDeck(model)" role="menuitem" tabindex="-1">
-                Delete Deck
+                {{ $t('actions.common.delete', { model: $t('actions.models.deck') }) }}
             </button>
         </template>
 
@@ -48,29 +48,29 @@ const tooltip = ref(null);
             <Link :href="model.terms_count > 0 ? route('deck-master.study', model.id) : '#'" role="menuitem"
                   tabindex="-1"
                   :class="{'disabled': model.terms_count < 1}"
-                  @mousemove="model.terms_count < 1 && tooltip.showTooltip('The Deck is empty.', $event);"
+                  @mousemove="model.terms_count < 1 && tooltip.showTooltip($t('actions.deck.empty'), $event);"
                   @mouseleave="model.terms_count < 1 && tooltip.hideTooltip()"
             >
-                Study Deck
+                {{ $t('actions.deck.study') }}
             </Link>
             <template v-if="UserStore.isStudent">
                 <Link v-if="model.lesson" :href="route('lessons.show', model.lesson.global_position)" role="menuitem" tabindex="-1">
-                    View Lesson
+                    {{ $t('actions.common.view', { model: $t('actions.models.lesson') }) }}
                 </Link>
                 <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })" role="menuitem" tabindex="-1">
-                    View Scores
+                    {{ $t('actions.common.view', { model: $t('actions.models.scores') }) }}
                 </Link>
             </template>
             <button @click="copyDeck(model)" role="menuitem" tabindex="-1">
-                Copy Deck
+                {{ $t('actions.common.copy', { model: $t('actions.models.deck') }) }}
             </button>
             <button @click="shareDeck" role="menuitem" tabindex="-1">
-                Share Link
+                {{ $t('actions.deck.share-link') }}
             </button>
             <form :action="route('decks.export', model.id)" method="POST">
                 <input type="hidden" name="_token" :value="csrfToken">
                 <button type="submit" role="menuitem" tabindex="-1">
-                    Export CSV
+                    {{ $t('actions.deck.export-csv') }}
                 </button>
             </form>
         </template>

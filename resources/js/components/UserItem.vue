@@ -2,6 +2,11 @@
 import UserNametag from "./UserNametag.vue";
 import UserAvatarWrapper from "./UserAvatarWrapper.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
+
+const NotificationStore = useNotificationStore();
 
 const props = defineProps({
     user: Object,
@@ -11,15 +16,15 @@ const props = defineProps({
     tags: {type: Boolean, default: false},
 })
 
-const NotificationStore = useNotificationStore();
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const copyText = (event) => {
     event.preventDefault();
 
     navigator.clipboard.writeText(props.user.teacher?.email).then(function () {
-        NotificationStore.addNotification('Copied to clipboard.');
+        NotificationStore.addNotification(t('components.common.copied'));
     }, function (err) {
-        alert('Could not copy text: ', err);
+        alert(`${t('components.common.copy-error')} ${err}`);
     });
 };
 </script>
@@ -38,11 +43,11 @@ const copyText = (event) => {
                             {{ user.bio }}
                         </template>
                         <template v-else>
-                            <i>Sadly, {{ user.name }} hasn't told us anything about themselves yet.</i>
+                            <i>{{ $t('components.user.bio-placeholder', {name: user.name}) }}</i>
                         </template>
                     </div>
                     <div class="user-comment-data">
-                        Joined on {{ user.created_at }} ({{ user.created_ago }}).
+                        {{ $t('components.user.joined-on', {date: user.created_at, ago: user.created_ago}) }}
                     </div>
                 </slot>
             </div>
@@ -50,11 +55,11 @@ const copyText = (event) => {
                 <div class="user-tag">
                     <div class="material-symbols-rounded">location_on</div>
                     <span v-if="user.home">{{ user.home }}</span>
-                    <span v-else>Earth, probably.</span>
+                    <span v-else>{{ $t('components.user.location-placeholder') }}</span>
                 </div>
                 <div class="user-tag">
                     <div class="material-symbols-rounded">lips</div>
-                    <span>{{ user.dialect.name }}</span>
+                    <span>{{ $t(`dialect.${localeKey(user.dialect.name)}`) }}</span>
                 </div>
                 <div class="user-tag" v-if="user.teacher">
                     <div class="material-symbols-rounded">mail</div>

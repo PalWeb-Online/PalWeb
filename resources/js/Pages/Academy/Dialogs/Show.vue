@@ -4,6 +4,7 @@ import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useDialogViewer} from "../../../composables/dialogs/useDialogViewer.js";
+import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({
     layout: Layout
@@ -33,9 +34,12 @@ watch(
 </script>
 <template>
     <Head :title="dialog ? `Academy: Dialogs: ${dialog.title}` : 'Academy: Dialogs'"/>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingDialog"/>
-        <DialogContainer v-else-if="dialog" :model="dialog"/>
-        <div v-else-if="dialogNotFound" class="loading-state"><p>Unable to load Dialog.</p></div>
+
+    <LoadingSpinner v-if="isLoadingDialog"/>
+    <AppTip v-else-if="dialogNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.dialog')}) }}</p>
+    </AppTip>
+    <div v-else-if="dialog" id="app-body">
+        <DialogContainer :model="dialog"/>
     </div>
 </template>

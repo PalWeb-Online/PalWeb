@@ -28,13 +28,13 @@ defineOptions({
 <template>
     <Head title="Community Hub"/>
     <div id="app-head">
-        <Link :href="route('users.index')"><h1>hub</h1></Link>
+        <Link :href="route('users.index')"><h1>{{ $t('pages.users.index.title') }}</h1></Link>
     </div>
 
     <div id="app-body">
         <div class="app-body-section">
             <AppHeading>
-                teachers
+                {{ $t('models.teachers') }}
             </AppHeading>
             <AppTip>
                 <p v-if="teachersCount <= 0">Sadly, there are no Teachers on PalWeb yet.</p>
@@ -49,8 +49,7 @@ defineOptions({
                             {{ user.teacher.bio }}
                         </template>
                         <template v-else>
-                            <i>Sadly, {{ user.name }} hasn't told us anything about themselves as a Teacher
-                                yet. They should probably fix that soon.</i>
+                            <i>{{ $t('teacher.bio-placeholder', {user: user.name}) }}</i>
                         </template>
                     </div>
                 </CommentItem>
@@ -58,38 +57,36 @@ defineOptions({
             <Paginator v-if="teachers.meta.links.length > 3" :links="teachers.meta.links"/>
 
             <AppHeading>
-                decks
+                {{ $t('models.decks') }}
             </AppHeading>
             <div class="decks-featured">
                 <DeckFlashcard :model="featuredDeck"/>
                 <div class="model-list">
-                    <div class="featured-title m" style="text-transform: none">Latest</div>
+                    <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                     <DeckItem v-for="deck in latestDecks" :model="deck" size="s"/>
                 </div>
                 <div v-if="popularDecks.length > 0" class="model-list popular">
-                    <div class="featured-title l" style="text-transform: none">Popular</div>
+                    <div class="featured-title l" style="text-transform: none">{{ $t('pages.users.index.popular') }}</div>
                     <DeckItem v-for="deck in popularDecks" :model="deck" size="l"/>
                 </div>
             </div>
-            <Link class="portal-button" style="justify-self: center"
-                  :href="route('deck-master.build')"
-            >create your own!
+            <Link class="portal-button" style="justify-self: center" :href="route('deck-master.build')">
+                {{ $t('pages.users.index.create-prompt') }}
             </Link>
 
             <AppHeading>
-                audios
+                {{ $t('models.audios') }}
             </AppHeading>
             <div v-if="latestAudios.length > 0" class="model-list">
-                <div class="featured-title m" style="text-transform: none">Latest</div>
+                <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                 <PronunciationItem v-for="audio in latestAudios" :model="audio.pronunciation" :audio="audio"/>
             </div>
-            <Link class="portal-button" style="justify-self: center"
-                  :href="route('sound-booth.index')"
-            >record your own!
+            <Link class="portal-button" style="justify-self: center" :href="route('sound-booth.index')">
+                {{ $t('pages.users.index.record-prompt') }}
             </Link>
 
             <AppHeading>
-                creators
+                {{ $t('pages.users.index.creators') }}
             </AppHeading>
             <div class="users-featured">
                 <UserScorecard v-for="user in topUsers" :user="user"/>

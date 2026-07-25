@@ -16,14 +16,14 @@ const props = defineProps({
     <ContextActions v-slot="{ closeMenu }">
         <Link v-if="$page.component !== 'Library/Sentences/Show'"
               :href="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
-            View Sentence
+            {{ $t('actions.common.view', { model: $t('actions.models.sentence') }) }}
         </Link>
         <template v-if="UserStore.isAdmin">
             <Link :href="route('speech-maker.sentence', model.id)" role="menuitem" tabindex="-1">
-                Edit Sentence
+                {{ $t('actions.common.edit', { model: $t('actions.models.sentence') }) }}
             </Link>
             <button @click="deleteSentence(model)" role="menuitem" tabindex="-1">
-                Delete Sentence
+                {{ $t('actions.common.delete', { model: $t('actions.models.sentence') }) }}
             </button>
         </template>
     </ContextActions>

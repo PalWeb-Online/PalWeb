@@ -21,26 +21,25 @@ const {isPlaying, playAudio} = useAudio(props.model.url);
             music_note
         </button>
         <img v-if="!model.speaker.user.private"
-             class="speaker-avatar" alt="User Avatar"
+             class="speaker-avatar" :alt="$t('components.common.alt.user-avatar')"
              @click="router.get(route('speaker.show', model.speaker))"
              :src="model.speaker.user.avatar_url"/>
         <div class="audio-item-data">
-            <div>by
+            <div>{{ $t('components.common.by') }}
                 <Link :href="route('speaker.show', model.speaker)">
-                    <template v-if="model.speaker.user.private">
-                        Speaker #{{ model.speaker.id }}
-                    </template>
-                    <template v-else>
-                        {{ model.speaker.user.name }}
-                    </template>
+                    {{ model.speaker.user.private
+                    ? t('speaker.anonymous-number', {id: model.speaker.id})
+                    : model.speaker.user.name
+                    }}
                 </Link>
             </div>
             <div class="audio-item-info">
-                {{ model.speaker.fluency_alias }}
-                <span style="text-transform: capitalize">{{
-                        model.speaker.gender !== 'other' ? model.speaker.gender : ''
-                    }}</span>
-                Speaker from {{ model.speaker.location.name_ar }} ({{ model.speaker.location.name_en }})
+                {{ $t('speaker.byline', {
+                    fluency: $t(`speaker.fluency.${model.speaker.fluency}`),
+                    gender: $t(`speaker.gender.${model.speaker.gender}`),
+                    ar: model.speaker.location.name_ar,
+                    en: model.speaker.location.name_en
+                }) }}
             </div>
             <div class="audio-item-date">
                 {{ model.created_at }}

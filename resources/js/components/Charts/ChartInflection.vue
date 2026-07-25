@@ -43,9 +43,8 @@ const plurals = computed(() =>
 </script>
 
 <template>
-    <!--    todo: Inflections may have Audios-->
     <div class="window-section-head">
-        <h2>inflections</h2>
+        <h2>{{ $t('charts.inflection.title') }}</h2>
     </div>
     <div class="inflection-carousel">
         <div class="carousel-item">

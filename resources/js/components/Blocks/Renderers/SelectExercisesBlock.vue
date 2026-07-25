@@ -23,7 +23,7 @@ const selectOption = (itemId, optionId) => {
 
 <template>
     <div class="block--exercises">
-        <h2>{{ block.exerciseType }}</h2>
+        <h2>{{ $t(`exercises.types.${block.exerciseType}`) }}</h2>
         <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems">
             <div class="exercise--select">

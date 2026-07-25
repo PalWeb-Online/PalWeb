@@ -5,7 +5,23 @@
             "subtitle": "the Web of Palestinian Arabic!"
         }
     },
+    "layout": {
+        "notifications": {
+            "offline": "You have gone offline. While offline, the site will not work as expected. Please wait until you are back online to continue using PalWeb.",
+            "online": "You are back online!"
+        }
+    },
     "nav": {
+        "sticky": {
+            "search": "Search",
+            "settings": "Settings",
+            "menu": "Menu",
+            "push-subscribe-hint": "Enable Notifications in Settings to get a daily reminder to review your Cards!"
+        },
+        "auth": {
+            "user-avatar": "User Avatar",
+            "resend-link": "Resend Link"
+        },
         "sidebar": {
             "home": {
                 "title": "home"
@@ -26,61 +42,14 @@
                 "title": "office",
                 "subtitle": "for Teachers only"
             },
-            "lessons": {
-                "title": "lessons",
-                "subtitle": "learn Palestinian Arabic"
-            },
-            "dialogs": {
-                "title": "dialogs",
-                "subtitle": "natural language input"
-            },
-            "scores": {
-                "title": "scores",
-                "subtitle": "view your Score history"
-            },
-            "dictionary": {
-                "title": "dictionary",
-                "subtitle": "Term::all()"
-            },
-            "corpus": {
-                "title": "corpus",
-                "subtitle": "Sentence::all()"
-            },
-            "decks": {
-                "title": "decks",
-                "subtitle": "Deck::all()"
-            },
-            "audios": {
-                "title": "audios",
-                "subtitle": "Audio::all()"
-            },
-            "deck-master": {
-                "title": "deckMaster",
-                "subtitle": "build & study Decks"
-            },
-            "card-dealer": {
-                "title": "cardDealer",
-                "subtitle": "spaced-repetition study"
-            },
-            "sound-booth": {
-                "title": "soundBooth",
-                "subtitle": "immortalize Palestinian Arabic"
-            },
-            "word-logger": {
-                "title": "wordLogger",
-                "subtitle": "manage Dictionary entries"
-            },
-            "speech-maker": {
-                "title": "speechMaker",
-                "subtitle": "create Sentences & Dialogs"
-            },
-            "lesson-planner": {
-                "title": "lessonPlanner",
-                "subtitle": "create Lessons & Activities"
-            },
             "my-admin": "myAdmin",
             "send-mail": "Send Mail",
             "view-feedback": "View Feedback",
+            "admin-actions": {
+                "restore-admin-view": "Restore Admin View",
+                "view-as-student": "View as Student",
+                "view-as-pal": "View as Pal"
+            },
             "my-account": "myAccount",
             "manage-subscription": "Manage Subscription",
             "change-password": "Change Password",
@@ -90,7 +59,271 @@
             "send-feedback": "Send Feedback"
         }
     },
+    "install": {
+        "button": "Install App",
+        "hint": "Click the Install Button to download PalWeb to your device for easier access!",
+        "unavailable": "App installation is not available in this browser."
+    },
+    "search": {
+        "genie": {
+            "title": "Search Genie",
+            "insert-title": "Insert {model}",
+            "empty": "Nothing yet.",
+            "see-all-results": "See All Results",
+            "tooltips": {
+                "navigate": "Navigate to this item's page.",
+                "insert": "Add this item to the set."
+            }
+        },
+        "filters": {
+            "placeholder": "Search",
+            "match": {
+                "root": "Match Root",
+                "term": "Match Term",
+                "gloss": "Match Gloss"
+            },
+            "sort": {
+                "alphabetical-root": "Alphabetical by Root",
+                "alphabetical": "Alphabetical",
+                "frequency": "by Frequency",
+                "latest": "by Latest",
+                "pinned": "by Pinned",
+                "fluency": "by Fluency",
+                "popularity": "by Popularity"
+            }
+        }
+    },
+    "models": {
+        "audios": "Audios",
+        "attributes": "Attributes",
+        "badges": "Badges",
+        "cards": "Cards",
+        "decks": "Decks",
+        "inflections": "Inflections",
+        "glosses": "Glosses",
+        "lessons": "Lessons",
+        "pages": "Pages",
+        "patterns": "Patterns",
+        "pronunciations": "Pronunciations",
+        "sentences": "Sentences",
+        "speakers": "Speakers",
+        "spellings": "Spellings",
+        "teachers": "Teachers",
+        "terms": "Terms",
+        "units": "Units"
+    },
+    "card": {
+        "fields": {
+            "status": "Status",
+            "mastery-level": "Mastery Level",
+            "mastery-score": "Mastery Score",
+            "times-seen": "Times Seen",
+            "last-seen": "Last Seen",
+            "due-on": "Due On"
+        },
+        "status": {
+            "active": "Active",
+            "suspended": "Suspended"
+        },
+        "grade": {
+            "fail": "Wrong",
+            "low": "Barely",
+            "medium": "Know",
+            "high": "Easy"
+        },
+        "mastery-level": {
+            "new": "New",
+            "lowest": "Rusty",
+            "low": "Learning",
+            "medium": "Solid",
+            "high": "Confident",
+            "highest": "Mastered"
+        },
+        "mastery-message": {
+            "new": "this Term is new to you",
+            "lowest": "your knowledge of this Term is spotty",
+            "low": "this Term is familiar to you",
+            "medium": "you have a grasp of this Term",
+            "high": "this Term is easy for you",
+            "highest": "you've fully mastered this Term"
+        },
+        "messages": {
+            "not-encountered": "You haven't encountered this Term yet.",
+            "mastery-tooltip": "Your Mastery Score for this Term is {score} ({label}), meaning {message}."
+        }
+    },
+    "dialect": {
+        "palestinian-bedouin": "Palestinian Bedouin",
+        "palestinian-druze": "Palestinian Druze",
+        "central-urban-palestinian": "Central Urban Palestinian",
+        "northern-urban-palestinian": "Northern Urban Palestinian",
+        "central-rural-palestinian": "Central Rural Palestinian",
+        "northern-rural-palestinian": "Northern Rural Palestinian",
+        "central-palestinian": "Central Palestinian",
+        "northern-palestinian": "Northern Palestinian",
+        "urban-palestinian": "Urban Palestinian",
+        "rural-palestinian": "Rural Palestinian",
+        "general-palestinian": "General Palestinian"
+    },
+    "exercises": {
+        "types": {
+            "input": "input",
+            "match": "match",
+            "select": "select",
+            "sort": "sort"
+        },
+        "prompts": {
+            "input": "Answer the prompt with a complete sentence, following the format of the example.",
+            "match": "Match the two columns based on the prompt. Only one distribution of answers is possible.",
+            "select": "Put the items in the correct order to build the sentence or dialog.",
+            "sort": "Select the most appropriate answer in response to the prompt."
+        },
+        "example": "example",
+        "shuffle": "shuffle"
+    },
+    "gloss": {
+        "fields": {
+            "gloss": "gloss"
+        }
+    },
+    "inflection": {
+        "fields": {
+            "form": "form",
+            "inflection": "inflection",
+            "transcription": "transcription"
+        }
+    },
+    "pattern": {
+        "type": {
+            "singular": "singular"
+        }
+    },
+    "pronunciation": {
+        "fields": {
+            "transcription": "transcription",
+            "phonemic": "phonemic",
+            "phonetic": "phonetic",
+            "dialects": "dialects",
+            "borrowed": "borrowed"
+        }
+    },
+    "speaker": {
+        "title": "speaker",
+        "data-title": "Speaker Data",
+        "byline": "{fluency} {gender} Speaker from {ar} ({en})",
+        "anonymous-bracketed": "[anonymous]",
+        "anonymous-number": "Speaker #{id}",
+        "audios": "audios",
+        "fields": {
+            "dialect": "dialect",
+            "location": "location",
+            "fluency": "fluency",
+            "gender": "gender"
+        },
+        "location": "{ar} ({en})",
+        "fluency": {
+            "1": "Beginner",
+            "2": "Intermediate",
+            "3": "Advanced",
+            "4": "Fluent",
+            "5": "Native"
+        },
+        "gender": {
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        }
+    },
+    "teacher": {
+        "bio": "teacher bio",
+        "bio-placeholder": "Sadly, {user} hasn't told us anything about themselves as a Teacher yet. They should probably fix that soon.",
+        "create": "create teacher profile"
+    },
+    "term": {
+        "category": {
+            "verb": "verb",
+            "noun": "noun",
+            "adjective": "adjective",
+            "numeral": "numeral",
+            "adverb": "adverb",
+            "preposition": "preposition",
+            "conjunction": "conjunction",
+            "determiner": "determiner",
+            "particle": "particle",
+            "phrase": "phrase",
+            "affix": "affix"
+        },
+        "filters": {
+            "category": "category",
+            "categories": {
+                "verbs": "verbs",
+                "nouns": "nouns",
+                "adjectives": "adjectives",
+                "numerals": "numerals",
+                "adverbs": "adverbs",
+                "prepositions": "prepositions",
+                "conjunctions": "conjunctions",
+                "determiners": "determiners",
+                "particles": "particles",
+                "phrases": "phrases",
+                "affixes": "affixes"
+            },
+            "attribute": "attribute",
+            "attributes": {
+                "masculine": "masculine",
+                "feminine": "feminine",
+                "plural": "plural",
+                "collective": "collective",
+                "demonym": "demonym",
+                "defect": "defect",
+                "pseudo": "pseudo",
+                "clitic": "clitic",
+                "idiom": "idiom"
+            },
+            "form": {
+                "label": "form",
+                "option": "form {form}"
+            },
+            "singular": "singular",
+            "plural": "plural",
+            "pattern-groups": {
+                "derived-terms": "Derived Terms",
+                "named-patterns": "Named Patterns",
+                "length": "Length {length}",
+                "length-range": "Length {start} / {end}",
+                "sound": "Sound"
+            },
+            "patterns": {
+                "active-participle-abbr": "Act. Part.",
+                "relative-adjective-abbr": "Relative Adj.",
+                "intensive-adjective-abbr": "Intensive Adj.",
+                "nominalized-adjective-abbr": "Nominalized Adj."
+            }
+        },
+        "data": {
+            "etymology": "etymology",
+            "type": "type",
+            "inherited": "inherited",
+            "hybrid": "hybrid",
+            "borrowed": "borrowed",
+            "source": "source",
+            "image-url": "image URL",
+            "usage-notes": "usage notes"
+        }
+    },
+    "unit": {
+        "number": "unit {number}"
+    },
     "user": {
+        "fields": {
+            "name": "Name",
+            "username": "Username",
+            "arabic-name": "Arabic Name",
+            "email": "Email",
+            "password": "Password",
+            "confirm-password": "Confirm Password",
+            "bio": "Bio"
+        },
         "roles": {
             "student": "student",
             "teacher": "teacher",
@@ -100,14 +333,708 @@
         },
         "subscriptions": {
             "manage": "manage"
+        },
+        "profile": "profile",
+        "notifications": {
+            "preferences-saved": "Your preferences have been saved!"
         }
     },
-    "speaker": {
-        "speaker": "speaker",
-        "dialect": "dialect",
-        "location": "location",
-        "fluency": "fluency",
-        "gender": "gender"
+    "modals": {
+        "popup": {
+            "types": {
+                "help": "help"
+            }
+        },
+        "settings": {
+            "title": "settings",
+            "fields": {
+                "color-theme": "Color Theme",
+                "language": "Language",
+                "notifications": "notifications"
+            },
+            "theme-description": {
+                "PalWebOS": "PalWeb's original theme. Modern & playful; for those who remember when the Internet used to be fun.",
+                "Watermelon": "Juicy like its namesake. Refreshment for the eyes; a perfect counterbalance to hot summer days.",
+                "Nabatean": "Ancient stones the color of rust, sand as far as the eyes can see; an oasis in the distance.",
+                "Jerusalem": "Intricate tilework of turquoise & lapis lazuli; homes protected from winter by the eponymous stone.",
+                "Falastin": "Most influential newspaper in Ottoman & Mandatory Palestine, a symbol of Palestinian national identity.",
+                "Msaxxan": "Roasted chicken baked with caramelized onion, saffron, sumac & fried pine nuts over taboon bread.",
+                "Zatoon": "Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives & Olives"
+            },
+            "theme-preview": "theme preview",
+            "notifications": {
+                "enable-error": "Could not enable notifications.",
+                "disable-error": "Could not disable notifications."
+            }
+        },
+        "nav-guard": {
+            "title": "warning: unsaved changes",
+            "warning-icon": "Warning",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "messages": {
+                "unsaved-changes": "You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost.",
+                "unsaved-score": "You haven't saved your Score yet. Are you sure you want to leave this page? Your Score will not be saved.",
+                "unfinished-quiz": "You haven't finished the Quiz yet. Are you sure you want to leave this page? Your progress will not be saved.",
+                "unfinished-activity": "You haven't finished the Activity yet. Are you sure you want to leave this page? Your progress will not be saved."
+            }
+        },
+        "purge-scores": {
+            "title": "Purge Scores",
+            "confirm": "Are you sure you want to delete these Scores? This action cannot be undone.",
+            "fields": {
+                "time-limit": "Time Limit"
+            },
+            "time-limits": {
+                "none": "None",
+                "day": "1 Day",
+                "week": "1 Week",
+                "month": "1 Month",
+                "year": "1 Year"
+            },
+            "keep": {
+                "highest": "Keep Highest",
+                "latest": "Keep Latest"
+            },
+            "submit": "purge"
+        },
+        "send-feedback": {
+            "title": "send feedback",
+            "placeholder": "Is something broken? Is a word missing from the Dictionary? Let us know!",
+            "submit": "Submit"
+        },
+        "send-mail": {
+            "title": "send mail",
+            "fields": {
+                "subject": "Subject"
+            },
+            "placeholder": "What would you like to say?",
+            "submit": "Send"
+        },
+        "sign-in": {
+            "title": "sign in",
+            "action": "Sign In!",
+            "sign-up-prompt": "New to PalWeb?",
+            "remember-me": "Remember Me",
+            "submit": "Sign In",
+            "discord": "Use Discord"
+        },
+        "sign-up": {
+            "title": "sign up",
+            "action": "Sign Up!",
+            "sign-in-prompt": "Already have an account?",
+            "randomize-name": "Randomize",
+            "submit": "Sign Up"
+        },
+        "forgot-password": {
+            "title": "forgot password",
+            "action": "Forgot?",
+            "prompt": "No password? No problem. Write down your email address & I'll send you a reset link.",
+            "submit": "Send Link"
+        },
+        "avatar-picker": {
+            "title": "avatar",
+            "custom": "custom",
+            "my-uploads": "my uploads",
+            "upload-new": "upload new",
+            "defaults": "defaults",
+            "confirm-delete": "Delete this uploaded avatar?",
+            "errors": {
+                "file-size": "Avatar images must be 5MB or smaller.",
+                "file-type": "Avatar images must be JPG, JPEG, PNG, or WEBP files.",
+                "upload-limit": "You may upload up to {count} custom avatars.",
+                "crop": "The Avatar could not be cropped.",
+                "upload": "The Avatar could not be uploaded.",
+                "delete": "The Avatar could not be deleted."
+            },
+            "messages": {
+                "upload-limit": "You may upload up to {count} custom avatars. Delete one before uploading another.",
+                "upload-format": "You may upload an image in the JPG, JPEG, PNG, or WEBP formats (max. 5MB)."
+            },
+            "notifications": {
+                "uploaded": "OK, your Avatar was successfully uploaded.",
+                "deleted": "OK, your Avatar was successfully deleted."
+            }
+        }
+    },
+    "actions": {
+        "common": {
+            "view": "View {model}",
+            "edit": "Edit {model}",
+            "delete": "Delete {model}",
+            "copy": "Copy {model}",
+            "select": "Select {thing}"
+        },
+        "models": {
+            "activity": "Activity",
+            "card": "Card",
+            "deck": "Deck",
+            "dialog": "Dialog",
+            "gloss": "Gloss",
+            "lesson": "Lesson",
+            "page": "Page",
+            "root": "Root",
+            "scores": "Scores",
+            "sentence": "Sentence",
+            "speaker": "Speaker",
+            "teacher": "Teacher",
+            "term": "Term",
+            "unit": "Unit",
+            "user": "User"
+        },
+        "card": {
+            "master": "Master Card",
+            "restore": "Restore Card",
+            "suspend": "Suspend Card",
+            "reset": "Reset Card"
+        },
+        "deck": {
+            "empty": "The Deck is empty.",
+            "study": "Study Deck",
+            "share-link": "Share Link",
+            "export-csv": "Export CSV"
+        },
+        "user": {
+            "grant-student-role": "Grant Student Role",
+            "revoke-student-role": "Revoke Student Role"
+        }
+    },
+    "charts": {
+        "variant": "variant {number}",
+        "cliticization": {
+            "title": "cliticization"
+        },
+        "conjugation": {
+            "title": "conjugation",
+            "derivatives": "derivatives",
+            "tenses": {
+                "present": "present",
+                "past": "past",
+                "command": "command"
+            }
+        },
+        "inflection": {
+            "title": "inflection"
+        }
+    },
+    "forms": {
+        "actions": {
+            "edit": "edit {title}",
+            "create": "create {title}",
+            "save": "Save",
+            "reset": "Reset",
+            "insert": "Insert",
+            "set-status": {
+                "draft": "Revert to Draft",
+                "published": "Publish"
+            }
+        },
+        "status": {
+            "public": "public",
+            "private": "private",
+            "draft": "draft",
+            "published": "published"
+        },
+        "fields": {
+            "slug": "slug",
+            "title": "title",
+            "summary": "summary",
+            "description": "description",
+            "locale": "locale",
+            "parent": "parent",
+            "position": "position"
+        },
+        "messages": {
+            "current-status": "The {model} is currently {status}.",
+            "has-validation-errors": "The {model} cannot be saved in the current state.",
+            "has-publish-issues": "The {model} cannot be published in the current state.",
+            "has-confirmable-issues": "Are you sure the {model} is complete?"
+        },
+        "blocks": "blocks"
+    },
+    "blocks": {
+        "container": "container",
+        "heading": "heading",
+        "text": "text",
+        "image": "image",
+        "audio": "audio",
+        "chart": "chart",
+        "table": "table",
+        "sentence": "sentence",
+        "exercises": "exercises",
+        "add": {
+            "model": "model",
+            "custom": "custom",
+            "row": "row",
+            "person": "person",
+            "inflection": "inflection"
+        },
+        "messages": {
+            "empty-sentence": "Empty Sentence Block. Please create a custom Sentence or load in a Sentence model.",
+            "unsupported-block": "Unsupported Exercises Block type:",
+            "unsupported-exercise-block": "Unsupported Block:"
+        }
+    },
+    "components": {
+        "common": {
+            "by": "by",
+            "by-author": "by {author}",
+            "anonymous": "Anonymous",
+            "copied": "Copied to clipboard.",
+            "copy-error": "Could not copy text:",
+            "never": "Never",
+            "hide": "Hide",
+            "expand": "Expand",
+            "see-all": "See All",
+            "boolean": {
+                "true": "true",
+                "false": "false"
+            },
+            "sections": {
+                "stats": "stats",
+                "terms": "terms",
+                "settings": "settings",
+                "options": "options"
+            },
+            "options": {
+                "show-transcription": "show transcription",
+                "shuffle": "shuffle",
+                "reset": "reset"
+            },
+            "counts": {
+                "terms": "{count} Terms"
+            },
+            "alt": {
+                "avatar": "Avatar",
+                "star": "Star",
+                "term-image": "Term Image",
+                "user-avatar": "User Avatar"
+            }
+        },
+        "activity": {
+            "title": "Activity",
+            "start": "Start Activity",
+            "exit": "Exit to Lesson"
+        },
+        "quiz": {
+            "answer": {
+                "user-input": "you said:",
+                "see-dictionary": "See in Dictionary",
+                "mark-correct": "Mark as Correct",
+                "add-to": "Add to Deck",
+                "remove-from": "Remove from Deck"
+            }
+        },
+        "hint": {
+            "dismiss": "Dismiss"
+        },
+        "notification": {
+            "types": {
+                "success": "success",
+                "error": "error",
+                "warning": "warning",
+                "info": "info"
+            }
+        },
+        "comment": {
+            "created-on": "on {date}."
+        },
+        "deck": {
+            "title": "Deck",
+            "empty": "This Deck is empty.",
+            "locked": "You haven't unlocked this Deck in the Academy yet.",
+            "description-placeholder": "Sadly, {author} hasn't told us anything about this Deck yet.",
+            "created-by": "Created by {author} on {date}.",
+            "terms": {
+                "load-error": "Unable to load Deck Terms."
+            }
+        },
+        "dialog": {
+            "title": "Dialog",
+            "locked": "You haven't unlocked this Dialog in the Academy yet.",
+            "sections": {
+                "media": "media",
+                "options": "options",
+                "transcript": "transcript"
+            },
+            "options": {
+                "show-terms": "Show Terms"
+            }
+        },
+        "lesson": {
+            "number": "Lesson {number}",
+            "scored-perfect": "Scored 100% ({count}/{total})",
+            "open": "open lesson",
+            "no-skills": "(No Skills have been added to the Lesson yet.)",
+            "skill": "skill {number}",
+            "sections": {
+                "skills": "skills"
+            }
+        },
+        "page": {
+            "is-draft": "This Page is a draft. It is only visible to administrators."
+        },
+        "pronunciation": {
+            "borrowed": "(Borrowed)"
+        },
+        "score": {
+            "student-required": "You must be a Student to enable Scores.",
+            "quizzed-on": "Quizzed on {date}.",
+            "new-record": "new record!",
+            "answered-correctly": "You answered {correct} out of {total} questions correctly.",
+            "review-answers": "Review your answers below.",
+            "history": "See Score History",
+            "sections": {
+                "history": "history",
+                "detail": "detail"
+            },
+            "feedback": {
+                "highest": "Flawless!",
+                "high": "Impressive!",
+                "medium": "You’re getting there!",
+                "low": "Off to a great start!",
+                "lowest": "Better keep practicing!"
+            },
+            "stats": {
+                "latest-score": "Latest Score",
+                "highest-score": "Highest Score",
+                "average-score": "Average Score",
+                "latest-quiz": "Latest Quiz",
+                "highest-quiz": "Highest Quiz",
+                "times-quizzed": "Times Quizzed"
+            },
+            "quiz": {
+                "type": "Quiz Type",
+                "types": {
+                    "glosses": "glosses",
+                    "sentences": "sentences",
+                    "terms": "terms"
+                },
+                "options": {
+                    "strictTerms": "strictTerms",
+                    "strictGloss": "strictGloss",
+                    "withTranslation": "withTranslation"
+                }
+            }
+        },
+        "skill": {
+            "title": "Skill"
+        },
+        "search-select": {
+            "placeholder": "Search",
+            "searching": "Searching...",
+            "no-results": "No results."
+        },
+        "sentence": {
+            "title": "Sentence",
+            "loading": "Loading Sentence...",
+            "speaker": "speaker"
+        },
+        "term": {
+            "title": "Term",
+            "construct": "construct:",
+            "editor-note": "editor’s note",
+            "featured": "featured",
+            "featured-in": "Featured In",
+            "references": {
+                "see": "see:",
+                "alt": "alt.",
+                "or": "or"
+            },
+            "relatives": {
+                "title": "relatives",
+                "synonym-abbr": "syn.",
+                "antonym-abbr": "ant."
+            },
+            "sections": {
+                "info": "info",
+                "glosses": "glosses"
+            },
+            "deck-toggle": {
+                "loading": "Loading Decks",
+                "none": "No Decks Available."
+            }
+        },
+        "user": {
+            "bio-placeholder": "Sadly, {name} hasn't told us anything about themselves yet.",
+            "location-placeholder": "Earth, probably.",
+            "joined-on": "Joined on {date} ({ago})."
+        }
+    },
+    "pages": {
+        "common": {
+            "index": "index",
+            "loading": "Loading {model}...",
+            "displaying-all": "Displaying all {count} {model} in the Library.",
+            "displaying-none": "No {model} matching this query.",
+            "displaying-results": "Displaying {count} {model} matching this query.",
+            "not-found": "Sorry, the requested {model} could not be found.",
+            "sort-messages": {
+                "alphabetical": "Sorting alphabetically by root.",
+                "frequency": "Sorting by frequency across the Corpus.",
+                "latest": "Sorting by most recently created."
+            }
+        },
+        "terms": {
+            "index": {
+                "title": "dictionary",
+                "subtitle": "Term::all()"
+            }
+        },
+        "sentences": {
+            "index": {
+                "title": "corpus",
+                "subtitle": "Sentence::all()"
+            }
+        },
+        "decks": {
+            "index": {
+                "title": "decks",
+                "subtitle": "Deck::all()"
+            }
+        },
+        "audios": {
+            "index": {
+                "title": "audios",
+                "subtitle": "Audio::all()"
+            },
+            "speaker": {
+                "is-private": "Your Profile is currently set to Private.",
+                "empty": "{speaker} has not uploaded any Audios yet."
+            }
+        },
+        "academy": {
+            "index": {
+                "title": "academy"
+            }
+        },
+        "lessons": {
+            "index": {
+                "title": "lessons",
+                "subtitle": "learn Palestinian Arabic"
+            },
+            "show": {
+                "skill-list": "In this Lesson, you'll learn to:",
+                "no-description": "(No description has been written for the Lesson yet.)",
+                "missing-deck": "No Deck available for this Lesson yet.",
+                "missing-activity": "No Activity available for this Lesson yet.",
+                "missing-dialog": "No Dialog available for this Lesson yet.",
+                "ready": "ready to go?"
+            }
+        },
+        "dialogs": {
+            "index": {
+                "title": "dialogs",
+                "subtitle": "natural language input"
+            }
+        },
+        "scores": {
+            "index": {
+                "title": "scores",
+                "subtitle": "view your Score history",
+                "latest-scored": "Latest Scored",
+                "messages": {
+                    "deck-list": "Here are all the Decks you've studied, from most to least recent, except for Decks associated with Lessons, which are shown in the Lessons tab.",
+                    "no-decks": "You have not studied any Decks yet. When you do, you will see your most recently scored Decks here."
+                }
+            },
+            "history": {
+                "messages": {
+                    "displaying-all": "Displaying all {count} Scores for this {model}, from most to least recent.",
+                    "no-scores": "You have not studied this {model} yet. When you do, you will see a history of your Scores here."
+                }
+            }
+        },
+        "cards": {
+            "index": {
+                "title": "cards",
+                "filters": {
+                    "due": "Soonest Due",
+                    "latest": "Latest Review",
+                    "mastery": "Mastery Level"
+                },
+                "messages": {
+                    "results": "Displaying {count} Cards, {message}.",
+                    "no-results": "You have no Cards matching these filters.",
+                    "no-cards": "You don't have any Cards yet. Start reviewing to get started!"
+                },
+                "sort-message": {
+                    "due": "sorted by soonest due",
+                    "latest": "sorted by most recent review",
+                    "mastery": "sorted by Mastery Level"
+                }
+            },
+            "review": {
+                "title": "review",
+                "learn": "Learn",
+                "review": "Review",
+                "sections": {
+                    "options": "options",
+                    "card": "card"
+                },
+                "tooltips": {
+                    "processed-cards": "Processed Session Cards",
+                    "session-progress": "Review Session Progress",
+                    "total-cards": "Total Session Cards",
+                    "remaining-learning": "Remaining (New) Learning Cards",
+                    "remaining-learning-relearning": "Remaining Learning & Relearning Cards",
+                    "remaining-relearning": "Remaining (Owned) Relearning Cards",
+                    "remaining-owned": "Remaining Owned Cards"
+                },
+                "notifications": {
+                    "mastered": "Mastered Card!",
+                    "suspended": "Suspended Card!"
+                }
+            }
+        },
+        "users": {
+            "index": {
+                "title": "hub",
+                "latest": "latest",
+                "popular": "popular",
+                "creators": "creators",
+                "create-prompt": "Create your own!",
+                "record-prompt": "Record your own!"
+            },
+            "show": {
+                "empty": "{user} has not created any public Decks yet."
+            },
+            "edit": {
+                "messages": {
+                    "teacher-eligible": "You are eligible to create a Teacher profile. Click the + button to start creating one now.",
+                    "teacher-instructions": "Fill out the following form to create your Teacher profile. It will only be created once you Save.",
+                    "teacher-bio-placeholder": "What would you like us to know about you as a teacher?"
+                }
+            }
+        },
+        "wiki": {
+            "title": "wiki"
+        },
+        "deck-master": {
+            "title": "deckMaster",
+            "subtitle": "build & study Decks",
+            "build": "build",
+            "study": "study",
+            "quiz": "quiz",
+            "results": "results",
+            "select-deck": "select deck",
+            "card-index": "{index} of {total}",
+            "quiz-types": {
+                "practice": "practice"
+            },
+            "buttons": {
+                "card-dealer": "load in Card Dealer",
+                "start-practice": "start practice",
+                "start-quiz": "start quiz"
+            },
+            "options": {
+                "initial-face": "initial face",
+                "front": "front",
+                "back": "back",
+                "show-term": "show term (back)",
+                "show-inflections": "show inflections"
+            },
+            "messages": {
+                "no-created-decks": "It looks like you haven't created any Decks yet. Click the + button to get started!",
+                "no-pinned-decks": "It looks like you haven't pinned any Decks yet. Watch this space.",
+                "select-quiz-type": "Select the type of Quiz & adjust how you'd like for it to be generated.",
+                "student-required": "You must be a Student to enable Quizzes.",
+                "glosses-prompt": "Select the meaning of the Term in English.",
+                "inflections-prompt": "Write the indicated inflection of the Term in Arabic.",
+                "sentences-prompt": "Select the Term that best fits the blank in the Sentence."
+            },
+            "notifications": {
+                "insufficient-items": "Couldn't generate a Quiz with at least 5 questions."
+            }
+        },
+        "card-dealer": {
+            "title": "cardDealer",
+            "subtitle": "spaced-repetition study"
+        },
+        "sound-booth": {
+            "title": "soundBooth",
+            "subtitle": "immortalize Palestinian Arabic"
+        },
+        "word-logger": {
+            "title": "wordLogger",
+            "subtitle": "manage Dictionary entries"
+        },
+        "speech-maker": {
+            "title": "speechMaker",
+            "subtitle": "create Sentences & Dialogs"
+        },
+        "lesson-planner": {
+            "title": "lessonPlanner",
+            "subtitle": "create Lessons & Activities",
+            "course": "course",
+            "total-exercises": "total exercises",
+            "messages": {
+                "info-deck-search": "If you cannot find the desired Deck, make sure it doesn't already belong to another Lesson.",
+                "info-unit-removal": "You must go to the edit page for a Unit to delete it.",
+                "info-lesson-removal": "Removing a Lesson from this list will unlink it from this Unit. You must go to its edit page to delete the Lesson altogether.",
+                "warning-incomplete": "This Unit is incomplete, as it contains fewer than 9 published Lessons."
+            }
+        }
+    },
+    "card-dealer": {
+        "scope": "scope",
+        "review-progress": {
+            "exposure": "Exposure",
+            "progress": "Progress",
+            "mastery": "Mastery",
+            "created": "Created",
+            "suspended": "Suspended",
+            "reviewed": "Reviewed",
+            "total": "Total",
+            "points": "Points",
+            "manage-cards": "manage cards",
+            "messages": {
+                "created": "{createdActiveCount} ({createdTotalCount}) out of {activeCount} ({totalCount}) available in the set ({percentCreated})",
+                "reviewed": "{reviewedCount} out of {activeCount} ({percentOfActive}), out of {potentialCount} available in the set ({percentOfTotal})",
+                "suspended": "{suspendedCount} out of {createdCount} created Cards out of {totalCount} total Terms in the set",
+                "not-student": "You must be a Student to enable SRS Review."
+            },
+            "tooltips": {
+                "exposure": "% of Cards you have reviewed in the set.",
+                "progress": "Mastery Score for the set, determined by adding up your Mastery Score for each Term."
+            }
+        },
+        "session-preview": {
+            "title": "today’s review",
+            "due": "due",
+            "new": "new",
+            "review": "review",
+            "start": "start",
+            "tooltips": {
+                "purge": "Purges all your New Cards."
+            }
+        },
+        "session-settings": {
+            "title": "settings",
+            "new-limit": "new limit",
+            "review-limit": "review limit",
+            "learning-steps": "learning steps",
+            "prompt-type": "prompt type"
+        },
+        "review-queue": {
+            "title": "review queue",
+            "today": "today",
+            "due": "Due"
+        },
+        "review-history": {
+            "title": "review history",
+            "cards": "Cards",
+            "owned": "Owned",
+            "new": "New",
+            "actions": "Actions",
+            "reviews": "Reviews",
+            "right": "Right",
+            "wrong": "Wrong",
+            "steps": "Steps",
+            "learning": "Learning",
+            "relearning": "Relearning",
+            "trends": "Trends"
+        }
     },
     "sound-booth": {
         "test": {
@@ -150,6 +1077,33 @@
         },
         "check": "check"
     },
+    "footer": {
+        "links": {
+            "about": {
+                "title": "About",
+                "faq": "FAQ",
+                "palweb": "PalWeb",
+                "spoken-arabic": "Spoken Arabic"
+            },
+            "donate": {
+                "title": "Donate",
+                "subscribe": "Subscribe"
+            }
+        }
+    },
+    "signin.message": "Welcome back, :user!",
+    "signin.message.head": "Hey!",
+    "signout.message": "See you soon, :user!",
+    "signout.message.head": "Bye!",
+    "created": "Created :thing!",
+    "updated": "Updated :thing!",
+    "deleted": "Deleted :thing!",
+    "pin.added": "Pinned :thing!",
+    "pin.removed": "Unpinned :thing!",
+    "deck.copied": "Created a copy of \":deck\"!",
+    "decks.term.added": "Added :term to \":deck\"!",
+    "decks.term.removed": "Removed :term from \":deck\"!",
+    "badges.get": "You got the \":badge\" Badge! Good job!",
     "wiki": "wiki",
     "lessons": "lessons",
     "texts": "texts",
@@ -157,27 +1111,6 @@
     "word-of-the-day": "word of the day",
     "random-term": "random term",
     "latest-terms": "latest terms",
-    "category": "category",
-    "verbs": "verbs",
-    "nouns": "nouns",
-    "determiners": "determiners",
-    "adjectives": "adjectives",
-    "adverbs": "adverbs",
-    "prepositions": "prepositions",
-    "conjunctions": "conjunctions",
-    "particles": "particles",
-    "numerals": "numerals",
-    "phrases": "phrases",
-    "verb": "verb",
-    "noun": "noun",
-    "determiner": "determiner",
-    "adjective": "adjective",
-    "adverb": "adverb",
-    "preposition": "preposition",
-    "conjunction": "conjunction",
-    "particle": "particle",
-    "numeral": "numeral",
-    "phrase": "phrase",
     "pronouns": "pronouns",
     "questions": "questions",
     "subtype": "subtype",
@@ -194,11 +1127,9 @@
     "new": "new",
     "edit": "edit",
     "info": "info",
-    "components": "components",
     "origin": "origin",
     "inherited": "inherited",
     "borrowed": "borrowed",
-    "pattern": "pattern",
     "variants": "variants",
     "spellings": "spellings",
     "root": "root",
@@ -212,7 +1143,6 @@
     "past": "past",
     "present": "present",
     "command": "command",
-    "dialect": "dialect",
     "dialects.change": "change dialect",
     "dialects.target": "target dialect",
     "dialects.general": "General Palestinian",
@@ -227,7 +1157,6 @@
     "palestinian.arabic": "Palestinian Arabic",
     "curriculum": "curriculum",
     "level": "level",
-    "unit": "unit",
     "know-this": "know this",
     "lesson": "lesson",
     "module": "module",
@@ -241,137 +1170,11 @@
     "back": "back",
     "next": "next",
     "go": "let's go",
-    "lessons.1": "the World",
-    "lessons.u1-l1": "in the World",
-    "lessons.u1-l2": "in the Class",
-    "lessons.u1-l3": "in the City",
-    "lessons.101": "Hello World!",
-    "lessons.101-1": "to Be",
-    "lessons.101-2": "Questions",
-    "lessons.101-3": "Greetings",
-    "lessons.102": "Jerusalem, Palestine",
-    "lessons.102-1": "the Article",
-    "lessons.102-2": "Cities",
-    "lessons.102-3": "Let’s Go!",
-    "lessons.103": "Isn’t it Hot?",
-    "lessons.103-1": "Not to Be",
-    "lessons.103-2": "the Weather",
-    "lessons.103-3": "Really?",
-    "lessons.104": "Gender Trouble",
-    "lessons.104-1": "Gender",
-    "lessons.104-2": "This & That",
-    "lessons.104-3": "Hey, You!",
-    "lessons.105": "Spilled the Tea",
-    "lessons.105-1": "there Is",
-    "lessons.105-2": "In & On",
-    "lessons.105-3": "May I?",
-    "lessons.106": "Free Tomorrow?",
-    "lessons.106-1": "Agreement I",
-    "lessons.106-2": "I’m Busy",
-    "lessons.106-3": "Don’t Worry",
-    "lessons.107": "Meet at Ghassan’s",
-    "lessons.107-1": "Participles I",
-    "lessons.107-2": "I’m Lost",
-    "lessons.107-3": "Sorry",
-    "lessons.108": "Living Arrangements",
-    "lessons.108-1": "Agreement II",
-    "lessons.108-2": "Which One?",
-    "lessons.108-3": "Me Too!",
-    "lessons.109": "Palestine Railways",
-    "lessons.109-1": "Participles II",
-    "lessons.109-2": "On My Way",
-    "lessons.109-3": "Maybe",
-    "lessons.2": "Your Life",
-    "lessons.u2-l1": "time for Work",
-    "lessons.u2-l2": "time for Fun",
-    "lessons.u2-l3": "time for Food",
-    "lessons.201": "Thank Allah it’s Friday",
-    "lessons.201-1": "Iḍāfa I",
-    "lessons.201-2": "On the Job",
-    "lessons.201-3": "By the Way",
-    "lessons.202": "it’s About Time",
-    "lessons.202-1": "Numbers I",
-    "lessons.202-2": "Telling Time",
-    "lessons.202-3": "it Is!",
-    "lessons.203": "Family Matters",
-    "lessons.203-1": "Personal Enclitics I",
-    "lessons.203-2": "the Family",
-    "lessons.203-3": "At the Doctor’s",
-    "lessons.204": "In My Feelings",
-    "lessons.204-1": "it Seems",
-    "lessons.204-2": "Feelings",
-    "lessons.204-3": "Could it Be?",
-    "lessons.205": "Save the Date",
-    "lessons.205-1": "Numbers II",
-    "lessons.205-2": "Save the Date",
-    "lessons.205-3": "So?",
-    "lessons.206": "Particular Interests",
-    "lessons.206-1": "Personal Enclitics II",
-    "lessons.206-2": "Hobbies",
-    "lessons.206-3": "At the Bookstore",
-    "lessons.207": "You Need Help",
-    "lessons.207-1": "to Want",
-    "lessons.207-2": "Birthdays",
-    "lessons.207-3": "Like This?",
-    "lessons.208": "Bon Appétit",
-    "lessons.208-1": "Counting I",
-    "lessons.208-2": "Grocery Haul",
-    "lessons.208-3": "Ordering Food",
-    "lessons.209": "Out of Town",
-    "lessons.209-1": "Quantities",
-    "lessons.209-2": "Travel Plans",
-    "lessons.209-3": "What’s in a Name?",
-    "lessons.3": "Wellbeing",
-    "lessons.u3-l1": "get Well",
-    "lessons.u3-l2": "get Dressed",
-    "lessons.u3-l3": "get Going",
-    "lessons.301": "No, Furthermore No",
-    "lessons.301-1": "Negation",
-    "lessons.301-2": "Nothing",
-    "lessons.301-3": "Too/Neither",
-    "lessons.302": "What’s the Difference?",
-    "lessons.302-1": "Comparatives",
-    "lessons.302-2": "?",
-    "lessons.302-3": "Anything",
-    "lessons.303": "No Pain, No Gain",
-    "lessons.303-1": "To Have I",
-    "lessons.303-2": "Health & Body",
-    "lessons.303-3": "What’s Wrong?",
-    "lessons.304": "Memory Lane",
-    "lessons.304-1": "it Was",
-    "lessons.304-2": "Childhood",
-    "lessons.304-3": "Speaking Of",
-    "lessons.305": "Let’s Get Some Shoes",
-    "lessons.305-1": "Superlatives",
-    "lessons.305-2": "the One With",
-    "lessons.305-3": "Buying Clothes",
-    "lessons.306": "In Stock",
-    "lessons.306-1": "to Have II",
-    "lessons.306-2": "Still",
-    "lessons.306-3": "at the Bookstore",
-    "lessons.307": "Gone Fishing",
-    "lessons.307-1": "They Were",
-    "lessons.307-2": "Same Thing",
-    "lessons.307-3": "Welcome Back",
-    "lessons.308": "Out of Many, One",
-    "lessons.308-1": "Inanimate Masses",
-    "lessons.308-2": "Colors",
-    "lessons.308-3": "Buying Clothes",
-    "lessons.309": "at Long Last",
-    "lessons.309-1": "to Have III",
-    "lessons.309-2": "Voilà",
-    "lessons.309-3": "Root Types",
     "activity.yes-no": "Answer the following yes-or-no questions.",
     "activity.true-false": "Indicate whether the following statements are true or false.",
     "activity.multiple-choice": "Choose the correct response to the following questions.",
     "activity.fill-in": "Complete the following sentences with the correct word.",
     "activity.complete-sentence": "Answer the following questions with a complete sentence.",
-    "signin": "sign in",
-    "signin.message": "Welcome back, :user!",
-    "signin.message.head": "Hey!",
-    "signout": "sign out",
-    "signout.message": "See you soon, :user!",
-    "signout.message.head": "Bye!",
     "signup": "sign up",
     "signup.prompt": "No account yet? Sign up!",
     "signup.already": "Got an account? Sign in!",
@@ -483,9 +1286,6 @@
     "unauthorized": "You can’t do that.",
     "unauthorized.foreign.deck": "Sneaky you. That's not your Deck!",
     "unauthorized.private.user": "This User has their Profile set to Private.",
-    "created": "Created :thing!",
-    "updated": "Updated :thing!",
-    "deleted": "Deleted :thing!",
     "published": "Published :thing!",
     "unpublished": "Reverted :thing to Draft!",
     "dictionary": "dictionary",
@@ -498,18 +1298,10 @@
     "sentences.new": "new sentence",
     "sentences.edit": "edit sentence",
     "deck-builder": "deck builder",
-    "deck.copied": "Created a copy of \":deck\"!",
     "decks.new": "new deck",
     "decks.edit": "edit deck",
     "decks.build": "build deck",
-    "decks.term.added": "Added :term to \":deck\"!",
-    "decks.term.removed": "Removed :term from \":deck\"!",
     "pin.add": "Pin",
     "pin.remove": "Unpin",
-    "pin.added": "Pinned :thing!",
-    "pin.removed": "Unpinned :thing!",
-    "badges.get": "You got the \":badge\" Badge! Good job!",
-    "footer.about": "About",
-    "footer.ajp": "What is AJP?",
-    "footer.subscribe": "Subscribe"
+    "dismiss": "Dismiss"
 }

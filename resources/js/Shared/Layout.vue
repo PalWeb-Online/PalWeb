@@ -7,12 +7,15 @@ import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {usePage} from "@inertiajs/vue3";
-import {onMounted, watch} from "vue";
+import {computed, onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import i18n from "../i18n.js";
 import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 defineProps({
     section: {
@@ -27,6 +30,22 @@ const NotificationStore = useNotificationStore();
 
 const page = usePage();
 const {browserOnline} = useConnectionStatus(Echo);
+
+const locale = computed(() => page.props.locale ?? 'en');
+const syncDocumentLocale = (newLocale) => {
+    document.documentElement.lang = newLocale;
+};
+
+watch(
+    locale,
+    (newLocale) => {
+        if (newLocale) {
+            i18n.global.locale.value = newLocale;
+            syncDocumentLocale(newLocale);
+        }
+    },
+    {immediate: true}
+);
 
 let lastBrowserOnlineState = browserOnline.value;
 let hasSeenInitialConnectionState = false;
@@ -61,14 +80,14 @@ watch(browserOnline, (isOnline) => {
 
     if (!isOnline) {
         NotificationStore.addNotification(
-            "You've gone offline. While offline, the site won't work as expected. Please wait until you're back online to continue using PalWeb.",
+            t('layout.notifications.offline'),
             'warning',
             5000
         );
         return;
     }
 
-    NotificationStore.addNotification("You're back online!", 'success', 3000);
+    NotificationStore.addNotification(t('layout.notifications.online'), 'success', 3000);
 }, {immediate: true});
 
 watch(() => page.props.flash.notification,

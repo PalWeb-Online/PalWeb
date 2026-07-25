@@ -49,6 +49,7 @@ defineProps({
     display: grid;
     align-items: center;
     row-gap: 1.6rem;
+    direction: ltr;
 
     @media (width >= 720px) {
         grid-template-columns: calc(9.6rem * 1.25) 1fr;
@@ -72,6 +73,7 @@ defineProps({
 
     .gloss-item-content {
         display: grid;
+        justify-items: left;
         gap: 0.8rem;
         padding-inline: 1.6rem;
 

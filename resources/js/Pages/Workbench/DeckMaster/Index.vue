@@ -95,9 +95,11 @@ defineOptions({
 <template>
     <Head title="Deck Master"/>
     <div id="app-head">
-        <h1>Deck Master</h1>
-        <div @click="toggleMode" id="app-mode-toggle" :class="mode">
-            <div class="app-mode-toggle-slider" :class="{active: mode === 'study'}">{{ mode }}</div>
+        <h1>{{ $t('pages.deck-master.title') }}</h1>
+        <div @click="toggleMode" class="app-mode-toggle" :class="mode">
+            <div class="app-mode-toggle-slider" :class="{active: mode === 'study'}">
+                {{ $t('pages.deck-master.' + mode) }}
+            </div>
         </div>
     </div>
 
@@ -122,10 +124,10 @@ defineOptions({
                 <div v-else-if="!isLoading && !decks.length" class="deck-item-grid">
                     <AppTip>
                         <p v-if="mode === 'build'">
-                            It looks like you haven't created any Decks yet. Click <b>New</b> to get started!
+                            {{ $t('pages.deck-master.messages.no-created-decks') }}
                         </p>
                         <p v-if="mode === 'study'">
-                            It looks like you haven't pinned any Decks yet. Watch this space.
+                            {{ $t('pages.deck-master.messages.no-pinned-decks') }}
                         </p>
                     </AppTip>
                 </div>
@@ -143,7 +145,7 @@ defineOptions({
             <ScoreStats :model="DeckStudyStore.data.deck"/>
             <div v-if="DeckStudyStore.data.deck" class="window-footer">
                 <button @click="toStudy">
-                    Select Deck
+                    {{ $t('pages.deck-master.select-deck') }}
                 </button>
             </div>
         </QuizzerWindow>

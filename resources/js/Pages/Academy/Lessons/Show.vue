@@ -45,23 +45,21 @@ watch(() => props.lessonId, async () => {
     <Head :title="`Academy: Lesson ${lesson?.global_position}`"/>
 
     <LoadingSpinner v-if="isLoadingLesson"/>
-    <div v-else-if="lessonNotFound" id="app-body">
-        <AppTip>
-            <p>Sorry, but the requested Lesson could not be found.</p>
-        </AppTip>
-    </div>
+    <AppTip v-else-if="lessonNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.lesson')}) }}</p>
+    </AppTip>
     <template v-else-if="lesson">
         <div id="lesson-nav">
             <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
             <div class="lesson-data-container">
                 <div class="lesson-data-head">
-                    <div class="featured-title s">Lesson {{ lesson.global_position }}:</div>
+                    <div class="featured-title s">{{ $t('components.lesson.number', {number: lesson.global_position}) }}:</div>
                     <div class="lesson-head-title">{{ lesson.title }}</div>
                 </div>
                 <div class="lesson-data-body">
-                    <div>{{ lesson.description ?? '(No description has been written for the Lesson yet.)' }}</div>
+                    <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
                     <div v-if="lesson.document" class="lesson-skill-summary">
-                        <div style="font-weight: 700">In this Lesson, you'll learn to:</div>
+                        <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
                         <ul style="margin-block: 1.6rem">
                             <li v-for="skill in lesson.document.skills">
                                 {{ skill.description }}
@@ -75,7 +73,7 @@ watch(() => props.lessonId, async () => {
                 <div class="lesson-stage-wrapper" @click="currentTab = 'deck'"
                      :class="{active: currentTab === 'deck'}">
                     <div class="lesson-stage-index">1</div>
-                    <div class="featured-title m">deck</div>
+                    <div class="featured-title m">{{ $t('components.deck.title') }}</div>
                 </div>
                 <div class="lesson-stage-wrapper" @click="currentTab = 'skills'"
                      :class="{active: currentTab === 'skills', disabled: lesson.progress.stage < 2}">
@@ -84,7 +82,7 @@ watch(() => props.lessonId, async () => {
                     </div>
                     <template v-else>
                         <div class="lesson-stage-index">2</div>
-                        <div class="featured-title m">skills</div>
+                        <div class="featured-title m">{{ $t('components.lesson.sections.skills') }}</div>
                     </template>
                 </div>
                 <div class="lesson-stage-wrapper" @click="currentTab = 'dialog'"
@@ -94,7 +92,7 @@ watch(() => props.lessonId, async () => {
                     </div>
                     <template v-else>
                         <div class="lesson-stage-index">3</div>
-                        <div class="featured-title m">dialog</div>
+                        <div class="featured-title m">{{ $t('components.dialog.title') }}</div>
                     </template>
                 </div>
             </div>
@@ -105,24 +103,24 @@ watch(() => props.lessonId, async () => {
                 <DeckContainer :model="lesson.deck"/>
             </template>
             <AppTip v-else>
-                <p>No Deck available for this Lesson yet.</p>
+                <p>{{ $t('pages.lessons.show.missing-deck') }}</p>
             </AppTip>
         </div>
         <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
             <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill"/>
 
             <template v-if="lesson.activity">
-                <div class="featured-title l" style="margin-block: 3.2rem">ready to go?</div>
+                <div class="featured-title l" style="margin-block: 3.2rem">{{ $t('pages.lessons.show.ready') }}</div>
                 <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
             </template>
             <AppTip v-else>
-                <p>No Activity available for this Lesson yet.</p>
+                <p>{{ $t('pages.lessons.show.missing-activity') }}</p>
             </AppTip>
         </div>
         <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
             <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
             <AppTip v-else>
-                <p>No Dialog available for this Lesson yet.</p>
+                <p>{{ $t('pages.lessons.show.missing-dialog') }}</p>
             </AppTip>
         </div>
     </template>

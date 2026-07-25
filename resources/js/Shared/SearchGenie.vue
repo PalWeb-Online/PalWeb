@@ -7,6 +7,9 @@ import AppTooltip from "../components/AppTooltip.vue";
 import SearchFilters from "./SearchFilters.vue";
 import PopupWindow from "../components/Modals/PopupWindow.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const SearchStore = useSearchStore();
 const emit = defineEmits(['close']);
@@ -24,10 +27,10 @@ function handleMouseMove(event) {
 
     switch (SearchStore.data.action) {
         case "search":
-            message = "Navigate to this item's page.";
+            message = t('search.genie.tooltips.navigate');
             break;
         case "insert":
-            message = "Add this item to the set.";
+            message = t('search.genie.tooltips.insert');
             break;
     }
 
@@ -130,9 +133,11 @@ watch(() => SearchStore.data.results, () => {
     <div class="window-container modal-container">
         <div class="window-section-head">
             <h1>{{
-                    SearchStore.data.action === 'insert' ? 'Insert ' + SearchStore.data.activeModel : 'Search Genie'
+                    SearchStore.data.action === 'insert'
+                        ? $t('search.genie.insert-title', { model: $t('models.' + SearchStore.data.activeModel) })
+                        : $t('search.genie.title')
                 }}</h1>
-            <PopupWindow title="Search Genie">
+            <PopupWindow :title="$t('search.genie.title')">
                 <p>Welcome to the <b>Search Genie</b>!</p>
                 <p>The <b>Search Genie</b> will match your search with Terms, Sentences & Decks on PalWeb. It does
                     so by matching your search with a variety of attributes on the items you are searching for.</p>
@@ -168,7 +173,7 @@ watch(() => SearchStore.data.results, () => {
                     }"
                 @click="!tab.disabled && setActiveModel(model)"
             >
-                {{ tab.label }}
+                {{ $t('models.' + model) }}
             </button>
         </div>
 
@@ -200,7 +205,7 @@ watch(() => SearchStore.data.results, () => {
                 </div>
             </template>
             <div v-else-if="!SearchStore.isLoading" class="sg-empty">
-                Nothing yet.
+                {{ $t('search.genie.empty') }}
             </div>
             <LoadingSpinner v-show="SearchStore.isLoading"/>
         </div>
@@ -217,7 +222,7 @@ watch(() => SearchStore.data.results, () => {
                     singular: SearchStore.data.filters.singular,
                     plural: SearchStore.data.filters.plural
                 })">
-                See All Results
+                {{ $t('search.genie.see-all-results') }}
             </Link>
         </div>
         <div class="sg-all-results"
@@ -227,7 +232,7 @@ watch(() => SearchStore.data.results, () => {
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
                 })">
-                See All Results
+                {{ $t('search.genie.see-all-results') }}
             </Link>
         </div>
         <div class="sg-all-results"
@@ -237,7 +242,7 @@ watch(() => SearchStore.data.results, () => {
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
                 })">
-                See All Results
+                {{ $t('search.genie.see-all-results') }}
             </Link>
         </div>
 

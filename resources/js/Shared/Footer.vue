@@ -25,18 +25,18 @@ import AppLogo from "./AppLogo.vue";
 
             <div class="footer-logo-wrapper">
                 <AppLogo/>
-                <div>the Web of Palestinian Arabic!</div>
+                <div>{{ $t('meta.app.subtitle') }}</div>
             </div>
             <div class="footer-links-wrapper">
                 <div class="footer-links">
-                    <div>About</div>
-                    <Link :href="route('wiki.show', 'faq')">FAQ</Link>
-                    <Link :href="route('wiki.show', 'about')">PalWeb</Link>
-                    <Link :href="route('wiki.show', 'ajp')">Spoken Arabic</Link>
+                    <div>{{ $t('footer.links.about.title') }}</div>
+                    <Link :href="route('wiki.show', 'faq')">{{ $t('footer.links.about.faq') }}</Link>
+                    <Link :href="route('wiki.show', 'about')">{{ $t('footer.links.about.palweb') }}</Link>
+                    <Link :href="route('wiki.show', 'ajp')">{{ $t('footer.links.about.spoken-arabic') }}</Link>
                 </div>
                 <div class="footer-links">
-                    <div>Donate</div>
-                    <Link :href="route('subscription.index')">Subscribe</Link>
+                    <div>{{ $t('footer.links.donate.title') }}</div>
+                    <Link :href="route('subscription.index')">{{ $t('footer.links.donate.subscribe') }}</Link>
                     <a href="https://www.patreon.com/palweb" target="_blank">Patreon</a>
                     <a href="https://www.ko-fi.com/palweb" target="_blank">Ko-fi</a>
                 </div>
@@ -182,7 +182,6 @@ import AppLogo from "./AppLogo.vue";
             margin-block-start: 6.4rem;
 
             .footer-links {
-                justify-content: start;
                 justify-items: start;
             }
         }

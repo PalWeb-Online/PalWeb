@@ -35,7 +35,7 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
                 <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
             <div class="window-section-head">
-                <h1>deck</h1>
+                <h1>{{ $t('components.deck.title') }}</h1>
                 <PinButton modelType="deck" :model="deck"/>
                 <DeckActions :model="deck"/>
             </div>
@@ -56,16 +56,18 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
                             {{ deck.description }}
                         </template>
                         <template v-else>
-                            <i>Sadly, {{ deck.author.name }} hasn't told us anything about this Deck yet.</i>
+                            <i>{{ $t('components.deck.description-placeholder', {author: deck.author.name}) }}</i>
                         </template>
                     </div>
-                    <div class="user-comment-data">Created by {{ deck.author.name }} on {{ deck.created_at }}.</div>
+                    <div class="user-comment-data">
+                        {{ $t('components.deck.created-by', {author: deck.author.name, date: deck.created_at}) }}
+                    </div>
                 </template>
             </UserItem>
 
             <WindowSection :visible="false">
                 <template #title>
-                    <h2>stats</h2>
+                    <h2>{{ $t('components.common.sections.stats') }}</h2>
                 </template>
                 <template #content>
                     <ReviewProgress :cards="deck.terms.map(t => t.card).filter(c => c !== null)"
@@ -75,11 +77,11 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
             </WindowSection>
 
             <div class="window-section-head">
-                <h2>terms</h2>
+                <h2>{{ $t('components.common.sections.terms') }}</h2>
             </div>
             <LoadingSpinner v-if="isLoadingTerms"/>
             <AppTip v-else-if="loadTermsError">
-                <p>Unable to load Deck Terms.</p>
+                <p>{{ $t('components.deck.terms.load-error') }}</p>
             </AppTip>
             <template v-else-if="deck.terms.length > 0">
                 <div class="model-list index-list">
@@ -89,7 +91,7 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
                               :glossId="term.deckPivot.gloss_id"
                     />
                 </div>
-                <div class="terms-count">{{ deck.terms.length }} Terms</div>
+                <div class="terms-count">{{ $t('components.common.counts.terms', {count: deck.terms.length}) }}</div>
             </template>
             <template v-else>
                 <AppTip>

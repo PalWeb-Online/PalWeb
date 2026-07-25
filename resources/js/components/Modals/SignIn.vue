@@ -46,20 +46,23 @@ const sendResetLink = () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1 v-if="!forgotPassword">sign in</h1>
+            <h1 v-if="!forgotPassword">{{ $t('modals.sign-in.title') }}</h1>
             <template v-else>
-                <h1>forgot password</h1>
+                <h1>{{ $t('modals.forgot-password.title') }}</h1>
                 <button @click="forgotPassword = false" class="material-symbols-rounded">undo</button>
             </template>
         </div>
         <template v-if="!forgotPassword">
             <AppTip>
-                <p>New to PalWeb? <button @click="emit('signUp')">Sign Up!</button></p>
+                <p>
+                    {{ $t('modals.sign-in.sign-up-prompt') }}
+                    <button @click="emit('signUp')">{{ $t('modals.sign-up.action') }}</button>
+                </p>
             </AppTip>
             <form @submit.prevent="signIn">
                 <div class="modal-container-body form-body">
                     <div class="field-item">
-                        <label>Email</label>
+                        <label>{{ $t('user.fields.email') }}</label>
                         <div class="field-input">
                             <input type="text" v-model="signInForm.email" placeholder="free@palestine.com" required>
                         </div>
@@ -67,30 +70,34 @@ const sendResetLink = () => {
                     </div>
                     <div class="field-item">
                         <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <label>Password</label>
-                            <button type="button" @click="forgotPassword = true">Forgot?</button>
+                            <label>{{ $t('user.fields.password') }}</label>
+                            <button type="button" @click="forgotPassword = true">
+                                {{ $t('modals.forgot-password.action') }}
+                            </button>
                         </div>
                         <div class="field-input">
                             <input type="password" v-model="signInForm.password" placeholder="Lenin1917!" required>
                         </div>
                         <div v-if="signInForm.errors.password" v-text="signInForm.errors.password" class="field-error"/>
                     </div>
-                    <ToggleSingle v-model="signInForm.remember" label="Remember Me"/>
+                    <ToggleSingle v-model="signInForm.remember" :label="$t('modals.sign-in.remember-me')"/>
                 </div>
                 <div class="window-footer">
-                    <button type="submit" :disabled="signInForm.processing || !isValidRequest">Sign In</button>
-                    <a :href="route('auth.discord')">Use Discord</a>
+                    <button type="submit" :disabled="signInForm.processing || !isValidRequest">
+                        {{ $t('modals.sign-in.submit') }}
+                    </button>
+                    <a :href="route('auth.discord')">{{ $t('modals.sign-in.discord') }}</a>
                 </div>
             </form>
         </template>
         <template v-else>
             <AppTip>
-                <p>No password? No problem. Write down your email address & I'll send you a reset link.</p>
+                <p>{{ $t('modals.forgot-password.prompt') }}</p>
             </AppTip>
             <form @submit.prevent="sendResetLink">
                 <div class="modal-container-body form-body">
                     <div class="field-item">
-                        <label>Email</label>
+                        <label>{{ $t('user.fields.email') }}</label>
                         <div class="field-input">
                             <input type="text" v-model="resetLinkForm.email" placeholder="free@palestine.com" required>
                         </div>
@@ -99,7 +106,7 @@ const sendResetLink = () => {
                 </div>
                 <div class="window-footer">
                     <button type="submit" :disabled="resetLinkForm.processing || !isValidRequest">
-                        Send Link
+                        {{ $t('modals.forgot-password.submit') }}
                     </button>
                 </div>
             </form>

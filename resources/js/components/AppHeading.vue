@@ -38,7 +38,7 @@
 .heading-popout {
     position: absolute;
     top: -0.66em;
-    left: 0;
+    inset-inline-start: 0;
     width: 1em;
     height: 1em;
     z-index: -1;

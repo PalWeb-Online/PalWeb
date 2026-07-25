@@ -9,8 +9,8 @@ const props = defineProps({
     <div class="user-name">
         <div class="user-name-ar">{{ speaker && user.private ? 'مجهول' : user.ar_name }}</div>
         <div class="user-name-en">
-            <div>{{ speaker && user.private ? 'Speaker #' + speaker.id : user.name }}</div>
-            <div>{{ speaker && user.private ? '[anonymous]' : '@' + user.username }}</div>
+            <div>{{ speaker && user.private ? $t('speaker.anonymous-number', {id: speaker.id}) : user.name }}</div>
+            <div>{{ speaker && user.private ? $t('speaker.anonymous-bracketed') : '@' + user.username }}</div>
         </div>
     </div>
 </template>
@@ -24,6 +24,7 @@ const props = defineProps({
     font-size: 2.4rem;
     line-break: anywhere;
     color: var(--color-dark-primary);
+    direction: ltr;
 
     * {
         text-box: trim-both cap alphabetic;

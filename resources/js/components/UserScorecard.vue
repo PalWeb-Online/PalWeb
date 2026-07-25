@@ -11,17 +11,17 @@ defineProps({
 <template>
     <div class="user-scorecard">
         <Link class="user-avatar" :href="route('users.show', user.username)">
-            <img alt="Avatar"
+            <img :alt="$t('components.common.alt.avatar')"
                  :src="user.avatar_url"/>
         </Link>
         <UserNametag :user="user"/>
         <div v-if="scores" class="user-scorecard-body">
             <div class="user-creations">
-                <div>decks</div>
+                <div>{{ $t('models.decks') }}</div>
                 <div>{{ user.decks_count }}</div>
             </div>
             <div class="user-creations">
-                <div>audios</div>
+                <div>{{ $t('models.audios') }}</div>
                 <div>{{ user.audios_count }}</div>
             </div>
         </div>

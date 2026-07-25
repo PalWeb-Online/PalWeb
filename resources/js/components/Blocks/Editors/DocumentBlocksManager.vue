@@ -110,7 +110,7 @@ const handleFlattenContainer = (containerId) => {
             <div class="add-button"
                  @click="addBlock(documentBlocks, { type: blockType, atStart: true })">+
             </div>
-            <div>{{ blockType }}</div>
+            <div>{{ $t(`blocks.${blockType}`) }}</div>
         </div>
     </div>
 
@@ -124,10 +124,10 @@ const handleFlattenContainer = (containerId) => {
                 <div class="featured-title s" style="flex-grow: 1">
                     <span>{{ bi + 1 }}: </span>
                     <span style="color: var(--color-dark-primary)">
-                        {{ block.type }}
+                        {{ $t(`blocks.${block.type}`) }}
                     </span>
                     <template v-if="block.type === 'exercises'">
-                        {{ block.exerciseType ? ': ' + block.exerciseType : '' }}
+                        {{ block.exerciseType ? ': ' + $t(`exercises.types.${block.exerciseType}`) : '' }}
                         <span style="color: var(--color-medium-secondary)">
                             {{ getExerciseCount(block) }}
                         </span>
@@ -165,18 +165,18 @@ const handleFlattenContainer = (containerId) => {
             />
         </div>
         <div class="block-add-buttons">
-            <span>Insert --></span>
+            <span>{{ $t('forms.actions.insert') }}</span>
             <div v-for="blockType in resolvedBlockTypes">
                 <div class="add-button"
                      @click="addBlock(documentBlocks, { afterBlockId: block.id, type: blockType })">+
                 </div>
-                <div>{{ blockType }}</div>
+                <div>{{ $t(`blocks.${blockType}`) }}</div>
             </div>
         </div>
     </div>
 
     <div v-if="!isNested && documentBlocks.some(block => block.type === 'exercises')" class="featured-title s" style="margin-block-start: 1rem">
-        Total Exercises:
+        {{ $t('pages.lesson-planner.total-exercises') }}:
         <span style="color: var(--color-dark-primary)">
             {{ totalExerciseCount }}
         </span>

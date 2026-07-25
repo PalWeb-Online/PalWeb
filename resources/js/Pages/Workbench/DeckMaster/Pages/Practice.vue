@@ -96,7 +96,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
 <template>
     <QuizzerWindow>
         <div class="window-section-head">
-            <h2>Options</h2>
+            <h2>{{ $t('components.common.sections.options') }}</h2>
             <PopupWindow title="Deck Master (Practice)">
                 <div class="h1">Options</div>
                 <ul>
@@ -126,17 +126,20 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
             </PopupWindow>
         </div>
         <div class="settings-wrapper">
-            <ToggleDouble v-model="flipDefault" label="Initial Face" option-a="Term" option-b="Gloss"/>
-            <ToggleDouble v-model="flipDefaultInflections" label="Inflections" option-a="Back"
-                          option-b="Front"/>
-            <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
-            <ToggleSingle v-model="showTerm" label="Show Term (Back)"/>
-            <AppButton @click="shuffleCards" label="shuffle"/>
-            <AppButton @click="resetCards" label="reset"/>
+            <ToggleDouble v-model="flipDefault" :label="$t('pages.deck-master.options.initial-face')"
+                          :option-a="$t('actions.models.term')" :option-b="$t('actions.models.gloss')"
+            />
+            <ToggleDouble v-model="flipDefaultInflections" :label="$t('models.inflections')"
+                          :option-a="$t('pages.deck-master.options.back')" :option-b="$t('pages.deck-master.options.front')"
+            />
+            <ToggleSingle v-model="showTranslit" :label="$t('components.common.options.show-transcription')"/>
+            <ToggleSingle v-model="showTerm" :label="$t('pages.deck-master.options.show-term')"/>
+            <AppButton @click="shuffleCards" :label="$t('components.common.options.shuffle')"/>
+            <AppButton @click="resetCards" :label="$t('components.common.options.reset')"/>
         </div>
         <WindowSection :visible="false">
             <template #title>
-                <h2>term</h2>
+                <h2>{{ $t('actions.models.term') }}</h2>
             </template>
             <template #content>
                 <div class="model-list index-list">
@@ -171,7 +174,9 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
         </template>
         <template #addons>
             <Pagination/>
-            <div class="featured-title s">{{ currentSlideIndex + 1 }} of {{ cards.length }}</div>
+            <div class="featured-title s">
+                {{ $t('pages.deck-master.card-index', {index: currentSlideIndex + 1, total: cards.length}) }}
+            </div>
         </template>
     </Carousel>
     <LoadingSpinner v-else/>

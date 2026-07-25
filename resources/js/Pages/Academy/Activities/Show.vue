@@ -36,12 +36,11 @@ watch(() => props.activityId, async () => {
 
 <template>
     <Head title="Academy: Activities"/>
+
     <LoadingSpinner v-if="isLoadingActivity"/>
-    <template v-else-if="activityNotFound">
-        <AppTip>
-            <p>Sorry, but the requested Activity could not be found.</p>
-        </AppTip>
-    </template>
+    <AppTip v-else-if="activityNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.activity')}) }}</p>
+    </AppTip>
     <div v-else-if="activity" id="app-body">
         <ActivityContainer :model="activity"/>
     </div>

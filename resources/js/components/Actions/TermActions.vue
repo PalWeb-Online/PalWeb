@@ -17,17 +17,17 @@ const props = defineProps({
     <ContextActions v-slot="{ closeMenu }">
         <Link v-if="$page.component !== 'Library/Terms/Show'"
               :href="route('terms.show', model.slug)" role="menuitem" tabindex="-1">
-            View Term
+            {{ $t('actions.common.view', { model: $t('actions.models.term') }) }}
         </Link>
         <Link v-if="model.root" :href="route('roots.show', model.root.id)" role="menuitem" tabindex="-1">
-            View Root
+            {{ $t('actions.common.view', { model: $t('actions.models.root') }) }}
         </Link>
         <template v-if="UserStore.isAdmin">
             <Link :href="route('word-logger.term', model.id)" role="menuitem" tabindex="-1">
-                Edit Term
+                {{ $t('actions.common.edit', { model: $t('actions.models.term') }) }}
             </Link>
             <button @click="deleteTerm(model)" role="menuitem" tabindex="-1">
-                Delete Term
+                {{ $t('actions.common.delete', { model: $t('actions.models.term') }) }}
             </button>
         </template>
 

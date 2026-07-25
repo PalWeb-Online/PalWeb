@@ -25,7 +25,7 @@ const DeckStudyStore = useDeckStudyStore();
             </template>
         </div>
         <div class="window-section-head">
-            <h1>deck</h1>
+            <h1>{{ $t('components.deck.title') }}</h1>
             <template v-if="DeckStudyStore.data.deck">
                 <PinButton modelType="deck" :model="DeckStudyStore.data.deck"/>
                 <DeckActions :model="DeckStudyStore.data.deck"/>

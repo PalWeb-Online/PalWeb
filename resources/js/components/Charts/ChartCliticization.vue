@@ -32,7 +32,7 @@ const genitiveResult = (inflection) => {
 
 <template>
     <div class="window-section-head">
-        <h2>cliticization</h2>
+        <h2>{{ $t('charts.cliticization.title') }}</h2>
     </div>
     <div class="inflection-carousel">
         <div v-for="(inflection, index) in inflections" v-show="activeIndex === index" class="carousel-item">
@@ -43,7 +43,7 @@ const genitiveResult = (inflection) => {
                     arrow_back
                 </button>
                 <h3>
-                    Variant {{ index + 1 }}
+                    {{ $t('charts.variant', { number: index + 1 }) }}
                 </h3>
                 <button @click="activeIndex = (activeIndex < inflections.length - 1) ? activeIndex + 1 : 0"
                         class="material-symbols-rounded"

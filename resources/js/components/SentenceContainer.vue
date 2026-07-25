@@ -26,7 +26,7 @@ const {sentence, isLoading} = useSentence(props);
                 </Link>
             </div>
             <div class="window-section-head">
-                <h1>sentence</h1>
+                <h1>{{ $t('components.sentence.title') }}</h1>
                 <PinButton modelType="sentence" :model="sentence"/>
                 <SentenceActions :model="sentence"/>
             </div>
@@ -34,11 +34,11 @@ const {sentence, isLoading} = useSentence(props);
                 <div v-if="sentence.dialog" class="sentence-dialog-data">
                     <Link :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
                           target="_blank">
-                        <div>dialog</div>
+                        <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ sentence.dialog.title }}</div>
                     </Link>
                     <div>
-                        <div>speaker</div>
+                        <div>{{ $t('components.sentence.speaker') }}</div>
                         <div>{{ sentence.speaker }}</div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@ const {sentence, isLoading} = useSentence(props);
                 </div>
             </div>
             <div class="window-section-head">
-                <h2>terms</h2>
+                <h2>{{ $t('components.common.sections.terms') }}</h2>
             </div>
             <div class="model-list index-list">
                 <TermItem v-for="term in sentence.terms.filter(term => term.id)"
@@ -79,7 +79,9 @@ const {sentence, isLoading} = useSentence(props);
                           :glossId="term.sentencePivot.gloss_id"
                 />
             </div>
-            <div class="terms-count">{{ sentence.terms.filter(term => term.id).length }} Terms</div>
+            <div class="terms-count">
+                {{ $t('components.common.counts.terms', {count: sentence.terms.filter(term => term.id).length}) }}
+            </div>
         </div>
     </template>
 </template>

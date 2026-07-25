@@ -6,6 +6,9 @@ import {useUserStore} from "../../../../stores/UserStore.js";
 import WindowSection from "../../../../components/WindowSection.vue";
 import ToggleMulti from "../../../../components/ToggleMulti.vue";
 import AppTip from "../../../../components/AppTip.vue";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const NotificationStore = useNotificationStore();
 const UserStore = useUserStore();
@@ -30,7 +33,7 @@ const saveSettings = async () => {
 
     if (response.data.success) {
         UserStore.user.preferences.srs = response.data.preferences.srs;
-        NotificationStore.addNotification('Preferences have been updated!', 'success')
+        NotificationStore.addNotification(t('user.notifications.preferences-saved'), 'success')
     }
 }
 </script>
@@ -38,31 +41,31 @@ const saveSettings = async () => {
 <template>
     <WindowSection :visible="false">
         <template #title>
-            <h1>settings</h1>
+            <h1>{{ $t('card-dealer.session-settings.title') }}</h1>
         </template>
         <template #content>
             <section class="session-settings">
                 <div class="settings-wrapper" style="background: white">
                     <RangeSlider
                         v-model="settings.new_limit"
-                        label="New Limit"
+                        :label="$t('card-dealer.session-settings.new-limit')"
                         min="0" max="50"
                         @change="saveSettings"
                     />
                     <RangeSlider
                         v-model="settings.review_limit"
-                        label="Review Limit"
+                        :label="$t('card-dealer.session-settings.review-limit')"
                         min="25" max="300"
                         @change="saveSettings"
                     />
                     <RangeSlider
                         v-model="settings.learning_steps"
-                        label="Learning Steps"
+                        :label="$t('card-dealer.session-settings.learning-steps')"
                         min="1" max="5"
                         @change="saveSettings"
                     />
                     <ToggleMulti v-model="settings.prompt_type"
-                                 label="Prompt Type"
+                                 :label="$t('card-dealer.session-settings.prompt-type')"
                                  :options="['term', 'gloss', 'audio']"
                                  @change="saveSettings"
                     />

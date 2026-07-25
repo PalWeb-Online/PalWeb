@@ -88,7 +88,7 @@ watch(() => props.sentenceId, async () => {
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="sentenceNotFound">
             <AppTip>
-                <p>Sorry, the requested Sentence could not be found.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.sentence')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('speech-maker.index')">
                 Back to Speech Maker
@@ -119,16 +119,21 @@ watch(() => props.sentenceId, async () => {
                 </button>
             </div>
             <AppTip>
-                <p>The Sentence is currently {{ sentence?.id ? 'Published' : 'a Draft' }}.</p>
+                <p>{{
+                        $t('forms.messages.current-status', {
+                            model: $t('actions.models.sentence'),
+                            status: sentence?.id ? $t('forms.status.published') : $t('forms.status.draft')
+                        })
+                    }}</p>
                 <template v-if="Object.keys(validationErrors).length">
-                    <p style="font-weight: 700">The Sentence cannot be saved in the current state.</p>
+                    <p style="font-weight: 700">{{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.sentence')}) }}</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>
                 </template>
             </AppTip>
             <div class="window-section-head">
-                <h1>sentence</h1>
+                <h1>{{ $t('components.sentence.title') }}</h1>
                 <PinButton v-if="sentence?.id" modelType="sentence" :model="sentence"/>
                 <SentenceActions v-if="sentence?.id" :model="sentence"/>
             </div>
@@ -140,11 +145,11 @@ watch(() => props.sentenceId, async () => {
             <div class="model-item-container sentence-item-container l">
                 <div v-if="form.dialog?.id" class="sentence-dialog-data">
                     <Link :href="route('speech-maker.dialog', form.dialog.id)" target="_blank">
-                        <div>dialog</div>
+                        <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ form.dialog.title }}</div>
                     </Link>
                     <div>
-                        <div>speaker</div>
+                        <div>{{ $t('components.sentence.speaker') }}</div>
                         <input v-model="form.speaker"/>
                     </div>
                 </div>
@@ -166,7 +171,7 @@ watch(() => props.sentenceId, async () => {
             </div>
 
             <div class="window-section-head">
-                <h2>terms</h2>
+                <h2>{{ $t('components.common.sections.terms') }}</h2>
             </div>
             <AppTip v-if="form.dialog?.id">
                 <p>Since this Sentence appears in a Dialog, you may select the Terms that should be toggled off if the
@@ -210,14 +215,14 @@ watch(() => props.sentenceId, async () => {
                     </div>
                 </template>
             </draggable>
-            <div class="terms-count">{{ form.terms.filter(term => term.id).length }} Terms</div>
+            <div class="terms-count">{{ $t('components.common.counts.terms', {count: form.terms.filter(term => term.id).length }) }}</div>
         </div>
     </div>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
             v-if="showAlert"
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

@@ -13,17 +13,19 @@ const props = defineProps({
 });
 
 const {term, isLoading} = useTerm(props);
+
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 </script>
 
 <template>
     <template v-if="! isLoading">
         <div class="window-section-head">
-            <h2>featured</h2>
+            <h2>{{ $t('components.term.featured') }}</h2>
             <PinButton modelType="term" :model="term"/>
             <TermActions :model="term"/>
         </div>
         <section class="featured-term">
-            <img alt="Term Image" :src="term.image">
+            <img :alt="$t('components.common.alt.term-image')" :src="term.image">
             <div>
                 <div class="term-container-head">
                     <div class="term-headword">
@@ -31,16 +33,15 @@ const {term, isLoading} = useTerm(props);
                             <div class="term-headword-arb">{{ term.term }}</div>
                             <div class="term-headword-eng">({{ term.translit }})</div>
                         </div>
-
-                        <div class="term-headword-data">{{ term.category }}.
+                        <div class="term-headword-data">{{ $t('term.category.' + term.category) }}.
                             <template v-for="attribute in term.attributes" :key="attribute.id">
                                 <template v-if="['idiom', 'clitic'].includes(attribute.attribute)">
                                 <span style="font-weight: 400; font-style: italic">
-                                    {{ attribute.attribute }}.
+                                    {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
                                 </span>
                                 </template>
                                 <template v-else>
-                                    <span style="font-weight: 400">{{ attribute.attribute }}.</span>
+                                    <span style="font-weight: 400">{{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.</span>
                                 </template>
                             </template>
                         </div>

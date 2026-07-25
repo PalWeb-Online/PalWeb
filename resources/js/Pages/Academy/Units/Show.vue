@@ -39,11 +39,9 @@ watch(() => props.unitId, async () => {
     <Head :title="`Academy: Unit ${unit?.position}`"/>
 
     <LoadingSpinner v-if="isLoadingUnit"/>
-    <template v-else-if="unitNotFound">
-        <AppTip>
-            <p>Sorry, but the requested Unit could not be found.</p>
-        </AppTip>
-    </template>
+    <AppTip v-else-if="unitNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.unit')}) }}</p>
+    </AppTip>
     <template v-else-if="unit">
         <div id="lesson-nav">
             <UnitNav :unit="unit"/>

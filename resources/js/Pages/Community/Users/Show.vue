@@ -57,7 +57,7 @@ defineOptions({
                 <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
             </div>
             <div class="window-section-head">
-                <h1>profile</h1>
+                <h1>{{ $t('user.profile')}}</h1>
                 <UserActions v-if="UserStore.isAdmin" :model="user"/>
                 <Link v-else-if="user.id === UserStore.user.id"
                       :href="route('users.edit', user.username)" class="material-symbols-rounded">edit
@@ -81,7 +81,7 @@ defineOptions({
                         <div class="user-comment">
                             <div class="user-comment-title">
                                 <img class="popout" src="/img/star.svg" alt="Star"/>
-                                <span>teacher bio</span>
+                                <span>{{ $t('teacher.bio') }}</span>
                             </div>
                             <AppTip v-if="!isStudent && (user.id === UserStore.user.id || UserStore.isAdmin)">
                                 <p>You don't have a Student subscription, so your Teacher profile will not be visible to
@@ -92,8 +92,7 @@ defineOptions({
                                     {{ user.teacher.bio }}
                                 </template>
                                 <template v-else>
-                                    <i>Sadly, {{ user.name }} hasn't told us anything about themselves as a Teacher
-                                        yet. They should probably fix that soon.</i>
+                                    <i>{{ $t('teacher.bio-placeholder', {user: user.name}) }}</i>
                                 </template>
                             </div>
                         </div>
@@ -103,20 +102,20 @@ defineOptions({
                       :href="route('users.edit', user.username)"
                       style="margin-block: 3.2rem; justify-self: center"
                 >
-                    Create Teacher Profile
+                    {{ $t('teacher.create') }}
                 </Link>
 
                 <SpeakerItem v-if="speaker" :speaker="speaker"/>
             </UserItem>
 
             <div class="window-section-head">
-                <h2>decks</h2>
+                <h2>{{ $t('models.decks') }}</h2>
             </div>
             <div class="search-filters-container">
                 <div class="search-filters">
                     <select v-model="filters.sort">
-                        <option value="latest">by Latest</option>
-                        <option value="alphabetical">Alphabetical</option>
+                        <option value="latest">{{ $t('search.filters.sort.latest') }}</option>
+                        <option value="alphabetical">{{ $t('search.filters.sort.alphabetical') }}</option>
                     </select>
                 </div>
             </div>
@@ -128,14 +127,14 @@ defineOptions({
             </template>
             <template v-else>
                 <AppTip>
-                    <p>{{ user.name }} has not created any public Decks yet.</p>
+                    <p>{{ $t('pages.users.show.empty', { user: user.name }) }}</p>
                 </AppTip>
             </template>
         </div>
 
         <div class="app-body-section">
             <AppHeading>
-                badges
+                {{ $t('models.badges') }}
             </AppHeading>
             <div class="badge-wrapper">
                 <BadgeItem v-for="badge in unlockedBadges" :badge="badge" :key="badge.id"/>

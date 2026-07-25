@@ -1,6 +1,9 @@
 <script setup>
 import {useForm} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const props = defineProps({
     scorable_type: {type: String, required: true},
@@ -17,7 +20,7 @@ const form = useForm({
 });
 
 const purgeScores = () => {
-    if (confirm('Are you sure you want to delete these Scores? This action cannot be undone.')) {
+    if (confirm(t('modals.purge-scores.confirm'))) {
         form.post(route('scores.purge'), {
             onSuccess: () => {
                 emit('close');
@@ -33,7 +36,7 @@ const purgeScores = () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1>Purge Scores</h1>
+            <h1>{{ $t('modals.purge-scores.title') }}</h1>
         </div>
 
         <form @submit.prevent="purgeScores">
@@ -48,29 +51,31 @@ const purgeScores = () => {
                 </p>
 
                 <div class="field-item">
-                    <label for="older_than">Time Limit</label>
+                    <label for="older_than">{{ $t('modals.purge-scores.fields.time-limit') }}</label>
                     <select id="older_than" v-model="form.older_than">
-                        <option :value="null">None</option>
-                        <option value="day">1 Day</option>
-                        <option value="week">1 Week</option>
-                        <option value="month">1 Month</option>
-                        <option value="year">1 Year</option>
+                        <option :value="null">{{ $t('modals.purge-scores.time-limits.none') }}</option>
+                        <option value="day">{{ $t('modals.purge-scores.time-limits.day') }}</option>
+                        <option value="week">{{ $t('modals.purge-scores.time-limits.week') }}</option>
+                        <option value="month">{{ $t('modals.purge-scores.time-limits.month') }}</option>
+                        <option value="year">{{ $t('modals.purge-scores.time-limits.year') }}</option>
                     </select>
                 </div>
 
                 <div class="field-item">
                     <label>
                         <input type="checkbox" value="highest" v-model="form.except">
-                        Keep Highest
+                        {{ $t('modals.purge-scores.keep.highest') }}
                     </label>
                     <label>
                         <input type="checkbox" value="latest" v-model="form.except">
-                        Keep Latest
+                        {{ $t('modals.purge-scores.keep.latest') }}
                     </label>
                 </div>
             </div>
             <div class="window-footer">
-                <button type="submit" class="button-danger" :disabled="form.processing">purge</button>
+                <button type="submit" class="button-danger" :disabled="form.processing">
+                    {{ $t('modals.purge-scores.submit') }}
+                </button>
             </div>
         </form>
     </div>

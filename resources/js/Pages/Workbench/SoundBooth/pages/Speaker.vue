@@ -108,7 +108,7 @@ onMounted(async () => {
 
 <template>
     <div class="window-section-head">
-        <h2>{{ $t('speaker.speaker') }}</h2>
+        <h2>{{ $t('speaker.title') }}</h2>
 
         <PopupWindow title="Sound Booth (Speaker)">
             <div>What is my Speaker profile?</div>
@@ -194,14 +194,14 @@ onMounted(async () => {
 
                     <div class="speaker-data">
                         <div class="speaker-data-head">
-                            <div>{{ $t('speaker.speaker')}}</div>
+                            <div>{{ $t('speaker.title')}}</div>
                             <button :disabled="form.processing || !hasNavigationGuard || !isValidRequest"
                                     class="material-symbols-rounded" @click="saveSpeaker">
                                 save
                             </button>
                         </div>
                         <div class="speaker-data-row">
-                            <div>{{ $t('speaker.dialect') }}</div>
+                            <div>{{ $t('speaker.fields.dialect') }}</div>
                             <WizardDropdown
                                 v-model="form.dialect_id"
                                 :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
@@ -209,21 +209,21 @@ onMounted(async () => {
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>{{ $t('speaker.location') }}</div>
+                            <div>{{ $t('speaker.fields.location') }}</div>
                             <WizardDropdown
                                 v-model="form.location_id"
                                 :options="locations.map(location => ({ data: location.id, label: location.name_ar }))"
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>{{ $t('speaker.fluency') }}</div>
+                            <div>{{ $t('speaker.fields.fluency') }}</div>
                             <WizardDropdown
                                 v-model="form.fluency"
                                 :options="levels"
                             />
                         </div>
                         <div class="speaker-data-row">
-                            <div>{{ $t('speaker.gender') }}</div>
+                            <div>{{ $t('speaker.fields.gender') }}</div>
                             <WizardDropdown
                                 v-model="form.gender"
                                 :options="genders"

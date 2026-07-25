@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
     <div id="app-body">
         <div class="rw-container window-container">
             <div class="window-section-head">
-                <h1>Sound Booth</h1>
+                <h1>{{ $t('pages.sound-booth.title') }}</h1>
             </div>
             <div class="window-page-nav">
                 <button class="material-symbols-rounded" :disabled="SoundBoothStore.backDisabled"

@@ -3,8 +3,10 @@ import {computed, ref} from "vue";
 import {useAudio} from "../composables/audios/useAudio.js";
 import AppTooltip from "./AppTooltip.vue";
 import {useUserStore} from "../stores/UserStore.js";
+import {useI18n} from "vue-i18n";
 
 const UserStore = useUserStore();
+const {t} = useI18n();
 
 const props = defineProps({
     pronunciation: {
@@ -23,9 +25,11 @@ const isUserAudio = computed(() =>
 
 const showDialectTooltip = (event) => {
     if (!isUserAudio.value) {
-        appTooltip.value?.showTooltip(props.pronunciation.dialect.name, event);
+        appTooltip.value?.showTooltip(t(`dialect.${localeKey(props.pronunciation.dialect.name)}`), event);
     }
 };
+
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 </script>
 
 <template>

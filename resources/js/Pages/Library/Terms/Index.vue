@@ -71,12 +71,6 @@ function updateFilter({filter, value}) {
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchTerms(Object.fromEntries(searchParams.entries()));
 }
-
-const sortingMessage = computed(() => {
-    if (filters.value.sort === 'latest') return 'sorted by most recent first';
-    if (filters.value.sort === 'pinned') return 'in the order they were Pinned';
-    return 'sorted alphabetically by root';
-});
 </script>
 
 <template>
@@ -90,10 +84,10 @@ const sortingMessage = computed(() => {
                 </Link>
                 <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-            <div class="window-section-head"><h1>dictionary</h1></div>
+            <div class="window-section-head"><h1>{{ $t('pages.terms.index.title') }}</h1></div>
 
             <TermFeatured :model="featuredTerm"/>
-            <div class="window-section-head"><h2>index</h2></div>
+            <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
 
             <div class="letters-array">
                 <button
@@ -108,18 +102,20 @@ const sortingMessage = computed(() => {
 
             <template v-if="loading">
                 <AppTip>
-                    <p>Loading...</p>
+                    <p>{{ $t('pages.common.loading', { model: $t('models.terms') }) }}</p>
                 </AppTip>
                 <LoadingSpinner/>
             </template>
             <template v-else>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
-                        Displaying {{ totalCount }} Terms matching this query, {{ sortingMessage }}.
+                        {{ $t('pages.common.displaying-results', { count: totalCount, model: $t('models.terms') }) }}
+                        {{ $t(`pages.common.sort-messages.${filters.sort}`) }}
                     </p>
-                    <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Terms in the Dictionary.</p>
+                    <p v-else-if="totalCount > 0">{{ $t('pages.common.displaying-all', { count: totalCount, model: $t('models.terms') }) }}</p>
                     <p v-else>
-                        No Terms matching this query. Is a term missing from the Dictionary?
+                        {{ $t('pages.common.displaying-none', { model: $t('models.terms') }) }}
+                        Is a term missing from the Dictionary?
                         <a @click="NavigationStore.showSendFeedback = true" style="cursor: pointer">Click here to let us
                             know!</a>
                     </p>

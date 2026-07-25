@@ -1,5 +1,5 @@
 .model-list.index-list:has(.sentence-item-container) {
-    justify-items: end;
+    justify-items: right;
 }
 
 .sentence-item-container {
@@ -188,7 +188,7 @@
     text-align: start;
     margin: 2.4rem;
     gap: 1.6rem;
-    justify-items: end;
+    justify-items: right;
 
     .sentence-item-container {
         max-width: 100%;

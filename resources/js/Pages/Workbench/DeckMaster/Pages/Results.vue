@@ -24,7 +24,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
     <QuizzerWindow>
         <WindowSection :visible="false">
             <template #title>
-                <h2>stats</h2>
+                <h2>{{ $t('components.common.sections.stats') }}</h2>
             </template>
             <template #content>
                 <ScoreStats :model="DeckStudyStore.data.deck"/>
@@ -32,7 +32,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
         </WindowSection>
 
         <div class="window-section-head">
-            <h2>Results</h2>
+            <h2>{{ $t('pages.deck-master.results') }}</h2>
             <PopupWindow title="Deck Master (Results)">
                 <div class="h1">Results</div>
                 <p>Sometimes humans are smarter than machines. The Deck Master automatically generates Quizzes & grades
@@ -81,7 +81,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You haven't saved your Score yet. Are you sure you want to leave this page? Your Score for this Quiz will not be saved."
+            :message="$t('modals.nav-guard.messages.unsaved-score')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

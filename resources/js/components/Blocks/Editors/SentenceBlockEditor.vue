@@ -70,16 +70,16 @@ watch(
             <template v-if="!block.model && !block.custom">
                 <div>
                     <div class="add-button" @click="openSearch">+</div>
-                    <div>model</div>
+                    <div>{{ $t('blocks.add.model') }}</div>
                 </div>
                 <div>
                     <div class="add-button" @click="addSentence">+</div>
-                    <div>custom</div>
+                    <div>{{ $t('blocks.add.custom') }}</div>
                 </div>
             </template>
             <div v-else-if="block.custom">
                 <div class="add-button" @click="addTerm">+</div>
-                <div>term</div>
+                <div>{{ $t('actions.models.term') }}</div>
             </div>
         </div>
 

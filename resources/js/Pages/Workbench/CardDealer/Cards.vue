@@ -1,7 +1,6 @@
 <script setup>
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {computed} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
@@ -23,22 +22,12 @@ const setFilter = (key, value) => {
 defineOptions({
     layout: Layout
 });
-
-const sortingMessage = computed(() => {
-    if (props.filters.sort === 'latest') {
-        return 'sorted by most recent review';
-    } else if (props.filters.sort === 'mastery') {
-        return 'sorted by Mastery Level';
-    } else {
-        return 'sorted by soonest due';
-    }
-});
 </script>
 
 <template>
     <Head title="Card Dealer: Cards"/>
     <div id="app-head">
-        <h1>Card Dealer</h1>
+        <h1>{{ $t('pages.card-dealer.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="window-container">
@@ -49,33 +38,33 @@ const sortingMessage = computed(() => {
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/cards</div>
             </div>
             <div class="window-section-head">
-                <h1>cards</h1>
+                <h1>{{ $t('pages.cards.index.title') }}</h1>
             </div>
             <div class="search-filters-container">
                 <select :value="filters.status" @change="setFilter('status', $event.target.value)">
-                    <option value="">All</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
+                    <option value="">{{ $t('card.fields.status') }}</option>
+                    <option value="active">{{ $t('card.status.active') }}</option>
+                    <option value="suspended">{{ $t('card.status.suspended') }}</option>
                 </select>
                 <select :value="filters.level" @change="setFilter('level', $event.target.value)">
-                    <option value="">All</option>
-                    <option value="0">New</option>
-                    <option value="1">Rusty</option>
-                    <option value="2">Learning</option>
-                    <option value="3">Solid</option>
-                    <option value="4">Confident</option>
-                    <option value="5">Mastered</option>
+                    <option value="">{{ $t('card.fields.mastery-level') }}</option>
+                    <option value="0">{{ $t('card.mastery-level.new') }}</option>
+                    <option value="1">{{ $t('card.mastery-level.lowest') }}</option>
+                    <option value="2">{{ $t('card.mastery-level.low') }}</option>
+                    <option value="3">{{ $t('card.mastery-level.medium') }}</option>
+                    <option value="4">{{ $t('card.mastery-level.high') }}</option>
+                    <option value="5">{{ $t('card.mastery-level.highest') }}</option>
                 </select>
                 <select :value="filters.sort" @change="setFilter('sort', $event.target.value)">
-                    <option value="due">by Soonest Due</option>
-                    <option value="latest">by Latest Review</option>
-                    <option value="mastery">by Mastery Level</option>
+                    <option value="due">{{ $t('pages.cards.index.filters.due') }}</option>
+                    <option value="latest">{{ $t('pages.cards.index.filters.latest') }}</option>
+                    <option value="mastery">{{ $t('pages.cards.index.filters.mastery') }}</option>
                 </select>
             </div>
             <AppTip>
-                <p v-if="totalCount > 0">Displaying {{ totalCount }} Cards, {{ sortingMessage }}.</p>
-                <p v-else-if="!Object.values(filters).every(value => !value)">You have no Cards matching these filters.</p>
-                <p v-else>You don't have any Cards yet. Start reviewing to get started!</p>
+                <p v-if="totalCount > 0">{{ $t('pages.cards.index.messages.results', { count: totalCount, message: $t('pages.cards.index.sort-message.' + filters.sort) }) }}</p>
+                <p v-else-if="!Object.values(filters).every(value => !value)">{{ $t('pages.cards.index.messages.no-results') }}</p>
+                <p v-else>{{ $t('pages.cards.index.messages.no-cards') }}</p>
             </AppTip>
 
             <template v-if="cards.data.length > 0">

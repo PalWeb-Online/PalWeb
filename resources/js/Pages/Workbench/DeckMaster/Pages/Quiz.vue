@@ -30,21 +30,25 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 <template>
     <QuizzerWindow>
         <div class="window-section-head">
-            <h2>Quiz</h2>
+            <h2>{{ $t('pages.deck-master.quiz') }}</h2>
         </div>
         <AppTip>
             <p v-if="DeckStudyStore.settings.quizType === 'glosses'">
-                Select the meaning of the Arabic term in English.</p>
+                {{ $t('pages.deck-master.messages.glosses-prompt') }}
+            </p>
             <p v-else-if="DeckStudyStore.settings.quizType === 'inflections'">
-                Write the indicated inflection of the Term in Arabic.</p>
+                {{ $t('pages.deck-master.messages.inflections-prompt') }}
+            </p>
             <p v-else-if="DeckStudyStore.settings.quizType === 'sentences'">
-                Select the Term that best fits the blank in the Sentence. <b>Terms are listed in their Dictionary form,
-                not necessarily as they would be expected to appear in the Sentence.</b></p>
+                {{ $t('pages.deck-master.messages.sentences-prompt') }}
+                <b>Terms are listed in their Dictionary form,
+                not necessarily as they would be expected to appear in the Sentence.</b>
+            </p>
         </AppTip>
         <div class="settings-wrapper" style="justify-content: space-around">
-            <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+            <ToggleSingle v-model="showTranslit" :label="$t('components.common.options.show-transcription')"/>
             <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'glosses'"
-                          v-model="showInflections" label="Show Inflections"/>
+                          v-model="showInflections" :label="$t('pages.deck-master.options.show-inflections')"/>
         </div>
     </QuizzerWindow>
 
@@ -69,14 +73,14 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                             :showTranslit="showTranslit"
         />
 
-        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz">
+        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz()">
             check
         </button>
     </div>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You haven't finished the Quiz yet. Are you sure you want to leave this page? Your progress will not be saved."
+            :message="$t('modals.nav-guard.messages.unfinished-quiz')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

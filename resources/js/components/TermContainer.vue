@@ -121,6 +121,8 @@ const attributeLinks = {
     pseudo: {text: "verbs", url: route("wiki.show", "verbs")},
 };
 
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const etymology = computed(() => {
     const data = {};
 
@@ -208,7 +210,7 @@ const etymology = computed(() => {
                 <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
             <div class="window-section-head">
-                <h1>term</h1>
+                <h1>{{ $t('actions.models.term') }}</h1>
                 <PinButton modelType="term" :model="term"/>
                 <TermActions :model="term"/>
             </div>
@@ -219,7 +221,7 @@ const etymology = computed(() => {
                         <div class="term-headword-arb">{{ term.term }}</div>
                         <div class="term-headword-eng">({{ term.translit }})</div>
                     </div>
-                    <div class="term-headword-data">{{ term.category }}.
+                    <div class="term-headword-data">{{ $t(`term.category.${term.category}`) }}.
                         <template v-for="attribute in term.attributes" :key="attribute.id">
                             <template v-if="attributeLinks[attribute.attribute]">
                                 <a
@@ -227,51 +229,51 @@ const etymology = computed(() => {
                                     target="_blank"
                                     class="attribute-link"
                                 >
-                                    {{ attribute.attribute }}.
+                                    {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
                                     <span> </span>
                                 </a>
                             </template>
                             <template v-else-if="['idiom', 'clitic'].includes(attribute.attribute)">
                                 <span style="font-weight: 400; font-style: italic">
-                                    {{ attribute.attribute }}.
+                                    {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
                                     <span> </span>
                                 </span>
                             </template>
                             <template v-else>
                                 <span style="font-weight: 400">
-                                    {{ attribute.attribute }}.
+                                    {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
                                     <span> </span>
                                 </span>
                             </template>
                         </template>
                         <template v-if="constructForms.length > 0">
-                            <span style="font-weight: 400">construct:</span>
+                            <span style="font-weight: 400">{{ $t('components.term.construct') }}</span>
                             {{ constructForms[0].inflection }}
                             ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="term.category === 'verb'">
                             <a v-for="pattern in term.patterns"
                                :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
-                                form {{ pattern.form }}.</a>
+                                {{ $t('term.filters.form.option', {form: pattern.form}) }}.</a>
                         </template>
                     </div>
                 </div>
                 <div class="term-references"
                      v-if="term.spellings.length + variants.length + references.length > 0">
                     <div v-if="references.length > 0">
-                        <div>see:</div>
+                        <div>{{ $t('components.term.references.see') }}</div>
                         <Link v-for="reference in references" :href="route('terms.show', reference.slug)">
                             {{ reference.term }} ({{ reference.translit }})
                         </Link>
                     </div>
                     <div v-if="variants.length > 0">
-                        <div>alt.</div>
+                        <div>{{ $t('components.term.references.alt') }}</div>
                         <Link v-for="variant in variants" :href="route('terms.show', variant.slug)">
                             {{ variant.term }} ({{ variant.translit }})
                         </Link>
                     </div>
                     <div v-if="term.spellings.length > 0">
-                        <div>or</div>
+                        <div>{{ $t('components.term.references.or') }}</div>
                         <div v-for="spelling in term.spellings" style="font-weight: 700">
                             {{ spelling.spelling }}
                         </div>
@@ -280,16 +282,11 @@ const etymology = computed(() => {
             </div>
 
             <div class="window-section-head">
-                <h2>info</h2>
+                <h2>{{ $t('components.term.sections.info') }}</h2>
             </div>
             <div class="term-etymology">
-                <Link class="term-root" v-if="term.root" :href="route('roots.show', term.root.id )">
-                    <div class="term-root-ar">{{ term.root.ar }}</div>
-                    <div class="term-root-en">({{ term.root.en }})</div>
-                </Link>
                 <div class="term-data">
                     <!-- todo: link to Wiki page with info on Patterns -->
-
                     <span v-html="etymology.origin"></span>
 
                     <span v-for="(token, index) in etymology.source" :key="index">
@@ -316,6 +313,10 @@ const etymology = computed(() => {
                             </Link>
                         </span>
                 </div>
+                <Link class="term-root" v-if="term.root" :href="route('roots.show', term.root.id )">
+                    <div class="term-root-ar">{{ term.root.ar }}</div>
+                    <div class="term-root-en">({{ term.root.en }})</div>
+                </Link>
             </div>
             <div class="term-pronunciation">
                 <div class="model-list">
@@ -338,13 +339,13 @@ const etymology = computed(() => {
             </div>
 
             <div class="window-section-head">
-                <h2>glosses</h2>
+                <h2>{{ $t('components.term.sections.glosses') }}</h2>
             </div>
             <div class="term-glosses">
                 <GlossItem v-for="(gloss, index) in term.glosses" :key="gloss.id" :gloss="gloss" :position="index + 1">
                     <template #relatives>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
-                            syn.
+                            {{ $t('components.term.relatives.synonym-abbr') }}
                             <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
                                   :href="route('terms.show', synonym.slug)">
                                 {{ synonym.term }}
@@ -352,7 +353,7 @@ const etymology = computed(() => {
                             </Link>
                         </div>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
-                            ant.
+                            {{ $t('components.term.relatives.antonym-abbr') }}
                             <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
                                   :href="route('terms.show', antonym.slug)">
                                 {{ antonym.term }}
@@ -379,13 +380,15 @@ const etymology = computed(() => {
 
                             <div class="model-list-toggle-expand"
                                  v-if="gloss.sentences_count > 1 && !sentencesFetched.get(gloss.id)">
-                                <button @click="fetchSentences(gloss.id)">See All ({{ gloss.sentences_count }})</button>
+                                <button @click="fetchSentences(gloss.id)">
+                                    {{ $t('components.common.see-all') }} ({{ gloss.sentences_count }})
+                                </button>
                                 <LoadingSpinner v-show="loadingSentences.get(gloss.id)"/>
                             </div>
 
                             <div class="model-list-toggle-expand" v-if="sentencesFetched.get(gloss.id)">
                                 <button @click="toggleShowSentences(gloss.id)">
-                                    {{ showSentences.get(gloss.id) ? 'Hide' : 'Expand' }}
+                                    {{ showSentences.get(gloss.id) ? $t('components.common.hide') : $t('components.common.expand') }}
                                 </button>
                             </div>
                         </div>
@@ -419,12 +422,12 @@ const etymology = computed(() => {
 
             <!--            note that my user is hard-coded -->
             <div v-if="term.usage" class="user-item comment-item l" style="padding: 2.4rem">
-                <UserAvatarWrapper :user="{username: 'permanent.intifada', avatar: 'character02.webp'}"/>
+                <UserAvatarWrapper :user="{username: 'permanent.intifada', avatar_url: '/img/avatars/character02.webp'}"/>
                 <div class="user-data-wrapper">
                     <div class="user-comment">
                         <div class="user-comment-title">
-                            <img class="popout" src="/img/star.svg" alt="Star"/>
-                            <span>editor’s note</span>
+                            <img class="popout" src="/img/star.svg" :alt="$t('components.common.alt.star')"/>
+                            <span>{{ $t('components.term.editor-note') }}</span>
                         </div>
                         <div class="user-comment-content">
                             {{ term.usage }}
@@ -437,11 +440,11 @@ const etymology = computed(() => {
             </div>
 
             <div class="term-image">
-                <img v-if="term.image" :src="term.image" alt="Term Image">
+                <img v-if="term.image" :src="term.image" :alt="$t('components.common.alt.term-image')">
             </div>
 
             <div v-if="term.decks.length > 0" class="term-container-decks">
-                <div class="featured-title m">Featured In</div>
+                <div class="featured-title m">{{ $t('components.term.featured-in') }}</div>
                 <div class="model-list index-list">
                     <DeckItem v-for="deck in term.decks" :model="deck"/>
                 </div>
@@ -486,22 +489,23 @@ const etymology = computed(() => {
 
 .term-etymology {
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: auto min-content;
     background: var(--color-pastel-light);
+    direction: ltr;
 
     .term-root {
+        grid-column: 2;
         display: flex;
         align-items: center;
         justify-content: center;
         white-space: nowrap;
         gap: 0.8rem;
-        direction: rtl;
         padding: 0.8rem 1.6rem;
         background: var(--color-pastel-light);
-        border-inline-start: 0.1rem solid var(--color-medium-primary);
+        border-inline-end: 0.1rem solid var(--color-medium-primary);
+        direction: rtl;
 
         &:hover {
-            color: var(--color-accent-medium);
             background: var(--color-accent-light);
             text-decoration: none;
         }
@@ -519,7 +523,6 @@ const etymology = computed(() => {
 
     .term-data {
         align-self: center;
-        grid-column: 2;
         padding: 1.2rem 1.6rem;
     }
 }

@@ -39,20 +39,20 @@ const isCorrect = computed(() => {
             </div>
 
             <div class="quiz-answer-user">
-                <div>you said:
+                <div>{{ $t('components.quiz.answer.user-input') }}
                     <span style="font-weight: 700">{{ exercise.response }}</span>
                 </div>
             </div>
         </div>
         <div class="quiz-answer-options">
-            <a :href="route('terms.show', exercise.term.slug)" target="_blank">See in Dictionary</a>
+            <a :href="route('terms.show', exercise.term.slug)" target="_blank">{{ $t('components.quiz.answer.see-dictionary') }}</a>
             <template v-if="deck">
                 <template v-if="UserStore.user.id === deck.author.id">
                     <button @click="toggleTerm(deck, exercise.term)">
-                        {{ deck.terms.some(term => term.id === exercise.term.id) ? 'Remove from' : 'Add to' }} Deck
+                        {{ deck.terms.some(term => term.id === exercise.term.id) ? $t('components.quiz.answer.remove-from') : $t('components.quiz.answer.add-to') }}
                     </button>
                 </template>
-                <button v-if="!isCorrect" type="button" @click="markCorrect">Mark as Correct</button>
+                <button v-if="!isCorrect" type="button" @click="markCorrect()">{{ $t('components.quiz.answer.mark-correct') }}</button>
             </template>
         </div>
     </div>

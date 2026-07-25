@@ -28,7 +28,7 @@ const vn = computed(() =>
 
 <template>
     <div class="window-section-head">
-        <h2>conjugation</h2>
+        <h2>{{ $t('charts.conjugation.title') }}</h2>
     </div>
     <div class="inflection-carousel">
         <template v-for="(pattern, index) in patterns">
@@ -57,7 +57,9 @@ const vn = computed(() =>
 
                 <div v-if="derivatives.length > 0" class="inflection-chart-wrapper">
                     <div class="inflection-chart">
-                        <div class="inflection-chart-title" style="grid-column: span 2">Derivatives</div>
+                        <div class="inflection-chart-title" style="grid-column: span 2">
+                            {{ $t('charts.conjugation.derivatives') }}
+                        </div>
                         <Link v-if="ap" :href="route('terms.show', ap.slug)" class="inflection-chart-item" style="grid-column: 1">
                             <div>AP</div>
                             <div>

@@ -63,23 +63,24 @@ function updateFilter({filter, value}) {
                 </Link>
                 <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
             </div>
-            <div class="window-section-head"><h1>deck library</h1></div>
-            <div class="window-section-head"><h2>Index</h2></div>
+            <div class="window-section-head"><h1>{{ $t('pages.decks.index.title') }}</h1></div>
+            <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
 
             <SearchFilters :activeModel="'decks'" :filters="filters" @updateFilter="updateFilter"/>
 
             <template v-if="loading">
                 <AppTip>
-                    <p>Loading...</p>
+                    <p>{{ $t('pages.common.loading', { model: $t('models.decks') }) }}</p>
                 </AppTip>
                 <LoadingSpinner/>
             </template>
             <template v-else>
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
-                        Displaying {{ totalCount }} Decks matching this query.</p>
-                    <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Decks in the Library.</p>
-                    <p v-else>No Decks matching this query.</p>
+                        {{ $t('pages.common.displaying-results', { count: totalCount, model: $t('models.decks') }) }}
+                    </p>
+                    <p v-else-if="totalCount > 0">{{ $t('pages.common.displaying-all', { model: $t('models.decks') }) }}</p>
+                    <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.decks') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
                     <div class="model-list index-list">

@@ -12,6 +12,8 @@ const pronunciation = reactive({});
 const showAudios = ref(false);
 const audiosFetched = ref(false);
 
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const fetchAudios = async () => {
     try {
         const response = await axios.get(route('terms.get.pronunciations.audios', {pronunciation: props.model.id}));
@@ -40,9 +42,11 @@ onMounted(() => {
                   :href="route('terms.show', model.term.slug)">{{ model.term.term }}
             </Link>
             <div class="pronunciation-item-data">
-                <span class="pronunciation-item-dialect">{{ model.dialect.name }}</span>
+                <span class="pronunciation-item-dialect">
+                    {{ $t(`dialect.${localeKey(model.dialect.name)}`) }}
+                </span>
                 <span class="pronunciation-item-phonology">{{
-                        model.borrowed === true ? '(Borrowed)' : ''
+                        model.borrowed === true ? $t('components.pronunciation.borrowed') : ''
                     }} {{ model.translit }}</span>
                 <span class="pronunciation-item-phonology">{{ model.phonemic }}</span>
                 <span class="pronunciation-item-phonology">{{ model.phonetic }}</span>
@@ -111,6 +115,7 @@ onMounted(() => {
     display: flex;
     flex-flow: row-reverse wrap;
     background: var(--color-accent-light);
+    direction: ltr;
 
     .pronunciation-item-term,
     .pronunciation-item-data {

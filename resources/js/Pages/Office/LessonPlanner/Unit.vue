@@ -84,13 +84,13 @@ const removeLesson = (lesson) => {
     <Head :title="`Lesson Planner: Unit ${unit?.position}`"/>
 
     <div id="app-head">
-        <h1>lesson planner</h1>
+        <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="unitNotFound">
             <AppTip>
-                <p>Sorry, the requested Unit could not be found.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.unit')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
@@ -103,25 +103,21 @@ const removeLesson = (lesson) => {
                     <Link :href="route('lesson-planner.index')">
                         <- to Course
                     </Link>
-                    <Link v-if="unit?.id" :href="route('units.show', unit.position)">
-                        View
-                    </Link>
                 </div>
                 <div class="featured-title l">
-                    {{ unit?.id ? 'Unit ' + unit.position : 'New Unit' }}: {{ form.title }}
+                    {{ unit?.id ? $t('unit.number', {number: unit.position}) : 'New Unit' }}: {{ form.title }}
                 </div>
 
                 <div class="field-item">
-                    <label>Title</label>
+                    <label>{{ $t('forms.fields.title') }}</label>
                     <div class="field-input">
                         <input type="text" v-model="form.title" placeholder="Title" required>
                     </div>
                 </div>
                 <div class="featured-title m">
-                    Lessons
+                    {{ $t('models.lessons') }}
                 </div>
-                <p>Removing a Lesson from this list will unlink it from this Unit. You must go to its edit page to
-                    delete the Lesson altogether.</p>
+                <p>{{ $t('pages.lesson-planner.messages.info-lesson-removal') }}</p>
                 <draggable v-if="form.lessons.length > 0" class="unit-lessons-draggable"
                            :list="form.lessons" itemKey="id" handle=".handle"
                            @change="updateLessonPositions">
@@ -141,18 +137,26 @@ const removeLesson = (lesson) => {
                         </li>
                     </template>
                 </draggable>
-                <button v-if="form.lessons.length < 9" @click="addLesson">
-                    + Lesson
-                </button>
+                <div v-if="form.lessons.length < 9" class="block-add-buttons">
+                    <div>
+                        <div class="add-button" @click="addLesson">+</div>
+                        <div>{{ $t('actions.models.lesson') }}</div>
+                    </div>
+                </div>
                 <AppTip v-if="form.published && (!form.lessons || form.lessons.filter(l => l.published).length < 9)">
-                    <p>This Unit is incomplete, as it contains fewer than 9 published Lessons.</p>
+                    <p>{{ $t('pages.lesson-planner.messages.warning-incomplete') }}</p>
                 </AppTip>
             </div>
 
             <AppTip>
-                <p>The Unit is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
+                <p>{{
+                        $t('forms.messages.current-status', {
+                            model: $t('actions.models.unit'),
+                            status: form.published ? $t('forms.status.published') : $t('forms.status.draft')
+                        })
+                    }}</p>
                 <template v-if="Object.keys(validationErrors).length">
-                    <p style="font-weight: 700">The Unit cannot be saved in the current state.</p>
+                    <p style="font-weight: 700">{{ $t('forms.messages.has-publish-issues', {model: $t('actions.models.unit')}) }}</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>
@@ -161,19 +165,36 @@ const removeLesson = (lesson) => {
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">
-                    <button type="button"
-                            @click="saveUnit({ publish: form.published })"
-                            :disabled="isSaving || !hasNavigationGuard || !isValidRequest">
-                        Save
+                    <button
+                        type="button"
+                        @click="saveUnit({ publish: form.published })"
+                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
+                    >
+                        {{ $t('forms.actions.save') }}
                     </button>
-                    <button type="button" :disabled="!hasNavigationGuard" @click="reset()">Reset</button>
+                    <button
+                        type="button"
+                        @click="reset()"
+                        :disabled="!hasNavigationGuard"
+                    >
+                        {{ $t('forms.actions.reset') }}
+                    </button>
                     <button type="button"
                             @click="saveUnit({ publish: !form.published })"
                             :disabled="isSaving || !isValidRequest"
                     >
-                        {{ hasNavigationGuard ? 'Save & ' : '' }} {{ form.published ? 'Revert to Draft' : 'Publish' }}
+                        {{
+                            hasNavigationGuard ? $t('forms.actions.save') + ' & ' : ''
+                        }} {{
+                            form?.published ? $t('forms.actions.set-status.draft') : $t('forms.actions.set-status.published')
+                        }}
                     </button>
-                    <button type="button" @click="deleteUnit()">Delete Unit</button>
+                    <button type="button" @click="deleteUnit()">
+                        {{ $t('actions.common.delete', {model: $t('actions.models.unit')}) }}
+                    </button>
+                    <Link v-if="unit?.id" :href="route('units.show', unit.position)">
+                        {{ $t('actions.common.view', {model: $t('actions.models.unit')}) }}
+                    </Link>
                 </div>
             </div>
         </template>
@@ -181,7 +202,7 @@ const removeLesson = (lesson) => {
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

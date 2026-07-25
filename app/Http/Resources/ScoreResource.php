@@ -22,7 +22,7 @@ class ScoreResource extends JsonResource
             'settings' => $this->settings,
             'score' => $this->score,
             'results' => $this->results,
-            'created_at' => $this->created_at->format('j F Y'),
+            'created_at' => $this->created_at->translatedFormat('j F Y'),
         ];
     }
 }

@@ -8,6 +8,7 @@ import {useNotificationStore} from "../stores/NotificationStore.js";
 import WindowSection from "./WindowSection.vue";
 import AppTip from "./AppTip.vue";
 import {useUser} from "../composables/users/useUser.js";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     modelValue: {
@@ -40,6 +41,7 @@ const emit = defineEmits([
 ]);
 
 const {isStudent} = useUser(computed(() => props.user));
+const {t} = useI18n();
 
 const NotificationStore = useNotificationStore();
 const maxAvatarFileSize = 5 * 1024 * 1024;
@@ -104,11 +106,11 @@ const getFileExtension = (file) => {
 
 const validateStagedFile = (file) => {
     if (file.size > maxAvatarFileSize) {
-        return 'Avatar images must be 5MB or smaller.';
+        return t('modals.avatar-picker.errors.file-size');
     }
 
     if (!allowedAvatarMimeTypes.includes(file.type) || !allowedAvatarExtensions.includes(getFileExtension(file))) {
-        return 'Avatar images must be JPG, JPEG, PNG, or WEBP files.';
+        return t('modals.avatar-picker.errors.file-type');
     }
 
     return null;
@@ -122,7 +124,7 @@ const handleUploadSelection = (event) => {
     if (!file) return;
 
     if (hasReachedAvatarLimit.value) {
-        uploadError.value = `You may upload up to ${maxUploadedAvatars} custom avatars.`;
+        uploadError.value = t('modals.avatar-picker.errors.upload-limit', {count: maxUploadedAvatars});
         NotificationStore.addNotification(uploadError.value, 'error');
         return;
     }
@@ -148,12 +150,12 @@ const getCroppedAvatarBlob = async () => {
     const result = cropper.value?.getResult();
 
     if (!result?.canvas) {
-        throw new Error('The Avatar could not be cropped.');
+        throw new Error(t('modals.avatar-picker.errors.crop'));
     }
 
     return await new Promise((resolve, reject) => {
         result.canvas.toBlob((blob) => {
-            blob ? resolve(blob) : reject(new Error('The Avatar could not be cropped.'));
+            blob ? resolve(blob) : reject(new Error(t('modals.avatar-picker.errors.crop')));
         }, uploadFile.value.type, 0.92);
     });
 };
@@ -178,12 +180,12 @@ const uploadAvatar = async () => {
         ]);
 
         clearUploadPreview();
-        NotificationStore.addNotification('OK, your Avatar was successfully uploaded.', 'success');
+        NotificationStore.addNotification(t('modals.avatar-picker.notifications.uploaded'), 'success');
 
     } catch (error) {
         uploadError.value = error?.response?.data?.errors?.avatar?.[0]
             ?? error?.response?.data?.message
-            ?? 'The Avatar could not be uploaded.';
+            ?? t('modals.avatar-picker.errors.upload');
 
         NotificationStore.addNotification(uploadError.value, 'error');
 
@@ -197,7 +199,7 @@ const zoomCropper = (factor) => {
 };
 
 const deleteAvatar = async (avatar) => {
-    if (!confirm('Delete this uploaded avatar?')) return;
+    if (!confirm(t('modals.avatar-picker.confirm-delete'))) return;
 
     deletingAvatarIds.value = new Set([...deletingAvatarIds.value, avatar.id]);
 
@@ -217,11 +219,11 @@ const deleteAvatar = async (avatar) => {
             emit('user-updated', savedUser);
         }
 
-        NotificationStore.addNotification('OK, your Avatar was successfully deleted.', 'success');
+        NotificationStore.addNotification(t('modals.avatar-picker.notifications.deleted'), 'success');
 
     } catch (error) {
         NotificationStore.addNotification(
-            error?.response?.data?.message ?? 'The Avatar could not be deleted.',
+            error?.response?.data?.message ?? t('modals.avatar-picker.errors.delete'),
             'error',
         );
 
@@ -241,16 +243,16 @@ onBeforeUnmount(() => {
     <ModalWrapper v-model="isOpen">
         <div class="window-container modal-container">
             <div class="window-section-head">
-                <h1>avatar</h1>
+                <h1>{{ $t('modals.avatar-picker.title') }}</h1>
             </div>
             <div class="modal-container-body">
                 <template v-if="canSelectCustomAvatar || localUploadedAvatars.length">
                     <div class="window-section-head">
-                        <h2>custom</h2>
+                        <h2>{{ $t('modals.avatar-picker.custom') }}</h2>
                     </div>
                     <template v-if="localUploadedAvatars.length">
                         <div class="window-section-head">
-                            <h3>my uploads</h3>
+                            <h3>{{ $t('modals.avatar-picker.my-uploads') }}</h3>
                         </div>
                         <AppTip v-if="!canSelectCustomAvatar">
                             <p>You cannot use a custom avatar while your Student subscription is inactive. You may
@@ -269,7 +271,7 @@ onBeforeUnmount(() => {
                                             class="avatar-choice"
                                             :disabled="!canSelectCustomAvatar"
                                             @click="selectAvatar(avatar)">
-                                        <img :src="avatar.url" alt="Avatar"/>
+                                        <img :src="avatar.url" :alt="$t('components.common.alt.avatar')"/>
                                     </button>
                                     <button type="button"
                                             class="avatar-delete material-symbols-rounded"
@@ -283,14 +285,14 @@ onBeforeUnmount(() => {
                     </template>
                     <template v-if="canSelectCustomAvatar">
                         <div class="window-section-head">
-                            <h3>upload new</h3>
+                            <h3>{{ $t('modals.avatar-picker.upload-new') }}</h3>
                         </div>
                         <AppTip>
                             <p v-if="hasReachedAvatarLimit">
-                                You may upload up to 8 custom avatars. Delete one before uploading another.
+                                {{ $t('modals.avatar-picker.messages.upload-limit', {count: maxUploadedAvatars}) }}
                             </p>
                             <p v-else>
-                                You may upload an image in the JPG, JPEG, PNG, or WEBP formats (max. 5MB).
+                                {{ $t('modals.avatar-picker.messages.upload-format') }}
                             </p>
                         </AppTip>
                         <section v-if="canCreateCustomAvatar" class="avatar-picker-section avatar-upload-section">
@@ -338,7 +340,7 @@ onBeforeUnmount(() => {
 
                 <WindowSection>
                     <template #title>
-                        <h2>defaults</h2>
+                        <h2>{{ $t('modals.avatar-picker.defaults') }}</h2>
                     </template>
                     <template #content>
                         <section class="avatar-picker-section">
@@ -349,7 +351,7 @@ onBeforeUnmount(() => {
                                 >
                                     <div class="avatar-selected material-symbols-rounded">check</div>
                                     <button type="button" class="avatar-choice" @click="selectAvatar(avatar)">
-                                        <img :src="avatar.url" alt="Avatar"/>
+                                        <img :src="avatar.url" :alt="$t('components.common.alt.avatar')"/>
                                     </button>
                                 </div>
                             </div>

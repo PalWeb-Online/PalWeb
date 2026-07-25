@@ -42,23 +42,23 @@ const isDraft = computed(() => {
     <div class="unit-nav">
         <div class="unit-meta" v-if="isDraft">draft</div>
         <div class="academy-breadcrumbs" v-if="$page.component !== 'Academy/Units/Index'">
-            <Link :href="route('units.index')">academy</Link>
+            <Link :href="route('units.index')">{{ $t('pages.academy.index.title') }}</Link>
             <Link v-if="unit" :href="route('units.show', unit.position)"
                   :class="{ active: !lesson }"
             >
-                unit {{ unit.position }}
+                {{ $t('unit.number', {number: unit.position}) }}
             </Link>
             <Link v-if="lesson" :href="route('lessons.show', lesson.global_position)"
                   class="active"
             >
-                lesson {{ lesson.global_position }}
+                {{ $t('components.lesson.number', {number: lesson.global_position}) }}
             </Link>
             <button v-if="UserStore.isAdmin"
                     @click="router.get(editRoute)" class="material-symbols-rounded">edit
             </button>
         </div>
 
-        <div class="featured-title s">unit {{ unit.position }}: {{ unit.title }}</div>
+        <div class="featured-title s">{{ $t('unit.number', {number: unit.position}) }}: {{ unit.title }}</div>
         <div class="unit-progress-bar-wrapper">
             <Link :href="route('units.show', unit.position)" class="material-symbols-rounded"
                   :class="{ active: $page.component === 'Academy/Units/Show' }">

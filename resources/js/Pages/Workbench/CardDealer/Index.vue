@@ -200,11 +200,11 @@ onMounted(async () => {
 <template>
     <Head title="Card Dealer"/>
     <div id="app-head">
-        <h1>Card Dealer</h1>
+        <h1>{{ $t('pages.card-dealer.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="scope-selection-container">
-            <div class="featured-title m">scope</div>
+            <div class="featured-title m">{{ $t('card-dealer.scope') }}</div>
             <div>
                 <div class="scope-button-wrapper">
                     <button class="scope-button material-symbols-rounded" :class="{selected: scope === 'all'}"
@@ -272,7 +272,7 @@ onMounted(async () => {
             <div class="score-stats-wrapper">
                 <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
                     <div class="score-stats-container__overlay">
-                        <span>You must be a Student to enable Scores.</span>
+                        <span>{{ $t('components.score.student-required') }}</span>
                     </div>
                     <div class="score-stats-container__content">
                         <ReviewQueue :cards="activeCards"/>

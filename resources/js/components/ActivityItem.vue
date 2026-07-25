@@ -1,10 +1,7 @@
 <script setup>
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {useUserStore} from "../stores/UserStore.js";
 import ActivityActions from "./Actions/ActivityActions.vue";
-
-const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -34,10 +31,10 @@ const formatter = new Intl.NumberFormat('en-US', {
         </div>
 
         <div v-if="model.stats" class="model-item-stats">
-            <span style="font-weight: 700">Times Quizzed</span>
+            <span style="font-weight: 700">{{ $t('components.score.stats.times-quizzed') }}</span>
             <span>{{ model.stats.count }}</span>
             ·
-            <span style="font-weight: 700">Latest Score</span>
+            <span style="font-weight: 700">{{ $t('components.score.stats.latest-score') }}</span>
             <span>{{ formatter.format(model.stats.latest) }}</span>
             <span>({{ model.stats.latest_date }})</span>
         </div>

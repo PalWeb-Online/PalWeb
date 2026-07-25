@@ -16,33 +16,37 @@ const appTooltip = ref(null);
 
 <template>
     <div class="card-item">
-        <p v-if="!card">You haven't encountered this Term yet.</p>
+        <p v-if="!card">{{ $t('card.messages.not-encountered') }}</p>
 
         <template v-else>
             <div class="level-icon material-symbols-rounded" :class="'mastery-level__'+card.mastery_rank"
-                 @mousemove="appTooltip.showTooltip(`Your Mastery Score for this Term is ${formatter.format(card.mastery_score)} (${card.mastery_label}), meaning ${card.mastery_message}.`, $event);"
+                 @mousemove="appTooltip.showTooltip($t('card.messages.mastery-tooltip', {
+                     score: formatter.format(card.mastery_score),
+                     label: $t(`card.mastery-level.${card.mastery_key}`),
+                     message: $t(`card.mastery-message.${card.mastery_key}`)
+                 }), $event);"
                  @mouseleave="appTooltip.hideTooltip()"
             >network_intelligence
             </div>
 
             <div class="card-stats">
                 <div>
-                    <span>Mastery Score:</span>
+                    <span>{{ $t('card.fields.mastery-score') }}:</span>
                     <span style="text-transform: capitalize">
                     {{ formatter.format(card.mastery_score) }}
-                    ({{ card.mastery_label }})</span>
+                    ({{ $t(`card.mastery-level.${card.mastery_key}`) }})</span>
                 </div>
                 <div>
-                    <span>Times Seen:</span>
+                    <span>{{ $t('card.fields.times-seen') }}:</span>
                     <span>{{ card.repetitions }}</span>
                 </div>
                 <div>
-                    <span>Last Seen:</span>
-                    <span>{{ card.last_reviewed_at_human ?? 'Never' }}</span>
+                    <span>{{ $t('card.fields.last-seen') }}:</span>
+                    <span>{{ card.last_reviewed_at_human ?? $t('components.common.never') }}</span>
                 </div>
                 <div>
-                    <span>Due On:</span>
-                    <span>{{ card.due_at_human ?? 'Never' }}</span>
+                    <span>{{ $t('card.fields.due-on') }}:</span>
+                    <span>{{ card.due_at_human ?? $t('components.common.never') }}</span>
                 </div>
             </div>
         </template>

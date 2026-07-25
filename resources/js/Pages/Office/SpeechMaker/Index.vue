@@ -28,7 +28,7 @@ const toBuild = () => {
     <Head title="Speech Maker"/>
 
     <div id="app-head">
-        <h1>Speech Maker</h1>
+        <h1>{{ $t('pages.speech-maker.title') }}</h1>
     </div>
     <div id="app-body">
         <div id="sm-select">

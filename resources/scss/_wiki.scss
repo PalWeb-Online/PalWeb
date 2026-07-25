@@ -1,4 +1,10 @@
 .wiki-blocks-wrapper {
+    direction: ltr;
+
+    .featured-title {
+        direction: ltr !important;
+    }
+
     .block--text {
         display: grid;
         gap: 1.6rem;

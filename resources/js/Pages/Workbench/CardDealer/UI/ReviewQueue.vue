@@ -1,6 +1,9 @@
 <script setup>
 import {computed} from "vue";
 import {useTooltip} from "../../../../composables/useTooltip.js";
+import {useI18n} from "vue-i18n";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
     cards: {
@@ -41,7 +44,7 @@ const upcomingReviews = computed(() => {
 
         schedule.push({
             date: dateString,
-            label: i === 0 ? 'Today' : date.toLocaleDateString('en-US', {day: 'numeric', month: 'short'}),
+            label: i === 0 ? t('card-dealer.review-queue.today') : date.toLocaleDateString(locale.value, {day: 'numeric', month: 'short'}),
             count
         });
     }
@@ -66,7 +69,7 @@ const {
 
 <template>
     <div class="chart-section">
-        <div class="featured-title s">Review Queue</div>
+        <div class="featured-title s">{{ $t('card-dealer.review-queue.title') }}</div>
         <div class="review-stats-graph-wrapper">
             <div class="graph-y-axis-legend">
                 <div v-for="val in upcomingReviews.legend" :key="val">{{ val }}</div>
@@ -90,7 +93,7 @@ const {
         <div style="font-weight: 700">{{ tooltipData.label }}</div>
         <div>
             {{ tooltipData.count }}
-            <span style="font-size: 1.2rem">Due</span>
+            <span style="font-size: 1.2rem">{{ $t('card-dealer.review-queue.due') }}</span>
         </div>
     </div>
 </template>

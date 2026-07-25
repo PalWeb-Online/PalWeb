@@ -31,7 +31,7 @@ const handleToggleMenu = () => {
             <Teleport to="body">
                 <div ref="floating" v-if="isOpen" :style="floatingStyles" class="popup-menu">
                     <template v-if="!UserStore.hasFetchedDecks">
-                        <div>Loading Decks</div>
+                        <div>{{ $t('components.term.deck-toggle.loading') }}</div>
                         <LoadingSpinner/>
                     </template>
                     <form v-else-if="UserStore.decks.length > 0">
@@ -43,7 +43,7 @@ const handleToggleMenu = () => {
                         </button>
                     </form>
                     <a v-else>
-                        No Decks Available.
+                        {{ $t('components.term.deck-toggle.none') }}
                     </a>
                 </div>
             </Teleport>

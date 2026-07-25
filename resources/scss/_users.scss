@@ -61,7 +61,10 @@
 .user-comment {
     display: grid;
     background: var(--color-pastel-light);
-    border-radius: 0.4rem 3.2rem 3.2rem 3.2rem;
+    border-start-start-radius: 0.4rem;
+    border-start-end-radius: 3.2rem;
+    border-end-end-radius: 3.2rem;
+    border-end-start-radius: 3.2rem;
     line-height: 2.4rem;
     font-family: var(--body-font);
     position: relative;
@@ -90,6 +93,7 @@
         padding-block-start: 0.4rem;
         font-size: 1.6rem;
         font-family: var(--body-font);
+        direction: ltr;
     }
 
     .user-comment-data {
@@ -194,10 +198,10 @@
     .user-comment {
         margin-block-start: 0.5em;
         width: min(100%, 36rem);
+        overflow: hidden;
 
         .user-name, .user-comment-title {
             padding: 1.6rem 2.0rem;
-            border-radius: 0.4rem 3.2rem 0 0;
         }
 
         .user-name {

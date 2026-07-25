@@ -11,7 +11,9 @@ import PopupWindow from "../../../components/Modals/PopupWindow.vue";
 import AppTooltip from "../../../components/AppTooltip.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppButton from "../../../components/AppButton.vue";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const NotificationStore = useNotificationStore();
 
 const appTooltip = ref(null);
@@ -147,11 +149,11 @@ const dismissCard = async (action) => {
 
     if (action === 'master') {
         await axios.post(route('cards.master', card.id));
-        NotificationStore.addNotification('Mastered Card!', 'info');
+        NotificationStore.addNotification(t('pages.cards.review.notifications.mastered'), 'success');
 
     } else if (action === 'suspend') {
         await axios.post(route('cards.suspend', card.id));
-        NotificationStore.addNotification('Suspended Card!', 'info');
+        NotificationStore.addNotification(t('pages.cards.review.notifications.suspended'), 'success');
     }
 
     const key = `${card.id}-${index}`;
@@ -197,7 +199,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>
             </div>
             <div class="window-section-head">
-                <h1>review</h1>
+                <h1>{{ $t('pages.cards.review.title') }}</h1>
                 <PopupWindow title="Card Dealer (Review)">
                     <div class="h1">Tutorial</div>
                     <p>Welcome to the Review area of the Card Dealer. Here, you will be shown <b>Owned</b> Cards that
@@ -255,17 +257,17 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
             </div>
             <WindowSection :visible="false">
                 <template #title>
-                    <h2>options</h2>
+                    <h2>{{ $t('pages.cards.review.sections.options') }}</h2>
                 </template>
                 <template #content>
                     <div class="settings-wrapper">
-                        <ToggleSingle v-model="showTranscription" label="Show Transcription"/>
+                        <ToggleSingle v-model="showTranscription" :label="$t('components.common.options.show-transcription')"/>
                     </div>
                 </template>
             </WindowSection>
             <WindowSection :visible="false">
                 <template #title>
-                    <h2>card</h2>
+                    <h2>{{ $t('pages.cards.review.sections.card') }}</h2>
                 </template>
                 <template #content>
                     <div class="model-list index-list">
@@ -273,10 +275,10 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                                   :glossId="queue[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
                     </div>
                     <div class="settings-wrapper">
-                        <AppButton @click="dismissCard('master')" label="master"
+                        <AppButton @click="dismissCard('master')" :label="$t('actions.card.master')"
                                    :disabled="currentSlideIndex === queue.length - 1"
                         />
-                        <AppButton @click="dismissCard('suspend')" label="suspend"
+                        <AppButton @click="dismissCard('suspend')" :label="$t('actions.card.suspend')"
                                    :disabled="currentSlideIndex === queue.length - 1"
                         />
                     </div>
@@ -291,17 +293,17 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                 </div>
                 <div class="progress-bar-values">
                     <div class="featured-title s"
-                         @mousemove="appTooltip.showTooltip('Processed Session Cards', $event);"
+                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.processed-cards'), $event);"
                          @mouseleave="appTooltip.hideTooltip()">
                         {{ processedCount }}
                     </div>
                     <div class="featured-title l"
-                         @mousemove="appTooltip.showTooltip('Review Session Progress', $event);"
+                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.session-progress'), $event);"
                          @mouseleave="appTooltip.hideTooltip()">
                         {{ formatter.format(processedCount / cards.length) }}
                     </div>
                     <div class="featured-title s"
-                         @mousemove="appTooltip.showTooltip('Total Session Cards', $event);"
+                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.total-cards'), $event);"
                          @mouseleave="appTooltip.hideTooltip()">
                         {{ cards.length }}
                     </div>
@@ -313,34 +315,34 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
                     <div class="bucket-count-line"></div>
                     <div class="bucket-count-wrapper">
                         <div class="featured-title xs bucket-count"
-                             @mousemove="appTooltip.showTooltip('Remaining (New) Learning Cards', $event);"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning'), $event);"
                              @mouseleave="appTooltip.hideTooltip()">
                             {{ buckets.newCards }}
                         </div>
                         <div class="featured-title s bucket-count"
-                             @mousemove="appTooltip.showTooltip('Remaining Learning & Relearning Cards', $event);"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning-relearning'), $event);"
                              @mouseleave="appTooltip.hideTooltip()">
                             {{ buckets.learningCards }}
                         </div>
                         <div class="featured-title xs bucket-count"
-                             @mousemove="appTooltip.showTooltip('Remaining (Owned) Relearning Cards', $event);"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-relearning'), $event);"
                              @mouseleave="appTooltip.hideTooltip()">
                             {{ buckets.learningCards - buckets.newCards }}
                         </div>
                     </div>
-                    <div class="featured-title">learn</div>
+                    <div class="featured-title">{{ $t('pages.cards.review.learn') }}</div>
                 </div>
 
                 <div class="bucket-wrapper">
                     <div class="material-symbols-rounded">package_2</div>
                     <div class="bucket-count-wrapper">
                         <div class="featured-title s bucket-count"
-                             @mousemove="appTooltip.showTooltip('Remaining Owned Cards', $event);"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-owned'), $event);"
                              @mouseleave="appTooltip.hideTooltip()">
                             {{ buckets.reviewCards }}
                         </div>
                     </div>
-                    <div class="featured-title">review</div>
+                    <div class="featured-title">{{ $t('pages.cards.review.review') }}</div>
                 </div>
             </div>
         </div>
@@ -373,19 +375,19 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 
                         <div class="answer-buttons" :class="{disabled: gradeCommitted || !answerShown}">
                             <div>
-                                <button class="portal-button" @click="gradeCard(0)">Wrong</button>
+                                <button class="portal-button" @click="gradeCard(0)">{{ $t('card.grade.fail')}}</button>
                                 <div class="interval-preview">{{ card.next_intervals[0]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(1)">Barely</button>
+                                <button class="portal-button" @click="gradeCard(1)">{{ $t('card.grade.low')}}</button>
                                 <div class="interval-preview">{{ card.next_intervals[1]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(2)">Know</button>
+                                <button class="portal-button" @click="gradeCard(2)">{{ $t('card.grade.medium')}}</button>
                                 <div class="interval-preview">{{ card.next_intervals[2]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(3)">Easy</button>
+                                <button class="portal-button" @click="gradeCard(3)">{{ $t('card.grade.high')}}</button>
                                 <div class="interval-preview">{{ card.next_intervals[3]?.label }}</div>
                             </div>
 

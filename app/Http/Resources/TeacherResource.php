@@ -18,7 +18,7 @@ class TeacherResource extends JsonResource
             'id' => $this->id,
             'bio' => $this->bio,
             'email' => $this->email,
-            'created_at' => $this->created_at->format('j F Y'),
+            'created_at' => $this->created_at->translatedFormat('j F Y'),
             'created_ago' => $this->created_at->diffForHumans(),
         ];
     }

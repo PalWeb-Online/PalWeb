@@ -437,8 +437,8 @@ Route::prefix('/api')->group(function () {
     });
 
     Route::prefix('/units')->controller(UnitController::class)->group(function () {
-        Route::get('/{unit}', 'fetch')->name('api.units.fetch');
         Route::get('/search', 'search')->name('api.units.search');
+        Route::get('/{unit}', 'fetch')->name('api.units.fetch');
     });
 
     Route::prefix('/wiki')->controller(PageController::class)->group(function () {

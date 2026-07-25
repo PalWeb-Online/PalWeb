@@ -127,9 +127,9 @@ const isCCC = computed(() => {
 <template>
     <div class="search-filters-container">
         <select v-model="filters.match">
-            <option value="root">Match Root</option>
-            <option value="term">Match Term</option>
-            <option value="gloss">Match Gloss</option>
+            <option value="root">{{ $t('search.filters.match.root') }}</option>
+            <option value="term">{{ $t('search.filters.match.term') }}</option>
+            <option value="gloss">{{ $t('search.filters.match.gloss') }}</option>
         </select>
 
         <div class="search-bar">
@@ -144,120 +144,120 @@ const isCCC = computed(() => {
                 v-model="filters.search"
                 :class="{'persisting': filters.search.length}"
                 type="text"
-                placeholder="دوّر"
+                :placeholder="$t('search.filters.placeholder')"
             />
         </div>
 
         <select v-model="filters.sort"
                 :class="((activeModel === 'terms' && filters.sort !== 'alphabetical') || (activeModel !== 'terms' && filters.sort !== 'latest')) ? 'persisting' : ''"
                 v-if="['terms', 'decks'].includes(activeModel)">
-            <option value="alphabetical" v-if="activeModel === 'terms'">Alphabetical by Root</option>
-            <option value="frequency" v-if="activeModel === 'terms'">by Frequency</option>
-            <option value="latest">by Latest</option>
-            <option value="popular" v-if="activeModel === 'decks'">by Popularity</option>
-            <option value="pinned" v-if="filters.pinned">by Pinned</option>
+            <option value="alphabetical" v-if="activeModel === 'terms'">{{ $t('search.filters.sort.alphabetical-root') }}</option>
+            <option value="frequency" v-if="activeModel === 'terms'">{{ $t('search.filters.sort.frequency') }}</option>
+            <option value="latest">{{ $t('search.filters.sort.latest') }}</option>
+            <option value="popular" v-if="activeModel === 'decks'">{{ $t('search.filters.sort.popularity') }}</option>
+            <option value="pinned" v-if="filters.pinned">{{ $t('search.filters.sort.pinned') }}</option>
         </select>
 
         <div class="search-filters" v-if="activeModel === 'terms'">
             <select v-model="filters.category" :class="filters.category ? 'persisting' : ''">
-                <option value="">Category</option>
-                <option value="verb">Verbs</option>
-                <option value="noun">Nouns</option>
-                <option value="adjective">Adjectives</option>
-                <option value="numeral">Numerals</option>
-                <option value="adverb">Adverbs</option>
-                <option value="preposition">Prepositions</option>
-                <option value="conjunction">Conjunctions</option>
-                <option value="determiner">Determiners</option>
-                <option value="particle">Particles</option>
-                <option value="phrase">Phrases</option>
-                <option value="affix">Affixes</option>
+                <option value="">{{ $t('term.filters.category') }}</option>
+                <option value="verb">{{ $t('term.filters.categories.verbs') }}</option>
+                <option value="noun">{{ $t('term.filters.categories.nouns') }}</option>
+                <option value="adjective">{{ $t('term.filters.categories.adjectives') }}</option>
+                <option value="numeral">{{ $t('term.filters.categories.numerals') }}</option>
+                <option value="adverb">{{ $t('term.filters.categories.adverbs') }}</option>
+                <option value="preposition">{{ $t('term.filters.categories.prepositions') }}</option>
+                <option value="conjunction">{{ $t('term.filters.categories.conjunctions') }}</option>
+                <option value="determiner">{{ $t('term.filters.categories.determiners') }}</option>
+                <option value="particle">{{ $t('term.filters.categories.particles') }}</option>
+                <option value="phrase">{{ $t('term.filters.categories.phrases') }}</option>
+                <option value="affix">{{ $t('term.filters.categories.affixes') }}</option>
             </select>
             <select v-model="filters.attribute" :class="filters.attribute ? 'persisting' : ''">
-                <option value="">Attribute</option>
+                <option value="">{{ $t('term.filters.attribute') }}</option>
                 <option
                     v-if="filters.category === '' || filters.category === 'noun' || filters.category === 'determiner'"
                     value="masculine">
-                    Masculine
+                    {{ $t('term.filters.attributes.masculine') }}
                 </option>
                 <option
                     v-if="filters.category === '' || filters.category === 'noun' || filters.category === 'determiner'"
                     value="feminine">
-                    Feminine
+                    {{ $t('term.filters.attributes.feminine') }}
                 </option>
                 <option
                     v-if="filters.category === '' || filters.category === 'noun' || filters.category === 'determiner'"
                     value="plural">
-                    Plural
+                    {{ $t('term.filters.attributes.plural') }}
                 </option>
                 <option v-if="filters.category === '' || filters.category === 'noun'" value="collective">
-                    Collective
+                    {{ $t('term.filters.attributes.collective') }}
                 </option>
                 <option
                     v-if="filters.category === '' || filters.category === 'noun' || filters.category === 'adjective'"
                     value="demonym">
-                    Demonym
+                    {{ $t('term.filters.attributes.demonym') }}
                 </option>
                 <option
                     v-if="(filters.category === '' || filters.category === 'adjective') && filters.form === ''"
                     value="defect">
-                    Defect
+                    {{ $t('term.filters.attributes.defect') }}
                 </option>
                 <option v-if="(filters.category === '' || filters.category === 'verb') && filters.form === ''"
                         value="pseudo">
-                    Pseudo
+                    {{ $t('term.filters.attributes.pseudo') }}
                 </option>
-                <option value="clitic">Clitic</option>
-                <option value="idiom">Idiom</option>
+                <option value="clitic">{{ $t('term.filters.attributes.clitic') }}</option>
+                <option value="idiom">{{ $t('term.filters.attributes.idiom') }}</option>
             </select>
             <select v-model="filters.form" :class="filters.form ? 'persisting' : ''">
-                <option value="">Form</option>
-                <option value="1">Form 1</option>
+                <option value="">{{ $t('term.filters.form.label') }}</option>
+                <option value="1">{{ $t('term.filters.form.option', { form: 1 }) }}</option>
                 <template v-if="filters.category !== 'numeral' && filters.plural !== 'Cu22āC'">
-                    <option value="2">Form 2</option>
-                    <option value="3">Form 3</option>
-                    <option value="4">Form 4</option>
-                    <option value="5">Form 5</option>
-                    <option value="6">Form 6</option>
-                    <option value="7">Form 7</option>
-                    <option value="8">Form 8</option>
-                    <option value="9">Form 9</option>
-                    <option value="X">Form X</option>
-                    <option value="2Q">Form 2Q</option>
-                    <option value="5Q">Form 5Q</option>
+                    <option value="2">{{ $t('term.filters.form.option', { form: 2 }) }}</option>
+                    <option value="3">{{ $t('term.filters.form.option', { form: 3 }) }}</option>
+                    <option value="4">{{ $t('term.filters.form.option', { form: 4 }) }}</option>
+                    <option value="5">{{ $t('term.filters.form.option', { form: 5 }) }}</option>
+                    <option value="6">{{ $t('term.filters.form.option', { form: 6 }) }}</option>
+                    <option value="7">{{ $t('term.filters.form.option', { form: 7 }) }}</option>
+                    <option value="8">{{ $t('term.filters.form.option', { form: 8 }) }}</option>
+                    <option value="9">{{ $t('term.filters.form.option', { form: 9 }) }}</option>
+                    <option value="X">{{ $t('term.filters.form.option', { form: 'X' }) }}</option>
+                    <option value="2Q">{{ $t('term.filters.form.option', { form: '2Q' }) }}</option>
+                    <option value="5Q">{{ $t('term.filters.form.option', { form: '5Q' }) }}</option>
                 </template>
             </select>
             <select v-model="filters.singular" :class="filters.singular ? 'persisting' : ''">
-                <option value="">Singular</option>
-                <optgroup v-if="filters.category === 'numeral'" label="Derived Terms">
-                    <option value="ap">Act. Part.</option>
+                <option value="">{{ $t('term.filters.singular') }}</option>
+                <optgroup v-if="filters.category === 'numeral'" :label="$t('term.filters.pattern-groups.derived-terms')">
+                    <option value="ap">{{ $t('term.filters.patterns.active-participle-abbr') }}</option>
                 </optgroup>
                 <template v-if="filters.category !== 'numeral'">
-                    <optgroup label="Derived Terms">
+                    <optgroup :label="$t('term.filters.pattern-groups.derived-terms')">
                         <option value="ap">AP</option>
                         <option value="pp">PP</option>
                         <option value="vn">VN</option>
                     </optgroup>
-                    <optgroup label="Named Patterns">
-                        <option value="relative">Relative Adj.</option>
-                        <option value="ia">Intensive Adj.</option>
-                        <option value="na">Nominalized Adj.</option>
+                    <optgroup :label="$t('term.filters.pattern-groups.named-patterns')">
+                        <option value="relative">{{ $t('term.filters.patterns.relative-adjective-abbr') }}</option>
+                        <option value="ia">{{ $t('term.filters.patterns.intensive-adjective-abbr') }}</option>
+                        <option value="na">{{ $t('term.filters.patterns.nominalized-adjective-abbr') }}</option>
                     </optgroup>
-                    <optgroup label="Length 3">
+                    <optgroup :label="$t('term.filters.pattern-groups.length', { length: 3 })">
                         <option value="CLC">CLC</option>
                         <option value="CVCC">CVCC</option>
                         <option value="CVCCe">CVCCe</option>
                         <option value="CVCVC">CVCVC</option>
                         <option value="CiCiC">CiCiC</option>
                     </optgroup>
-                    <optgroup label="Length 4">
+                    <optgroup :label="$t('term.filters.pattern-groups.length', { length: 4 })">
                         <option value="CCāC">CCāC</option>
                         <option value="CCīC">CCīC</option>
                         <option value="CCūC">CCūC</option>
                         <option value="CVCCVC">CVCCVC</option>
                         <option value="maCCVC">maCCVC</option>
                     </optgroup>
-                    <optgroup label="Length 5">
+                    <optgroup :label="$t('term.filters.pattern-groups.length', { length: 5 })">
                         <option value="CVCCLC">CVCCLC</option>
                         <option value="CaC:āC">CaC:āC</option>
                         <option value="CaC:īC">CaC:īC</option>
@@ -266,25 +266,25 @@ const isCCC = computed(() => {
                 </template>
             </select>
             <select v-model="filters.plural" :class="filters.plural ? 'persisting' : ''">
-                <option value="">Plural</option>
-                <optgroup v-if="filters.singular === '' || isRegular" label="Sound">
+                <option value="">{{ $t('term.filters.plural') }}</option>
+                <optgroup v-if="filters.singular === '' || isRegular" :label="$t('term.filters.pattern-groups.sound')">
                     <option value="-īn">-īn</option>
                     <option value="-āt">-āt</option>
                 </optgroup>
-                <optgroup label="Length 3">
+                <optgroup :label="$t('term.filters.pattern-groups.length', { length: 3 })">
                     <template v-if="filters.singular === '' || isCCC">
                         <option value="CCūC">CCūC</option>
                         <option value="ʔaCCāC">ʔaCCāC</option>
                         <option value="CVCaC">CVCaC</option>
                     </template>
                 </optgroup>
-                <optgroup v-if="!isRegular" label="Length 3 / 4">
+                <optgroup v-if="!isRegular" :label="$t('term.filters.pattern-groups.length-range', { start: 3, end: 4 })">
                     <option value="CCāC">CCāC</option>
                     <option value="CVCCān">CVCCān</option>
                 </optgroup>
                 <optgroup
                     v-if="filters.singular === '' || (filters.singular === 'CCāC' || filters.singular === 'CCīC')"
-                    label="Length 4">
+                    :label="$t('term.filters.pattern-groups.length', { length: 4 })">
                     <option v-if="!isRegular" value="CaCāCiC">CaCāCiC</option>
                     <option value="CuC:āC" v-if="filters.singular === '' || filters.singular === 'ap'">CuC:āC</option>
                     <option value="CuCuC">CuCuC</option>
@@ -296,7 +296,7 @@ const isCCC = computed(() => {
                 </optgroup>
                 <optgroup
                     v-if="filters.singular === '' || filters.singular === 'CVCCLC' || filters.singular === 'relative'"
-                    label="Length 5">
+                    :label="$t('term.filters.pattern-groups.length', { length: 5 })">
                     <option v-if="filters.singular !== 'relative'" value="CaCāCīC">CaCāCīC</option>
                     <option value="CaCāCCe">CaCāCCe</option>
                 </optgroup>

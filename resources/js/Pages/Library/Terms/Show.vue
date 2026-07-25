@@ -4,6 +4,7 @@ import Layout from "../../../Shared/Layout.vue";
 import TermContainer from "../../../components/TermContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useTermViewer} from "../../../composables/terms/useTermViewer.js";
+import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({layout: Layout});
 
@@ -40,9 +41,12 @@ const pageTitle = computed(() => {
 
 <template>
     <Head :title="pageTitle"/>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingTerms"/>
-        <TermContainer v-else-if="terms?.length > 0" v-for="term in terms" :key="term.id" :model="term"/>
-        <div v-else-if="termsNotFound" class="loading-state"><p>Unable to load Term.</p></div>
+
+    <LoadingSpinner v-if="isLoadingTerms"/>
+    <AppTip v-else-if="termsNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
+    </AppTip>
+    <div v-else-if="terms?.length > 0" id="app-body">
+        <TermContainer v-for="term in terms" :key="term.id" :model="term"/>
     </div>
 </template>

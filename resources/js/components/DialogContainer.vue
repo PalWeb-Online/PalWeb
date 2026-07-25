@@ -31,7 +31,7 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
                 <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
             </div>
             <div class="window-section-head">
-                <h1>dialog</h1>
+                <h1>{{ $t('components.dialog.title') }}</h1>
                 <DialogActions :model="dialog"/>
             </div>
             <AppTip v-if="!dialog.published">
@@ -47,23 +47,23 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
 
             <template v-if="dialog.media">
                 <div class="window-section-head">
-                    <h2>media</h2>
+                    <h2>{{ $t('components.dialog.sections.media') }}</h2>
                 </div>
                 <iframe :src="dialog.media" allowfullscreen></iframe>
             </template>
 
             <template v-if="!isLoadingTerms">
                 <div class="window-section-head">
-                    <h2>options</h2>
+                    <h2>{{ $t('components.dialog.sections.options') }}</h2>
                 </div>
                 <div class="settings-wrapper">
-                    <ToggleSingle v-model="showTerms" label="Show Terms"/>
-                    <ToggleSingle v-model="showTranscription" label="Show Transcription"/>
+                    <ToggleSingle v-model="showTerms" :label="$t('components.dialog.options.show-terms')"/>
+                    <ToggleSingle v-model="showTranscription" :label="$t('components.common.options.show-transcription')"/>
                 </div>
             </template>
 
             <div class="window-section-head">
-                <h2>transcript</h2>
+                <h2>{{ $t('components.dialog.sections.transcript') }}</h2>
             </div>
             <div class="loading-dialog" v-if="isLoadingTerms">
                 <AppTip>

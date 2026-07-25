@@ -62,7 +62,7 @@ watch(() => props.selectedScore, (newVal) => {
 <template>
     <Head :title="`Academy: Score History for ${model.id}`"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>Scores</h1></Link>
+        <Link :href="route('scores.index')"><h1>{{ $t('pages.scores.index.title') }}</h1></Link>
     </div>
     <div id="app-body">
         <div class="window-container">
@@ -72,7 +72,7 @@ watch(() => props.selectedScore, (newVal) => {
                 </div>
             </div>
             <div class="window-section-head">
-                <h1>{{ scorable_type }}</h1>
+                <h1>{{ $t(`components.${scorable_type}.title`) }}</h1>
                 <PinButton :modelType="scorable_type" :model="model"/>
                 <DeckActions v-if="scorable_type === 'deck'" :model="model"/>
                 <ActivityActions v-if="scorable_type === 'activity'" :model="model"/>
@@ -82,7 +82,7 @@ watch(() => props.selectedScore, (newVal) => {
             </div>
             <WindowSection>
                 <template #title>
-                    <h2>stats</h2>
+                    <h2>{{ $t('components.common.sections.stats') }}</h2>
                 </template>
                 <template #content>
                     <ScoreStats :model="model"/>
@@ -96,7 +96,7 @@ watch(() => props.selectedScore, (newVal) => {
                         class="material-symbols-rounded" preserve-scroll preserve-state>
                         arrow_back
                     </Link>
-                    <h2>Detail</h2>
+                    <h2>{{ $t('components.score.sections.detail') }}</h2>
                     <button @click="deleteScore(selectedScore?.id)" class="material-symbols-rounded">delete</button>
                 </div>
                 <ScoreDetail :score="selectedScore">
@@ -109,19 +109,26 @@ watch(() => props.selectedScore, (newVal) => {
             </template>
             <template v-else>
                 <div class="window-section-head">
-                    <h2>History</h2>
+                    <h2>{{ $t('components.score.sections.history') }}</h2>
                     <button v-if="totalCount > 0" @click="showPurgeScores = true" class="material-symbols-rounded">
                         delete_sweep
                     </button>
                 </div>
                 <AppTip>
-                    <p v-if="totalCount > 0">Displaying all {{ totalCount }} Scores for this
-                        <span style="text-transform: capitalize">{{ scorable_type }}</span>,
-                        from most to least recent.</p>
-                    <p v-else>You have not Quizzed this <span style="text-transform: capitalize">{{
-                            scorable_type
-                        }}</span>
-                        yet. When you do, you will see a history of your Scores here.
+                    <p v-if="totalCount > 0">
+                        {{
+                            $t('pages.scores.history.messages.displaying-all', {
+                                count: totalCount,
+                                model: $t(`components.${scorable_type}.title`)
+                            })
+                        }}
+                    </p>
+                    <p v-else>
+                        {{
+                            $t('pages.scores.history.messages.no-scores', {
+                                model: $t(`components.${scorable_type}.title`)
+                            })
+                        }}
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">
@@ -129,7 +136,7 @@ watch(() => props.selectedScore, (newVal) => {
                         <Link
                             :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
                             class="score-item" preserve-scroll preserve-state>
-                            <div style="text-transform: capitalize">{{ score.settings.quizType ?? 'Activity' }}</div>
+                            <div style="text-transform: capitalize">{{ $t(`models.${score.settings.quizType}`) ?? $t('components.activity.title') }}</div>
                             <div>{{ getScoreStats(score).formatted }}
                                 ({{ getScoreStats(score).correct }}/{{ getScoreStats(score).total }})
                             </div>

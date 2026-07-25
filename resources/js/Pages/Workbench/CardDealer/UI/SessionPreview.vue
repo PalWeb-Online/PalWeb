@@ -105,7 +105,7 @@ const sessionSettings = ref({
 <template>
     <div class="score-stats-wrapper" style="width: min(96rem, 100%); gap: 1.6rem">
         <div class="featured-title m">
-            Today’s Review
+            {{ $t('card-dealer.session-preview.title') }}
             <PopupWindow title="Card Dealer (Session)">
                 <div class="h1">Session Preview</div>
                 <p>Cards within Review Sessions belong to two main categories: <b>Review</b> & <b>New</b>
@@ -145,7 +145,7 @@ const sessionSettings = ref({
             <div class="score-stats-container__content">
                 <div class="score-stats-highlight-wrapper">
                     <div class="score-highlight">
-                        <div class="score-highlight-title">Total Due</div>
+                        <div class="score-highlight-title">{{ $t('card-dealer.session-preview.due') }}</div>
                         <div style="display: grid; justify-items: center">
                             <div v-if="scope !== 'all'" class="featured-title s"
                                  style="font-size: 3.2rem; color: var(--color-pastel-dark)">
@@ -169,7 +169,7 @@ const sessionSettings = ref({
                         </div>
                     </div>
                     <div class="score-highlight">
-                        <div class="score-highlight-title">New</div>
+                        <div class="score-highlight-title">{{ $t('card-dealer.session-preview.new') }}</div>
                         <div style="display: grid; justify-items: center">
                             <div v-if="scope !== 'all'" class="featured-title s"
                                  style="font-size: 3.2rem; color: var(--color-pastel-dark)">
@@ -194,13 +194,13 @@ const sessionSettings = ref({
 
                         <button class="material-symbols-rounded"
                                 @click="purgeNew"
-                                @mousemove="appTooltip.showTooltip('Purges all your New Cards.', $event);"
+                                @mousemove="appTooltip.showTooltip($t('card-dealer.session-preview.tooltips.purge'), $event);"
                                 @mouseleave="appTooltip.hideTooltip()"
                         >cycle
                         </button>
                     </div>
                     <div class="score-highlight">
-                        <div class="score-highlight-title">Review</div>
+                        <div class="score-highlight-title">{{ $t('card-dealer.session-preview.review') }}</div>
                         <div v-if="scope !== 'all'" class="featured-title s"
                              style="font-size: 3.2rem; color: var(--color-pastel-dark)">
                             {{ allStats.remainingReviews }}
@@ -233,7 +233,7 @@ const sessionSettings = ref({
                 <SessionSettings :settings="sessionSettings"/>
                 <button v-if="props.scope !== 'deck' || (props.scope === 'deck' && props.deckId)"
                         class="featured-title s session-start-button" type="button" @click="startReview">
-                    start
+                    {{ $t('card-dealer.session-preview.start') }}
                 </button>
             </div>
         </div>

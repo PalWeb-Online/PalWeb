@@ -30,7 +30,7 @@ const {dialog, isLoading} = useDialog(props);
     <template v-if="!isLoading">
         <div class="model-item-container dialog-item-container">
             <div v-if="!dialog.unlocked" class="model-item-overlay"
-                 @mousemove="tooltip.showTooltip('You haven\'t unlocked this Dialog in the Academy yet.', $event);"
+                 @mousemove="tooltip.showTooltip($t('components.dialog.locked'), $event);"
                  @mouseleave="tooltip.hideTooltip()"></div>
 
             <div class="model-item dialog-item">

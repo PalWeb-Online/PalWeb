@@ -94,7 +94,7 @@ watch(
 <template>
     <Head title="Academy: Lessons"/>
     <div id="app-head">
-        <h1>lesson planner</h1>
+        <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="form-body" style="width: min(96rem, 100%); padding: 0">
@@ -104,13 +104,12 @@ watch(
                 </Link>
             </div>
             <div class="featured-title l">
-                Course
+                {{ $t('pages.lesson-planner.course') }}
             </div>
-
             <div class="featured-title m">
-                Units
+                {{ $t('models.units') }}
             </div>
-            <p>You must go to the edit page for a Unit to delete it.</p>
+            <p>{{ $t('pages.lesson-planner.messages.info-unit-removal') }}</p>
             <draggable v-if="form.units.length > 0" class="unit-lessons-draggable"
                        :list="form.units" itemKey="id" handle=".handle"
                        @change="updateUnitPositions">
@@ -130,13 +129,16 @@ watch(
                     </li>
                 </template>
             </draggable>
-            <button @click="addUnit">
-                + Unit
-            </button>
+            <div class="block-add-buttons">
+                <div>
+                    <div class="add-button" @click="addUnit">+</div>
+                    <div>{{ $t('actions.models.unit') }}</div>
+                </div>
+            </div>
 
             <template v-if="lessons.length">
                 <div class="featured-title m">
-                    Lessons
+                    {{ $t('models.lessons') }}
                 </div>
                 <ul class="unit-lessons-draggable">
                     <li v-for="lesson in lessons" class="draggable-item" :class="{'hidden': !lesson.published}">
@@ -152,16 +154,19 @@ watch(
         </div>
 
         <AppTip v-if="!isValidRequest">
-            <p style="font-weight: 700">The Course cannot be saved in the current state.</p>
+            <p style="font-weight: 700">{{ $t('forms.messages.has-validation-errors', {model: $t('pages.lesson-planner.course')}) }}</p>
             <ul>
                 <li v-for="(issue, i) in validationIssues" :key="i">{{ issue }}</li>
             </ul>
         </AppTip>
         <div class="app-nav-interact">
             <div class="app-nav-interact-buttons">
-                <button type="button" @click="saveCourse"
-                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest">
-                    Save
+                <button
+                    type="button"
+                    @click="saveCourse"
+                    :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
+                >
+                    {{ $t('forms.actions.save') }}
                 </button>
             </div>
         </div>
@@ -169,7 +174,7 @@ watch(
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

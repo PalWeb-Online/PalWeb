@@ -2,6 +2,9 @@
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import {useTooltip} from "../../../../composables/useTooltip.js";
 import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
     review_history: Object
@@ -44,7 +47,7 @@ const reviewHistory = computed(() => {
 
         history.push({
             date: dateString,
-            label: i === 0 ? 'Today' : date.toLocaleDateString('en-US', {day: 'numeric', month: 'short'}),
+            label: i === 0 ? t('card-dealer.review-queue.today') : date.toLocaleDateString(locale.value, {day: 'numeric', month: 'short'}),
             newCardsCount,
             ownedCardsCount,
             rightReviewsCount,
@@ -112,7 +115,7 @@ const {
 <template>
     <div class="chart-section">
         <div class="featured-title s">
-            Review History
+            {{ $t('card-dealer.review-history.title') }}
             <PopupWindow title="Card Dealer (Stats)">
                 <div class="h1">Review History</div>
                 <div class="h2">Cards</div>
@@ -166,15 +169,15 @@ const {
         <div class="progress-bar-mode-tabs">
             <button :class="{ active: historyGraphMode === 'cards' }"
                     @click="historyGraphMode = 'cards'">
-                Cards
+                {{ $t('card-dealer.review-history.cards') }}
             </button>
             <button :class="{ active: historyGraphMode === 'actions' }"
                     @click="historyGraphMode = 'actions'">
-                Actions
+                {{ $t('card-dealer.review-history.actions') }}
             </button>
             <button :class="{ active: historyGraphMode === 'trends' }"
                     @click="historyGraphMode = 'trends'">
-                Trends
+                {{ $t('card-dealer.review-history.trends') }}
             </button>
         </div>
         <div class="review-stats-graph-wrapper">
@@ -230,24 +233,24 @@ const {
         <template v-if="historyGraphMode === 'cards'">
             <div>{{ tooltipData.totalCards }}
                 <span style="font-size: 1.2rem">
-                    Cards
+                    {{ $t('card-dealer.review-history.cards') }}
                 </span>
             </div>
             <div style="display: grid; gap: 0.2rem">
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-dark-primary)"></div>
-                    {{ tooltipData.ownedCardsCount }} Owned
+                    {{ tooltipData.ownedCardsCount }} {{ $t('card-dealer.review-history.owned') }}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-pastel-dark)"></div>
-                    {{ tooltipData.newCardsCount }} New
+                    {{ tooltipData.newCardsCount }} {{ $t('card-dealer.review-history.new') }}
                 </div>
             </div>
         </template>
         <template v-else>
             <div>{{ tooltipData.totalActions }}
                 <span style="font-size: 1.2rem">
-                        Actions
+                        {{ $t('card-dealer.review-history.actions') }}
                          <span style="font-weight: 400">
                         ({{ formatTime(tooltipData.totalSeconds) }})
                     </span>
@@ -256,29 +259,29 @@ const {
             <div style="display: grid; gap: 0.2rem">
                 <div style="font-weight: 700">
                     {{ tooltipData.rightReviewsCount + tooltipData.wrongReviewsCount }}
-                    Reviews
+                    {{ $t('card-dealer.review-history.reviews') }}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-dark-primary)"></div>
-                    {{ tooltipData.rightReviewsCount }} Right
+                    {{ tooltipData.rightReviewsCount }} {{ $t('card-dealer.review-history.right') }}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-medium-primary)"></div>
-                    {{ tooltipData.wrongReviewsCount }} Wrong
+                    {{ tooltipData.wrongReviewsCount }} {{ $t('card-dealer.review-history.wrong') }}
                 </div>
             </div>
             <div style="display: grid; gap: 0.2rem">
                 <div style="font-weight: 700">
                     {{ tooltipData.relearningStepsCount + tooltipData.learningStepsCount }}
-                    Steps
+                    {{ $t('card-dealer.review-history.steps') }}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-accent-light)"></div>
-                    {{ tooltipData.relearningStepsCount }} Relearning
+                    {{ tooltipData.relearningStepsCount }} {{ $t('card-dealer.review-history.relearning') }}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.4rem">
                     <div class="bar-legend" style="background: var(--color-pastel-dark)"></div>
-                    {{ tooltipData.learningStepsCount }} Learning
+                    {{ tooltipData.learningStepsCount }} {{ $t('card-dealer.review-history.learning') }}
                 </div>
             </div>
         </template>

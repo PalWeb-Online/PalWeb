@@ -4,7 +4,7 @@ export function useUnitSearch() {
     const {
         searchResource: searchUnits,
     } = useResourceSearch({
-        routeBase: 'api.units.search',
+        routeName: 'api.units.search',
     });
 
     return {

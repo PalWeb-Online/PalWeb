@@ -4,6 +4,7 @@ import Layout from "../../../Shared/Layout.vue";
 import SentenceContainer from "../../../components/SentenceContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useSentenceViewer} from "../../../composables/sentences/useSentenceViewer.js";
+import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({layout: Layout});
 
@@ -32,9 +33,12 @@ watch(
 
 <template>
     <Head :title="sentence ? `Library: Corpus: ${sentence.sentence}` : 'Library: Corpus'"/>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingSentence"/>
-        <SentenceContainer v-else-if="sentence" :model="sentence"/>
-        <div v-else-if="sentenceNotFound" class="loading-state"><p>Unable to load Sentence.</p></div>
+
+    <LoadingSpinner v-if="isLoadingSentence"/>
+    <AppTip v-else-if="sentenceNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.sentence')}) }}</p>
+    </AppTip>
+    <div v-else-if="sentence" id="app-body">
+        <SentenceContainer :model="sentence"/>
     </div>
 </template>

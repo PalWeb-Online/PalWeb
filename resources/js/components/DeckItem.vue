@@ -40,7 +40,7 @@ const {deck, blurb, isLoading} = useDeck(props);
     <template v-if="! isLoading">
         <div class="model-item-container deck-item-container">
             <div v-if="!deck.unlocked" class="model-item-overlay"
-                 @mousemove="tooltip.showTooltip('You haven\'t unlocked this Deck in the Academy yet.', $event);"
+                 @mousemove="tooltip.showTooltip($t('components.deck.locked'), $event);"
                  @mouseleave="tooltip.hideTooltip()"></div>
 
             <div :class="['model-item', 'deck-item', size]">
@@ -56,11 +56,13 @@ const {deck, blurb, isLoading} = useDeck(props);
                         {{ deck.private ? 'lock' : 'public' }}
                     </div>
                     <div class="deck-author-name">
-                        by {{ !deck.author.private ? deck.author.name : 'Anonymous' }}
+                        {{
+                            $t('components.common.by-author', {author: deck.author.private ? $t('components.common.anonymous') : deck.author.name})
+                        }}
                     </div>
                 </div>
                 <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
-                     class="deck-author-avatar" alt="Avatar"
+                     class="deck-author-avatar" :alt="$t('components.common.alt.avatar')"
                      :src="deck.author.avatar_url"/>
                 <DeckActions :model="deck"/>
             </div>
@@ -70,10 +72,10 @@ const {deck, blurb, isLoading} = useDeck(props);
                 {{ blurb }}
             </div>
             <div v-if="deck.stats" class="model-item-stats">
-                <span style="font-weight: 700">Times Quizzed</span>
+                <span style="font-weight: 700">{{ $t('components.score.stats.times-quizzed') }}</span>
                 <span>{{ deck.stats.count }}</span>
                 ·
-                <span style="font-weight: 700">Latest Score</span>
+                <span style="font-weight: 700">{{ $t('components.score.stats.latest-score') }}</span>
                 <span>{{ formatter.format(deck.stats.latest) }}</span>
                 <span>({{ deck.stats.latest_date }})</span>
             </div>

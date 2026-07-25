@@ -16,19 +16,19 @@ const props = defineProps({
     <ContextActions v-slot="{ closeMenu }">
         <Link v-if="$page.component !== 'Academy/Dialogs/Show'"
               :href="route('dialogs.show', model.id)" role="menuitem" tabindex="-1">
-            View Dialog
+            {{ $t('actions.common.view', { model: $t('actions.models.dialog') }) }}
         </Link>
         <template v-if="UserStore.isAdmin">
             <Link :href="route('speech-maker.dialog', model.id)" role="menuitem" tabindex="-1">
-                Edit Dialog
+                {{ $t('actions.common.edit', { model: $t('actions.models.dialog') }) }}
             </Link>
             <button @click="deleteDialog(model)" role="menuitem" tabindex="-1">
-                Delete Dialog
+                {{ $t('actions.common.delete', { model: $t('actions.models.dialog') }) }}
             </button>
         </template>
         <Link v-if="model.lesson" :href="route('lessons.show', model.lesson.global_position)" role="menuitem"
               tabindex="-1">
-            View Lesson
+            {{ $t('actions.common.view', { model: $t('actions.models.lesson') }) }}
         </Link>
     </ContextActions>
 </template>

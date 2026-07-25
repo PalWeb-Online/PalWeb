@@ -28,13 +28,13 @@ const sendFeedback = () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1>send feedback</h1>
+            <h1>{{ $t('modals.send-feedback.title') }}</h1>
         </div>
         <form @submit.prevent="sendFeedback">
             <div class="modal-container-body form-body">
                 <CommentItem :user="UserStore.user">
                     <textarea class="user-comment-content" v-model="form.comment"
-                              placeholder="Is something broken? Is a word missing from the Dictionary? Let us know!"
+                              :placeholder="$t('modals.send-feedback.placeholder')"
                     />
                     <div class="user-comment-data">
                         — {{ UserStore.user.name }} ({{ UserStore.user.username }})
@@ -44,7 +44,7 @@ const sendFeedback = () => {
             </div>
             <div class="window-footer">
                 <button type="submit" :disabled="form.processing || !isValidRequest">
-                    Submit
+                    {{ $t('modals.send-feedback.submit') }}
                 </button>
             </div>
         </form>

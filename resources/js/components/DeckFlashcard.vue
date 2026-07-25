@@ -47,7 +47,7 @@ const {deck, blurb, isLoading} = useDeck(props);
 <template>
     <template v-if="! isLoading">
         <div :class="['deck-flashcard-wrapper', { active: active }]"
-             @mousemove="disabled && tooltip.showTooltip('This Deck is empty.', $event);"
+             @mousemove="disabled && tooltip.showTooltip($t('components.deck.empty'), $event);"
              @mouseleave="disabled && tooltip.hideTooltip()"
         >
             <div :class="['deck-flashcard', { flipped: active }, { disabled: disabled }]" ref="flashcard"
@@ -57,7 +57,9 @@ const {deck, blurb, isLoading} = useDeck(props);
                     <div class="deck-flashcard-front-head">
                         <div class="model-item-title">{{ deck.name }}</div>
                         <div class="deck-author-name">
-                            by {{ !deck.author.private ? deck.author.name : 'Anonymous' }}
+                            {{
+                                $t('components.common.by-author', {author: deck.author.private ? $t('components.common.anonymous') : deck.author.name})
+                            }}
                         </div>
                     </div>
                     <div class="deck-flashcard-front-body"
@@ -69,7 +71,9 @@ const {deck, blurb, isLoading} = useDeck(props);
                     <div class="deck-flashcard-back-terms">
                         <div v-for="term in deck.terms.slice(0, 16)">{{ term.term }}</div>
                     </div>
-                    <div class="deck-flashcard-back-count">{{ deck.terms.length }} terms</div>
+                    <div class="deck-flashcard-back-count">
+                        {{ $t('components.common.counts.terms', {count: deck.terms.length}) }}
+                    </div>
                 </div>
             </div>
 
@@ -87,7 +91,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 <div class="model-item-container deck-item-container">
                     <div class="model-item deck-item">
                         <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
-                             class="deck-author-avatar" alt="Avatar"
+                             class="deck-author-avatar" :alt="$t('components.common.alt.avatar')"
                              :src="deck.author.avatar_url"/>
                         <DeckActions :model="deck"/>
                     </div>

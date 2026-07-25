@@ -102,7 +102,7 @@ watch(() => props.pageId, async () => {
     <Head :title="page ? `Wiki: ${page?.title}` : 'Wiki'"/>
 
     <div id="app-head">
-        <h1>wiki</h1>
+        <h1>{{ $t('pages.wiki.title') }}</h1>
     </div>
 
     <div class="wiki-container">
@@ -139,19 +139,15 @@ watch(() => props.pageId, async () => {
 
             <LoadingSpinner v-if="isLoadingPage"/>
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
-                <p>Sorry, but the requested page does not exist.</p>
-
-                <p v-if="UserStore.isAdmin">
-                    <Link :href="route('wiki.edit', page)">Create this Page</Link>
-                </p>
-
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
                 <p>
-                    <Link :href="route('wiki.show')">Go to Wiki Home</Link>
+                    <Link v-if="UserStore.isAdmin" :href="route('wiki.edit', page)">Create this Page</Link>
+                    <Link v-else :href="route('wiki.show')">Go to Wiki Home</Link>
                 </p>
             </div>
             <div v-else-if="page" class="wiki-blocks-wrapper">
                 <AppTip v-if="page.status === 'draft'">
-                    This Page is a draft. It is only visible to administrators.
+                    {{ $t('components.page.is-draft') }}}
                 </AppTip>
 
                 <div class="featured-title l" style="z-index: 1">{{ page.title }}</div>

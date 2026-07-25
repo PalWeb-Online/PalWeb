@@ -195,7 +195,7 @@ const getMatchState = (itemId, type, value) => {
 
 <template>
     <div class="block--exercises" ref="blockRef">
-        <h2>{{ block.exerciseType }}</h2>
+        <h2>{{ $t(`exercises.types.${block.exerciseType}`) }}</h2>
         <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems" :key="item.id">
             <div class="exercise--match" :data-item-id="item.id">

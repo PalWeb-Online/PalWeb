@@ -62,17 +62,20 @@ watch(
                 <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
                 <div class="window-header-url">www.palweb.app/library/audios/{speaker}</div>
             </div>
-            <div class="window-section-head"><h1>speaker</h1></div>
+            <div class="window-section-head"><h1>{{ $t('actions.models.speaker') }}</h1></div>
 
             <LoadingSpinner v-if="isLoadingSpeaker"/>
+            <AppTip v-else-if="speakerNotFound">
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.speaker')}) }}</p>
+            </AppTip>
             <template v-else-if="speaker">
                 <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
-                    <p>Your Profile is currently set to Private.</p>
+                    <p>{{ $t('pages.audios.speaker.is-private') }}</p>
                 </AppTip>
                 <UserItem :user="speaker.user" size="l" :speaker="speaker">
                     <SpeakerItem :speaker="speaker"/>
                 </UserItem>
-                <div class="window-section-head"><h2>audios</h2></div>
+                <div class="window-section-head"><h2>{{ $t('models.audios') }}</h2></div>
                 <template v-if="audios.length > 0">
                     <div class="model-list index-list">
                         <PronunciationItem
@@ -90,12 +93,12 @@ watch(
                 </template>
                 <template v-else>
                     <AppTip>
-                        <p>{{ speaker.user.private ? 'This Speaker' : speaker.user.name }} has not uploaded any Audios
-                            yet.</p>
+                        <p>{{
+                                $t('pages.audios.speaker.empty', {speaker: speaker.user.private ? 'This Speaker' : speaker.user.name})
+                            }}</p>
                     </AppTip>
                 </template>
             </template>
-            <div v-else-if="speakerNotFound" class="loading-state"><p>Unable to load Speaker.</p></div>
         </div>
     </div>
 </template>

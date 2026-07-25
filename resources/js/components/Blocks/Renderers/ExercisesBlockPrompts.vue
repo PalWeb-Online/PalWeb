@@ -1,5 +1,8 @@
 <script setup>
 import {computed} from "vue";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -13,14 +16,14 @@ const instructionText = computed(() => {
 
     switch (props.block?.exerciseType) {
         case "input":
-            return "Answer the prompt with a complete sentence, following the format of the example.";
+            return t('exercises.prompts.input');
         case "match":
-            return "Match the two columns based on the prompt. Only one distribution of answers is possible.";
+            return t('exercises.prompts.match');
         case "sort":
-            return "Put the items in the correct order to build the sentence or dialog.";
+            return t('exercises.prompts.sort');
         case "select":
         default:
-            return "Select the most appropriate answer in response to the prompt.";
+            return t('exercises.prompts.select');
     }
 });
 </script>

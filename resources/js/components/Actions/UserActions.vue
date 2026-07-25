@@ -14,10 +14,10 @@ const {isStudent, toggleStudentRole} = useUser(props.model);
 <template>
     <ContextActions v-slot="{ closeMenu }">
         <Link :href="route('users.edit', model.username)" role="menuitem" tabindex="-1">
-            Edit User
+            {{ $t('actions.common.edit', { model: $t('actions.models.user') }) }}
         </Link>
         <button @click="toggleStudentRole(model.id)" role="menuitem" tabindex="-1">
-            {{ isStudent ? 'Revoke' : 'Grant' }} Student Role
+            {{ $t(isStudent ? 'actions.user.revoke-student-role' : 'actions.user.grant-student-role') }}
         </button>
     </ContextActions>
 </template>

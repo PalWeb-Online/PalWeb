@@ -21,19 +21,19 @@ const hasAudio = computed(() => prompts.value.filter(p => p.type === "audio").le
             <div class="add-button"
                  @click="addPrompt(owner, 'text')">+
             </div>
-            <div>text</div>
+            <div>{{ $t('blocks.text') }}</div>
         </div>
         <div v-if="!hasAudio">
             <div class="add-button"
                  @click="addPrompt(owner, 'audio')">+
             </div>
-            <div>audio</div>
+            <div>{{ $t('blocks.audio') }}</div>
         </div>
         <div>
             <div class="add-button"
                  @click="addPrompt(owner, 'image')">+
             </div>
-            <div>image</div>
+            <div>{{ $t('blocks.image') }}</div>
         </div>
     </div>
     <div class="exercise-prompt_build"

@@ -70,13 +70,13 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 <template>
     <Head title="Academy: Lessons"/>
     <div id="app-head">
-        <h1>lesson planner</h1>
+        <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="activityNotFound">
             <AppTip>
-                <p>Sorry, the requested Activity could not be found.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.activity')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('lesson-planner.index')">
                 Back to Lesson Planner
@@ -90,9 +90,6 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                           :href="route('lesson-planner.lesson', activity?.lesson?.id ?? initialLesson.id)">
                         <- to Lesson
                     </Link>
-                    <Link v-if="activity?.id" :href="route('activities.activity', activity.id)">
-                        View
-                    </Link>
                 </div>
                 <div class="featured-title l">
                     {{ form.title }}
@@ -105,28 +102,33 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         Activity now that would render it unpublishable, you will not be able to save those changes.</p>
                 </AppTip>
                 <div class="field-item">
-                    <label>Title</label>
+                    <label>{{ $t('forms.fields.title') }}</label>
                     <div class="field-input">
                         <input type="text" v-model="form.title" :disabled="form.lesson_id"
                                placeholder="Title" required>
                     </div>
                 </div>
 
-                <div class="featured-title m">blocks</div>
+                <div class="featured-title m">{{ $t('forms.blocks') }}</div>
                 <DocumentBlocksManager :document-blocks="form.document.blocks"
                                        :block-types="allowedBlockTypes"
                 />
 
                 <AppTip>
-                    <p>The Activity is currently {{ form.published ? 'Published' : 'a Draft' }}.</p>
+                    <p>{{
+                            $t('forms.messages.current-status', {
+                                model: $t('actions.models.activity'),
+                                status: form.published ? $t('forms.status.published') : $t('forms.status.draft')
+                            })
+                        }}</p>
                     <template v-if="Object.keys(validationErrors).length">
-                        <p style="font-weight: 700">The Activity cannot be saved in the current state.</p>
+                        <p style="font-weight: 700">{{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.activity')}) }}</p>
                         <ul>
                             <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                         </ul>
                     </template>
                     <template v-if="!isPublishable">
-                        <p style="font-weight: 700">The Activity cannot be Published in the current state.</p>
+                        <p style="font-weight: 700">{{ $t('forms.messages.has-publish-issues', {model: $t('actions.models.activity')}) }}</p>
                         <ul>
                             <li v-for="(issue, i) in publishIssues" :key="i">{{ issue }}</li>
                         </ul>
@@ -138,21 +140,36 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
             <div class="app-nav-interact">
                 <div class="app-nav-interact-buttons">
-                    <button type="button"
-                            @click="saveActivity({ publish: form.published })"
-                            :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.published && !isPublishable)">
-                        Save
+                    <button
+                        type="button"
+                        @click="saveActivity({ publish: form.published })"
+                        :disabled="isSaving || !hasNavigationGuard || !isValidRequest || (form.published && !isPublishable)"
+                    >
+                        {{ $t('forms.actions.save') }}
                     </button>
-                    <button type="button" :disabled="!hasNavigationGuard" @click="reset()">Reset</button>
+                    <button
+                        type="button"
+                        @click="reset()"
+                        :disabled="!hasNavigationGuard"
+                    >
+                        {{ $t('forms.actions.reset') }}
+                    </button>
                     <button type="button"
                             @click="saveActivity({ publish: !form.published })"
                             :disabled="isSaving || !isValidRequest || (!form.published && !isPublishable) || (form.published && activity?.lesson?.published)"
                     >
-                        {{ hasNavigationGuard ? 'Save & ' : '' }} {{
-                            form?.published ? 'Revert to Draft' : 'Publish'
+                        {{
+                            hasNavigationGuard ? $t('forms.actions.save') + ' & ' : ''
+                        }} {{
+                            form?.published ? $t('forms.actions.set-status.draft') : $t('forms.actions.set-status.published')
                         }}
                     </button>
-                    <button type="button" @click="deleteActivity()">Delete Activity</button>
+                    <button type="button" @click="deleteActivity()">
+                        {{ $t('actions.common.delete', {model: $t('actions.models.activity')}) }}
+                    </button>
+                    <Link v-if="activity?.id" :href="route('activities.activity', activity.id)">
+                        {{ $t('actions.common.view', {model: $t('actions.models.activity')}) }}
+                    </Link>
                 </div>
             </div>
         </template>
@@ -160,7 +177,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

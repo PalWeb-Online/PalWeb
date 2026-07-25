@@ -55,6 +55,8 @@ function updateFilter(key, value) {
     window.history.pushState({}, '', '?' + searchParams.toString());
     fetchAudios(Object.fromEntries(searchParams.entries()));
 }
+
+const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 </script>
 
 <template>
@@ -67,51 +69,51 @@ function updateFilter(key, value) {
                 <Link v-if="UserStore.isUser" :href="route('sound-booth.index')" class="material-symbols-rounded">add
                 </Link>
             </div>
-            <div class="window-section-head"><h1>audio library</h1></div>
-            <div class="window-section-head"><h2>Index</h2></div>
+            <div class="window-section-head"><h1>{{ $t('pages.audios.index.title') }}</h1></div>
+            <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
 
             <div class="search-filters-container">
                 <div class="search-filters">
                     <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''"
                             @change="updateFilter('dialect', filters.dialect)">
-                        <option value="">Dialect</option>
+                        <option value="">{{ $t('speaker.fields.dialect') }}</option>
                         <option v-for="dialect in dialects" :key="dialect.id" :value="dialect.id">
-                            {{ dialect.name }}
+                            {{ $t(`dialect.${localeKey(dialect.name)}`) }}
                         </option>
                     </select>
                     <select v-model="filters.location" :class="filters.location ? 'persisting' : ''"
                             @change="updateFilter('location', filters.location)">
-                        <option value="">Location</option>
+                        <option value="">{{ $t('speaker.fields.location') }}</option>
                         <option v-for="location in locations" :key="location.id" :value="location.id">
                             {{ location.name_ar }}
                         </option>
                     </select>
                     <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''"
                             @change="updateFilter('gender', filters.gender)">
-                        <option value="">Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="">{{ $t('speaker.fields.gender') }}</option>
+                        <option value="male">{{ $t('speaker.gender.male') }}</option>
+                        <option value="female">{{ $t('speaker.gender.female') }}</option>
                     </select>
                     <select v-model="filters.sort" @change="updateFilter('sort', filters.sort)">
-                        <option value="latest">by Latest</option>
-                        <option value="fluency">by Fluency</option>
+                        <option value="latest">{{ $t('search.filters.sort.latest') }}</option>
+                        <option value="fluency">{{ $t('search.filters.sort.fluency') }}</option>
                     </select>
                 </div>
             </div>
 
             <template v-if="loading">
                 <AppTip>
-                    <p>Loading...</p>
+                    <p>{{ $t('pages.common.loading', { model: $t('models.audios') }) }}</p>
                 </AppTip>
                 <LoadingSpinner/>
             </template>
             <template v-else>
                 <AppTip>
-                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">Displaying {{
-                            totalCount
-                        }} Audios matching this query.</p>
-                    <p v-else-if="totalCount > 0">Displaying all {{ totalCount }} Audios in the Library.</p>
-                    <p v-else>No Audios matching this query.</p>
+                    <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
+                        {{ $t('pages.common.displaying-results', { count: totalCount, model: $t('models.audios') }) }}
+                    </p>
+                    <p v-else-if="totalCount > 0">{{ $t('pages.common.displaying-all', { model: $t('models.audios') }) }}</p>
+                    <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.audios') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
                     <div class="model-list index-list" style="padding: 3.2rem 1.6rem">

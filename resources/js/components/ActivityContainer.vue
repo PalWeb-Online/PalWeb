@@ -17,7 +17,7 @@ defineProps({
             <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}</div>
         </div>
         <div class="window-section-head">
-            <h1>activity</h1>
+            <h1>{{ $t('components.activity.title') }}</h1>
             <ActivityActions :model="model"/>
         </div>
 
@@ -28,7 +28,7 @@ defineProps({
 
         <WindowSection>
             <template #title>
-                <h2>stats</h2>
+                <h2>{{ $t('components.common.sections.stats') }}</h2>
             </template>
             <template #content>
                 <ScoreStats :model="model"/>
@@ -37,7 +37,7 @@ defineProps({
 
         <div class="window-footer">
             <Link :href="route('activities.activity', model.id)">
-                Start Activity
+                {{ $t('components.activity.start') }}
             </Link>
         </div>
     </div>

@@ -82,7 +82,7 @@ watch(() => props.dialogId, async () => {
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="dialogNotFound">
             <AppTip>
-                <p>Sorry, the requested Dialog could not be found.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.dialog')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('speech-maker.index')">
                 Back to Speech Maker
@@ -97,7 +97,7 @@ watch(() => props.dialogId, async () => {
                 </button>
                 <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
                 <Link v-if="dialog?.id" class="material-symbols-rounded"
-                        :href="route('speech-maker.dialog-sentence', dialog.id)">
+                      :href="route('speech-maker.dialog-sentence', dialog.id)">
                     add
                 </Link>
                 <button class="material-symbols-rounded" @click="SearchStore.openSearchGenie('insert', 'sentences')">
@@ -113,32 +113,40 @@ watch(() => props.dialogId, async () => {
                 </button>
             </div>
             <AppTip>
-                <p>The Dialog is currently {{ dialog?.published ? 'Published' : 'a Draft' }}.</p>
+                <p>{{
+                        $t('forms.messages.current-status', {
+                            model: $t('actions.models.dialog'),
+                            status: dialog?.published ? $t('forms.status.published') : $t('forms.status.draft')
+                        })
+                    }}</p>
                 <template v-if="Object.keys(validationErrors).length">
-                    <p style="font-weight: 700">The Dialog cannot be saved in the current state.</p>
+                    <p style="font-weight: 700">
+                        {{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.dialog')}) }}</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>
                 </template>
             </AppTip>
             <div class="window-section-head">
-                <h1>dialog</h1>
+                <h1>{{ $t('components.dialog.title') }}</h1>
                 <DialogActions v-if="dialog?.id" :model="dialog"/>
             </div>
             <div class="window-content-head">
                 <input class="window-content-head-title" style="direction: rtl" v-model="form.title"
-                       placeholder="Required: Dialog Title"
+                       :placeholder="$t('forms.fields.title')"
                 />
-                <textarea class="dialog-description" v-model="form.description"/>
+                <textarea class="dialog-description" v-model="form.description"
+                          :placeholder="$t('forms.fields.description')"
+                />
             </div>
             <div class="window-section-head">
-                <h2>media</h2>
+                <h2>{{ $t('components.dialog.sections.media') }}</h2>
             </div>
-            <iframe :src="form.media" allowfullscreen></iframe>
+            <iframe v-if="form.media" :src="form.media" allowfullscreen></iframe>
             <input v-model="form.media" style="margin: 1.6rem; width: 50%"/>
 
             <div class="window-section-head">
-                <h2>transcript</h2>
+                <h2>{{ $t('components.dialog.sections.transcript') }}</h2>
             </div>
             <draggable class="dialog-body draggable" :list="form.sentences" itemKey="id" handle=".handle"
                        @end="updatePosition()">
@@ -150,7 +158,7 @@ watch(() => props.dialogId, async () => {
                         <div class="model-item-container sentence-item-container">
                             <div class="sentence-dialog-data">
                                 <div>
-                                    <div>speaker</div>
+                                    <div>{{ $t('components.sentence.speaker') }}</div>
                                     <input v-model="element.speaker" placeholder="ناطق"/>
                                 </div>
                             </div>
@@ -175,7 +183,7 @@ watch(() => props.dialogId, async () => {
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

@@ -31,16 +31,16 @@ const removeItem = (row, index) => row.items.splice(index, 1);
 
         <div class="block-add-buttons">
             <div>
+                <div class="add-button" @click="addRow">+</div>
+                <div>{{ $t('blocks.add.row') }}</div>
+            </div>
+            <div>
                 <div class="add-button" @click="applyChartTemplate(block, 'person')">+</div>
-                <div>person</div>
+                <div>{{ $t('blocks.add.person') }}</div>
             </div>
             <div>
                 <div class="add-button" @click="applyChartTemplate(block, 'inflection')">+</div>
-                <div>inflection</div>
-            </div>
-            <div>
-                <div class="add-button" @click="addRow">+</div>
-                <div>row</div>
+                <div>{{ $t('blocks.add.inflection') }}</div>
             </div>
         </div>
 

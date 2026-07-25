@@ -16,6 +16,7 @@ class Speaker extends Model
 
     protected $guarded = [];
 
+//    todo: this is probably unnecessary now since the strings are localized in the frontend
     protected static $fluencyLevels = [
         1 => 'Beginner',
         2 => 'Intermediate',

@@ -21,6 +21,6 @@ defineProps({
         </div>
     </div>
     <AppTip v-else>
-        Empty Sentence Block. Please create a custom Sentence or load in a Sentence model.
+        {{ $t('blocks.messages.empty-sentence') }}
     </AppTip>
 </template>

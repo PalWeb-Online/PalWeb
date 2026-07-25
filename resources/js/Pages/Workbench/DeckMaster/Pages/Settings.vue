@@ -13,6 +13,9 @@ import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import ReviewProgress from "../../CardDealer/UI/ReviewProgress.vue";
 import {route} from "ziggy-js";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
@@ -21,7 +24,7 @@ const NotificationStore = useNotificationStore();
 watch(() => DeckStudyStore.settings.quizType, (newVal) => {
     if (newVal !== 'practice' && !UserStore.isStudent) {
         DeckStudyStore.settings.quizType = 'practice';
-        NotificationStore.addNotification('You must be a Student to Quiz a Deck.');
+        NotificationStore.addNotification(t('pages.deck-master.messages.student-required'), 'error');
     }
 })
 </script>
@@ -29,7 +32,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
     <QuizzerWindow>
         <WindowSection :visible="false">
             <template #title>
-                <h2>stats</h2>
+                <h2>{{ $t('components.common.sections.stats') }}</h2>
             </template>
             <template #content>
                 <ReviewProgress
@@ -41,7 +44,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
         </WindowSection>
         <WindowSection :visible="false">
             <template #title>
-                <h2>terms</h2>
+                <h2>{{ $t('components.common.sections.terms') }}</h2>
             </template>
             <template #content>
                 <div class="model-list index-list">
@@ -53,7 +56,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
         </WindowSection>
 
         <div class="window-section-head">
-            <h2>Settings</h2>
+            <h2>{{ $t('components.common.sections.settings') }}</h2>
             <PopupWindow title="Deck Master (Study)">
                 <div class="h1">Study</div>
                 <p>Welcome to the Deck Master <b>Study</b> page, where you can study Decks in a variety of modes. Use
@@ -147,19 +150,19 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             </PopupWindow>
         </div>
         <AppTip>
-            <p v-if="UserStore.isStudent">Select the type of Quiz & adjust how you'd like for it to be generated.</p>
-            <p v-else><b>You must be a Student to enable Quizzes.</b></p>
+            <p v-if="UserStore.isStudent">{{ $t('pages.deck-master.messages.select-quiz-type') }}</p>
+            <p v-else style="font-weight: 700">{{ $t('pages.deck-master.messages.student-required') }}</p>
         </AppTip>
         <Link class="quiz-type card-dealer"
               :href="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
-            <div>load in Card Dealer</div>
+            <div>{{ $t('pages.deck-master.buttons.card-dealer') }}</div>
         </Link>
 
         <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'practice'
             }"
              @click="DeckStudyStore.settings.quizType = 'practice'">
-            <div>Practice</div>
+            <div>{{ $t('pages.deck-master.quiz-types.practice') }}</div>
             <p>View your Decks as flashcards, without receiving a Score.</p>
         </div>
 
@@ -168,7 +171,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 'disabled': !UserStore.isStudent
             }"
              @click="DeckStudyStore.settings.quizType = 'glosses'">
-            <div>Glosses</div>
+            <div>{{ $t('models.glosses') }}</div>
             <p><b>(Easy)</b> Test your knowledge of Arabic vocabulary with a multiple-choice Quiz, where you must select
                 the correct English meaning (Gloss) of the Arabic Term; the correct answer is
                 <b>{{
@@ -183,7 +186,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                     "All" as the decoy source to avoid unintended results (see <b>Help</b>).</p>
             </AppTip>
             <div class="settings-wrapper">
-                <ToggleDouble v-model="DeckStudyStore.settings.options.promptTerm" label="prompt type"
+                <ToggleDouble v-model="DeckStudyStore.settings.options.promptTerm" :label="$t('card-dealer.session-settings.prompt-type')"
                               option-a="audio" option-b="term"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictGloss" label="strict gloss"/>
                 <ToggleSingle v-model="DeckStudyStore.settings.options.strictTerms" label="strict terms"/>
@@ -194,7 +197,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 'disabled': !UserStore.isStudent
             }"
              @click="DeckStudyStore.settings.quizType = 'inflections'">
-            <div>Inflections</div>
+            <div>{{ $t('models.inflections') }}</div>
             <p><b>(Medium)</b> Do you know your broken plurals & other forms of the Terms you've learned? Test
                 yourself with a fill-in Quiz, where you must give the correct form of the indicated Term.</p>
             <p>(You will only be quizzed on Terms with Inflections, so the Quiz may have fewer questions than
@@ -205,7 +208,7 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
                 'disabled': !UserStore.isStudent
             }"
              @click="DeckStudyStore.settings.quizType = 'sentences'">
-            <div>Sentences</div>
+            <div>{{ $t('models.sentences') }}</div>
             <p><b>(Medium/Hard)</b> Can you find the right word to express yourself? Test yourself with a
                 multiple-choice Quiz, where you must select the right Term to complete the Sentence,
                 <b>{{
@@ -225,11 +228,11 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             </div>
         </div>
         <div class="window-footer">
-            <button v-if="DeckStudyStore.settings.quizType === 'practice'" @click="DeckStudyStore.startPractice">
-                Start Practice
+            <button v-if="DeckStudyStore.settings.quizType === 'practice'" @click="DeckStudyStore.startPractice()">
+                {{ $t('pages.deck-master.buttons.start-practice') }}
             </button>
-            <button v-else @click="DeckStudyStore.startQuiz" :disabled="!DeckStudyStore.settings.quizType">
-                Start Quiz
+            <button v-else @click="DeckStudyStore.startQuiz()" :disabled="!DeckStudyStore.settings.quizType">
+                {{ $t('pages.deck-master.buttons.start-quiz') }}
             </button>
         </div>
     </QuizzerWindow>
@@ -274,7 +277,8 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
         font-family: var(--head-font);
         font-weight: 700;
         font-size: 2.4rem;
-        color: var(--color-medium-primary)
+        color: var(--color-medium-primary);
+        text-transform: capitalize;
     }
 
     & > p {

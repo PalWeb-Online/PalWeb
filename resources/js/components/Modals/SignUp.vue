@@ -31,17 +31,18 @@ const signUp = () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1>sign up</h1>
+            <h1>{{ $t('modals.sign-up.title') }}</h1>
         </div>
         <AppTip>
-            <p>Already have an account?
-                <button @click="emit('signIn')">Sign In!</button>
+            <p>
+                {{ $t('modals.sign-up.sign-in-prompt') }}
+                <button @click="emit('signIn')">{{ $t('modals.sign-in.action') }}</button>
             </p>
         </AppTip>
         <form @submit.prevent="signUp">
             <div class="modal-container-body form-body">
                 <div class="field-item">
-                    <label>Name</label>
+                    <label>{{ $t('user.fields.name') }}</label>
                     <div class="field-input">
                         <input type="text" v-model="form.name" placeholder="Rafiq" required>
                         <div class="field-chars"
@@ -52,7 +53,7 @@ const signUp = () => {
                     <div v-if="form.errors.name" v-text="form.errors.name" class="field-error"/>
                 </div>
                 <div class="field-item">
-                    <label>Username</label>
+                    <label>{{ $t('user.fields.username') }}</label>
                     <div class="field-input">
                         <input type="text" v-model="form.username" placeholder="permanent.intifada" required>
                         <div class="field-chars"
@@ -64,8 +65,10 @@ const signUp = () => {
                 </div>
                 <div class="field-item">
                     <div style="display: flex; align-items: center; gap: 3.2rem;">
-                        <label>Arabic Name</label>
-                        <button type="button" @click="form.ar_name = generateArabicName()">Randomize</button>
+                        <label>{{ $t('user.fields.arabic-name') }}</label>
+                        <button type="button" @click="form.ar_name = generateArabicName()">
+                            {{ $t('modals.sign-up.randomize-name') }}
+                        </button>
                     </div>
                     <div class="field-input">
                         <input type="text" v-model="form.ar_name" placeholder="رفيق" required>
@@ -77,7 +80,7 @@ const signUp = () => {
                     <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
                 </div>
                 <div class="field-item">
-                    <label>Email</label>
+                    <label>{{ $t('user.fields.email') }}</label>
                     <div class="field-input">
                         <input type="text" v-model="form.email" placeholder="free@palestine.com" required>
                         <div class="field-chars"
@@ -88,7 +91,7 @@ const signUp = () => {
                     <div v-if="form.errors.email" v-text="form.errors.email" class="field-error"/>
                 </div>
                 <div class="field-item">
-                    <label>Password</label>
+                    <label>{{ $t('user.fields.password') }}</label>
                     <div class="field-input">
                         <input type="password" v-model="form.password" placeholder="Lenin1917!" required>
                         <div class="field-chars"
@@ -99,7 +102,7 @@ const signUp = () => {
                     <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
                 </div>
                 <div class="field-item">
-                    <label>Confirm Password</label>
+                    <label>{{ $t('user.fields.confirm-password') }}</label>
                     <div class="field-input">
                         <input type="password" v-model="form.password_confirmation" placeholder="Lenin1917!" required>
                         <div class="field-chars"
@@ -111,7 +114,7 @@ const signUp = () => {
             </div>
             <div class="window-footer">
                 <button type="submit" :disabled="form.processing || !isValidRequest">
-                    Sign Up
+                    {{ $t('modals.sign-up.submit') }}
                 </button>
             </div>
         </form>

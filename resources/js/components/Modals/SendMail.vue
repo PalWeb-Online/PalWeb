@@ -29,20 +29,20 @@ const sendMail = () => {
 <template>
     <div class="window-container modal-container">
         <div class="window-section-head">
-            <h1>send mail</h1>
+            <h1>{{ $t('modals.send-mail.title') }}</h1>
         </div>
         <form @submit.prevent="sendMail">
             <div class="modal-container-body form-body">
                 <div class="field-item">
-                    <label>Subject</label>
+                    <label>{{ $t('modals.send-mail.fields.subject') }}</label>
                     <div class="field-input">
-                        <input v-model="form.subject" placeholder="Subject" required>
+                        <input v-model="form.subject" :placeholder="$t('modals.send-mail.fields.subject')" required>
                     </div>
                     <div v-if="form.errors.subject" v-text="form.errors.subject" class="field-error"/>
                 </div>
                 <CommentItem :user="UserStore.user">
                     <textarea class="user-comment-content" v-model="form.body"
-                              placeholder="What would you like to say?"
+                              :placeholder="$t('modals.send-mail.placeholder')"
                     />
                     <div class="user-comment-data">
                         — {{ UserStore.user.name }} ({{ UserStore.user.username }})
@@ -52,7 +52,7 @@ const sendMail = () => {
             </div>
             <div class="window-footer">
                 <button type="submit" :disabled="form.processing || !isValidRequest">
-                    Send
+                    {{ $t('modals.send-mail.submit') }}
                 </button>
             </div>
         </form>

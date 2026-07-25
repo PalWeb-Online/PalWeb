@@ -11,7 +11,7 @@ defineProps({
     <div class="lesson-status">
         <div style="background: var(--color-medium-secondary); color: white;">
             <Link class="lesson-title" :href="route('lessons.show', lesson.global_position)">
-                Lesson {{ lesson.global_position }}
+                {{ $t('components.lesson.number', {number: lesson.global_position}) }}
             </Link>
 
             <div style="display: flex; align-items: center; gap: 0.8rem">
@@ -29,14 +29,16 @@ defineProps({
 
         <div style="flex-grow: 1; justify-content: space-between; font-weight: 700">
             <div v-if="['deck', 'activity'].includes(model.model_class)">
-                Scored 100%
-                ({{
-                    lesson.scores_count[`${model.model_class}:${model.id}`] ?? 0
-                }}/{{ model.model_class === 'deck' ? '3' : '1' }})
+                {{ $t('components.lesson.scored-perfect', {
+                    count: lesson.scores_count[`${model.model_class}:${model.id}`] ?? 0,
+                    total: model.model_class === 'deck' ? '3' : '1'
+                }) }}
             </div>
-            <Link v-if="model.model_class === 'deck'" :href="route('deck-master.study', model)">Start Quiz</Link>
-            <Link v-else-if="model.model_class === 'activity'" :href="route('activities.activity', model)">Start
-                Activity
+            <Link v-if="model.model_class === 'deck'" :href="route('deck-master.study', model)">
+                {{ $t('pages.deck-master.buttons.start-quiz') }}
+            </Link>
+            <Link v-else-if="model.model_class === 'activity'" :href="route('activities.activity', model)">
+                {{ $t('components.activity.start') }}
             </Link>
         </div>
     </div>

@@ -7,7 +7,9 @@ defineProps({
 <template>
     <div class="inflection-chart-wrapper">
         <div class="inflection-chart">
-            <div class="inflection-chart-title" style="grid-column: span 2">Present</div>
+            <div class="inflection-chart-title" style="grid-column: span 2">
+                {{ $t('charts.conjugation.tenses.present') }}
+            </div>
             <div class="inflection-chart-item">
                 <div>1S</div>
                 <div>
@@ -67,7 +69,9 @@ defineProps({
         </div>
 
         <div class="inflection-chart">
-            <div class="inflection-chart-title" style="grid-column: span 2">Past</div>
+            <div class="inflection-chart-title" style="grid-column: span 2">
+                {{ $t('charts.conjugation.tenses.past') }}
+            </div>
             <div class="inflection-chart-item" style="grid-row: span 2">
                 <div style="display: grid; gap: 1.6rem">
                     <div>1S</div>
@@ -123,7 +127,9 @@ defineProps({
         </div>
 
         <div class="inflection-chart">
-            <div class="inflection-chart-title" style="grid-column: span 2">Command</div>
+            <div class="inflection-chart-title" style="grid-column: span 2">
+                {{ $t('charts.conjugation.tenses.command') }}
+            </div>
             <div class="inflection-chart-item">
                 <div>2M</div>
                 <div>

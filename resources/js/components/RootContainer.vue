@@ -13,7 +13,7 @@ defineProps({
             <div class="window-header-url">www.palweb.app/library/roots/{root}</div>
         </div>
         <div class="window-section-head">
-            <h1>root</h1>
+            <h1>{{ $t('actions.models.root') }}</h1>
         </div>
         <div class="term-container-head">
             <div class="term-headword">
@@ -24,7 +24,7 @@ defineProps({
             </div>
         </div>
         <div class="window-section-head">
-            <h2>terms</h2>
+            <h2>{{ $t('components.common.sections.terms') }}</h2>
         </div>
         <div v-if="Object.keys(root.terms).length > 0" class="model-list index-list">
             <template v-for="term in root.terms" :key="term.id">

@@ -10,15 +10,15 @@ const {deleteCard, masterCard, toggleSuspend, resetCard} = useCard();
 
 <template>
         <button @click="masterCard(model)" role="menuitem" tabindex="-1">
-            Master Card
+            {{ $t('actions.card.master') }}
         </button>
         <button @click="toggleSuspend(model)" role="menuitem" tabindex="-1">
-            {{ model.suspended_at ? 'Restore' : 'Suspend' }} Card
+            {{ $t(model.suspended_at ? 'actions.card.restore' : 'actions.card.suspend') }}
         </button>
         <button @click="resetCard(model)" role="menuitem" tabindex="-1">
-            Reset Card
+            {{ $t('actions.card.reset') }}
         </button>
         <button @click="deleteCard(model)" role="menuitem" tabindex="-1">
-            Delete Card
+            {{ $t('actions.common.delete', { model: $t('actions.models.card') }) }}
         </button>
 </template>

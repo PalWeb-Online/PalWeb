@@ -15,7 +15,7 @@ const props = defineProps({
     <div class="window-container lesson-item"
          :class="{hidden: !lesson.published}">
         <div class="window-section-head">
-            <h1>lesson {{ lesson.global_position }}</h1>
+            <h1>{{ $t('components.lesson.number', {number: lesson.global_position}) }}</h1>
             <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.lesson', lesson.id)" class="material-symbols-rounded">
                 edit
             </Link>
@@ -31,7 +31,7 @@ const props = defineProps({
         <WindowSection :visible="false">
             <template #title>
                 <div class="window-section-head">
-                    <h2>skills</h2>
+                    <h2>{{ $t('components.lesson.sections.skills') }}</h2>
                 </div>
             </template>
             <template #content>
@@ -43,13 +43,13 @@ const props = defineProps({
                     </div>
                 </div>
                 <AppTip v-else>
-                    <p>(No Skills have been added to the Lesson yet.)</p>
+                    <p>{{ $t('components.lesson.no-skills') }}</p>
                 </AppTip>
             </template>
         </WindowSection>
         <div class="window-footer">
             <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !UserStore.hasUnlockedLesson(lesson.id) }">
-                open lesson
+                {{ $t('components.lesson.open') }}
             </Link>
         </div>
     </div>

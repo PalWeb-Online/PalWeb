@@ -116,14 +116,14 @@ onMounted(() => {
                 class="material-symbols-rounded"
                 @click="SearchStore.openSearchGenie('search')"
                 type="button"
-                aria-label="Search"
+                :aria-label="$t('nav.sticky.search')"
             >
                 search
             </button>
 
             <AppHint
                 v-model="NotificationStore.showPushSubscribeHint"
-                message="Enable Notifications in Settings to get a daily reminder to review your Cards!"
+                :message="$t('nav.sticky.push-subscribe-hint')"
             >
                 <template #default="{ setReference }">
                     <button
@@ -131,7 +131,7 @@ onMounted(() => {
                         class="material-symbols-rounded"
                         @click="showGlobalSettings = true"
                         type="button"
-                        aria-label="Settings"
+                        :aria-label="$t('nav.sticky.settings')"
                     >
                         settings
                     </button>
@@ -141,7 +141,7 @@ onMounted(() => {
                 class="material-symbols-rounded"
                 @click.stop="NavigationStore.toggleSidebar"
                 type="button"
-                aria-label="Menu"
+                :aria-label="$t('nav.sticky.menu')"
             >
                 menu
             </button>

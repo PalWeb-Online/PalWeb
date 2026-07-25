@@ -10,7 +10,7 @@ const UserStore = useUserStore();
 <template>
     <div class="auth-user">
         <Link class="user-avatar" :href="route('users.show', UserStore.user.username)">
-            <img alt="User Avatar"
+            <img :alt="$t('nav.auth.user-avatar')"
                  :src="UserStore.user.avatar_url"/>
         </Link>
 
@@ -27,7 +27,7 @@ const UserStore = useUserStore();
             </span>
             <span class="resend-prompt"
                   @click="router.post(route('verification.send'))">
-                Resend Link
+                {{ $t('nav.auth.resend-link') }}
             </span>
         </template>
     </div>

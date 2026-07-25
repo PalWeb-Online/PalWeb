@@ -84,12 +84,12 @@ const trendLinePoints = computed(() => {
     <div class="score-stats-wrapper">
         <div class="score-stats-container" :class="{ disabled: !UserStore.isStudent }">
             <div class="score-stats-container__overlay">
-                <span>You must be a Student to enable Scores.</span>
+                <span>{{ $t('components.score.student-required') }}</span>
             </div>
             <div class="score-stats-container__content">
                 <div class="score-stats-highlight-wrapper">
                     <div class="score-highlight">
-                        <div class="score-highlight-title">Latest Score</div>
+                        <div class="score-highlight-title">{{ $t('components.score.stats.latest-score') }}</div>
                         <div class="featured-title">{{
                                 model?.stats?.latest ? formatter.format(model?.stats.latest) : '—'
                             }}
@@ -100,7 +100,7 @@ const trendLinePoints = computed(() => {
                         </div>
                     </div>
                     <div class="score-highlight">
-                        <div class="score-highlight-title">Highest Score</div>
+                        <div class="score-highlight-title">{{ $t('components.score.stats.highest-score') }}</div>
                         <div class="featured-title">{{
                                 model?.stats?.highest ? formatter.format(model?.stats.highest) : '—'
                             }}
@@ -108,7 +108,7 @@ const trendLinePoints = computed(() => {
                         <div v-if="model?.stats?.highest_trend" class="material-symbols-rounded">trending_up</div>
                     </div>
                     <div class="score-highlight">
-                        <div class="score-highlight-title">Average Score</div>
+                        <div class="score-highlight-title">{{ $t('components.score.stats.average-score') }}</div>
                         <div class="featured-title">{{
                                 model?.stats?.average ? formatter.format(model?.stats.average) : '—'
                             }}
@@ -147,7 +147,9 @@ const trendLinePoints = computed(() => {
                         </div>
 
                         <div v-if="isVisible" :style="tooltipStyle" ref="tooltip" class="data-tooltip">
-                            <div style="text-transform: capitalize">{{ tooltipData.settings.quizType }}</div>
+                            <div style="text-transform: capitalize">
+                                {{ $t(`components.score.quiz.types.${tooltipData.settings.quizType}`) }}
+                            </div>
                             <div>{{ formatter.format(tooltipData.score) }}
                                 <span style="font-size: 1.2rem">
                                     ({{ tooltipData.results.filter(q => q.correct).length }}/{{ tooltipData.results.length }})
@@ -159,22 +161,22 @@ const trendLinePoints = computed(() => {
                 </div>
                 <div class="score-stats-detail-wrapper">
                     <div class="score-stats-detail">
-                        <div>Latest Quiz</div>
+                        <div>{{ $t('components.score.stats.latest-quiz') }}</div>
                         <div>{{ model?.stats?.latest_date ?? '—' }}</div>
                     </div>
                     <div class="score-stats-detail">
-                        <div>Highest Quiz</div>
+                        <div>{{ $t('components.score.stats.highest-quiz') }}</div>
                         <div>{{ model?.stats?.highest_date ?? '—' }}</div>
                     </div>
                     <div class="score-stats-detail">
-                        <div>Times Quizzed</div>
+                        <div>{{ $t('components.score.stats.times-quizzed') }}</div>
                         <div>{{ model?.stats?.count ?? '—' }}</div>
                     </div>
                 </div>
             </div>
         </div>
         <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id })">
-            See Score History
+            {{ $t('components.score.history') }}
         </Link>
     </div>
 </template>

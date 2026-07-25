@@ -20,6 +20,7 @@
     gap: 0 1.6rem;
     padding: 1.6rem;
     font-weight: 700;
+    direction: ltr;
 
     .term-headword-term {
         display: flex;
@@ -41,7 +42,7 @@
 }
 
 .gloss-item-container .model-list {
-    justify-items: end;
+    justify-items: right;
     padding-inline: 1.6rem;
 }
 
@@ -79,6 +80,8 @@
 }
 
 .term-item {
+    direction: ltr;
+
     .model-item-content {
         display: grid;
         grid-template-columns: 50% 50%;

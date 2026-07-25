@@ -112,13 +112,13 @@ defineOptions({
 <template>
     <Head title="Word Logger: Build Term"/>
     <div id="app-head">
-        <h1>Word Logger</h1>
+        <h1>{{ $t('pages.word-logger.title') }}</h1>
     </div>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="termsNotFound">
             <AppTip>
-                <p>Sorry, the requested Term could not be found.</p>
+                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
             </AppTip>
             <Link class="portal-button" :href="route('word-logger.index')">Back to Word Logger</Link>
         </template>
@@ -138,19 +138,25 @@ defineOptions({
                     </button>
                 </div>
                 <AppTip>
-                    <p>The Term is currently {{ term?.id ? 'Published' : 'a Draft' }}.</p>
-                    <p v-if="Object.keys(validationErrors).length">
-                        <b>The Term cannot be saved in the current state.</b> Please review the form inputs.
+                    <p>{{
+                            $t('forms.messages.current-status', {
+                                model: $t('actions.models.term'),
+                                status: term?.id ? $t('forms.status.published') : $t('forms.status.draft')
+                            })
+                        }}</p>
+                    <p v-if="Object.keys(validationErrors).length" style="font-weight: 700">
+                        {{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.term')}) }}
+                        Please review the form inputs.
                     </p>
                     <template v-if="confirmableIssues.length">
-                        <p><b>Are you sure the Term is complete?</b></p>
+                        <p><b>{{ $t('forms.messages.has-confirmable-issues') }}</b></p>
                         <ul>
                             <li v-for="issue in confirmableIssues">{{ issue }}</li>
                         </ul>
                     </template>
                 </AppTip>
                 <div class="window-section-head">
-                    <h1>term</h1>
+                    <h1>{{ $t('components.term.title') }}</h1>
                     <PinButton v-if="term?.id" modelType="term" :model="term"/>
                     <TermActions v-if="term?.id" :model="term"/>
                 </div>
@@ -160,11 +166,11 @@ defineOptions({
                 <div>
                     <div class="field-block">
                         <div class="field-block-head">
-                            <div>term</div>
+                            <div>{{ $t('components.term.title') }}</div>
                         </div>
                         <div class="field-block-body">
                             <div class="field-item">
-                                <label>Term</label>
+                                <label>{{ $t('components.term.title') }}</label>
                                 <input v-model="form.term" required/>
                                 <div v-if="validationErrors[`term`]" class="field-error">
                                     {{ validationErrors[`term`] }}
@@ -172,7 +178,7 @@ defineOptions({
                             </div>
                             <div class="field-block">
                                 <div class="field-block-head" @click="addSpelling()">
-                                    <div>spellings</div>
+                                    <div>{{ $t('models.spellings') }}</div>
                                     <div class="field-item-add">+</div>
                                 </div>
                                 <div class="field-block-body" v-if="form.spellings.length > 0">
@@ -190,19 +196,19 @@ defineOptions({
                                 </div>
                             </div>
                             <div class="field-item">
-                                <label>Category</label>
+                                <label>{{ $t('term.filters.category') }}</label>
                                 <select v-model="form.category" required>
-                                    <option value="verb">verb</option>
-                                    <option value="noun">noun</option>
-                                    <option value="adjective">adjective</option>
-                                    <option value="numeral">numeral</option>
-                                    <option value="adverb">adverb</option>
-                                    <option value="preposition">preposition</option>
-                                    <option value="conjunction">conjunction</option>
-                                    <option value="determiner">determiner</option>
-                                    <option value="particle">particle</option>
-                                    <option value="phrase">phrase</option>
-                                    <option value="affix">affix</option>
+                                    <option value="verb">{{ $t('term.category.verb') }}</option>
+                                    <option value="noun">{{ $t('term.category.noun') }}</option>
+                                    <option value="adjective">{{ $t('term.category.adjective') }}</option>
+                                    <option value="numeral">{{ $t('term.category.numeral') }}</option>
+                                    <option value="adverb">{{ $t('term.category.adverb') }}</option>
+                                    <option value="preposition">{{ $t('term.category.preposition') }}</option>
+                                    <option value="conjunction">{{ $t('term.category.conjunction') }}</option>
+                                    <option value="determiner">{{ $t('term.category.determiner') }}</option>
+                                    <option value="particle">{{ $t('term.category.particle') }}</option>
+                                    <option value="phrase">{{ $t('term.category.phrase') }}</option>
+                                    <option value="affix">{{ $t('term.category.affix') }}</option>
                                 </select>
                                 <div v-if="validationErrors[`category`]" class="field-error">{{
                                         validationErrors[`category`]
@@ -211,7 +217,7 @@ defineOptions({
                             </div>
                             <div class="field-block">
                                 <div class="field-block-head" @click="addAttribute('term')">
-                                    <div>attributes</div>
+                                    <div>{{ $t('models.attributes') }}</div>
                                     <div class="field-item-add">+</div>
                                 </div>
                                 <div class="field-block-body" v-if="form.attributes.length > 0">
@@ -224,7 +230,7 @@ defineOptions({
                                             <select v-model="attribute.attribute">
                                                 <option v-for="attribute in editorData.attributes.filter(a => a.model === 'term')" :key="attribute.id"
                                                         :value="attribute.attribute">
-                                                    {{ attribute.attribute }}
+                                                    {{ $t(`term.filters.attributes.${attribute.attribute}`) }}
                                                 </option>
                                             </select>
                                             <div v-if="validationErrors[`attributes.${index}.attribute`]"
@@ -240,7 +246,7 @@ defineOptions({
 
                     <div class="field-block">
                         <div class="field-block-head" @click="addPronunciation()">
-                            <div>pronunciations</div>
+                            <div>{{ $t('models.pronunciations') }}</div>
                             <div class="field-item-add">+</div>
                         </div>
                         <div class="field-block-body" v-if="form.pronunciations.length > 0">
@@ -249,7 +255,7 @@ defineOptions({
                                 <img src="/img/trash.svg" alt="Delete" v-show="form.pronunciations.length > 1"
                                      @click="removeItem(index, form.pronunciations)"/>
                                 <div class="field-item">
-                                    <label>Transcription</label>
+                                    <label>{{ $t('pronunciation.fields.transcription') }}</label>
                                     <input v-model="pronunciation.translit" required/>
                                     <div v-if="validationErrors[`pronunciations.${index}.translit`]"
                                          class="field-error">
@@ -257,7 +263,7 @@ defineOptions({
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>Phonemic</label>
+                                    <label>{{ $t('pronunciation.fields.phonemic') }}</label>
                                     <input v-model="pronunciation.phonemic" required/>
                                     <div v-if="validationErrors[`pronunciations.${index}.phonemic`]"
                                          class="field-error">
@@ -265,7 +271,7 @@ defineOptions({
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>Phonetic</label>
+                                    <label>{{ $t('pronunciation.fields.phonetic') }}</label>
                                     <input v-model="pronunciation.phonetic" required/>
                                     <div v-if="validationErrors[`pronunciations.${index}.phonetic`]"
                                          class="field-error">
@@ -273,7 +279,7 @@ defineOptions({
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>Dialect</label>
+                                    <label>{{ $t('pronunciation.fields.dialects') }}</label>
                                     <select v-model="pronunciation.dialect_id" required>
                                         <option v-for="dialect in editorData.dialects" :key="dialect.id"
                                                 :value="dialect.id">
@@ -286,7 +292,7 @@ defineOptions({
                                     </div>
                                 </div>
                                 <label class="checkbox">
-                                    <span>Borrowed</span>
+                                    <span>{{ $t('pronunciation.fields.borrowed') }}</span>
                                     <input v-model="pronunciation.borrowed" type="checkbox" value=1/>
                                 </label>
                             </div>
@@ -296,12 +302,12 @@ defineOptions({
                 <div>
                     <div class="field-block">
                         <div class="field-block-head">
-                            <div>etymology</div>
+                            <div>{{ $t('term.data.etymology') }}</div>
                         </div>
                         <div class="field-block-body"
                              v-if="!form.attributes.map(attr => attr.attribute).includes(['idiom', 'clitic'])">
                             <div class="field-item">
-                                <label>Root</label>
+                                <label>{{ $t('actions.models.root') }}</label>
                                 <input v-model="form.root.root"
                                        :required="form.category === 'verb' && !form.attributes.map(attr => attr.attribute).includes('pseudo')"/>
                                 <div v-if="validationErrors[`root.root`]" class="field-error">
@@ -309,11 +315,11 @@ defineOptions({
                                 </div>
                             </div>
                             <div class="field-item">
-                                <label>Type</label>
+                                <label>{{ $t('term.data.type') }}</label>
                                 <select v-model="form.etymology.type" required>
-                                    <option value="inherited">inherited</option>
-                                    <option value="hybrid">hybrid</option>
-                                    <option value="borrowed">borrowed</option>
+                                    <option value="inherited">{{ $t('term.data.inherited') }}</option>
+                                    <option value="hybrid">{{ $t('term.data.hybrid') }}</option>
+                                    <option value="borrowed">{{ $t('term.data.borrowed') }}</option>
                                 </select>
                                 <div v-if="validationErrors[`etymology.type`]" class="field-error">{{
                                         validationErrors[`etymology.type`]
@@ -321,14 +327,14 @@ defineOptions({
                                 </div>
                             </div>
                             <div class="field-item">
-                                <label>Source</label>
+                                <label>{{ $t('term.data.source') }}</label>
                                 <input v-model="form.etymology.source"/>
                             </div>
 
                             <div class="field-block"
                                  v-if="!form.attributes.some(attribute => attribute.attribute === 'idiom')">
                                 <div class="field-block-head" @click="addPattern()">
-                                    <div>patterns</div>
+                                    <div>{{ $t('models.patterns') }}</div>
                                     <div class="field-item-add">+</div>
                                 </div>
                                 <div class="field-block-body" v-if="form.patterns.length > 0">
@@ -493,7 +499,7 @@ defineOptions({
                     </div>
                     <div class="field-block">
                         <div class="field-block-head" @click="addInflection()">
-                            <div>inflections</div>
+                            <div>{{ $t('models.inflections') }}</div>
                             <div class="field-item-add">+</div>
                         </div>
                         <div class="field-block-body" v-if="form.inflections.length > 0">
@@ -502,7 +508,7 @@ defineOptions({
                                 <img src="/img/trash.svg" alt="Delete" v-show="form.inflections.length > 0"
                                      @click="removeItem(index, form.inflections)"/>
                                 <div class="field-item">
-                                    <label>Form</label>
+                                    <label>{{ $t('inflection.fields.form') }}</label>
                                     <select v-model="inflection.form" required>
                                         <template v-if="form.category === 'noun'">
                                             <option
@@ -539,14 +545,14 @@ defineOptions({
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>Inflection</label>
+                                    <label>{{ $t('inflection.fields.inflection') }}</label>
                                     <input v-model="inflection.inflection" required/>
                                     <div v-if="validationErrors[`inflections.${index}.inflection`]" class="field-error">
                                         {{ validationErrors[`inflections.${index}.inflection`] }}
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>Translit</label>
+                                    <label>{{ $t('inflection.fields.transcription') }}</label>
                                     <input v-model="inflection.translit" required/>
                                     <div v-if="validationErrors[`inflections.${index}.translit`]" class="field-error">
                                         {{ validationErrors[`inflections.${index}.translit`] }}
@@ -557,12 +563,12 @@ defineOptions({
                     </div>
                     <div class="field-block">
                         <div class="field-block-head">
-                            <div>Info</div>
+                            <div>{{ $t('components.term.sections.info') }}</div>
                         </div>
                         <div class="field-block-body">
                             <div class="field-block">
                                 <div class="field-block-head" @click="SearchStore.openSearchGenie('insert', 'terms')">
-                                    <div>relatives</div>
+                                    <div>{{ $t('components.term.relatives.title') }}</div>
                                     <div class="field-item-add">+</div>
                                 </div>
                                 <div class="field-block-body" v-if="form.relatives.length > 0">
@@ -618,11 +624,11 @@ defineOptions({
                                 </div>
                             </div>
                             <div class="field-item">
-                                <label>Image URL</label>
+                                <label>{{ $t('term.data.image-url') }}</label>
                                 <input v-model="form.image"/>
                             </div>
                             <div class="field-item">
-                                <label>Usage Notes</label>
+                                <label>{{ $t('term.data.usage-notes') }}</label>
                                 <textarea v-model="form.usage"/>
                             </div>
                         </div>
@@ -631,7 +637,7 @@ defineOptions({
                 <div>
                     <div class="field-block">
                         <div class="field-block-head" @click="addGloss()">
-                            <div>glosses</div>
+                            <div>{{ $t('models.glosses') }}</div>
                             <div class="field-item-add">+</div>
                         </div>
                         <div class="field-block-body" v-if="form.glosses.length > 0">
@@ -641,7 +647,7 @@ defineOptions({
                                      @click="removeItem(index, form.glosses)"/>
 
                                 <div class="field-item">
-                                    <label>Gloss</label>
+                                    <label>{{ $t('gloss.fields.gloss') }}</label>
                                     <input v-model="gloss.gloss" required/>
                                     <div v-if="validationErrors[`glosses.${index}.gloss`]" class="field-error">
                                         {{ validationErrors[`glosses.${index}.gloss`] }}
@@ -650,7 +656,7 @@ defineOptions({
 
                                 <div class="field-block">
                                     <div class="field-block-head" @click="addAttribute('gloss', index)">
-                                        <div>attributes</div>
+                                        <div>{{ $t('models.attributes') }}</div>
                                         <div class="field-item-add">+</div>
                                     </div>
                                     <div class="field-block-body" v-if="gloss.attributes.length > 0">
@@ -705,7 +711,7 @@ defineOptions({
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('modals.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

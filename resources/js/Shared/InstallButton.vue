@@ -2,6 +2,9 @@
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import {autoUpdate, offset, flip, shift, useFloating} from "@floating-ui/vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const showInstallButton = ref(false);
 const showInstallHint = ref(false);
@@ -38,7 +41,7 @@ const dismissInstallHint = () => {
 
 const installApp = async () => {
     if (!deferredInstallPrompt) {
-        alert('App installation is not available in this browser.');
+        alert(t('install.unavailable'));
         return;
     }
 
@@ -90,7 +93,7 @@ onMounted(() => {
             class="material-symbols-rounded install-button"
             @click="installApp"
             type="button"
-            aria-label="Install App"
+            :aria-label="$t('install.button')"
         >
             download
         </button>
@@ -104,7 +107,7 @@ onMounted(() => {
                  aria-live="polite"
             >
                 <div class="app-hint__text">
-                    Click the Install Button to download PalWeb to your device for easier access!
+                    {{ $t('install.hint') }}
                 </div>
 
                 <button
@@ -112,7 +115,7 @@ onMounted(() => {
                     class="app-hint__dismiss"
                     @click="dismissInstallHint"
                 >
-                    Dismiss
+                    {{ $t('components.hint.dismiss') }}
                 </button>
             </div>
         </Teleport>
