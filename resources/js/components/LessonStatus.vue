@@ -11,7 +11,7 @@ defineProps({
     <div class="lesson-status">
         <div style="background: var(--color-medium-secondary); color: white;">
             <Link class="lesson-title" :href="route('lessons.show', lesson.global_position)">
-                {{ $t('components.lesson.number', {number: lesson.global_position}) }}
+                {{ $t('lesson.key-index', {index: lesson.global_position}) }}
             </Link>
 
             <div style="display: flex; align-items: center; gap: 0.8rem">

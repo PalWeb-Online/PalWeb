@@ -11,7 +11,6 @@ use App\Models\Unit;
 use App\Services\LessonService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -69,7 +68,7 @@ class LessonController extends Controller
         ]);
     }
 
-    public function store(UpsertLessonRequest $request): RedirectResponse|JsonResponse
+    public function store(UpsertLessonRequest $request): JsonResponse
     {
 //        todo: this method is hit if & only if the Lesson is created via the `lesson-planner.unit-lesson` route;
 //         if it's created in the `lesson-planner.unit` route, the UnitController store() method is hit.
@@ -104,19 +103,12 @@ class LessonController extends Controller
             'dialog',
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'lesson' => new LessonResource($lesson),
-                'message' => 'Lesson created successfully.',
-            ], 201);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $lesson->title])]);
-        return to_route('lesson-planner.lesson', $lesson);
+        return response()->json([
+            'lesson' => new LessonResource($lesson),
+        ], 201);
     }
 
-    public function update(UpsertLessonRequest $request, Lesson $lesson): RedirectResponse|JsonResponse
+    public function update(UpsertLessonRequest $request, Lesson $lesson): JsonResponse
     {
         DB::transaction(function () use ($request, $lesson) {
             $oldUnit = $lesson->unit;
@@ -158,24 +150,15 @@ class LessonController extends Controller
             'dialog',
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'lesson' => new LessonResource($lesson),
-                'message' => 'Lesson updated successfully.',
-            ]);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $lesson->title])]);
-        return to_route('lesson-planner.lesson', $lesson);
+        return response()->json([
+            'lesson' => new LessonResource($lesson),
+        ]);
     }
 
     public function destroy(Lesson $lesson): JsonResponse
     {
         try {
             Gate::authorize('delete', $lesson);
-
-            $deletedLesson = $lesson->title;
 
             DB::transaction(function () use ($lesson) {
                 $unit = $lesson->unit;
@@ -188,7 +171,6 @@ class LessonController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedLesson]),
             ]);
 
         } catch (Throwable $e) {

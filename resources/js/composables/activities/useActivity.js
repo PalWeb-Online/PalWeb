@@ -5,8 +5,8 @@ export function useActivity() {
         isDeleting: isDeletingActivity,
         deleteResource: deleteActivity,
     } = useResourceDelete({
+        label: 'activity',
         routeBase: 'activities',
-        label: 'Activity',
     });
 
     return {

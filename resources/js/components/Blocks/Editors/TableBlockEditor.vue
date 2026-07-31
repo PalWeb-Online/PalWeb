@@ -23,18 +23,18 @@ const gridStyle = computed(() => ({
                      @click="addTableColumn({ blockId: props.block.id })">
                     +
                 </div>
-                <div>column</div>
+                <div>{{ $t('block.element.column') }}</div>
             </div>
             <div>
                 <div class="add-button" @click="addTableRow({ blockId: props.block.id })">
                     +
                 </div>
-                <div>row</div>
+                <div>{{ $t('block.element.row') }}</div>
             </div>
         </div>
 
         <AppTip v-if="(props.block.columns?.length ?? 0) === 0">
-            <p>Add at least one column to start entering row data.</p>
+            <p>{{ $t('document.messages.no-columns') }}</p>
         </AppTip>
 
         <Draggable v-if="props.block.columns?.length" class="table-grid" :style="gridStyle"

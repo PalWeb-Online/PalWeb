@@ -12,7 +12,6 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
-use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\FeedbackCommentController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Office\LessonPlannerController;
@@ -295,11 +294,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/purge', 'purge')->name('scores.purge');
             Route::delete('/{score}', 'destroy')->name('scores.destroy');
         });
-
-        Route::prefix('/explore')->controller(ExploreController::class)->group(function () {
-            Route::get('/', 'index')->name('explore.index');
-            Route::get('/{page}', 'show')->name('explore.show');
-        });
     });
 
     Route::prefix('/library')->group(function () {
@@ -416,7 +410,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('/api')->group(function () {
     Route::prefix('/users')->controller(UserController::class)->group(function () {
         Route::get('/{user}', 'fetch')->name('api.users.fetch');
-        Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggleStudent');
+        Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggle-student');
     });
 
     Route::prefix('/activities')->controller(ActivityController::class)->group(function () {

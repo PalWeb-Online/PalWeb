@@ -1,11 +1,14 @@
 import {computed} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useUnitValidation({
-                                          form,
-                                          backendErrors,
-                                          allowedBlockTypes,
-                                      }) {
+                                      form,
+                                      backendErrors,
+                                      allowedBlockTypes,
+                                  }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         useValidationState,
@@ -18,14 +21,14 @@ export function useUnitValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            errors.title = 'Title is required.';
+            errors.title = t('validation.required', {field: t('forms.fields.title')});
         }
 
         (form.lessons ?? []).forEach((lesson, index) => {
-            const lessonIndex = `Lesson ${form.position}0${index + 1}`;
+            const lessonIndex = t('lesson.key-index', {index: `${form.position}0${index + 1}`});
 
             if (!lesson.title) {
-                errors[`lesson.${index}.title`] = `${lessonIndex}: Title is required.`;
+                errors[`lesson.${index}.title`] = `${lessonIndex}: ${t('validation.required', {field: t('forms.fields.title')})}`;
             }
         });
 

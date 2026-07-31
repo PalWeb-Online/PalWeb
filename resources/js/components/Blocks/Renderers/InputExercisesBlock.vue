@@ -16,10 +16,10 @@ const {
 
 <template>
     <div class="block--exercises">
-        <h2>{{ $t(`exercises.types.${block.exerciseType}`) }}</h2>
+        <h2>{{ $t(`exercise.type.${block.exerciseType}`) }}</h2>
         <ExercisesBlockPrompts :block="block"/>
         <div v-if="block.examples" v-for="ex in block.examples" class="dialog-body">
-            <div class="featured-title s">{{ $t('exercises.example') }}</div>
+            <div class="featured-title s">{{ $t('exercise.example') }}</div>
             <DialogLine speaker="سؤال" :ar="ex.prompt"/>
             <DialogLine speaker="جواب" :ar="ex.answer" align="ltr"/>
         </div>

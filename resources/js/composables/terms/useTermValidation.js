@@ -1,10 +1,13 @@
 import {computed} from "vue";
 import {useResourceValidation} from "../resources/useResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useTermValidation({
                                       form,
                                       backendErrors,
                                   }) {
+    const {t} = useI18n();
+
     const {
         latinScriptPattern,
         arabicScriptPattern,
@@ -21,111 +24,114 @@ export function useTermValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.term)) {
-            errors.term = 'Term is required.';
+            errors.term = t('validation.required', {field: t('term.key')});
 
         } else if (!matchesPattern(form.term, arabicScriptPattern)) {
-            errors.term = 'Term may only contain Arabic-script characters.';
+            errors.term = t('validation.script.arabic', {field: t('term.key')});
         }
 
         if (!isNonEmptyString(form.category)) {
-            errors.category = 'Category is required.';
+            errors.category = t('validation.required', {field: t('term.fields.category')});
         }
 
         (form.pronunciations ?? []).forEach((pronunciation, index) => {
             if (!isNonEmptyString(pronunciation.translit)) {
-                errors[`pronunciations.${index}.translit`] = 'Transcription is required.';
+                errors[`pronunciations.${index}.translit`] = t('validation.required', {field: t('pronunciation.fields.transcription')});
 
             } else if (!matchesPattern(pronunciation.translit, latinScriptPattern)) {
-                errors[`pronunciations.${index}.translit`] = 'Transcription may only contain Latin-script characters.';
+                errors[`pronunciations.${index}.translit`] = t('validation.script.latin', {field: t('pronunciation.fields.transcription')});
             }
 
             if (!isNonEmptyString(pronunciation.phonemic)) {
-                errors[`pronunciations.${index}.phonemic`] = 'Phonemic transcription is required.';
+                errors[`pronunciations.${index}.phonemic`] = t('validation.required', {field: t('pronunciation.fields.phonemic')});
             }
 
             if (!isNonEmptyString(pronunciation.phonetic)) {
-                errors[`pronunciations.${index}.phonetic`] = 'Phonetic transcription is required.';
+                errors[`pronunciations.${index}.phonetic`] = t('validation.required', {field: t('pronunciation.fields.phonetic')});
             }
 
             if (!pronunciation.dialect_id) {
-                errors[`pronunciations.${index}.dialect_id`] = 'Dialect is required.';
+                errors[`pronunciations.${index}.dialect_id`] = t('validation.min-items', {
+                    item: t('dialect.key'),
+                    min: 1
+                });
             }
         });
 
         if (!isEmpty(form.root?.root)) {
             if (form.root.root.length < 3) {
-                errors['root.root'] = 'Root must be at least 3 characters.';
+                errors['root.root'] = t('validation.min-chars', {field: t('term.fields.root'), min: 3});
 
             } else if (form.root.root.length > 4) {
-                errors['root.root'] = 'Root must not be greater than 4 characters.';
+                errors['root.root'] = t('validation.max-chars', {field: t('term.fields.root'), max: 4});
 
             } else if (!matchesPattern(form.root.root, arabicScriptPattern)) {
-                errors['root.root'] = 'Root may only contain Arabic-script characters.';
+                errors['root.root'] = t('validation.script.arabic', {field: t('term.fields.root')});
             }
         }
 
         if (!isNonEmptyString(form.etymology?.type)) {
-            errors['etymology.type'] = 'Etymology type is required.';
+            errors['etymology.type'] = t('validation.required', {field: t('term.data.type')});
         }
 
         (form.attributes ?? []).forEach((attribute, index) => {
             if (!isNonEmptyString(attribute.attribute)) {
-                errors[`attributes.${index}.attribute`] = 'Attribute is required.';
+                errors[`attributes.${index}.attribute`] = t('validation.required', {field: t('term.fields.attribute')});
             }
         });
 
         (form.spellings ?? []).forEach((spelling, index) => {
             if (!isNonEmptyString(spelling.spelling)) {
-                errors[`spellings.${index}.spelling`] = 'Spelling is required.';
+                errors[`spellings.${index}.spelling`] = t('validation.required', {field: t('term.fields.spelling')});
 
             } else if (!matchesPattern(spelling.spelling, arabicScriptPattern)) {
-                errors[`spellings.${index}.spelling`] = 'Spelling may only contain Arabic-script characters.';
+                errors[`spellings.${index}.spelling`] = t('validation.script.arabic', {field: t('term.fields.spelling')});
             }
         });
 
         (form.relatives ?? []).forEach((relative, index) => {
             if (!isNonEmptyString(relative.slug)) {
-                errors[`relatives.${index}.slug`] = 'Relative is required.';
+                errors[`relatives.${index}.slug`] = t('validation.required', {field: t('forms.fields.slug')});
             }
 
             if (!isNonEmptyString(relative.type)) {
-                errors[`relatives.${index}.type`] = 'Relationship type is required.';
+                errors[`relatives.${index}.type`] = t('validation.required', {field: t('forms.fields.type')});
             }
 
             if (glossRelativeTypes.includes(relative.type) && isEmpty(relative.gloss_id)) {
-                errors[`relatives.${index}.gloss_id`] = 'Gloss is required for this relationship type.';
+                errors[`relatives.${index}.gloss_id`] = t('term.validation.relative-gloss');
             }
         });
 
         (form.glosses ?? []).forEach((gloss, glossIndex) => {
             if (!isNonEmptyString(gloss.gloss)) {
-                errors[`glosses.${glossIndex}.gloss`] = 'Gloss is required.';
+                errors[`glosses.${glossIndex}.gloss`] = t('validation.required', {field: t('gloss.key')});
             }
 
             (gloss.attributes ?? []).forEach((attribute, attributeIndex) => {
                 if (!isNonEmptyString(attribute.attribute)) {
-                    errors[`glosses.${glossIndex}.attributes.${attributeIndex}.attribute`] = 'Gloss attribute is required.';
+                    errors[`glosses.${glossIndex}.attributes.${attributeIndex}.attribute`] = t('validation.required', {field: t('term.fields.attribute')});
                 }
             });
         });
 
         (form.inflections ?? []).forEach((inflection, index) => {
             if (!isNonEmptyString(inflection.form)) {
-                errors[`inflections.${index}.form`] = 'Inflection form is required.';
+                errors[`inflections.${index}.form`] = t('validation.required', {field: t('inflection.fields.form')});
             }
 
             if (!isNonEmptyString(inflection.inflection)) {
-                errors[`inflections.${index}.inflection`] = 'Inflection is required.';
+                errors[`inflections.${index}.inflection`] = t('validation.required', {field: t('inflection.key')});
 
             } else if (!matchesPattern(inflection.inflection, arabicScriptPattern)) {
-                errors[`inflections.${index}.inflection`] = 'Inflection may only contain Arabic-script characters.';
+                errors[`inflections.${index}.inflection`] = t('validation.script.arabic', {field: t('inflection.key')});
             }
 
             if (!isNonEmptyString(inflection.translit)) {
-                errors[`inflections.${index}.translit`] = 'Inflection transcription is required.';
+                errors[`inflections.${index}.translit`] = t('validation.required', {field: t('inflection.fields.transcription')});
 
             } else if (!matchesPattern(inflection.translit, latinScriptPattern)) {
-                errors[`inflections.${index}.translit`] = 'Inflection transcription may only contain Latin-script letters & hyphens.';
+                errors[`inflections.${index}.translit`] = t('validation.script.latin', {field: t('inflection.fields.transcription')});
             }
         });
 
@@ -137,28 +143,28 @@ export function useTermValidation({
 
         if (form.category === 'verb') {
             if (isEmpty(form.root?.root)) {
-                messages.push('The Verb has no root.');
+                messages.push(t('term.validation.verb-missing-root'));
             }
 
             if (!form.attributes.some(attribute => attribute.attribute === 'idiom') && !form.patterns.find(pattern => pattern.type === 'verbal')) {
-                messages.push('The Verb has no pattern.');
+                messages.push(t('term.validation.verb-missing-pattern'));
             }
 
             if (form.glosses.some(gloss => !gloss.attributes.length)) {
-                messages.push('The Verb has a Gloss with no Attribute.');
+                messages.push(t('term.validation.verb-missing-gloss-attribute'));
             }
         }
 
         if (form.category === 'noun' && !form.attributes.some(attribute => ['masculine', 'feminine', 'plural'].includes(attribute.attribute))) {
-            messages.push('The Noun has no gender.');
+            messages.push(t('term.validation.noun-missing-gender'));
         }
 
         if (form.category === 'adjective' && !form.inflections.length) {
-            messages.push('The Adjective has no Inflections.');
+            messages.push(t('term.validation.adjective-missing-inflections'));
         }
 
         if (form.attributes.some(attribute => attribute.attribute === 'idiom') && !form.relatives.filter(relative => relative.type === 'component').length) {
-            messages.push('The Idiom has no components.');
+            messages.push(t('term.validation.idiom-missing-components'));
         }
 
         return messages;

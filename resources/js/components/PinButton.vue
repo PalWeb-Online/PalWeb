@@ -4,7 +4,9 @@ import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import AppTooltip from "./AppTooltip.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
 const UserStore = useUserStore();
 const NotificationStore = useNotificationStore();
 
@@ -20,17 +22,24 @@ let isPinned = ref(props.model.isPinned);
 
 const pin = async () => {
     try {
-        const response = await axios.post(route(`${props.modelType}s.pin`, props.model.id));
+        const {data} = await axios.post(route(`${props.modelType}s.pin`, props.model.id));
 
         if (props.modelType === 'deck') {
-            pinCount.value = response.data.pinCount;
+            pinCount.value = data.pinCount;
         }
 
         isPinned.value = !isPinned.value;
-        NotificationStore.addNotification(response.data.message);
+        NotificationStore.addNotification(
+            t(`components.pin-button.notifications.pin-${
+                data.isPinned ? 'added' : 'removed'
+            }`, {
+                model: data.modelKey
+            })
+        );
 
     } catch (error) {
-        console.error('Pin Failed', error);
+        console.error(t('components.pin-button.notifications.pin-error'), error);
+        NotificationStore.addNotification(t('components.pin-button.notifications.pin-error'), 'error');
     }
 };
 
@@ -51,7 +60,7 @@ watch(() => props.model, (newModel) => {
         </div>
         <div v-else
              class="pin-button-wrapper"
-             @mousemove="tooltip.showTooltip('You must verify your email to enable Pins.', $event);"
+             @mousemove="tooltip.showTooltip($t('components.pin-button.tooltips.must-verify-email'), $event);"
              @mouseleave="tooltip.hideTooltip()">
             <button class="material-symbols-rounded pin-button">keep_off</button>
         </div>

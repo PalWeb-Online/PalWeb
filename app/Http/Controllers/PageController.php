@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpsertPageRequest;
 use App\Models\Page;
 use App\Services\PageService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -144,40 +143,22 @@ class PageController extends Controller
         ]);
     }
 
-    public function store(UpsertPageRequest $request): JsonResponse|RedirectResponse
+    public function store(UpsertPageRequest $request): JsonResponse
     {
         $page = PageService::upsertWithSiblingPosition(null, $request->validated());
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'page' => $page->load('parent:id,slug,title'),
-                'message' => 'Page created successfully.',
-            ], 201);
-        }
-
-        return to_route('wiki.show', $page->slug)
-            ->with('notification', [
-                'type' => 'success',
-                'message' => 'Page created successfully.',
-            ]);
+        return response()->json([
+            'page' => $page->load('parent:id,slug,title'),
+        ], 201);
     }
 
-    public function update(UpsertPageRequest $request, Page $page): JsonResponse|RedirectResponse
+    public function update(UpsertPageRequest $request, Page $page): JsonResponse
     {
         $page = PageService::upsertWithSiblingPosition($page, $request->validated());
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'page' => $page->refresh()->load('parent:id,slug,title'),
-                'message' => 'Page updated successfully.',
-            ]);
-        }
-
-        return to_route('wiki.show', $page->slug)
-            ->with('notification', [
-                'type' => 'success',
-                'message' => 'Page updated successfully.',
-            ]);
+        return response()->json([
+            'page' => $page->refresh()->load('parent:id,slug,title'),
+        ]);
     }
 
     public function destroy(Page $page): JsonResponse
@@ -191,7 +172,6 @@ class PageController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => 'Page']),
             ]);
 
         } catch (Throwable $e) {

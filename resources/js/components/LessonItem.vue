@@ -15,7 +15,7 @@ const props = defineProps({
     <div class="window-container lesson-item"
          :class="{hidden: !lesson.published}">
         <div class="window-section-head">
-            <h1>{{ $t('components.lesson.number', {number: lesson.global_position}) }}</h1>
+            <h1>{{ $t('lesson.key-index', {index: lesson.global_position}) }}</h1>
             <Link v-if="UserStore.isAdmin" :href="route('lesson-planner.lesson', lesson.id)" class="material-symbols-rounded">
                 edit
             </Link>

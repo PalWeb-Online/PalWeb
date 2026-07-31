@@ -62,26 +62,26 @@ const removeMatchPair = (ex, index) => {
                 <div class="add-button"
                      @click="addExercise({ blockId: props.block.id, type: exerciseType, atStart: true })">+
                 </div>
-                <div>{{ $t(`exercises.types.${exerciseType}`) }}</div>
+                <div>{{ $t(`exercise.type.${exerciseType}`) }}</div>
             </div>
             <div v-else>
                 <div class="add-button"
                      @click="addExercise({ blockId: props.block.id, type: props.block.exerciseType, atStart: true })">+
                 </div>
-                <div>{{ $t(`exercises.types.${props.block.exerciseType}`) }}</div>
+                <div>{{ $t(`exercise.type.${props.block.exerciseType}`) }}</div>
             </div>
             <div v-if="props.block.exerciseType === 'input'">
                 <div class="add-button"
                      @click="addExample">+
                 </div>
-                <div>{{ $t('exercises.example') }}</div>
+                <div>{{ $t('exercise.example') }}</div>
             </div>
         </div>
 
         <div v-if="props.block.exerciseType === 'input'" class="exercise-item"
              v-for="(example, i) in props.block.examples" :key="i">
             <div class="block-meta">
-                <div>{{ $t('exercises.example') }}</div>
+                <div>{{ $t('exercise.example') }}</div>
                 <button
                     type="button"
                     class="material-symbols-rounded"
@@ -123,7 +123,7 @@ const removeMatchPair = (ex, index) => {
                 <div class="exercise-item-wrapper">
                     <div class="exercise-item">
                         <div class="block-meta">
-                            <div style="flex-grow: 1">{{ index + 1 + '. ' + $t('exercises.types.' + ex.type) }}</div>
+                            <div style="flex-grow: 1">{{ index + 1 + '. ' + $t('exercise.type.' + ex.type) }}</div>
                             <span class="handle material-symbols-rounded">drag_indicator</span>
                             <span class="material-symbols-rounded"
                                   @click="duplicateExercise({ blockId: props.block.id, exerciseId: ex.id })"
@@ -269,13 +269,13 @@ const removeMatchPair = (ex, index) => {
                                  @click="addExercise({ blockId: props.block.id, afterExerciseId: ex.id, type: props.block.exerciseType })">
                                 +
                             </div>
-                            <div>{{ $t(`exercises.types.${props.block.exerciseType}`) }}</div>
+                            <div>{{ $t(`exercise.type.${props.block.exerciseType}`) }}</div>
                         </div>
                     </div>
                 </div>
             </template>
         </Draggable>
-        <ToggleSingle :label="$t('exercises.shuffle')" v-model="props.block.shuffle"/>
+        <ToggleSingle :label="$t('exercise.shuffle')" v-model="props.block.shuffle"/>
     </div>
 </template>
 

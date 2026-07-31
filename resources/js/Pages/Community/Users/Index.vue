@@ -34,7 +34,7 @@ defineOptions({
     <div id="app-body">
         <div class="app-body-section">
             <AppHeading>
-                {{ $t('models.teachers') }}
+                {{ $t('pages.users.index.teachers') }}
             </AppHeading>
             <AppTip>
                 <p v-if="teachersCount <= 0">Sadly, there are no Teachers on PalWeb yet.</p>
@@ -49,7 +49,7 @@ defineOptions({
                             {{ user.teacher.bio }}
                         </template>
                         <template v-else>
-                            <i>{{ $t('teacher.bio-placeholder', {user: user.name}) }}</i>
+                            <i>{{ $t('teacher.fields.bio-placeholder', {user: user.name}) }}</i>
                         </template>
                     </div>
                 </CommentItem>
@@ -57,7 +57,7 @@ defineOptions({
             <Paginator v-if="teachers.meta.links.length > 3" :links="teachers.meta.links"/>
 
             <AppHeading>
-                {{ $t('models.decks') }}
+                {{ $t('pages.users.index.decks') }}
             </AppHeading>
             <div class="decks-featured">
                 <DeckFlashcard :model="featuredDeck"/>
@@ -75,7 +75,7 @@ defineOptions({
             </Link>
 
             <AppHeading>
-                {{ $t('models.audios') }}
+                {{ $t('pages.users.index.audios') }}
             </AppHeading>
             <div v-if="latestAudios.length > 0" class="model-list">
                 <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>

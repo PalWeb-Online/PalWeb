@@ -12,8 +12,8 @@ export function useAudio(url = null) {
         isDeleting: isDeletingAudio,
         deleteResource: deleteAudio,
     } = useResourceDelete({
+        label: 'audio',
         routeBase: 'audios',
-        label: 'Audio',
         onDeleteSuccess: () => {
             router.get(route('audios.index'));
         },

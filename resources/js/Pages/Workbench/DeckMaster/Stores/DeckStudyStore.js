@@ -6,7 +6,7 @@ import {useScoreManager} from "../../../../composables/useScoreManager.js";
 import {useI18n} from "vue-i18n";
 
 export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
-    const { t } = useI18n();
+    const {t} = useI18n();
     const scoreManager = useScoreManager();
     const NotificationStore = useNotificationStore();
 
@@ -43,7 +43,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         data.isLoading = false;
     }
 
-    const startQuiz = () => {
+    const startQuiz = async () => {
         scoreManager.score.scorable_type = 'deck';
 
         data.step = 'quiz';
@@ -53,35 +53,40 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
-        generateQuiz().then(() => {
+        try {
+            await generateQuiz();
+
             if (quiz.value.length < 5) {
-                NotificationStore.addNotification(t('pages.deck-master.notifications.insufficient-items'), 'error');
+                NotificationStore.addNotification(t('pages.deck-master.notifications.insufficient-items'), 'warning');
+
                 data.step = 'settings';
             }
-        });
 
-        data.isLoading = false;
+        } catch (e) {
+            console.error(t('pages.deck-master.notifications.quiz-generation-error'), e);
+            NotificationStore.addNotification(t('pages.deck-master.notifications.quiz-generation-error'), 'error');
+
+            data.step = 'settings';
+
+        } finally {
+            data.isLoading = false;
+        }
     };
 
     const generateQuiz = async () => {
-        try {
-            const response = await axios.post(route('deck-master.get-quiz', data.deck.id), {
-                settings: settings
+        const response = await axios.post(route('deck-master.get-quiz', data.deck.id), {
+            settings: settings
+        });
+
+        quiz.value = response.data.quiz;
+
+        if (settings.quizType === 'glosses') {
+            quiz.value.forEach(question => {
+                shuffle(Object.entries(question.options));
             });
-
-            quiz.value = response.data.quiz;
-
-            if (settings.quizType === 'glosses') {
-                quiz.value.forEach(question => {
-                    shuffle(Object.entries(question.options));
-                });
-            }
-
-            quiz.value = shuffle(quiz.value);
-
-        } catch (error) {
-            console.error('Failed to generate quiz', error);
         }
+
+        quiz.value = shuffle(quiz.value);
     };
 
     const submitQuiz = () => {
@@ -98,25 +103,25 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             };
 
             if (settings.quizType === 'glosses') {
-                    result.answer = [q.options[q.answer]];
-                    result.response = q.options[q.response];
-                    result.correct = q.answer === q.response;
+                result.answer = [q.options[q.answer]];
+                result.response = q.options[q.response];
+                result.correct = q.answer === q.response;
 
             } else if (settings.quizType === 'inflections') {
-                    result.prompt = q.prompt;
-                    result.answer = q.answer;
-                    result.response = q.response;
-                    result.correct = q.answer.includes(q.response);
+                result.prompt = q.prompt;
+                result.answer = q.answer;
+                result.response = q.response;
+                result.correct = q.answer.includes(q.response);
 
             } else if (settings.quizType === 'sentences') {
-                    result.sentence = {
-                        id: q.sentence.id,
-                        sentence: q.sentence.sentence,
-                    };
-                    result.prompt = q.prompt;
-                    result.answer = [q.options[q.answer]['term']];
-                    result.response = q.options[q.response]['term'];
-                    result.correct = q.answer === q.response;
+                result.sentence = {
+                    id: q.sentence.id,
+                    sentence: q.sentence.sentence,
+                };
+                result.prompt = q.prompt;
+                result.answer = [q.options[q.answer]['term']];
+                result.response = q.options[q.response]['term'];
+                result.correct = q.answer === q.response;
             }
 
             return result;

@@ -11,6 +11,9 @@ import WindowSection from "./WindowSection.vue";
 import LessonStatus from "./LessonStatus.vue";
 import ReviewProgress from "../Pages/Workbench/CardDealer/UI/ReviewProgress.vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
+import {useI18n} from "vue-i18n";
+
+const {locale} = useI18n();
 
 const props = defineProps({
     model: {
@@ -56,11 +59,20 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
                             {{ deck.description }}
                         </template>
                         <template v-else>
-                            <i>{{ $t('components.deck.description-placeholder', {author: deck.author.name}) }}</i>
+                            <i>{{
+                                    $t('components.deck.description-placeholder', {
+                                        author: locale === 'ar' ? deck.author.ar_name : deck.author.name
+                                    })
+                                }}</i>
                         </template>
                     </div>
                     <div class="user-comment-data">
-                        {{ $t('components.deck.created-by', {author: deck.author.name, date: deck.created_at}) }}
+                        {{
+                            $t('components.deck.created-by', {
+                                author: locale === 'ar' ? deck.author.ar_name : deck.author.name,
+                                date: deck.created_at
+                            })
+                        }}
                     </div>
                 </template>
             </UserItem>

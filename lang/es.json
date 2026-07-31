@@ -2,7 +2,7 @@
     "meta": {
         "app": {
             "title": "PalWeb",
-            "subtitle": "la Red del Árabe Palestino!"
+            "subtitle": "¡la Red del Árabe Palestino!"
         }
     },
     "layout": {
@@ -16,11 +16,10 @@
             "search": "Búsqueda",
             "settings": "Ajustes",
             "menu": "Menú",
-            "push-subscribe-hint": "Enciende tus Notificaciones en Ajustes para recibir un recordatorio diario para estudiar tus Cartas!"
+            "push-subscribe-hint": "¡Enciende tus Notificaciones en Ajustes para recibir un recordatorio diario para estudiar tus Fichas!"
         },
         "auth": {
-            "user-avatar": "Avatar del Usuario",
-            "resend-link": "Reenviar Enlace"
+            "user-avatar": "Avatar del Usuario"
         },
         "sidebar": {
             "home": {
@@ -66,7 +65,7 @@
     },
     "search": {
         "genie": {
-            "title": "Search Genie",
+            "title": "Genio de Búsqueda",
             "insert-title": "Insertar {model}",
             "empty": "Aún no hay nada.",
             "see-all-results": "Ver todos los resultados.",
@@ -97,7 +96,7 @@
         "audios": "Audios",
         "attributes": "Atributos",
         "badges": "Insignias",
-        "cards": "Cartas",
+        "cards": "Fichas",
         "decks": "Barajas",
         "inflections": "Inflecciones",
         "glosses": "Definiciones",
@@ -110,7 +109,11 @@
         "spellings": "Ortografías",
         "teachers": "Profes",
         "terms": "Términos",
-        "units": "Unidades"
+        "units": "Unidades",
+        "users": "Pals"
+    },
+    "activity": {
+        "key": "Actividad"
     },
     "card": {
         "fields": {
@@ -150,9 +153,26 @@
         "messages": {
             "not-encountered": "Aún no has encontrado este Término.",
             "mastery-tooltip": "Tu Puntaje de Maestría para este Término es {score} ({label}), lo que significa que {message}."
+        },
+        "notifications": {
+            "reset-confirm": "¿Estás seguro de que quieres eliminar tus datos para esta Ficha y restablecerla como Ficha Nueva?",
+            "reset-success": "¡Ficha reseteada!",
+            "master-confirm": "¿Estás seguro de que quieres sobrescribir los datos de esta Ficha y dominarla inmediatamente?",
+            "master-success": "¡Ficha dominada!",
+            "suspend-success": "¡Ficha suspendida!",
+            "restore-success": "¡Ficha restaurada!"
+        }
+    },
+    "deck": {
+        "key": "Baraja",
+        "notifications": {
+            "copy-link-success": "Enlace a la Baraja ha sido copiado al portapapeles.",
+            "copy-confirm": "¿Estás seguro de que quieres crear una copia de esta Baraja?",
+            "copy-success": "¡Se ha creado una copia de la Baraja!"
         }
     },
     "dialect": {
+        "key": "Dialecto",
         "palestinian-bedouin": "Palestino Beduino",
         "palestinian-druze": "Palestino Druso",
         "central-urban-palestinian": "Palestino Central Urbano",
@@ -165,32 +185,68 @@
         "rural-palestinian": "Palestino Rural",
         "general-palestinian": "Palestino General"
     },
-    "exercises": {
-        "types": {
+    "dialog": {
+        "key": "Diálogo"
+    },
+    "exercise": {
+        "key": "Ejercicio",
+        "type": {
             "input": "escribir",
             "match": "emparejar",
             "select": "elegir",
             "sort": "ordenar"
         },
+        "fields": {
+            "example-prompt": "Indicación del Ejemplo {index}",
+            "example-answer": "Respuesta del Ejemplo {index}",
+            "prompt": "Indicación {index} ({type})",
+            "select-options": "Opciones de Selección",
+            "pairs": "Pares",
+            "pair-start": "Lado Inicial del Par {index}",
+            "pair-end": "Lado Final del Par {index}",
+            "sort-items": "Elementos a Ordenar",
+            "input-answer": "Respuesta"
+        },
         "prompts": {
             "input": "Contesta a la pregunta con una oración completa, siguiendo el formato del ejemplo.",
             "match": "Empareja las dos columnas en base a la pregunta. Solo una distribución de respuestas es posible.",
-            "select": "Coloca los elementos en el orden correcto para construir la oración o el diálogo.",
-            "sort": "Selecciona la respuesta más adecuada en respuesta a la pregunta."
+            "select": "Selecciona la respuesta más adecuada en respuesta a la pregunta.",
+            "sort": "Coloca los elementos en el orden correcto para construir la oración o el diálogo."
         },
         "example": "ejemplo",
         "shuffle": "barajar"
     },
     "gloss": {
-        "fields": {
-            "gloss": "definición"
-        }
+        "key": "Definición"
     },
     "inflection": {
+        "key": "Inflección",
         "fields": {
             "form": "forma",
             "inflection": "inflección",
             "transcription": "transcripción"
+        }
+    },
+    "lesson": {
+        "key": "Lección",
+        "key-index": "Lección {index}",
+        "fields": {
+            "unlock-conditions": "Condiciones de Desbloqueo"
+        },
+        "unlock-condition": {
+            "key": "Condición de Desbloqueo",
+            "type": "Tipo",
+            "value": "Valor"
+        },
+        "validation": {
+            "min-unlock-conditions": "Las Lecciones Extra deben tener al menos una Condición de Desbloqueo."
+        }
+    },
+    "page": {
+        "key": "Página",
+        "validation": {
+            "self-is-parent": "La Página no puede ser su propio nodo padre.",
+            "child-is-parent": "Un hijo de la Página no puede ser su nodo padre."
         }
     },
     "pattern": {
@@ -206,6 +262,21 @@
             "dialects": "dialectos",
             "borrowed": "prestado"
         }
+    },
+    "score": {
+        "key": "Puntaje"
+    },
+    "sentence": {
+        "fields": {
+            "translation": "Traducción",
+            "transcription": "Transcripción",
+            "speaker": "Hablante",
+            "position": "Posición"
+        }
+    },
+    "skill": {
+        "key": "Habilidad",
+        "key-index": "Habilidad {index}"
     },
     "speaker": {
         "title": "hablante",
@@ -234,12 +305,35 @@
             "other": "Otro"
         }
     },
+    "subscription": {
+        "title": "suscripción",
+        "manage": "gestionar suscripción",
+        "current-plan": "plan actual",
+        "free": "gratis",
+        "price": "{monthlyPrice}/mes {yearlyPrice}/año",
+        "messages": {
+            "access-denied": "Disculpa, pero actualmente no tienes acceso a este contenido.",
+            "sign-in-prompt": "Por favor, inicia sesión o crea una cuenta primero.",
+            "update-subscription-prompt": "Por favor, revisa y actualiza tu Suscripción y vuelve a intentarlo."
+        }
+    },
     "teacher": {
-        "bio": "bio del profe",
-        "bio-placeholder": "Lamentablemente, {user} aún no nos ha contado nada sobre de sí mismo como Profesor. Deberían arreglar eso pronto.",
-        "create": "crear perfil de profe"
+        "create": "crear perfil de profe",
+        "fields": {
+            "bio": "bio del profe",
+            "bio-placeholder": "Lamentablemente, {user} aún no nos ha contado nada sobre de sí mismo como Profesor. Deberían arreglar eso pronto.",
+            "create": "crear perfil de profe"
+        }
     },
     "term": {
+        "key": "Término",
+        "fields": {
+            "category": "Categoría",
+            "attribute": "Atributo",
+            "root": "Raíz",
+            "spelling": "Ortografía",
+            "relative": "Pariente"
+        },
         "category": {
             "verb": "verbo",
             "noun": "nombre",
@@ -254,7 +348,6 @@
             "affix": "afijo"
         },
         "filters": {
-            "category": "categoría",
             "categories": {
                 "verbs": "verbos",
                 "nouns": "nombres",
@@ -268,7 +361,6 @@
                 "phrases": "expresiones",
                 "affixes": "afijos"
             },
-            "attribute": "atributos",
             "attributes": {
                 "masculine": "masculino",
                 "feminine": "femenino",
@@ -309,6 +401,15 @@
             "source": "fuente",
             "image-url": "URL de imagen",
             "usage-notes": "notas de uso"
+        },
+        "validation": {
+            "relative-gloss": "Se requiere una Definición para este tipo de relación.",
+            "verb-missing-root": "El verbo no tiene Raíz.",
+            "verb-missing-pattern": "El verbo no tiene Patrón.",
+            "verb-missing-gloss-attribute": "El verbo tiene una Definición sin Atributo.",
+            "noun-missing-gender": "El nombre no tiene género.",
+            "adjective-missing-inflections": "El adjetivo no tiene Inflecciones.",
+            "idiom-missing-components": "El Modismo no tiene componentes."
         }
     },
     "unit": {
@@ -322,7 +423,8 @@
             "email": "Correo Electrónico",
             "password": "Contraseña",
             "confirm-password": "Confirmar Contraseña",
-            "bio": "Bio"
+            "bio": "Bio",
+            "home": "Hogar"
         },
         "roles": {
             "student": "estudiante",
@@ -336,7 +438,14 @@
         },
         "profile": "perfil",
         "notifications": {
-            "preferences-saved": "¡Tu preferencias han sido guardadas!"
+            "preferences-saved": "¡Tu preferencias han sido guardadas!",
+            "preferences-saved-error": "No se pudo guardar las preferencias de usuario.",
+            "role-granted": "Rol de Estudiante otorgado con éxito.",
+            "role-revoked": "Rol de Estudiante revocado con éxito.",
+            "role-toggle-error": "No se pudo cambiar el estado del rol de Estudiante."
+        },
+        "validation": {
+            "username-characters": "El Nombre de Usuario solo puede contener caracteres del alfabeto latino y números, además de guiones bajos y puntos entre letras."
         }
     },
     "modals": {
@@ -381,10 +490,12 @@
         },
         "purge-scores": {
             "title": "Purgar Puntajes",
-            "confirm": "Estás seguro de que quieres eliminar estos Puntajes? Esta acción no puede ser revertida.",
+            "message": "Borra todos los Puntajes para este modelo.",
             "fields": {
-                "time-limit": "Plazo"
+                "time-limit": "Plazo",
+                "keep": "Mantener"
             },
+            "older-than": "más antiguos que {age}.",
             "time-limits": {
                 "none": "Ninguno",
                 "day": "1 Día",
@@ -392,11 +503,16 @@
                 "month": "1 Mes",
                 "year": "1 Año"
             },
-            "keep": {
-                "highest": "Mantener el más alto",
-                "latest": "Mantener el más reciente"
+            "except-for": "excepto {scores}.",
+            "exceptions": {
+                "highest": "el Puntaje más alto",
+                "latest": "el Puntaje más reciente"
             },
-            "submit": "purgar"
+            "submit": "purgar",
+            "notifications": {
+                "purge-confirm": "¿Estás seguro de que quieres borrar estos Puntajes? Esta acción no puede ser revertida.",
+                "purge-success": "{count} Puntajes borrados con éxito."
+            }
         },
         "send-feedback": {
             "title": "enviar feedback",
@@ -447,13 +563,13 @@
                 "upload": "El Avatar no pudo ser subido.",
                 "delete": "El Avatar no pudo ser eliminado."
             },
+            "messages": {
+                "upload-limit": "Puedes subir hasta {count} avatares personalizados. Elimina uno antes de subir otro.",
+                "upload-format": "Puedes subir una imagen en formato JPG, JPEG, PNG o WEBP (máximo 5MB)."
+            },
             "notifications": {
                 "uploaded": "OK, tu Avatar se subió con éxito.",
                 "deleted": "OK, tu Avatar se eliminó con éxito."
-            },
-            "tips": {
-                "upload-limit": "Puedes subir hasta {count} avatares personalizados. Elimina uno antes de subir otro.",
-                "upload-format": "Puedes subir una imagen en formato JPG, JPEG, PNG o WEBP (máximo 5MB)."
             }
         }
     },
@@ -463,18 +579,20 @@
             "edit": "Editar {model}",
             "delete": "Eliminar {model}",
             "copy": "Copiar {model}",
-            "select": "Seleccionar {thing}"
+            "select": "Seleccionar {thing}",
+            "view-scores": "Ver Puntajes"
         },
         "models": {
             "activity": "Actividad",
-            "card": "Carta",
+            "audio": "Audio",
+            "card": "Ficha",
             "deck": "Baraja",
             "dialog": "Diálogo",
             "gloss": "Definición",
             "lesson": "Lección",
             "page": "Página",
             "root": "Raíz",
-            "scores": "Puntajes",
+            "score": "Puntaje",
             "sentence": "Oración",
             "speaker": "Hablante",
             "teacher": "Profe",
@@ -483,10 +601,10 @@
             "user": "Usuario"
         },
         "card": {
-            "master": "Dominar Carta",
-            "restore": "Restaurar Carta",
-            "suspend": "Suspender Carta",
-            "reset": "Resetear Carta"
+            "master": "Dominar Ficha",
+            "restore": "Restaurar Ficha",
+            "suspend": "Suspender Ficha",
+            "reset": "Resetear Ficha"
         },
         "deck": {
             "empty": "La Baraja está vacía.",
@@ -530,18 +648,19 @@
             }
         },
         "status": {
-            "public": "public",
-            "private": "private",
+            "public": "público",
+            "private": "privado",
             "draft": "en borrador",
             "published": "publicado"
         },
         "fields": {
             "slug": "encabezado",
+            "type": "tipo",
             "title": "título",
             "summary": "resumen",
             "description": "descripción",
             "locale": "idioma",
-            "parent": "padre",
+            "parent": "nodo padre",
             "position": "posición"
         },
         "messages": {
@@ -550,18 +669,22 @@
             "has-publish-issues": "El {model} no puede publicarse en el estado actual.",
             "has-confirmable-issues": "¿Está seguro de que el {model} está completo?"
         },
-        "blocks": "bloques"
+        "notifications": {
+            "model-added": "¡{model} se añadió a {target}!",
+            "model-removed": "¡{model} se sacó de {target}!",
+            "model-already-present": "¡{model} ya está en {target}!",
+            "save-success": "Listo, {model} se guardó con éxito.",
+            "save-error": "¡Ups! — {model} no pudo guardarse.",
+            "delete-confirm": "¿Estás seguro de que quieres eliminar este {model}?",
+            "delete-success": "Listo, {model} se eliminó con éxito.",
+            "delete-error": "¡Ups! — {model} no pudo eliminarse."
+        }
     },
-    "blocks": {
-        "container": "contenedor",
-        "heading": "titular",
-        "text": "texto",
-        "image": "imagen",
-        "audio": "audio",
-        "chart": "diagrama",
-        "table": "tabla",
-        "sentence": "oración",
-        "exercises": "ejercicios",
+    "document": {
+        "key": "Documento",
+        "fields": {
+            "blocks": "Bloques"
+        },
         "add": {
             "model": "modelo",
             "custom": "a medida",
@@ -570,9 +693,54 @@
             "inflection": "inflección"
         },
         "messages": {
+            "no-blocks": "Aún no se ha agregado ningún Bloque.",
+            "no-columns": "Agrega al menos una columna para comenzar a ingresar datos en las filas."
+        },
+        "validation": {
+            "invalid-block": "Este tipo de Bloque no está permitido aquí.",
+            "heading-type": "El tipo de Titular debe ser h1, h2 o h3.",
+            "sentence-block-content": "El Bloque de Oración debe tener un modelo de Oración o una Oración hecha a medida.",
+            "exercises-block-type": "El tipo de Bloque de Ejercicios debe ser escribir, emparejar, elegir u ordenar.",
+            "exercise-prompt": "Debe haber al menos una indicación de Texto o Audio no vacía.",
+            "select-exercise-answer": "Se debe seleccionar una respuesta correcta para el Ejercicio."
+        }
+    },
+    "block": {
+        "key": "Bloque",
+        "type": {
+            "container": "contenedor",
+            "heading": "titular",
+            "text": "texto",
+            "image": "imagen",
+            "audio": "audio",
+            "chart": "diagrama",
+            "table": "tabla",
+            "sentence": "oración",
+            "exercises": "ejercicios"
+        },
+        "element": {
+            "column": "columna",
+            "row": "fila"
+        },
+        "fields": {
+            "column-label": "Etiqueta de la Columna {index}",
+            "column-row-cell": "Celda en la Columna {columnIndex}, Fila {rowIndex}",
+            "row-items": "Elementos de la Fila {index}",
+            "row-item-key": "Título del Elemento {itemIndex}, Fila {rowIndex}",
+            "row-item-arabic": "Árabe del Elemento {itemIndex}, Fila {rowIndex}",
+            "row-item-transcription": "Transcripción del Elemento {itemIndex}, Fila {rowIndex}"
+        },
+        "buttons": {
+            "flatten": "Aplanar"
+        },
+        "messages": {
             "empty-sentence": "Bloque de Oración vacío. Por favor, crea una Oración a la medida o carga un modelo de Oración.",
             "unsupported-block": "Tipo de Bloque de Ejercicios no compatible:",
             "unsupported-exercise-block": "Bloque no compatible:"
+        },
+        "notifications": {
+            "flatten-container": "¿Aplanar este Contenedor? Sus Bloques anidados serán movidos un nivel hacia arriba y el Contenedor será eliminado.",
+            "remove-block": "¿Estás seguro de que quieres eliminar este Bloque?"
         }
     },
     "components": {
@@ -636,6 +804,16 @@
                 "info": "información"
             }
         },
+        "pin-button": {
+            "tooltips": {
+                "must-verify-email": "Debes verificar tu correo electrónico para habilitar los Pines."
+            },
+            "notifications": {
+                "pin-added": "¡\"{model}\" añadido a tus Pines!",
+                "pin-removed": "¡\"{model}\" quitado de tus Pines!",
+                "pin-error": "No se pudo cambiar el estado del Pin."
+            }
+        },
         "comment": {
             "created-on": "el {date}."
         },
@@ -662,11 +840,9 @@
             }
         },
         "lesson": {
-            "number": "Lección {number}",
             "scored-perfect": "Obtuviste 100% ({count}/{total})",
             "open": "abrir Lección",
             "no-skills": "(Ninguna habilidad ha sido agregada a esta Lección aún.)",
-            "skill": "habilidad {number}",
             "sections": {
                 "skills": "habilidades"
             }
@@ -680,7 +856,7 @@
         "score": {
             "student-required": "Debes ser un Estudiante para habilitar Puntajes.",
             "quizzed-on": "Quiz completado el {date}.",
-            "new-record": "nuevo record!",
+            "new-record": "¡nuevo record!",
             "answered-correctly": "Contestaste a {correct} de {total} preguntas correctamente.",
             "review-answers": "Revisa tus respuestas a continuación.",
             "history": "Ver Historial de Puntajes",
@@ -716,9 +892,6 @@
                     "withTranslation": "withTranslation"
                 }
             }
-        },
-        "skill": {
-            "title": "Habilidad"
         },
         "search-select": {
             "placeholder": "Buscar",
@@ -758,7 +931,18 @@
         "user": {
             "bio-placeholder": "Lamentablemente, {name} aún no nos ha contado nada sobre sí mismo.",
             "location-placeholder": "La Tierra, probablemente.",
-            "joined-on": "Alta el {date} ({ago})."
+            "joined-on": "Alta el {date} ({ago}).",
+            "sections": {
+                "decks": "barajas"
+            }
+        },
+        "nav-auth": {
+            "resend-link": "Reenviar Enlace",
+            "notifications": {
+                "already-verified": "¡Tu correo electrónico ya está verificado!",
+                "link-sent": "Enlace de verificación enviado a tu correo electrónico.",
+                "link-sent-error": "No se pudo enviar el enlace de verificación. Inténtalo de nuevo más tarde."
+            }
         }
     },
     "pages": {
@@ -772,7 +956,112 @@
             "sort-messages": {
                 "alphabetical": "Ordenando alfabéticamente por raíz.",
                 "frequency": "Ordenando por frecuencia en el Corpus.",
-                "latest": "Ordenando por más recientemente creado."
+                "latest": "Ordenando por más recientemente creado.",
+                "popular": "Ordenando por más agregado a Pines."
+            }
+        },
+        "home": {
+            "release-notes": "Notas de la Versión {version}",
+            "titles": {
+                "palweb": {
+                    "title": "así que estás {action} el árabe {dialect}",
+                    "subtitle": "PalWeb es tu centro",
+                    "actions": {
+                        "learning": "aprendiendo",
+                        "teaching": "enseñando",
+                        "researching": "investigando"
+                    },
+                    "dialects": {
+                        "spoken": "hablado",
+                        "levantine": "levantino",
+                        "palestinian": "palestino",
+                        "jordanian": "jordano"
+                    }
+                },
+                "language": {
+                    "title": "el lenguaje es una red",
+                    "subtitle": "PalWeb es la Red del Árabe Palestino"
+                },
+                "arabic": {
+                    "title": "haz el árabe tuyo",
+                    "subtitle": "por fin descomplicamos el aprendizaje de idiomas"
+                },
+                "community": {
+                    "title": "nosotros creamos. tú aprendes.",
+                    "subtitle": "todo en PalWeb está hecho por otros como tú"
+                }
+            },
+            "features": {
+                "dictionary": {
+                    "title": "diccionario de hipertexto",
+                    "subtitle": "Ve a donde te lleve tu curiosidad.",
+                    "description": "Las entradas super detalladas son solo el comienzo: escucha todo en voz alta; salta entre sinónimos y antónimos; explora las Oraciones para ver los Términos en su contexto, ¡y mucho más!"
+                },
+                "search-genie": {
+                    "title": "encuéntralo todo",
+                    "subtitle": "Solo llama al Genio de Búsqueda.",
+                    "description": "Busca en árabe o inglés y refina tu búsqueda con una variedad de filtros hechos a medida para el sistema de raíces del árabe. ¡Házle Pin a las cosas para encontrarlas fácilmente más tarde!",
+                    "try-me": "pruébame"
+                },
+                "sound-booth": {
+                    "title": "la grabadora",
+                    "subtitle": "Deja que tu voz brille.",
+                    "description": "Dale vida al idioma grabando muestras de pronunciación de todo en tu dialecto y representa la diversidad del árabe palestino."
+                },
+                "build-decks": {
+                    "title": "construye barajas",
+                    "subtitle": "Construye tu vocabulario, Baraja por Baraja.",
+                    "description": "Olvídate de la tediosa tarea de crear tus propios conjuntos de vocabulario y gestionar minuciosamente aplicaciones de fichas de memoria. Usa el Barajador para crear tus propias Barajas en un instante y estúdialas con total flexibilidad, ajustando la visualización con un solo clic. ¡Explora la Biblioteca para ver Barajas creadas por los demás!"
+                },
+                "card-dealer": {
+                    "title": "repetición espaciada",
+                    "subtitle": "No seas terco; estudia con inteligencia.",
+                    "description": "Mejora tu dominio de los Términos en tus Barajas y en todo el Diccionario con el Repartidor, que programará las revisiones de los Términos según tu nivel de conocimiento. PalWeb conocerá tus puntos débiles incluso mejor que tú."
+                },
+                "study-decks": {
+                    "title": "quizzes y puntajes",
+                    "subtitle": "Ponte a prueba antes de que sea demasiado tarde.",
+                    "description": "Repasa tus Barajas de Fichas con Quizzes personalizables que pondrán a prueba tu vocabulario árabe. ¡Guarda tus Puntuaciones y mira cómo evoluciona tu aprendizaje con el tiempo!"
+                },
+                "academy": {
+                    "title": "lecciones y actividades",
+                    "subtitle": "De Don Nadie a campeón.",
+                    "description": "¡Recorre las Lecciones para descubrir nuevas palabras, aprender nuevas habilidades y practicar con plantillas de diálogo! Cada Lección incluye una Actividad diseñada para que integres todo lo aprendido."
+                },
+                "community": {
+                    "title": "construyendo comunidad",
+                    "subtitle": "Conéctate y comparte con los demás."
+                }
+            },
+            "prompts": {
+                "join-discord": {
+                    "message": "sigue la conversación",
+                    "button": "¡Únete al Discord!"
+                },
+                "sign-up": {
+                    "message": "¿qué esperas?",
+                    "button": "¡Inscríbeme!"
+                }
+            },
+            "windows": {
+                "together": {
+                    "title": "métanse todos",
+                    "subtitle": "Estamos reuniendo a estudiantes, educadores y hablantes.",
+                    "description": "Tanto si estás empezando a aprender árabe como si eres un hablante nativo interesado en la preservación del idioma, el conjunto de herramientas de aprendizaje y documentación de PalWeb, basadas en bases de datos, reúne a todos para celebrar el árabe palestino."
+                },
+                "arabic": {
+                    "title": "escalera al árabe",
+                    "subtitle-1": "¿Por qué el árabe hablado?",
+                    "description-1": "{highlight} El árabe estándar es difícil, ¡incluso para los hablantes nativos! Aprender el árabe hablado antes refleja como los hablantes nativos adquieren el idioma — de manera social y contextual — y no solo facilita la transición al árabe estándar sino que hace que tenga más sentido, pues ya tendrás un sentido intuitivo de su estructura, sonido y ritmo.",
+                    "description-1-highlight": "Si quieres aprender árabe en serio, comienza con el árabe hablado.",
+                    "subtitle-2": "¿Por qué el árabe palestino?",
+                    "description-2": "El árabe palestino es una forma del árabe levantino, una de las familias dialectales mejor comprendidas a lo largo y ancho del mundo árabe, {highlight-1} en Palestina, Jordania, Líbano, Siria y más allá. Es uno de los dialectos más conservadores del árabe hablado, con similitudes importantes con el árabe estándar (¡hasta un 80% de solapamiento en el vocabulario!), lo que hace que sea {highlight-2} para quienes quieran construir una fundación sólida en el vocabulario y la gramática del árabe.",
+                    "description-2-highlight-1": "hablada por hasta 40 millones de personas",
+                    "description-2-highlight-2": "un punto de partida perfecto"
+                }
+            },
+            "notifications": {
+                "signed-in": "¡Ya estás ingresado en tu cuenta!"
             }
         },
         "terms": {
@@ -847,16 +1136,16 @@
         },
         "cards": {
             "index": {
-                "title": "cartas",
+                "title": "fichas",
                 "filters": {
                     "due": "Más Próximo Repaso",
                     "latest": "Último Repaso",
                     "mastery": "Nivel de Maestría"
                 },
                 "messages": {
-                    "results": "Mostrando {count} Cartas, {message}.",
-                    "no-results": "You have no Cards matching these filters.",
-                    "no-cards": "You don't have any Cards yet. Start reviewing to get started!"
+                    "results": "Mostrando {count} Fichas, {message}.",
+                    "no-results": "No tienes Fichas que coincidan con estos filtros.",
+                    "no-cards": "Aún no tienes ninguna Ficha. ¡Comienza a estudiar para empezar!"
                 },
                 "sort-message": {
                     "due": "comenzando por la más próxima fecha de entrega",
@@ -870,34 +1159,34 @@
                 "review": "Repasa",
                 "sections": {
                     "options": "opciones",
-                    "card": "carta"
+                    "card": "ficha"
                 },
                 "tooltips": {
-                    "processed-cards": "Cartas de la sesión procesadas",
+                    "processed-cards": "Fichas de la sesión procesadas",
                     "session-progress": "Progreso de la sesión de repaso",
-                    "total-cards": "Total de Cartas de la sesión",
-                    "remaining-learning": "Cartas de Aprendizaje (Nuevas) Restantes",
-                    "remaining-learning-relearning": "Cartas de Aprendizaje y Reaprendizaje Restantes",
-                    "remaining-relearning": "Cartas de Reaprendizaje (Propias) Restantes",
-                    "remaining-owned": "Cartas Propias Restantes"
-                },
-                "notifications": {
-                    "mastered": "¡Carta dominada!",
-                    "suspended": "¡Carta suspendida!"
+                    "total-cards": "Total de Fichas de la sesión",
+                    "remaining-learning": "Fichas de Aprendizaje (Nuevas) Restantes",
+                    "remaining-learning-relearning": "Fichas de Aprendizaje y Reaprendizaje Restantes",
+                    "remaining-relearning": "Fichas de Reaprendizaje (Propias) Restantes",
+                    "remaining-owned": "Fichas Propias Restantes"
                 }
             }
         },
         "users": {
             "index": {
                 "title": "hub",
+                "teachers": "profes",
+                "decks": "barajas",
                 "latest": "recientes",
                 "popular": "populares",
+                "audios": "audios",
                 "creators": "creadores",
                 "create-prompt": "¡Crea la tuya!",
                 "record-prompt": "¡Graba el tuyo!"
             },
             "show": {
-                "empty": "{user} aún no ha subido ninguna Baraja pública."
+                "empty": "{user} aún no ha subido ninguna Baraja pública.",
+                "badges": "insignias"
             },
             "edit": {
                 "messages": {
@@ -905,6 +1194,10 @@
                     "teacher-instructions": "Llena el siguiente formulario para crear tu perfil de Profe. Solo será creado al Guardar.",
                     "teacher-bio-placeholder": "¿Qué te gustaría que supieramos sobre ti como profesor?"
                 }
+            },
+            "new-password": {
+                "title": "nueva contraseña",
+                "set-password": "establecer contraseña"
             }
         },
         "wiki": {
@@ -935,7 +1228,7 @@
                 "show-inflections": "mostrar inflecciones"
             },
             "messages": {
-                "no-created-decks": "Parece que todavía no has creado ninguna Baraja. Haz click en el botón + para comenzar!",
+                "no-created-decks": "Parece que todavía no has creado ninguna Baraja. ¡Haz click en el botón + para comenzar!",
                 "no-pinned-decks": "Parece que todavía no has pineado ninguna Baraja. Te esperamos aquí.",
                 "select-quiz-type": "Selecciona el tipo de Quiz y ajusta cómo quieres que se genere.",
                 "student-required": "Debes ser un Estudiante para habilitar los Quizzes.",
@@ -944,7 +1237,8 @@
                 "sentences-prompt": "Selecciona el Término que mejor se ajusta al espacio en blanco en la frase."
             },
             "notifications": {
-                "insufficient-items": "No se pudo generar un Quiz con al menos 5 preguntas."
+                "insufficient-items": "No se pudo generar un Quiz con al menos 5 preguntas.",
+                "quiz-generation-error": "No se pudo generar el Quiz."
             }
         },
         "card-dealer": {
@@ -987,15 +1281,15 @@
             "suspended": "Suspendidas",
             "total": "Total",
             "points": "Puntos",
-            "manage-cards": "gestionar cartas",
+            "manage-cards": "gestionar fichas",
             "messages": {
                 "created": "{createdActiveCount} ({createdTotalCount}) de {activeCount} ({totalCount}) disponibles en el conjunto ({percentCreated})",
                 "reviewed": "{reviewedCount} de {activeCount} ({percentOfActive}), de {potentialCount} disponibles en el conjunto ({percentOfTotal})",
-                "suspended": "{suspendedCount} de {createdCount} Cartas creadas de {totalCount} Términos en total en el conjunto",
+                "suspended": "{suspendedCount} de {createdCount} Fichas creadas de {totalCount} Términos en total en el conjunto",
                 "not-student": "Debes ser un Estudiante para habilitar el estudio por repetición espaciada."
             },
             "tooltips": {
-                "exposure": "% de Cartas que has repasado del conjunto.",
+                "exposure": "% de Fichas que has repasado del conjunto.",
                 "progress": "Puntaje de Maestría para el conjunto, calculado sumando tu Puntaje de Maestría para cada Término."
             }
         },
@@ -1006,7 +1300,11 @@
             "review": "repaso",
             "start": "iniciar",
             "tooltips": {
-                "purge": "Purga todas tus Cartas Nuevas."
+                "purge": "Borra todas tus Fichas Nuevas."
+            },
+            "notifications": {
+                "purge-confirm": "¿Estás seguro de que quieres borrar todas tus Fichas Nuevas?",
+                "purge-success": "{count} Fichas Nuevas borradas con éxito."
             }
         },
         "session-settings": {
@@ -1023,7 +1321,7 @@
         },
         "review-history": {
             "title": "historial de repaso",
-            "cards": "Cartas",
+            "cards": "Fichas",
             "owned": "Propias",
             "new": "Nuevas",
             "actions": "Acciones",
@@ -1075,7 +1373,15 @@
             "upload": "subir",
             "prompt-start": "¡Graba algo para comenzar!"
         },
-        "check": "revisar"
+        "check": "revisar",
+        "notifications": {
+            "flush-queue-confirm": "¿Estás seguro de que quieres vaciar la Cola, eliminando todas tus grabaciones aún no subidas, si las hubiera?",
+            "remove-item-confirm": "Tienes grabaciones aún no subidas para este elemento. ¿Estás seguro de que quieres sacarlo de la Cola antes de subirlo? Tu grabación no subida se perderá.",
+            "auto-queue-success": "¡{count} Pronunciaciones fueron agregadas a la Cola!",
+            "auto-queue-error": "No se pudo agregar Pronunciaciones automáticamente a la Cola.",
+            "deck-queue-success": "¡{count} Pronunciaciones de la Baraja fueron agregadas a la Cola!",
+            "deck-queue-error": "No se pudo agregar Pronunciaciones de la Baraja a la Cola."
+        }
     },
     "footer": {
         "links": {
@@ -1091,137 +1397,60 @@
             }
         }
     },
-    "signin.message": "Bienvenido de vuelta, :user!",
-    "signin.message.head": "Hola!",
-    "signout.message": "Hasta pronto, :user!",
-    "signout.message.head": "Chao!",
-    "created": ":thing creado con éxito!",
-    "updated": ":thing actualizado con éxito!",
-    "deleted": ":thing eliminado con éxito!",
-    "pin.added": ":thing añadido a tus Pines!",
-    "pin.removed": ":thing quitado de tus Pines!",
-    "deck.copied": "Created a copy of \":deck\"!",
-    "decks.term.added": ":term ha sido añadido a \":deck\"!",
-    "decks.term.removed": ":term ha sido quitado de \":deck\"!",
+    "validation": {
+        "non-empty": "{field} no puede estár vacio.",
+        "object": "{field} debe ser un objeto.",
+        "array": "{field} debe ser una matriz.",
+        "min-items": "Debe haber un mínimo de {min} {item}.",
+        "non-empty-field": "{field} no puede contener un campo vacío.",
+        "required": "Se requiere {field}.",
+        "max-chars": "{field} no debe tener más de {max} caracteres.",
+        "min-chars": "{field} debe tener un mínimo de {min} caracteres.",
+        "email": "Debe ser una dirección de correo electrónico válida.",
+        "script": {
+            "latin": "{field} solo puede contener caracteres del alfabeto latino y guiones.",
+            "arabic": "{field} solo puede contener caracteres árabes."
+        },
+        "required-dependency": "Debe tener un {model} asignado.",
+        "invalid-dependency": "{model} seleccionado es inválido.",
+        "hidden-dependency": "{model} debe ser visible al público."
+    },
+    "passwords": {
+        "sent": "¡Se ha enviado el enlace para restablecer la contraseña!",
+        "reset": "¡Se ha restablecido la contraseña!",
+        "user": "No pudimos encontrar un usuario con esa dirección de correo electrónico.",
+        "token": "Este token de restablecimiento de contraseña es inválido.",
+        "throttled": "Por favor, espera antes de volver a intentarlo."
+    },
+    "auth.failed": "Estas credenciales no coinciden con nuestros registros.",
+    "auth.throttle": "Demasiados intentos de inicio de sesión. Vuelve a intentarlo en :segundos segundos.",
+    "signin.message": "¡Bienvenido de vuelta, {user}!",
+    "signin.message.head": "¡Hola!",
+    "signout.message": "¡Hasta pronto, {user}!",
+    "signout.message.head": "¡Chao!",
+    "signup.message": "¡Encantados de conocerte, {user}!",
+    "signup.message.head": "¡Bienvenido!",
+    "created": "¡:thing creado con éxito!",
+    "updated": "¡:thing actualizado con éxito!",
+    "deleted": "¡:thing eliminado con éxito!",
     "badges.get": "¡Conseguiste la Insignia \":badge\"! ¡Bien hecho!",
-    "documentation": "documentación",
-    "dictionary": "diccionario",
-    "lessons": "cursos",
-    "texts": "textos",
-    "all": "todos",
-    "pronouns": "pronombres",
-    "questions": "preguntas",
-    "subtype": "subtipo",
-    "masculine": "masculino",
-    "feminine": "femenino",
-    "singular": "singular",
-    "plural": "plural",
-    "defect": "defecto",
-    "elative": "elativo",
-    "participle": "participio",
-    "m": "m",
-    "f": "f",
-    "p": "p",
-    "new": "nuevo",
-    "edit": "editar",
-    "info": "info",
-    "origin": "orígen",
-    "inherited": "heredado",
-    "borrowed": "prestado",
-    "variants": "variantes",
-    "spellings": "ortografías",
-    "root": "raíz",
-    "definition": "definición",
-    "synonyms": "sinónimos",
-    "antonyms": "antónimos",
-    "usage.notes": "notas de uso",
-    "see.also": "véase también",
-    "see": "véase",
-    "form": "forma",
-    "conjugation": "conjugación",
-    "past": "pasado",
-    "present": "presente",
-    "command": "mandato",
-    "dialects.change": "cambiar dialecto",
-    "dialects.updated": "¡Tu dialecto ha sido actualizado!",
-    "dialects.target": "dialecto deseado",
-    "dialects.urban": "Palestino Urbano",
-    "dialects.rural": "Palestino Rural",
-    "dialects.northern": "Palestinino Norteño",
-    "dialects.bedouin": "Beduino General",
-    "it.tafsir": "it-Tafsīr",
-    "the.dictionary": "el Diccionario",
-    "palestinian.arabic": "el Árabe Palestino",
-    "curriculum": "currículo",
-    "level": "nivel",
-    "lesson": "lección",
-    "module": "módulo",
-    "grammar": "gramática",
-    "vocabulary": "vocabulario",
-    "dialogue": "diálogo",
-    "concept": "concepto",
-    "terms": "términos",
-    "exercise": "ejercicio",
-    "soon": "pronto",
-    "back": "p'atrás",
-    "next": "p'alante",
-    "go": "vamos",
-    "signup": "crear cuenta",
-    "signup.already": "¿Ya estás registrado?",
+    "oauth.discord.already-linked": "Tu cuenta de Discord ya está vinculada.",
+    "oauth.discord.link-canceled": "Cancelaste el proceso de autenticación con Discord.",
+    "oauth.discord.no-linked-account": "No pudimos iniciar sesión porque no hay ninguna cuenta de PalWeb vinculada a la cuenta de Discord proporcionada o que tenga el mismo correo electrónico. Inicia sesión normalmente primero y vincula tu cuenta de Discord antes de intentar iniciar sesión de esta manera.",
+    "oauth.discord.auth-failed": "No se pudo autenticar con Discord.",
+    "oauth.discord.no-password": "No has establecido una contraseña todavía. No puedes desconectarte de Discord hasta que hayas establecido una contraseña en PalWeb. Establece una contraseña primero y luego inténtalo de nuevo.",
+    "oauth.discord.no-token": "No se pudo desconectar la cuenta de Discord. No se encontró ningún token de Discord.",
+    "oauth.discord.connection-failed": "No se pudo desconectar la cuenta de Discord. No se pudo establecer la conexión con Discord.",
+    "oauth.discord.revoke-failed": "No se pudo desconectar la cuenta de Discord.",
+    "oauth.discord.revoke-success": "Se desconectó tu cuenta de Discord con éxito.",
     "mail.greeting": "Hola",
-    "mail.farewell": "Sinceramente",
-    "mail.subject.registered": "Bienvenido a it-Tafsir! 🙌",
-    "mail.subject.verified": "Cuenta it-Tafsir Verificada! 🎉",
-    "mail.subject.subscribed": "Bienvenido al Plan Estudiante! 🧠",
-    "mail.subject.passwordchanged": "Contraseña it-Tafsir Cambiada ⚠️",
+    "mail.farewell": "Saludos",
+    "mail.subject.registered": "Verifica tu Cuenta",
+    "mail.subject.verified": "¡Cuenta Verificada! ¡Únete al Discord!",
+    "mail.subject.subscribed": "¡Bienvenido al Plan Estudiante!",
+    "mail.subject.passwordchanged": "Contraseña Cambiada",
     "mail.registered": "We're so excited to have you join us at it-Tafsir! But first, would you mind clicking this link to verify your email address?",
     "mail.verified": "Awesome — thank you for verifying your account! We invite all verified users to join our Discord server to get to know others interested in Palestine & Palestinian Arabic — just click the link below. See you there!",
     "mail.subscribed": "Yay! You've just upgraded to a Scholar account at it-Tafsir, meaning you've gained access to all sections of the site. Are you ready to Learn Palestinian Arabic? Let's get going!",
-    "mail.passwordchanged": "Just FYI: the password for your account at it-Tafsir has been changed.",
-    "name": "nombre",
-    "name.display": "nombre personal",
-    "name.arabic": "nombre árabe",
-    "name.change": "cambiar nombre",
-    "email": "correo",
-    "password": "contraseña",
-    "password.change": "cambiar contraseña",
-    "password.old": "contraseña antigua",
-    "password.new": "contraseña nueva",
-    "password.confirm": "confirmar contraseña",
-    "password.forgot": "¿Olvidaste tu contraseña?",
-    "password.forgot.message": "No hay problema. Háganos saber su dirección de correo electrónico y le enviaremos un enlace de restablecimiento de contraseña para que pueda elegir una nueva.",
-    "password.send.link": "enviar enlace",
-    "language": "idioma",
-    "user.language": "español",
-    "role": "rol",
-    "auth.remember.me": "recuérdame",
-    "auth.failed": "Contraseña incorrecta. Vuelve a intentar.",
-    "auth.throttle": "Demasiados intentos de inicio de sesión. Vuelva a intentarlo en :segundos segundos.",
-    "dash": "panel",
-    "dash.welcome": "bienvenido",
-    "dash.profile": "perfil",
-    "dash.bookmarks": "palabras marcadas",
-    "dash.subscription": "suscripción",
-    "dash.plan": "plan",
-    "dash.change": "cambiar",
-    "dash.manage": "administrar",
-    "dash.submit": "guardar",
-    "settings": "settings",
-    "settings.updated": "Cuenta actualizada con éxito!",
-    "passwords.updated": "Your password has been updated!",
-    "passwords.reset": "Tu contraseña ha sido restablecida!",
-    "passwords.sent": "Le hemos enviado por correo electrónico su enlace de restablecimiento de contraseña!",
-    "passwords.throttled": "Espere antes de volver a intentarlo.",
-    "passwords.token": "Este token de restablecimiento de contraseña no es válido.",
-    "passwords.user": "No encontramos un usuario con esa dirección de correo electrónico.",
-    "validation.error": "Tuvimos un problema:",
-    "validation.alpha": "El nombre contiene caracteres inválidos.",
-    "validation.unique": "Ya existe una cuenta registrada con este correo.",
-    "validation.confirmed": "Las contraseñas no concuerdan.",
-    "validation.min.string": "Your password must be at least 8 characters.",
-    "verification": "verificación",
-    "verification.prompt": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\\'t receive the email, we will gladly send you another.",
-    "verification.sent": "A new verification link has been sent to the email address you provided during registration.",
-    "verification.send.link": "resend link",
-    "dismiss": "Descartar"
+    "mail.passwordchanged": "Just FYI: the password for your account at it-Tafsir has been changed."
 }

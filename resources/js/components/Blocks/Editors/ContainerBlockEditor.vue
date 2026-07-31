@@ -1,5 +1,8 @@
 <script setup>
 import DocumentBlocksManager from "./DocumentBlocksManager.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -9,7 +12,7 @@ const emit = defineEmits(['flatten']);
 
 const flattenContainer = () => {
     if (!props.block?.blocks?.length) return;
-    if (!confirm('Flatten this Container? Its nested blocks will be moved up one level and the Container will be removed.')) return;
+    if (!confirm(t('block.notifications.flatten-container'))) return;
 
     emit('flatten', props.block.id);
 };
@@ -27,7 +30,7 @@ const flattenContainer = () => {
         />
 
         <button @click="flattenContainer" :disabled="(block.blocks?.length ?? 0) === 0">
-            flatten
+            {{ $t('block.buttons.flatten') }}
         </button>
     </div>
 </template>

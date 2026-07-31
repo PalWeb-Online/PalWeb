@@ -12,11 +12,21 @@ import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import SendFeedback from "../components/Modals/SendFeedback.vue";
 import SendMail from "../components/Modals/SendMail.vue";
 import {useI18n} from "vue-i18n";
+import {useAuth} from "../composables/useAuth.js";
 
-const { locale } = useI18n();
+const {locale} = useI18n();
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
+
+const {
+    signingOut,
+    startingDiscordAuth,
+    revokingDiscord,
+    signOut,
+    startDiscordAuth,
+    revokeDiscord,
+} = useAuth();
 
 const carouselRef = ref(null);
 const sidebarRef = ref(null);
@@ -68,6 +78,14 @@ const handleClickOutside = (event) => {
     }
 };
 
+const handleSignOut = async () => {
+    await signOut({
+        afterSignOut: () => {
+            NavigationStore.closeSidebar();
+        },
+    });
+}
+
 onMounted(() => {
     const removeNavigationListener = router.on('navigate', () => {
         NavigationStore.closeSidebar();
@@ -79,21 +97,26 @@ onMounted(() => {
         document.removeEventListener('click', handleClickOutside);
     });
 });
-
-
 </script>
 <template>
     <div class="nav-sidebar-container" :class="{ 'show': NavigationStore.data.isOpen }">
         <div class="nav-sidebar" ref="sidebarRef">
             <div class="nav-sidebar-head">
                 <div>
-                    {{ $t(UserStore.user ? UserStore.highestRole : 'guest') }}
+                    {{
+                        UserStore.user ? $t(`user.roles.${UserStore.highestRole}`) : $t('user.roles.guest')
+                    }}
                     <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">
                         {{ $t('user.subscriptions.manage') }}
                     </Link>
                 </div>
                 <template v-if="UserStore.isUser">
-                    <button class="material-symbols-rounded" @click="router.post(route('signout'))">logout</button>
+                    <button class="material-symbols-rounded"
+                            @click="handleSignOut"
+                            :disabled="signingOut"
+                    >
+                        logout
+                    </button>
                 </template>
                 <template v-else>
                     <button class="material-symbols-rounded" @click="NavigationStore.showSignUp = true">person_add
@@ -112,10 +135,10 @@ onMounted(() => {
                         <div>{{ $t('nav.sidebar.' + NavigationStore.data.section + '.title') }}</div>
                     </div>
                     <Carousel :dir="locale === 'ar' ? 'rtl' : 'ltr'"
-                        :items-to-show="1"
-                        ref="carouselRef"
-                        @slide-start="onSlideStart"
-                        @slide-end="onSlideEnd"
+                              :items-to-show="1"
+                              ref="carouselRef"
+                              @slide-start="onSlideStart"
+                              @slide-end="onSlideEnd"
                     >
                         <Slide key="0">
                             <div @click="toSection('academy', 1)" class="nav-carousel-page-item"
@@ -306,10 +329,16 @@ onMounted(() => {
                     <div class="nav-user-menu-items">
                         <Link :href="route('subscription.index')">{{ $t('nav.sidebar.manage-subscription') }}</Link>
                         <Link :href="route('password.edit')">{{ $t('nav.sidebar.change-password') }}</Link>
-                        <a v-if="!UserStore.user.has_discord" :href="route('auth.discord')">
+                        <button v-if="!UserStore.user.has_discord"
+                                @click="startDiscordAuth"
+                                :disabled="startingDiscordAuth"
+                        >
                             {{ $t('nav.sidebar.link-discord') }}
-                        </a>
-                        <button v-else @click="router.post(route('auth.discord.revoke'))">
+                        </button>
+                        <button v-else
+                                @click="revokeDiscord"
+                                :disabled="revokingDiscord"
+                        >
                             {{ $t('nav.sidebar.unlink-discord') }}
                         </button>
                     </div>

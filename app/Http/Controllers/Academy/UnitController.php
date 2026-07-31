@@ -10,7 +10,6 @@ use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -57,7 +56,7 @@ class UnitController extends Controller
         ]);
     }
 
-    public function store(UpsertUnitRequest $request): RedirectResponse|JsonResponse
+    public function store(UpsertUnitRequest $request): JsonResponse
     {
         $unit = DB::transaction(function () use ($request) {
             $unit = Unit::create([
@@ -85,19 +84,12 @@ class UnitController extends Controller
             'lessons',
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'unit' => new UnitResource($unit),
-                'message' => 'Unit created successfully.',
-            ], 201);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $unit->title])]);
-        return to_route('lesson-planner.unit', $unit);
+        return response()->json([
+            'unit' => new UnitResource($unit),
+        ], 201);
     }
 
-    public function update(UpsertUnitRequest $request, Unit $unit): RedirectResponse|JsonResponse
+    public function update(UpsertUnitRequest $request, Unit $unit): JsonResponse
     {
         if (count($request->lessons) > 9) {
             session()->flash('notification',
@@ -149,24 +141,15 @@ class UnitController extends Controller
             'lessons',
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'unit' => new UnitResource($unit),
-                'message' => 'Unit updated successfully.',
-            ]);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $unit->title])]);
-        return to_route('lesson-planner.unit', $unit);
+        return response()->json([
+            'unit' => new UnitResource($unit),
+        ]);
     }
 
     public function destroy(Unit $unit): JsonResponse
     {
         try {
             Gate::authorize('delete', $unit);
-
-            $deletedUnit = $unit->title;
 
             DB::transaction(function () use ($unit) {
                 $unit->lessons()->each(function (Lesson $lesson) {
@@ -181,7 +164,6 @@ class UnitController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedUnit]),
             ]);
 
         } catch (Throwable $e) {

@@ -80,7 +80,7 @@ watch(
         text-transform: none;
         font-family: var(--head-font);
         font-size: clamp(1.8rem, 4vw, 3.2rem);
-        margin-inline-start: 17.5%;
+        margin-left: 17.5%;
         margin-block-start: -1.5em;
         padding: 0.75em;
         line-height: 1.25;

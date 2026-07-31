@@ -702,7 +702,7 @@
 .notification-container {
     position: fixed;
     bottom: 1.6rem;
-    left: 1.6rem;
+    inset-inline-start: 1.6rem;
     max-width: 80%;
     z-index: 9999;
     display: flex;

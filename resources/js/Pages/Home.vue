@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
+import {computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
 import HomepageHero from "../components/HomepageHero.vue";
@@ -19,6 +19,9 @@ import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
 import CommentItem from "../components/CommentItem.vue";
 import InfiniteCarousel from "../components/InfiniteCarousel.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 defineProps({
     count: Object,
@@ -41,12 +44,24 @@ const showSignUp = () => {
         NavigationStore.showSignUp = true
 
     } else {
-        NotificationStore.addNotification('You\'re already signed in!', 'info')
+        NotificationStore.addNotification(t('pages.home.notifications.signed-in'), 'info')
     }
 }
 
 const showTranslit = ref(false);
 const flipDefault = ref(false);
+
+const profileActions = computed(() =>
+    ['learning', 'teaching', 'researching'].map((action) =>
+        t(`pages.home.titles.palweb.actions.${action}`)
+    )
+);
+
+const profileDialects = computed(() =>
+    ['spoken', 'levantine', 'palestinian', 'jordanian'].map((dialect) =>
+        t(`pages.home.titles.palweb.dialects.${dialect}`)
+    )
+);
 
 let intervalId = null;
 
@@ -95,23 +110,26 @@ defineOptions({
         <div class="homepage-hero-wrapper"
              :style="{ transform: `translateY(${heroOffset}px)` }"
         >
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">v2.4 Release Notes -></Link>
+            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">{{ $t('pages.home.release-notes', {version: 'v2.4'}) }}</Link>
             <HomepageHero/>
         </div>
     </div>
     <div id="app-body" class="homepage">
         <div class="homepage-section accent-light" style="padding-block-end: 25.6rem">
             <div class="homepage-panel-content">
-                <div class="feature-panel-subtitle"
-                     style="margin-block: 3.2rem; display: flex; flex-flow: row wrap; align-items: center; justify-content: center; gap: 1.2rem 2.4rem">
-                    so, you’re
-                    <div style="display: flex; flex-flow: row wrap; gap: 1.6rem">
-                        <RotatingWordColumn :words="['learning', 'teaching', 'researching']"/>
-                        <RotatingWordColumn :words="['Spoken', 'Levantine', 'Palestinian', 'Jordanian']"/>
-                    </div>
-                    Arabic
-                </div>
-                <div class="feature-panel-title">PalWeb is your hub</div>
+                <i18n-t
+                    keypath="pages.home.titles.palweb.title"
+                    tag="div"
+                    class="feature-panel-subtitle"
+                >
+                    <template #action>
+                        <RotatingWordColumn :words="profileActions" />
+                    </template>
+                    <template #dialect>
+                        <RotatingWordColumn :words="profileDialects" />
+                    </template>
+                </i18n-t>
+                <div class="feature-panel-title">{{ $t('pages.home.titles.palweb.subtitle') }}</div>
             </div>
 
             <InfiniteCarousel>
@@ -121,54 +139,21 @@ defineOptions({
 
         <div class="homepage-section pastel-light">
             <div class="homepage-panel-content faq-panel" style="padding-block-end: 3.2rem;">
-                <div class="feature-panel-title">everyone get in</div>
-                <div class="feature-panel-subtitle">We’re bringing learners, educators & speakers together.</div>
-                <div class="feature-panel-description">Whether you're just starting to learn Arabic or you're a
-                    native speaker interested in language preservation, PalWeb's suite of database-powered learning
-                    & documentation tools bring everyone together to celebrate Palestinian Arabic.
-                </div>
+                <div class="feature-panel-title">{{ $t('pages.home.windows.together.title') }}</div>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.windows.together.subtitle') }}</div>
+                <div class="feature-panel-description">{{ $t('pages.home.windows.together.description') }}</div>
 
                 <div class="portal-button-wrapper" style="margin-block: 9.6rem 6.4rem">
                     <div class="portal-button-head">
-                        keep the convo going
+                        {{ $t('pages.home.prompts.join-discord.message') }}
                     </div>
                     <div class="portal-button-body">
-                        <a class="portal-button" href="https://discord.gg/3Wf7Q6RCjV" target="_blank">Join Our
-                            Discord!</a>
+                        <a class="portal-button" href="https://discord.gg/3Wf7Q6RCjV" target="_blank">
+                            {{ $t('pages.home.prompts.join-discord.button') }}
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <!--            <div-->
-            <!--                style="display: flex; flex-flow: row wrap; align-items: flex-start; justify-content: center; gap: 1.6rem 6.4rem">-->
-            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
-            <!--                    <div class="homepage-panel-content">-->
-            <!--                        <div class="feature-panel-title">Learn</div>-->
-            <!--                        <div class="feature-panel-subtitle">Arabic, easier than you think.</div>-->
-            <!--                        <div class="feature-panel-description">-->
-            <!--                            (A suite of reference & study tools.)-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
-            <!--                    <div class="homepage-panel-content">-->
-            <!--                        <div class="feature-panel-title">Teach</div>-->
-            <!--                        <div class="feature-panel-subtitle">Resources at your fingertips.</div>-->
-            <!--                        <div class="feature-panel-description">-->
-            <!--                            (A suite of reference & study tools.)-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--                <div class="feature-panel inline" style="grid-template-columns: 1fr">-->
-            <!--                    <div class="homepage-panel-content">-->
-            <!--                        <div class="feature-panel-title">Research</div>-->
-            <!--                        <div class="feature-panel-subtitle">Open-source documentation tools.</div>-->
-            <!--                        <div class="feature-panel-description">-->
-            <!--                            (A suite of reference & study tools.)-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
         </div>
 
         <div class="homepage-section pastel-light" style="padding-block-end: 25.6rem">
@@ -177,18 +162,15 @@ defineOptions({
             </div>
 
             <div class="homepage-panel-content">
-                <div class="feature-panel-title">language is a web</div>
-                <div class="feature-panel-subtitle">PalWeb is the Web of Palestinian Arabic</div>
+                <div class="feature-panel-title">{{ $t('pages.home.titles.language.title') }}</div>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.titles.language.subtitle') }}</div>
             </div>
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">hypertext dictionary</div>
-                    <div class="feature-panel-subtitle">Go where your curiosity takes you.</div>
-                    <div class="feature-panel-description">Highly detailed entries are just the beginning: hear
-                        everything out loud; jump between synonyms & antonyms; browse Sentences to see Terms in their
-                        context — & more!
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.dictionary.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.dictionary.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.dictionary.description') }}</div>
                     <div class="feature-preview" style="margin-block-start: 6.4rem">
                         <div class="model-list">
                             <SentenceItem v-for="sentence in sentences" :model="sentence" :key="sentence.id"/>
@@ -202,25 +184,23 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline reverse">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">find anything</div>
-                    <div class="feature-panel-subtitle">Just call the Search Genie.</div>
-                    <div class="feature-panel-description">Search in Arabic or English & narrow down your search with a
-                        variety of filters tailored for the Arabic root-pattern system. Pin things to find easily later!
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.search-genie.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.search-genie.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.search-genie.description') }}</div>
                     <div class="feature-preview" style="margin-block: 3.2rem; justify-self: center">
-                        <AppButton label="Try Me" @click="SearchStore.openSearchGenie"/>
+                        <AppButton :label="$t('pages.home.features.search-genie.try-me')" @click="SearchStore.openSearchGenie"/>
                     </div>
                     <div class="model-counter-wrapper" style="margin-block-start: 3.2rem">
                         <div class="model-counter">
                             <div class="model-counter-count">{{ count.terms }}</div>
                             <div class="model-counter-body">
-                                <span class="model-counter-model">Terms</span>
+                                <span class="model-counter-model">{{ $t('models.terms') }}</span>
                             </div>
                         </div>
                         <div class="model-counter">
                             <div class="model-counter-count">{{ count.sentences }}</div>
                             <div class="model-counter-body">
-                                <span class="model-counter-model">Sentences</span>
+                                <span class="model-counter-model">{{ $t('models.sentences') }}</span>
                             </div>
                         </div>
                     </div>
@@ -247,11 +227,9 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">sound booth</div>
-                    <div class="feature-panel-subtitle">Let your voice shine through.</div>
-                    <div class="feature-panel-description">Breathe life into language by recording pronunciation samples
-                        of everything in your dialect — & represent the diversity of Palestinian Arabic.
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.sound-booth.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.sound-booth.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.sound-booth.description') }}</div>
                 </div>
 
                 <div class="homepage-panel-content">
@@ -262,22 +240,30 @@ defineOptions({
 
         <div class="homepage-section accent-light">
             <div class="homepage-panel-content faq-panel">
-                <div class="feature-panel-title">stairway to Arabic</div>
-                <div class="feature-panel-subtitle">Why Spoken Arabic?</div>
-                <div class="feature-panel-description"><b>If you really want to learn Arabic, start with Spoken
-                    Arabic.</b> Standard Arabic is hard, even for native Arabic speakers. Learning Spoken Arabic
-                    first mirrors how native speakers acquire language — socially & contextually — & makes
-                    transitioning to Standard Arabic not only easier but more meaningful, as you’ll already have an
-                    intuitive feel for structure, sound, and flow.
-                </div>
-                <div class="feature-panel-subtitle">Why Palestinian Arabic?</div>
-                <div class="feature-panel-description">Palestinian Arabic is a form of Levantine Arabic, one of the
-                    most widely understood dialect families in the Arab world, <b>spoken by up to 40 million
-                        people</b> in Palestine, Jordan, Lebanon, Syria & beyond. It’s one of the more conservative
-                    dialects of Spoken Arabic, with strong similarities to Standard Arabic (up to 80% lexical
-                    overlap!), making it <b>a perfect starting point</b> for learners to build a solid foundation in
-                    Arabic vocabulary & grammar.
-                </div>
+                <div class="feature-panel-title">{{ $t('pages.home.windows.arabic.title') }}</div>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.windows.arabic.subtitle-1') }}</div>
+                <i18n-t
+                    tag="div"
+                    class="feature-panel-description"
+                    keypath="pages.home.windows.arabic.description-1"
+                >
+                    <template #highlight>
+                        <strong>{{ $t('pages.home.windows.arabic.description-1-highlight') }}</strong>
+                    </template>
+                </i18n-t>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.windows.arabic.subtitle-2') }}</div>
+                <i18n-t
+                    tag="div"
+                    class="feature-panel-description"
+                    keypath="pages.home.windows.arabic.description-2"
+                >
+                    <template #highlight-1>
+                        <strong>{{ $t('pages.home.windows.arabic.description-2-highlight-1') }}</strong>
+                    </template>
+                    <template #highlight-2>
+                        <strong>{{ $t('pages.home.windows.arabic.description-2-highlight-2') }}</strong>
+                    </template>
+                </i18n-t>
             </div>
         </div>
 
@@ -287,21 +273,17 @@ defineOptions({
             </div>
 
             <div class="homepage-panel-content">
-                <div class="feature-panel-title">make arabic yours</div>
-                <div class="feature-panel-subtitle">hassle-free language learning is here</div>
+                <div class="feature-panel-title">{{ $t('pages.home.titles.arabic.title') }}</div>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.titles.arabic.subtitle') }}</div>
             </div>
 
             <div class="homepage-panel-wrapper inline reverse">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">deck builder</div>
-                    <div class="feature-panel-subtitle">Build your vocabulary, Deck by Deck.</div>
-                    <div class="feature-panel-description">Say goodbye to the busy work of piecing together your own
-                        vocabulary sets & micro-managing flashcard applications. Use the Deck Master to build your own
-                        Decks in a flash, then study them with total flexibility to adjust how you view them with just
-                        one click. Browse the Library to see Decks others have made!
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.build-decks.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.build-decks.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.build-decks.description') }}</div>
                     <div class="feature-preview" style="margin-block: 3.2rem">
-                        <ToggleSingle v-model="showTranslit" label="Show Transcription"/>
+                        <ToggleSingle v-model="showTranslit" :label="$t('components.common.options.show-transcription')"/>
                         <TermFlashcard v-if="featuredTerm"
                                        :model="featuredTerm"
                                        :showTranslit="showTranslit"
@@ -317,12 +299,9 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">srs review</div>
-                    <div class="feature-panel-subtitle">Don’t study hard; study smart.</div>
-                    <div class="feature-panel-description">Raise your Mastery Level for the Terms in your Decks & across
-                        the whole Dictionary with the Card Dealer, which will schedule Terms for review based on how
-                        well you know them. PalWeb will know your weak points even better than you yourself.
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.card-dealer.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.card-dealer.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.card-dealer.description') }}</div>
                 </div>
 
                 <Carousel
@@ -349,12 +328,9 @@ defineOptions({
 
             <div class="homepage-panel-wrapper inline">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">quiz & score</div>
-                    <div class="feature-panel-subtitle">Test yourself before you wreck yourself.</div>
-                    <div class="feature-panel-description">Drill your flashcard Decks with customizable Quizzes that
-                        will put your knowledge of Arabic vocabulary to the test. Save your Scores & see how your
-                        learning journey evolves over time!
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.study-decks.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.study-decks.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.study-decks.description') }}</div>
                 </div>
                 <Carousel
                     :autoplay="3200"
@@ -375,12 +351,9 @@ defineOptions({
             </div>
             <div class="homepage-panel-wrapper inline reverse">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">lessons & activities</div>
-                    <div class="feature-panel-subtitle">Go from zero to hero.</div>
-                    <div class="feature-panel-description">Go through the Lessons to discover new words, learn new
-                        skills & practice with dialog templates! Each Lesson has an Activity designed to put your
-                        integrate everything you learn.
-                    </div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.academy.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.academy.subtitle') }}</div>
+                    <div class="feature-panel-description">{{ $t('pages.home.features.academy.description') }}</div>
                 </div>
                 <Carousel
                     :autoplay="2800"
@@ -409,27 +382,27 @@ defineOptions({
             </div>
 
             <div class="homepage-panel-content" style="text-align: center">
-                <div class="feature-panel-title">we create. you learn.</div>
-                <div class="feature-panel-subtitle">everything on PalWeb is made by others like you</div>
+                <div class="feature-panel-title">{{ $t('pages.home.titles.community.title') }}</div>
+                <div class="feature-panel-subtitle">{{ $t('pages.home.titles.community.subtitle') }}</div>
             </div>
 
             <div class="model-counter-wrapper">
                 <div class="model-counter">
                     <div class="model-counter-count">{{ count.decks }}</div>
                     <div class="model-counter-body">
-                        <span class="model-counter-model">Decks</span>
+                        <span class="model-counter-model">{{ $t('models.decks') }}</span>
                     </div>
                 </div>
                 <div class="model-counter">
                     <div class="model-counter-count">{{ count.audios }}</div>
                     <div class="model-counter-body">
-                        <span class="model-counter-model">Audios</span>
+                        <span class="model-counter-model">{{ $t('models.audios') }}</span>
                     </div>
                 </div>
                 <div class="model-counter">
                     <div class="model-counter-count">{{ count.users }}</div>
                     <div class="model-counter-body">
-                        <span class="model-counter-model">Pals</span>
+                        <span class="model-counter-model">{{ $t('models.users') }}</span>
                     </div>
                 </div>
             </div>
@@ -441,8 +414,8 @@ defineOptions({
 
             <div class="homepage-panel-wrapper" style="max-width: 96rem">
                 <div class="homepage-panel-content">
-                    <div class="feature-panel-title">building community</div>
-                    <div class="feature-panel-subtitle">Connect & share with others.</div>
+                    <div class="feature-panel-title">{{ $t('pages.home.features.community.title') }}</div>
+                    <div class="feature-panel-subtitle">{{ $t('pages.home.features.community.subtitle') }}</div>
                 </div>
                 <div class="window-container">
                     <div class="window-header">
@@ -459,10 +432,12 @@ defineOptions({
 
             <div class="portal-button-wrapper">
                 <div class="portal-button-head">
-                    what are you waiting for?
+                    {{ $t('pages.home.prompts.sign-up.message') }}
                 </div>
                 <div class="portal-button-body">
-                    <button @click="showSignUp" class="portal-button">Sign Me Up!</button>
+                    <button @click="showSignUp" class="portal-button">
+                        {{ $t('pages.home.prompts.sign-up.button') }}
+                    </button>
                 </div>
             </div>
         </div>

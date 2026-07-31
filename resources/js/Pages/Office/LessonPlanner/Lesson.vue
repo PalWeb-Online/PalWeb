@@ -169,7 +169,7 @@ const removeUnlockCondition = (i) => {
                 </div>
                 <div class="featured-title l">
                     <span v-if="lesson?.id">{{
-                            $t('components.lesson.number', {number: lesson.global_position})
+                            $t('lesson.key-index', {index: lesson.global_position})
                         }}</span>
                     <span v-else-if="initialUnit?.id">Lesson in Unit {{ initialUnit?.position }}</span>
                     <span v-else>{{ $t('forms.actions.create', {title: $t('actions.models.lesson')}) }}</span>
@@ -278,7 +278,7 @@ const removeUnlockCondition = (i) => {
                     <div class="field-item">
                         <div class="block-meta">
                             <div class="featured-title m" style="flex-grow: 1">
-                                {{ $t('components.lesson.skill', {number: si + 1}) }}
+                                {{ $t('skill.key-index', {index: si + 1}) }}
                             </div>
                             <button type="button"
                                     class="material-symbols-rounded"

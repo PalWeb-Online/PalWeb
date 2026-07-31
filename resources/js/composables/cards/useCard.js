@@ -2,44 +2,46 @@ import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
+import {useI18n} from "vue-i18n";
 
 export function useCard() {
+    const {t} = useI18n();
     const NotificationStore = useNotificationStore();
 
     const {
         isDeleting: isDeletingCard,
         deleteResource: deleteCard,
     } = useResourceDelete({
+        label: 'card',
         routeBase: 'cards',
-        label: 'Card',
         onDeleteSuccess: () => {
             router.get(route('card-dealer.cards'));
         },
     });
 
     const masterCard = (card) => {
-        if (!confirm('Are you sure you want to overwrite this Card\'s data to immediately master it?')) return;
+        if (!confirm(t('card.notifications.master-confirm'))) return;
 
         router.post(route('cards.master', card.id));
-        NotificationStore.addNotification('Mastered Card!', 'info');
+        NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
     };
 
     const toggleSuspend = (card) => {
         router.post(route('cards.suspend', card.id));
 
         if (card.suspended_at) {
-            NotificationStore.addNotification('Restored Card & scheduled it for tomorrow.', 'info');
+            NotificationStore.addNotification(t('card.notifications.restore-success'), 'info');
 
         } else {
-            NotificationStore.addNotification('Suspended Card!', 'info');
+            NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
         }
     };
 
     const resetCard = (card) => {
-        if (!confirm('Are you sure you want to delete your data for this Card & reset it to a New Card?')) return;
+        if (!confirm(t('card.notifications.reset-confirm'))) return;
 
         router.post(route('cards.reset', card.id));
-        NotificationStore.addNotification('Reset Card!', 'info');
+        NotificationStore.addNotification(t('card.notifications.reset-success'), 'info');
     };
 
     return {

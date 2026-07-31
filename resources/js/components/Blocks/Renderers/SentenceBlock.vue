@@ -21,6 +21,6 @@ defineProps({
         </div>
     </div>
     <AppTip v-else>
-        {{ $t('blocks.messages.empty-sentence') }}
+        {{ $t('block.messages.empty-sentence') }}
     </AppTip>
 </template>

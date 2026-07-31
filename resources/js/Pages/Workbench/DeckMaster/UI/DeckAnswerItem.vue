@@ -108,6 +108,7 @@ const isCorrect = computed(() => {
         align-items: center;
         font-weight: 700;
         color: var(--color-dark-primary);
+        direction: ltr;
 
         & > *:first-child {
             flex: 1 0 auto;

@@ -5,10 +5,12 @@ import {useDeckLoader} from "./useDeckLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
 export function useDeckEditor({
                                   deckId = null,
                               } = {}) {
+    const {t} = useI18n();
     const deckLoader = useDeckLoader();
     const NotificationStore = useNotificationStore();
 
@@ -63,7 +65,7 @@ export function useDeckEditor({
             include: 'edit',
         }),
         resetModel: deckLoader.setDeck,
-        label: 'Deck',
+        label: 'deck',
         routeBase: 'decks',
         afterSave: (response, savedDeck) => {
             redirectToEditRoute(savedDeck);
@@ -80,7 +82,10 @@ export function useDeckEditor({
         const termExists = editor.form.terms.some(existingTerm => existingTerm.id === term.id);
 
         if (termExists) {
-            NotificationStore.addNotification('This Term is already in the Deck!', 'error');
+            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
+                model: t('actions.models.term'),
+                target: t('actions.models.deck'),
+            }), 'error');
             return;
         }
 
@@ -100,7 +105,10 @@ export function useDeckEditor({
         });
 
         updatePosition();
-        NotificationStore.addNotification(`Added ${term.term} to the Deck!`);
+        NotificationStore.addNotification(t('forms.notifications.model-added', {
+            model: t('actions.models.term'),
+            target: t('actions.models.deck'),
+        }));
     };
 
     const removeTerm = (index) => {

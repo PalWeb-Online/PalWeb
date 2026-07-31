@@ -3,10 +3,12 @@ import {router} from "@inertiajs/vue3";
 import {useDialogLoader} from "./useDialogLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
 export function useDialogEditor({
                                     dialogId = null,
                                 } = {}) {
+    const {t} = useI18n();
     const dialogLoader = useDialogLoader();
     const NotificationStore = useNotificationStore();
 
@@ -50,7 +52,7 @@ export function useDialogEditor({
             include: 'edit',
         }),
         resetModel: dialogLoader.setDialog,
-        label: 'Dialog',
+        label: 'dialog',
         routeBase: 'dialogs',
         afterSave: (response, savedDialog) => {
             redirectToEditRoute(savedDialog);
@@ -67,11 +69,17 @@ export function useDialogEditor({
         const sentenceExists = editor.form.sentences.some(existingSentence => existingSentence.id === sentence.id);
 
         if (sentenceExists) {
-            NotificationStore.addNotification('This Sentence is already in the Dialog!', 'error');
+            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
+                model: t('actions.models.sentence'),
+                target: t('actions.models.dialog'),
+            }), 'error');
             return;
 
         } else if (sentence.dialog) {
-            NotificationStore.addNotification('This Sentence is already in a Dialog!', 'error');
+            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
+                model: t('actions.models.sentence'),
+                target: t('dialog.key'),
+            }), 'error');
             return;
         }
 
@@ -83,7 +91,10 @@ export function useDialogEditor({
         });
 
         updatePosition();
-        NotificationStore.addNotification(`Added ${sentence.sentence} to the Dialog!`);
+        NotificationStore.addNotification(t('forms.notifications.model-added', {
+            model: t('actions.models.sentence'),
+            target: t('actions.models.dialog'),
+        }));
     }
 
     const removeSentence = (index) => {

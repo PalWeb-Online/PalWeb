@@ -56,6 +56,10 @@ const emit = defineEmits(['update:modelValue']);
         text-transform: uppercase;
     }
 
+    .toggle-button-wrapper {
+        direction: ltr;
+    }
+
     .toggle-button-wrapper > div {
         font-size: 1.2rem;
         text-transform: uppercase;

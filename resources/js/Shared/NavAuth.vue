@@ -1,10 +1,47 @@
 <script setup>
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
-import {router} from "@inertiajs/vue3";
 import UserNametag from "../components/UserNametag.vue";
+import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
 const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
+
+const sendVerificationLink = async () => {
+    try {
+        const { data } = await axios.post(route('verification.send'));
+
+        switch (data.outcome) {
+            case 'sent':
+                NotificationStore.addNotification({
+                    type: 'success',
+                    message: t('components.nav-auth.notifications.link-sent'),
+                });
+                break;
+
+            case 'already_verified':
+                NotificationStore.addNotification({
+                    type: 'info',
+                    message: t('components.nav-auth.notifications.already-verified'),
+                });
+                break;
+
+            default:
+                NotificationStore.addNotification({
+                    type: 'error',
+                    message: t('components.nav-auth.notifications.link-sent-error'),
+                });
+        }
+
+    } catch (error) {
+        NotificationStore.addNotification({
+            type: 'error',
+            message: t('components.nav-auth.notifications.link-sent-error'),
+        });
+    }
+};
 </script>
 
 <template>
@@ -26,7 +63,7 @@ const UserStore = useUserStore();
                 verified_off
             </span>
             <span class="resend-prompt"
-                  @click="router.post(route('verification.send'))">
+                  @click="sendVerificationLink()">
                 {{ $t('nav.auth.resend-link') }}
             </span>
         </template>

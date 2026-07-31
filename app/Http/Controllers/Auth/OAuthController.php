@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\UserNotificationSent;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserAuthResource;
 use App\Models\Badge;
 use App\Models\User;
-use Flasher\Prime\FlasherInterface;
 use GuzzleHttp\Client;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,28 +18,32 @@ use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
-
-    public function redirect(Request $request): RedirectResponse
+    public function redirect(Request $request): JsonResponse
     {
         if ($request->user() && $request->user()->discord_id) {
-            $this->flasher->addInfo('Your Discord account is already connected.');
-
-            return back();
-
-        } else {
-            return Socialite::driver('discord')->scopes(['identify', 'email', 'guilds'])->redirect();
+            return response()->json([
+                'success' => false,
+                'message' => __('oauth.discord.already-linked'),
+            ], 409);
         }
+
+        $redirect = Socialite::driver('discord')
+            ->scopes(['identify', 'email', 'guilds'])
+            ->redirect();
+
+        return response()->json([
+            'success' => true,
+            'redirect_url' => $redirect->getTargetUrl(),
+        ]);
     }
 
     public function callback(Request $request): RedirectResponse
     {
-        $error = request('error') ?? null;
-        $errorDescription = request('error_description') ?? null;
-
-        if ($error) {
-            Log::error("Discord OAuth error: $error - $errorDescription");
-            $this->flasher->addError('You canceled the Discord authentication process.');
+        if ($request->has('error')) {
+            session()->flash('notification', [
+                'type' => 'warning',
+                'message' => __('oauth.discord.link-canceled'),
+            ]);
 
             return to_route('homepage');
         }
@@ -48,90 +53,118 @@ class OAuthController extends Controller
             $user = $request->user();
 
             if ($user) {
-                $this->updateUser($request->user(), $discordUser);
-                $this->checkMembership($request->user(), $discordUser->token);
+                $this->updateUser($user, $discordUser);
+                $this->checkMembership($user, $discordUser->token);
 
             } else {
                 $user = User::where('discord_id', $discordUser->id)->first();
 
                 if ($user) {
                     Auth::login($user);
-                    $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]),
-                        __('signin.message.head'));
+
+                    session()->flash('notification', [
+                        'type' => __('signin.message.head'),
+                        'message' => __('signin.message', ['user' => $user->name]),
+                    ]);
 
                 } else {
                     $user = User::where('email', $discordUser->email)->first();
 
                     if ($user) {
                         Auth::login($user);
-                        $this->flasher->addFlash('info', __('signin.message', ['user' => $user->name]),
-                            __('signin.message.head'));
+                        session()->flash('notification', [
+                            'type' => __('signin.message.head'),
+                            'message' => __('signin.message', ['user' => $user->name]),
+                        ]);
 
                         $this->updateUser($user, $discordUser);
-                        $this->checkMembership($request->user(), $discordUser->token);
+                        $this->checkMembership($user, $discordUser->token);
 
                     } else {
-                        $this->flasher->addWarning('We couldn\'t sign you in, because there is no PalWeb account that is connected to or has the same email as the provided Discord account. Please sign in normally first & connect your Discord account before trying to log in this way.');
+                        session()->flash('notification', [
+                            'type' => 'warning',
+                            'message' => __('oauth.discord.no-linked-account'),
+                        ]);
                     }
                 }
             }
         } catch (\Exception $e) {
             Log::error('Failed to authenticate with Discord: '.$e->getMessage());
 
-            $this->flasher->addError('Failed to authenticate with Discord.');
+            session()->flash('notification', [
+                'type' => 'error',
+                'message' => __('oauth.discord.auth-failed'),
+            ]);
         }
 
         return to_route('homepage');
     }
 
-    protected function updateUser($user, $discordUser)
+    protected function updateUser($user, $discordUser): void
     {
         $user->update([
             'discord_id' => $discordUser->id,
             'discord_token' => $discordUser->token,
             'discord_refresh_token' => $discordUser->refreshToken,
         ]);
-
-        $this->flasher->addSuccess('Connected your account to Discord!');
     }
 
-    protected function checkMembership($user, $token)
+    protected function checkMembership($user, $token): void
     {
-        $badge = Badge::where('key', 'joined_discord')->first();
+        try {
+            $badge = Badge::where('key', 'joined_discord')->first();
 
-        $client = new Client;
-        $response = $client->get('https://discord.com/api/users/@me/guilds', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$token,
-            ],
-        ]);
-        $guilds = json_decode($response->getBody()->getContents(), true);
-        $isMember = collect($guilds)->contains('id', '808771806945214474');
+            if (! $badge) {
+                return;
+            }
 
-        if ($isMember && $badge && ! $user->badges()->whereKey($badge->id)->exists()) {
+            $client = new Client;
+            $response = $client->get('https://discord.com/api/users/@me/guilds', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token,
+                ],
+            ]);
+
+            $guilds = json_decode($response->getBody()->getContents(), true);
+            $isMember = collect($guilds)->contains('id', '808771806945214474');
+
+            if (! $isMember || $user->badges()->whereKey($badge->id)->exists()) {
+                return;
+            }
+
             $user->badges()->attach($badge);
 
             UserNotificationSent::dispatch(
                 $user->id,
                 __('badges.get', ['badge' => $badge->title]),
             );
+
+        } catch (\Throwable $e) {
+            Log::warning('Failed to check Discord guild membership: '.$e->getMessage(), [
+                'user_id' => $user->id,
+                'exception' => $e,
+            ]);
         }
     }
 
-    public function revoke(Request $request): RedirectResponse
+    public function revoke(Request $request): JsonResponse
     {
-        if (! $request->user()->password) {
-            session()->flash('notification', ['type' => 'warning', 'message' => 'You have not set a password yet. You cannot disconnect from Discord until you have set a password on PalWeb. Set a password first, then try again.']);
+        $user = $request->user();
 
-            return back();
+        if (! $user->password) {
+            return response()->json([
+                'success' => false,
+                'message' => __('oauth.discord.no-password'),
+            ], 422);
         }
 
-        $token = $request->user()->discord_token;
+        $token = $user->discord_token;
 
         if (! $token) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. No Discord token was found.']);
-
-            return back();
+            return response()->json([
+                'success' => false,
+                'message' => __('oauth.discord.no-token'),
+            ], 422);
         }
 
         try {
@@ -147,24 +180,36 @@ class OAuthController extends Controller
                 ],
             ]);
 
-            if ($response->getStatusCode() == 200) {
-                $request->user()->update([
-                    'discord_id' => null,
-                    'discord_token' => null,
-                    'discord_refresh_token' => null,
-                ]);
-
-                session()->flash('notification', ['type' => 'success', 'message' => 'Disconnected your Discord account.']);
-
-            } else {
-                session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. Unable to contact Discord.']);
+            if ($response->getStatusCode() !== 200) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('oauth.discord.connection-failed'),
+                ], 502);
             }
 
-        } catch (\Exception $e) {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to disconnect Discord account. '.$e->getMessage()]);
-        }
+            $user->update([
+                'discord_id' => null,
+                'discord_token' => null,
+                'discord_refresh_token' => null,
+            ]);
 
-        return back();
+            return response()->json([
+                'success' => true,
+                'message' => __('oauth.discord.revoke-success'),
+                'user' => new UserAuthResource($user->fresh()),
+            ]);
+
+        } catch (\Throwable $e) {
+            Log::error('Failed to disconnect Discord account: '.$e->getMessage(), [
+                'user_id' => $user->id,
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('oauth.discord.revoke-failed'),
+            ], 500);
+        }
     }
 
     protected function createUser($discordUser)

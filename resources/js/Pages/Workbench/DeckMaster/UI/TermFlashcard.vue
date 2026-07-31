@@ -79,7 +79,7 @@ watch(() => props.active, (newVal) => {
                 <div class="term-flashcard-term">
                     <div>{{ model.term }}</div>
                     <div v-show="showTranslit">{{ model.translit }}</div>
-                    <div>{{ model.category }}</div>
+                    <div>{{ $t(`term.category.${model.category}`) }}</div>
                 </div>
                 <div v-show="flipDefaultInflections && model.inflections.length > 0"
                      class="term-flashcard-inflections">
@@ -104,7 +104,7 @@ watch(() => props.active, (newVal) => {
                     </div>
                 </div>
                 <div class="term-flashcard-glosses">
-                    <div class="term-flashcard-category">{{ model.category }}.</div>
+                    <div class="term-flashcard-category">{{ $t(`term.category.${model.category}`) }}.</div>
                     <div v-for="(gloss, index) in model.glosses" class="eng">{{ index + 1 }}. {{
                             gloss.gloss
                         }}

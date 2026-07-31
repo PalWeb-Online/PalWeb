@@ -46,9 +46,9 @@ const props = defineProps({
             <MatchExercisesBlock v-else-if="block.exerciseType === 'match'" :block="block"/>
             <SelectExercisesBlock v-else-if="block.exerciseType === 'select'" :block="block"/>
             <SortExercisesBlock v-else-if="block.exerciseType === 'sort'" :block="block"/>
-            <p v-else>{{ $t('blocks.messages.unsupported-exercise-block') }} {{ block.exerciseType }}</p>
+            <p v-else>{{ $t('block.messages.unsupported-exercise-block') }} {{ block.exerciseType }}</p>
         </template>
 
-        <p v-else>{{ $t('blocks.messages.unsupported-block') }} {{ block.type }}</p>
+        <p v-else>{{ $t('block.messages.unsupported-block') }} {{ block.type }}</p>
     </template>
 </template>

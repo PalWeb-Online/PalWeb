@@ -3,11 +3,13 @@ import {router} from "@inertiajs/vue3";
 import {useSentenceLoader} from "./useSentenceLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
 export function useSentenceEditor({
                                       sentenceId = null,
                                       initialDialog = null,
                                   } = {}) {
+    const {t} = useI18n();
     const sentenceLoader = useSentenceLoader();
     const NotificationStore = useNotificationStore();
 
@@ -60,7 +62,7 @@ export function useSentenceEditor({
             include: 'edit',
         }),
         resetModel: sentenceLoader.setSentence,
-        label: 'Sentence',
+        label: 'sentence',
         routeBase: 'sentences',
         afterSave: (response, savedSentence) => {
             redirectToEditRoute(savedSentence);
@@ -121,7 +123,10 @@ export function useSentenceEditor({
         );
 
         updatePosition();
-        NotificationStore.addNotification(`Added ${term.term} to the Sentence!`);
+        NotificationStore.addNotification(t('forms.notifications.model-added', {
+            model: t('actions.models.term'),
+            target: t('actions.models.sentence'),
+        }));
     };
 
     const removeTerm = (index) => {

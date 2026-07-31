@@ -3,16 +3,18 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
+import {useI18n} from "vue-i18n";
 
 export function useDeck(props = {}, options = {}) {
+    const {t, locale} = useI18n();
     const NotificationStore = useNotificationStore();
 
     const {
         isDeleting: isDeletingDeck,
         deleteResource: deleteDeck,
     } = useResourceDelete({
+        label: 'deck',
         routeBase: 'decks',
-        label: 'Deck',
         onDeleteSuccess: () => {
             router.get(route('decks.index'));
         },
@@ -49,7 +51,9 @@ export function useDeck(props = {}, options = {}) {
                 : deck.description;
 
         } else {
-            blurb.value = `Sadly, ${deck.author?.name} hasn't told us anything about this Deck yet.`;
+            blurb.value = t('components.deck.description-placeholder', {
+                author: locale.value === 'ar' ? deck.author.ar_name : deck.author.name
+            });
         }
     };
 
@@ -98,7 +102,11 @@ export function useDeck(props = {}, options = {}) {
                 }
             }
 
-            NotificationStore.addNotification(response.data.message);
+            NotificationStore.addNotification(t('forms.notifications.model-' + (response.data.isPresent ? 'added' : 'removed'), {
+                model: t('actions.models.term'),
+                target: t('actions.models.deck'),
+            }));
+
             return response.data.isPresent;
 
         } catch (error) {
@@ -107,15 +115,20 @@ export function useDeck(props = {}, options = {}) {
         }
     };
 
-    const copyDeck = (targetDeck = deck) => {
-        if (!confirm('Are you sure you want to create a copy of this Deck?')) return;
+    const copyDeck = async (targetDeck = deck) => {
+        if (!confirm(t('deck.notifications.copy-confirm'))) return;
 
-        router.post(route('decks.copy', targetDeck.id));
+        const {data} = await axios.post(route('decks.copy', targetDeck.id));
+
+        if (data.success) {
+            NotificationStore.addNotification(t('deck.notifications.copy-success'));
+            router.get(route('decks.show', data.deckId));
+        }
     };
 
     const copyLink = (targetDeck = deck) => {
         navigator.clipboard.writeText(route('decks.show', targetDeck.id)).then(function () {
-            alert('Copied to clipboard.');
+            alert(t('deck.notifications.copy-link-success'));
         }, function (err) {
             alert('Could not copy text: ', err);
         });

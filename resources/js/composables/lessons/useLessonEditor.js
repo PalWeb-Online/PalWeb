@@ -97,7 +97,7 @@ export function useLessonEditor({
         getLoadIdentifier: () => lessonId.value,
         fetchModel: lessonLoader.fetchLesson,
         resetModel: lessonLoader.setLesson,
-        label: 'Lesson',
+        label: 'lesson',
         routeBase: 'lessons',
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
         beforeReload: () => {

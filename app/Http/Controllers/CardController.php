@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -90,7 +89,6 @@ class CardController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => 'Card']),
             ]);
 
         } catch (Throwable $e) {
@@ -103,15 +101,13 @@ class CardController extends Controller
         }
     }
 
-    public function purge(): RedirectResponse
+    public function purge(): JsonResponse
     {
         $count = Card::purgeForUser(auth()->id());
 
-        session()->flash('notification', [
-            'type' => 'success',
-            'message' => "Purged {$count} New Cards."
+        return response()->json([
+            'success' => true,
+            'count' => $count,
         ]);
-
-        return back();
     }
 }

@@ -1,11 +1,14 @@
 import {computed} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useActivityValidation({
                                           form,
                                           backendErrors,
                                           allowedBlockTypes,
                                       }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         validateBlocks,
@@ -19,7 +22,7 @@ export function useActivityValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            errors.title = 'Title is required.';
+            errors.title = t('validation.required', {field: t('forms.fields.title')});
         }
 
         return errors;
@@ -31,7 +34,7 @@ export function useActivityValidation({
         const exerciseBlocks = blocks.filter((block) => block?.type === 'exercises');
 
         if (exerciseBlocks.length === 0) {
-            issues.push('At least one Exercises Block is required.');
+            issues.push(t('validation.min-items', {item: 'Exercises Block', min: '1'}));
         }
 
         validateBlocks(blocks, issues, 'Activity');

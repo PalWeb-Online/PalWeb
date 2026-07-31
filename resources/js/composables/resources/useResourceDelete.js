@@ -2,6 +2,7 @@ import {route} from "ziggy-js";
 import {ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
 export function useResourceDelete({
                                       routeBase,
@@ -13,6 +14,7 @@ export function useResourceDelete({
                                       onDeleteSuccess = null,
                                       onDeleteError = null,
                                   } = {}) {
+    const {t} = useI18n();
     const NotificationStore = useNotificationStore();
 
     const isDeleting = ref(false);
@@ -46,7 +48,7 @@ export function useResourceDelete({
 
         if (!hasIdentifier(identifier)) return null;
 
-        if (!confirm(`Are you sure you want to delete this ${label}?`)) {
+        if (!confirm(t('forms.notifications.delete-confirm', {model: t(`actions.models.${label}`)}))) {
             return null;
         }
 
@@ -70,14 +72,14 @@ export function useResourceDelete({
                     router.get(route('homepage'));
                 }
 
-                NotificationStore.addNotification(`${label} was successfully deleted.`, 'success');
+                NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t(`actions.models.${label}`)}), 'success');
 
                 return response;
 
             } catch (error) {
                 await onDeleteError?.(error, model, identifier, options);
                 await options.onError?.(error, model, identifier, options);
-                NotificationStore.addNotification(`Oops — ${label} could not be deleted.`, 'error');
+                NotificationStore.addNotification(t('forms.notifications.delete-error', {model: t(`actions.models.${label}`)}), 'error');
 
                 return null;
             }

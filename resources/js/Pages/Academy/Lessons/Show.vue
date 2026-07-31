@@ -53,7 +53,7 @@ watch(() => props.lessonId, async () => {
             <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
             <div class="lesson-data-container">
                 <div class="lesson-data-head">
-                    <div class="featured-title s">{{ $t('components.lesson.number', {number: lesson.global_position}) }}:</div>
+                    <div class="featured-title s">{{ $t('lesson.key-index', {index: lesson.global_position}) }}:</div>
                     <div class="lesson-head-title">{{ lesson.title }}</div>
                 </div>
                 <div class="lesson-data-body">

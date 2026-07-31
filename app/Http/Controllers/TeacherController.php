@@ -8,7 +8,6 @@ use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -16,40 +15,26 @@ use Throwable;
 
 class TeacherController extends Controller
 {
-    public function store(StoreTeacherRequest $request, User $user): JsonResponse|RedirectResponse
+    public function store(StoreTeacherRequest $request, User $user): JsonResponse
     {
         Gate::authorize('create', [Teacher::class, $user]);
 
         $teacher = $user->teacher()->create($request->validated());
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'teacher' => new TeacherResource($teacher),
-            ], 201);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => 'your Teacher profile'])]);
-
-        return to_route('users.show', $teacher->user);
+        return response()->json([
+            'teacher' => new TeacherResource($teacher),
+        ], 201);
     }
 
-    public function update(UpdateTeacherRequest $request, Teacher $teacher): JsonResponse|RedirectResponse
+    public function update(UpdateTeacherRequest $request, Teacher $teacher): JsonResponse
     {
         Gate::authorize('update', $teacher);
 
         $teacher->update($request->validated());
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'teacher' => new TeacherResource($teacher->fresh()),
-            ]);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => 'your Teacher profile'])]);
-
-        return to_route('users.show', $teacher->user);
+        return response()->json([
+            'teacher' => new TeacherResource($teacher->fresh()),
+        ]);
     }
 
     public function destroy(Teacher $teacher): JsonResponse
@@ -63,7 +48,6 @@ class TeacherController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => 'your Teacher profile'])
             ]);
 
         } catch (Throwable $e) {

@@ -16,6 +16,9 @@ import {useDeckValidation} from "../../../composables/decks/useDeckValidation.js
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {Link} from "@inertiajs/vue3";
+import {useI18n} from "vue-i18n";
+
+const {locale} = useI18n();
 
 defineOptions({
     layout: Layout
@@ -139,10 +142,17 @@ watch(() => props.deckId, async () => {
             <UserItem :user="form.author" size="m" comment>
                 <template #comment>
                         <textarea class="user-comment-content" v-model="form.description"
-                                  :placeholder="$t('components.deck.description-placeholder', {author: form.author.name})"
+                                  :placeholder="$t('components.deck.description-placeholder', {
+                                      author: locale === 'ar' ? form.author.ar_name : form.author.name
+                                  })"
                         />
                     <div v-if="form.id" class="user-comment-data">
-                        {{ $t('components.deck.created-by', {author: form.author.name, date: form.created_at}) }}
+                        {{
+                            $t('components.deck.created-by', {
+                                author: locale === 'ar' ? form.author.ar_name : form.author.name,
+                                date: form.created_at
+                            })
+                        }}
                     </div>
                 </template>
             </UserItem>

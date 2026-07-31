@@ -129,14 +129,9 @@ return [
     */
 
     'billables' => [
-
         'user' => [
             'model' => User::class,
-
-            // 'trial_days' => 5,
-
             'default_interval' => 'monthly',
-
             'plans' => [
                 [
                     'name' => 'Student',
@@ -145,13 +140,14 @@ return [
                     'yearly_id' => env('SPARK_STUDENT_YEARLY_PLAN', 'price_id'),
                     'trial_days' => 14,
                     'features' => [
-                        'Access to the Academy (Lessons & Texts)',
-                        'Access to the Explore Portal',
+                        'Access to the PalWeb Academy',
+                        'Quiz Decks in the Deck Master',
+                        'SRS Review in the Card Dealer',
+                        'Save your Quiz & Activity Scores',
                         'Support the Project',
                     ],
                 ],
             ],
-
         ],
     ],
 ];

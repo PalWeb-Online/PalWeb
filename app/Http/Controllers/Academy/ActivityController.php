@@ -8,7 +8,6 @@ use App\Http\Resources\ActivityResource;
 use App\Models\Activity;
 use App\Models\Lesson;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -55,7 +54,7 @@ class ActivityController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpsertActivityRequest $request): RedirectResponse|JsonResponse
+    public function store(UpsertActivityRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $lesson = Lesson::query()->findOrFail($validated['lesson_id']);
@@ -72,25 +71,17 @@ class ActivityController extends Controller
             return $activity;
         });
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'activity' => new ActivityResource($activity),
-                'message' => 'Activity created successfully.',
-            ], 201);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => 'Activity'])]);
-        return to_route('lesson-planner.lesson-activity', $lesson);
+        return response()->json([
+            'activity' => new ActivityResource($activity),
+        ], 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpsertActivityRequest $request, Activity $activity)
+    public function update(UpsertActivityRequest $request, Activity $activity): JsonResponse
     {
         $validated = $request->validated();
-        $lesson = $activity->lesson;
 
         DB::transaction(function () use ($validated, $activity) {
             $activity->update([
@@ -102,16 +93,9 @@ class ActivityController extends Controller
             $activity->refresh();
         });
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'activity' => new ActivityResource($activity),
-                'message' => 'Activity updated successfully.',
-            ]);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => 'Activity'])]);
-        return to_route('lesson-planner.lesson-activity', $lesson);
+        return response()->json([
+            'activity' => new ActivityResource($activity),
+        ]);
     }
 
     /**
@@ -122,15 +106,12 @@ class ActivityController extends Controller
         try {
             Gate::authorize('delete', $activity);
 
-            $deletedActivity = $activity->title;
-
             DB::transaction(function () use ($activity) {
                 $activity->delete();
             });
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedActivity]),
             ]);
 
         } catch (Throwable $e) {

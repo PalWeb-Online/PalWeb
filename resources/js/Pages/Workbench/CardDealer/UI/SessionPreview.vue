@@ -6,7 +6,11 @@ import {route} from "ziggy-js";
 import AppTooltip from "../../../../components/AppTooltip.vue";
 import SessionSettings from "./SessionSettings.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
+import {useI18n} from "vue-i18n";
+import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
+const {t} = useI18n();
+const NotificationStore = useNotificationStore();
 const UserStore = useUserStore();
 
 const appTooltip = ref(null);
@@ -71,14 +75,14 @@ const hasReachedReviewLimit = computed(() => {
     return props.activeStats.remainingReviews > remainingReviewCapacity.value
 })
 
-const purgeNew = () => {
-    if (confirm('Are you sure you want to delete all your New Cards?')) {
-        router.post(route('cards.purge'), {}, {
-            preserveScroll: true,
-            onSuccess: () => {
-                emit('refresh');
-            },
-        });
+const purgeNew = async () => {
+    if (confirm(t('card-dealer.session-preview.notifications.purge-confirm'))) {
+        const {data} = await axios.post(route('cards.purge'));
+
+        if (data.success) {
+            NotificationStore.addNotification(t('card-dealer.session-preview.notifications.purge-success', {count: data.count}));
+            emit('refresh');
+        }
     }
 }
 

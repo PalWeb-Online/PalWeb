@@ -1,10 +1,13 @@
 import {computed} from "vue";
 import {useResourceValidation} from "../resources/useResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useDeckValidation({
                                       form,
                                       backendErrors,
                                   }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         hasMaxLength,
@@ -15,14 +18,14 @@ export function useDeckValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.name)) {
-            errors.name = 'Title is required.';
+            errors.name = t('validation.required', {field: t('forms.fields.title')});
 
         } else if (!hasMaxLength(form.name, 50)) {
-            errors.name = 'Title must not be greater than 50 characters.';
+            errors.name = t('validation.max-chars', {field: t('forms.fields.title'), max: 50});
         }
 
         if (!hasMaxLength(form.description, 500)) {
-            errors.description = 'Description must not be greater than 500 characters.';
+            errors.description = t('validation.max-chars', {field: t('forms.fields.description'), max: 500});
         }
 
         return errors;

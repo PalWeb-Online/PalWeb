@@ -97,7 +97,7 @@ export function useTermEditor({
             return terms?.[0] ?? null;
         },
         resetModel: termLoader.setTerms,
-        label: 'Term',
+        label: 'term',
         routeBase: 'terms',
         afterSave: (response, savedTerm) => {
             redirectToEditRoute(savedTerm);

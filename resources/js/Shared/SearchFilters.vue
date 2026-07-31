@@ -56,7 +56,7 @@ watch(
 );
 
 watch(
-    props.filters,
+    () => props.filters,
     (newPropFilters) => {
         for (const key in newPropFilters) {
             if (newPropFilters[key] !== filters.value[key]) {
@@ -64,7 +64,8 @@ watch(
                 previousFilters[key] = newPropFilters[key];
             }
         }
-    }
+    },
+    {deep: true, immediate: true}
 );
 
 // watch(
@@ -160,7 +161,7 @@ const isCCC = computed(() => {
 
         <div class="search-filters" v-if="activeModel === 'terms'">
             <select v-model="filters.category" :class="filters.category ? 'persisting' : ''">
-                <option value="">{{ $t('term.filters.category') }}</option>
+                <option value="">{{ $t('term.fields.category') }}</option>
                 <option value="verb">{{ $t('term.filters.categories.verbs') }}</option>
                 <option value="noun">{{ $t('term.filters.categories.nouns') }}</option>
                 <option value="adjective">{{ $t('term.filters.categories.adjectives') }}</option>
@@ -174,7 +175,7 @@ const isCCC = computed(() => {
                 <option value="affix">{{ $t('term.filters.categories.affixes') }}</option>
             </select>
             <select v-model="filters.attribute" :class="filters.attribute ? 'persisting' : ''">
-                <option value="">{{ $t('term.filters.attribute') }}</option>
+                <option value="">{{ $t('term.fields.attribute') }}</option>
                 <option
                     v-if="filters.category === '' || filters.category === 'noun' || filters.category === 'determiner'"
                     value="masculine">

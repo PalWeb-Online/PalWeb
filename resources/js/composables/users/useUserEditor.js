@@ -41,7 +41,7 @@ export function useUserEditor({
         extractSavedModel: (response) => response.data.user ?? response.data.data ?? null,
         fetchModel: userLoader.fetchUser,
         resetModel: userLoader.setUser,
-        label: 'User',
+        label: 'user',
         getUpdateUrl: (identifier) => route('users.update', identifier),
 
         // todo: saving based on the username works, but it requires a soft redirect after saving

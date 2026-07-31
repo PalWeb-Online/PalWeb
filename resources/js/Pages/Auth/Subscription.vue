@@ -26,34 +26,34 @@ const navigate = () => {
 <template>
     <Head title="Subscribe"/>
     <div id="app-head">
-        <h1>Subscription</h1>
+        <h1>{{ $t('subscription.title') }}</h1>
     </div>
     <div id="app-body">
         <AppTip v-if="page.props.flash.denied">
-            <p>Sorry, but you currently don't have access to this content.
+            <p>{{ $t('subscription.messages.access-denied') }}
                 {{ !UserStore.isUser
-                    ? 'Please sign in or create an account first.'
-                    : 'Please review & update your Subscription & try again.'
+                    ? $t('subscription.messages.sign-in-prompt')
+                    : $t('subscription.messages.update-subscription-prompt')
                 }}
             </p>
         </AppTip>
-        <Link href="/billing" v-if="UserStore.isUser" class="portal-button">Billing Portal</Link>
+        <Link href="/billing" v-if="UserStore.isUser" class="portal-button">{{ $t('subscription.manage') }}</Link>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">
-                    <h1>Guest</h1>
+                    <h1>{{ $t('user.roles.guest') }}</h1>
                 </div>
                 <div class="tier-body">
                     <div>Read the <b>Wiki</b></div>
                     <div><b>Library: Dictionary & Corpus</b></div>
                 </div>
                 <div class="window-footer">
-                    <div style="background: var(--color-accent-dark); color: white;">you are here</div>
+                    <div style="background: var(--color-accent-dark); color: white;">{{ $t('subscription.current-plan') }}</div>
                 </div>
             </div>
             <div class="tier-item window-container">
                 <div class="window-section-head">
-                    <h1>Pal</h1>
+                    <h1>{{ $t('user.roles.pal') }}</h1>
                 </div>
                 <div class="tier-body">
                     <div>Read the <b>Wiki</b></div>
@@ -66,13 +66,13 @@ const navigate = () => {
                 </div>
                 <div class="window-footer">
                     <div v-if="UserStore.highestRole === 'pal'"
-                        style="background: var(--color-accent-dark); color: white;">you are here</div>
-                    <button v-else @click="navigate">free</button>
+                        style="background: var(--color-accent-dark); color: white;">{{ $t('subscription.current-plan') }}</div>
+                    <button v-else @click="navigate">{{ $t('subscription.free') }}</button>
                 </div>
             </div>
             <div class="tier-item window-container">
                 <div class="window-section-head">
-                    <h1>Student</h1>
+                    <h1>{{ $t('user.roles.student') }}</h1>
                 </div>
                 <div class="tier-body">
                     <div>Read the <b>Wiki</b></div>
@@ -89,8 +89,8 @@ const navigate = () => {
                 </div>
                 <div class="window-footer">
                     <div v-if="UserStore.highestRole === 'student'"
-                         style="background: var(--color-accent-dark); color: white;">you are here</div>
-                    <button v-else @click="navigate">$12/m $80/y</button>
+                         style="background: var(--color-accent-dark); color: white;">{{ $t('subscription.current-plan') }}</div>
+                    <button v-else @click="navigate">{{ $t('subscription.price', { monthlyPrice: '$12', yearlyPrice: '$80' }) }}</button>
                 </div>
             </div>
         </div>

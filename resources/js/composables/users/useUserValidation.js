@@ -1,5 +1,6 @@
 import {computed} from "vue";
 import {useResourceValidation} from "../resources/useResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useUserValidation({
                                       userForm,
@@ -7,6 +8,8 @@ export function useUserValidation({
                                       teacherForm,
                                       teacherBackendErrors,
                                   }) {
+    const {t} = useI18n();
+
     const {
         latinScriptPattern,
         arabicScriptPattern,
@@ -23,41 +26,41 @@ export function useUserValidation({
         const errors = {};
 
         if (!isNonEmptyString(userForm.name)) {
-            errors.name = 'You must have a name.';
+            errors.name = t('validation.required', {field: t('user.fields.name')});
 
         } else if (!hasMaxLength(userForm.name, 50)) {
-            errors.name = 'Your name must not be greater than 50 characters.';
+            errors.name = t('validation.max-chars', {field: t('user.fields.name'), max: 50});
 
         } else if (!matchesPattern(userForm.name, latinScriptPattern)) {
-            errors.name = 'Your name may only contain Latin-script letters & hyphens.';
+            errors.name = t('validation.script.latin', {field: t('user.fields.name')});
         }
 
         if (!isNonEmptyString(userForm.username)) {
-            errors.username = 'You must have a username.';
+            errors.username = t('validation.required', {field: t('user.fields.username')});
 
         } else if (!hasMaxLength(userForm.username, 50)) {
-            errors.username = 'Your username must not be greater than 50 characters.';
+            errors.username = t('validation.max-chars', {field: t('user.fields.username'), max: 50});
 
         } else if (!matchesPattern(userForm.username, usernamePattern)) {
-            errors.username = 'Your username has invalid characters.';
+            errors.username = t('user.validation.username-characters');
         }
 
         if (!isNonEmptyString(userForm.ar_name)) {
-            errors.ar_name = 'You must have an Arabic name.';
+            errors.ar_name = t('validation.required', {field: t('user.fields.arabic-name')});
 
         } else if (!hasMaxLength(userForm.ar_name, 50)) {
-            errors.ar_name = 'Your Arabic name must not be greater than 50 characters.';
+            errors.ar_name = t('validation.max-chars', {field: t('user.fields.arabic-name'), max: 50});
 
         } else if (!matchesPattern(userForm.ar_name, arabicScriptPattern)) {
-            errors.ar_name = 'Your Arabic name may only contain Arabic-script characters.';
+            errors.ar_name = t('validation.script.arabic', {field: t('user.fields.arabic-name')});
         }
 
         if (!hasMaxLength(userForm.home, 100)) {
-            errors.home = 'The Home field must not be greater than 100 characters.';
+            errors.home = t('validation.max-chars', {field: t('user.fields.home'), max: 100});
         }
 
         if (!hasMaxLength(userForm.bio, 500)) {
-            errors.bio = 'The Bio field must not be greater than 500 characters.';
+            errors.bio = t('validation.max-chars', {field: t('user.fields.bio'), max: 500});
         }
 
         return errors;
@@ -67,17 +70,17 @@ export function useUserValidation({
         const errors = {};
 
         if (!isNonEmptyString(teacherForm.email)) {
-            errors.email = 'You must add a contact email.';
+            errors.email = t('validation.required', {field: t('teacher.fields.email')});
 
         } else if (!matchesPattern(teacherForm.email, emailPattern)) {
-            errors.email = 'Your contact email must be a valid email address.';
+            errors.email = t('validation.email');
 
         } else if (!hasMaxLength(teacherForm.email, 255)) {
-            errors.email = 'Your contact email must not be greater than 255 characters.';
+            errors.email = t('validation.max-chars', {field: t('teacher.fields.email'), max: 255});
         }
 
         if (!hasMaxLength(teacherForm.bio, 5000)) {
-            errors.bio = 'The Bio field must not be greater than 5000 characters.';
+            errors.bio = t('validation.max-chars', {field: t('teacher.fields.bio'), max: 5000});
         }
 
         return errors;

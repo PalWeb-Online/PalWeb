@@ -11,8 +11,8 @@ export function useSentence(props = {}) {
         isDeleting: isDeletingSentence,
         deleteResource: deleteSentence,
     } = useResourceDelete({
+        label: 'sentence',
         routeBase: 'sentences',
-        label: 'Sentence',
         onDeleteSuccess: () => {
             router.get(route('sentences.index'));
         },

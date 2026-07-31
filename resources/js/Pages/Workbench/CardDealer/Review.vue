@@ -149,11 +149,11 @@ const dismissCard = async (action) => {
 
     if (action === 'master') {
         await axios.post(route('cards.master', card.id));
-        NotificationStore.addNotification(t('pages.cards.review.notifications.mastered'), 'success');
+        NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
 
     } else if (action === 'suspend') {
         await axios.post(route('cards.suspend', card.id));
-        NotificationStore.addNotification(t('pages.cards.review.notifications.suspended'), 'success');
+        NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
     }
 
     const key = `${card.id}-${index}`;

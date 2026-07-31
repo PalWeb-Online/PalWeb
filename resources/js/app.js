@@ -9,6 +9,7 @@ import {registerSW} from 'virtual:pwa-register'
 import {route} from 'ziggy-js';
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import 'vue3-carousel/dist/carousel.css';
+import {syncCsrfToken} from "./utils/csrfToken.js";
 
 registerSW({
     immediate: true,
@@ -48,22 +49,6 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
-
-function syncCsrfToken(token) {
-    if (!token) {
-        return;
-    }
-
-    let meta = document.querySelector('meta[name="csrf-token"]');
-
-    if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = 'csrf-token';
-        document.head.appendChild(meta);
-    }
-
-    meta.setAttribute('content', token);
-}
 
 createInertiaApp({
     resolve: (name) =>

@@ -1,8 +1,12 @@
 import {reactive, ref} from "vue";
-import {router} from "@inertiajs/vue3";
 import {route} from 'ziggy-js';
+import {useI18n} from "vue-i18n";
+import {useNotificationStore} from "../stores/NotificationStore.js";
 
 export function useScoreManager() {
+    const {t} = useI18n();
+    const NotificationStore = useNotificationStore();
+
     const score = reactive({
         scorable_type: '',
         settings: {},
@@ -77,22 +81,27 @@ export function useScoreManager() {
     };
 
     const saveScore = async (scorableId, options = {}) => {
-        router.post(route('scores.store'), {
-            scorable_type: score.scorable_type,
-            scorable_id: scorableId,
-            settings: score.settings,
-            score: score.score,
-            results: score.results,
-        }, {
-            onSuccess: () => {
-                console.log('Score saved successfully!');
-                if (options.onSuccess) options.onSuccess();
-            },
-            onError: (errors) => {
-                console.error('Error saving Score:', errors);
-                if (options.onError) options.onError(errors);
+        try {
+            const {data} = await axios.post(route('scores.store'), {
+                scorable_type: score.scorable_type,
+                scorable_id: scorableId,
+                settings: score.settings,
+                score: score.score,
+                results: score.results,
+            });
+
+            if (data.success) {
+                isSaved.value = true;
+                NotificationStore.addNotification(t('forms.notifications.save-success', {model: t('actions.models.score')}));
+                if (options.onSuccess) options.onSuccess(data);
             }
-        });
+
+        } catch (error) {
+            const errors = error.response?.data?.errors ?? error;
+
+            console.error('Error saving Score:', errors);
+            if (options.onError) options.onError(errors);
+        }
     };
 
     const resetScore = () => {
@@ -104,6 +113,7 @@ export function useScoreManager() {
 
     return {
         score,
+        isSaved,
         formatter,
         getScoreStats,
         markCorrect,

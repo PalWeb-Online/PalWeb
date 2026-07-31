@@ -1,5 +1,6 @@
 import {computed, unref} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useLessonValidation({
                                         form,
@@ -9,6 +10,8 @@ export function useLessonValidation({
                                         lessonActivity = null,
                                         allowedBlockTypes,
                                     }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         validateBlocks,
@@ -22,7 +25,7 @@ export function useLessonValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            errors.title = 'Title is required.';
+            errors.title = t('validation.required', {field: t('forms.fields.title')});
         }
 
         return errors;
@@ -39,18 +42,18 @@ export function useLessonValidation({
             const conditions = form.unlock_conditions || [];
 
             if (conditions.length === 0) {
-                issues.push('Extra Lessons must have at least one Unlock Condition.');
+                issues.push(t('lesson.validation.min-unlock-conditions'));
             }
 
             conditions.forEach((condition, index) => {
-                const name = `Unlock Condition ${index + 1}`;
+                const name = `${t('lesson.unlock-condition.key')} ${index + 1}`;
 
                 if (!isNonEmptyString(condition.type)) {
-                    issues.push(`${name}: Type is required.`);
+                    issues.push(`${name}: ${t('validation.required', {field: t('lesson.unlock-condition.type')})}`);
                 }
 
                 if (!condition.value) {
-                    issues.push(`${name}: Value is required.`);
+                    issues.push(`${name}: ${t('validation.required', {field: t('lesson.unlock-condition.value')})}`);
                 }
             });
         }
@@ -58,58 +61,58 @@ export function useLessonValidation({
         const skills = form.document?.skills || [];
 
         if (skills.length === 0) {
-            issues.push('At least one Skill is required.');
+            issues.push(t('validation.min-items', {item: t('skill.key'), min: 1}));
         }
 
         skills.forEach((skill, skillIndex) => {
-            const skillName = `Skill ${skillIndex + 1}`;
+            const skillName = `${t('skill.key')} ${skillIndex + 1}`;
 
             if (!isNonEmptyString(skill.type)) {
-                issues.push(`${skillName}: Type is required.`);
+                issues.push(`${skillName}: ${t('validation.required', {field: t('forms.fields.type')})}`);
             }
 
             if (!isNonEmptyString(skill.title)) {
-                issues.push(`${skillName}: Title is required.`);
+                issues.push(`${skillName}: ${t('validation.required', {field: t('forms.fields.title')})}`);
             }
 
             if (!isNonEmptyString(skill.description)) {
-                issues.push(`${skillName}: Description is required.`);
+                issues.push(`${skillName}: ${t('validation.required', {field: t('forms.fields.description')})}`);
             }
 
             const blocks = skill.blocks ?? [];
 
             if (!Array.isArray(blocks) || blocks.length === 0) {
-                issues.push(`${skillName}: Skill must have at least one Block.`);
+                issues.push(`${skillName}: ${t('validation.min-items', {item: 'Block', min: 1})}`);
             } else {
                 validateBlocks(blocks, issues, skillName);
             }
         });
 
         if (!form.deck_id) {
-            issues.push('Lesson must have an assigned Deck.');
+            issues.push(t('validation.required-dependency', {model: t('deck.key')}));
 
         } else if (!deck) {
-            issues.push('Selected Deck could not be validated.');
+            issues.push(t('validation.invalid-dependency', {model: t('deck.key')}));
 
         } else if (deck.private) {
-            issues.push('The Deck must be public before the Lesson can be published.');
+            issues.push(t('validation.hidden-dependency', {model: t('deck.key')}));
         }
 
         if (!form.dialog_id) {
-            issues.push('Lesson must have an assigned Dialog.');
+            issues.push(t('validation.required-dependency', {model: t('dialog.key')}));
 
         } else if (!dialog) {
-            issues.push('Selected Dialog could not be validated.');
+            issues.push(t('validation.invalid-dependency', {model: t('dialog.key')}));
 
         } else if (!dialog.published) {
-            issues.push('The Dialog must be published before the Lesson can be published.');
+            issues.push(t('validation.hidden-dependency', {model: t('dialog.key')}));
         }
 
         if (!activity?.id) {
-            issues.push('Lesson must have an assigned Activity.');
+            issues.push(t('validation.required-dependency', {model: t('activity.key')}));
 
         } else if (!activity.published) {
-            issues.push('The Activity must be published before the Lesson can be published.');
+            issues.push(t('validation.hidden-dependency', {model: t('activity.key')}));
         }
 
         return issues;

@@ -3,11 +3,11 @@ import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {CircleStencil, Cropper} from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-import ModalWrapper from "./Modals/ModalWrapper.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import WindowSection from "./WindowSection.vue";
-import AppTip from "./AppTip.vue";
-import {useUser} from "../composables/users/useUser.js";
+import ModalWrapper from "./../Modals/ModalWrapper.vue";
+import {useNotificationStore} from "../../stores/NotificationStore.js";
+import WindowSection from "./../WindowSection.vue";
+import AppTip from "./../AppTip.vue";
+import {useUser} from "../../composables/users/useUser.js";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({

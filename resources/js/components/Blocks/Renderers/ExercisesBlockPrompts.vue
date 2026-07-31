@@ -16,14 +16,14 @@ const instructionText = computed(() => {
 
     switch (props.block?.exerciseType) {
         case "input":
-            return t('exercises.prompts.input');
+            return t('exercise.prompts.input');
         case "match":
-            return t('exercises.prompts.match');
+            return t('exercise.prompts.match');
         case "sort":
-            return t('exercises.prompts.sort');
+            return t('exercise.prompts.sort');
         case "select":
         default:
-            return t('exercises.prompts.select');
+            return t('exercise.prompts.select');
     }
 });
 </script>

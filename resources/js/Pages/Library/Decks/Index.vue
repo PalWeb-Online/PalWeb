@@ -78,6 +78,7 @@ function updateFilter({filter, value}) {
                 <AppTip>
                     <p v-if="totalCount > 0 && !Object.values(filters).every(value => !value)">
                         {{ $t('pages.common.displaying-results', { count: totalCount, model: $t('models.decks') }) }}
+                        {{ $t(`pages.common.sort-messages.${filters.sort}`) }}
                     </p>
                     <p v-else-if="totalCount > 0">{{ $t('pages.common.displaying-all', { model: $t('models.decks') }) }}</p>
                     <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.decks') }) }}</p>

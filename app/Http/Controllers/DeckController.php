@@ -11,7 +11,6 @@ use App\Models\Term;
 use App\Services\SearchService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -44,9 +43,7 @@ class DeckController extends Controller
         return response()->json([
             'pinCount' => Bookmark::count($deck),
             'isPinned' => $isPinned,
-            'message' => $isPinned
-                ? __('pin.added', ['thing' => $deck->name])
-                : __('pin.removed', ['thing' => $deck->name]),
+            'modelKey' => $deck->name,
         ]);
     }
 
@@ -163,16 +160,18 @@ class DeckController extends Controller
         event(new ModelPinned($user));
         event(new DeckBuilt($user));
 
-        $deck->load([
-            'terms' => fn ($q) => $q
-                ->withItemData(),
-        ]);
+        $deck = Deck::query()
+            ->whereKey($deck->getKey())
+            ->with([
+                'terms' => fn ($q) => $q
+                    ->withItemData(),
+            ])
+            ->firstOrFail();
 
         $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
             'deck' => new DeckResource($deck),
-            'message' => __('created', ['thing' => $deck->name]),
         ], 201);
     }
 
@@ -183,16 +182,18 @@ class DeckController extends Controller
         $deck->update($request->all());
         $this->linkTerms($deck, $request->terms);
 
-        $deck->refresh()->load([
-            'terms' => fn ($q) => $q
-                ->withItemData(),
-        ]);
+        $deck = Deck::query()
+            ->whereKey($deck->getKey())
+            ->with([
+                'terms' => fn ($q) => $q
+                    ->withItemData(),
+            ])
+            ->firstOrFail();
 
         $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
             'deck' => new DeckResource($deck),
-            'message' => __('updated', ['thing' => $deck->name]),
         ]);
     }
 
@@ -223,15 +224,12 @@ class DeckController extends Controller
         try {
             Gate::authorize('delete', $deck);
 
-            $deletedDeck = $deck->name;
-
             DB::transaction(function () use ($deck) {
                 $deck->delete();
             });
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedDeck]),
             ]);
 
         } catch (Throwable $e) {
@@ -274,23 +272,18 @@ class DeckController extends Controller
         $deck->load('terms');
         $isPresent = $deck->terms->contains($term->id);
 
-        $message = $isPresent
-            ? __('decks.term.added', ['term' => $term->term, 'deck' => $deck->name])
-            : __('decks.term.removed', ['term' => $term->term, 'deck' => $deck->name]);
-
         return response()->json([
             'isPresent' => $isPresent,
-            'message' => $message,
         ]);
     }
 
-    public function copy(Request $request, Deck $deck): RedirectResponse
+    public function copy(Request $request, Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
         $user = $request->user();
 
-        $newDeck = $deck->replicate(['id', 'private', 'terms_count']);
+        $newDeck = $deck->replicate(['id', 'private', 'terms_count', 'is_pinned']);
 
         $newDeck->private = 0;
         $newDeck->user_id = $user->id;
@@ -307,10 +300,10 @@ class DeckController extends Controller
             $newDeck->terms()->attach($id, ['position' => $index + 1]);
         }
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('deck.copied', ['deck' => $deck->name])]);
-
-        return to_route('decks.show', $newDeck->id);
+        return response()->json([
+            'success' => true,
+            'deckId' => $newDeck->id,
+        ]);
     }
 
     public function export(Deck $deck): never

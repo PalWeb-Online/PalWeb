@@ -44,11 +44,11 @@ defineOptions({
     <div id="app-body">
         <div class="window-container">
             <div class="window-section-head">
-                <h1>new password</h1>
+                <h1>{{ $t('pages.users.new-password.title') }}</h1>
             </div>
             <div class="form-body">
                 <div class="field-item">
-                    <label>Password</label>
+                    <label>{{ $t('user.fields.password') }}</label>
                     <div class="field-input">
                         <input type="password" v-model="form.password" placeholder="Lenin1917!" required>
                         <div class="field-chars"
@@ -59,7 +59,7 @@ defineOptions({
                     <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
                 </div>
                 <div class="field-item">
-                    <label>Confirm Password</label>
+                    <label>{{ $t('user.fields.confirm-password') }}</label>
                     <div class="field-input">
                         <input type="password" v-model="form.password_confirmation" placeholder="Lenin1917!" required>
                         <div class="field-chars"
@@ -70,7 +70,9 @@ defineOptions({
                 </div>
             </div>
             <div class="window-footer">
-                <button @click="setNewPassword" :disabled="form.processing || !isValidRequest">Set Password</button>
+                <button @click="setNewPassword" :disabled="form.processing || !isValidRequest">
+                    {{ $t('pages.users.new-password.set-password') }}
+                </button>
             </div>
         </div>
     </div>

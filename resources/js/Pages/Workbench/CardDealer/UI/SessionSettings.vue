@@ -8,7 +8,7 @@ import ToggleMulti from "../../../../components/ToggleMulti.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
+const {t} = useI18n();
 
 const NotificationStore = useNotificationStore();
 const UserStore = useUserStore();
@@ -22,18 +22,22 @@ const saveSettings = async () => {
         props.settings.review_limit = props.settings.new_limit;
     }
 
-    const response = await axios.patch(route('users.preferences.update', UserStore.user.username), {
-        srs_settings: {
-            new_limit: props.settings.new_limit,
-            review_limit: props.settings.review_limit,
-            learning_steps: props.settings.learning_steps,
-            prompt_type: props.settings.prompt_type,
-        }
-    });
+    try {
+        const {data} = await axios.patch(route('users.preferences.update', UserStore.user.username), {
+            srs_settings: {
+                new_limit: props.settings.new_limit,
+                review_limit: props.settings.review_limit,
+                learning_steps: props.settings.learning_steps,
+                prompt_type: props.settings.prompt_type,
+            }
+        });
 
-    if (response.data.success) {
-        UserStore.user.preferences.srs = response.data.preferences.srs;
+        UserStore.user.preferences.srs = data.preferences.srs;
         NotificationStore.addNotification(t('user.notifications.preferences-saved'), 'success')
+
+    } catch (e) {
+        console.error(t('user.notifications.preferences-saved-error'), e);
+        NotificationStore.addNotification(t('user.notifications.preferences-saved-error'), 'error');
     }
 }
 </script>

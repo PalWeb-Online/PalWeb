@@ -16,7 +16,7 @@ const {locale, t} = useI18n();
 
 const description = computed(() => t('modals.settings.theme-description.' + NavigationStore.activeTheme));
 
-const selectedLocale = ref(UserStore.user?.language ?? 'en');
+const selectedLocale = ref(UserStore.user?.language ?? locale.value ?? 'en');
 const availableLocales = [
     {
         value: 'en',
@@ -28,7 +28,7 @@ const availableLocales = [
     },
     {
         value: 'ar',
-        label: 'العربية',
+        label: 'العربيّة',
     }
 ];
 

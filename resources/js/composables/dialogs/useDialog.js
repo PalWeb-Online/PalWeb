@@ -12,8 +12,8 @@ export function useDialog(props = {}) {
         isDeleting: isDeletingDialog,
         deleteResource: deleteDialog,
     } = useResourceDelete({
+        label: 'dialog',
         routeBase: 'dialogs',
-        label: 'Dialog',
         onDeleteSuccess: () => {
             router.get(route('dialogs.index'));
         },

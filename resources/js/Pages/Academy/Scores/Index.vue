@@ -55,7 +55,7 @@ const mode = ref('decks');
                     </p>
                 </AppTip>
                 <template v-else v-for="(lesson, slug) in scoredLessonModels">
-                    <div class="featured-title m">{{ $t('components.lesson.number', {number: slug}) }}</div>
+                    <div class="featured-title m">{{ $t('lesson.key-index', {index: slug}) }}</div>
                     <div class="model-list">
                         <DeckItem v-if="lesson.deck" :model="lesson.deck" target="academy"/>
                         <ActivityItem v-if="lesson.activity" :model="lesson.activity" target="academy"/>

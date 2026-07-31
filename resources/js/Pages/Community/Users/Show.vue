@@ -81,7 +81,7 @@ defineOptions({
                         <div class="user-comment">
                             <div class="user-comment-title">
                                 <img class="popout" src="/img/star.svg" alt="Star"/>
-                                <span>{{ $t('teacher.bio') }}</span>
+                                <span>{{ $t('teacher.fields.bio') }}</span>
                             </div>
                             <AppTip v-if="!isStudent && (user.id === UserStore.user.id || UserStore.isAdmin)">
                                 <p>You don't have a Student subscription, so your Teacher profile will not be visible to
@@ -92,7 +92,7 @@ defineOptions({
                                     {{ user.teacher.bio }}
                                 </template>
                                 <template v-else>
-                                    <i>{{ $t('teacher.bio-placeholder', {user: user.name}) }}</i>
+                                    <i>{{ $t('teacher.fields.bio-placeholder', {user: user.name}) }}</i>
                                 </template>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ defineOptions({
             </UserItem>
 
             <div class="window-section-head">
-                <h2>{{ $t('models.decks') }}</h2>
+                <h2>{{ $t('components.user.sections.decks') }}</h2>
             </div>
             <div class="search-filters-container">
                 <div class="search-filters">
@@ -134,7 +134,7 @@ defineOptions({
 
         <div class="app-body-section">
             <AppHeading>
-                {{ $t('models.badges') }}
+                {{ $t('pages.users.show.badges') }}
             </AppHeading>
             <div class="badge-wrapper">
                 <BadgeItem v-for="badge in unlockedBadges" :badge="badge" :key="badge.id"/>

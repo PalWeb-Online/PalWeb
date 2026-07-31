@@ -11,7 +11,7 @@ const isOpen = ref(false);
 <template>
     <div class="skill-container">
         <div class="skill-head" @click="isOpen = !isOpen">
-            <div class="featured-title s">{{ $t('components.skill.title') }}: {{ skill.type }}</div>
+            <div class="featured-title s">{{ $t('skill.key') }}: {{ skill.type }}</div>
         </div>
 
         <div v-if="isOpen" class="skill-body">

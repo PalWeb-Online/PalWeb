@@ -109,7 +109,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     </div>
                 </div>
 
-                <div class="featured-title m">{{ $t('forms.blocks') }}</div>
+                <div class="featured-title m">{{ $t('document.fields.blocks') }}</div>
                 <DocumentBlocksManager :document-blocks="form.document.blocks"
                                        :block-types="allowedBlockTypes"
                 />

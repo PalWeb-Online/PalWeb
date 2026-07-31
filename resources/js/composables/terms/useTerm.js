@@ -11,8 +11,8 @@ export function useTerm(props = {}) {
         isDeleting: isDeletingTerm,
         deleteResource: deleteTerm,
     } = useResourceDelete({
+        label: 'term',
         routeBase: 'terms',
-        label: 'Term',
         onDeleteSuccess: () => {
             router.get(route('terms.index'));
         },

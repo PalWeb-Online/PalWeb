@@ -16,6 +16,8 @@ import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
 import ActivityActions from "../../../components/Actions/ActivityActions.vue";
 import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {useScoreManager} from "../../../composables/useScoreManager.js";
+import {useI18n} from "vue-i18n";
+import {useNotificationStore} from "../../../stores/NotificationStore.js";
 
 defineOptions({
     layout: Layout
@@ -30,12 +32,29 @@ const props = defineProps({
 })
 
 const {getScoreStats} = useScoreManager();
+const {t} = useI18n();
+const NotificationStore = useNotificationStore();
 
 const showPurgeScores = ref(false);
 
-const deleteScore = (id) => {
-    if (!confirm('Are you sure you want to delete this Score?')) return;
-    router.delete(route('scores.destroy', id));
+const deleteScore = async (id) => {
+    if (!confirm(t('forms.notifications.delete-confirm', {model: t('actions.models.score')}))) return;
+
+    const {data} = await axios.delete(route('scores.destroy', id));
+
+    if (data.success) {
+        NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t('actions.models.score')}));
+
+        if (props.selectedScore?.id === id) {
+            router.get(route('scores.history', {
+                scorable_type: props.scorable_type,
+                scorable_id: props.model.id,
+            }));
+            return;
+        }
+
+        router.reload();
+    }
 }
 
 function scrollToDetail() {

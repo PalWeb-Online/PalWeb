@@ -39,7 +39,7 @@ export function useTeacherEditor({
         getLoadIdentifier: () => user.value?.teacher?.id ?? null,
         fetchModel: async () => user.value?.teacher ?? null,
         resetModel: setTeacher,
-        label: 'Teacher',
+        label: 'teacher',
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
         onDeleteSuccess: () => {

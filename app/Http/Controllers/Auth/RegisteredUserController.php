@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegisteredUserRequest;
+use App\Http\Resources\UserAuthResource;
 use App\Models\User;
-use Flasher\Prime\FlasherInterface;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(protected FlasherInterface $flasher) {}
-
-    public function store(StoreRegisteredUserRequest $request): RedirectResponse
+    public function store(StoreRegisteredUserRequest $request): JsonResponse
     {
         $user = User::create([
             'name' => $request->name,
@@ -23,6 +21,7 @@ class RegisteredUserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'language' => $request->language,
             'dialect_id' => '8',
         ]);
 
@@ -30,9 +29,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('signup.message', ['user' => $request->user()->name])]);
-
-        return to_route('users.show', $user);
+        return response()->json([
+            'user' => new UserAuthResource($user),
+            'csrf_token' => csrf_token(),
+        ]);
     }
 }

@@ -1,31 +1,71 @@
 <script setup>
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../composables/useForm.js";
 import {route} from "ziggy-js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import {generateArabicName} from "../../utils/NameGenerator.js";
+import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useUserStore} from "../../stores/UserStore.js";
+import {syncCsrfToken} from "../../utils/csrfToken.js";
+import {useI18n} from "vue-i18n";
+import {router} from "@inertiajs/vue3";
 
+const {t, locale} = useI18n();
 const emit = defineEmits(['close', 'signIn']);
+const NotificationStore = useNotificationStore();
+const UserStore = useUserStore();
 
-const form = useForm({
+const {
+    form,
+    errors,
+    clearErrors,
+    setErrors,
+    setRecentlySuccessful,
+    payload,
+} = useForm({
     name: '',
     username: '',
     ar_name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    language: computed(() => locale.value),
 });
+
+const processing = ref(false);
 
 const isValidRequest = computed(() => {
-    return Object.values(form.data()).every(value => value.length);
+    return Object.values(form).every(value => value.length);
 });
 
-const signUp = () => {
-    form.post(route('signup'), {
-        onSuccess: () => {
-            emit('close');
+const signUp = async () => {
+    processing.value = true;
+    clearErrors();
+
+    try {
+        const {data} = await axios.post(route('signup'), payload());
+        syncCsrfToken(data.csrf_token);
+
+        UserStore.setUser(data.user);
+        setRecentlySuccessful();
+
+        emit('close');
+
+        NotificationStore.addNotification(t('signup.message', {
+            user: locale.value === 'ar'
+                ? UserStore.user.ar_name
+                : UserStore.user.name
+        }));
+
+        router.get(route('users.show', UserStore.user.username));
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
         }
-    });
+    } finally {
+        processing.value = false;
+    }
 }
 </script>
 <template>
@@ -50,7 +90,7 @@ const signUp = () => {
                              v-text="50 - form.name.length"
                         />
                     </div>
-                    <div v-if="form.errors.name" v-text="form.errors.name" class="field-error"/>
+                    <div v-if="errors.name" v-text="errors.name" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <label>{{ $t('user.fields.username') }}</label>
@@ -61,7 +101,7 @@ const signUp = () => {
                              v-text="50 - form.username.length"
                         />
                     </div>
-                    <div v-if="form.errors.username" v-text="form.errors.username" class="field-error"/>
+                    <div v-if="errors.username" v-text="errors.username" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <div style="display: flex; align-items: center; gap: 3.2rem;">
@@ -77,7 +117,7 @@ const signUp = () => {
                              v-text="50 - form.ar_name.length"
                         />
                     </div>
-                    <div v-if="form.errors.ar_name" v-text="form.errors.ar_name" class="field-error"/>
+                    <div v-if="errors.ar_name" v-text="errors.ar_name" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <label>{{ $t('user.fields.email') }}</label>
@@ -88,7 +128,7 @@ const signUp = () => {
                              v-text="255 - form.email.length"
                         />
                     </div>
-                    <div v-if="form.errors.email" v-text="form.errors.email" class="field-error"/>
+                    <div v-if="errors.email" v-text="errors.email" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <label>{{ $t('user.fields.password') }}</label>
@@ -99,7 +139,7 @@ const signUp = () => {
                              v-text="form.password.length + `/8`"
                         />
                     </div>
-                    <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
+                    <div v-if="errors.password" v-text="errors.password" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <label>{{ $t('user.fields.confirm-password') }}</label>
@@ -113,7 +153,7 @@ const signUp = () => {
                 </div>
             </div>
             <div class="window-footer">
-                <button type="submit" :disabled="form.processing || !isValidRequest">
+                <button type="submit" :disabled="processing || !isValidRequest">
                     {{ $t('modals.sign-up.submit') }}
                 </button>
             </div>

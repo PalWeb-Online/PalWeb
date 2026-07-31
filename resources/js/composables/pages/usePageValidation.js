@@ -1,5 +1,6 @@
 import {computed} from "vue";
 import {useDocumentResourceValidation} from "../documents/useDocumentResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function usePageValidation({
                                       form,
@@ -8,6 +9,8 @@ export function usePageValidation({
                                       descendantIds,
                                       allowedBlockTypes,
                                   }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         validateBlocks,
@@ -21,11 +24,11 @@ export function usePageValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.slug)) {
-            errors.slug = 'Slug is required.';
+            errors.slug = t('validation.required', {field: t('forms.fields.slug')});
         }
 
         if (!isNonEmptyString(form.title)) {
-            errors.title = 'Title is required.';
+            errors.title = t('validation.required', {field: t('forms.fields.title')});
         }
 
         return errors;
@@ -35,23 +38,19 @@ export function usePageValidation({
         const issues = [];
 
         if (page.value?.id && Number(form.parent_id) === Number(page.value.id)) {
-            issues.push('A page cannot be its own parent.');
+            issues.push(t('page.validation.self-is-parent'));
         }
 
         if (form.parent_id && descendantIds.value.map(Number).includes(Number(form.parent_id))) {
-            issues.push('A page cannot use one of its own child pages as its parent.');
-        }
-
-        if (!form.document?.schemaVersion) {
-            issues.push('Document schemaVersion is required.');
+            issues.push(t('page.validation.child-is-parent'));
         }
 
         const blocks = form.document?.blocks ?? [];
 
         if (!Array.isArray(blocks) || blocks.length === 0) {
-            issues.push('At least one Block is required.');
+            issues.push(t('validation.min-items', {item: t('block.key'), min: 1}));
         } else {
-            validateBlocks(blocks, issues, 'Page');
+            validateBlocks(blocks, issues, t('page.key'));
         }
 
         return issues;

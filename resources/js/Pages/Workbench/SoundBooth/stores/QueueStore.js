@@ -4,8 +4,10 @@ import {useSoundBoothStore} from "./SoundBoothStore.js";
 import {useRecordStore} from './RecordStore';
 import {route} from "ziggy-js";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useI18n} from "vue-i18n";
 
 export const useQueueStore = defineStore('QueueStore', () => {
+    const {t} = useI18n();
     const SoundBoothStore = useSoundBoothStore();
     const RecordStore = useRecordStore();
 
@@ -85,35 +87,35 @@ export const useQueueStore = defineStore('QueueStore', () => {
 
     const fetchAutoItems = async () => {
         try {
-            const response = await axios.post(route('sound-booth.get.auto'), {
+            const {data} = await axios.post(route('sound-booth.get.auto'), {
                 speaker_id: SoundBoothStore.speaker.id,
                 dialect_id: SoundBoothStore.speaker.dialect.id,
                 queuedItems: queue,
             });
 
-            if (response.data) {
-                queue.push(...response.data.items);
-                NotificationStore.addNotification(`Added ${response.data.items.length} Pronunciations to the Queue!`);
-            }
-        } catch (error) {
-            console.error('Error loading items:', error);
+            queue.push(...data.items);
+            NotificationStore.addNotification(t('sound-booth.notifications.auto-queue-success', {count: data.items.length}));
+
+        } catch (e) {
+            console.error(t('sound-booth.notifications.auto-queue-error'), e);
+            NotificationStore.addNotification(t('sound-booth.notifications.auto-queue-error'));
         }
     };
 
     const fetchDeckItems = async (id) => {
         try {
-            const response = await axios.post(route('sound-booth.get.deck', id), {
+            const {data} = await axios.post(route('sound-booth.get.deck', id), {
                 speaker_id: SoundBoothStore.speaker.id,
                 dialect_id: SoundBoothStore.speaker.dialect.id,
                 queuedItems: queue,
             });
 
-            if (response.data) {
-                queue.push(...response.data.items);
-                NotificationStore.addNotification('Added Deck to the Queue!');
-            }
-        } catch (error) {
-            console.error(`Error fetching deck with ID ${id}:`, error);
+            queue.push(...data.items);
+            NotificationStore.addNotification(t('sound-booth.notifications.deck-queue-success', {count: data.items.length}));
+
+        } catch (e) {
+            console.error(t('sound-booth.notifications.deck-queue-error'), e);
+            NotificationStore.addNotification(t('sound-booth.notifications.deck-queue-error'));
         }
     };
 
@@ -121,7 +123,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
         const index = queue.indexOf(pronunciation);
 
         if (RecordStore.data.records[pronunciation.id]) {
-            if (!confirm('You have a stashed recording for this item. Are you sure you would like to remove the item from your Queue before uploading? Your stashed recording will be lost.')) return false;
+            if (!confirm(t('sound-booth.notifications.remove-item-confirm'))) return false;
 
             const discarded = await RecordStore.discardRecord(pronunciation.id);
             if (!discarded) return false;
@@ -132,7 +134,7 @@ export const useQueueStore = defineStore('QueueStore', () => {
     };
 
     const flushQueue = async () => {
-        if (queue.length === 0 || confirm('Doing this will clear your Queue & delete all your currently stashed recordings, if any. Proceed?')) {
+        if (queue.length === 0 || confirm(t('sound-booth.notifications.flush-queue-confirm'))) {
             queue.splice(0, queue.length);
 
             await RecordStore.clearStash();

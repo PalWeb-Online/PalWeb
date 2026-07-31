@@ -58,7 +58,7 @@ const tooltip = ref(null);
                     {{ $t('actions.common.view', { model: $t('actions.models.lesson') }) }}
                 </Link>
                 <Link :href="route('scores.history', { scorable_type: 'deck', scorable_id: model.id })" role="menuitem" tabindex="-1">
-                    {{ $t('actions.common.view', { model: $t('actions.models.scores') }) }}
+                    {{ $t('actions.common.view-scores') }}
                 </Link>
             </template>
             <button @click="copyDeck(model)" role="menuitem" tabindex="-1">

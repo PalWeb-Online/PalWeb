@@ -13,7 +13,6 @@ use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Score;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
@@ -94,7 +93,7 @@ class ScoreController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreScoreRequest $request): RedirectResponse
+    public function store(StoreScoreRequest $request): JsonResponse
     {
         $score = Score::create(array_merge($request->all(), [
             'user_id' => $request->user()->id,
@@ -102,10 +101,10 @@ class ScoreController extends Controller
 
         ScoreCreated::dispatch($score);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => 'Your Score for this model has been saved!']);
-
-        return back();
+        return response()->json([
+            'success' => true,
+            'score_id' => $score->id,
+        ]);
     }
 
     public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
@@ -141,10 +140,10 @@ class ScoreController extends Controller
         ]);
     }
 
-    public function purge(Request $request): RedirectResponse
+    public function purge(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'scorable_type' => ['required', Rule::in(['deck', 'dialog'])],
+            'scorable_type' => ['required', Rule::in(['deck', 'activity', 'dialog'])],
             'scorable_id' => ['required', 'integer'],
             'older_than' => ['nullable', Rule::in(['day', 'week', 'month', 'year'])],
             'except' => ['nullable', 'array'],
@@ -154,6 +153,7 @@ class ScoreController extends Controller
         $modelClass = match ($validated['scorable_type']) {
             'deck' => Deck::class,
             'dialog' => Dialog::class,
+            'activity' => Activity::class,
         };
         $model = $modelClass::findOrFail($validated['scorable_id']);
 
@@ -193,12 +193,9 @@ class ScoreController extends Controller
         $count = $query->count();
         $query->delete();
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => "Successfully purged {$count} Scores."]);
-
-        return to_route('scores.history', [
-            'scorable_type' => $validated['scorable_type'],
-            'scorable_id' => $validated['scorable_id'],
+        return response()->json([
+            'success' => true,
+            'count' => $count,
         ]);
     }
 
@@ -216,7 +213,6 @@ class ScoreController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => 'Score']),
             ]);
 
         } catch (Throwable $e) {

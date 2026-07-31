@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'bio',
         'home',
         'private',
+        'language',
         'dialect_id',
         'speaker_id',
         'discord_id',

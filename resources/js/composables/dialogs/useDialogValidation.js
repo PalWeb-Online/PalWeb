@@ -1,10 +1,13 @@
 import {computed} from "vue";
 import {useResourceValidation} from "../resources/useResourceValidation.js";
+import {useI18n} from "vue-i18n";
 
 export function useDialogValidation({
                                         form,
                                         backendErrors,
                                     }) {
+    const {t} = useI18n();
+
     const {
         isNonEmptyString,
         hasMaxLength,
@@ -15,20 +18,20 @@ export function useDialogValidation({
         const errors = {};
 
         if (!isNonEmptyString(form.title)) {
-            errors.title = 'Title is required.';
+            errors.title = t('validation.required', {field: t('forms.fields.title')});
 
         } else if (!hasMaxLength(form.name, 50)) {
-            errors.name = 'Title must not be greater than 50 characters.';
+            errors.name = t('validation.max-chars', {field: t('forms.fields.title'), max: 50});
         }
 
         (form.sentences ?? []).forEach((sentence, index) => {
-            const sentenceIndex = `Sentence ${index + 1}`;
+            const sentenceIndex = `${t('actions.models.sentence')} ${index + 1}`;
 
             if (!isNonEmptyString(sentence.speaker)) {
-                errors[`sentence.${index}.speaker`] = `${sentenceIndex}: Sentence speaker is required.`;
+                errors[`sentence.${index}.speaker`] = `${sentenceIndex}: ${t('validation.required', {field: t('sentence.fields.speaker')})}`;
 
             } else if (!sentence.position) {
-                errors[`sentence.${index}.position`] = `${sentenceIndex}: Sentence position is required.`;
+                errors[`sentence.${index}.position`] = `${sentenceIndex}: ${t('validation.required', {field: t('sentence.fields.position')})}`;
             }
         });
 

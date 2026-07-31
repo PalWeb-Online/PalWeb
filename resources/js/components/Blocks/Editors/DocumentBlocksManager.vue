@@ -2,6 +2,9 @@
 import AppTip from "../../AppTip.vue";
 import {useDocumentBuilder} from "../../../composables/useDocumentBuilder.js";
 import {computed, reactive} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const props = defineProps({
     documentBlocks: {type: Array, required: true},
@@ -81,7 +84,7 @@ if (!props.isNested) {
 }
 
 const handleRemoveBlock = (documentBlocks, blockId) => {
-    if (!confirm('Are you sure you want to remove this Block?')) return;
+    if (!confirm(t('block.notifications.remove-block'))) return;
     removeBlock(documentBlocks, blockId);
 }
 
@@ -110,12 +113,12 @@ const handleFlattenContainer = (containerId) => {
             <div class="add-button"
                  @click="addBlock(documentBlocks, { type: blockType, atStart: true })">+
             </div>
-            <div>{{ $t(`blocks.${blockType}`) }}</div>
+            <div>{{ $t(`block.type.${blockType}`) }}</div>
         </div>
     </div>
 
     <AppTip v-if="documentBlocks.length === 0">
-        <p>No Blocks have been added yet.</p>
+        <p>{{ $t('document.messages.no-blocks') }}</p>
     </AppTip>
 
     <div class="block-editor-container-wrapper" v-for="(block, bi) in documentBlocks" :key="block.id">
@@ -124,10 +127,10 @@ const handleFlattenContainer = (containerId) => {
                 <div class="featured-title s" style="flex-grow: 1">
                     <span>{{ bi + 1 }}: </span>
                     <span style="color: var(--color-dark-primary)">
-                        {{ $t(`blocks.${block.type}`) }}
+                        {{ $t(`block.type.${block.type}`) }}
                     </span>
                     <template v-if="block.type === 'exercises'">
-                        {{ block.exerciseType ? ': ' + $t(`exercises.types.${block.exerciseType}`) : '' }}
+                        {{ block.exerciseType ? ': ' + $t(`exercise.type.${block.exerciseType}`) : '' }}
                         <span style="color: var(--color-medium-secondary)">
                             {{ getExerciseCount(block) }}
                         </span>
@@ -170,7 +173,7 @@ const handleFlattenContainer = (containerId) => {
                 <div class="add-button"
                      @click="addBlock(documentBlocks, { afterBlockId: block.id, type: blockType })">+
                 </div>
-                <div>{{ $t(`blocks.${blockType}`) }}</div>
+                <div>{{ $t(`block.type.${blockType}`) }}</div>
             </div>
         </div>
     </div>

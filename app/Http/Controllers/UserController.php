@@ -12,7 +12,6 @@ use App\Models\Avatar;
 use App\Models\Badge;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -69,7 +68,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(User $user, UpdateUserRequest $request): JsonResponse|RedirectResponse
+    public function update(User $user, UpdateUserRequest $request): JsonResponse
     {
         Gate::authorize('modify', $user);
 
@@ -89,16 +88,9 @@ class UserController extends Controller
 
         event(new ProfileChanged($user));
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'user' => new UserEditResource($user->fresh(['dialect', 'teacher', 'uploadedAvatars'])),
-            ]);
-        }
-
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => 'your Profile'])]);
-
-        return to_route('users.show', $user);
+        return response()->json([
+            'user' => new UserEditResource($user->fresh(['dialect', 'teacher', 'uploadedAvatars'])),
+        ]);
     }
 
     private function resolveAvatarSelection(User $user, UpdateUserRequest $request): ?int
@@ -139,7 +131,6 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'success' => true,
             'preferences' => $user->preferences
         ]);
     }
@@ -160,7 +151,6 @@ class UserController extends Controller
         $user->load('roles');
 
         return response()->json([
-            'success' => true,
             'user' => new UserShowResource($user)
         ]);
     }

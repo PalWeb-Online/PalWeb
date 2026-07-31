@@ -51,7 +51,7 @@ const isDraft = computed(() => {
             <Link v-if="lesson" :href="route('lessons.show', lesson.global_position)"
                   class="active"
             >
-                {{ $t('components.lesson.number', {number: lesson.global_position}) }}
+                {{ $t('lesson.key-index', {index: lesson.global_position}) }}
             </Link>
             <button v-if="UserStore.isAdmin"
                     @click="router.get(editRoute)" class="material-symbols-rounded">edit

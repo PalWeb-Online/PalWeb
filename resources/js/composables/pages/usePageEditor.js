@@ -61,7 +61,7 @@ export function usePageEditor({
         getLoadIdentifier: () => pageId.value,
         fetchModel: pageLoader.fetchPage,
         resetModel: pageLoader.setPage,
-        label: 'Page',
+        label: 'page',
         routeBase: 'wiki',
         getBlocks: (document) => document?.blocks ?? [],
         beforeReload: () => {

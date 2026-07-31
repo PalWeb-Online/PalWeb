@@ -8,7 +8,6 @@ use App\Http\Resources\DialogResource;
 use App\Models\Dialog;
 use App\Models\Sentence;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +17,7 @@ use Throwable;
 
 class DialogController extends Controller
 {
-    public function index(): \Inertia\Response|RedirectResponse
+    public function index(): \Inertia\Response
     {
         return Inertia::render('Academy/Dialogs/Index', [
             'section' => 'academy',
@@ -26,7 +25,7 @@ class DialogController extends Controller
         ]);
     }
 
-    public function show(Dialog $dialog): \Inertia\Response|RedirectResponse
+    public function show(Dialog $dialog): \Inertia\Response
     {
         Gate::authorize('view', $dialog);
 
@@ -54,26 +53,24 @@ class DialogController extends Controller
         ]);
     }
 
-    public function store(UpsertDialogRequest $request): RedirectResponse
+    public function store(UpsertDialogRequest $request): JsonResponse
     {
         $dialog = Dialog::create($request->all());
         $this->linkSentences($dialog, $request->sentences);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('created', ['thing' => $dialog->title])]);
-
-        return to_route('speech-maker.dialog', $dialog);
+        return response()->json([
+            'deck' => new DialogResource($dialog),
+        ], 201);
     }
 
-    public function update(UpsertDialogRequest $request, Dialog $dialog): RedirectResponse
+    public function update(UpsertDialogRequest $request, Dialog $dialog): JsonResponse
     {
         $dialog->update($request->all());
         $this->linkSentences($dialog, $request->sentences);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => $dialog->title])]);
-
-        return to_route('speech-maker.dialog', $dialog);
+        return response()->json([
+            'deck' => new DialogResource($dialog),
+        ]);
     }
 
     private function linkSentences(Dialog $dialog, array $sentences): void
@@ -102,15 +99,12 @@ class DialogController extends Controller
         try {
             Gate::authorize('delete', $dialog);
 
-            $deletedDialog = $dialog->title;
-
             DB::transaction(function () use ($dialog) {
                 $dialog->delete();
             });
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedDialog]),
             ]);
 
         } catch (Throwable $e) {

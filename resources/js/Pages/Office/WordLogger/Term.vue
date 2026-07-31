@@ -196,7 +196,7 @@ defineOptions({
                                 </div>
                             </div>
                             <div class="field-item">
-                                <label>{{ $t('term.filters.category') }}</label>
+                                <label>{{ $t('term.fields.category') }}</label>
                                 <select v-model="form.category" required>
                                     <option value="verb">{{ $t('term.category.verb') }}</option>
                                     <option value="noun">{{ $t('term.category.noun') }}</option>
@@ -545,7 +545,7 @@ defineOptions({
                                     </div>
                                 </div>
                                 <div class="field-item">
-                                    <label>{{ $t('inflection.fields.inflection') }}</label>
+                                    <label>{{ $t('inflection.key') }}</label>
                                     <input v-model="inflection.inflection" required/>
                                     <div v-if="validationErrors[`inflections.${index}.inflection`]" class="field-error">
                                         {{ validationErrors[`inflections.${index}.inflection`] }}
@@ -647,7 +647,7 @@ defineOptions({
                                      @click="removeItem(index, form.glosses)"/>
 
                                 <div class="field-item">
-                                    <label>{{ $t('gloss.fields.gloss') }}</label>
+                                    <label>{{ $t('gloss.key') }}</label>
                                     <input v-model="gloss.gloss" required/>
                                     <div v-if="validationErrors[`glosses.${index}.gloss`]" class="field-error">
                                         {{ validationErrors[`glosses.${index}.gloss`] }}

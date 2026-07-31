@@ -7,7 +7,9 @@ import {useUser} from "../composables/users/useUser.js";
 
 export const useUserStore = defineStore('UserStore', () => {
     const page = usePage();
-    const user = computed(() => page.props.auth.user || null);
+    const currentUser = ref(page.props.auth.user || null);
+
+    const user = computed(() => currentUser.value);
 
     const {isAdmin, isStudent, isUser, highestRole} = useUser(user);
     const isSuperuser = computed(() => !!user.value?.is_superuser);
@@ -21,6 +23,21 @@ export const useUserStore = defineStore('UserStore', () => {
         decks.value = [];
         hasFetchedDecks.value = false;
     };
+
+    const setUser = (newUser) => {
+        currentUser.value = newUser || null;
+    };
+
+    const clearUser = () => {
+        setUser(null);
+    };
+
+    watch(
+        () => page.props.auth.user,
+        (newUser) => {
+            setUser(newUser || null);
+        }
+    );
 
     watch(
         () => user.value?.id,
@@ -51,6 +68,8 @@ export const useUserStore = defineStore('UserStore', () => {
 
     return {
         user,
+        setUser,
+        clearUser,
         decks,
         hasFetchedDecks,
         fetchDecks,

@@ -75,8 +75,6 @@ class AudioController extends Controller
         try {
             Gate::authorize('delete', $audio);
 
-            $deletedAudio = $audio->filename;
-
             DB::transaction(function () use ($audio) {
                 $this->audioService->deleteAudio($audio->filename);
                 $audio->delete();
@@ -84,7 +82,6 @@ class AudioController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedAudio]),
             ]);
 
         } catch (Throwable $e) {

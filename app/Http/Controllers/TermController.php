@@ -51,11 +51,11 @@ class TermController extends Controller
             event(new ModelPinned($user));
         }
 
+        dd('test');
+
         return response()->json([
             'isPinned' => $isPinned,
-            'message' => $isPinned
-                ? __('pin.added', ['thing' => $term->term])
-                : __('pin.removed', ['thing' => $term->term]),
+            'modelKey' => $term->term,
         ]);
     }
 
@@ -249,7 +249,6 @@ class TermController extends Controller
 
         return response()->json([
             'term' => new TermShowResource($term),
-            'message' => __('created', ['thing' => $term->term]),
         ], 201);
     }
 
@@ -319,7 +318,6 @@ class TermController extends Controller
 
         return response()->json([
             'term' => new TermShowResource($term),
-            'message' => __('updated', ['thing' => $term->term]),
         ]);
     }
 
@@ -452,8 +450,6 @@ class TermController extends Controller
         try {
             Gate::authorize('delete', $term);
 
-            $deletedTerm = $term->term;
-
             DB::transaction(function () use ($term) {
                 $category = $term->category;
                 $translit = $term->translit;
@@ -477,7 +473,6 @@ class TermController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => __('deleted', ['thing' => $deletedTerm]),
             ]);
 
         } catch (Throwable $e) {
