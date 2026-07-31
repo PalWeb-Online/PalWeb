@@ -15,7 +15,7 @@ import {generateArabicName} from "../../../utils/NameGenerator.js";
 import {useUser} from "../../../composables/users/useUser.js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useUserValidation} from "../../../composables/users/useUserValidation.js";
-import AvatarPicker from "../../../components/modals/AvatarPicker.vue";
+import AvatarPicker from "../../../components/Modals/AvatarPicker.vue";
 
 const props = defineProps({
     userId: {
