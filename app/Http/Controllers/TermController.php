@@ -51,8 +51,6 @@ class TermController extends Controller
             event(new ModelPinned($user));
         }
 
-        dd('test');
-
         return response()->json([
             'isPinned' => $isPinned,
             'modelKey' => $term->term,
