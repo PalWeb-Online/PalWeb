@@ -1,13 +1,68 @@
 import {defineStore} from 'pinia';
 import {onMounted, reactive, ref} from 'vue';
 import {disableWebPush, enableWebPush} from "../push.js";
+import {useI18n} from "vue-i18n";
 
 export const useNotificationStore = defineStore('NotificationStore', () => {
+    const {t, locale} = useI18n();
     const notifications = reactive([]);
     const currentBrowserSubscribed = ref(false);
     const currentBrowserSubscription = ref(null);
     const showPushSubscribeHint = ref(false);
     const isUpdatingBrowserSubscription = ref(false);
+
+    const localizedName = (value) => {
+        if (!value || typeof value !== 'object') {
+            return value;
+        }
+
+        if ('ar_name' in value || 'name' in value) {
+            return locale.value === 'ar'
+                ? value.ar_name ?? value.name
+                : value.name;
+        }
+
+        return value;
+    };
+
+    const resolveParams = (params = {}) => {
+        return Object.fromEntries(
+            Object.entries(params).map(([key, value]) => [
+                key,
+                localizedName(value),
+            ])
+        );
+    };
+
+    const resolveMessage = (payload) => {
+        if (typeof payload === 'string') {
+            return payload;
+        }
+
+        if (payload?.key) {
+            return t(payload.key, resolveParams(payload.params));
+        }
+
+        return payload?.message ?? '';
+    };
+
+    const notify = (payload) => {
+        const message = resolveMessage(payload);
+
+        if (!message) {
+            return;
+        }
+
+        const type = typeof payload === 'object'
+            ? payload.type ?? 'success'
+            : 'success';
+
+        const duration = typeof payload === 'object'
+            ? payload.duration ?? 3000
+            : 3000;
+
+        addNotification(message, type, duration);
+    };
 
     const addNotification = (message, type = 'success', duration = 3000) => {
         const id = Date.now();
@@ -93,6 +148,7 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
 
     return {
         notifications,
+        notify,
         addNotification,
         removeNotification,
         currentBrowserSubscribed,

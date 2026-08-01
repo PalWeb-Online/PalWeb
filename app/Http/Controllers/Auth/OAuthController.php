@@ -56,6 +56,11 @@ class OAuthController extends Controller
                 $this->updateUser($user, $discordUser);
                 $this->checkMembership($user, $discordUser->token);
 
+                session()->flash('notification', [
+                    'type' => 'success',
+                    'message' => __('oauth.discord.link-success'),
+                ]);
+
             } else {
                 $user = User::where('discord_id', $discordUser->id)->first();
 
@@ -63,8 +68,14 @@ class OAuthController extends Controller
                     Auth::login($user);
 
                     session()->flash('notification', [
-                        'type' => __('signin.message.head'),
-                        'message' => __('signin.message', ['user' => $user->name]),
+                        'type' => 'success',
+                        'key' => 'user.notifications.signed-in',
+                        'params' => [
+                            'user' => [
+                                'name' => $user->name,
+                                'ar_name' => $user->ar_name
+                            ]
+                        ],
                     ]);
 
                 } else {
@@ -72,9 +83,16 @@ class OAuthController extends Controller
 
                     if ($user) {
                         Auth::login($user);
+
                         session()->flash('notification', [
-                            'type' => __('signin.message.head'),
-                            'message' => __('signin.message', ['user' => $user->name]),
+                            'type' => 'success',
+                            'key' => 'user.notifications.signed-in',
+                            'params' => [
+                                'user' => [
+                                    'name' => $user->name,
+                                    'ar_name' => $user->ar_name
+                                ]
+                            ],
                         ]);
 
                         $this->updateUser($user, $discordUser);
@@ -134,10 +152,12 @@ class OAuthController extends Controller
 
             $user->badges()->attach($badge);
 
-            UserNotificationSent::dispatch(
-                $user->id,
-                __('badges.get', ['badge' => $badge->title]),
-            );
+            UserNotificationSent::dispatch($user->id, [
+                'key' => 'badge.notifications.awarded',
+                'params' => [
+                    'badge' => $badge->title,
+                ]
+            ]);
 
         } catch (\Throwable $e) {
             Log::warning('Failed to check Discord guild membership: '.$e->getMessage(), [

@@ -14,9 +14,7 @@ class UserNotificationSent implements ShouldBroadcast
 
     public function __construct(
         private readonly int $userId,
-        public readonly string $message,
-        public readonly string $type = 'success',
-        public readonly int $duration = 3000,
+        public readonly array $notification,
     ) {}
 
     public function broadcastOn(): array

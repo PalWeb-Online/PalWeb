@@ -115,6 +115,11 @@
     "activity": {
         "key": "Actividad"
     },
+    "badge": {
+        "notifications": {
+            "awarded": "¡Conseguiste la Insignia \"{badge}\"! ¡Bien hecho!"
+        }
+    },
     "card": {
         "fields": {
             "status": "Estado",
@@ -438,6 +443,9 @@
         },
         "profile": "perfil",
         "notifications": {
+            "signed-up": "¡Encantados de conocerte, {user}!",
+            "signed-in": "¡Bienvenido de vuelta, {user}!",
+            "signed-out": "¡Hasta pronto, {user}!",
             "preferences-saved": "¡Tu preferencias han sido guardadas!",
             "preferences-saved-error": "No se pudo guardar las preferencias de usuario.",
             "role-granted": "Rol de Estudiante otorgado con éxito.",
@@ -1424,17 +1432,11 @@
     },
     "auth.failed": "Estas credenciales no coinciden con nuestros registros.",
     "auth.throttle": "Demasiados intentos de inicio de sesión. Vuelve a intentarlo en :segundos segundos.",
-    "signin.message": "¡Bienvenido de vuelta, {user}!",
-    "signin.message.head": "¡Hola!",
-    "signout.message": "¡Hasta pronto, {user}!",
-    "signout.message.head": "¡Chao!",
-    "signup.message": "¡Encantados de conocerte, {user}!",
-    "signup.message.head": "¡Bienvenido!",
     "created": "¡:thing creado con éxito!",
     "updated": "¡:thing actualizado con éxito!",
     "deleted": "¡:thing eliminado con éxito!",
-    "badges.get": "¡Conseguiste la Insignia \":badge\"! ¡Bien hecho!",
     "oauth.discord.already-linked": "Tu cuenta de Discord ya está vinculada.",
+    "oauth.discord.link-success": "¡Se conectó tu cuenta a Discord con éxito!",
     "oauth.discord.link-canceled": "Cancelaste el proceso de autenticación con Discord.",
     "oauth.discord.no-linked-account": "No pudimos iniciar sesión porque no hay ninguna cuenta de PalWeb vinculada a la cuenta de Discord proporcionada o que tenga el mismo correo electrónico. Inicia sesión normalmente primero y vincula tu cuenta de Discord antes de intentar iniciar sesión de esta manera.",
     "oauth.discord.auth-failed": "No se pudo autenticar con Discord.",

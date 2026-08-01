@@ -115,6 +115,11 @@
     "activity": {
         "key": "نشاط"
     },
+    "badge": {
+        "notifications": {
+            "awarded": "حصلت على شارة \"{badge}\"! أبدعت!"
+        }
+    },
     "card": {
         "fields": {
             "status": "وضع",
@@ -438,6 +443,9 @@
         },
         "profile": "الملفّ الشخصيّ",
         "notifications": {
+            "signed-up": "انبسطنا من معرفتك، يا {user}!",
+            "signed-in": "أهلًا بعودتك، يا {user}!",
+            "signed-out": "منشوفك قريبًا، يا {user}!",
             "preferences-saved": "تمّ حفظ إعداداتك!",
             "preferences-saved-error": "فشل حفظ إعدادات المستخدم.",
             "role-granted": "تم منح دور الطالب بنجاح.",
@@ -1424,17 +1432,11 @@
     },
     "auth.failed": "هدا غلط، إيش مالك؟",
     "auth.throttle": "عدد محاولات تسجيل الدخول كبير جدًا. يرجى المحاولة مرة أخرى بعد :seconds seconds.",
-    "signin.message": "أهلًا بعودتك، يا {user}!",
-    "signin.message.head": "هلا!",
-    "signout.message": "منشوفك قريبًا، يا {user}!",
-    "signout.message.head": "سلامات!",
-    "signup.message": "انبسطنا من معرفتك، يا {user}!",
-    "signup.message.head": "أهلا وسهلا!",
     "created": "تمّ إنشاء :thing بنجاح!",
     "updated": "تمّ تحديث :thing بنجاح!",
     "deleted": "تمّ حذف :thing بنجاح!",
-    "badges.get": "حصلت على شارة \":badge\"! أبدعت!",
     "oauth.discord.already-linked": "حساب ديسكورد الخاص بك مرتبط بالفعل.",
+    "oauth.discord.link-success": "تمّ ربط حسابك على ديسكورد بنجاح!",
     "oauth.discord.link-canceled": "لقد ألغيت عملية المصادقة على ديسكورد.",
     "oauth.discord.no-linked-account": "لم نتمكن من تسجيل دخولك لعدم وجود حساب بالويب مرتبط بحساب ديسكورد المُقدّم أو يحمل نفس البريد الإلكتروني. يُرجى تسجيل الدخول بالطريقة المعتادة أولاً، ثم ربط حساب ديسكورد الخاص بك قبل محاولة تسجيل الدخول بهذه الطريقة.",
     "oauth.discord.auth-failed": "لا يمكنك المصادقة على ديسكورد.",

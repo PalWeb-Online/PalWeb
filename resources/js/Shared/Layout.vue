@@ -15,7 +15,7 @@ import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
+const {t, locale} = useI18n();
 
 defineProps({
     section: {
@@ -31,7 +31,6 @@ const NotificationStore = useNotificationStore();
 const page = usePage();
 const {browserOnline} = useConnectionStatus(Echo);
 
-const locale = computed(() => page.props.locale ?? 'en');
 const syncDocumentLocale = (newLocale) => {
     document.documentElement.lang = newLocale;
 };
@@ -56,10 +55,10 @@ onMounted(() => {
     if (userId) {
         window.Echo.private(`users.${userId}`)
             .listen('LessonProgressUpdated', (e) => {
-                NotificationStore.addNotification(e.message, e.type);
+                NotificationStore.notify(e.notification ?? e);
             })
             .listen('UserNotificationSent', (e) => {
-                NotificationStore.addNotification(e.message, e.type);
+                NotificationStore.notify(e.notification ?? e);
             });
     }
 });
@@ -78,23 +77,22 @@ watch(browserOnline, (isOnline) => {
     lastBrowserOnlineState = isOnline;
 
     if (!isOnline) {
-        NotificationStore.addNotification(
-            t('layout.notifications.offline'),
-            'warning',
-            5000
-        );
+        NotificationStore.addNotification(t('layout.notifications.offline'), 'warning');
         return;
     }
 
-    NotificationStore.addNotification(t('layout.notifications.online'), 'success', 3000);
+    NotificationStore.addNotification(t('layout.notifications.online'));
 }, {immediate: true});
 
-watch(() => page.props.flash.notification,
+watch(
+    () => page.props.flash.notification,
     (notification) => {
         if (notification) {
-            NotificationStore.addNotification(notification.message, notification.type);
+            NotificationStore.notify(notification);
         }
-    });
+    },
+    {immediate: true}
+);
 
 watch(
     () => page.props.locale,
@@ -115,7 +113,7 @@ watch(
         <Footer/>
 
         <div class="app-container-pattern" aria-hidden="true">
-            <BackgroundPattern :section="section" />
+            <BackgroundPattern :section="section"/>
         </div>
     </div>
 

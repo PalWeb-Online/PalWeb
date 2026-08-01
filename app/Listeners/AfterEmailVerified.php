@@ -21,10 +21,12 @@ class AfterEmailVerified
         if ($badge && ! $event->user->badges()->whereKey($badge->id)->exists()) {
             $event->user->badges()->attach($badge);
 
-            UserNotificationSent::dispatch(
-                $event->user->id,
-                __('badges.get', ['badge' => $badge->title]),
-            );
+            UserNotificationSent::dispatch($event->user->id, [
+                'key' => 'badge.notifications.awarded',
+                'params' => [
+                    'badge' => $badge->title,
+                ]
+            ]);
         }
 
         try {

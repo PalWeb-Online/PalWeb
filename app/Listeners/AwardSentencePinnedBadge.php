@@ -19,10 +19,12 @@ class AwardSentencePinnedBadge
         if ($badge && ! $event->user->badges()->whereKey($badge->id)->exists() && Sentence::whereHasBookmark($event->user)->count() >= 5) {
             $event->user->badges()->attach($badge);
 
-            UserNotificationSent::dispatch(
-                $event->user->id,
-                __('badges.get', ['badge' => $badge->title]),
-            );
+            UserNotificationSent::dispatch($event->user->id, [
+                'key' => 'badge.notifications.awarded',
+                'params' => [
+                    'badge' => $badge->title,
+                ]
+            ]);
         }
     }
 }

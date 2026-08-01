@@ -17,10 +17,12 @@ class DiscordController extends Controller
         if ($user && $badge && ! $user->badges()->whereKey($badge->id)->exists()) {
             $user->badges()->attach($badge);
 
-            UserNotificationSent::dispatch(
-                $user->id,
-                __('badges.get', ['badge' => $badge->title]),
-            );
+            UserNotificationSent::dispatch($user->id, [
+                'key' => 'badge.notifications.awarded',
+                'params' => [
+                    'badge' => $badge->title,
+                ]
+            ]);
         }
     }
 }

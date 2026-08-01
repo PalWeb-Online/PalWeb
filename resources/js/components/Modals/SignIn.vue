@@ -61,7 +61,7 @@ const signIn = async () => {
         emit('close');
 
         setTimeout(() => {
-            NotificationStore.addNotification(t('signin.message', {
+            NotificationStore.addNotification(t('user.notifications.signed-in', {
                 user: locale.value === 'ar'
                     ? UserStore.user.ar_name
                     : UserStore.user.name

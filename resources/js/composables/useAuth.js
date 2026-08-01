@@ -104,7 +104,7 @@ export function useAuth() {
             await afterSignOut?.(data);
 
             setTimeout(() => {
-                NotificationStore.addNotification(t('signout.message', {
+                NotificationStore.addNotification(t('user.notifications.signed-out', {
                     user: locale.value === 'ar' ? data.user.ar_name : data.user.name,
                 }));
             }, 300);

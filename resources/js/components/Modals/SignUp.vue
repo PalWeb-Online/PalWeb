@@ -51,7 +51,7 @@ const signUp = async () => {
 
         emit('close');
 
-        NotificationStore.addNotification(t('signup.message', {
+        NotificationStore.addNotification(t('user.notifications.signed-up', {
             user: locale.value === 'ar'
                 ? UserStore.user.ar_name
                 : UserStore.user.name

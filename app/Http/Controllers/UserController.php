@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -116,22 +117,30 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $request->validate([
-            'srs_settings' => 'required|array',
-            'srs_settings.new_limit' => 'integer|min:0|max:100',
-            'srs_settings.review_limit' => 'integer|min:0|max:300',
-            'srs_settings.learning_steps' => 'integer|min:1|max:5',
-            'srs_settings.prompt_type' => 'string',
+        $validated = $request->validate([
+            'srs_settings' => ['required_without:theme', 'array'],
+            'srs_settings.new_limit' => ['integer', 'min:0', 'max:100'],
+            'srs_settings.review_limit' => ['integer', 'min:0', 'max:300'],
+            'srs_settings.learning_steps' => ['integer', 'min:1', 'max:5'],
+            'srs_settings.prompt_type' => ['string'],
+            'theme' => ['required_without:srs_settings', Rule::in(['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'])],
         ]);
 
         $preferences = $user->preferences ?? [];
-        $preferences['srs'] = array_merge($preferences['srs'] ?? [], $request->input('srs_settings'));
+
+        if (array_key_exists('srs_settings', $validated)) {
+            $preferences['srs'] = array_merge($preferences['srs'] ?? [], $validated['srs_settings']);
+        }
+
+        if (array_key_exists('theme', $validated)) {
+            $preferences['theme'] = $validated['theme'];
+        }
 
         $user->preferences = $preferences;
         $user->save();
 
         return response()->json([
-            'preferences' => $user->preferences
+            'preferences' => array_replace_recursive(config('preferences'), $user->preferences ?? []),
         ]);
     }
 

@@ -19,10 +19,12 @@ class AwardTermPinnedBadge
         if ($badge && ! $event->user->badges()->whereKey($badge->id)->exists() && Term::whereHasBookmark($event->user)->count() >= 10) {
             $event->user->badges()->attach($badge);
 
-            UserNotificationSent::dispatch(
-                $event->user->id,
-                __('badges.get', ['badge' => $badge->title]),
-            );
+            UserNotificationSent::dispatch($event->user->id, [
+                'key' => 'badge.notifications.awarded',
+                'params' => [
+                    'badge' => $badge->title,
+                ]
+            ]);
         }
     }
 }
