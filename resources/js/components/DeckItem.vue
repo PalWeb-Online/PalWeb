@@ -6,6 +6,9 @@ import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTooltip from "./AppTooltip.vue";
+import {useUserStore} from "../stores/UserStore.js";
+
+const UserStore = useUserStore();
 
 const props = defineProps({
     model: {
@@ -39,7 +42,11 @@ const {deck, blurb, isLoading} = useDeck(props);
 <template>
     <template v-if="! isLoading">
         <div class="model-item-container deck-item-container">
-            <div v-if="!deck.unlocked" class="model-item-overlay"
+            <div v-if="!UserStore.isUser" class="model-item-overlay"
+                 @mousemove="tooltip.showTooltip($t('deck.messages.guest'), $event);"
+                 @mouseleave="tooltip.hideTooltip()"></div>
+<!--            this state persists after you sign in until you refresh or renavigate-->
+            <div v-else-if="!deck.unlocked" class="model-item-overlay"
                  @mousemove="tooltip.showTooltip($t('components.deck.locked'), $event);"
                  @mouseleave="tooltip.hideTooltip()"></div>
 

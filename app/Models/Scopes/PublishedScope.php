@@ -36,15 +36,13 @@ class PublishedScope implements Scope
         }
 
         if ($table === 'activities' || $table === 'dialogs') {
-            $column = $table === 'activities' ? 'activity_id' : 'dialog_id';
+            $lessonColumn = $table === 'activities' ? 'activity_id' : 'dialog_id';
 
-            $builder->where(function ($query) use ($column) {
-                $query->whereNotExists(function ($subquery) use ($column) {
-                    $subquery->select(DB::raw(1))
-                        ->from('lessons')
-                        ->whereColumn('lessons.'.$column, 'id')
-                        ->where('published', false);
-                });
+            $builder->whereNotExists(function ($subquery) use ($table, $lessonColumn) {
+                $subquery->select(DB::raw(1))
+                    ->from('lessons')
+                    ->whereColumn('lessons.'.$lessonColumn, $table.'.id')
+                    ->where('lessons.published', false);
             });
         }
     }

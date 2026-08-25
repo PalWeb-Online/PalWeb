@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Office;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ActivityResource;
+use App\Http\Resources\DeckResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\UnitResource;
+use App\Models\Deck;
 use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
+use App\Services\TermService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -82,6 +84,34 @@ class LessonPlannerController extends Controller
                 'title' => $unit->title,
                 'position' => $unit->position,
             ],
+        ]);
+    }
+
+    public function unitDecks(Unit $unit, TermService $termService): \Inertia\Response
+    {
+        $deckIds = $unit->lessons()
+            ->whereNotNull('deck_id')
+            ->orderBy('unit_position')
+            ->pluck('deck_id')
+            ->unique()
+            ->values();
+
+        $decks = Deck::query()
+            ->whereKey($deckIds)
+            ->with([
+                'terms' => fn ($q) => $q
+                    ->withItemData(),
+            ])
+            ->get()
+            ->sortBy(fn (Deck $deck) => $deckIds->search($deck->getKey()))
+            ->values();
+
+        $decks->each(fn (Deck $deck) => $termService->hydratePronunciations($deck->terms));
+
+        return Inertia::render('Office/LessonPlanner/Decks', [
+            'section' => 'office',
+            'unit' => new UnitResource($unit),
+            'decks' => DeckResource::collection($decks),
         ]);
     }
 

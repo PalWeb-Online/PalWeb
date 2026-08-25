@@ -170,6 +170,9 @@
     },
     "deck": {
         "key": "Baraja",
+        "messages": {
+            "guest": "Debes estar ingresado en tu cuenta para ver Barajas."
+        },
         "notifications": {
             "copy-link-success": "Enlace a la Baraja ha sido copiado al portapapeles.",
             "copy-confirm": "¿Estás seguro de que quieres crear una copia de esta Baraja?",

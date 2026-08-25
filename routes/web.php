@@ -390,6 +390,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('lesson-planner.index');
             Route::patch('/', 'update')->name('lesson-planner.update');
             Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
+            Route::get('/unit/{unit}/decks', 'unitDecks')->name('lesson-planner.unit-decks');
             Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
             Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
             Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');

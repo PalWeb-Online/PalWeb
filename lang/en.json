@@ -170,6 +170,9 @@
     },
     "deck": {
         "key": "Deck",
+        "messages": {
+            "guest": "You must be signed in to view Decks."
+        },
         "notifications": {
             "copy-link-success": "Link to Deck copied to clipboard.",
             "copy-confirm": "Are you sure you want to create a copy of this Deck?",

@@ -148,6 +148,8 @@ const removeLesson = (lesson) => {
                 </AppTip>
             </div>
 
+            <Link v-if="unit" :href="route('lesson-planner.unit-decks', unit.id)">Manage Decks</Link>
+
             <AppTip>
                 <p>{{
                         $t('forms.messages.current-status', {
