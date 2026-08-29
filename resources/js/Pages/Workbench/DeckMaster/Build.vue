@@ -65,17 +65,17 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
 onMounted(async () => {
     await loadForm();
-
-    watch(
-        () => SearchStore.data.selectedModel,
-        (newModel) => {
-            if (newModel) {
-                insertTerm(newModel);
-                SearchStore.deselectModel();
-            }
-        }
-    );
 });
+
+watch(
+    () => SearchStore.data.selectedModel,
+    (newModel) => {
+        if (newModel) {
+            insertTerm(newModel);
+            SearchStore.deselectModel();
+        }
+    }
+);
 
 watch(() => props.deckId, async () => {
     await reloadForm();
@@ -123,7 +123,8 @@ watch(() => props.deckId, async () => {
                         })
                     }}</p>
                 <template v-if="Object.keys(validationErrors).length">
-                    <p style="font-weight: 700">{{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.deck')}) }}</p>
+                    <p style="font-weight: 700">
+                        {{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.deck')}) }}</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>

@@ -54,6 +54,20 @@ class Term extends Model
         ];
     }
 
+    protected function derivedType(): AttributeCast
+    {
+        return AttributeCast::make(
+            get: function (): ?string {
+                $derivedTypes = ['ap', 'pp', 'vn'];
+
+                return $this->relatedBy
+                    ->first(fn (Term $term) => in_array($term->pivot->type, $derivedTypes, true))
+                    ?->pivot
+                    ?->type;
+            }
+        );
+    }
+
     public function bookmarks(): MorphMany
     {
         return $this->morphMany(Bookmark::class, 'markable');
@@ -141,7 +155,13 @@ class Term extends Model
     public function relatives(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_relative', 'term_id', 'relative_id')
-            ->withPivot('type', 'gloss_id');
+            ->withPivot('id', 'reciprocal_id', 'type', 'gloss_id');
+    }
+
+    public function relatedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(Term::class, 'term_relative', 'relative_id', 'term_id')
+            ->withPivot('id', 'reciprocal_id', 'type', 'gloss_id');
     }
 
     #[Scope]

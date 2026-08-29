@@ -59,17 +59,17 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
 onMounted(async () => {
     await loadForm();
-
-    watch(
-        () => SearchStore.data.selectedModel,
-        (newModel) => {
-            if (newModel) {
-                insertSentence(newModel);
-                SearchStore.deselectModel();
-            }
-        }
-    );
 });
+
+watch(
+    () => SearchStore.data.selectedModel,
+    (newModel) => {
+        if (newModel) {
+            insertSentence(newModel);
+            SearchStore.deselectModel();
+        }
+    }
+);
 
 watch(() => props.dialogId, async () => {
     await reloadForm();

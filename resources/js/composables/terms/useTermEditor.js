@@ -46,7 +46,10 @@ export function useTermEditor({
             withAttribute: form.category === 'verb',
         })];
         form.inflections = model?.inflections ?? [];
-        form.relatives = model?.relatives ?? [];
+        form.relatives = (model?.relatives ?? []).map(relative => ({
+            ...relative,
+            original_type: relative.type,
+        }));
         form.image = model?.image ?? '';
         form.usage = model?.usage ?? '';
 
@@ -143,7 +146,7 @@ export function useTermEditor({
 
     const insertRelative = (relative) => {
         editor.form.relatives.push({
-            slug: relative.slug, type: '',
+            slug: relative.slug, type: '', original_type: '',
         });
     };
 

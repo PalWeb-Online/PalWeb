@@ -373,6 +373,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/word-logger')->controller(WordLoggerController::class)->group(function () {
             Route::get('/', 'index')->name('word-logger.index');
+            Route::get('/relatives', 'relatives')->name('word-logger.relatives');
+            Route::get('/sentences', 'sentences')->name('word-logger.sentences');
+            Route::get('/inflections', 'inflections')->name('word-logger.inflections');
             Route::get('/term/{term?}', 'term')->name('word-logger.term');
         });
 

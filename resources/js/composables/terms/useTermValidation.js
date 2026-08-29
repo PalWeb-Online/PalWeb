@@ -89,6 +89,8 @@ export function useTermValidation({
             }
         });
 
+        const seenRelatives = new Set();
+
         (form.relatives ?? []).forEach((relative, index) => {
             if (!isNonEmptyString(relative.slug)) {
                 errors[`relatives.${index}.slug`] = t('validation.required', {field: t('forms.fields.slug')});
@@ -101,6 +103,18 @@ export function useTermValidation({
             if (glossRelativeTypes.includes(relative.type) && isEmpty(relative.gloss_id)) {
                 errors[`relatives.${index}.gloss_id`] = t('term.validation.relative-gloss');
             }
+
+            const key = [
+                glossRelativeTypes.includes(relative.type) ? relative.gloss_id : '',
+                relative.id ?? relative.slug,
+                relative.type,
+            ].join(':');
+
+            if (seenRelatives.has(key)) {
+                errors[`relatives.${index}.type`] = 'There\'s already such a link between these two Terms.';
+            }
+
+            seenRelatives.add(key);
         });
 
         (form.glosses ?? []).forEach((gloss, glossIndex) => {

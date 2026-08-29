@@ -18,27 +18,30 @@ use App\Models\Spelling;
 use App\Models\Term;
 use App\Repositories\TermRepository;
 use App\Services\SearchService;
+use App\Services\TermRelativeService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
-use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
+use Inertia\Response;
+use Maize\Markable\Models\Bookmark;
 use Throwable;
 
 class TermController extends Controller
 {
     public function __construct(
         protected TermRepository $termRepository,
-        protected TermService $termService
-    ) {
-    }
+        protected TermService $termService,
+        protected TermRelativeService $termRelativeService,
+    ) {}
 
     public function pin(Request $request, Term $term): JsonResponse
     {
@@ -57,7 +60,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
         $featuredTerm?->load(['attributes', 'glosses.attributes']);
@@ -67,7 +70,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function show(Term $term): \Inertia\Response
+    public function show(Term $term): Response
     {
         return Inertia::render('Library/Terms/Show', [
             'termId' => $term->id,
@@ -90,7 +93,7 @@ class TermController extends Controller
         $currentPage = $request->integer('page', 1);
 
         $termsCollection = $searchService->search($filters)['terms'];
-        $terms = new \Illuminate\Pagination\LengthAwarePaginator(
+        $terms = new LengthAwarePaginator(
             $termsCollection->forPage($currentPage, $perPage)->values(),
             $termsCollection->count(),
             $perPage,
@@ -127,6 +130,10 @@ class TermController extends Controller
 
             $terms = Term::query()
                 ->whereIn('id', $termIds)
+                ->orderByRaw(
+                    'FIELD(id, '.$termIds->map(fn () => '?')->implode(',').')',
+                    $termIds->all()
+                )
                 ->with([
                     'spellings',
                     'attributes',
@@ -136,6 +143,7 @@ class TermController extends Controller
                     'glosses.attributes',
                     'inflections',
                     'relatives',
+                    'relatedBy',
                     'cards',
                     'decks' => fn ($q) => $q->limit(10),
                 ])
@@ -164,7 +172,7 @@ class TermController extends Controller
         }
 
         return response()->json([
-            'terms' => $payload
+            'terms' => $payload,
         ]);
     }
 
@@ -214,7 +222,7 @@ class TermController extends Controller
                 Attribute::firstWhere('attribute', $attribute)->terms()->attach($term);
             }
 
-            $this->handleRelatives($term, $formData['relatives']);
+            $this->termRelativeService->sync($term, $formData['relatives']);
             $this->handlePatterns($term, $formData['patterns']);
 
             $this->handleDependents($term, $formData['spellings'], Spelling::class);
@@ -266,7 +274,7 @@ class TermController extends Controller
             $term->refresh();
 
             $this->handleAttributes($term, $formData['attributes'], 'terms');
-            $this->handleRelatives($term, $formData['relatives']);
+            $this->termRelativeService->sync($term, $formData['relatives']);
             $this->handlePatterns($term, $formData['patterns']);
 
             $this->handleDependents($term, $formData['spellings'], Spelling::class, $term->spellings);
@@ -364,6 +372,8 @@ class TermController extends Controller
 
     public function handleAttributes(object $model, array $attributes, string $relation): void
     {
+        $model->load('attributes');
+
         $requestAttributes = array_map(fn ($item) => $item['attribute'], $attributes);
         foreach ($requestAttributes as $attribute) {
             Attribute::firstWhere('attribute', $attribute)->{$relation}()->syncWithoutDetaching($model->id);
@@ -372,51 +382,6 @@ class TermController extends Controller
         $detachableAttributes = array_diff($model->attributes->pluck('attribute')->toArray(), $requestAttributes);
         foreach ($detachableAttributes as $attribute) {
             Attribute::firstWhere('attribute', $attribute)->{$relation}()->detach($model);
-        }
-    }
-
-    private function handleRelatives(Term $term, array $relatives): void
-    {
-        $attachedTerms = $term->relatives->pluck('slug')->toArray();
-
-        $requestTerms = [];
-        foreach ($relatives as $relative) {
-            $relativeTerm = Term::firstWhere('slug', $relative['slug']);
-            $requestTerms[] = $relativeTerm->slug;
-
-            if (! in_array($relativeTerm->slug, $attachedTerms)) {
-                $term->relatives()->attach($relativeTerm, [
-                    'type' => $relative['type'],
-                    'gloss_id' => $relative['gloss_id'] ?? null,
-                ]);
-
-                switch ($relative['type']) {
-                    default:
-                        $relativeTerm->relatives()->attach($term, ['type' => $relative['type']]);
-                        break;
-                    case 'component':
-                        $relativeTerm->relatives()->attach($term, ['type' => 'descendant']);
-                        break;
-                    case 'descendant':
-                        $relativeTerm->relatives()->attach($term, ['type' => 'component']);
-                        break;
-                    case in_array($relative['type'], ['ap', 'pp', 'vn']):
-                        $relativeTerm->relatives()->attach($term, ['type' => 'source']);
-                        break;
-                }
-            } else {
-                $term->relatives()->updateExistingPivot($relativeTerm->id, [
-                    'type' => $relative['type'],
-                    'gloss_id' => $relative['gloss_id'] ?? null,
-                ]);
-            }
-        }
-
-        $detachableSlugs = array_diff($attachedTerms, $requestTerms);
-        foreach ($detachableSlugs as $slug) {
-            $detachableTerm = Term::firstWhere('slug', $slug);
-            $term->relatives()->detach($detachableTerm);
-            $detachableTerm->relatives()->detach($term);
         }
     }
 

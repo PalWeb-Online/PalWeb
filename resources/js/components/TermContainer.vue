@@ -17,6 +17,7 @@ import CardItem from "./CardItem.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import GlossItem from "./GlossItem.vue";
 import UserAvatarWrapper from "./UserAvatarWrapper.vue";
+import AppTip from "./AppTip.vue";
 
 const UserStore = useUserStore();
 
@@ -90,6 +91,10 @@ const references = computed(() =>
 
 const derivatives = computed(() =>
     term.relatives.filter(relative => ['ap', 'pp', 'vn'].includes(relative.type)) ?? []
+);
+
+const source = computed(() =>
+    term.relatives.find(relative => relative.type === 'source')
 );
 
 const hostForms = computed(() =>
@@ -176,22 +181,20 @@ const etymology = computed(() => {
         });
     }
 
-    const derivative = term.patterns.find(pattern => pattern.type === 'singular' && pattern.form)?.pattern;
     const derivativeMap = {
         ap: 'Active Participle',
         pp: 'Passive Participle',
         vn: 'Verbal Noun',
     };
 
-    const source = term.relatives.find(relative => relative.type === 'source');
     data.source = [];
 
-    if (source) {
-        data.source.push({type: 'text', value: `<b>${derivativeMap[derivative]}</b> of `});
+    if (source.value && term.derived_type) {
+        data.source.push({type: 'text', value: `<b>${derivativeMap[term.derived_type]}</b> of `});
         data.source.push({
             type: 'link',
-            slug: source.slug,
-            label: `${source.term} (${source.translit})`,
+            slug: source.value.slug,
+            label: `${source.value.term} (${source.value.translit})`,
         });
         data.source.push({type: 'text', value: '. '});
     }
@@ -224,37 +227,51 @@ const etymology = computed(() => {
                     <div class="term-headword-data">{{ $t(`term.category.${term.category}`) }}.
                         <template v-for="attribute in term.attributes" :key="attribute.id">
                             <template v-if="attributeLinks[attribute.attribute]">
-                                <a
-                                    :href="attributeLinks[attribute.attribute].url"
-                                    target="_blank"
-                                    class="attribute-link"
-                                >
+                                <a :href="attributeLinks[attribute.attribute].url" class="attribute-link"
+                                   target="_blank">
                                     {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
-                                    <span> </span>
+                                    {{ ' ' }}
                                 </a>
                             </template>
                             <template v-else-if="['idiom', 'clitic'].includes(attribute.attribute)">
                                 <span style="font-weight: 400; font-style: italic">
                                     {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
-                                    <span> </span>
+                                    {{ ' ' }}
                                 </span>
                             </template>
                             <template v-else>
                                 <span style="font-weight: 400">
                                     {{ $t(`term.filters.attributes.${localeKey(attribute.attribute)}`) }}.
-                                    <span> </span>
+                                    {{ ' ' }}
                                 </span>
                             </template>
                         </template>
                         <template v-if="constructForms.length > 0">
                             <span style="font-weight: 400">{{ $t('components.term.construct') }}</span>
-                            {{ constructForms[0].inflection }}
-                            ({{ constructForms[0].translit }})
+                            {{ constructForms[0].inflection }} ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="term.category === 'verb'">
-                            <a v-for="pattern in term.patterns"
-                               :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
-                                {{ $t('term.filters.form.option', {form: pattern.form}) }}.</a>
+                            <a :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
+                                {{ $t('term.filters.form.option', {form: term.patterns[0]?.form}) }}.</a>
+                            {{ ' ' }}
+                            <template v-for="derivative in derivatives">
+                                <span style="font-weight: 400">{{ derivative.type }}:</span>
+                                {{ ' ' }}
+                                <Link :href="route('terms.show', derivative.slug)">
+                                    {{ derivative.term }} ({{ derivative.translit }})
+                                </Link>
+                                {{ ' ' }}
+                            </template>
+                        </template>
+                        <template v-if="term.derived_type">
+                            <a :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
+                                {{ term.derived_type }}.</a>
+                            {{ ' ' }}
+                            <span style="font-weight: 400">verb:</span>
+                            {{ ' ' }}
+                            <Link :href="route('terms.show', source.slug)">
+                                {{ source.term }} ({{ source.translit }})
+                            </Link>
                         </template>
                     </div>
                 </div>
@@ -341,6 +358,11 @@ const etymology = computed(() => {
             <div class="window-section-head">
                 <h2>{{ $t('components.term.sections.glosses') }}</h2>
             </div>
+            <AppTip v-if="term.derived_type === 'ap'">
+                <p>You're viewing the page for a verb's <b>Active Participle</b>. Because its meaning is determined by
+                    the verb it's derived from, some definitions may be abridged. Refer to the source verb for a full
+                    list of this Term's Glosses & related Terms.</p>
+            </AppTip>
             <div class="term-glosses">
                 <GlossItem v-for="(gloss, index) in term.glosses" :key="gloss.id" :gloss="gloss" :position="index + 1">
                     <template #relatives>
@@ -348,16 +370,14 @@ const etymology = computed(() => {
                             {{ $t('components.term.relatives.synonym-abbr') }}
                             <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
                                   :href="route('terms.show', synonym.slug)">
-                                {{ synonym.term }}
-                                ({{ synonym.translit }})
+                                {{ synonym.term }} ({{ synonym.translit }})
                             </Link>
                         </div>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
                             {{ $t('components.term.relatives.antonym-abbr') }}
                             <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
                                   :href="route('terms.show', antonym.slug)">
-                                {{ antonym.term }}
-                                ({{ antonym.translit }})
+                                {{ antonym.term }} ({{ antonym.translit }})
                             </Link>
                         </div>
                         <div class="gloss-item-relatives"
@@ -366,8 +386,8 @@ const etymology = computed(() => {
                              :key="pair.id"
                         >
                             {{ pair.type }}
-                            <Link :href="route('terms.show', pair.slug)">{{ pair.term }}
-                                ({{ pair.translit }})
+                            <Link :href="route('terms.show', pair.slug)">
+                                {{ pair.term }} ({{ pair.translit }})
                             </Link>
                         </div>
                     </template>
@@ -388,7 +408,9 @@ const etymology = computed(() => {
 
                             <div class="model-list-toggle-expand" v-if="sentencesFetched.get(gloss.id)">
                                 <button @click="toggleShowSentences(gloss.id)">
-                                    {{ showSentences.get(gloss.id) ? $t('components.common.hide') : $t('components.common.expand') }}
+                                    {{
+                                        showSentences.get(gloss.id) ? $t('components.common.hide') : $t('components.common.expand')
+                                    }}
                                 </button>
                             </div>
                         </div>
@@ -422,7 +444,8 @@ const etymology = computed(() => {
 
             <!--            note that my user is hard-coded -->
             <div v-if="term.usage" class="user-item comment-item l" style="padding: 2.4rem">
-                <UserAvatarWrapper :user="{username: 'permanent.intifada', avatar_url: '/img/avatars/character02.webp'}"/>
+                <UserAvatarWrapper
+                    :user="{username: 'permanent.intifada', avatar_url: '/img/avatars/character02.webp'}"/>
                 <div class="user-data-wrapper">
                     <div class="user-comment">
                         <div class="user-comment-title">

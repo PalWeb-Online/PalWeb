@@ -16,17 +16,15 @@ const remove = (index) => {
     QueueStore.removeItem(QueueStore.queue[index]);
 };
 
-onMounted(() => {
-    watch(
-        () => SearchStore.data.selectedModel,
-        (newModel) => {
-            if (newModel) {
-                QueueStore.fetchDeckItems(newModel.id)
-                SearchStore.deselectModel();
-            }
+watch(
+    () => SearchStore.data.selectedModel,
+    (newModel) => {
+        if (newModel) {
+            QueueStore.fetchDeckItems(newModel.id)
+            SearchStore.deselectModel();
         }
-    );
-});
+    }
+);
 </script>
 
 <template>

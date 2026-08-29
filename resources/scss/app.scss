@@ -323,6 +323,10 @@ html[lang="ar"] {
         font-weight: 700;
         color: var(--color-dark-primary);
     }
+
+    select {
+        width: 100%;
+    }
 }
 
 .toggle-button-wrapper {

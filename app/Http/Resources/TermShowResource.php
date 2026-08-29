@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TermShowResource extends TermResource
 {
@@ -22,6 +23,7 @@ class TermShowResource extends TermResource
             'usage' => $this->usage,
             'image' => $this->image,
             'etymology' => $this->etymology,
+            'derived_type' => $this->derived_type,
             'attributes' => $this->whenLoaded('attributes', fn () => $this->sorted_tags),
             'pronunciations_count' => $this->whenCounted('pronunciations'),
             'spellings' => $this->whenLoaded('spellings'),
@@ -30,8 +32,13 @@ class TermShowResource extends TermResource
                 'slug' => $relative->slug,
                 'term' => $relative->term,
                 'translit' => $relative->translit,
+                'pivot_id' => $relative->pivot->id,
                 'type' => $relative->pivot->type,
                 'gloss_id' => $relative->pivot->gloss_id,
+                'reciprocal_id' => $relative->pivot->reciprocal_id,
+                'reciprocal_type' => $relative->pivot->reciprocal_id
+                    ? DB::table('term_relative')->where('id', $relative->pivot->reciprocal_id)->value('type')
+                    : null,
             ])),
             'patterns' => $this->whenLoaded('patterns', fn () => $this->patterns->map(fn ($pattern) => [
                 'type' => $pattern->type,
