@@ -177,6 +177,9 @@
             "copy-link-success": "Enlace a la Baraja ha sido copiado al portapapeles.",
             "copy-confirm": "¿Estás seguro de que quieres crear una copia de esta Baraja?",
             "copy-success": "¡Se ha creado una copia de la Baraja!"
+        },
+        "validation": {
+            "duplicate-term-gloss": "Este Término ya está en la Baraja con la Definición seleccionada."
         }
     },
     "dialect": {

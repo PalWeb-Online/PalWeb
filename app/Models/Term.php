@@ -93,7 +93,7 @@ class Term extends Model
     public function decks(): BelongsToMany
     {
         return $this->belongsToMany(Deck::class)
-            ->withPivot('position');
+            ->withPivot('id', 'gloss_id', 'position');
     }
 
     public function root(): BelongsTo

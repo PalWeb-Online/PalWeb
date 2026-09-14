@@ -161,7 +161,7 @@ watch(() => props.deckId, async () => {
             <div class="window-section-head">
                 <h2>{{ $t('models.terms') }}</h2>
             </div>
-            <draggable :list="form.terms" itemKey="id" handle=".handle"
+            <draggable :list="form.terms" itemKey="deckTermKey" handle=".handle"
                        @end="updatePosition()"
                        class="model-list index-list draggable">
                 <template #item="{ element, index }">
