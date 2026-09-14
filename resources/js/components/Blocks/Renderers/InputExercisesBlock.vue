@@ -3,6 +3,7 @@ import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import DialogLine from "../../Charts/DialogLine.vue";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
+import AppTip from "../../AppTip.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -46,6 +47,9 @@ const {
                             type="button" @click="ActivitySession.markCorrect(item.id)">Mark as Correct
                     </button>
                 </div>
+                <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+                    <p>{{ item.tip }}</p>
+                </AppTip>
             </div>
         </template>
     </div>

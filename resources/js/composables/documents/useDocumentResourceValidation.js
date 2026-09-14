@@ -319,11 +319,11 @@ export function useDocumentResourceValidation({
 
         pairs.forEach((pair, pairIndex) => {
             if (!isNonEmptyString(pair?.start)) {
-                issues.push(`${where}: ${t('validate.required', {field: t('exercise.pair-start', {index: pairIndex + 1})})}`);
+                issues.push(`${where}: ${t('validation.required', {field: t('exercise.fields.pair-start', {index: pairIndex + 1})})}`);
             }
 
             if (!isNonEmptyString(pair?.end)) {
-                issues.push(`${where}: ${t('validate.required', {field: t('exercise.pair-end', {index: pairIndex + 1})})}`);
+                issues.push(`${where}: ${t('validation.required', {field: t('exercise.fields.pair-end', {index: pairIndex + 1})})}`);
             }
         });
     };

@@ -8,6 +8,26 @@ use Illuminate\Validation\ValidationException;
 
 class UpsertActivityRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $document = $this->input('document');
+
+        if (! is_array($document)) {
+            return;
+        }
+
+        $blocks = $document['blocks'] ?? [];
+
+        if (! is_array($blocks)) {
+            return;
+        }
+
+        $this->stripBlankExerciseTips($blocks);
+        $document['blocks'] = $blocks;
+
+        $this->merge(['document' => $document]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      */
@@ -48,5 +68,36 @@ class UpsertActivityRequest extends FormRequest
         if (!empty($errors)) {
             throw ValidationException::withMessages($errors);
         }
+    }
+
+    private function stripBlankExerciseTips(array &$blocks): void
+    {
+        foreach ($blocks as &$block) {
+            if (! is_array($block)) {
+                continue;
+            }
+
+            if (($block['type'] ?? null) === 'container' && is_array($block['blocks'] ?? null)) {
+                $this->stripBlankExerciseTips($block['blocks']);
+            }
+
+            if (($block['type'] ?? null) !== 'exercises' || ! is_array($block['items'] ?? null)) {
+                continue;
+            }
+
+            foreach ($block['items'] as &$exercise) {
+                if (
+                    is_array($exercise)
+                    && array_key_exists('tip', $exercise)
+                    && (! is_string($exercise['tip']) || trim($exercise['tip']) === '')
+                ) {
+                    unset($exercise['tip']);
+                }
+            }
+
+            unset($exercise);
+        }
+
+        unset($block);
     }
 }

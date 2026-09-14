@@ -11,7 +11,8 @@ const {
     addSelectOption,
     removeSelectOption,
     addSortableItem,
-    removeSortableItem
+    removeSortableItem,
+    setExerciseTip
 } = useDocumentBuilder();
 
 const props = defineProps({
@@ -261,6 +262,15 @@ const removeMatchPair = (ex, index) => {
                                 <div class="add-button" @click="addSortableItem(ex)">+</div>
                             </div>
                         </template>
+
+                        <details class="exercise-tip" :class="{ 'filled': ex.tip?.trim() }">
+                            <summary>{{ $t('exercise.fields.tip') }}</summary>
+                            <textarea
+                                :value="ex.tip ?? ''"
+                                :placeholder="$t('exercise.fields.tip')"
+                                @input="setExerciseTip(ex, $event.target.value)"
+                            />
+                        </details>
                     </div>
                     <div class="block-add-buttons" v-if="props.block.exerciseType">
                         <span>{{ $t('forms.actions.insert') }}</span>
@@ -302,7 +312,7 @@ const removeMatchPair = (ex, index) => {
         border: 0.1rem solid var(--color-medium-primary);
     }
 
-    input {
+    input, textarea {
         font-size: 1.4rem;
     }
 
@@ -358,6 +368,28 @@ const removeMatchPair = (ex, index) => {
 
         button {
             color: var(--color-dark-primary);
+        }
+    }
+
+    .exercise-tip {
+        background: var(--color-pastel-light);
+        border-radius: 0.8rem;
+        padding: 0.8rem;
+
+        &.filled {
+            color: white;
+            background: var(--color-dark-primary);
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 700;
+            padding-inline: 0.4rem;
+            user-select: none;
+        }
+
+        textarea {
+            margin-block-start: 0.8rem;
         }
     }
 }

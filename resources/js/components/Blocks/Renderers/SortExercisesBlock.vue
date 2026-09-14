@@ -3,6 +3,7 @@ import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
 import Draggable from "vuedraggable";
+import AppTip from "../../AppTip.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -64,6 +65,9 @@ const handleDragEnd = (exerciseId) => {
                         </div>
                     </div>
                 </div>
+                <AppTip v-if="ActivitySession.isViewingResults && ex.tip">
+                    <p>{{ ex.tip }}</p>
+                </AppTip>
             </div>
         </template>
     </div>

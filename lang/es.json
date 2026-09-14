@@ -216,7 +216,8 @@
             "pair-start": "Lado Inicial del Par {index}",
             "pair-end": "Lado Final del Par {index}",
             "sort-items": "Elementos a Ordenar",
-            "input-answer": "Respuesta"
+            "input-answer": "Respuesta",
+            "tip": "Justificación"
         },
         "prompts": {
             "input": "Contesta a la pregunta con una oración completa, siguiendo el formato del ejemplo.",

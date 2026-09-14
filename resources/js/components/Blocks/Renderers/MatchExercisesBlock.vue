@@ -4,6 +4,7 @@ import {shuffle} from "lodash";
 import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
+import AppTip from "../../AppTip.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -232,6 +233,9 @@ const getMatchState = (itemId, type, value) => {
                         </div>
                     </div>
                 </div>
+                <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+                    <p>{{ item.tip }}</p>
+                </AppTip>
             </div>
         </template>
     </div>

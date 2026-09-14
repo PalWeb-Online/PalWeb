@@ -216,7 +216,8 @@
             "pair-start": "Pair {index} Start Side",
             "pair-end": "Pair {index} End Side",
             "sort-items": "Sort Items",
-            "input-answer": "Answer"
+            "input-answer": "Answer",
+            "tip": "Justification"
         },
         "prompts": {
             "input": "Answer the prompt with a complete sentence, following the format of the example.",

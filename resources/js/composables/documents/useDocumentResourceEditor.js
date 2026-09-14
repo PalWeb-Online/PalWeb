@@ -10,6 +10,32 @@ export function useDocumentResourceEditor({
                                           }) {
     const documentLoader = useDocumentResourceLoader();
 
+    const stripBlankExerciseTips = (blocks = []) => {
+        if (!Array.isArray(blocks)) {
+            return;
+        }
+
+        blocks.forEach((block) => {
+            if (block?.type === 'container') {
+                stripBlankExerciseTips(block.blocks);
+            }
+
+            if (block?.type !== 'exercises' || !Array.isArray(block.items)) {
+                return;
+            }
+
+            block.items.forEach((exercise) => {
+                if (
+                    exercise
+                    && Object.prototype.hasOwnProperty.call(exercise, 'tip')
+                    && (typeof exercise.tip !== 'string' || exercise.tip.trim() === '')
+                ) {
+                    delete exercise.tip;
+                }
+            });
+        });
+    };
+
     const editor = useResourceEditor({
         ...options,
         afterLoad: async (model, context) => {
@@ -22,6 +48,12 @@ export function useDocumentResourceEditor({
             documentLoader.resetDocuments();
 
             await beforeReload?.();
+        },
+        beforeSave: (saveOptions, context) => {
+            const blocks = getBlocks(context.form.document) ?? [];
+            stripBlankExerciseTips(blocks);
+
+            return options.beforeSave?.(saveOptions, context);
         },
         afterDelete: async (response) => {
             documentLoader.resetDocuments();
