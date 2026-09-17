@@ -15,6 +15,7 @@ import PinButton from "../../../components/PinButton.vue";
 import TermActions from "../../../components/Actions/TermActions.vue";
 import {Link} from "@inertiajs/vue3";
 import TermRelativesEditor from "./TermRelativesEditor.vue";
+import draggable from 'vuedraggable';
 
 const props = defineProps({
     termId: {
@@ -53,6 +54,7 @@ const {
     addInflection,
     insertRelative,
     removeItem,
+    updateGlossPosition,
 } = useTermEditor({
     termId: computed(() => props.termId),
 });
@@ -590,69 +592,74 @@ defineOptions({
                             <div>{{ $t('models.glosses') }}</div>
                             <div class="field-item-add">+</div>
                         </div>
-                        <div class="field-block-body" v-if="form.glosses.length > 0">
-                            <div v-for="(gloss, index) in form.glosses" :key="index"
-                                 class="field-set">
-                                <img src="/img/trash.svg" alt="Delete" v-show="form.glosses.length > 1"
-                                     @click="removeItem(index, form.glosses)"/>
+                        <draggable :list="form.glosses" itemKey="termGlossKey" handle=".handle"
+                                   @end="updateGlossPosition()"
+                                   class="field-block-body draggable"
+                                   v-if="form.glosses.length > 0">
+                            <template #item="{ element: gloss, index }">
+                                <div class="field-set draggable-item">
+                                    <img src="/img/trash.svg" alt="Delete" v-show="form.glosses.length > 1"
+                                         @click="removeItem(index, form.glosses)"/>
+                                    <span class="handle material-symbols-rounded">drag_indicator</span>
 
-                                <div class="field-item">
-                                    <label>{{ $t('gloss.key') }}</label>
-                                    <input v-model="gloss.gloss" required/>
-                                    <div v-if="validationErrors[`glosses.${index}.gloss`]" class="field-error">
-                                        {{ validationErrors[`glosses.${index}.gloss`] }}
+                                    <div class="field-item">
+                                        <label>{{ $t('gloss.key') }}</label>
+                                        <input v-model="gloss.gloss" required/>
+                                        <div v-if="validationErrors[`glosses.${index}.gloss`]" class="field-error">
+                                            {{ validationErrors[`glosses.${index}.gloss`] }}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="field-block">
-                                    <div class="field-block-head" @click="addAttribute('gloss', index)">
-                                        <div>{{ $t('models.attributes') }}</div>
-                                        <div class="field-item-add">+</div>
-                                    </div>
-                                    <div class="field-block-body" v-if="gloss.attributes.length > 0">
-                                        <div class="field-set"
-                                             v-for="(attribute, i) in gloss.attributes" :key="i">
-                                            <img src="/img/trash.svg" alt="Delete"
-                                                 v-show="gloss.attributes.length > 1 || (form.category !== 'verb' && gloss.attributes.length > 0)"
-                                                 @click="removeItem(i, gloss.attributes)"/>
-                                            <div class="field-item">
-                                                <!--                                                todo: loop over these & group them -->
-                                                <select v-model="attribute.attribute">
-                                                    <option value="auxiliary">auxiliary</option>
-                                                    <option value="participle" v-if="form.category === 'adjective'">
-                                                        participle
-                                                    </option>
-                                                    <template v-if="form.category === 'verb'">
-                                                        <optgroup label="isPatient">
-                                                            <option value="unaccusative">unaccusative</option>
-                                                            <option value="mediopassive">mediopassive</option>
-                                                            <option value="reflexive">reflexive</option>
-                                                            <option value="reciprocal">reciprocal</option>
-                                                        </optgroup>
-                                                        <optgroup label="noPatient">
-                                                            <option value="unergative">unergative</option>
-                                                            <option value="copular">copular</option>
-                                                            <option value="stative">stative</option>
-                                                        </optgroup>
-                                                        <optgroup label="hasObject">
-                                                            <option value="transitive">transitive</option>
-                                                            <option value="ditransitive">ditransitive</option>
-                                                            <option value="causative">causative</option>
-                                                            <option value="dative">dative</option>
-                                                        </optgroup>
-                                                    </template>
-                                                </select>
-                                                <div
-                                                    v-if="validationErrors[`glosses.${index}.attributes.${i}.attribute`]"
-                                                    class="field-error">
-                                                    {{ validationErrors[`glosses.${index}.attributes.${i}.attribute`] }}
+                                    <div class="field-block">
+                                        <div class="field-block-head" @click="addAttribute('gloss', index)">
+                                            <div>{{ $t('models.attributes') }}</div>
+                                            <div class="field-item-add">+</div>
+                                        </div>
+                                        <div class="field-block-body" v-if="gloss.attributes.length > 0">
+                                            <div class="field-set"
+                                                 v-for="(attribute, i) in gloss.attributes" :key="i">
+                                                <img src="/img/trash.svg" alt="Delete"
+                                                     v-show="gloss.attributes.length > 1 || (form.category !== 'verb' && gloss.attributes.length > 0)"
+                                                     @click="removeItem(i, gloss.attributes)"/>
+                                                <div class="field-item">
+                                                    <!--                                                todo: loop over these & group them -->
+                                                    <select v-model="attribute.attribute">
+                                                        <option value="auxiliary">auxiliary</option>
+                                                        <option value="participle" v-if="form.category === 'adjective'">
+                                                            participle
+                                                        </option>
+                                                        <template v-if="form.category === 'verb'">
+                                                            <optgroup label="isPatient">
+                                                                <option value="unaccusative">unaccusative</option>
+                                                                <option value="mediopassive">mediopassive</option>
+                                                                <option value="reflexive">reflexive</option>
+                                                                <option value="reciprocal">reciprocal</option>
+                                                            </optgroup>
+                                                            <optgroup label="noPatient">
+                                                                <option value="unergative">unergative</option>
+                                                                <option value="copular">copular</option>
+                                                                <option value="stative">stative</option>
+                                                            </optgroup>
+                                                            <optgroup label="hasObject">
+                                                                <option value="transitive">transitive</option>
+                                                                <option value="ditransitive">ditransitive</option>
+                                                                <option value="causative">causative</option>
+                                                                <option value="dative">dative</option>
+                                                            </optgroup>
+                                                        </template>
+                                                    </select>
+                                                    <div
+                                                        v-if="validationErrors[`glosses.${index}.attributes.${i}.attribute`]"
+                                                        class="field-error">
+                                                        {{ validationErrors[`glosses.${index}.attributes.${i}.attribute`] }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </template>
+                        </draggable>
                     </div>
                 </div>
             </div>

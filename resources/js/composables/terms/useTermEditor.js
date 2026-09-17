@@ -21,8 +21,23 @@ export function useTermEditor({
         borrowed: 0,
     });
 
-    const makeGloss = ({withAttribute = false} = {}) => ({
+    let localTermGlossKey = 0;
+
+    const makeTermGlossKey = () => `term-gloss-${++localTermGlossKey}`;
+
+    const normalizeTermGloss = (gloss, index) => ({
+        id: gloss?.id ?? null,
+        gloss: gloss?.gloss ?? '',
+        position: gloss?.position ?? index + 1,
+        attributes: gloss?.attributes ?? [],
+        termGlossKey: gloss?.id ? `term-gloss-${gloss.id}` : makeTermGlossKey(),
+    });
+
+    const makeGloss = ({withAttribute = false, position = null} = {}) => ({
+        id: null,
         gloss: '',
+        position,
+        termGlossKey: makeTermGlossKey(),
         attributes: withAttribute ? [makeAttribute()] : [],
     });
 
@@ -42,8 +57,9 @@ export function useTermEditor({
         };
         form.patterns = model?.patterns ?? [];
         form.pronunciations = model?.pronunciations ?? [makePronunciation()];
-        form.glosses = model?.glosses ?? [makeGloss({
+        form.glosses = model?.glosses?.map(normalizeTermGloss) ?? [makeGloss({
             withAttribute: form.category === 'verb',
+            position: 1,
         })];
         form.inflections = model?.inflections ?? [];
         form.relatives = (model?.relatives ?? []).map(relative => ({
@@ -105,7 +121,16 @@ export function useTermEditor({
         afterSave: (response, savedTerm) => {
             redirectToEditRoute(savedTerm);
         },
+        beforeSave: () => {
+            updateGlossPosition();
+        },
     });
+
+    const updateGlossPosition = () => {
+        editor.form.glosses.forEach((gloss, index) => {
+            gloss.position = index + 1;
+        });
+    };
 
     const addSpelling = () => {
         editor.form.spellings.push({
@@ -135,7 +160,10 @@ export function useTermEditor({
     const addGloss = () => {
         editor.form.glosses.push(makeGloss({
             withAttribute: editor.form.category === 'verb',
+            position: editor.form.glosses.length + 1,
         }));
+
+        updateGlossPosition();
     };
 
     const addInflection = () => {
@@ -152,6 +180,10 @@ export function useTermEditor({
 
     const removeItem = (index, fieldType) => {
         fieldType.splice(index, 1);
+
+        if (fieldType === editor.form.glosses) {
+            updateGlossPosition();
+        }
     };
 
     return {
@@ -175,5 +207,6 @@ export function useTermEditor({
         addInflection,
         insertRelative,
         removeItem,
+        updateGlossPosition,
     };
 }
