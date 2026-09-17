@@ -30,6 +30,7 @@ class UpsertTermRequest extends FormRequest
             'relatives.*.gloss_id' => ['nullable', 'integer', 'exists:glosses,id'],
             'relatives.*.reciprocal_id' => ['nullable', 'integer', 'exists:term_relative,id'],
             'glosses.*.gloss' => ['required'],
+            'glosses.*.position' => ['required', 'integer', 'min:1'],
             'glosses.*.attributes.*.attribute' => ['required'],
             'inflections.*.form' => ['required'],
             'inflections.*.inflection' => ['required', new ArabicScript],
