@@ -139,7 +139,9 @@ Route::get('/', function () {
         'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
             'selectedAvatar', 'dialect'
         ])) : null,
-        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
+        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load([
+            'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+        ])) : null,
     ]);
 })->name('homepage');
 
@@ -305,7 +307,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
 
             Route::get('/{deck}/get', function (Deck $deck) {
-                return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
+                return new DeckResource(Deck::with([
+                    'author',
+                    'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+                ])->findOrFail($deck->id));
             })->name('decks.get');
         });
 

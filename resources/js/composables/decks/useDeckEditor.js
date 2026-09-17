@@ -84,6 +84,9 @@ export function useDeckEditor({
         afterSave: (response, savedDeck) => {
             redirectToEditRoute(savedDeck);
         },
+        beforeSave: () => {
+            updatePosition();
+        },
     });
 
     const updatePosition = () => {

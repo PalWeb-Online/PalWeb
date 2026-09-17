@@ -147,7 +147,9 @@ class UserController extends Controller
     public function getDecks(): JsonResponse
     {
         return response()->json([
-            'decks' => DeckResource::collection(auth()->user()->decks->load(['terms'])),
+            'decks' => DeckResource::collection(auth()->user()->decks->load([
+                'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+            ])),
         ]);
     }
 

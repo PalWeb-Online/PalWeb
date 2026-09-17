@@ -25,9 +25,8 @@ return new class extends Migration
         ");
 
         Schema::table('deck_term', function (Blueprint $table) {
-            $table->unsignedBigInteger('gloss_id')->nullable(false)->change();
-            $table->dropUnique('deck_term_deck_id_term_id_unique');
             $table->unique(['deck_id', 'term_id', 'gloss_id']);
+            $table->dropUnique('deck_term_deck_id_term_id_unique');
         });
     }
 
@@ -37,9 +36,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('deck_term', function (Blueprint $table) {
-            $table->dropUnique('deck_term_deck_id_term_id_gloss_id_unique');
-            $table->unsignedBigInteger('gloss_id')->nullable()->change();
             $table->unique(['deck_id', 'term_id']);
+            $table->dropUnique('deck_term_deck_id_term_id_gloss_id_unique');
         });
     }
 };

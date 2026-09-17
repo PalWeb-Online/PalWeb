@@ -306,9 +306,15 @@ class Card extends Model
     public function forReviewOptions(Builder $query, ReviewOptions $options, User $user): Builder
     {
         return match ($options->scope) {
-            'deck' => $query->whereHas('term.decks', fn (Builder $deckQuery) => $deckQuery->whereKey($options->deckId)),
-            'pinned' => $query->whereHas('term.decks', fn (Builder $deckQuery) => $deckQuery->whereHasBookmark($user)),
-            'lesson' => $query->whereHas('term.decks.lesson', fn (Builder $lessonQuery) => $lessonQuery->whereHas('users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))),
+            'deck' => $query->whereHas('term.decks', fn (Builder $deckQuery) => $deckQuery
+                ->whereNotNull('deck_term.gloss_id')
+                ->whereKey($options->deckId)),
+            'pinned' => $query->whereHas('term.decks', fn (Builder $deckQuery) => $deckQuery
+                ->whereNotNull('deck_term.gloss_id')
+                ->whereHasBookmark($user)),
+            'lesson' => $query->whereHas('term.decks', fn (Builder $deckQuery) => $deckQuery
+                ->whereNotNull('deck_term.gloss_id')
+                ->whereHas('lesson.users', fn (Builder $userQuery) => $userQuery->whereKey($user->id))),
             default => $query,
         };
     }
