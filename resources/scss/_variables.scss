@@ -1,3 +1,10 @@
+@mixin featured-title {
+    font-family: var(--display-font);
+    text-box: trim-both cap alphabetic;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
 @mixin info-box-yellow {
     background: var(--color-accent-light);
     border: 0.1rem solid var(--color-accent-medium);
@@ -70,6 +77,14 @@
     &:hover {
         transform: scale(1.05) rotate(-3deg);
     }
+}
+
+:root {
+    --to-inline-end: 1;
+}
+
+html[lang="ar"] {
+    --to-inline-end: -1;
 }
 
 :root, .font-theme-GoldStar {

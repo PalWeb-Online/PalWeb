@@ -1,7 +1,13 @@
 <script setup>
+const props = defineProps({
+    section: {
+        type: String,
+        required: false,
+    }
+})
 </script>
 <template>
-    <div class="app-heading-wrapper">
+    <div class="app-heading-wrapper" :class="section">
         <svg
             class="heading-shape"
             viewBox="0 0 100 100"
@@ -32,6 +38,12 @@
 
     &:hover .heading-popout {
         rotate: 15deg;
+    }
+
+    &.academy {
+        .heading-popout {
+            fill: var(--color-medium-primary);
+        }
     }
 }
 

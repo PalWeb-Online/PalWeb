@@ -12,6 +12,7 @@ import MatchExercisesBlock from "./MatchExercisesBlock.vue";
 import SelectExercisesBlock from "./SelectExercisesBlock.vue";
 import SortExercisesBlock from "./SortExercisesBlock.vue";
 import ImageBlock from "./ImageBlock.vue";
+import DividerBlock from "../../../Shared/DividerBlock.vue";
 
 const props = defineProps({
     blocks: {
@@ -29,6 +30,7 @@ const props = defineProps({
             />
         </ContainerBlock>
 
+        <DividerBlock v-else-if="block.type === 'divider'" :block="block"/>
         <HeadingBlock v-else-if="block.type === 'heading'" :block="block"/>
         <TextBlock v-else-if="block.type === 'text'" :block="block"/>
         <ImageBlock v-else-if="block.type === 'image'" :block="block"/>

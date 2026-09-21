@@ -9,7 +9,7 @@ export const documentPresets = {
     },
     activity: {
         schemaVersion: 1,
-        allowedBlockTypes: ['text', 'image', 'audio', 'table', 'exercises'],
+        allowedBlockTypes: ['divider', 'text', 'image', 'audio', 'table', 'exercises'],
         createDocument: () => ({
             schemaVersion: 1,
             blocks: [],

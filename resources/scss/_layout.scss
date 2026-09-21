@@ -12,7 +12,7 @@ body {
 }
 
 #app-container {
-    &.library, &.community, &.wiki {
+    &.library, &.community, &.wiki, &.academy {
         #app-head {
             background: none;
             border: none;
@@ -21,6 +21,22 @@ body {
 
             h1 {
                 font-size: clamp(4.8rem, 12vw, 12.8rem);
+            }
+        }
+    }
+
+    &.office {
+        #app-head {
+            border: none;
+            box-shadow: none;
+            background: var(--color-medium-primary);
+
+            h1 {
+                font-family: var(--mono-font);
+                text-transform: none;
+                font-weight: 700;
+                color: white;
+                background: var(--color-accent-medium);
             }
         }
     }
@@ -147,8 +163,7 @@ nav {
 
     & > button,
     .app-hint-wrapper > button,
-    .popup-menu-wrapper > button
-    {
+    .popup-menu-wrapper > button {
         color: white;
         font-size: 1.5em;
         width: 2em;

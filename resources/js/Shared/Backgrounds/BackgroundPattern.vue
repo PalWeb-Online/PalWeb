@@ -21,7 +21,7 @@ function getThemeColor() {
         workbench: '--color-medium-secondary',
         community: '--color-accent-medium',
         account: '--color-medium-primary',
-        academy: '--color-accent-dark',
+        academy: '--color-accent-light',
         office: '--color-accent-medium',
         wiki: '--color-medium-primary',
         default: '--color-medium-primary',

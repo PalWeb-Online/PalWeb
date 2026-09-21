@@ -59,7 +59,7 @@ class UpsertActivityRequest extends FormRequest
         }
 
         $blockValidator = new BlockValidator(
-            allowedBlockTypes: ['text', 'image', 'audio', 'table', 'exercises'],
+            allowedBlockTypes: ['divider', 'text', 'image', 'audio', 'table', 'exercises'],
             recursive: false,
         );
 
