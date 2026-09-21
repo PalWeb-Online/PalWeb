@@ -60,10 +60,6 @@ const appTooltip = ref(null);
 }
 
 .card-item {
-    display: flex;
-    align-items: center;
-    color: var(--color-dark-primary);
-    background: var(--color-pastel-light);
     font-size: 2.4rem;
     gap: 0.25em;
 

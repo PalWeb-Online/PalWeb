@@ -136,7 +136,6 @@
     border-radius: 1.6rem;
     cursor: pointer;
     padding: 0.2rem;
-    direction: ltr;
 
     .app-mode-toggle-slider {
         height: 100%;
@@ -160,7 +159,7 @@
     .app-mode-toggle-slider.active {
         color: var(--color-dark-primary);
         background: var(--color-accent-medium);
-        transform: translateX(100%);
+        transform: translateX(calc(100% * var(--to-inline-end)));
     }
 }
 

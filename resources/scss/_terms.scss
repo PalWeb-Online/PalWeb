@@ -132,8 +132,8 @@
     }
 
     .term-item-gloss {
-        align-self: center;
-        padding-inline: 1.6rem;
+        display: flex;
+        height: 100%;
         background: white;
         font-family: var(--body-font);
         font-size: 1.4rem;
@@ -143,8 +143,13 @@
         white-space: nowrap;
         flex-grow: 1;
 
+        .term-item-gloss-text {
+            align-self: center;
+            padding-inline: 1.6rem;
+        }
+
         &:has(select) {
-            padding-inline: 1.6rem 0.8rem;
+            padding-inline: 1.6rem;
         }
 
         select {
