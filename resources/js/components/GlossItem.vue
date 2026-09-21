@@ -29,12 +29,7 @@ defineProps({
 <style scoped lang="scss">
 .gloss-item-container {
     display: grid;
-    gap: 1.6rem;
-
-    &:not(:last-child) {
-        padding-block-end: 3.2rem;
-        border-block-end: 0.1rem solid var(--color-medium-primary);
-    }
+    border-block-end: 0.1rem solid var(--color-dark-primary);
 
     & > a {
         padding-block: 0.8rem;
@@ -50,6 +45,7 @@ defineProps({
     align-items: center;
     row-gap: 1.6rem;
     direction: ltr;
+    padding-block: 3.2rem;
 
     @media (width >= 720px) {
         grid-template-columns: calc(9.6rem * 1.25) 1fr;

@@ -126,7 +126,8 @@ watch(() => props.sentenceId, async () => {
                         })
                     }}</p>
                 <template v-if="Object.keys(validationErrors).length">
-                    <p style="font-weight: 700">{{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.sentence')}) }}</p>
+                    <p style="font-weight: 700">
+                        {{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.sentence')}) }}</p>
                     <ul>
                         <li v-for="(issue, i) in validationErrors" :key="i">{{ issue }}</li>
                     </ul>
@@ -183,15 +184,16 @@ watch(() => props.sentenceId, async () => {
                        class="model-list index-list draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                    <span class="delete material-symbols-rounded"
-                          @click="removeTerm(index)">delete</span>
-                        <span v-if="form.dialog?.id" class="material-symbols-rounded"
-                              :class="{toggleable: element.sentencePivot.toggleable}"
-                              @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
-                        {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}
-                    </span>
+                        <!--                        todo: fix button appearance-->
                         <div class="model-item-container term-item-container">
                             <div class="model-item term-item">
+                                <button class="delete material-symbols-rounded"
+                                      @click="removeTerm(index)">delete</button>
+                                <button v-if="form.dialog?.id" class="material-symbols-rounded"
+                                      :class="{toggleable: element.sentencePivot.toggleable}"
+                                      @click="element.sentencePivot.toggleable = !element.sentencePivot.toggleable">
+                                    {{ element.sentencePivot.toggleable ? 'visibility_off' : 'visibility' }}
+                                </button>
                                 <div class="model-item-content">
                                     <div class="term-item-gloss">
                                         <template v-if="element.glosses">
@@ -209,13 +211,15 @@ watch(() => props.sentenceId, async () => {
                                         <input class="translit" v-model="element.sentencePivot.sent_translit"/>
                                     </div>
                                 </div>
+                                <span class="handle material-symbols-rounded">drag_indicator</span>
                             </div>
                         </div>
-                        <span class="handle material-symbols-rounded">drag_indicator</span>
                     </div>
                 </template>
             </draggable>
-            <div class="terms-count">{{ $t('components.common.counts.terms', {count: form.terms.filter(term => term.id).length }) }}</div>
+            <div class="terms-count">
+                {{ $t('components.common.counts.terms', {count: form.terms.filter(term => term.id).length}) }}
+            </div>
         </div>
     </div>
 

@@ -1,7 +1,3 @@
-.model-list.index-list:has(.sentence-item-container) {
-    justify-items: right;
-}
-
 .sentence-item-container {
     scroll-margin-top: 12rem;
     max-width: 100%;
@@ -178,31 +174,6 @@
     a:link.sentence-term, a:visited.sentence-term {
         cursor: pointer;
         font-weight: 400;
-    }
-}
-
-.dialog-body {
-    display: grid;
-    text-align: start;
-    margin: 2.4rem;
-    gap: 1.6rem;
-    justify-items: right;
-
-    .sentence-item-container {
-        max-width: 100%;
-    }
-
-    .draggable-item {
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    & + & {
-        margin-block-start: 0;
-    }
-
-    & + .exercise--input {
-        margin-block-start: 3.2rem;
     }
 }
 

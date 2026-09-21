@@ -148,33 +148,32 @@ watch(() => props.dialogId, async () => {
             <div class="window-section-head">
                 <h2>{{ $t('components.dialog.sections.transcript') }}</h2>
             </div>
-            <draggable class="dialog-body draggable" :list="form.sentences" itemKey="id" handle=".handle"
+            <draggable class="model-list index-list draggable" :list="form.sentences" itemKey="id" handle=".handle"
                        @end="updatePosition()">
                 <template #item="{ element, index }">
-                    <div class="draggable-item">
-                    <span class="delete material-symbols-rounded"
-                          v-show="form.sentences.length > 0"
-                          @click="removeSentence(index)">delete</span>
-                        <div class="model-item-container sentence-item-container">
-                            <div class="sentence-dialog-data">
-                                <div>
-                                    <div>{{ $t('components.sentence.speaker') }}</div>
-                                    <input v-model="element.speaker" placeholder="ناطق"/>
-                                </div>
-                            </div>
-                            <div class="model-item sentence-item">
-                                <div class="model-item-content">
-                                    <div class="sentence-term" style="background: none">
-                                        <div>{{ element.sentence }}</div>
-                                    </div>
-                                </div>
-                                <SentenceActions v-if="element.id" :model="element"/>
-                            </div>
-                            <div class="model-item-description">
-                                {{ element.trans }}
+                    <div class="model-item-container sentence-item-container">
+                        <div class="sentence-dialog-data">
+                            <div>
+                                <div>{{ $t('components.sentence.speaker') }}</div>
+                                <input v-model="element.speaker" placeholder="ناطق"/>
                             </div>
                         </div>
-                        <span class="handle material-symbols-rounded">drag_indicator</span>
+                        <div class="model-item sentence-item">
+                            <button class="delete material-symbols-rounded"
+                                    v-show="form.sentences.length > 0"
+                                    @click="removeSentence(index)">delete
+                            </button>
+                            <div class="model-item-content">
+                                <div class="sentence-term" style="background: none">
+                                    <div>{{ element.sentence }}</div>
+                                </div>
+                            </div>
+                            <SentenceActions v-if="element.id" :model="element"/>
+                            <span class="handle material-symbols-rounded">drag_indicator</span>
+                        </div>
+                        <div class="model-item-description">
+                            {{ element.trans }}
+                        </div>
                     </div>
                 </template>
             </draggable>

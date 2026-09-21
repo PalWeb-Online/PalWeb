@@ -71,7 +71,7 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
                 </AppTip>
                 <LoadingSpinner/>
             </div>
-            <div class="dialog-body">
+            <div class="model-list index-list">
                 <template v-for="sentence in dialog.sentences">
                     <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker
                                   :showTerms="showTerms"

@@ -41,15 +41,10 @@
     }
 }
 
-.gloss-item-container .model-list {
-    justify-items: right;
-    padding-inline: 1.6rem;
-}
-
-.term-glosses {
-    margin-block: 3.2rem;
-    display: grid;
-    gap: 3.2rem;
+@media (width < 960px) {
+    .gloss-item-container .model-list {
+        padding-block-end: 0;
+    }
 }
 
 .terms-count {
