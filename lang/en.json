@@ -250,6 +250,12 @@
             "type": "Type",
             "value": "Value"
         },
+        "notifications": {
+            "activity-unlocked": "Great job! You've unlocked the Activity for this Lesson!",
+            "unlocked-lesson": "Lesson completed! You've unlocked Lesson {position}.",
+            "unlocked-lessons": "Lesson completed! You've unlocked {count} new Lessons.",
+            "completed-everything": "You've finished the Lesson & completed everything you're eligible for in the Academy. Check back in soon!"
+        },
         "validation": {
             "min-unlock-conditions": "Extra Lessons must have at least one Unlock Condition."
         }

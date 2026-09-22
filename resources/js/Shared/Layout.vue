@@ -54,9 +54,6 @@ onMounted(() => {
 
     if (userId) {
         window.Echo.private(`users.${userId}`)
-            .listen('LessonProgressUpdated', (e) => {
-                NotificationStore.notify(e.notification ?? e);
-            })
             .listen('UserNotificationSent', (e) => {
                 NotificationStore.notify(e.notification ?? e);
             });
@@ -88,7 +85,7 @@ watch(
     () => page.props.flash.notification,
     (notification) => {
         if (notification) {
-            NotificationStore.notify(notification);
+            NotificationStore.notify({notification});
         }
     },
     {immediate: true}
