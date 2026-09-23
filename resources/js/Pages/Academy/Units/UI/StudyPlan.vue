@@ -230,6 +230,7 @@ onMounted(() => {
     color: var(--color-dark-primary);
     border-radius: 6.4rem;
     padding: 1.6rem 2.4rem;
+    hyphens: none;
 
     @media (width >= 960px) {
         margin-inline: 3.2rem;

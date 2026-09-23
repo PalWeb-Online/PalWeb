@@ -141,6 +141,8 @@
         .term-item-gloss-text {
             align-self: center;
             padding-inline: 1.6rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         &:has(select) {

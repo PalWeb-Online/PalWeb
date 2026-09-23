@@ -3,6 +3,7 @@
     text-box: trim-both cap alphabetic;
     text-transform: uppercase;
     line-height: 1;
+    hyphens: none;
 }
 
 @mixin info-box-yellow {
