@@ -71,6 +71,7 @@ defineProps({
     font-family: var(--head-font), sans-serif;
     font-size: 1.6rem;
     font-weight: 700;
+    line-height: 1.25;
 }
 
 .lesson-progress-meta {
@@ -79,8 +80,7 @@ defineProps({
     line-height: 1.3;
 }
 
-.lesson-progress-action,
-.lesson-progress-complete {
+.lesson-progress-action {
     flex: 0 0 auto;
     color: white;
     background: var(--color-medium-secondary);
@@ -89,10 +89,5 @@ defineProps({
     font-weight: 700;
     padding: 0.8rem 1.2rem;
     text-transform: capitalize;
-}
-
-.lesson-progress-complete {
-    min-width: 5.6rem;
-    text-align: center;
 }
 </style>
