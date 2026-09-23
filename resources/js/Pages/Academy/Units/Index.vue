@@ -75,6 +75,10 @@ onMounted(() => {
         gap: 4.8rem;
         justify-items: center;
         justify-content: center;
+
+        .app-heading-wrapper {
+            font-size: 7.2rem;
+        }
     }
 
     @media (width >= 960px) {

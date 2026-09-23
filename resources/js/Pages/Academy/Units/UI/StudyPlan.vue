@@ -191,34 +191,6 @@ onMounted(() => {
     }
 }
 
-
-.academy-lesson-progress-loading {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    color: var(--color-dark-primary);
-    background: var(--color-accent-light);
-    border-radius: 1.6rem;
-    font-size: 1.6rem;
-    font-weight: 700;
-    padding: 1.2rem 1.6rem;
-
-    .material-symbols-rounded {
-        flex: 0 0 auto;
-        color: var(--color-medium-secondary);
-        font-variation-settings: 'wght' 700;
-    }
-
-    &.error {
-        color: white;
-        background: var(--color-error, #b3261e);
-
-        .material-symbols-rounded {
-            color: white;
-        }
-    }
-}
-
 .progress-message {
     justify-self: start;
     text-align: center;

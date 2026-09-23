@@ -170,6 +170,7 @@ h3 {
     text-transform: uppercase;
     padding-block: 0.125em;
     text-box: trim-both cap alphabetic;
+    line-height: 1;
 
     &.l {
         font-size: clamp(3.2rem, 9vw, 6.4rem);
