@@ -7,13 +7,14 @@ import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {usePage} from "@inertiajs/vue3";
-import {computed, onMounted, watch} from "vue";
+import {onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
 import i18n from "../i18n.js";
 import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 import {useI18n} from "vue-i18n";
+import {useAcademyStateStore} from "../stores/AcademyStateStore.js";
 
 const {t, locale} = useI18n();
 
@@ -27,6 +28,7 @@ defineProps({
 const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
+const AcademyStateStore = useAcademyStateStore();
 
 const page = usePage();
 const {browserOnline} = useConnectionStatus(Echo);
@@ -55,7 +57,10 @@ onMounted(() => {
     if (userId) {
         window.Echo.private(`users.${userId}`)
             .listen('UserNotificationSent', (e) => {
-                NotificationStore.notify(e.notification ?? e);
+                NotificationStore.notify(e);
+            })
+            .listen('AcademyStateUpdated', () => {
+                AcademyStateStore.refreshState().catch(() => {});
             });
     }
 });
@@ -106,9 +111,10 @@ watch(
     <NavSidebar/>
 
     <div id="app-container" :class="section">
-        <slot/>
-        <Footer/>
-
+        <div class="app-container-content">
+            <slot/>
+            <Footer/>
+        </div>
         <div class="app-container-pattern" aria-hidden="true">
             <BackgroundPattern :section="section"/>
         </div>
@@ -135,15 +141,27 @@ watch(
     grid-template-rows: min-content 1fr;
     align-content: start;
     position: relative;
-    overflow: hidden;
+    isolation: isolate;
+    //overflow: hidden;
 
     @media (width >= 960px) {
         min-height: calc(100vh - 3.6rem);
     }
 
-    > *:not(.app-container-pattern) {
+    .app-container-content {
         position: relative;
         z-index: 1;
+        display: grid;
+        grid-template-rows: min-content 1fr;
+        align-content: start;
+        min-height: inherit;
+    }
+
+    .app-container-pattern {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
     }
 
     &.academy {

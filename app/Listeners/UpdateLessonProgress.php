@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\AcademyProgressChanged;
+use App\Events\AcademyStateUpdated;
 use App\Events\ScoreCreated;
 use App\Events\UserNotificationSent;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -103,6 +103,6 @@ class UpdateLessonProgress implements ShouldQueue
             }
         }
 
-        AcademyProgressChanged::dispatch($user->id);
+        AcademyStateUpdated::dispatch($user->id);
     }
 }

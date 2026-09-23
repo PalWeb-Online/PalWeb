@@ -32,11 +32,13 @@ body {
             background: var(--color-medium-primary);
 
             h1 {
-                font-family: var(--mono-font);
+                font-family: var(--head-font);
                 text-transform: none;
                 font-weight: 700;
                 color: white;
-                background: var(--color-accent-medium);
+                text-box: trim-both cap alphabetic;
+                padding: 1.6rem 0;
+                line-height: 1;
             }
         }
     }
