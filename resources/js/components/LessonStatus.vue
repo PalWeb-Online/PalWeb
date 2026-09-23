@@ -58,6 +58,10 @@ defineProps({
         padding: 0.8rem 1.6rem
     }
 
+    a {
+        text-transform: capitalize;
+    }
+
     .lesson-title {
         display: flex;
         align-items: center;

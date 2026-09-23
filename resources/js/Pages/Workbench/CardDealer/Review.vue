@@ -1,6 +1,5 @@
 <script setup>
 import {Carousel, Slide} from "vue3-carousel";
-import TermFlashcard from "../DeckMaster/UI/TermFlashcard.vue";
 import {computed, onBeforeUnmount, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
@@ -13,6 +12,7 @@ import TermItem from "../../../components/TermItem.vue";
 import AppButton from "../../../components/AppButton.vue";
 import {useI18n} from "vue-i18n";
 import {useAcademyStateStore} from "../../../stores/AcademyStateStore.js";
+import TermFlashcard from "../../../components/TermFlashcard.vue";
 
 const { t } = useI18n();
 const NotificationStore = useNotificationStore();

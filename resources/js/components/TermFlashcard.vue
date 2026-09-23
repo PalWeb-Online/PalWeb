@@ -1,8 +1,8 @@
 <script setup>
 import {onMounted, onUnmounted, ref, watch} from 'vue';
 import VanillaTilt from "vanilla-tilt";
-import AppButton from "../../../../components/AppButton.vue";
-import AudioButton from "../../../../components/AudioButton.vue";
+import AppButton from "./AppButton.vue";
+import AudioButton from "./AudioButton.vue";
 
 const props = defineProps({
     model: {
