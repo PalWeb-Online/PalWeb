@@ -41,15 +41,10 @@
     }
 }
 
-.gloss-item-container .model-list {
-    justify-items: right;
-    padding-inline: 1.6rem;
-}
-
-.term-glosses {
-    margin-block: 3.2rem;
-    display: grid;
-    gap: 3.2rem;
+@media (width < 960px) {
+    .gloss-item-container .model-list {
+        padding-block-end: 0;
+    }
 }
 
 .terms-count {
@@ -132,8 +127,8 @@
     }
 
     .term-item-gloss {
-        align-self: center;
-        padding-inline: 1.6rem;
+        display: flex;
+        height: 100%;
         background: white;
         font-family: var(--body-font);
         font-size: 1.4rem;
@@ -143,8 +138,15 @@
         white-space: nowrap;
         flex-grow: 1;
 
+        .term-item-gloss-text {
+            align-self: center;
+            padding-inline: 1.6rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         &:has(select) {
-            padding-inline: 1.6rem 0.8rem;
+            padding-inline: 1.6rem;
         }
 
         select {

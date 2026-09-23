@@ -1,7 +1,8 @@
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-import {VitePWA} from 'vite-plugin-pwa'
+import {VitePWA} from 'vite-plugin-pwa';
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
     plugins: [
@@ -93,6 +94,13 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: {
+        alias: {
+            "@styles": fileURLToPath(
+                new URL("./resources/scss", import.meta.url),
+            ),
+        },
+    },
     build: {
         rollupOptions: {
             output: {

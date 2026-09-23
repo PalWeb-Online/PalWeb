@@ -136,6 +136,7 @@ class DeckController extends Controller
 
         $deck->load([
             'terms' => fn ($q) => $q
+                ->whereNotNull('deck_term.gloss_id')
                 ->withItemData()
                 ->withUserCard(),
         ]);
@@ -153,8 +154,17 @@ class DeckController extends Controller
     {
         $user = $request->user();
 
-        $deck = Deck::create(array_merge($request->all(), ['user_id' => $user->id]));
-        $this->linkTerms($deck, $request->terms);
+        $deck = DB::transaction(function () use ($request, $user) {
+            $deck = Deck::create(array_merge($request->safe()->only([
+                'name',
+                'description',
+                'private',
+            ]), ['user_id' => $user->id]));
+
+            $this->linkTerms($deck, $request->input('terms', []));
+
+            return $deck;
+        });
 
         Bookmark::add($deck, $user);
         event(new ModelPinned($user));
@@ -164,6 +174,7 @@ class DeckController extends Controller
             ->whereKey($deck->getKey())
             ->with([
                 'terms' => fn ($q) => $q
+                    ->whereNotNull('deck_term.gloss_id')
                     ->withItemData(),
             ])
             ->firstOrFail();
@@ -179,13 +190,21 @@ class DeckController extends Controller
     {
         Gate::authorize('modify', $deck);
 
-        $deck->update($request->all());
-        $this->linkTerms($deck, $request->terms);
+        DB::transaction(function () use ($request, $deck) {
+            $deck->update($request->safe()->only([
+                'name',
+                'description',
+                'private',
+            ]));
+
+            $this->linkTerms($deck, $request->input('terms', []));
+        });
 
         $deck = Deck::query()
             ->whereKey($deck->getKey())
             ->with([
                 'terms' => fn ($q) => $q
+                    ->whereNotNull('deck_term.gloss_id')
                     ->withItemData(),
             ])
             ->firstOrFail();
@@ -199,24 +218,73 @@ class DeckController extends Controller
 
     private function linkTerms($deck, $terms): void
     {
-        foreach ($terms as $termData) {
-            $term = Term::find($termData['id']);
+        $now = now();
 
-            if ($term) {
-                $deck->terms()->syncWithoutDetaching([
-                    $term->id => [
-                        'gloss_id' => $termData['deckPivot']['gloss_id'],
-                        'position' => $termData['deckPivot']['position'],
-                    ],
+        $existingRows = DB::table('deck_term')
+            ->where('deck_id', $deck->id)
+            ->get()
+            ->keyBy('id');
+
+        $incomingRows = collect($terms ?? [])
+            ->map(fn ($termData) => [
+                'id' => $termData['deckPivot']['id'] ?? null,
+                'term_id' => $termData['id'],
+                'gloss_id' => $termData['deckPivot']['gloss_id'],
+                'position' => $termData['deckPivot']['position'],
+            ]);
+
+        $incomingExistingRows = $incomingRows
+            ->filter(fn ($row) => $row['id'] && $existingRows->has($row['id']))
+            ->keyBy('id');
+
+        $rowsToDelete = $existingRows->keys()->diff($incomingExistingRows->keys());
+
+        if ($rowsToDelete->isNotEmpty()) {
+            DB::table('deck_term')
+                ->where('deck_id', $deck->id)
+                ->whereIn('id', $rowsToDelete)
+                ->delete();
+        }
+
+        $rowsToInsert = $incomingRows
+            ->reject(fn ($row) => $row['id'] && $existingRows->has($row['id']))
+            ->map(fn ($row) => [
+                'deck_id' => $deck->id,
+                'term_id' => $row['term_id'],
+                'gloss_id' => $row['gloss_id'],
+                'position' => $row['position'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ])
+            ->all();
+
+        if ($rowsToInsert) {
+            DB::table('deck_term')->insert($rowsToInsert);
+        }
+
+        foreach ($incomingExistingRows as $row) {
+            $existing = $existingRows->get($row['id']);
+
+            if (
+                (int) $existing->term_id === (int) $row['term_id']
+                && (int) $existing->gloss_id === (int) $row['gloss_id']
+                && (int) $existing->position === (int) $row['position']
+            ) {
+                continue;
+            }
+
+            DB::table('deck_term')
+                ->where('deck_id', $deck->id)
+                ->where('id', $row['id'])
+                ->update([
+                    'term_id' => $row['term_id'],
+                    'gloss_id' => $row['gloss_id'],
+                    'position' => $row['position'],
+                    'updated_at' => $now,
                 ]);
-            }
         }
 
-        foreach ($deck->terms as $term) {
-            if (! in_array($term->id, array_column($terms, 'id'))) {
-                $deck->terms()->detach($term->id);
-            }
-        }
+        $deck->unsetRelation('terms');
     }
 
     public function destroy(Deck $deck): JsonResponse
@@ -294,10 +362,15 @@ class DeckController extends Controller
 
         Bookmark::add($deck, $user);
 
-        $termIds = $deck->terms()->pluck('term_id');
+        $deckTerms = $deck->terms()
+            ->whereNotNull('deck_term.gloss_id')
+            ->get();
 
-        foreach ($termIds as $index => $id) {
-            $newDeck->terms()->attach($id, ['position' => $index + 1]);
+        foreach ($deckTerms as $index => $term) {
+            $newDeck->terms()->attach($term->id, [
+                'gloss_id' => $term->pivot->gloss_id,
+                'position' => $index + 1,
+            ]);
         }
 
         return response()->json([
@@ -310,7 +383,10 @@ class DeckController extends Controller
     {
         Gate::authorize('interact', $deck);
 
-        $deck->load(['terms.glosses']);
+        $deck->load([
+            'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+            'terms.glosses',
+        ]);
 
         foreach ($deck->terms as $term) {
             $glosses = $term->glosses->pluck('gloss')->implode('; ');

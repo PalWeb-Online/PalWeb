@@ -4,6 +4,7 @@ use App\Http\Controllers\Academy\ActivityController;
 use App\Http\Controllers\Academy\DialogController;
 use App\Http\Controllers\Academy\LessonController;
 use App\Http\Controllers\Academy\ScoreController;
+use App\Http\Controllers\Academy\AcademyStateController;
 use App\Http\Controllers\Academy\UnitController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\Auth\EmailVerificationController;
@@ -139,7 +140,9 @@ Route::get('/', function () {
         'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
             'selectedAvatar', 'dialect'
         ])) : null,
-        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load(['terms'])) : null,
+        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load([
+            'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+        ])) : null,
     ]);
 })->name('homepage');
 
@@ -305,7 +308,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{deck}/toggle/{term}', 'toggleTerm')->name('decks.term.toggle');
 
             Route::get('/{deck}/get', function (Deck $deck) {
-                return new DeckResource(Deck::with(['author', 'terms'])->findOrFail($deck->id));
+                return new DeckResource(Deck::with([
+                    'author',
+                    'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+                ])->findOrFail($deck->id));
             })->name('decks.get');
         });
 
@@ -412,6 +418,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::prefix('/api')->group(function () {
+    Route::middleware(['auth', 'verified', 'student'])->prefix('/academy')->group(function () {
+        Route::get('/state', [AcademyStateController::class, 'show'])->name('api.academy.state');
+    });
+
     Route::prefix('/users')->controller(UserController::class)->group(function () {
         Route::get('/{user}', 'fetch')->name('api.users.fetch');
         Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggle-student');

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\AcademyStateUpdated;
 use App\Models\Lesson;
 use App\Models\User;
 use App\Services\LessonService;
@@ -31,7 +32,11 @@ class SyncAllUsersProgress implements ShouldQueue
             ->with('lessons')
             ->chunk(100, function ($users) {
                 foreach ($users as $user) {
-                    LessonService::syncUserProgress($user);
+                    $newlyUnlocked = LessonService::syncUserProgress($user);
+
+                    if ($newlyUnlocked->isNotEmpty()) {
+                        AcademyStateUpdated::dispatch($user->id);
+                    }
                 }
             });
     }

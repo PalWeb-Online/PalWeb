@@ -116,7 +116,7 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
                     <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.audios') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list" style="padding: 3.2rem 1.6rem">
+                    <div class="model-list index-list">
                         <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
                     </div>
                     <Paginator

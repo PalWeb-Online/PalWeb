@@ -49,6 +49,7 @@ class TermShowResource extends TermResource
             'glosses' => $this->whenLoaded('glosses', fn () => $this->glosses->map(fn ($gloss) => [
                 'id' => $gloss->id,
                 'gloss' => $gloss->gloss,
+                'position' => $gloss->position,
                 'attributes' => $gloss->attributes,
                 'sentences' => SentenceResource::collection($this->gloss_sentences[$gloss->id]['sentences'] ?? []),
                 'sentences_count' => $this->gloss_sentences[$gloss->id]['sentences_count'] ?? 0,

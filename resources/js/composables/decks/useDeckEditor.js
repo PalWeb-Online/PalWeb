@@ -23,6 +23,20 @@ export function useDeckEditor({
         avatar_url: UserStore.user?.avatar_url ?? '',
     }));
 
+    let localDeckTermKey = 0;
+
+    const makeDeckTermKey = () => `deck-term-${++localDeckTermKey}`;
+
+    const normalizeDeckTerm = (term) => ({
+        ...term,
+        deckTermKey: term.deckPivot?.id ?? makeDeckTermKey(),
+        deckPivot: {
+            id: term.deckPivot?.id ?? null,
+            gloss_id: term.deckPivot?.gloss_id ?? term.glosses?.[0]?.id ?? null,
+            position: term.deckPivot?.position ?? '',
+        },
+    });
+
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         deckLoader.setDeck(model);
 
@@ -32,7 +46,7 @@ export function useDeckEditor({
         form.private = model?.private ?? false;
         form.created_at = model?.created_at ?? null;
         form.author = model?.author ?? author.value;
-        form.terms = model?.terms ?? [];
+        form.terms = (model?.terms ?? []).map(normalizeDeckTerm);
 
         defaults();
         clearErrors();
@@ -70,6 +84,9 @@ export function useDeckEditor({
         afterSave: (response, savedDeck) => {
             redirectToEditRoute(savedDeck);
         },
+        beforeSave: () => {
+            updatePosition();
+        },
     });
 
     const updatePosition = () => {
@@ -79,26 +96,18 @@ export function useDeckEditor({
     };
 
     const insertTerm = (term) => {
-        const termExists = editor.form.terms.some(existingTerm => existingTerm.id === term.id);
-
-        if (termExists) {
-            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
-                model: t('actions.models.term'),
-                target: t('actions.models.deck'),
-            }), 'error');
-            return;
-        }
-
         editor.form.terms.push({
             id: term.id,
             term: term.term,
             category: term.category,
             translit: term.translit,
+            deckTermKey: makeDeckTermKey(),
             glosses: term.glosses.map((gloss) => ({
                 id: gloss.id,
                 gloss: gloss.gloss,
             })),
             deckPivot: {
+                id: null,
                 gloss_id: term.glosses[0].id,
                 position: '',
             },

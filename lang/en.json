@@ -177,6 +177,9 @@
             "copy-link-success": "Link to Deck copied to clipboard.",
             "copy-confirm": "Are you sure you want to create a copy of this Deck?",
             "copy-success": "Created a copy of the Deck!"
+        },
+        "validation": {
+            "duplicate-term-gloss": "This Term is already in the Deck with the selected Gloss."
         }
     },
     "dialect": {
@@ -213,7 +216,8 @@
             "pair-start": "Pair {index} Start Side",
             "pair-end": "Pair {index} End Side",
             "sort-items": "Sort Items",
-            "input-answer": "Answer"
+            "input-answer": "Answer",
+            "tip": "Justification"
         },
         "prompts": {
             "input": "Answer the prompt with a complete sentence, following the format of the example.",
@@ -245,6 +249,12 @@
             "key": "Unlock Condition",
             "type": "Type",
             "value": "Value"
+        },
+        "notifications": {
+            "activity-unlocked": "Great job! You've unlocked the Activity for this Lesson!",
+            "unlocked-lesson": "Lesson completed! You've unlocked Lesson {position}.",
+            "unlocked-lessons": "Lesson completed! You've unlocked {count} new Lessons.",
+            "completed-everything": "You've finished the Lesson & completed everything you're eligible for in the Academy. Check back in soon!"
         },
         "validation": {
             "min-unlock-conditions": "Extra Lessons must have at least one Unlock Condition."
@@ -851,11 +861,30 @@
             }
         },
         "lesson": {
-            "scored-perfect": "Scored 100% ({count}/{total})",
             "open": "open lesson",
+            "scored-perfect": "Scored 100% ({count}/{total})",
             "no-skills": "(No Skills have been added to the Lesson yet.)",
             "sections": {
                 "skills": "skills"
+            },
+            "progress": {
+                "stages": "stages",
+                "completed-tasks": "all done",
+                "next-task": "next up"
+            },
+            "tasks": {
+                "deck": {
+                    "label": "Quiz the Deck",
+                    "meta": "Score 100% on any type of Quiz ({count}/{total})"
+                },
+                "activity": {
+                    "label": "Do the Activity",
+                    "meta": "Read the Skills, then Score 100% on the Activity"
+                },
+                "dialog": {
+                    "label": "Review the Dialog",
+                    "meta": "Come back any time to practice your speech!"
+                }
             }
         },
         "page": {
@@ -1106,6 +1135,23 @@
         "academy": {
             "index": {
                 "title": "academy"
+            },
+            "study-plan": {
+                "title": "study plan",
+                "loading": "Loading today's Study Plan...",
+                "error": "Unable to load today's Study Plan.",
+                "tasks-completed": "You got everything done for today! See you tomorrow!",
+                "cards": {
+                    "label": "Review your Due Cards",
+                    "meta": "You have {count} Due Cards in the Card Dealer.",
+                    "complete": "No more Due Cards left for today!",
+                    "action": "review cards"
+                },
+                "lesson": {
+                    "label": "Continue with Lesson {lesson}",
+                    "continue-deck": "Quiz the Deck to unlock the Skills for this Lesson!",
+                    "continue-activity": "Do the Activity to unlock the Dialog for this Lesson!"
+                }
             }
         },
         "lessons": {

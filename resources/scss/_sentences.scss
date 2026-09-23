@@ -1,7 +1,3 @@
-.model-list.index-list:has(.sentence-item-container) {
-    justify-items: right;
-}
-
 .sentence-item-container {
     scroll-margin-top: 12rem;
     max-width: 100%;
@@ -59,8 +55,6 @@
 
 .sentence-item-container:not(.l) {
     .sentence-dialog-data {
-        border-block-end: 0.1rem solid var(--color-dark-primary);
-
         & > * {
             padding: 0.4rem 1.2rem;
 
@@ -183,31 +177,6 @@
     }
 }
 
-.dialog-body {
-    display: grid;
-    text-align: start;
-    margin: 2.4rem;
-    gap: 1.6rem;
-    justify-items: right;
-
-    .sentence-item-container {
-        max-width: 100%;
-    }
-
-    .draggable-item {
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    & + & {
-        margin-block-start: 0;
-    }
-
-    & + .exercise--input {
-        margin-block-start: 3.2rem;
-    }
-}
-
 .chart-dialog {
     display: grid;
     gap: 1.6rem;
@@ -219,18 +188,6 @@
 
     .dialog-line-wrapper {
         width: min(100%, 36rem);
-    }
-}
-
-#sm-select {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    gap: 3.2rem;
-    padding: 3.2rem;
-
-    @media (width >= 960px) {
-        padding: 0;
     }
 }
 
@@ -263,7 +220,7 @@
         margin-inline-end: 4.8rem;
 
         &.sentence {
-            transform: translateX(100%);
+            transform: translateX(calc(100% * var(--to-inline-end)));
         }
 
         button {

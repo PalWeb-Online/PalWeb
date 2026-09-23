@@ -53,10 +53,11 @@ export function useDocumentBuilder(documentBlocks = null) {
         exercises: ExercisesBlockEditor,
     };
 
-    const getBlockEditor = (type) => blockEditors[type] ?? TextBlockEditor;
+    const getBlockEditor = (type) => blockEditors[type];
 
     const blockFactories = {
         container: () => ({id: uid(), type: 'container', title: '', blocks: []}),
+        divider: () => ({id: uid(), type: 'divider'}),
         heading: () => ({id: uid(), type: 'heading', title: '', level: 'h1'}),
         text: () => ({id: uid(), type: 'text', content: ''}),
         image: () => ({id: uid(), type: 'image', media: ''}),
@@ -340,6 +341,17 @@ export function useDocumentBuilder(documentBlocks = null) {
         ex.items.splice(index, 1);
     };
 
+    const setExerciseTip = (ex, value) => {
+        const tip = typeof value === 'string' ? value : '';
+
+        if (tip.trim() === '') {
+            delete ex.tip;
+            return;
+        }
+
+        ex.tip = tip;
+    };
+
     return {
         inheritedContext,
         uid,
@@ -361,6 +373,7 @@ export function useDocumentBuilder(documentBlocks = null) {
         addSelectOption,
         removeSelectOption,
         addSortableItem,
-        removeSortableItem
+        removeSortableItem,
+        setExerciseTip
     };
 }

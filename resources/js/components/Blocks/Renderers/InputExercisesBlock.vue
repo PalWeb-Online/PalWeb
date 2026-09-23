@@ -3,6 +3,7 @@ import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import DialogLine from "../../Charts/DialogLine.vue";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
 import ExercisesBlockPrompts from "./ExercisesBlockPrompts.vue";
+import AppTip from "../../AppTip.vue";
 
 const props = defineProps({
     block: {type: Object, required: true},
@@ -18,40 +19,54 @@ const {
     <div class="block--exercises">
         <h2>{{ $t(`exercise.type.${block.exerciseType}`) }}</h2>
         <ExercisesBlockPrompts :block="block"/>
-        <div v-if="block.examples" v-for="ex in block.examples" class="dialog-body">
+        <div v-if="block.examples" v-for="ex in block.examples" class="exercise--input-example">
             <div class="featured-title s">{{ $t('exercise.example') }}</div>
             <DialogLine speaker="سؤال" :ar="ex.prompt"/>
             <DialogLine speaker="جواب" :ar="ex.answer" align="ltr"/>
         </div>
-        <template v-for="item in processedItems">
-            <div class="exercise--input" :class="{
+        <div v-for="item in processedItems"
+             class="exercise--input" :class="{
                     'correct': ActivitySession.isViewingResults && item.correct,
                     'incorrect': ActivitySession.isViewingResults && !item.correct
                 }">
-                <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
+            <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
 
-                <input type="text" placeholder="جواب"
-                       :disabled="ActivitySession.isViewingResults"
-                       :value="ActivitySession.isViewingResults ? item.response : ActivitySession.getExerciseById(item.id)?.response"
-                       @input="ActivitySession.getExerciseById(item.id).response = $event.target.value"
-                >
-                <div class="exercise--input-answers" v-if="ActivitySession.isViewingResults && !item.correct">
-                    <div>
-                        ->
-                        <span v-for="answer in item.answers">
+            <input type="text" placeholder="جواب"
+                   :disabled="ActivitySession.isViewingResults"
+                   :value="ActivitySession.isViewingResults ? item.response : ActivitySession.getExerciseById(item.id)?.response"
+                   @input="ActivitySession.getExerciseById(item.id).response = $event.target.value"
+            >
+            <div class="exercise--input-answers" v-if="ActivitySession.isViewingResults && !item.correct">
+                <div>
+                    ->
+                    <span v-for="answer in item.answers">
                                 {{ answer }}
                             </span>
-                    </div>
-                    <button v-if="ActivitySession.activity"
-                            type="button" @click="ActivitySession.markCorrect(item.id)">Mark as Correct
-                    </button>
                 </div>
+                <button v-if="ActivitySession.activity"
+                        type="button" @click="ActivitySession.markCorrect(item.id)">Mark as Correct
+                </button>
             </div>
-        </template>
+            <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+                <p>{{ item.tip }}</p>
+            </AppTip>
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+.exercise--input-example {
+    display: grid;
+    text-align: start;
+    margin: 2.4rem;
+    gap: 1.6rem;
+    justify-items: right;
+
+    & + .exercise--input {
+        margin-block-start: 3.2rem;
+    }
+}
+
 .exercise--input {
     input {
         direction: rtl;

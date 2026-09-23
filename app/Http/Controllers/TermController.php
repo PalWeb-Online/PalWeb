@@ -24,6 +24,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -229,15 +230,7 @@ class TermController extends Controller
             $this->handleDependents($term, $formData['inflections'], Inflection::class);
             $this->handleDependents($term, $formData['pronunciations'], Pronunciation::class);
 
-            foreach ($request->glosses as $glossData) {
-                $glossData = array_merge($glossData, ['term_id' => $term->id]);
-                $gloss = Gloss::create($glossData);
-
-                $glossAttributes = array_map(fn ($item) => $item['attribute'], $glossData['attributes']);
-                foreach ($glossAttributes as $attribute) {
-                    Attribute::firstWhere('attribute', $attribute)->glosses()->attach($gloss);
-                }
-            }
+            $this->syncGlosses($term, $formData['glosses']);
 
             return $term;
         });
@@ -286,25 +279,7 @@ class TermController extends Controller
                 'slug' => $this->handleSlug($formData['category'], $formData['pronunciations'][0]['translit'], $term),
             ]);
 
-            $requestGlosses = collect($formData['glosses']);
-            $existingGlosses = $term->glosses->keyBy('id');
-
-            foreach ($requestGlosses as $glossData) {
-                $id = $glossData['id'] ?? null;
-                if ($id && $existingGlosses->has($id)) {
-                    $existingGlosses[$id]->update($glossData);
-                    $gloss = $existingGlosses[$id];
-                } else {
-                    $gloss = Gloss::create(array_merge($glossData, ['term_id' => $term->id]));
-                }
-                $this->handleAttributes($gloss, $glossData['attributes'], 'glosses');
-            }
-
-            $existingGlosses->each(function ($gloss) use ($requestGlosses) {
-                if (! $requestGlosses->pluck('id')->contains($gloss->id)) {
-                    $gloss->delete();
-                }
-            });
+            $this->syncGlosses($term, $formData['glosses']);
 
             Root::doesntHave('terms')->delete();
 
@@ -383,6 +358,43 @@ class TermController extends Controller
         foreach ($detachableAttributes as $attribute) {
             Attribute::firstWhere('attribute', $attribute)->{$relation}()->detach($model);
         }
+    }
+
+    private function syncGlosses(Term $term, array $glosses): void
+    {
+        $requestGlosses = collect($glosses)
+            ->values()
+            ->map(fn ($glossData, int $index) => [
+                ...$glossData,
+                'position' => $glossData['position'] ?? $index + 1,
+            ]);
+
+        $existingGlosses = $term->glosses()->get()->keyBy('id');
+
+        foreach ($requestGlosses as $glossData) {
+            $id = $glossData['id'] ?? null;
+            $values = Arr::only($glossData, ['gloss', 'position']);
+
+            if ($id && $existingGlosses->has($id)) {
+                $existingGlosses[$id]->update($values);
+                $gloss = $existingGlosses[$id];
+            } else {
+                $gloss = Gloss::create([
+                    ...$values,
+                    'term_id' => $term->id,
+                ]);
+            }
+
+            $this->handleAttributes($gloss, $glossData['attributes'] ?? [], 'glosses');
+        }
+
+        $requestGlossIds = $requestGlosses->pluck('id')->filter();
+
+        $existingGlosses->each(function ($gloss) use ($requestGlossIds) {
+            if (! $requestGlossIds->contains($gloss->id)) {
+                $gloss->delete();
+            }
+        });
     }
 
     private function handleDependents(

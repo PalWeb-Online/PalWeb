@@ -93,7 +93,7 @@ class Term extends Model
     public function decks(): BelongsToMany
     {
         return $this->belongsToMany(Deck::class)
-            ->withPivot('position');
+            ->withPivot('id', 'gloss_id', 'position');
     }
 
     public function root(): BelongsTo
@@ -134,7 +134,7 @@ class Term extends Model
 
     public function glosses(): HasMany
     {
-        return $this->hasMany(Gloss::class);
+        return $this->hasMany(Gloss::class)->orderBy('position')->orderBy('id');
     }
 
     public function spellings(): HasMany
@@ -176,8 +176,12 @@ class Term extends Model
     public function forReviewOptions(Builder $query, ReviewOptions $options, User $user): Builder
     {
         return match ($options->scope) {
-            'deck' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereKey($options->deckId)),
-            'pinned' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery->whereHasBookmark($user)),
+            'deck' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery
+                ->whereNotNull('deck_term.gloss_id')
+                ->whereKey($options->deckId)),
+            'pinned' => $query->whereHas('decks', fn (Builder $deckQuery) => $deckQuery
+                ->whereNotNull('deck_term.gloss_id')
+                ->whereHasBookmark($user)),
             'lesson' => $query->whereHas('decks.lesson', fn (Builder $lessonQuery) => $lessonQuery
                 ->whereHas('users', fn (Builder $userQuery) => $userQuery
                     ->whereKey($user->id))),

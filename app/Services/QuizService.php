@@ -32,13 +32,18 @@ class QuizService
         $quiz = [];
 
         $terms = $deck->terms()
+            ->whereNotNull('deck_term.gloss_id')
             ->withItemData()
             ->when($promptTerm, fn ($q) => $q->whereHas('pronunciations.audios'))
             ->get()
             ->shuffle()
             ->values();
 
-        foreach ($terms as $term) {
+        $questionTerms = $strictGloss
+            ? $terms
+            : $terms->unique('id')->values();
+
+        foreach ($questionTerms as $term) {
             if (count($quiz) >= 50) {
                 break;
             }
@@ -49,23 +54,37 @@ class QuizService
                 ? $term->glosses->firstWhere('id', $glossId)
                 : $term->glosses->random();
 
+            if (! $answer) {
+                continue;
+            }
+
+            $excludedGlossIds = $term->glosses
+                ->pluck('id')
+                ->push($answer->id)
+                ->unique()
+                ->values();
+
             $decoysQuery = Gloss::query();
 
             if ($strictTerms) {
                 $decoyGlossIds = $strictGloss
-                    ? $deck->terms->pluck('pivot.gloss_id')->filter()
-                    : $deck->terms->pluck('glosses')->flatten()->pluck('id');
-                $decoysQuery->whereIn('id', $decoyGlossIds);
+                    ? $questionTerms->pluck('pivot.gloss_id')->filter()->unique()->values()
+                    : $questionTerms->pluck('glosses')->flatten()->pluck('id')->unique()->values();
+
+                $decoysQuery->whereIn('id', $decoyGlossIds->diff($excludedGlossIds)->values());
             }
 
             $decoys = $decoysQuery
-                ->whereNot('id', $answer->id)
-                ->whereNot('term_id', $answer->term_id)
+                ->whereNotIn('id', $excludedGlossIds)
+                ->whereNot('term_id', $term->id)
                 ->inRandomOrder()
                 ->take(2)
                 ->get();
 
-            $options = collect([$answer, ...$decoys])->keyBy('id')->map(fn ($g) => $g->gloss)->toArray();
+            $options = collect([$answer, ...$decoys])
+                ->keyBy('id')
+                ->map(fn ($g) => $g->gloss)
+                ->toArray();
 
             $quiz[] = [
                 'term' => new TermResource($term),
@@ -83,9 +102,11 @@ class QuizService
     {
         $quiz = [];
         $terms = $deck->terms()
+            ->whereNotNull('deck_term.gloss_id')
             ->with('inflections')
             ->get()
             ->shuffle()
+            ->unique('id')
             ->values();
 
         foreach ($terms as $term) {
@@ -125,12 +146,17 @@ class QuizService
 
         $quiz = [];
         $terms = $deck->terms()
+            ->whereNotNull('deck_term.gloss_id')
             ->with('sentences')
             ->get()
             ->shuffle()
             ->values();
 
-        foreach ($terms as $term) {
+        $questionTerms = $strictGloss
+            ? $terms
+            : $terms->unique('id')->values();
+
+        foreach ($questionTerms as $term) {
             if (count($quiz) >= 25) {
                 break;
             }
@@ -143,7 +169,7 @@ class QuizService
                 continue;
             }
 
-            $sentence = $term->sentences->random();
+            $sentence = $sentences->random();
 
             $sentenceTerms = app(SentenceService::class)->getSentenceTerms($sentence);
 
@@ -156,7 +182,8 @@ class QuizService
                 ->push($term->id);
 
             if ($withTranslation) {
-                $decoys = $deck->terms
+                $decoys = $terms
+                    ->unique('id')
                     ->whereNotIn('id', $excludedDecoys)
                     ->shuffle()
                     ->take(2);

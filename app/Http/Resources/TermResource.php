@@ -26,8 +26,10 @@ class TermResource extends JsonResource
             'glosses' => $this->whenLoaded('glosses', fn () => $this->glosses->map(fn ($gloss) => [
                 'id' => $gloss->id,
                 'gloss' => $gloss->gloss,
+                'position' => $gloss->position,
             ])),
             'deckPivot' => $this->whenPivotLoaded('deck_term', fn () => [
+                'id' => $this->pivot->id,
                 'gloss_id' => $this->pivot->gloss_id,
                 'position' => $this->pivot->position,
             ]),

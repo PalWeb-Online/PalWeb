@@ -100,6 +100,7 @@ class LessonPlannerController extends Controller
             ->whereKey($deckIds)
             ->with([
                 'terms' => fn ($q) => $q
+                    ->whereNotNull('deck_term.gloss_id')
                     ->withItemData(),
             ])
             ->get()

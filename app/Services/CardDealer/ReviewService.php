@@ -48,6 +48,8 @@ class ReviewService
         $newTerms = $remainingSessionCapacity > 0 && $remainingNewLimit > 0
             ? Term::query()
                 ->forReviewOptions($options, $user)
+                ->select('terms.*')
+                ->distinct()
                 ->orderByDesc('usage_count')
                 ->when($options->promptType === 'audio', fn (Builder $query) => $query->hasFluentAudio())
                 ->whereDoesntHave('cards', fn ($q) => $q->where('user_id', $user->id))
@@ -128,8 +130,9 @@ class ReviewService
     {
         return Term::query()
             ->forReviewOptions($options, $user)
+            ->distinct()
             ->whereDoesntHave('cards', fn ($q) => $q->where('user_id', $user->id))
-            ->count();
+            ->count('terms.id');
     }
 
     private function baseDueCardsQuery(User $user, ReviewOptions $options): Builder

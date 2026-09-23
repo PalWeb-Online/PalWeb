@@ -45,6 +45,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
 
     const startQuiz = async () => {
         scoreManager.score.scorable_type = 'deck';
+        scoreManager.isSaved.value = false;
 
         data.step = 'quiz';
         data.isLoading = true;

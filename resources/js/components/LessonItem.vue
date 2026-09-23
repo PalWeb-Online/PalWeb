@@ -3,8 +3,10 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import WindowSection from "./WindowSection.vue";
 import AppTip from "./AppTip.vue";
+import {useAcademyStateStore} from "../stores/AcademyStateStore.js";
 
 const UserStore = useUserStore();
+const AcademyStateStore = useAcademyStateStore();
 
 const props = defineProps({
     lesson: Object,
@@ -48,7 +50,7 @@ const props = defineProps({
             </template>
         </WindowSection>
         <div class="window-footer">
-            <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !UserStore.hasUnlockedLesson(lesson.id) }">
+            <Link :href="route('lessons.show', lesson.global_position)" :class="{ disabled: !UserStore.isAdmin && !AcademyStateStore.hasUnlockedLesson(lesson.id) }">
                 {{ $t('components.lesson.open') }}
             </Link>
         </div>

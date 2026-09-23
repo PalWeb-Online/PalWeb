@@ -68,7 +68,7 @@ class Deck extends Model
     public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class)
-            ->withPivot('gloss_id', 'position')
+            ->withPivot('id', 'gloss_id', 'position')
             ->orderBy('position');
     }
 

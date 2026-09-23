@@ -28,6 +28,8 @@ class DeckScope implements Scope
 
         $builder
             ->with(['author.selectedAvatar', 'lesson'])
-            ->withCount('terms');
+            ->withCount([
+                'terms' => fn ($query) => $query->whereNotNull('deck_term.gloss_id'),
+            ]);
     }
 }

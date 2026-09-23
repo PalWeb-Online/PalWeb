@@ -1,7 +1,6 @@
 <script setup>
 import {Carousel, Slide} from "vue3-carousel";
-import TermFlashcard from "../DeckMaster/UI/TermFlashcard.vue";
-import {computed, ref} from "vue";
+import {computed, onBeforeUnmount, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
@@ -12,9 +11,12 @@ import AppTooltip from "../../../components/AppTooltip.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppButton from "../../../components/AppButton.vue";
 import {useI18n} from "vue-i18n";
+import {useAcademyStateStore} from "../../../stores/AcademyStateStore.js";
+import TermFlashcard from "../../../components/TermFlashcard.vue";
 
 const { t } = useI18n();
 const NotificationStore = useNotificationStore();
+const AcademyStateStore = useAcademyStateStore();
 
 const appTooltip = ref(null);
 
@@ -87,6 +89,7 @@ const showTranscription = ref(false);
 
 const answerShown = ref(false);
 const gradeCommitted = ref(false);
+const shouldRefreshAcademyProgress = ref(false);
 
 const progressFill = computed(() => ({
     width: formatter.format(processedCount.value / props.cards.length),
@@ -107,6 +110,7 @@ const gradeCard = async (gradeValue) => {
         next_interval: card.next_intervals[gradeValue]?.days,
         learning_steps: props.options.learningSteps
     });
+    shouldRefreshAcademyProgress.value = true;
 
     const key = `${card.id}-${index}`;
     if (flashcardRefs.value[key]) {
@@ -149,10 +153,12 @@ const dismissCard = async (action) => {
 
     if (action === 'master') {
         await axios.post(route('cards.master', card.id));
+        shouldRefreshAcademyProgress.value = true;
         NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
 
     } else if (action === 'suspend') {
         await axios.post(route('cards.suspend', card.id));
+        shouldRefreshAcademyProgress.value = true;
         NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
     }
 
@@ -186,6 +192,12 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     gradeCommitted.value = false;
     cardStartTime.value = Date.now();
 };
+
+onBeforeUnmount(() => {
+    if (shouldRefreshAcademyProgress.value) {
+        AcademyStateStore.refreshState().catch(() => {});
+    }
+});
 </script>
 
 <template>

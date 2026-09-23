@@ -8,7 +8,6 @@ import HomepageHero from "../components/HomepageHero.vue";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import UserScorecard from "../components/UserScorecard.vue";
 import RotatingWordColumn from "../components/RotatingWordColumn.vue";
-import TermFlashcard from "./Workbench/DeckMaster/UI/TermFlashcard.vue";
 import ToggleSingle from "../components/ToggleSingle.vue";
 import {useSearchStore} from "../stores/SearchStore.js";
 import SentenceItem from "../components/SentenceItem.vue";
@@ -20,6 +19,7 @@ import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
 import CommentItem from "../components/CommentItem.vue";
 import InfiniteCarousel from "../components/InfiniteCarousel.vue";
 import {useI18n} from "vue-i18n";
+import TermFlashcard from "../components/TermFlashcard.vue";
 
 const {t} = useI18n();
 

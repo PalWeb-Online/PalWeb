@@ -62,10 +62,6 @@ export const useUserStore = defineStore('UserStore', () => {
         }
     };
 
-    const hasUnlockedLesson = (id) => {
-        return user.value?.unlocked_lessons?.includes(id) ?? false;
-    }
-
     return {
         user,
         setUser,
@@ -73,7 +69,6 @@ export const useUserStore = defineStore('UserStore', () => {
         decks,
         hasFetchedDecks,
         fetchDecks,
-        hasUnlockedLesson,
         isSuperuser,
         isAdmin,
         isStudent,

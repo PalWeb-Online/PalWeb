@@ -47,6 +47,12 @@ html[lang="ar"] {
     .homepage-panel-content,
     .feature-callout,
     .notification-container,
+    .study-plan-wrapper,
+    .unit-map,
+    .unit-nav,
+    .lesson-head-position,
+    .lesson-progress-summary,
+    .sm-mode-select,
     #app-head
     {
         direction: rtl;
@@ -408,10 +414,6 @@ button.toggle-button {
             color: var(--color-accent-dark);
         }
     }
-}
-
-.model-list.draggable {
-    padding-inline: 1.6rem;
 }
 
 .draggable {

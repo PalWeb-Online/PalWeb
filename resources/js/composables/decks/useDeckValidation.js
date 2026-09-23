@@ -28,6 +28,25 @@ export function useDeckValidation({
             errors.description = t('validation.max-chars', {field: t('forms.fields.description'), max: 500});
         }
 
+        const seenTermGlosses = new Set();
+
+        (form.terms ?? []).forEach((term, index) => {
+            const glossId = term.deckPivot?.gloss_id;
+
+            if (!glossId) {
+                errors[`terms.${index}.deckPivot.gloss_id`] = `${term.term}: ${t('validation.required', {field: t('gloss.key')})}`;
+                return;
+            }
+
+            const key = `${term.id}:${glossId}`;
+
+            if (seenTermGlosses.has(key)) {
+                errors[`terms.${index}.deckPivot.gloss_id`] = `${term.term}: ${t('deck.validation.duplicate-term-gloss')}`;
+            }
+
+            seenTermGlosses.add(key);
+        });
+
         return errors;
     });
 
@@ -42,5 +61,6 @@ export function useDeckValidation({
     return {
         isValidRequest,
         validationErrors,
+        frontendErrors,
     };
 }

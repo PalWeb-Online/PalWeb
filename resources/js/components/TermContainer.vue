@@ -392,7 +392,7 @@ const etymology = computed(() => {
                         </div>
                     </template>
                     <template #sentences>
-                        <div v-if="gloss.sentences.length > 0" class="model-list">
+                        <div v-if="gloss.sentences.length > 0" class="model-list index-list">
                             <SentenceItem v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences"
                                           :model="sentence"
                                           :currentTerm="term.id" dialog/>
@@ -566,11 +566,13 @@ const etymology = computed(() => {
     flex-direction: column;
     gap: 0.8rem;
     align-items: center;
+    background: white;
+    padding: 0.8rem 1.6rem;
 
     button {
+        color: var(--color-medium-primary);
         font-family: var(--body-font);
         font-weight: 700;
-        color: var(--color-dark-primary);
 
         &:hover {
             text-decoration: underline;
@@ -584,10 +586,11 @@ const etymology = computed(() => {
 
 .term-container-decks {
     background: var(--color-medium-primary);
+    border-block-start: 0.1rem solid var(--color-dark-primary);
 
     .featured-title {
         color: white;
-        padding: 3.6rem 2.4rem 1.2rem;
+        padding: 3.6rem 2.4rem;
     }
 }
 </style>

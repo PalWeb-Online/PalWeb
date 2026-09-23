@@ -46,6 +46,7 @@ class DeckMasterController extends Controller
     {
         $deck->load([
             'terms' => fn ($q) => $q
+                ->whereNotNull('deck_term.gloss_id')
                 ->withItemData()
                 ->withUserCard(),
             'scores'
@@ -89,12 +90,15 @@ class DeckMasterController extends Controller
                 ->whereHasBookmark($user)
                 ->with([
                     'terms' => fn ($q) => $q
+                        ->whereNotNull('deck_term.gloss_id')
                         ->withUserCard(),
                     'scores'
                 ])
                 ->get()
             : $user->decks()
-                ->with(['terms'])
+                ->with([
+                    'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+                ])
                 ->get();
 
         return response()->json([
@@ -108,6 +112,7 @@ class DeckMasterController extends Controller
 
         $deck->load([
             'terms' => fn ($q) => $q
+                ->whereNotNull('deck_term.gloss_id')
                 ->withItemData()
                 ->withUserCard()
                 ->with('inflections'),

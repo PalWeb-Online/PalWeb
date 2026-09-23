@@ -31,7 +31,7 @@ const toBuild = () => {
         <h1>{{ $t('pages.speech-maker.title') }}</h1>
     </div>
     <div id="app-body">
-        <div id="sm-select">
+        <div class="app-body-section">
             <div class="sm-mode-select">
                 <button class="featured-title l" :class="{'active': mode === 'dialog'}"
                         @click="mode = 'dialog'">dlg

@@ -37,15 +37,13 @@ watch(() => props.unitId, async () => {
 </script>
 <template>
     <Head :title="`Academy: Unit ${unit?.position}`"/>
+    <UnitNav v-if="unit" :unit="unit"/>
 
     <LoadingSpinner v-if="isLoadingUnit"/>
     <AppTip v-else-if="unitNotFound">
         <p>{{ $t('pages.common.not-found', {model: $t('actions.models.unit')}) }}</p>
     </AppTip>
     <template v-else-if="unit">
-        <div id="lesson-nav">
-            <UnitNav :unit="unit"/>
-        </div>
         <div id="app-body">
             <LessonItem v-for="lesson in lessons" :key="lesson.id" :lesson="lesson"/>
         </div>

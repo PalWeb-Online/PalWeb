@@ -9,12 +9,17 @@ import ActivityContainer from "../../../components/ActivityContainer.vue";
 import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useLessonViewer} from "../../../composables/lessons/useLessonViewer.js";
+import ProgressSummary from "./UI/ProgressSummary.vue";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
+    unitId: {
+        type: Number,
+        required: false,
+    },
     lessonId: {
         type: Number,
         required: true,
@@ -32,70 +37,50 @@ const {
 
 const currentTab = ref('deck');
 
+const tabForStage = (stage) => {
+    if (stage >= 3) return 'dialog';
+    if (stage >= 2) return 'skills';
+
+    return 'deck';
+};
+
 onMounted(async () => {
     await loadLesson(props.lessonId);
+    currentTab.value = tabForStage(lesson.value?.progress?.stage);
 });
 
-watch(() => props.lessonId, async () => {
+watch([() => props.lessonId, () => props.unitId], async () => {
     currentTab.value = 'deck';
     await reloadLesson(props.lessonId);
+    currentTab.value = tabForStage(lesson.value?.progress?.stage);
 });
 </script>
 <template>
     <Head :title="`Academy: Lesson ${lesson?.global_position}`"/>
+    <UnitNav v-if="unit" :unit="unit" :activeLesson="lesson"/>
 
     <LoadingSpinner v-if="isLoadingLesson"/>
     <AppTip v-else-if="lessonNotFound">
         <p>{{ $t('pages.common.not-found', {model: $t('actions.models.lesson')}) }}</p>
     </AppTip>
     <template v-else-if="lesson">
-        <div id="lesson-nav">
-            <UnitNav v-if="unit" :unit="unit" :lesson="lesson" :activeLesson="lesson.global_position"/>
-            <div class="lesson-data-container">
-                <div class="lesson-data-head">
-                    <div class="featured-title s">{{ $t('lesson.key-index', {index: lesson.global_position}) }}:</div>
-                    <div class="lesson-head-title">{{ lesson.title }}</div>
-                </div>
-                <div class="lesson-data-body">
-                    <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
-                    <div v-if="lesson.document" class="lesson-skill-summary">
-                        <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
-                        <ul style="margin-block: 1.6rem">
-                            <li v-for="skill in lesson.document.skills">
-                                {{ skill.description }}
-                            </li>
-                        </ul>
-                    </div>
+        <div class="lesson-data-container">
+            <div class="lesson-data-head">
+                <div class="lesson-head-position">{{ $t('lesson.key-index', {index: lesson.global_position}) }}:</div>
+                <div class="lesson-head-title">{{ lesson.title }}</div>
+            </div>
+            <div class="lesson-data-body">
+                <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
+                <div v-if="lesson.document" class="lesson-skill-summary">
+                    <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
+                    <ul style="margin-block: 1.6rem">
+                        <li v-for="skill in lesson.document.skills">
+                            {{ skill.description }}
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-            <div class="lesson-stages">
-                <div class="lesson-stage-wrapper" @click="currentTab = 'deck'"
-                     :class="{active: currentTab === 'deck'}">
-                    <div class="lesson-stage-index">1</div>
-                    <div class="featured-title m">{{ $t('components.deck.title') }}</div>
-                </div>
-                <div class="lesson-stage-wrapper" @click="currentTab = 'skills'"
-                     :class="{active: currentTab === 'skills', disabled: lesson.progress.stage < 2}">
-                    <div v-if="lesson.progress.stage < 2" class="lesson-stage-index">
-                        <span class="material-symbols-rounded">lock</span>
-                    </div>
-                    <template v-else>
-                        <div class="lesson-stage-index">2</div>
-                        <div class="featured-title m">{{ $t('components.lesson.sections.skills') }}</div>
-                    </template>
-                </div>
-                <div class="lesson-stage-wrapper" @click="currentTab = 'dialog'"
-                     :class="{active: currentTab === 'dialog', disabled: lesson.progress.stage < 3}">
-                    <div v-if="lesson.progress.stage < 3" class="lesson-stage-index">
-                        <span class="material-symbols-rounded">lock</span>
-                    </div>
-                    <template v-else>
-                        <div class="lesson-stage-index">3</div>
-                        <div class="featured-title m">{{ $t('components.dialog.title') }}</div>
-                    </template>
-                </div>
-            </div>
+            <ProgressSummary :lesson="lesson" v-model:current-tab="currentTab"/>
         </div>
 
         <div id="app-body" v-show="currentTab === 'deck'">
@@ -127,11 +112,17 @@ watch(() => props.lessonId, async () => {
 </template>
 
 <style lang="scss" scoped>
+@use "@styles/variables";
+
 .lesson-data-container {
+    justify-self: center;
     display: grid;
     overflow: hidden;
+    color: var(--color-dark-primary);
+    background: var(--color-accent-light);
 
     @media (width >= 960px) {
+        width: min(100%, 96rem);
         border-radius: 3.2rem;
     }
 }
@@ -143,8 +134,11 @@ watch(() => props.lessonId, async () => {
     background: var(--color-medium-secondary);
     padding: 3.2rem 3.2rem 1.6rem;
 
-    .featured-title {
-        color: var(--color-accent-medium)
+
+    .lesson-head-position {
+        @include variables.featured-title;
+        color: var(--color-accent-medium);
+        font-size: 3.2rem;
     }
 
     .lesson-head-title {
@@ -162,89 +156,5 @@ watch(() => props.lessonId, async () => {
     font-size: 1.8rem;
     line-height: 1.5;
     padding: 3.2rem;
-    color: var(--color-dark-primary);
-    background: var(--color-accent-light);
-}
-
-.lesson-stages {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
-    margin-block: 3.2rem 6.4rem;
-
-    .lesson-stage-wrapper {
-        display: grid;
-        place-items: center;
-        grid-template-areas: 'overlap';
-        user-select: none;
-        cursor: pointer;
-        font-size: clamp(0.8rem, 2vw, 1.6rem);
-
-        & > * {
-            grid-area: overlap;
-        }
-
-        .featured-title {
-            color: white;
-            background: var(--color-medium-secondary);
-            font-size: 3em;
-            padding: 0.1em 0.3em 0.2em;
-            z-index: 1;
-        }
-
-        .lesson-stage-index {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-dark-primary);
-            font-family: var(--display-font), serif;
-            font-size: 16em;
-            height: 0.75em;
-            width: 0.75em;
-            border-radius: 50%;
-            background: var(--color-accent-light);
-            overflow: hidden;
-            z-index: 0;
-            transition: rotate 0.1s;
-
-            .material-symbols-rounded {
-                font-size: 0.2em;
-            }
-        }
-
-        &:not(.disabled) {
-            .lesson-stage-index {
-                padding-block-end: 0.125em;
-            }
-
-            &:hover {
-                .lesson-stage-index {
-                    rotate: 9deg;
-                }
-            }
-        }
-
-        &.active {
-            .featured-title {
-                color: var(--color-medium-secondary);
-                background: var(--color-accent-light);
-            }
-
-            .lesson-stage-index {
-                background: var(--color-medium-secondary);
-                rotate: 9deg;
-            }
-        }
-
-        &.disabled {
-            .lesson-stage-index {
-                color: var(--color-accent-light);
-                background: var(--color-dark-primary);
-            }
-
-            pointer-events: none;
-            cursor: not-allowed;
-        }
-    }
 }
 </style>

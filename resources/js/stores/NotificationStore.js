@@ -34,32 +34,23 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         );
     };
 
-    const resolveMessage = (payload) => {
-        if (typeof payload === 'string') {
-            return payload;
+    const resolveMessage = (notification) => {
+        if (notification?.key) {
+            return t(notification.key, resolveParams(notification.params));
         }
 
-        if (payload?.key) {
-            return t(payload.key, resolveParams(payload.params));
-        }
-
-        return payload?.message ?? '';
+        return notification?.message ?? '';
     };
 
-    const notify = (payload) => {
-        const message = resolveMessage(payload);
+    const notify = ({notification}) => {
+        const message = resolveMessage(notification);
 
         if (!message) {
             return;
         }
 
-        const type = typeof payload === 'object'
-            ? payload.type ?? 'success'
-            : 'success';
-
-        const duration = typeof payload === 'object'
-            ? payload.duration ?? 3000
-            : 3000;
+        const type = notification.type ?? 'success';
+        const duration = notification.duration ?? 3000;
 
         addNotification(message, type, duration);
     };

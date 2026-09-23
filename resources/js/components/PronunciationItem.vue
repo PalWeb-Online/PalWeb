@@ -80,7 +80,6 @@ onMounted(() => {
         justify-items: start;
         border-inline-start: none;
         background: var(--color-pastel-dark);
-        border-block-start: 0.1rem solid var(--color-dark-primary);
 
         & > * {
             min-width: 0;

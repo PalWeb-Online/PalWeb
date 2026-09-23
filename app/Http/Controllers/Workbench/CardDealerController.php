@@ -132,7 +132,8 @@ class CardDealerController extends Controller
 
             $count = Term::query()
                 ->forReviewOptions($options, $user)
-                ->count();
+                ->distinct()
+                ->count('terms.id');
 
             $cards = Card::query()
                 ->forUser($user->id)

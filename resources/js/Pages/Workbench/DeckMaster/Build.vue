@@ -2,7 +2,6 @@
 import {computed, onMounted, watch} from "vue";
 import {route} from "ziggy-js";
 import draggable from 'vuedraggable';
-import TermItem from "./UI/TermItem.vue";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import PinButton from "../../../components/PinButton.vue";
@@ -161,16 +160,36 @@ watch(() => props.deckId, async () => {
             <div class="window-section-head">
                 <h2>{{ $t('models.terms') }}</h2>
             </div>
-            <draggable :list="form.terms" itemKey="id" handle=".handle"
+            <draggable :list="form.terms" itemKey="deckTermKey" handle=".handle"
                        @end="updatePosition()"
                        class="model-list index-list draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                        <span class="delete material-symbols-rounded"
-                              v-show="form.terms.length > 0"
-                              @click="removeTerm(index)">delete</span>
-                        <TermItem :term="element"/>
-                        <span class="handle material-symbols-rounded">drag_indicator</span>
+                        <div class="model-item-container term-item-container">
+                            <div class="model-item term-item">
+                                <button class="delete material-symbols-rounded"
+                                      v-show="form.terms.length > 0" @click="removeTerm(index)">delete</button>
+                                <div class="model-item-content">
+                                    <div class="term-item-gloss">
+                                        <select v-model="element.deckPivot.gloss_id">
+                                            <option v-for="gloss in element.glosses" :value="gloss.id">
+                                                {{
+                                                    gloss.gloss.length > 85 ? gloss.gloss.slice(0, 85) + "..." : gloss.gloss
+                                                }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="term-item-term">
+                                        <div
+                                            style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;">
+                                            <span class="arb">{{ element.term }}</span>
+                                            <span class="translit">{{ element.translit }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="handle material-symbols-rounded">drag_indicator</span>
+                            </div>
+                        </div>
                     </div>
                 </template>
             </draggable>

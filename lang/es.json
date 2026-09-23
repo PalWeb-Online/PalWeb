@@ -177,6 +177,9 @@
             "copy-link-success": "Enlace a la Baraja ha sido copiado al portapapeles.",
             "copy-confirm": "¿Estás seguro de que quieres crear una copia de esta Baraja?",
             "copy-success": "¡Se ha creado una copia de la Baraja!"
+        },
+        "validation": {
+            "duplicate-term-gloss": "Este Término ya está en la Baraja con la Definición seleccionada."
         }
     },
     "dialect": {
@@ -213,7 +216,8 @@
             "pair-start": "Lado Inicial del Par {index}",
             "pair-end": "Lado Final del Par {index}",
             "sort-items": "Elementos a Ordenar",
-            "input-answer": "Respuesta"
+            "input-answer": "Respuesta",
+            "tip": "Justificación"
         },
         "prompts": {
             "input": "Contesta a la pregunta con una oración completa, siguiendo el formato del ejemplo.",
@@ -245,6 +249,12 @@
             "key": "Condición de Desbloqueo",
             "type": "Tipo",
             "value": "Valor"
+        },
+        "notifications": {
+            "activity-unlocked": "¡Bien hecho! ¡Has desbloqueado la Actividad de esta Lección!",
+            "unlocked-lesson": "¡Lección completada! Has desbloqueado la Lección {position}.",
+            "unlocked-lessons": "¡Lección completada! Has desbloqueado {count} nuevas Lecciones.",
+            "completed-everything": "¡Has completado la Lección y todo lo que está disponible para tí en la Academia! ¡Vuelve pronto!"
         },
         "validation": {
             "min-unlock-conditions": "Las Lecciones Extra deben tener al menos una Condición de Desbloqueo."
@@ -851,11 +861,30 @@
             }
         },
         "lesson": {
-            "scored-perfect": "Obtuviste 100% ({count}/{total})",
             "open": "abrir Lección",
+            "scored-perfect": "Obtuviste 100% ({count}/{total})",
             "no-skills": "(Ninguna habilidad ha sido agregada a esta Lección aún.)",
             "sections": {
                 "skills": "habilidades"
+            },
+            "progress": {
+                "stages": "fases",
+                "completed-tasks": "hecho",
+                "next-task": "ahora toca"
+            },
+            "tasks": {
+                "deck": {
+                    "label": "Haz un Quiz de la Baraja",
+                    "meta": "Obtén un Puntaje de 100% en cualquier tipo de Quiz ({count}/{total})"
+                },
+                "activity": {
+                    "label": "Completa la Actividad",
+                    "meta": "Lee las Habilidades, luego obtén un Puntaje de 100% en la Actividad"
+                },
+                "dialog": {
+                    "label": "Repasa el Diálogo",
+                    "meta": "¡Vuelve en cualquier momento para practicar el habla!"
+                }
             }
         },
         "page": {
@@ -1106,6 +1135,23 @@
         "academy": {
             "index": {
                 "title": "academia"
+            },
+            "study-plan": {
+                "title": "plan de estudio",
+                "loading": "Cargando el Plan de Estudio de hoy...",
+                "error": "No se pudo cargar el Plan de Estudio de hoy.",
+                "tasks-completed": "¡Has terminado todo por hoy! ¡Nos vemos mañana!",
+                "cards": {
+                    "label": "Repasa tus Cartas Programadas",
+                    "meta": "Tienes {count} Cartas Programadas en el Repartidor.",
+                    "complete": "¡Ya no quedan más Cartas Programadas para hoy!",
+                    "action": "repasar cartas"
+                },
+                "lesson": {
+                    "label": "Continúa la Lección {lesson}",
+                    "continue-deck": "¡Haz un Quiz de la Baraja para desbloquear las Habilidades de esta Lección!",
+                    "continue-activity": "¡Haz la Actividad para desbloquear el Diálogo de esta Lección!"
+                }
             }
         },
         "lessons": {

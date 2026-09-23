@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
-import TermFlashcard from "../UI/TermFlashcard.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import TermItem from "../../../../components/TermItem.vue";
@@ -11,6 +10,7 @@ import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
 import AppButton from "../../../../components/AppButton.vue";
+import TermFlashcard from "../../../../components/TermFlashcard.vue";
 
 const DeckStudyStore = useDeckStudyStore();
 
