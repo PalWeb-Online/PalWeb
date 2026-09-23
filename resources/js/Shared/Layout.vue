@@ -60,7 +60,8 @@ onMounted(() => {
                 NotificationStore.notify(e);
             })
             .listen('AcademyStateUpdated', () => {
-                AcademyStateStore.refreshState().catch(() => {});
+                AcademyStateStore.refreshState().catch(() => {
+                });
             });
     }
 });
@@ -142,7 +143,6 @@ watch(
     align-content: start;
     position: relative;
     isolation: isolate;
-    //overflow: hidden;
 
     @media (width >= 960px) {
         min-height: calc(100vh - 3.6rem);

@@ -32,6 +32,7 @@ class LessonController extends Controller
 
         return Inertia::render('Academy/Lessons/Show', [
             'section' => 'academy',
+            'unitId' => $lesson->unit_id,
             'lessonId' => $lesson->id,
         ]);
     }

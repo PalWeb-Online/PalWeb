@@ -163,7 +163,7 @@ onMounted(() => {
     width: 100%;
     height: 3em;
     font-size: 1.6rem;
-    z-index: 999;
+    z-index: 1;
     user-select: none;
 
     @media (width >= 960px) {
