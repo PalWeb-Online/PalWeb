@@ -87,7 +87,7 @@ class TermController extends Controller
         URL::forceScheme('https');
 
         $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'rootType', 'attribute', 'form', 'singular', 'plural',
         ]));
 
         $perPage = 25;

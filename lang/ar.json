@@ -394,6 +394,10 @@
                 "label": "الوزن",
                 "option": "وزن {form}"
             },
+            "root-type": {
+                "label": "نوع الجذر",
+                "option": "نوع {type}"
+            },
             "singular": "المفرد",
             "plural": "الجمع",
             "pattern-groups": {
@@ -731,6 +735,7 @@
         "type": {
             "container": "حاوية",
             "heading": "عنوان",
+            "divider": "فاصل",
             "text": "نصّ",
             "image": "صورة",
             "audio": "صوت",

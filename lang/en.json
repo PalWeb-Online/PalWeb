@@ -394,6 +394,10 @@
                 "label": "form",
                 "option": "form {form}"
             },
+            "root-type": {
+                "label": "Root Type",
+                "option": "type {type}"
+            },
             "singular": "singular",
             "plural": "plural",
             "pattern-groups": {
@@ -731,6 +735,7 @@
         "type": {
             "container": "container",
             "heading": "heading",
+            "divider": "divider",
             "text": "text",
             "image": "image",
             "audio": "audio",

@@ -394,6 +394,10 @@
                 "label": "forma",
                 "option": "forma {form}"
             },
+            "root-type": {
+                "label": "Tipo de Raíz",
+                "option": "tipo {type}"
+            },
             "singular": "singular",
             "plural": "plural",
             "pattern-groups": {
@@ -731,6 +735,7 @@
         "type": {
             "container": "contenedor",
             "heading": "titular",
+            "divider": "separador",
             "text": "texto",
             "image": "imagen",
             "audio": "audio",

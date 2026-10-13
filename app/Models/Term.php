@@ -263,6 +263,10 @@ class Term extends Model
             ->where('category', $category)
         );
 
+        $query->when($filters['rootType'] ?? false, fn ($query, $rootType) => $query
+            ->whereHas('root', fn ($query) => $query->where('type', $rootType))
+        );
+
         $query->when($filters['attribute'] ?? false, fn ($query, $attribute) => $query
             ->whereHas('attributes', fn ($query) => $query->where('attribute', $attribute))
         );
