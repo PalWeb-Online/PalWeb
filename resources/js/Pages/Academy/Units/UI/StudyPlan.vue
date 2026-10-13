@@ -4,6 +4,7 @@ import ProgressTaskItem from "../../Lessons/UI/ProgressTaskItem.vue";
 import {useAcademyStateStore} from "../../../../stores/AcademyStateStore.js";
 import AppTip from "../../../../components/AppTip.vue";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
+import ZatuneThinking from "../../../../Shared/ZatuneThinking.vue";
 
 const AcademyStateStore = useAcademyStateStore();
 const studyPlan = computed(() => AcademyStateStore.studyPlan);
@@ -68,6 +69,7 @@ onMounted(() => {
 
 <template>
     <div class="study-plan-wrapper">
+        <ZatuneThinking/>
         <section class="study-plan-container" aria-label="Today's Study Plan">
             <div class="study-plan-head">
                 <div class="today-date">
@@ -121,9 +123,18 @@ onMounted(() => {
     display: grid;
     width: min(100%, 96rem);
     margin-block: 3.2rem 6.4rem;
+    position: relative;
 
     @media (width >= 960px) {
         margin-block-start: 0;
+    }
+
+    .mascot-zatune {
+        position: absolute;
+        top: -10%;
+        right: 5%;
+        max-width: 15%;
+        z-index: 1;
     }
 }
 

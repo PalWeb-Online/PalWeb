@@ -141,14 +141,6 @@ body {
     gap: 0;
 }
 
-.app-logo {
-    animation: bounceIn 0.5s;
-    z-index: 1;
-    cursor: pointer;
-
-    @include variables.pop-on-hover;
-}
-
 nav {
     display: flex;
     flex-wrap: nowrap;

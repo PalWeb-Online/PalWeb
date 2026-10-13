@@ -20,7 +20,18 @@ import {route} from "ziggy-js";
     </svg>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@styles/variables";
+
+.app-logo {
+    position: relative;
+    animation: bounceIn 0.5s;
+    z-index: 1;
+    cursor: pointer;
+
+    @include variables.pop-on-hover;
+}
+
 .letters-fill, .letters-shadow {
     stroke-width: 0;
 }
