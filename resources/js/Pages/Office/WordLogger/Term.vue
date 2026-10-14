@@ -13,7 +13,6 @@ import {route} from "ziggy-js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import PinButton from "../../../components/PinButton.vue";
 import TermActions from "../../../components/Actions/TermActions.vue";
-import {Link} from "@inertiajs/vue3";
 import TermRelativesEditor from "./TermRelativesEditor.vue";
 import draggable from 'vuedraggable';
 
@@ -111,7 +110,6 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Word Logger: Build Term"/>
     <div id="app-head">
         <h1>{{ $t('pages.word-logger.title') }}</h1>
     </div>
@@ -121,13 +119,13 @@ defineOptions({
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('word-logger.index')">Back to Word Logger</Link>
+            <RouterLink class="portal-button" :to="{ name: 'word-logger.index' }">Back to Word Logger</RouterLink>
         </template>
 
         <template v-else>
             <div class="window-container">
                 <div class="window-header">
-                    <Link :href="route('word-logger.index')" class="material-symbols-rounded">arrow_back</Link>
+                    <RouterLink :to="{ name: 'word-logger.index' }" class="material-symbols-rounded">arrow_back</RouterLink>
                     <div class="window-header-url">www.palweb.app/library/terms/{term}</div>
                     <button class="material-symbols-rounded" @click="saveTerm()"
                             :disabled="isSaving || !hasNavigationGuard || !isValidRequest">

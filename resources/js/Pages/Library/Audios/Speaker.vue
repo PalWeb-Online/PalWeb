@@ -5,7 +5,6 @@ import PronunciationItem from "../../../components/PronunciationItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import UserItem from "../../../components/UserItem.vue";
 import {usePaginator} from "../../../composables/usePaginator.js";
@@ -55,11 +54,10 @@ watch(
 </script>
 
 <template>
-    <Head :title="speaker ? `Library: Audios by ${speaker.user.name}` : 'Library: Audios'"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'audios.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/audios/{speaker}</div>
             </div>
             <div class="window-section-head"><h1>{{ $t('actions.models.speaker') }}</h1></div>

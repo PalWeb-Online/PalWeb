@@ -6,7 +6,6 @@ import {createActivitySession, provideActivitySession} from "../../../composable
 import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import {route} from "ziggy-js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import {useActivityViewer} from "../../../composables/activities/useActivityViewer.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
@@ -68,7 +67,6 @@ const isValidRequest = computed(() => {
 </script>
 
 <template>
-    <Head :title="ActivitySession.activity?.title ?? 'Activity'"/>
 
     <LoadingSpinner v-if="isLoadingActivity"/>
     <template v-else-if="activityNotFound">
@@ -78,10 +76,10 @@ const isValidRequest = computed(() => {
     </template>
     <template v-else-if="ActivitySession.activity">
         <div class="activity-head" v-if="!ActivitySession.isViewingResults">
-            <Link class="feature-callout" style="justify-self: center"
-                  :href="route('lessons.show', ActivitySession.activity.lesson.global_position)">
+            <RouterLink class="feature-callout" style="justify-self: center"
+                  :to="{ name: 'lessons.show', params: { lesson: ActivitySession.activity.lesson.global_position } }">
                 {{ $t('components.activity.exit') }}
-            </Link>
+            </RouterLink>
             <h1>{{ $t('components.activity.title') }}</h1>
         </div>
         <div id="app-body">

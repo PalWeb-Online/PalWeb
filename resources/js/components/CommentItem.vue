@@ -1,7 +1,6 @@
 <script setup>
 import UserNametag from "./UserNametag.vue";
 import UserAvatarWrapper from "./UserAvatarWrapper.vue";
-import {route} from "ziggy-js";
 import {computed} from "vue";
 
 const props = defineProps({
@@ -15,9 +14,9 @@ const resolvedUser = computed(() => props.user ?? props.model.user);
 <template>
     <div class="user-item comment-item">
         <UserAvatarWrapper :user="resolvedUser">
-            <Link class="material-symbols-rounded" :href="route('users.show', resolvedUser.username)">
+            <RouterLink class="material-symbols-rounded" :to="{ name: 'users.show', params: { user: resolvedUser.username } }">
                 account_circle
-            </Link>
+            </RouterLink>
 
             <a v-if="resolvedUser.teacher?.email" class="material-symbols-rounded" :href="`mailto:${resolvedUser.teacher?.email}`">mail</a>
         </UserAvatarWrapper>

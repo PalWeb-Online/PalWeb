@@ -3,7 +3,6 @@ import {useTerm} from "../composables/terms/useTerm.js";
 import PinButton from "./PinButton.vue";
 import TermDeckToggleButton from "./TermDeckToggleButton.vue";
 import TermActions from "./Actions/TermActions.vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import CardItem from "./CardItem.vue";
 import AudioButton from "./AudioButton.vue";
@@ -87,11 +86,11 @@ const showNextGloss = () => {
                         </div>
                     </div>
                     <div class="term-item-term">
-                        <Link style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
-                              :href="route('terms.show', term.slug)">
+                        <RouterLink style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
+                              :to="{ name: 'terms.show', params: { term: term.slug } }">
                             <span class="arb">{{ term.term }}</span>
                             <span class="translit">({{ term.translit }})</span>
-                        </Link>
+                        </RouterLink>
                         <AudioButton v-if="term.audio" :pronunciation="term.pronunciations[0]"/>
                     </div>
                 </div>

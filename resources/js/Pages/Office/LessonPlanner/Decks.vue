@@ -73,7 +73,6 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Head :title="unit ? `Lesson Planner: Unit ${unit.position} Decks` : 'Lesson Planner: Unit Decks'"/>
 
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
@@ -82,9 +81,9 @@ onMounted(async () => {
     <div id="app-body">
         <div v-if="unit" class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
-                <Link :href="route('lesson-planner.unit', unit.id)">
+                <RouterLink :to="{ name: 'lesson-planner.unit', params: { unit: unit.id } }">
                     <- to Unit
-                </Link>
+                </RouterLink>
             </div>
 
             <div class="featured-title l">

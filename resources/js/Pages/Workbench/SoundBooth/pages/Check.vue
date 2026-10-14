@@ -2,7 +2,6 @@
 import {computed} from 'vue';
 import {useRecordStore} from "../stores/RecordStore.js";
 import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
-import {route} from "ziggy-js";
 import AppTip from "../../../../components/AppTip.vue";
 import PronunciationItem from "../../../../components/PronunciationItem.vue";
 

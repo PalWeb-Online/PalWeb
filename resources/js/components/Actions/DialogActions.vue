@@ -14,21 +14,21 @@ const props = defineProps({
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <Link v-if="$page.component !== 'Academy/Dialogs/Show'"
-              :href="route('dialogs.show', model.id)" role="menuitem" tabindex="-1">
+        <RouterLink v-if="$page.component !== 'Academy/Dialogs/Show'"
+              :to="route('dialogs.show', model.id)" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.dialog') }) }}
-        </Link>
+        </RouterLink>
         <template v-if="UserStore.isAdmin">
-            <Link :href="route('speech-maker.dialog', model.id)" role="menuitem" tabindex="-1">
+            <RouterLink :to="{ name: 'speech-maker.dialog', params: { dialog: model.id } }" role="menuitem" tabindex="-1">
                 {{ $t('actions.common.edit', { model: $t('actions.models.dialog') }) }}
-            </Link>
+            </RouterLink>
             <button @click="deleteDialog(model)" role="menuitem" tabindex="-1">
                 {{ $t('actions.common.delete', { model: $t('actions.models.dialog') }) }}
             </button>
         </template>
-        <Link v-if="model.lesson" :href="route('lessons.show', model.lesson.global_position)" role="menuitem"
+        <RouterLink v-if="model.lesson" :to="{ name: 'lessons.show', params: { lesson: model.lesson.global_position } }" role="menuitem"
               tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.lesson') }) }}
-        </Link>
+        </RouterLink>
     </ContextActions>
 </template>

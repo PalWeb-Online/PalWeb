@@ -24,7 +24,6 @@ const navigate = () => {
 }
 </script>
 <template>
-    <Head title="Subscribe"/>
     <div id="app-head">
         <h1>{{ $t('subscription.title') }}</h1>
     </div>
@@ -37,7 +36,7 @@ const navigate = () => {
                 }}
             </p>
         </AppTip>
-        <Link href="/billing" v-if="UserStore.isUser" class="portal-button">{{ $t('subscription.manage') }}</Link>
+        <a href="/billing" v-if="UserStore.isUser" class="portal-button">{{ $t('subscription.manage') }}</a>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">

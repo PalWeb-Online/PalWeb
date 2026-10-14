@@ -7,7 +7,6 @@ import ScoreStats from "../../../../components/ScoreStats.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import ScoreDetail from "../../../../components/ScoreDetail.vue";
 import DocumentBlocksRenderer from "../../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
-import {route} from "ziggy-js";
 import ActivityActions from "../../../../components/Actions/ActivityActions.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
@@ -28,9 +27,9 @@ const handleSave = () => {
 <template>
     <div class="window-container">
         <div class="window-header">
-            <Link :href="route('lessons.show', ActivitySession.activity.lesson.global_position)"
+            <RouterLink :to="{ name: 'lessons.show', params: { lesson: ActivitySession.activity.lesson.global_position } }"
                   class="material-symbols-rounded">close
-            </Link>
+            </RouterLink>
             <div class="window-header-url">www.palweb.app/academy/lessons/{lesson}/activity</div>
         </div>
         <div class="window-section-head">

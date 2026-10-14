@@ -17,9 +17,8 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head title="Academy: Dialogs"/>
     <div id="app-head">
-        <Link :href="route('dialogs.index')"><h1>{{ $t('pages.dialogs.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'dialogs.index' }"><h1>{{ $t('pages.dialogs.index.title') }}</h1></RouterLink>
     </div>
     <div id="app-body">
         <div class="app-body-section">

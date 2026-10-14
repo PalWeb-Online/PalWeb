@@ -33,7 +33,6 @@ watch(
 );
 </script>
 <template>
-    <Head :title="dialog ? `Academy: Dialogs: ${dialog.title}` : 'Academy: Dialogs'"/>
 
     <LoadingSpinner v-if="isLoadingDialog"/>
     <AppTip v-else-if="dialogNotFound">

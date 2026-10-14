@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import WindowSection from "./WindowSection.vue";
 import ActivityActions from "./Actions/ActivityActions.vue";
 import ScoreStats from "./ScoreStats.vue";
@@ -36,9 +35,9 @@ defineProps({
         </WindowSection>
 
         <div class="window-footer">
-            <Link :href="route('activities.activity', model.id)">
+            <RouterLink :to="{ name: 'activities.activity', params: { activity: model.id } }">
                 {{ $t('components.activity.start') }}
-            </Link>
+            </RouterLink>
         </div>
     </div>
 </template>

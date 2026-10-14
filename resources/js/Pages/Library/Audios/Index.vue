@@ -60,14 +60,13 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 </script>
 
 <template>
-    <Head title="Library: Audios"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'audios.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/audios</div>
-                <Link v-if="UserStore.isUser" :href="route('sound-booth.index')" class="material-symbols-rounded">add
-                </Link>
+                <RouterLink v-if="UserStore.isUser" :to="{ name: 'sound-booth.index' }" class="material-symbols-rounded">add
+                </RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.audios.index.title') }}</h1></div>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>

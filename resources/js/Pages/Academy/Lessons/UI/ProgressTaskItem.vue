@@ -22,11 +22,11 @@ defineProps({
             </div>
         </div>
 
-        <Link v-if="item.route && !item.completed"
+        <RouterLink v-if="item.route && !item.completed"
               class="lesson-progress-action"
-              :href="item.route">
+              :to="item.route">
             {{ $t(item.actionKey) }}
-        </Link>
+        </RouterLink>
     </div>
 </template>
 

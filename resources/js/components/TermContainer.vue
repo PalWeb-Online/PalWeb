@@ -207,10 +207,10 @@ const etymology = computed(() => {
     <template v-if="! isLoading">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'terms.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/terms/{term}</div>
                 <TermDeckToggleButton :model="term"/>
-                <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+                <RouterLink :to="{ name: 'terms.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
             </div>
             <div class="window-section-head">
                 <h1>{{ $t('actions.models.term') }}</h1>
@@ -257,9 +257,9 @@ const etymology = computed(() => {
                             <template v-for="derivative in derivatives">
                                 <span style="font-weight: 400">{{ derivative.type }}:</span>
                                 {{ ' ' }}
-                                <Link :href="route('terms.show', derivative.slug)">
+                                <RouterLink :to="{ name: 'terms.show', params: { term: derivative.slug } }">
                                     {{ derivative.term }} ({{ derivative.translit }})
-                                </Link>
+                                </RouterLink>
                                 {{ ' ' }}
                             </template>
                         </template>
@@ -269,9 +269,9 @@ const etymology = computed(() => {
                             {{ ' ' }}
                             <span style="font-weight: 400">verb:</span>
                             {{ ' ' }}
-                            <Link :href="route('terms.show', source.slug)">
+                            <RouterLink :to="{ name: 'terms.show', params: { term: source.slug } }">
                                 {{ source.term }} ({{ source.translit }})
-                            </Link>
+                            </RouterLink>
                         </template>
                     </div>
                 </div>
@@ -279,15 +279,15 @@ const etymology = computed(() => {
                      v-if="term.spellings.length + variants.length + references.length > 0">
                     <div v-if="references.length > 0">
                         <div>{{ $t('components.term.references.see') }}</div>
-                        <Link v-for="reference in references" :href="route('terms.show', reference.slug)">
+                        <RouterLink v-for="reference in references" :to="{ name: 'terms.show', params: { term: reference.slug } }">
                             {{ reference.term }} ({{ reference.translit }})
-                        </Link>
+                        </RouterLink>
                     </div>
                     <div v-if="variants.length > 0">
                         <div>{{ $t('components.term.references.alt') }}</div>
-                        <Link v-for="variant in variants" :href="route('terms.show', variant.slug)">
+                        <RouterLink v-for="variant in variants" :to="{ name: 'terms.show', params: { term: variant.slug } }">
                             {{ variant.term }} ({{ variant.translit }})
-                        </Link>
+                        </RouterLink>
                     </div>
                     <div v-if="term.spellings.length > 0">
                         <div>{{ $t('components.term.references.or') }}</div>
@@ -308,9 +308,9 @@ const etymology = computed(() => {
 
                     <span v-for="(token, index) in etymology.source" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
-                            </Link>
+                            </RouterLink>
                         </span>
 
                     <span v-html="etymology.singPatterns"></span>
@@ -318,22 +318,22 @@ const etymology = computed(() => {
 
                     <span v-for="(token, index) in etymology.components" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
-                            </Link>
+                            </RouterLink>
                         </span>
 
                     <span v-for="(token, index) in etymology.descendants" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <Link v-else-if="token.type === 'link'" :href="route('terms.show', token.slug)">
+                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
-                            </Link>
+                            </RouterLink>
                         </span>
                 </div>
-                <Link class="term-root" v-if="term.root" :href="route('roots.show', term.root.id )">
+                <RouterLink class="term-root" v-if="term.root" :to="{ name: 'roots.show', params: { root: term.root.id  } }">
                     <div class="term-root-ar">{{ term.root.ar }}</div>
                     <div class="term-root-en">({{ term.root.en }})</div>
-                </Link>
+                </RouterLink>
             </div>
             <div class="term-pronunciation">
                 <div class="model-list">
@@ -368,17 +368,17 @@ const etymology = computed(() => {
                     <template #relatives>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
                             {{ $t('components.term.relatives.synonym-abbr') }}
-                            <Link v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
-                                  :href="route('terms.show', synonym.slug)">
+                            <RouterLink v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
+                                  :to="{ name: 'terms.show', params: { term: synonym.slug } }">
                                 {{ synonym.term }} ({{ synonym.translit }})
-                            </Link>
+                            </RouterLink>
                         </div>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
                             {{ $t('components.term.relatives.antonym-abbr') }}
-                            <Link v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
-                                  :href="route('terms.show', antonym.slug)">
+                            <RouterLink v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
+                                  :to="{ name: 'terms.show', params: { term: antonym.slug } }">
                                 {{ antonym.term }} ({{ antonym.translit }})
-                            </Link>
+                            </RouterLink>
                         </div>
                         <div class="gloss-item-relatives"
                              v-if="glossRelatives(gloss.id, ['isPatient', 'noPatient', 'hasObject']).length > 0"
@@ -386,9 +386,9 @@ const etymology = computed(() => {
                              :key="pair.id"
                         >
                             {{ pair.type }}
-                            <Link :href="route('terms.show', pair.slug)">
+                            <RouterLink :to="{ name: 'terms.show', params: { term: pair.slug } }">
                                 {{ pair.term }} ({{ pair.translit }})
-                            </Link>
+                            </RouterLink>
                         </div>
                     </template>
                     <template #sentences>

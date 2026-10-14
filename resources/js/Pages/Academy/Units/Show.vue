@@ -36,7 +36,6 @@ watch(() => props.unitId, async () => {
 });
 </script>
 <template>
-    <Head :title="`Academy: Unit ${unit?.position}`"/>
     <UnitNav v-if="unit" :unit="unit"/>
 
     <LoadingSpinner v-if="isLoadingUnit"/>

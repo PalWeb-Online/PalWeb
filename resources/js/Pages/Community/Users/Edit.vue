@@ -1,9 +1,7 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {Link} from "@inertiajs/vue3";
 import {computed, onMounted, ref, watch} from "vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import {route} from "ziggy-js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import UserAvatarWrapper from "../../../components/UserAvatarWrapper.vue";
@@ -167,23 +165,22 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 </script>
 
 <template>
-    <Head title="Edit Profile"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingUserForm"/>
         <template v-else-if="userNotFound">
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('action.models.user')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('users.index')">
+            <RouterLink class="portal-button" :to="{ name: 'users.index' }">
                 Back to Community
-            </Link>
+            </RouterLink>
         </template>
 
         <div v-else class="window-container">
             <div class="window-header">
-                <Link class="material-symbols-rounded" :href="route('users.show', user?.username ?? props.username)">
+                <RouterLink class="material-symbols-rounded" :to="{ name: 'users.show', params: { user: user?.username ?? props.username } }">
                     arrow_back
-                </Link>
+                </RouterLink>
                 <button @click="userForm.private = !userForm.private" class="material-symbols-rounded">
                     {{ userForm.private ? 'lock' : 'public' }}
                 </button>
@@ -191,9 +188,9 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
             </div>
             <div class="window-section-head">
                 <h1>{{ $t('user.profile') }}</h1>
-                <Link :href="route('users.show', user?.username ?? props.username)" class="material-symbols-rounded">
+                <RouterLink :to="{ name: 'users.show', params: { user: user?.username ?? props.username } }" class="material-symbols-rounded">
                     visibility
-                </Link>
+                </RouterLink>
             </div>
             <div class="user-item l">
                 <UserAvatarWrapper :user="avatarPreviewUser">

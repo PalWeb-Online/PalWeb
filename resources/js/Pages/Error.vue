@@ -44,7 +44,6 @@ defineOptions({
 });
 </script>
 <template>
-    <Head title="Error"/>
     <div id="app-body">
         <div class="error-container">
             <div class="error-status">{{ status }}</div>

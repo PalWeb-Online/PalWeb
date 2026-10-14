@@ -160,7 +160,7 @@ watch(() => props.unit, () => {
             <div ref="collapsibleInner" class="unit-nav-collapsible-inner">
                 <div class="unit-meta" v-if="isDraft">draft</div>
                 <div class="unit-title">
-                    <Link :href="route('units.index')" class="material-symbols-rounded">arrow_back</Link>
+                    <RouterLink :to="{ name: 'units.index' }" class="material-symbols-rounded">arrow_back</RouterLink>
                     <div class="unit-title-text">
                         {{ $t('unit.number', {number: unit.position}) }}: {{ unit.title }}
                     </div>
@@ -175,14 +175,14 @@ watch(() => props.unit, () => {
             </div>
         </div>
         <div class="unit-progress-bar-wrapper">
-            <Link :href="route('units.show', unit.position)" class="material-symbols-rounded"
+            <RouterLink :to="{ name: 'units.show', params: { unit: unit.position } }" class="material-symbols-rounded"
                   :class="{ active: $page.component === 'Academy/Units/Show' }">
                 home
-            </Link>
+            </RouterLink>
             <div class="unit-progress-bar">
-                <Link v-for="lesson in unit.lessons"
+                <RouterLink v-for="lesson in unit.lessons"
                       :key="lesson.id"
-                      :href="route('lessons.show', lesson)"
+                      :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }"
                       :class="{
                         hidden: !UserStore.isAdmin && !lesson.published,
                         locked: !UserStore.isAdmin && !AcademyStateStore.hasUnlockedLesson(lesson.id),
@@ -195,11 +195,11 @@ watch(() => props.unit, () => {
                     <div>
                         <span>{{ lesson.unit_position }}</span>
                     </div>
-                </Link>
-                <Link v-if="UserStore.isAdmin && unit.lessons?.length < 9"
+                </RouterLink>
+                <RouterLink v-if="UserStore.isAdmin && unit.lessons?.length < 9"
                       class="new-lesson-link"
-                      :href="route('lesson-planner.unit-lesson', unit)">+
-                </Link>
+                      :to="route('lesson-planner.unit-lesson', unit)">+
+                </RouterLink>
             </div>
         </div>
     </div>

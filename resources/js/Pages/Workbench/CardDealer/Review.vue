@@ -218,13 +218,18 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="Card Dealer: Review"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('card-dealer.index', {scope: options.scope, deck: options.deckId})" class="material-symbols-rounded">
+                <RouterLink :to="{
+                    name: 'card-dealer.index',
+                    query: {
+                        scope: options.scope,
+                        deck: options.deckId
+                    }
+                }" class="material-symbols-rounded">
                     arrow_back
-                </Link>
+                </RouterLink>
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>
             </div>
             <div class="window-section-head">

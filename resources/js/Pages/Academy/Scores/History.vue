@@ -104,14 +104,13 @@ watch(selectedScore, (newVal) => {
 });
 </script>
 <template>
-    <Head :title="`Academy: Score History${model ? ` for ${model.id}` : ''}`"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>{{ $t('pages.scores.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'scores.index' }"><h1>{{ $t('pages.scores.index.title') }}</h1></RouterLink>
     </div>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('scores.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'scores.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/academy/scores/history/{{ '{' + scorable_type + '}' }}
                 </div>
             </div>
@@ -136,11 +135,11 @@ watch(selectedScore, (newVal) => {
 
             <template v-if="selectedScore">
                 <div class="window-section-head" id="score-detail">
-                    <Link
-                        :href="route('scores.history', { scorable_type: selectedScore?.scorable_type, scorable_id: selectedScore?.scorable_id })"
-                        class="material-symbols-rounded" preserve-scroll preserve-state>
+                    <RouterLink
+                        :to="route('scores.history', { scorable_type: selectedScore?.scorable_type, scorable_id: selectedScore?.scorable_id })"
+                        class="material-symbols-rounded">
                         arrow_back
-                    </Link>
+                    </RouterLink>
                     <h2>{{ $t('components.score.sections.detail') }}</h2>
                     <button @click="deleteScore(selectedScore?.id)" class="material-symbols-rounded">delete</button>
                 </div>
@@ -178,15 +177,15 @@ watch(selectedScore, (newVal) => {
                 </AppTip>
                 <template v-if="totalCount > 0">
                     <div class="score-item-wrapper" v-for="score in scores.data">
-                        <Link
-                            :href="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
-                            class="score-item" preserve-scroll preserve-state>
+                        <RouterLink
+                            :to="route('scores.history', { scorable_type: score.scorable_type, scorable_id: score.scorable_id, score: score.id })"
+                            class="score-item">
                             <div style="text-transform: capitalize">{{ $t(`models.${score.settings.quizType}`) ?? $t('components.activity.title') }}</div>
                             <div>{{ getScoreStats(score).formatted }}
                                 ({{ getScoreStats(score).correct }}/{{ getScoreStats(score).total }})
                             </div>
                             <div style="font-size: 1.2rem">{{ score.created_at }}</div>
-                        </Link>
+                        </RouterLink>
                         <button @click="deleteScore(score.id)" class="material-symbols-rounded">delete</button>
                     </div>
                     <Paginator :links="scores.meta.links"/>

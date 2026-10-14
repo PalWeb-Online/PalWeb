@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, onMounted} from "vue";
+import {ref, onMounted} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
@@ -72,15 +72,14 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Dictionary"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'terms.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/terms</div>
-                <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add
-                </Link>
-                <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+                <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'word-logger.term' }" class="material-symbols-rounded">add
+                </RouterLink>
+                <RouterLink :to="{ name: 'terms.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.terms.index.title') }}</h1></div>
 

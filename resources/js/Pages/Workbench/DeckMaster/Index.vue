@@ -97,7 +97,6 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Deck Master"/>
     <div id="app-head">
         <h1>{{ $t('pages.deck-master.title') }}</h1>
         <div @click="toggleMode" class="app-mode-toggle" :class="mode">

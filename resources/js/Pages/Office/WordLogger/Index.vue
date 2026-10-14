@@ -55,12 +55,11 @@ defineOptions({
 })
 </script>
 <template>
-    <Head title="Word Logger"/>
     <div id="app-head">
         <h1>{{ $t('pages.word-logger.title') }}</h1>
     </div>
     <div id="app-body">
-        <Link :href="route('word-logger.term')">{{ $t('forms.actions.create', {title: $t('actions.models.term')}) }}</Link>
+        <RouterLink :to="{ name: 'word-logger.term' }">{{ $t('forms.actions.create', {title: $t('actions.models.term')}) }}</RouterLink>
 
         <div class="word-logger-tabs">
             <button v-for="tab in tabs"
@@ -106,7 +105,7 @@ defineOptions({
                     {{ term.sent_term }}
                     ({{ term.sent_translit }})
 
-                    <Link :href="route('sentences.show', term.sentence_id)">{{ $t('actions.common.view', {model: 'Sentence'}) }}</Link>
+                    <RouterLink :to="{ name: 'sentences.show', params: { sentence: term.sentence_id } }">{{ $t('actions.common.view', {model: 'Sentence'}) }}</RouterLink>
                 </div>
             </div>
             <div v-if="!tabData.sentences.fromSentences.length" class="empty-state">No sentence terms are waiting to be linked.</div>

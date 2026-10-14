@@ -20,7 +20,6 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head :title="root ? `Dictionary: ${root.ar} (${root.en})` : 'Dictionary'"/>
     <div id="app-body">
         <RootContainer v-if="root" :root="root"/>
     </div>

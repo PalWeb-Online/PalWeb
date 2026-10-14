@@ -37,9 +37,8 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Community Hub"/>
     <div id="app-head">
-        <Link :href="route('users.index')"><h1>{{ $t('pages.users.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'users.index' }"><h1>{{ $t('pages.users.index.title') }}</h1></RouterLink>
     </div>
 
     <div id="app-body">
@@ -81,9 +80,9 @@ defineOptions({
                     <DeckItem v-for="deck in popularDecks" :model="deck" size="l"/>
                 </div>
             </div>
-            <Link class="portal-button" style="justify-self: center" :href="route('deck-master.build')">
+            <RouterLink class="portal-button" style="justify-self: center" :to="{ name: 'deck-master.build' }">
                 {{ $t('pages.users.index.create-prompt') }}
-            </Link>
+            </RouterLink>
 
             <AppHeading>
                 {{ $t('pages.users.index.audios') }}
@@ -92,9 +91,9 @@ defineOptions({
                 <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                 <PronunciationItem v-for="audio in latestAudios" :model="audio.pronunciation" :audio="audio"/>
             </div>
-            <Link class="portal-button" style="justify-self: center" :href="route('sound-booth.index')">
+            <RouterLink class="portal-button" style="justify-self: center" :to="{ name: 'sound-booth.index' }">
                 {{ $t('pages.users.index.record-prompt') }}
-            </Link>
+            </RouterLink>
 
             <AppHeading>
                 {{ $t('pages.users.index.creators') }}

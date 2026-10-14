@@ -50,12 +50,12 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 <template>
     <div v-if="! isLoading && sentence.sentence" class="model-item-container sentence-item-container">
         <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
-            <Link v-if="dialog && sentence.dialog"
+            <a v-if="dialog && sentence.dialog"
                   :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
                   target="_blank">
                 <div>{{ $t('components.dialog.title') }}</div>
                 <div>{{ sentence.dialog.title }}</div>
-            </Link>
+            </a>
             <div v-if="speaker">
                 <div>{{ $t('components.sentence.speaker') }}</div>
                 <div>{{ sentence.speaker }}</div>
@@ -72,13 +72,13 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                         <div v-if="showTranscription">[]</div>
                     </div>
                     <template v-else>
-                        <Link v-if="term.id"
-                              :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                        <RouterLink v-if="term.id"
+                              :to="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
                               :target="isCurrentTerm(term) ? '' : '_blank'"
                               :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
                             <div>{{ term.sentencePivot.sent_term }}</div>
                             <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                        </Link>
+                        </RouterLink>
                         <div v-else class="sentence-term">
                             <div>{{ term.sentencePivot.sent_term }}</div>
                             <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>

@@ -1,6 +1,5 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
-import {computed} from "vue";
 import AppTip from "../components/AppTip.vue";
 
 defineOptions({
@@ -8,7 +7,6 @@ defineOptions({
 });
 </script>
 <template>
-    <Head title="Coming Soon"/>
     <div id="app-head">
         <h1>Coming Soon</h1>
     </div>

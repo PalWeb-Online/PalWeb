@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {onBeforeUnmount, onMounted, ref} from "vue";
@@ -109,7 +108,7 @@ onMounted(() => {
                 (UTC +{{ utcOffsetHours }})
             </div>
             <InstallButton/>
-            <Link :href="route('homepage')">PalWeb 2.4 (Msaxxan)</Link>
+            <RouterLink :to="{ name: 'homepage' }">PalWeb 2.4 (Msaxxan)</RouterLink>
         </div>
         <div class="nav-sticky-buttons">
             <button

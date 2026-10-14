@@ -93,25 +93,24 @@ watch(() => props.sentenceId, async () => {
 </script>
 
 <template>
-    <Head title="Speech Maker: Build Sentence"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="sentenceNotFound">
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.sentence')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('speech-maker.index')">
+            <RouterLink class="portal-button" :to="{ name: 'speech-maker.index' }">
                 Back to Speech Maker
-            </Link>
+            </RouterLink>
         </template>
 
         <div v-else class="window-container">
             <div class="window-header">
-                <Link :href="initialDialog
+                <RouterLink :to="initialDialog
                         ? route('speech-maker.dialog', initialDialog.id)
                         : route('speech-maker.index')"
                       class="material-symbols-rounded">arrow_back
-                </Link>
+                </RouterLink>
                 <div class="window-header-url">www.palweb.app/library/sentences/{sentence}</div>
                 <button class="material-symbols-rounded" @click="addTerm">
                     add
@@ -155,10 +154,10 @@ watch(() => props.sentenceId, async () => {
             </AppTip>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="form.dialog?.id" class="sentence-dialog-data">
-                    <Link :href="route('speech-maker.dialog', form.dialog.id)" target="_blank">
+                    <a :href="route('speech-maker.dialog', form.dialog.id)" target="_blank">
                         <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ form.dialog.title }}</div>
-                    </Link>
+                    </a>
                     <div>
                         <div>{{ $t('components.sentence.speaker') }}</div>
                         <input v-model="form.speaker"/>

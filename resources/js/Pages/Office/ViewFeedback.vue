@@ -17,7 +17,6 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Head title="to-Do List"/>
     <div id="app-head">
         <h1>Feedback</h1>
     </div>

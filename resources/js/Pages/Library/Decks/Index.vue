@@ -53,15 +53,14 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Library: Decks"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('decks.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'decks.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/decks</div>
-                <Link v-if="UserStore.isUser" :href="route('deck-master.build')" class="material-symbols-rounded">add
-                </Link>
-                <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+                <RouterLink v-if="UserStore.isUser" :to="{ name: 'deck-master.build' }" class="material-symbols-rounded">add
+                </RouterLink>
+                <RouterLink :to="{ name: 'decks.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.decks.index.title') }}</h1></div>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>

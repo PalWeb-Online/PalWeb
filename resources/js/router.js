@@ -98,7 +98,7 @@ const router = createRouter({
             path: '/subscription',
             name: 'subscription.index',
             component: Subscription,
-            meta: { title: 'Subscription', section: 'account' }
+            meta: { title: 'Subscribe', section: 'account' }
         },
 
         // Auth
@@ -161,17 +161,19 @@ const router = createRouter({
                     path: 'terms',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'terms.index', component: TermsIndex, meta: { title: 'Terms' } },
-                        { path: ':term', name: 'terms.show', component: TermShow, props: route => ({termId: identifier(route.params.term)}), meta: { title: 'Term' } },
+                        { path: '', name: 'terms.index', component: TermsIndex, meta: { title: 'Dictionary' } },
+                        { path: 'random', name: 'terms.random', component: TermShow, props: {termId: 'random'}, meta: { title: 'Dictionary' } },
+                        { path: ':term', name: 'terms.show', component: TermShow, props: route => ({termId: identifier(route.params.term)}), meta: { title: 'Dictionary' } },
                     ]
                 },
-                { path: 'roots/:root', name: 'roots.show', component: TermRoot, props: route => ({rootId: identifier(route.params.root)}), meta: { title: 'Word Roots' } },
+                { path: 'roots/:root', name: 'roots.show', component: TermRoot, props: route => ({rootId: identifier(route.params.root)}), meta: { title: 'Dictionary' } },
                 {
                     path: 'sentences',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'sentences.index', component: SentencesIndex, meta: { title: 'Sentences' } },
-                        { path: ':sentence', name: 'sentences.show', component: SentenceShow, props: route => ({sentenceId: identifier(route.params.sentence)}), meta: { title: 'Sentence' } },
+                        { path: '', name: 'sentences.index', component: SentencesIndex, meta: { title: 'Library: Corpus' } },
+                        { path: 'random', name: 'sentences.random', component: SentenceShow, props: {sentenceId: 'random'}, meta: { title: 'Library: Corpus' } },
+                        { path: ':sentence', name: 'sentences.show', component: SentenceShow, props: route => ({sentenceId: identifier(route.params.sentence)}), meta: { title: 'Library: Corpus' } },
                     ]
                 },
                 {
@@ -179,8 +181,9 @@ const router = createRouter({
                     component: RouterView,
                     meta: { requiresAuth: true, requiresVerified: true },
                     children: [
-                        { path: '', name: 'decks.index', component: DecksIndex, meta: { title: 'Decks' } },
-                        { path: ':deck', name: 'decks.show', component: DeckShow, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Deck' } },
+                        { path: '', name: 'decks.index', component: DecksIndex, meta: { title: 'Library: Decks' } },
+                        { path: 'random', name: 'decks.random', component: DeckShow, props: {deckId: 'random'}, meta: { title: 'Library: Decks' } },
+                        { path: ':deck', name: 'decks.show', component: DeckShow, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Library: Decks' } },
                     ]
                 },
                 {
@@ -188,8 +191,8 @@ const router = createRouter({
                     component: RouterView,
                     meta: { requiresAuth: true, requiresVerified: true },
                     children: [
-                        { path: '', name: 'audios.index', component: AudiosIndex, meta: { title: 'Audios' } },
-                        { path: ':speaker', name: 'speaker.show', component: SpeakerShow, props: route => ({speakerId: identifier(route.params.speaker)}), meta: { title: 'Speaker' } },
+                        { path: '', name: 'audios.index', component: AudiosIndex, meta: { title: 'Library: Audios' } },
+                        { path: ':speaker', name: 'speaker.show', component: SpeakerShow, props: route => ({speakerId: identifier(route.params.speaker)}), meta: { title: 'Library: Audios' } },
                     ]
                 },
             ]
@@ -205,7 +208,7 @@ const router = createRouter({
                     path: 'users',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'users.index', component: UsersIndex, meta: { title: 'Users' } },
+                        { path: '', name: 'users.index', component: UsersIndex, meta: { title: 'Community Hub' } },
                         {
                             path: ':user',
                             name: 'users.show',
@@ -214,7 +217,7 @@ const router = createRouter({
                                 userId: identifier(route.params.user),
                                 username: route.params.user,
                             }),
-                            meta: { title: 'User Profile' },
+                            meta: { title: route => `Pal: ${route.params.user}` },
                         },
                         {
                             path: ':user/edit',
@@ -241,8 +244,8 @@ const router = createRouter({
                     path: 'units',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'units.index', component: UnitsIndex, meta: { title: 'Course' } },
-                        { path: ':unit', name: 'units.show', component: UnitShow, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: 'Unit' } },
+                        { path: '', name: 'units.index', component: UnitsIndex, meta: { title: 'Academy: Lessons' } },
+                        { path: ':unit', name: 'units.show', component: UnitShow, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: route => `Academy: Unit ${route.params.unit}` } },
                     ]
                 },
                 {
@@ -250,14 +253,14 @@ const router = createRouter({
                     name: 'lessons.show',
                     component: LessonShow,
                     props: route => ({lessonId: identifier(route.params.lesson)}),
-                    meta: { title: 'Lesson' },
+                    meta: { title: route => `Academy: Lesson ${route.params.lesson}` },
                 },
                 {
                     path: 'activities/:activity',
                     name: 'activities.show',
                     component: ActivityShow,
                     props: route => ({activityId: identifier(route.params.activity)}),
-                    meta: { title: 'Activity' },
+                    meta: { title: 'Academy: Activities' },
                 },
                 {
                     path: 'activities/:activity/activity',
@@ -270,15 +273,15 @@ const router = createRouter({
                     path: 'dialogs',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'dialogs.index', component: DialogsIndex, meta: { title: 'Dialogs' } },
-                        { path: ':dialog', name: 'dialogs.show', component: DialogShow, props: route => ({dialogId: identifier(route.params.dialog)}), meta: { title: 'Dialog' } },
+                        { path: '', name: 'dialogs.index', component: DialogsIndex, meta: { title: 'Academy: Dialogs' } },
+                        { path: ':dialog', name: 'dialogs.show', component: DialogShow, props: route => ({dialogId: identifier(route.params.dialog)}), meta: { title: 'Academy: Dialogs' } },
                     ]
                 },
                 {
                     path: 'scores',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'scores.index', component: ScoresIndex, meta: { title: 'Scores' } },
+                        { path: '', name: 'scores.index', component: ScoresIndex, meta: { title: 'Academy: Scores' } },
                         {
                             path: ':scorable_type/:scorable_id',
                             name: 'scores.history',
@@ -288,7 +291,7 @@ const router = createRouter({
                                 scorable_id: identifier(route.params.scorable_id),
                                 scoreId: identifier(route.query.score),
                             }),
-                            meta: { title: 'Score History' },
+                            meta: { title: 'Academy: Score History' },
                         },
                     ]
                 },
@@ -312,8 +315,8 @@ const router = createRouter({
                             props: route => ({mode: route.query.mode ?? 'build'}),
                             meta: { title: 'Deck Master' },
                         },
-                        { path: 'build/:deck?', name: 'deck-master.build', component: DeckMasterBuild, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Build Deck' } },
-                        { path: 'study/:deck', name: 'deck-master.study', component: DeckMasterStudy, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Study Deck' } },
+                        { path: 'build/:deck?', name: 'deck-master.build', component: DeckMasterBuild, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Deck Master: Build Deck' } },
+                        { path: 'study/:deck', name: 'deck-master.study', component: DeckMasterStudy, props: route => ({deckId: identifier(route.params.deck)}), meta: { title: 'Deck Master: Study' } },
                     ]
                 },
                 {
@@ -331,7 +334,7 @@ const router = createRouter({
                             }),
                             meta: { title: 'Card Dealer' },
                         },
-                        { path: 'cards', name: 'card-dealer.cards', component: CardDealerCards, meta: { title: 'Card Dealer - Cards' } },
+                        { path: 'cards', name: 'card-dealer.cards', component: CardDealerCards, meta: { title: 'Card Dealer: Cards' } },
                         {
                             path: 'review',
                             name: 'card-dealer.review',
@@ -340,7 +343,7 @@ const router = createRouter({
                                 scope: route.query.scope,
                                 deckId: identifier(route.query.deck),
                             }),
-                            meta: { title: 'Card Dealer - Review' },
+                            meta: { title: 'Card Dealer: Review' },
                         },
                     ]
                 },
@@ -359,7 +362,7 @@ const router = createRouter({
                     component: RouterView,
                     children: [
                         { path: '', name: 'word-logger.index', component: WordLoggerIndex, meta: { title: 'Word Logger' } },
-                        { path: 'term/:term?', name: 'word-logger.term', component: WordLoggerTerm, props: route => ({termId: identifier(route.params.term)}), meta: { title: 'Word Logger - Term' } },
+                        { path: 'term/:term?', name: 'word-logger.term', component: WordLoggerTerm, props: route => ({termId: identifier(route.params.term)}), meta: { title: 'Word Logger: Build Term' } },
                     ]
                 },
                 {
@@ -367,24 +370,24 @@ const router = createRouter({
                     component: RouterView,
                     children: [
                         { path: '', name: 'speech-maker.index', component: SpeechMaker, meta: { title: 'Speech Maker' } },
-                        { path: 'dialog/:dialog?', name: 'speech-maker.dialog', component: SpeechMakerDialog, props: route => ({dialogId: identifier(route.params.dialog)}), meta: { title: 'Speech Maker - Dialog' } },
-                        { path: 'dialog/:dialog/sentence', name: 'speech-maker.dialog-sentence', component: SpeechMakerSentence, props: route => ({initialDialogId: identifier(route.params.dialog)}), meta: { title: 'Speech Maker - Sentence' } },
-                        { path: 'sentence/:sentence?', name: 'speech-maker.sentence', component: SpeechMakerSentence, props: route => ({sentenceId: identifier(route.params.sentence)}), meta: { title: 'Speech Maker - Sentence' } },
+                        { path: 'dialog/:dialog?', name: 'speech-maker.dialog', component: SpeechMakerDialog, props: route => ({dialogId: identifier(route.params.dialog)}), meta: { title: 'Speech Maker: Build Dialog' } },
+                        { path: 'dialog/:dialog/sentence', name: 'speech-maker.dialog-sentence', component: SpeechMakerSentence, props: route => ({initialDialogId: identifier(route.params.dialog)}), meta: { title: 'Speech Maker: Build Sentence' } },
+                        { path: 'sentence/:sentence?', name: 'speech-maker.sentence', component: SpeechMakerSentence, props: route => ({sentenceId: identifier(route.params.sentence)}), meta: { title: 'Speech Maker: Build Sentence' } },
                     ]
                 },
                 {
                     path: 'lesson-planner',
                     component: RouterView,
                     children: [
-                        { path: '', name: 'lesson-planner.index', component: LessonPlannerCourse, meta: { title: 'Lesson Planner' } },
-                        { path: 'unit/:unit?', name: 'lesson-planner.unit', component: LessonPlannerUnit, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: 'Lesson Planner - Unit' } },
-                        { path: 'unit/:unit/decks', name: 'lesson-planner.unit-decks', component: LessonPlannerDecks, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: 'Lesson Planner - Decks' } },
-                        { path: 'unit/:unit/lesson', name: 'lesson-planner.unit-lesson', component: LessonPlannerLesson, props: route => ({initialUnitId: identifier(route.params.unit)}), meta: { title: 'Lesson Planner - Lesson' } },
-                        { path: 'lesson/:lesson?', name: 'lesson-planner.lesson', component: LessonPlannerLesson, props: route => ({lessonId: identifier(route.params.lesson)}), meta: { title: 'Lesson Planner - Lesson' } },
-                        { path: 'lesson/:lesson/activity', name: 'lesson-planner.lesson-activity', component: LessonPlannerActivity, props: route => ({initialLessonId: identifier(route.params.lesson)}), meta: { title: 'Lesson Planner - Activity' } },
+                        { path: '', name: 'lesson-planner.index', component: LessonPlannerCourse, meta: { title: 'Academy: Lessons' } },
+                        { path: 'unit/:unit?', name: 'lesson-planner.unit', component: LessonPlannerUnit, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: route => `Lesson Planner: Unit ${route.params.unit ?? ''}`.trim() } },
+                        { path: 'unit/:unit/decks', name: 'lesson-planner.unit-decks', component: LessonPlannerDecks, props: route => ({unitId: identifier(route.params.unit)}), meta: { title: route => `Lesson Planner: Unit ${route.params.unit} Decks` } },
+                        { path: 'unit/:unit/lesson', name: 'lesson-planner.unit-lesson', component: LessonPlannerLesson, props: route => ({initialUnitId: identifier(route.params.unit)}), meta: { title: 'Lesson Planner: Lesson' } },
+                        { path: 'lesson/:lesson?', name: 'lesson-planner.lesson', component: LessonPlannerLesson, props: route => ({lessonId: identifier(route.params.lesson)}), meta: { title: route => `Lesson Planner: Lesson ${route.params.lesson ?? ''}`.trim() } },
+                        { path: 'lesson/:lesson/activity', name: 'lesson-planner.lesson-activity', component: LessonPlannerActivity, props: route => ({initialLessonId: identifier(route.params.lesson)}), meta: { title: 'Academy: Lessons' } },
                     ]
                 },
-                { path: 'feedback', name: 'feedback.index', component: ViewFeedback, meta: { title: 'Feedback' } },
+                { path: 'feedback', name: 'feedback.index', component: ViewFeedback, meta: { title: 'to-Do List' } },
             ]
         },
         {
@@ -428,7 +431,9 @@ router.beforeEach(async (to) => {
 });
 
 router.afterEach((to) => {
-    const title = to.meta.title;
+    const title = typeof to.meta.title === 'function'
+        ? to.meta.title(to)
+        : to.meta.title;
     document.title = title
         ? `${title} | PalWeb`
         : 'PalWeb';

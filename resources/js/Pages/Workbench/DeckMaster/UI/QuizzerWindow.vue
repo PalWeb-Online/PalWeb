@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import PinButton from "../../../../components/PinButton.vue";
 import DeckActions from "../../../../components/Actions/DeckActions.vue";
 import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
@@ -11,12 +10,12 @@ const DeckStudyStore = useDeckStudyStore();
     <div class="window-container">
         <div class="window-header">
             <template v-if="DeckStudyStore.data.step !== 'select'">
-                <Link v-if="DeckStudyStore.data.step === 'settings'" :href="route('deck-master.index', {mode: 'study'})"
+                <RouterLink v-if="DeckStudyStore.data.step === 'settings'" :to="{ name: 'deck-master.index', query: { mode: 'study' } }"
                       class="material-symbols-rounded">close
-                </Link>
-                <Link v-else :href="route('deck-master.study', DeckStudyStore.data.deck.id)" class="material-symbols-rounded">
+                </RouterLink>
+                <RouterLink v-else :to="{ name: 'deck-master.study', params: { deck: DeckStudyStore.data.deck.id } }" class="material-symbols-rounded">
                     arrow_back
-                </Link>
+                </RouterLink>
                 <div class="window-header-url">www.palweb.app/workbench/deck-master/study/{deck}</div>
             </template>
             <template v-else>

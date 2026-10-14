@@ -1,5 +1,5 @@
 import {createApp, h} from "vue/dist/vue.esm-bundler";
-import {createInertiaApp, Head, Link} from "@inertiajs/vue3";
+import {createInertiaApp} from "@inertiajs/vue3";
 import {createPinia} from 'pinia';
 import axios from 'axios';
 import i18n from './i18n';
@@ -75,8 +75,6 @@ createInertiaApp({
             .use(i18n)
             .use(pinia)
             .use(router)
-            .component("Link", Link)
-            .component("Head", Head)
             .mount(el);
     },
     title: title => "PalWeb | " + title

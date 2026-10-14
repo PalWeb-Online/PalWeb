@@ -212,7 +212,9 @@ watch(() => SearchStore.data.results, () => {
 
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'terms' && SearchStore.data.results.terms?.length > 0">
-            <Link class="sg-all-results" :href="route('terms.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'terms.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned,
@@ -221,29 +223,36 @@ watch(() => SearchStore.data.results, () => {
                     form: SearchStore.data.filters.form,
                     singular: SearchStore.data.filters.singular,
                     plural: SearchStore.data.filters.plural
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'sentences' && SearchStore.data.results.sentences?.length > 0">
-            <Link class="sg-all-results" :href="route('sentences.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'sentences.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'decks' && SearchStore.data.results.decks?.length > 0">
-            <Link class="sg-all-results" :href="route('decks.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'decks.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
 
         <div class="sg-footer">

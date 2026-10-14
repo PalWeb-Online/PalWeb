@@ -35,7 +35,6 @@ watch(() => props.activityId, async () => {
 </script>
 
 <template>
-    <Head title="Academy: Activities"/>
 
     <LoadingSpinner v-if="isLoadingActivity"/>
     <AppTip v-else-if="activityNotFound">

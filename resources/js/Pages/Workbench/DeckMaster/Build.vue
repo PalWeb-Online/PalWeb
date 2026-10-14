@@ -1,6 +1,5 @@
 <script setup>
 import {computed, onMounted, watch} from "vue";
-import {route} from "ziggy-js";
 import draggable from 'vuedraggable';
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -14,7 +13,6 @@ import {useDeckEditor} from "../../../composables/decks/useDeckEditor.js";
 import {useDeckValidation} from "../../../composables/decks/useDeckValidation.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {Link} from "@inertiajs/vue3";
 import {useI18n} from "vue-i18n";
 
 const {locale} = useI18n();
@@ -82,21 +80,20 @@ watch(() => props.deckId, async () => {
 </script>
 
 <template>
-    <Head title="Deck Master: Build Deck"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="deckNotFound">
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.deck')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('deck-master.index')">Back to Deck Master</Link>
+            <RouterLink class="portal-button" :to="{ name: 'deck-master.index' }">Back to Deck Master</RouterLink>
         </template>
 
         <div v-else class="window-container">
             <div class="window-header">
-                <Link :href="route('deck-master.index', {mode: 'build'})" class="material-symbols-rounded">
+                <RouterLink :to="{ name: 'deck-master.index', query: { mode: 'build' } }" class="material-symbols-rounded">
                     arrow_back
-                </Link>
+                </RouterLink>
                 <button @click="form.private = !form.private" class="material-symbols-rounded">
                     {{ form.private ? 'lock' : 'public' }}
                 </button>

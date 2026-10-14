@@ -153,10 +153,10 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p v-if="UserStore.isStudent">{{ $t('pages.deck-master.messages.select-quiz-type') }}</p>
             <p v-else style="font-weight: 700">{{ $t('pages.deck-master.messages.student-required') }}</p>
         </AppTip>
-        <Link class="quiz-type card-dealer"
-              :href="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
+        <RouterLink class="quiz-type card-dealer"
+              :to="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
             <div>{{ $t('pages.deck-master.buttons.card-dealer') }}</div>
-        </Link>
+        </RouterLink>
 
         <div class="quiz-type" :class="{
                 'selected': DeckStudyStore.settings.quizType === 'practice'

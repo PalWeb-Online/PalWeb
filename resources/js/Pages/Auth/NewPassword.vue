@@ -62,7 +62,6 @@ defineOptions({
 })
 </script>
 <template>
-    <Head title="New Password"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-section-head">

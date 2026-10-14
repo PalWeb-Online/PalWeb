@@ -105,16 +105,15 @@ watch(units, (newValue) => {
 }, {deep: true});
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
-                <Link :href="route('units.index')">
+                <RouterLink :to="{ name: 'units.index' }">
                     <- to Academy
-                </Link>
+                </RouterLink>
             </div>
             <div class="featured-title l">
                 {{ $t('pages.lesson-planner.course') }}
@@ -134,9 +133,9 @@ watch(units, (newValue) => {
                         <div>
                             <div>{{ element.position }}</div>
                             <input v-model="element.title">
-                            <Link v-if="element.id" :href="route('lesson-planner.unit', element.id)"
+                            <RouterLink v-if="element.id" :to="{ name: 'lesson-planner.unit', params: { unit: element.id } }"
                                   class="material-symbols-rounded">edit
-                            </Link>
+                            </RouterLink>
                         </div>
                         <span class="handle material-symbols-rounded">drag_indicator</span>
                     </li>
@@ -158,8 +157,8 @@ watch(units, (newValue) => {
                         <div>
                             <div>{{ lesson.id }}</div>
                             <div style="width: 100%">{{ lesson.title }}</div>
-                            <Link :href="route('lesson-planner.lesson', lesson)" class="material-symbols-rounded">edit
-                            </Link>
+                            <RouterLink :to="{ name: 'lesson-planner.lesson', params: { lesson: lesson.id } }" class="material-symbols-rounded">edit
+                            </RouterLink>
                         </div>
                     </li>
                 </ul>

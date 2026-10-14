@@ -62,11 +62,10 @@ defineOptions({
 </script>
 
 <template>
-    <Head :title="user ? `Pal: ${user.username}` : 'Pal'"/>
     <div id="app-body" v-if="user">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'users.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="material-symbols-rounded" :class="user.private ? 'private' : ''">
                     {{ user.private ? 'lock' : 'public' }}
                 </div>
@@ -75,9 +74,9 @@ defineOptions({
             <div class="window-section-head">
                 <h1>{{ $t('user.profile')}}</h1>
                 <UserActions v-if="UserStore.isAdmin" :model="user"/>
-                <Link v-else-if="user.id === UserStore.user.id"
-                      :href="route('users.edit', user.username)" class="material-symbols-rounded">edit
-                </Link>
+                <RouterLink v-else-if="user.id === UserStore.user.id"
+                      :to="{ name: 'users.edit', params: { user: user.username } }" class="material-symbols-rounded">edit
+                </RouterLink>
             </div>
             <AppTip v-if="user.id === UserStore.user.id && !UserStore.user.is_verified">
                 <p>Welcome to PalWeb! In order to to access all of the site's features, you must verify your email
@@ -114,12 +113,12 @@ defineOptions({
                         </div>
                     </div>
                 </div>
-                <Link v-else-if="canCreateTeacher" class="portal-button"
-                      :href="route('users.edit', user.username)"
+                <RouterLink v-else-if="canCreateTeacher" class="portal-button"
+                      :to="{ name: 'users.edit', params: { user: user.username } }"
                       style="margin-block: 3.2rem; justify-self: center"
                 >
                     {{ $t('teacher.create') }}
-                </Link>
+                </RouterLink>
 
                 <SpeakerItem v-if="speaker" :speaker="speaker"/>
             </UserItem>

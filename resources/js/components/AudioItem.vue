@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import {useRouter} from "vue-router";
 import {useAudio} from "../composables/audios/useAudio.js";
@@ -27,12 +26,12 @@ const {isPlaying, playAudio} = useAudio(props.model.url);
              :src="model.speaker.user.avatar_url"/>
         <div class="audio-item-data">
             <div>{{ $t('components.common.by') }}
-                <Link :href="route('speaker.show', model.speaker)">
+                <RouterLink :to="{ name: 'speaker.show', params: { speaker: model.speaker.id } }">
                     {{ model.speaker.user.private
                     ? t('speaker.anonymous-number', {id: model.speaker.id})
                     : model.speaker.user.name
                     }}
-                </Link>
+                </RouterLink>
             </div>
             <div class="audio-item-info">
                 {{ $t('speaker.byline', {

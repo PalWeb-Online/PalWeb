@@ -1,6 +1,5 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {route} from "ziggy-js";
 import Draggable from 'vuedraggable';
 import {computed, onMounted, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -81,7 +80,6 @@ const removeLesson = (lesson) => {
 }
 </script>
 <template>
-    <Head :title="`Lesson Planner: Unit ${unit?.position}`"/>
 
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
@@ -92,17 +90,17 @@ const removeLesson = (lesson) => {
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.unit')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('lesson-planner.index')">
+            <RouterLink class="portal-button" :to="{ name: 'lesson-planner.index' }">
                 Back to Lesson Planner
-            </Link>
+            </RouterLink>
         </template>
 
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link :href="route('lesson-planner.index')">
+                    <RouterLink :to="{ name: 'lesson-planner.index' }">
                         <- to Course
-                    </Link>
+                    </RouterLink>
                 </div>
                 <div class="featured-title l">
                     {{ unit?.id ? $t('unit.number', {number: unit.position}) : 'New Unit' }}: {{ form.title }}
@@ -129,9 +127,9 @@ const removeLesson = (lesson) => {
                             <div>
                                 <div>{{ form.position + '0' + (index + 1) }}</div>
                                 <input v-model="element.title">
-                                <Link v-if="element.id" :href="route('lesson-planner.lesson', element)"
+                                <RouterLink v-if="element.id" :to="{ name: 'lesson-planner.lesson', params: { lesson: element.id } }"
                                       class="material-symbols-rounded">edit
-                                </Link>
+                                </RouterLink>
                             </div>
                             <span class="handle material-symbols-rounded">drag_indicator</span>
                         </li>
@@ -148,7 +146,7 @@ const removeLesson = (lesson) => {
                 </AppTip>
             </div>
 
-            <Link v-if="unit" :href="route('lesson-planner.unit-decks', unit.id)">Manage Decks</Link>
+            <RouterLink v-if="unit" :to="{ name: 'lesson-planner.unit-decks', params: { unit: unit.id } }">Manage Decks</RouterLink>
 
             <AppTip>
                 <p>{{
@@ -194,9 +192,9 @@ const removeLesson = (lesson) => {
                     <button type="button" @click="deleteUnit()">
                         {{ $t('actions.common.delete', {model: $t('actions.models.unit')}) }}
                     </button>
-                    <Link v-if="unit?.id" :href="route('units.show', unit.position)">
+                    <RouterLink v-if="unit?.id" :to="{ name: 'units.show', params: { unit: unit.position } }">
                         {{ $t('actions.common.view', {model: $t('actions.models.unit')}) }}
-                    </Link>
+                    </RouterLink>
                 </div>
             </div>
         </template>

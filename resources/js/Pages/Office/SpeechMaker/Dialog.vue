@@ -77,29 +77,28 @@ watch(() => props.dialogId, async () => {
 </script>
 
 <template>
-    <Head title="Speech Maker: Build Dialog"/>
     <div id="app-body">
         <LoadingSpinner v-if="isLoadingForm"/>
         <template v-else-if="dialogNotFound">
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.dialog')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('speech-maker.index')">
+            <RouterLink class="portal-button" :to="{ name: 'speech-maker.index' }">
                 Back to Speech Maker
-            </Link>
+            </RouterLink>
         </template>
 
         <div v-else class="window-container">
             <div class="window-header">
-                <Link :href="route('speech-maker.index')" class="material-symbols-rounded">arrow_back</Link>
+                <RouterLink :to="{ name: 'speech-maker.index' }" class="material-symbols-rounded">arrow_back</RouterLink>
                 <button @click="form.published = !form.published" class="material-symbols-rounded">
                     {{ !form.published ? 'lock' : 'public' }}
                 </button>
                 <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
-                <Link v-if="dialog?.id" class="material-symbols-rounded"
-                      :href="route('speech-maker.dialog-sentence', dialog.id)">
+                <RouterLink v-if="dialog?.id" class="material-symbols-rounded"
+                      :to="route('speech-maker.dialog-sentence', dialog.id)">
                     add
-                </Link>
+                </RouterLink>
                 <button class="material-symbols-rounded" @click="SearchStore.openSearchGenie('insert', 'sentences')">
                     place_item
                 </button>

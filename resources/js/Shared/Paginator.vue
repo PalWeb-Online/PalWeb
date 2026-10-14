@@ -33,16 +33,16 @@ const filteredLinks = computed(() => {
 
             <template v-else>
                 <template v-for="link in filteredLinks" :key="link.url">
-                    <Link
+                    <RouterLink
                         v-if="link.url"
-                        :href="link.url"
+                        :to="link.url"
                         :class="{ active: link.active }"
-                        preserve-scroll
+
                     >
                         <span v-if="!link.label.includes('Previous') && !link.label.includes('Next')">
                             {{ link.label }}
                         </span>
-                    </Link>
+                    </RouterLink>
                     <div class="disabled" v-else>{{ link.label }}</div>
                 </template>
             </template>

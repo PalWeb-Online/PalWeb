@@ -116,9 +116,9 @@ onMounted(() => {
                     {{
                         UserStore.user ? $t(`user.roles.${UserStore.highestRole}`) : $t('user.roles.guest')
                     }}
-                    <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">
+                    <RouterLink v-if="UserStore.user" class="auth-role" :to="{ name: 'subscription.index' }">
                         {{ $t('user.subscriptions.manage') }}
-                    </Link>
+                    </RouterLink>
                 </div>
                 <template v-if="UserStore.isUser">
                     <button class="material-symbols-rounded"
@@ -207,20 +207,20 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
-                                <Link :href="route('terms.index')"
+                                <RouterLink :to="{ name: 'terms.index' }"
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Terms/Index', 'Library/Terms/Show'].includes($page.component) }"
                                 >
                                     <div>{{ $t('pages.terms.index.title') }}</div>
                                     <div>{{ $t('pages.terms.index.subtitle') }}</div>
-                                </Link>
-                                <Link :href="route('sentences.index')"
+                                </RouterLink>
+                                <RouterLink :to="{ name: 'sentences.index' }"
                                       class="nav-carousel-page-item"
                                       :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
                                 >
                                     <div>{{ $t('pages.sentences.index.title') }}</div>
                                     <div>{{ $t('pages.sentences.index.subtitle') }}</div>
-                                </Link>
+                                </RouterLink>
                                 <div @click="navigateOrPrompt('decks.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
@@ -308,10 +308,10 @@ onMounted(() => {
                             <img src="/img/sphere-wireframe.svg" :alt="$t('pages.users.index.title')"/>
                             <div>{{ $t('pages.users.index.title') }}</div>
                         </div>
-                        <Link :href="route('wiki.index')" class="nav-portal">
+                        <RouterLink :to="{ name: 'wiki.index' }" class="nav-portal">
                             <img src="/img/sphere-wireframe.svg" :alt="$t('pages.wiki.title')"/>
                             <div>{{ $t('pages.wiki.title') }}</div>
-                        </Link>
+                        </RouterLink>
                     </div>
                 </div>
 
@@ -319,7 +319,7 @@ onMounted(() => {
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-admin') }}</div>
                     <div class="nav-user-menu-items">
                         <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
-                        <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
+                        <RouterLink :to="{ name: 'feedback.index' }">{{ $t('nav.sidebar.view-feedback') }}</RouterLink>
 
                         <button v-if="!UserStore.isAdmin" @click="toggleAdminView()">
                             {{ $t('nav.sidebar.admin-actions.restore-admin-view') }}
@@ -337,8 +337,8 @@ onMounted(() => {
                 <div v-if="UserStore.isUser" class="nav-user-menu">
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-account') }}</div>
                     <div class="nav-user-menu-items">
-                        <Link :href="route('subscription.index')">{{ $t('nav.sidebar.manage-subscription') }}</Link>
-                        <Link :href="route('password.edit')">{{ $t('nav.sidebar.change-password') }}</Link>
+                        <RouterLink :to="{ name: 'subscription.index' }">{{ $t('nav.sidebar.manage-subscription') }}</RouterLink>
+                        <RouterLink :to="{ name: 'password.edit' }">{{ $t('nav.sidebar.change-password') }}</RouterLink>
                         <button v-if="!UserStore.user.has_discord"
                                 @click="startDiscordAuth"
                                 :disabled="startingDiscordAuth"

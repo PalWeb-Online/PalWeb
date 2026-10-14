@@ -40,7 +40,6 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-    <Head :title="pageTitle"/>
 
     <LoadingSpinner v-if="isLoadingTerms"/>
     <AppTip v-else-if="termsNotFound">

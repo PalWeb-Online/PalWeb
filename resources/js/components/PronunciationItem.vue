@@ -38,9 +38,9 @@ onMounted(() => {
 <template>
     <div class="model-item-container pronunciation-item-container">
         <div class="pronunciation-item">
-            <Link v-if="audio" class="pronunciation-item-term"
-                  :href="route('terms.show', model.term.slug)">{{ model.term.term }}
-            </Link>
+            <RouterLink v-if="audio" class="pronunciation-item-term"
+                  :to="{ name: 'terms.show', params: { term: model.term.slug } }">{{ model.term.term }}
+            </RouterLink>
             <div class="pronunciation-item-data">
                 <span class="pronunciation-item-dialect">
                     {{ $t(`dialect.${localeKey(model.dialect.name)}`) }}

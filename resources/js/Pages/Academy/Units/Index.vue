@@ -28,7 +28,6 @@ onMounted(async () => {
 })
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
     <div id="app-head">
         <h1>{{ $t('pages.academy.index.title') }}</h1>
         <DividerBlock/>
@@ -45,8 +44,8 @@ onMounted(async () => {
                     <div class="unit-map-lesson-button" v-for="lesson in unit.lessons" :key="lesson.id"
                          :class="{current: AcademyStateStore.isCurrentLesson(lesson.id)}"
                     >
-                        <Link
-                            :href="route('lessons.show', lesson)"
+                        <RouterLink
+                            :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }"
                             :class="{
                                 locked: !UserStore.isAdmin && !AcademyStateStore.hasUnlockedLesson(lesson.id),
                                 completed: AcademyStateStore.isCompletedLesson(lesson.id, lesson.completed),
@@ -55,7 +54,7 @@ onMounted(async () => {
                               }"
                         >
                             <span>{{ lesson.unit_position }}</span>
-                        </Link>
+                        </RouterLink>
                     </div>
                 </div>
             </div>

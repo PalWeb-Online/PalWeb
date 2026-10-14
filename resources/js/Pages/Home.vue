@@ -118,7 +118,6 @@ defineOptions({
 });
 </script>
 <template>
-    <Head title="Home"/>
     <div class="homepage-head-container">
         <div class="kufiyye-strip">
             <Kufiyye v-for="n in 4" :key="n" class="kufiyye-tile"/>
@@ -126,7 +125,7 @@ defineOptions({
         <div class="homepage-hero-wrapper"
              :style="{ transform: `translateY(${heroOffset}px)` }"
         >
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">{{ $t('pages.home.release-notes', {version: 'v2.4'}) }}</Link>
+            <RouterLink :to="{ name: 'wiki.show', params: { page: 'release-notes' } }" class="feature-callout">{{ $t('pages.home.release-notes', {version: 'v2.4'}) }}</RouterLink>
             <HomepageHero/>
         </div>
     </div>
@@ -164,7 +163,7 @@ defineOptions({
                         {{ $t('pages.home.prompts.join-discord.message') }}
                     </div>
                     <div class="portal-button-body">
-                        <a class="portal-button" href="https://discord.gg/3Wf7Q6RCjV" target="_blank">
+                        <a class="portal-button" to="https://discord.gg/3Wf7Q6RCjV" target="_blank">
                             {{ $t('pages.home.prompts.join-discord.button') }}
                         </a>
                     </div>
@@ -435,7 +434,7 @@ defineOptions({
                 </div>
                 <div class="window-container">
                     <div class="window-header">
-                        <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
+                        <RouterLink :to="{ name: 'users.index' }" class="material-symbols-rounded">home</RouterLink>
                         <div class="material-symbols-rounded">public</div>
                         <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
                     </div>

@@ -20,10 +20,10 @@ const {sentence, isLoading} = useSentence(props);
     <template v-if="! isLoading">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('sentences.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'sentences.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/sentences/{sentence}</div>
-                <Link :href="route('sentences.random')" class="material-symbols-rounded">keyboard_double_arrow_right
-                </Link>
+                <RouterLink :to="{ name: 'sentences.random' }" class="material-symbols-rounded">keyboard_double_arrow_right
+                </RouterLink>
             </div>
             <div class="window-section-head">
                 <h1>{{ $t('components.sentence.title') }}</h1>
@@ -32,11 +32,11 @@ const {sentence, isLoading} = useSentence(props);
             </div>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="sentence.dialog" class="sentence-dialog-data">
-                    <Link :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
+                    <a :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
                           target="_blank">
                         <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ sentence.dialog.title }}</div>
-                    </Link>
+                    </a>
                     <div>
                         <div>{{ $t('components.sentence.speaker') }}</div>
                         <div>{{ sentence.speaker }}</div>
@@ -46,10 +46,10 @@ const {sentence, isLoading} = useSentence(props);
                     <div class="model-item-content">
                         <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
                             <template v-if="term.id">
-                                <Link class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
+                                <a class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
                                     <div>{{ term.sentencePivot.sent_term }}</div>
                                     <div>{{ term.sentencePivot.sent_translit }}</div>
-                                </Link>
+                                </a>
                             </template>
                             <template v-else>
                                 <div class="sentence-term">

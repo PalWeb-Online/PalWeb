@@ -2,7 +2,6 @@
 import WikiNav from "./UI/WikiNav.vue";
 import AppTip from "../../components/AppTip.vue";
 import {computed, onMounted, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import Layout from "../../Shared/Layout.vue";
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import {useUserStore} from "../../stores/UserStore.js";
@@ -99,7 +98,6 @@ watch(() => props.pageId, async () => {
 </script>
 
 <template>
-    <Head :title="page ? `Wiki: ${page?.title}` : 'Wiki'"/>
 
     <div id="app-head">
         <h1>{{ $t('pages.wiki.title') }}</h1>
@@ -118,8 +116,8 @@ watch(() => props.pageId, async () => {
             <h1>{{ page?.title }}</h1>
 
             <template v-if="UserStore.isAdmin">
-                <Link :href="route('wiki.edit', page)" class="material-symbols-rounded">edit</Link>
-                <Link :href="route('wiki.edit')" class="material-symbols-rounded">add</Link>
+                <RouterLink :to="{ name: 'wiki.edit', params: { page: page.id } }" class="material-symbols-rounded">edit</RouterLink>
+                <RouterLink :to="{ name: 'wiki.edit' }" class="material-symbols-rounded">add</RouterLink>
             </template>
         </div>
 
@@ -141,8 +139,8 @@ watch(() => props.pageId, async () => {
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
                 <p>
-                    <Link v-if="UserStore.isAdmin" :href="route('wiki.edit', page)">Create this Page</Link>
-                    <Link v-else :href="route('wiki.show')">Go to Wiki Home</Link>
+                    <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit', params: { page: page.id } }">Create this Page</RouterLink>
+                    <RouterLink v-else :to="{ name: 'wiki.show' }">Go to Wiki Home</RouterLink>
                 </p>
             </div>
             <div v-else-if="page" class="wiki-blocks-wrapper">

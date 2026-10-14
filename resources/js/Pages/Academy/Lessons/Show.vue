@@ -56,7 +56,6 @@ watch([() => props.lessonId, () => props.unitId], async () => {
 });
 </script>
 <template>
-    <Head :title="`Academy: Lesson ${lesson?.global_position}`"/>
     <UnitNav v-if="unit" :unit="unit" :activeLesson="lesson"/>
 
     <LoadingSpinner v-if="isLoadingLesson"/>

@@ -47,7 +47,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="Sound Booth"/>
     <div id="app-body">
         <div class="rw-container window-container">
             <div class="window-section-head">

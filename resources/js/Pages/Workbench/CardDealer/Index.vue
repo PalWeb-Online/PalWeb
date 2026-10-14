@@ -193,7 +193,6 @@ const handleSessionDataRefresh = async () => {
 </script>
 
 <template>
-    <Head title="Card Dealer"/>
     <div id="app-head">
         <h1>{{ $t('pages.card-dealer.title') }}</h1>
     </div>

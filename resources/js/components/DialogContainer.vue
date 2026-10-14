@@ -2,7 +2,6 @@
 import {useDialog} from "../composables/dialogs/useDialog.js";
 import SentenceItem from "./SentenceItem.vue";
 import DialogActions from "./Actions/DialogActions.vue";
-import {route} from "ziggy-js";
 import AppTip from "./AppTip.vue";
 import {ref} from "vue";
 import ToggleSingle from "./ToggleSingle.vue";
@@ -27,7 +26,7 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
     <template v-if="!isLoading">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('dialogs.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'dialogs.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
             </div>
             <div class="window-section-head">

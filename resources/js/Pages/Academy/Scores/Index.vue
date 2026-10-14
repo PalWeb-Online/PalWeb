@@ -25,9 +25,8 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head title="Academy: Scores"/>
     <div id="app-head">
-        <Link :href="route('scores.index')"><h1>{{ $t('pages.scores.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'scores.index' }"><h1>{{ $t('pages.scores.index.title') }}</h1></RouterLink>
     </div>
     <div id="app-body">
         <div class="app-body-section">
@@ -56,7 +55,7 @@ onMounted(async () => {
             <template v-if="mode === 'lessons'">
                 <AppTip v-if="Object.keys(scoredLessonModels).length === 0">
                     <p>You don't have any Scores for any Lesson Decks or Activities. Have you started the Lessons in the
-                        Academy yet? If not, <Link :href="route('units.index')">click here</Link> to get started!
+                        Academy yet? If not, <RouterLink :to="{ name: 'units.index' }">click here</RouterLink> to get started!
                     </p>
                 </AppTip>
                 <template v-else v-for="(lesson, slug) in scoredLessonModels">

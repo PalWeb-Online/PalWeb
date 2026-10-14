@@ -32,7 +32,6 @@ watch(
 </script>
 
 <template>
-    <Head :title="sentence ? `Library: Corpus: ${sentence.sentence}` : 'Library: Corpus'"/>
 
     <LoadingSpinner v-if="isLoadingSentence"/>
     <AppTip v-else-if="sentenceNotFound">

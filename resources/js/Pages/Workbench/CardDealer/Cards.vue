@@ -38,16 +38,15 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Card Dealer: Cards"/>
     <div id="app-head">
         <h1>{{ $t('pages.card-dealer.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('card-dealer.index')" class="material-symbols-rounded">
+                <RouterLink :to="{ name: 'card-dealer.index' }" class="material-symbols-rounded">
                     arrow_back
-                </Link>
+                </RouterLink>
                 <div class="window-header-url">www.palweb.app/workbench/card-dealer/cards</div>
             </div>
             <div class="window-section-head">

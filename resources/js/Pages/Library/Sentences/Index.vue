@@ -53,17 +53,16 @@ function updateFilter({filter, value}) {
 </script>
 
 <template>
-    <Head title="Library: Corpus"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('sentences.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'sentences.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/sentences</div>
-                <Link v-if="UserStore.isAdmin" :href="route('speech-maker.sentence')" class="material-symbols-rounded">
+                <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'speech-maker.sentence' }" class="material-symbols-rounded">
                     add
-                </Link>
-                <Link :href="route('sentences.random')" class="material-symbols-rounded">keyboard_double_arrow_right
-                </Link>
+                </RouterLink>
+                <RouterLink :to="{ name: 'sentences.random' }" class="material-symbols-rounded">keyboard_double_arrow_right
+                </RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.sentences.index.title') }}</h1></div>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>

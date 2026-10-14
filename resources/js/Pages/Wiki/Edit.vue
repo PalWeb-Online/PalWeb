@@ -1,7 +1,6 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue";
 import {computed, onMounted, provide, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {useNavGuard} from "../../composables/NavGuard.js";
 import NavGuard from "../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../components/Modals/ModalWrapper.vue";
@@ -114,7 +113,6 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 </script>
 
 <template>
-    <Head :title="page?.id ? `Edit Wiki: ${page?.title || 'Page'}` : 'Create Wiki Page'"/>
     <div id="app-head">
         <h1>{{ $t('pages.wiki.title') }}</h1>
     </div>
@@ -124,9 +122,9 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('wiki.index')">
+            <RouterLink class="portal-button" :to="{ name: 'wiki.index' }">
                 Back to Wiki
-            </Link>
+            </RouterLink>
         </template>
 
         <template v-else>
@@ -254,12 +252,12 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         {{ $t('actions.common.delete', {model: $t('actions.models.page')}) }}
                     </button>
 
-                    <Link v-if="page" :href="route('wiki.show', page.slug)">
+                    <RouterLink v-if="page" :to="{ name: 'wiki.show', params: { page: page.slug } }">
                         {{ $t('actions.common.view', {model: $t('actions.models.page')}) }}
-                    </Link>
-                    <Link v-else :href="route('wiki.index')">
+                    </RouterLink>
+                    <RouterLink v-else :to="{ name: 'wiki.index' }">
                         Back to Wiki
-                    </Link>
+                    </RouterLink>
                 </div>
             </div>
         </template>

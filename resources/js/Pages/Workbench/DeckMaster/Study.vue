@@ -30,7 +30,6 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-    <Head title="Deck Master: Study"/>
     <div id="app-body">
         <Settings v-if="DeckStudyStore.data.step === 'settings'"/>
         <Practice v-if="DeckStudyStore.data.step === 'practice'"/>

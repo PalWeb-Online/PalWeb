@@ -32,7 +32,6 @@ watch(
 </script>
 
 <template>
-    <Head :title="deck ? `Library: Decks: ${deck.name}` : 'Library: Decks'"/>
 
     <LoadingSpinner v-if="isLoadingDeck"/>
     <AppTip v-else-if="deckNotFound">

@@ -46,10 +46,10 @@ const sendVerificationLink = async () => {
 
 <template>
     <div class="auth-user">
-        <Link class="user-avatar" :href="route('users.show', UserStore.user.username)">
+        <RouterLink class="user-avatar" :to="{ name: 'users.show', params: { user: UserStore.user.username } }">
             <img :alt="$t('nav.auth.user-avatar')"
                  :src="UserStore.user.avatar_url"/>
-        </Link>
+        </RouterLink>
 
         <UserNametag :user="UserStore.user"/>
     </div>

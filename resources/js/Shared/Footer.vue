@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import AppLogo from "./AppLogo.vue";
 </script>
 <template>
@@ -30,13 +29,13 @@ import AppLogo from "./AppLogo.vue";
             <div class="footer-links-wrapper">
                 <div class="footer-links">
                     <div>{{ $t('footer.links.about.title') }}</div>
-                    <Link :href="route('wiki.show', 'faq')">{{ $t('footer.links.about.faq') }}</Link>
-                    <Link :href="route('wiki.show', 'about')">{{ $t('footer.links.about.palweb') }}</Link>
-                    <Link :href="route('wiki.show', 'ajp')">{{ $t('footer.links.about.spoken-arabic') }}</Link>
+                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'faq' } }">{{ $t('footer.links.about.faq') }}</RouterLink>
+                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'about' } }">{{ $t('footer.links.about.palweb') }}</RouterLink>
+                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'ajp' } }">{{ $t('footer.links.about.spoken-arabic') }}</RouterLink>
                 </div>
                 <div class="footer-links">
                     <div>{{ $t('footer.links.donate.title') }}</div>
-                    <Link :href="route('subscription.index')">{{ $t('footer.links.donate.subscribe') }}</Link>
+                    <RouterLink :to="{ name: 'subscription.index' }">{{ $t('footer.links.donate.subscribe') }}</RouterLink>
                     <a href="https://www.patreon.com/palweb" target="_blank">Patreon</a>
                     <a href="https://www.ko-fi.com/palweb" target="_blank">Ko-fi</a>
                 </div>
