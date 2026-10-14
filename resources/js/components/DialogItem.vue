@@ -1,10 +1,11 @@
 <script setup>
 import {useDialog} from "../composables/dialogs/useDialog.js";
 import DialogActions from "./Actions/DialogActions.vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
+import {useRouter} from "vue-router";
 import AppTooltip from "./AppTooltip.vue";
+
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -19,8 +20,8 @@ const tooltip = ref(null);
 
 const requestTarget = computed(() => {
     return props.target === 'library'
-        ? route('dialogs.show', dialog?.id)
-        : route('speech-maker.dialog', dialog?.id);
+        ? {name: 'dialogs.show', params: {dialog: dialog?.id}}
+        : {name: 'speech-maker.dialog', params: {dialog: dialog?.id}};
 })
 
 const {dialog, isLoading} = useDialog(props);
@@ -34,7 +35,7 @@ const {dialog, isLoading} = useDialog(props);
                  @mouseleave="tooltip.hideTooltip()"></div>
 
             <div class="model-item dialog-item">
-                <div class="model-item-content" @click="router.get(requestTarget)">
+                <div class="model-item-content" @click="router.push(requestTarget)">
                     <div class="model-item-title">
                         {{ dialog.title }}
                     </div>

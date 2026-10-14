@@ -1,7 +1,8 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import ActivityActions from "./Actions/ActivityActions.vue";
+
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -22,7 +23,7 @@ const formatter = new Intl.NumberFormat('en-US', {
     <div class="model-item-container deck-item-container">
         <div class="model-item deck-item">
             <div class="model-item-content" style="border: none"
-                 @click="router.get(route('scores.history', { scorable_type: 'activity', scorable_id: model.id }))">
+                 @click="router.push({name: 'scores.history', params: {scorable_type: 'activity', scorable_id: model.id}})">
                 <div class="model-item-title">
                     {{ model.title }}
                 </div>

@@ -1,15 +1,15 @@
-import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useSentenceLoader} from "./useSentenceLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useI18n} from "vue-i18n";
 
 export function useSentenceEditor({
-                                      sentenceId = null,
-                                      initialDialog = null,
-                                  } = {}) {
+                                  sentenceId = null,
+                                  initialDialog = null,
+                              } = {}) {
     const {t} = useI18n();
+    const router = useRouter();
     const sentenceLoader = useSentenceLoader();
     const NotificationStore = useNotificationStore();
 
@@ -37,10 +37,9 @@ export function useSentenceEditor({
     const redirectToEditRoute = (sentence = null) => {
         if (sentenceId.value || !sentence?.id) return;
 
-        router.visit(route('speech-maker.sentence', sentence.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'speech-maker.sentence',
+            params: {sentence: sentence.id},
         });
     };
 

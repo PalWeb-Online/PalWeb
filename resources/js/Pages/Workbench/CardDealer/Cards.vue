@@ -1,6 +1,6 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
@@ -10,6 +10,7 @@ import {onMounted, ref} from "vue";
 const filters = ref({sort: 'due'});
 const cards = ref({data: [], meta: {links: []}});
 const totalCount = ref(0);
+const router = useRouter();
 
 const fetchCards = async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
@@ -22,10 +23,13 @@ const fetchCards = async () => {
 onMounted(fetchCards);
 
 const setFilter = (key, value) => {
-    router.get(route('card-dealer.cards'), {
-        ...filters.value,
-        [key]: value
-    }, {preserveState: true});
+    router.push({
+        name: 'card-dealer.cards',
+        query: {
+            ...filters.value,
+            [key]: value,
+        },
+    });
 }
 
 defineOptions({

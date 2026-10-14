@@ -1,10 +1,11 @@
 <script setup>
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useAudio} from "../composables/audios/useAudio.js";
 
 const UserStore = useUserStore();
+const router = useRouter();
 const {deleteAudio} = useAudio();
 
 const props = defineProps({
@@ -22,7 +23,7 @@ const {isPlaying, playAudio} = useAudio(props.model.url);
         </button>
         <img v-if="!model.speaker.user.private"
              class="speaker-avatar" :alt="$t('components.common.alt.user-avatar')"
-             @click="router.get(route('speaker.show', model.speaker))"
+             @click="router.push({name: 'speaker.show', params: {speaker: model.speaker.id}})"
              :src="model.speaker.user.avatar_url"/>
         <div class="audio-item-data">
             <div>{{ $t('components.common.by') }}

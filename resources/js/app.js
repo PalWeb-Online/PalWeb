@@ -1,12 +1,12 @@
 import {createApp, h} from "vue/dist/vue.esm-bundler";
-import {createInertiaApp, Head, Link, router} from "@inertiajs/vue3";
+import {createInertiaApp, Head, Link} from "@inertiajs/vue3";
 import {createPinia} from 'pinia';
 import axios from 'axios';
 import i18n from './i18n';
+import router from './router.js';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import {registerSW} from 'virtual:pwa-register'
-import {route} from 'ziggy-js';
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import 'vue3-carousel/dist/carousel.css';
 import {syncCsrfToken} from "./utils/csrfToken.js";
@@ -38,6 +38,15 @@ const pinia = createPinia();
 window.axios = axios;
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.interceptors.response.use((response) => {
+    const csrfToken = response?.data?.csrf_token;
+
+    if (csrfToken) {
+        syncCsrfToken(csrfToken);
+    }
+
+    return response;
+});
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
@@ -61,36 +70,29 @@ createInertiaApp({
 
         syncCsrfToken(props.initialPage.props.csrfToken);
 
-        router.on('success', (event) => {
-            syncCsrfToken(event.detail.page.props.csrfToken);
-        });
-
         createApp({render: () => h(App, props)})
             .use(plugin)
             .use(i18n)
+            .use(pinia)
+            .use(router)
             .component("Link", Link)
             .component("Head", Head)
-            .use(pinia)
             .mount(el);
     },
     title: title => "PalWeb | " + title
 });
 
-router.on('before', (event) => {
+router.beforeEach((to) => {
     if (navigator.onLine) {
         return;
     }
 
-    const url = event.detail.visit.url;
-
-    if (typeof url === 'string' && url.includes(route('offline'))) {
+    if (to.name === 'offline') {
         return;
     }
 
-    event.preventDefault();
-
-    router.visit(route('offline'), {
+    return {
+        name: 'offline',
         replace: true,
-        preserveState: true,
-    });
+    };
 });

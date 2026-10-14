@@ -2,13 +2,13 @@
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
 import {useDeck} from "../composables/decks/useDeck.js";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
+import {useRouter} from "vue-router";
 import AppTooltip from "./AppTooltip.vue";
 import {useUserStore} from "../stores/UserStore.js";
 
 const UserStore = useUserStore();
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -29,11 +29,14 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 const requestTarget = computed(() => {
     return props.target === 'library'
-        ? route('decks.show', deck?.id)
-        : route('scores.history', {
-            scorable_type: 'deck',
-            scorable_id: deck?.id
-        });
+        ? {name: 'decks.show', params: {deck: deck?.id}}
+        : {
+            name: 'scores.history',
+            params: {
+                scorable_type: 'deck',
+                scorable_id: deck?.id,
+            },
+        };
 })
 
 const {deck, blurb, isLoading} = useDeck(props);
@@ -52,7 +55,7 @@ const {deck, blurb, isLoading} = useDeck(props);
 
             <div :class="['model-item', 'deck-item', size]">
                 <PinButton modelType="deck" :model="deck"/>
-                <div class="model-item-content" @click="router.get(requestTarget)">
+                <div class="model-item-content" @click="router.push(requestTarget)">
                     <div class="model-item-title">
                         {{ deck.name }}
                         <span class="deck-item-terms-count">
@@ -68,7 +71,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                         }}
                     </div>
                 </div>
-                <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
+                <img v-if="!deck.author.private" @click="router.push({name: 'users.show', params: {user: deck.author.username}})"
                      class="deck-author-avatar" :alt="$t('components.common.alt.avatar')"
                      :src="deck.author.avatar_url"/>
                 <DeckActions :model="deck"/>

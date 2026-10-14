@@ -1,8 +1,7 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useSearchStore} from '../stores/SearchStore.js';
-import {router} from '@inertiajs/vue3';
-import {route} from 'ziggy-js';
+import {useRouter} from "vue-router";
 import AppTooltip from "../components/AppTooltip.vue";
 import SearchFilters from "./SearchFilters.vue";
 import PopupWindow from "../components/Modals/PopupWindow.vue";
@@ -10,6 +9,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 import {useI18n} from "vue-i18n";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const SearchStore = useSearchStore();
 const emit = defineEmits(['close']);
@@ -68,22 +68,22 @@ const setActiveModel = (model) => {
 
 const selectModel = (model) => {
     const routes = {
-        terms: {route: 'terms.show', idField: 'slug'},
-        sentences: {route: 'sentences.show', idField: 'id'},
-        decks: {route: 'decks.show', idField: 'id'},
+        terms: {route: 'terms.show', param: 'term', idField: 'slug'},
+        sentences: {route: 'sentences.show', param: 'sentence', idField: 'id'},
+        decks: {route: 'decks.show', param: 'deck', idField: 'id'},
     };
 
     if (SearchStore.data.action === 'insert') {
         SearchStore.selectModel(model);
 
     } else if (routes[SearchStore.data.activeModel]) {
-        const {route: targetRoute, idField} = routes[SearchStore.data.activeModel];
-        const param = model[idField];
+        const {route: targetRoute, param, idField} = routes[SearchStore.data.activeModel];
 
-        router.get(route(targetRoute, param), {}, {
-            onSuccess: () => {
-                emit('close');
-            }
+        router.push({
+            name: targetRoute,
+            params: {[param]: model[idField]},
+        }).then(() => {
+            emit('close');
         });
     }
 };

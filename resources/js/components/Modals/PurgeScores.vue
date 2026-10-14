@@ -1,11 +1,12 @@
 <script setup>
 import {computed, reactive} from 'vue';
-import {router} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
+import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
 
 const {t, locale} = useI18n();
+const router = useRouter();
 const NotificationStore = useNotificationStore();
 
 const props = defineProps({
@@ -50,7 +51,7 @@ const purgeScores = async () => {
         if (data.success) {
             NotificationStore.addNotification(t('modals.purge-scores.notifications.purge-success', {count: data.count}));
             emit('close');
-            router.reload();
+            router.go(0);
         }
     } finally {
         form.processing = false;

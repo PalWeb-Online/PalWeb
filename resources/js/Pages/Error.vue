@@ -1,11 +1,11 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import {computed, watch} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 
 const props = defineProps({status: Number})
+const router = useRouter();
 
 const {browserOnline} = useConnectionStatus(Echo);
 
@@ -35,10 +35,7 @@ watch(browserOnline, (isOnline) => {
     }
 
     if (isOnline) {
-        router.visit(route('homepage'), {
-            replace: true,
-            preserveScroll: true,
-        });
+        router.replace({name: 'homepage'});
     }
 }, {immediate: true});
 

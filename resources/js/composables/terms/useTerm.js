@@ -1,9 +1,9 @@
 import {onMounted, reactive, ref, watch} from "vue";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 
 export function useTerm(props = {}) {
+    const router = useRouter();
     const term = reactive({});
     const isLoading = ref(true);
 
@@ -14,7 +14,7 @@ export function useTerm(props = {}) {
         label: 'term',
         routeBase: 'terms',
         onDeleteSuccess: () => {
-            router.get(route('terms.index'));
+            router.push({name: 'terms.index'});
         },
     });
 

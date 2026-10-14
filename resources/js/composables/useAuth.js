@@ -1,13 +1,14 @@
 import {ref} from "vue";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
 import {useUserStore} from "../stores/UserStore.js";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {syncCsrfToken} from "../utils/csrfToken.js";
 
 export function useAuth() {
     const {t, locale} = useI18n();
+    const router = useRouter();
 
     const UserStore = useUserStore();
     const NotificationStore = useNotificationStore();
@@ -77,10 +78,6 @@ export function useAuth() {
                 data.success ? 'success' : 'error',
             );
 
-            router.reload({
-                only: ['auth'],
-            });
-
         } catch (error) {
             notifyFromError(error, 'Failed to disconnect Discord account.');
 
@@ -109,7 +106,7 @@ export function useAuth() {
                 }));
             }, 300);
 
-            router.get(route('homepage'));
+            router.push({name: 'homepage'});
 
         } finally {
             signingOut.value = false;

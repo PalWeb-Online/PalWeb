@@ -1,11 +1,11 @@
-import {route} from "ziggy-js";
 import {useUnitLoader} from "./useUnitLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useUnitEditor({
-                                  unitId = null,
-                              } = {}) {
+                              unitId = null,
+                          } = {}) {
+    const router = useRouter();
     const unitLoader = useUnitLoader();
 
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
@@ -46,7 +46,7 @@ export function useUnitEditor({
             };
         },
         onDeleteSuccess: () => {
-            router.get(route('lesson-planner.index'));
+            router.push({name: 'lesson-planner.index'});
         },
     });
 

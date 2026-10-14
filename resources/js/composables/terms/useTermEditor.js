@@ -1,11 +1,11 @@
-import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useTermLoader} from "./useTermLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 
 export function useTermEditor({
-                                  termId = null,
-                              } = {}) {
+                              termId = null,
+                          } = {}) {
+    const router = useRouter();
     const termLoader = useTermLoader();
 
     const makeAttribute = () => ({
@@ -76,10 +76,9 @@ export function useTermEditor({
     const redirectToEditRoute = (term = null) => {
         if (termId.value || !term?.id) return;
 
-        router.visit(route('word-logger.term', term.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'word-logger.term',
+            params: {term: term.id},
         });
     };
 

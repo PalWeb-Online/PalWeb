@@ -4,7 +4,6 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {computed, ref} from "vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import ToggleSingle from "../ToggleSingle.vue";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {useI18n} from "vue-i18n";
 
@@ -32,12 +31,10 @@ const availableLocales = [
     }
 ];
 
-const changeLanguage = (lang) => {
+const changeLanguage = async (lang) => {
     locale.value = lang;
 
-    router.post(route('language.store', lang), {}, {
-        preserveScroll: true,
-    });
+    await axios.post(route('language.store', lang));
 };
 
 const toggleNotifications = async (nextValue) => {

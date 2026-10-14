@@ -5,9 +5,10 @@ import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 const UserStore = useUserStore();
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -91,7 +92,7 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
             </div>
             <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
             <div v-else class="popup-menu-wrapper">
-                <button class="material-symbols-rounded" @click="router.get(route('sentences.show', sentence.id))">
+                <button class="material-symbols-rounded" @click="router.push({name: 'sentences.show', params: {sentence: sentence.id}})">
                     visibility
                 </button>
             </div>

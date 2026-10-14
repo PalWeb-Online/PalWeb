@@ -4,14 +4,15 @@ import DialogItem from "../../../components/DialogItem.vue";
 import TermItem from "../../../components/TermItem.vue";
 import {onMounted, ref} from "vue";
 import AppTip from "../../../components/AppTip.vue";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 
 defineOptions({
     layout: Layout
 });
 
 const mode = ref('dialog');
+const router = useRouter();
 const dialogs = ref([]);
 const terms = ref([]);
 
@@ -23,8 +24,8 @@ onMounted(async () => {
 
 const toBuild = () => {
     mode.value === 'dialog'
-        ? router.get(route('speech-maker.dialog'))
-        : router.get(route('speech-maker.sentence'));
+        ? router.push({name: 'speech-maker.dialog'})
+        : router.push({name: 'speech-maker.sentence'});
 }
 </script>
 

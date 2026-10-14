@@ -8,7 +8,6 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useI18n} from "vue-i18n";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
-import {router} from "@inertiajs/vue3";
 import {useAuth} from "../../composables/useAuth.js";
 
 const {t, locale} = useI18n();
@@ -55,8 +54,6 @@ const signIn = async () => {
 
         UserStore.setUser(data.user);
         setSignInRecentlySuccessful();
-
-        router.reload();
 
         emit('close');
 

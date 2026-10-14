@@ -1,11 +1,12 @@
 import {computed, ref} from "vue";
 import {route} from "ziggy-js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useTeacherEditor({
-                                      user,
-                                  }) {
+                                  user,
+                              }) {
+    const router = useRouter();
     // normally there would be a use*Loader composable here, but the Teacher model is loaded in
     // with the User model, so we just need to provide the ref & set method
 
@@ -43,7 +44,10 @@ export function useTeacherEditor({
         routeBase: 'teachers',
         getStoreUrl: () => route('users.teacher.store', user.value?.username),
         onDeleteSuccess: () => {
-            router.get(route('users.show', user.value?.username));
+            router.push({
+                name: 'users.show',
+                params: {user: user.value?.username},
+            });
         },
     });
 

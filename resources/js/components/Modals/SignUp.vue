@@ -8,9 +8,10 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useI18n} from "vue-i18n";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 const {t, locale} = useI18n();
+const router = useRouter();
 const emit = defineEmits(['close', 'signIn']);
 const NotificationStore = useNotificationStore();
 const UserStore = useUserStore();
@@ -57,7 +58,10 @@ const signUp = async () => {
                 : UserStore.user.name
         }));
 
-        router.get(route('users.show', UserStore.user.username));
+        router.push({
+            name: 'users.show',
+            params: {user: UserStore.user.username},
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {

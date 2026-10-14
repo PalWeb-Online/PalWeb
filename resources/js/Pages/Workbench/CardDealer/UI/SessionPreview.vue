@@ -1,8 +1,8 @@
 <script setup>
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import {computed, ref} from "vue";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import AppTooltip from "../../../../components/AppTooltip.vue";
 import SessionSettings from "./SessionSettings.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
@@ -10,6 +10,7 @@ import {useI18n} from "vue-i18n";
 import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 
 const {t} = useI18n();
+const router = useRouter();
 const NotificationStore = useNotificationStore();
 const UserStore = useUserStore();
 
@@ -95,7 +96,10 @@ const startReview = () => {
         payload.deck = props.deckId;
     }
 
-    router.get(route('card-dealer.review'), payload);
+    router.push({
+        name: 'card-dealer.review',
+        query: payload,
+    });
 };
 
 const sessionSettings = ref({

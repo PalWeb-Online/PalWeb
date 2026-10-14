@@ -11,7 +11,7 @@ import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import PurgeScores from "../../../components/Modals/PurgeScores.vue";
 import {nextTick, onMounted, ref, watch} from "vue";
 import ScoreDetail from "../../../components/ScoreDetail.vue";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import DeckAnswerItem from "../../Workbench/DeckMaster/UI/DeckAnswerItem.vue";
 import ActivityActions from "../../../components/Actions/ActivityActions.vue";
 import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
@@ -34,6 +34,7 @@ const props = defineProps({
 
 const {getScoreStats} = useScoreManager();
 const {t} = useI18n();
+const router = useRouter();
 const NotificationStore = useNotificationStore();
 
 const showPurgeScores = ref(false);
@@ -65,14 +66,17 @@ const deleteScore = async (id) => {
         NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t('actions.models.score')}));
 
         if (selectedScore.value?.id === id) {
-            router.get(route('scores.history', {
-                scorable_type: props.scorable_type,
-                scorable_id: model.value.id,
-            }));
+            router.push({
+                name: 'scores.history',
+                params: {
+                    scorable_type: props.scorable_type,
+                    scorable_id: model.value.id,
+                },
+            });
             return;
         }
 
-        router.reload();
+        await fetchHistory();
     }
 }
 

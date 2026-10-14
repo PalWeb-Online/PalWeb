@@ -1,14 +1,14 @@
 import {computed, ref} from "vue";
-import {route} from "ziggy-js";
 import {useLessonLoader} from "./useLessonLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useLessonEditor({
                                     lessonId = null,
-                                    initialUnit = null,
-                                } = {}) {
+                                initialUnit = null,
+                            } = {}) {
+    const router = useRouter();
     const documentPreset = getDocumentPreset('lesson');
     const lessonLoader = useLessonLoader();
 
@@ -73,10 +73,9 @@ export function useLessonEditor({
     const redirectToEditRoute = (lesson = null) => {
         if (lessonId.value || !lesson?.id) return;
 
-        router.visit(route('lesson-planner.lesson', lesson.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'lesson-planner.lesson',
+            params: {lesson: lesson.id},
         });
     };
 
@@ -120,7 +119,7 @@ export function useLessonEditor({
             redirectToEditRoute(savedModel);
         },
         onDeleteSuccess: () => {
-            router.get(route('lesson-planner.index'));
+            router.push({name: 'lesson-planner.index'});
         },
     });
 

@@ -1,6 +1,5 @@
 import {computed} from "vue";
-import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useDeckLoader} from "./useDeckLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserStore} from "../../stores/UserStore.js";
@@ -8,9 +7,10 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {useI18n} from "vue-i18n";
 
 export function useDeckEditor({
-                                  deckId = null,
-                              } = {}) {
+                              deckId = null,
+                          } = {}) {
     const {t} = useI18n();
+    const router = useRouter();
     const deckLoader = useDeckLoader();
     const NotificationStore = useNotificationStore();
 
@@ -55,10 +55,9 @@ export function useDeckEditor({
     const redirectToEditRoute = (deck = null) => {
         if (deckId.value || !deck?.id) return;
 
-        router.visit(route('deck-master.build', deck.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'deck-master.build',
+            params: {deck: deck.id},
         });
     };
 

@@ -3,7 +3,7 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import QuizzerWindow from "./UI/QuizzerWindow.vue";
@@ -12,6 +12,7 @@ import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
 import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
 
 const DeckStudyStore = useDeckStudyStore();
+const router = useRouter();
 
 const props = defineProps({
     mode: {type: String, default: 'build'},
@@ -65,13 +66,16 @@ const toggleSelectDeck = (index) => {
 
 const toBuild = () => {
     selectedDeck.value?.id
-        ? router.get(route('deck-master.build', selectedDeck.value?.id))
-        : router.get(route('deck-master.build'))
+        ? router.push({name: 'deck-master.build', params: {deck: selectedDeck.value?.id}})
+        : router.push({name: 'deck-master.build'})
 };
 
 const toStudy = () => {
     if (DeckStudyStore.data.deck.id) {
-        router.get(route('deck-master.study', DeckStudyStore.data.deck.id));
+        router.push({
+            name: 'deck-master.study',
+            params: {deck: DeckStudyStore.data.deck.id},
+        });
     }
 };
 

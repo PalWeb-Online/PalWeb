@@ -1,12 +1,13 @@
 import {reactive, ref, watch} from "vue";
 import {useNotificationStore} from "../../stores/NotificationStore.js";
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
 import {useI18n} from "vue-i18n";
 
 export function useDeck(props = {}, options = {}) {
     const {t, locale} = useI18n();
+    const router = useRouter();
     const NotificationStore = useNotificationStore();
 
     const {
@@ -16,7 +17,7 @@ export function useDeck(props = {}, options = {}) {
         label: 'deck',
         routeBase: 'decks',
         onDeleteSuccess: () => {
-            router.get(route('decks.index'));
+            router.push({name: 'decks.index'});
         },
     });
 
@@ -122,7 +123,10 @@ export function useDeck(props = {}, options = {}) {
 
         if (data.success) {
             NotificationStore.addNotification(t('deck.notifications.copy-success'));
-            router.get(route('decks.show', data.deckId));
+            router.push({
+                name: 'decks.show',
+                params: {deck: data.deckId},
+            });
         }
     };
 

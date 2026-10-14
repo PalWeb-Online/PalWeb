@@ -1,5 +1,4 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import Layout from "../../../Shared/Layout.vue";
@@ -169,17 +168,22 @@ const activeSessionStats = computed(() => {
 const refreshSessionData = async () => {
     isLoading.value = true;
 
-    router.reload({
-        only: ['cards', 'session_stats'],
-        preserveScroll: true,
-        preserveState: true,
-    });
+    try {
+        if (mode.value === 'deck') {
+            await fetchScopeData();
+        } else {
+            const {data} = await axios.get(route('card-dealer.get', {
+                scope: scope.value,
+            }));
 
-    if (mode.value === 'deck') {
-        await fetchScopeData();
+            allData.cards = data.cards;
+            allData.termsCount = data.terms_count;
+            allData.sessionStats = data.session_stats;
+            reviewHistory.value = data.review_history;
+        }
+    } finally {
+        isLoading.value = false;
     }
-
-    isLoading.value = false;
 };
 
 const handleSessionDataRefresh = async () => {

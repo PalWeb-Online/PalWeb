@@ -1,12 +1,12 @@
 import {inject, nextTick, provide, reactive, ref} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import {useScoreManager} from "../useScoreManager.js";
 import {shuffle} from "lodash";
 
 const activitySessionKey = Symbol("ActivitySession");
 
 export function createActivitySession() {
+    const router = useRouter();
     const scoreManager = useScoreManager();
 
     const activity = ref(null);
@@ -102,7 +102,10 @@ export function createActivitySession() {
 
         scoreManager.saveScore(activity.value?.id, {
             onSuccess: () => {
-                router.get(route('lessons.show', activity.value.lesson.global_position));
+                router.push({
+                    name: 'lessons.show',
+                    params: {lesson: activity.value.lesson.global_position},
+                });
             }
         });
     };

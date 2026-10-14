@@ -2,11 +2,13 @@
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {router, usePage} from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useAcademyStateStore} from "../../../../stores/AcademyStateStore.js";
 
 const UserStore = useUserStore();
 const AcademyStateStore = useAcademyStateStore();
+const router = useRouter();
 
 const props = defineProps({
     unit: {type: Object, required: true},
@@ -23,13 +25,19 @@ let resizeObserver = null;
 
 const editRoute = computed(() => {
     if (props.activeLesson) {
-        return route('lesson-planner.lesson', props.activeLesson.id);
+        return {
+            name: 'lesson-planner.lesson',
+            params: {lesson: props.activeLesson.id},
+        };
 
     } else if (props.unit) {
-        return route('lesson-planner.unit', props.unit.id);
+        return {
+            name: 'lesson-planner.unit',
+            params: {unit: props.unit.id},
+        };
 
     } else {
-        return route('lesson-planner.index');
+        return {name: 'lesson-planner.index'};
     }
 });
 
@@ -161,7 +169,7 @@ watch(() => props.unit, () => {
                         check
                     </div>
                     <button v-if="UserStore.isAdmin"
-                            @click="router.get(editRoute)" class="material-symbols-rounded">edit
+                            @click="router.push(editRoute)" class="material-symbols-rounded">edit
                     </button>
                 </div>
             </div>

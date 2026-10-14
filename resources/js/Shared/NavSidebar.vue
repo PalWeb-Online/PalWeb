@@ -1,9 +1,9 @@
 <script setup>
 import {useUserStore} from "../stores/UserStore.js";
 import {useNavigationStore} from "../stores/NavigationStore.js";
-import {router} from '@inertiajs/vue3'
 import {route} from 'ziggy-js';
 import {onMounted, onUnmounted, ref} from "vue";
+import {useRouter} from "vue-router";
 import {Carousel, Slide} from "vue3-carousel";
 import NavAuth from "./NavAuth.vue";
 import SignIn from "../components/Modals/SignIn.vue";
@@ -15,6 +15,7 @@ import {useI18n} from "vue-i18n";
 import {useAuth} from "../composables/useAuth.js";
 
 const {locale} = useI18n();
+const router = useRouter();
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -48,12 +49,21 @@ const toSection = async (section, key) => {
 
 const navigateOrPrompt = (page) => {
     if (UserStore.isUser) {
-        router.get(route(page));
+        router.push({name: page});
 
     } else {
         NavigationStore.showSignIn = true;
     }
 }
+
+const toggleAdminView = async (role = null) => {
+    await axios.get(role
+        ? route('admin.toggle-view', role)
+        : route('admin.toggle-view')
+    );
+
+    router.go(0);
+};
 
 const onSlideStart = () => {
     if (NavigationStore.data.section !== 'home') {
@@ -87,7 +97,7 @@ const handleSignOut = async () => {
 }
 
 onMounted(() => {
-    const removeNavigationListener = router.on('navigate', () => {
+    const removeNavigationListener = router.afterEach(() => {
         NavigationStore.closeSidebar();
     });
     document.addEventListener('click', handleClickOutside);
@@ -311,14 +321,14 @@ onMounted(() => {
                         <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
                         <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
 
-                        <button v-if="!UserStore.isAdmin" @click="router.get(route('admin.toggle-view'))">
+                        <button v-if="!UserStore.isAdmin" @click="toggleAdminView()">
                             {{ $t('nav.sidebar.admin-actions.restore-admin-view') }}
                         </button>
                         <template v-else>
-                            <button @click="router.get(route('admin.toggle-view', 'student'))">
+                            <button @click="toggleAdminView('student')">
                                 {{ $t('nav.sidebar.admin-actions.view-as-student') }}
                             </button>
-                            <button @click="router.get(route('admin.toggle-view', 'pal'))">
+                            <button @click="toggleAdminView('pal')">
                                 {{ $t('nav.sidebar.admin-actions.view-as-pal') }}
                             </button>
                         </template>
