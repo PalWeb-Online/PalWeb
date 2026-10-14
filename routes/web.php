@@ -37,14 +37,12 @@ use App\Http\Resources\DialogResource;
 use App\Http\Resources\TermResource;
 use App\Models\Deck;
 use App\Models\Dialog;
-use App\Models\Page;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
 use App\Services\SentenceService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,38 +50,13 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/offline', function () {
-    return Inertia::render('Error', ['status' => 911]);
-})->name('offline');
-
-Route::get('/', [HomeController::class, 'index'])->name('homepage');
-
 Route::prefix('/wiki')->controller(PageController::class)->group(function () {
-    Route::get('/', function () {
-        return Page::where('slug', 'about')->exists()
-            ? to_route('wiki.show', 'about')
-            : to_route('wiki.edit');
-    })->name('wiki.index');
-
     Route::middleware('admin')->group(function () {
-        Route::get('/edit/{page?}', 'edit')->name('wiki.edit');
         Route::post('/', 'store')->name('wiki.store');
         Route::patch('/{page}', 'update')->name('wiki.update');
         Route::delete('/{page}', 'destroy')->name('wiki.destroy');
     });
-
-    Route::get('/{page:slug}', 'show')->name('wiki.show');
 });
-
-Route::get('/coming-soon', function () {
-    return Inertia::render('ComingSoon');
-})->name('coming-soon');
-
-Route::get('/subscription', function () {
-    return Inertia::render('Auth/Subscription', [
-        'section' => 'account',
-    ]);
-})->name('subscription.index');
 
 Route::post('/lang/{lang}', [LanguageController::class, 'store'])->name('language.store');
 
@@ -112,8 +85,6 @@ Route::post('/email', [EmailAnnouncementController::class, 'store'])
 
 Route::prefix('/library')->controller(TermController::class)->group(function () {
     Route::prefix('/terms')->group(function () {
-        Route::get('/', 'index')->name('terms.index');
-        Route::get('/{term:slug}', 'show')->name('terms.show');
         Route::post('/{term}/pin', 'pin')->middleware(['auth', 'verified'])->name('terms.pin');
 
         Route::get('/{term}/get', function (Term $term) {
@@ -128,23 +99,10 @@ Route::prefix('/library')->controller(TermController::class)->group(function () 
     });
 
     Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
-        Route::get('/', 'index')->name('sentences.index');
-        Route::get('/{sentence}', 'show')->name('sentences.show');
         Route::post('/{sentence}/pin', 'pin')->middleware(['auth', 'verified'])->name('sentences.pin');
         Route::post('/get-many', 'getMany')->name('sentences.get-many');
     });
 
-    Route::prefix('/random')->group(function () {
-        Route::get('/term', function () {
-            return to_route('terms.show', Term::inRandomOrder()->first());
-        })->name('terms.random');
-
-        Route::get('/sentence', function () {
-            return to_route('sentences.show', Sentence::inRandomOrder()->first());
-        })->name('sentences.random');
-    });
-
-    Route::get('/roots/{root}', [RootController::class, 'show'])->name('roots.show');
 });
 
 Route::middleware(['auth'])->prefix('/hub')->group(function () {
@@ -152,9 +110,6 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
     Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
 
     Route::prefix('/users')->group(function () {
-        Route::get('/', [CommunityController::class, 'index'])->name('users.index');
-        Route::get('/{user:username}', [UserController::class, 'show'])->name('users.show');
-        Route::get('/{user:username}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
         Route::get('/{user:username}/avatars', [AvatarController::class, 'index'])->name('users.avatars.index');
         Route::post('/{user:username}/avatars', [AvatarController::class, 'store'])->name('users.avatars.store');
@@ -177,24 +132,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/academy')->middleware(['student'])->group(function () {
-        Route::controller(UnitController::class)->group(function () {
-            Route::get('/units', 'index')->name('units.index');
-            Route::get('/units/{unit:position}', 'show')->name('units.show');
-        });
-
-        Route::controller(LessonController::class)->group(function () {
-            Route::get('/lessons/{lesson:global_position}', 'show')->name('lessons.show');
-        });
-
-        Route::controller(ActivityController::class)->group(function () {
-            Route::get('/activities/{activity}', 'show')->name('activities.show');
-            Route::get('/activities/{activity}/activity', 'activity')->name('activities.activity');
-        });
-
         Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
-            Route::get('/', 'index')->name('dialogs.index');
-            Route::get('/{dialog}', 'show')->name('dialogs.show');
-
             Route::get('/{dialog}/get', function (Dialog $dialog) {
                 return new DialogResource(
                     Dialog::with(['sentences'])->findOrFail($dialog->id)
@@ -203,16 +141,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('/scores')->controller(ScoreController::class)->group(function () {
-            Route::get('/', 'index')->name('scores.index');
             Route::post('/', 'store')->name('scores.store');
-            Route::get('/{scorable_type}/{scorable_id}', 'history')->name('scores.history');
             Route::post('/purge', 'purge')->name('scores.purge');
             Route::delete('/{score}', 'destroy')->name('scores.destroy');
         });
     });
 
     Route::prefix('/library')->group(function () {
-        Route::resource('/decks', DeckController::class)->except(['create', 'edit']);
+        Route::resource('/decks', DeckController::class)->except(['index', 'show', 'create', 'edit']);
         Route::prefix('/decks')->controller(DeckController::class)->group(function () {
             Route::post('/{deck}/pin', 'pin')->name('decks.pin');
             Route::post('/{deck}/copy', 'copy')->name('decks.copy');
@@ -228,22 +164,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('/audios')->group(function () {
-            Route::get('/', [AudioController::class, 'index'])->name('audios.index');
             Route::delete('/{audio}', [AudioController::class, 'destroy'])->name('audios.destroy');
-            Route::get('/{speaker}', [SpeakerController::class, 'show'])->name('speaker.show');
         });
 
-        Route::get('/random/deck', function () {
-            return to_route('decks.show', Deck::inRandomOrder()->first());
-        })->name('decks.random');
     });
 
     Route::prefix('/workbench')->group(function () {
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
-            Route::get('/', 'index')->name('deck-master.index');
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
-            Route::get('/build/{deck?}', 'build')->name('deck-master.build');
-            Route::get('/study/{deck}', 'study')->name('deck-master.study');
             Route::get('/study/{deck}/get', 'fetchStudyDeck')->name('deck-master.study.get');
             Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
@@ -251,11 +179,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
         ) {
-            Route::get('/', 'index')->name('card-dealer.index');
             Route::get('/get', 'apiIndex')->name('card-dealer.get');
-            Route::get('/cards', 'cards')->name('card-dealer.cards');
             Route::get('/cards/get', 'apiCards')->name('card-dealer.cards.get');
-            Route::get('/review', 'review')->name('card-dealer.review');
             Route::get('/review/get', 'apiReview')->name('card-dealer.review.get');
             Route::post('/get/cards', 'getScopeCards')->name('card-dealer.get.cards');
         });
@@ -274,7 +199,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/sound-booth')->group(function () {
             Route::controller(SoundBoothController::class)->group(function () {
-                Route::get('/', 'index')->name('sound-booth.index');
                 Route::get('/speaker', 'fetchSpeaker')->name('sound-booth.speaker');
                 Route::post('/pronunciations', 'getAutoItems')->name('sound-booth.get.auto');
                 Route::post('/decks/{deck}', 'getDeckItems')->name('sound-booth.get.deck');
@@ -295,39 +219,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/activities', ActivityController::class)->except(['index', 'show', 'create', 'edit']);
 
         Route::prefix('/word-logger')->controller(WordLoggerController::class)->group(function () {
-            Route::get('/', 'index')->name('word-logger.index');
             Route::get('/relatives', 'relatives')->name('word-logger.relatives');
             Route::get('/sentences', 'sentences')->name('word-logger.sentences');
             Route::get('/inflections', 'inflections')->name('word-logger.inflections');
             Route::get('/editor-data', 'editorData')->name('word-logger.editor-data');
-            Route::get('/term/{term?}', 'term')->name('word-logger.term');
         });
 
         Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
-            Route::get('/', 'index')->name('speech-maker.index');
             Route::get('/get', 'apiIndex')->name('speech-maker.get');
-            Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
-            Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
-            Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
             Route::get('/get-terms/{id}', function (string $sentenceId) {
                 return response()->json(['terms' => app(SentenceService::class)->getSentenceTerms(Sentence::findOrFail($sentenceId))->toArray()]);
             })->name('speech-maker.get-terms');
         });
 
         Route::prefix('/lesson-planner')->controller(LessonPlannerController::class)->group(function () {
-            Route::get('/', 'index')->name('lesson-planner.index');
             Route::get('/get', 'apiCourse')->name('lesson-planner.get');
             Route::patch('/', 'update')->name('lesson-planner.update');
-            Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
-            Route::get('/unit/{unit}/decks', 'unitDecks')->name('lesson-planner.unit-decks');
             Route::get('/unit/{unit}/decks/get', 'apiUnitDecks')->name('lesson-planner.unit-decks.get');
-            Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
-            Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
-            Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');
         });
 
         Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
-            Route::get('/', 'index')->name('feedback.index');
             Route::get('/get', 'apiIndex')->name('feedback.get');
             Route::post('/', 'store')->name('todo.store');
             Route::delete('/{feedbackComment}', 'destroy')->name('todo.destroy');
@@ -412,10 +323,6 @@ Route::prefix('/api')->group(function () {
             });
         });
     });
-});
-
-Route::middleware('admin')->get('/theme-testing', function () {
-    return Inertia::render('ThemeTesting');
 });
 
 Route::middleware('auth')

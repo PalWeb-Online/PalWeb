@@ -21,15 +21,11 @@ Route::middleware('guest')->group(function () {
 
 Route::controller(NewPasswordController::class)->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('reset-password/{token}', 'show')
-            ->name('password.reset');
         Route::post('reset-password', 'store')
             ->name('password.update');
     });
 
     Route::middleware('auth')->group(function () {
-        Route::get('change-password', 'show')
-            ->name('password.edit');
         Route::patch('change-password', 'update')
             ->name('password.change');
     });
