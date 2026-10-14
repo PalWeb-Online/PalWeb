@@ -3,9 +3,10 @@ import {computed, onMounted, ref, watch} from 'vue';
 import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
 import {useRecordStore} from "../stores/RecordStore.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../../../composables/useForm.js";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
+import {useNotificationStore} from "../../../../stores/NotificationStore.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
@@ -15,6 +16,7 @@ import UserNametag from "../../../../components/UserNametag.vue";
 import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
 
 const UserStore = useUserStore();
+const NotificationStore = useNotificationStore();
 const SoundBoothStore = useSoundBoothStore();
 const RecordStore = useRecordStore();
 
@@ -39,7 +41,14 @@ const levels = ref([
     {data: '5', label: 'Native'},
 ]);
 
-const form = useForm({
+const {
+    form,
+    isDirty,
+    defaults,
+    payload,
+    setErrors,
+    clearErrors,
+} = useForm({
     dialect_id: SoundBoothStore.speaker.dialect?.id || '',
     location_id: SoundBoothStore.speaker.location?.id || '',
     fluency: SoundBoothStore.speaker.fluency || '',
@@ -52,20 +61,20 @@ watch(() => SoundBoothStore.speaker, (newSpeaker) => {
         form.location_id = newSpeaker.location?.id || '';
         form.fluency = newSpeaker.fluency || '';
         form.gender = newSpeaker.gender || '';
-        form.defaults();
+        defaults();
     }
 }, {deep: true});
 
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return form.isDirty && !isSaving.value;
+    return isDirty.value && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const isValidRequest = computed(() => {
-    return Object.values(form.data()).every(value => value);
+    return Object.values(payload()).every(value => value);
 });
 
 const fetchSpeakerOptions = async () => {
@@ -84,18 +93,28 @@ const fetchSpeakerOptions = async () => {
 
 const saveSpeaker = async () => {
     isSaving.value = true;
+    clearErrors();
 
-    form.post(route('speaker.store'), {
-        onSuccess: () => {
-            form.defaults();
-        },
-        onError: () => {
-            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.', 'error');
-        },
-        onFinish: () => {
-            isSaving.value = false;
+    try {
+        await axios.post(route('speaker.store'), payload());
+        const {data} = await axios.get(route('sound-booth.speaker'));
+
+        if (data.speaker) {
+            Object.assign(SoundBoothStore.speaker, data.speaker);
         }
-    });
+
+        defaults();
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        } else {
+            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.', 'error');
+        }
+
+    } finally {
+        isSaving.value = false;
+    }
 };
 
 onMounted(async () => {
@@ -195,7 +214,7 @@ onMounted(async () => {
                     <div class="speaker-data">
                         <div class="speaker-data-head">
                             <div>{{ $t('speaker.title')}}</div>
-                            <button :disabled="form.processing || !hasNavigationGuard || !isValidRequest"
+                            <button :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
                                     class="material-symbols-rounded" @click="saveSpeaker">
                                 save
                             </button>

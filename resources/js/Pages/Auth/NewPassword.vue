@@ -1,9 +1,9 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue";
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../composables/useForm.js";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 
 const UserStore = useUserStore();
 
@@ -12,23 +12,45 @@ const props = defineProps({
     email: {type: String, default: ''},
 });
 
-const form = useForm({
+const {
+    form,
+    errors,
+    clearErrors,
+    setErrors,
+    payload,
+} = useForm({
     token: props.token || '',
     email: props.email || '',
     password: '',
     password_confirmation: '',
 });
+const processing = ref(false);
 
-const setNewPassword = () => {
-    const method = !UserStore.isUser
-        ? form.post.bind(form)
-        : form.patch.bind(form);
-
+const setNewPassword = async () => {
     const url = !UserStore.isUser
         ? route('password.update')
         : route('password.change');
 
-    method(url);
+    processing.value = true;
+    clearErrors();
+
+    try {
+        if (!UserStore.isUser) {
+            await axios.post(url, payload());
+            window.location.href = route('homepage');
+            return;
+        }
+
+        await axios.patch(url, payload());
+        window.location.href = route('users.show', UserStore.user.username);
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        }
+    } finally {
+        processing.value = false;
+    }
 }
 
 const isValidRequest = computed(() => {
@@ -56,7 +78,7 @@ defineOptions({
                              v-text="form.password.length + `/8`"
                         />
                     </div>
-                    <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
+                    <div v-if="errors.password" v-text="errors.password" class="field-error"/>
                 </div>
                 <div class="field-item">
                     <label>{{ $t('user.fields.confirm-password') }}</label>
@@ -70,7 +92,7 @@ defineOptions({
                 </div>
             </div>
             <div class="window-footer">
-                <button @click="setNewPassword" :disabled="form.processing || !isValidRequest">
+                <button @click="setNewPassword" :disabled="processing || !isValidRequest">
                     {{ $t('pages.users.new-password.set-password') }}
                 </button>
             </div>

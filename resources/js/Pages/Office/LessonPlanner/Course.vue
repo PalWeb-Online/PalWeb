@@ -1,13 +1,14 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../../composables/useForm.js";
 import Draggable from 'vuedraggable';
 import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
+import {useNotificationStore} from "../../../stores/NotificationStore.js";
 
 defineOptions({
     layout: Layout,
@@ -15,8 +16,16 @@ defineOptions({
 
 const units = ref([]);
 const lessons = ref([]);
+const NotificationStore = useNotificationStore();
 
-const form = useForm({
+const {
+    form,
+    isDirty,
+    defaults,
+    payload,
+    setErrors,
+    clearErrors,
+} = useForm({
     units: [],
 })
 
@@ -25,7 +34,7 @@ onMounted(async () => {
     units.value = data.units?.data ?? data.units ?? [];
     lessons.value = data.lessons?.data ?? data.lessons ?? [];
     form.units = [...units.value];
-    form.defaults();
+    defaults();
 });
 
 const addUnit = () => {
@@ -44,7 +53,7 @@ const removeUnit = (unit) => {
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return form.isDirty && !isSaving.value;
+    return isDirty.value && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -67,18 +76,22 @@ const isValidRequest = computed(() => validationIssues.value.length === 0);
 
 const saveCourse = async () => {
     isSaving.value = true;
+    clearErrors();
 
-    form.patch(route('lesson-planner.update'), {
-        onSuccess: () => {
-            form.defaults();
-        },
-        onError: () => {
+    try {
+        await axios.patch(route('lesson-planner.update'), payload());
+        defaults();
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        } else {
             NotificationStore.addNotification('Oh no! The Course could not be saved.', 'error');
-        },
-        onFinish: () => {
-            isSaving.value = false;
         }
-    });
+
+    } finally {
+        isSaving.value = false;
+    }
 };
 
 const updateUnitPositions = () => {

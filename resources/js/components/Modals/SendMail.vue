@@ -1,29 +1,45 @@
 <script setup>
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../composables/useForm.js";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import CommentItem from "../CommentItem.vue";
 
 const emit = defineEmits(['close']);
 
 const UserStore = useUserStore();
 
-const form = useForm({
+const {
+    form,
+    errors,
+    clearErrors,
+    setErrors,
+    payload,
+} = useForm({
     subject: '',
     body: '',
 });
+const processing = ref(false);
 
 const isValidRequest = computed(() => {
     return form.subject.length && form.body.length;
 });
 
-const sendMail = () => {
-    form.post(route('email.store'), {
-        onSuccess: () => {
-            emit('close');
+const sendMail = async () => {
+    processing.value = true;
+    clearErrors();
+
+    try {
+        await axios.post(route('email.store'), payload());
+        emit('close');
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
         }
-    });
+    } finally {
+        processing.value = false;
+    }
 }
 </script>
 <template>
@@ -38,7 +54,7 @@ const sendMail = () => {
                     <div class="field-input">
                         <input v-model="form.subject" :placeholder="$t('modals.send-mail.fields.subject')" required>
                     </div>
-                    <div v-if="form.errors.subject" v-text="form.errors.subject" class="field-error"/>
+                    <div v-if="errors.subject" v-text="errors.subject" class="field-error"/>
                 </div>
                 <CommentItem :user="UserStore.user">
                     <textarea class="user-comment-content" v-model="form.body"
@@ -47,11 +63,11 @@ const sendMail = () => {
                     <div class="user-comment-data">
                         — {{ UserStore.user.name }} ({{ UserStore.user.username }})
                     </div>
-                    <div v-if="form.errors.body" v-text="form.errors.body" class="field-error"/>
+                    <div v-if="errors.body" v-text="errors.body" class="field-error"/>
                 </CommentItem>
             </div>
             <div class="window-footer">
-                <button type="submit" :disabled="form.processing || !isValidRequest">
+                <button type="submit" :disabled="processing || !isValidRequest">
                     {{ $t('modals.send-mail.submit') }}
                 </button>
             </div>
