@@ -11,6 +11,7 @@ use App\Models\Gloss;
 use App\Models\Sentence;
 use App\Models\Term;
 use App\Services\TermService;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 
 class SpeechMakerController extends Controller
@@ -21,6 +22,13 @@ class SpeechMakerController extends Controller
     }
 
     public function index(): \Inertia\Response
+    {
+        return Inertia::render('Office/SpeechMaker/Index', [
+            'section' => 'office',
+        ]);
+    }
+
+    public function apiIndex(): JsonResponse
     {
         $termsMissingSentences = collect();
 
@@ -44,8 +52,7 @@ class SpeechMakerController extends Controller
 
         $this->termService->hydratePronunciations($termsMissingSentences);
 
-        return Inertia::render('Office/SpeechMaker/Index', [
-            'section' => 'office',
+        return response()->json([
             'dialogs' => DialogResource::collection(Dialog::orderByDesc('id')->take(10)->get()),
             'terms' => TermResource::collection($termsMissingSentences),
         ]);
@@ -63,10 +70,7 @@ class SpeechMakerController extends Controller
     {
         return Inertia::render('Office/SpeechMaker/Sentence', [
             'section' => 'office',
-            'initialDialog' => [
-                'id' => $dialog->id,
-                'title' => $dialog->title,
-            ]
+            'initialDialogId' => $dialog->id,
         ]);
     }
 

@@ -11,6 +11,7 @@ use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
 use App\Services\TermService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,12 @@ class LessonPlannerController extends Controller
     {
         return Inertia::render('Office/LessonPlanner/Course', [
             'section' => 'office',
+        ]);
+    }
+
+    public function apiCourse(): JsonResponse
+    {
+        return response()->json([
             'units' => UnitResource::collection(Unit::all()),
             'lessons' => LessonResource::collection(Lesson::where('unit_id', null)->get()),
         ]);
@@ -79,15 +86,19 @@ class LessonPlannerController extends Controller
     {
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
-            'initialUnit' => [
-                'id' => $unit->id,
-                'title' => $unit->title,
-                'position' => $unit->position,
-            ],
+            'initialUnitId' => $unit->id,
         ]);
     }
 
     public function unitDecks(Unit $unit, TermService $termService): \Inertia\Response
+    {
+        return Inertia::render('Office/LessonPlanner/Decks', [
+            'section' => 'office',
+            'unitId' => $unit->id,
+        ]);
+    }
+
+    public function apiUnitDecks(Unit $unit, TermService $termService): JsonResponse
     {
         $deckIds = $unit->lessons()
             ->whereNotNull('deck_id')
@@ -109,8 +120,7 @@ class LessonPlannerController extends Controller
 
         $decks->each(fn (Deck $deck) => $termService->hydratePronunciations($deck->terms));
 
-        return Inertia::render('Office/LessonPlanner/Decks', [
-            'section' => 'office',
+        return response()->json([
             'unit' => new UnitResource($unit),
             'decks' => DeckResource::collection($decks),
         ]);
@@ -118,13 +128,6 @@ class LessonPlannerController extends Controller
 
     public function lesson(?Lesson $lesson = null): \Inertia\Response
     {
-        $lesson?->load([
-            'unit',
-            'deck',
-            'activity',
-            'dialog'
-        ]);
-
         return Inertia::render('Office/LessonPlanner/Lesson', [
             'section' => 'office',
             'lessonId' => $lesson?->id,
@@ -133,17 +136,10 @@ class LessonPlannerController extends Controller
 
     public function lessonActivity(Lesson $lesson): \Inertia\Response
     {
-        $activity = $lesson->activity;
-
         return Inertia::render('Office/LessonPlanner/Activity', [
             'section' => 'office',
-            'activityId' => $activity?->id,
-            'initialLesson' => [
-                'id' => $lesson->id,
-                'title' => $lesson->title,
-                'global_position' => $lesson->global_position,
-                'published' => $lesson->published,
-            ],
+            'activityId' => $lesson->activity_id,
+            'initialLessonId' => $lesson->id,
         ]);
     }
 }

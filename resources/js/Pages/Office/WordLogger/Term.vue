@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
@@ -22,13 +22,11 @@ const props = defineProps({
         type: Number,
         default: null,
     },
-    editorData: {
-        type: Object,
-        default: () => ({
-            attributes: [],
-            dialects: [],
-        }),
-    },
+});
+
+const editorData = ref({
+    attributes: [],
+    dialects: [],
 });
 
 const SearchStore = useSearchStore();
@@ -80,6 +78,9 @@ const removeRelative = (index) => {
 };
 
 onMounted(async () => {
+    const {data} = await axios.get(route('word-logger.editor-data'));
+    editorData.value = data.editorData;
+
     await loadForm();
 });
 

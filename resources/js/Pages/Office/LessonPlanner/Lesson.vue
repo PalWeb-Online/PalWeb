@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {computed, onMounted, provide, watch} from "vue";
+import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -30,7 +30,13 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    initialUnitId: {
+        type: Number,
+        default: null,
+    },
 })
+
+const initialUnit = ref(props.initialUnit);
 
 const {
     form,
@@ -56,7 +62,7 @@ const {
     setSelectedDialog,
 } = useLessonEditor({
     lessonId: computed(() => props.lessonId),
-    initialUnit: computed(() => props.initialUnit),
+    initialUnit: computed(() => initialUnit.value),
 });
 
 const {
@@ -78,6 +84,11 @@ const {
 provide('documentSentenceModels', sentenceModels);
 
 onMounted(async () => {
+    if (props.initialUnitId) {
+        const {data} = await axios.get(route('api.units.fetch', props.initialUnitId));
+        initialUnit.value = data.unit;
+    }
+
     await loadForm();
 });
 

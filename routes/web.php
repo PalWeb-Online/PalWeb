@@ -14,6 +14,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\EmailAnnouncementController;
 use App\Http\Controllers\FeedbackCommentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Office\LessonPlannerController;
 use App\Http\Controllers\Office\SpeechMakerController;
@@ -33,20 +34,14 @@ use App\Http\Controllers\Workbench\SoundBoothController;
 use App\Http\Resources\AudioResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\DialogResource;
-use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
-use App\Http\Resources\UserShowResource;
-use App\Http\Resources\UserResource;
-use App\Models\Audio;
 use App\Models\Deck;
 use App\Models\Dialog;
 use App\Models\Page;
 use App\Models\Pronunciation;
 use App\Models\Sentence;
 use App\Models\Term;
-use App\Models\User;
 use App\Services\SentenceService;
-use App\Services\TermService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -61,90 +56,7 @@ Route::get('/offline', function () {
     return Inertia::render('Error', ['status' => 911]);
 })->name('offline');
 
-Route::get('/', function () {
-    $counts = Cache::remember('public_model_counts', now()->addHour(), function () {
-        return [
-            'terms' => Term::count(),
-            'sentences' => Sentence::count(),
-            'users' => User::count(),
-            'decks' => Deck::where('private', false)->count(),
-            'dialogs' => Dialog::count(),
-            'audios' => Audio::count(),
-        ];
-    });
-
-    $isStaging = app()->environment('staging');
-
-    $users = ! $isStaging
-        ? User::whereKey([7, 10, 11, 18, 19, 878, 1113, 1115, 1186, 1224])->get()
-        : User::inRandomOrder()->limit(10)->get();
-    $users->load('selectedAvatar');
-
-    $decks = ! $isStaging
-        ? Deck::with('terms')->whereKey([2, 3, 4, 12, 19, 83, 100, 118])->get()
-        : Deck::with('terms')
-            ->where('private', false)
-            ->inRandomOrder()
-            ->limit(8)
-            ->get();
-
-    $sentences = ! $isStaging
-        ? Sentence::whereKey([256, 66, 54])->get()
-        : Sentence::inRandomOrder()->limit(3)->get();
-
-    $testimonialComments = [
-        'PalWeb has made it so much easier to connect with real spoken Arabic. The dictionary and example sentences help me sound natural, not just textbook-correct.',
-        'Finally — a resource that respects the richness of Palestinian Arabic and makes it accessible to learners. My students love the interactive decks and real-life examples.',
-        'Recording audio for PalWeb has been a powerful way to share my dialect and support learners around the world. It’s exciting to be part of something that preserves our language.',
-        'PalWeb stands out as a resource because of its content & the structuring of vocabulary on the site, where you can break down sentences into their constituent words and even words into their dictionary form. This is a format that more language sites should seek to emulate.',
-        'I\'m learning Palestinian Arabic to connect better with my family, and PalWeb has been a lifesaver. I love that I can hear everything spoken out loud!',
-    ];
-
-    $testimonialUsers = ! $isStaging
-        ? User::whereKey([243, 1317, 16, 18, 3])->get()
-        : User::inRandomOrder()->limit(count($testimonialComments))->get();
-    $testimonialUsers->load('selectedAvatar');
-
-    $testimonials = collect($testimonialComments)
-        ->map(fn (string $comment, int $index) => [
-            'user' => new UserResource(
-                $testimonialUsers->values()->get($index) ?? User::first()
-            ),
-            'comment' => $comment,
-        ])
-        ->all();
-
-    $termCollection = ! $isStaging
-        ? Term::whereKey(662)
-            ->withItemData()
-            ->with(['inflections'])
-            ->get()
-        : Term::query()
-            ->withItemData()
-            ->with(['inflections'])
-            ->limit(1)
-            ->get();
-
-    if ($termCollection->isNotEmpty()) {
-        app(TermService::class)->hydratePronunciations($termCollection);
-        $featuredTerm = new TermResource($termCollection->first());
-    }
-
-    return Inertia::render('Home', [
-        'count' => $counts,
-        'users' => UserResource::collection($users),
-        'decks' => DeckResource::collection($decks),
-        'sentences' => SentenceResource::collection($sentences),
-        'testimonials' => $testimonials,
-        'featuredTerm' => $termCollection->isNotEmpty() ? $featuredTerm : null,
-        'featuredUser' => User::find(1) ? new UserShowResource(User::find(1)->load([
-            'selectedAvatar', 'dialect'
-        ])) : null,
-        'featuredDeck' => Deck::find(2) ? new DeckResource(Deck::find(2)->load([
-            'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
-        ])) : null,
-    ]);
-})->name('homepage');
+Route::get('/', [HomeController::class, 'index'])->name('homepage');
 
 Route::prefix('/wiki')->controller(PageController::class)->group(function () {
     Route::get('/', function () {
@@ -332,6 +244,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
             Route::get('/build/{deck?}', 'build')->name('deck-master.build');
             Route::get('/study/{deck}', 'study')->name('deck-master.study');
+            Route::get('/study/{deck}/get', 'fetchStudyDeck')->name('deck-master.study.get');
             Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
@@ -339,8 +252,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
         ) {
             Route::get('/', 'index')->name('card-dealer.index');
+            Route::get('/get', 'apiIndex')->name('card-dealer.get');
             Route::get('/cards', 'cards')->name('card-dealer.cards');
+            Route::get('/cards/get', 'apiCards')->name('card-dealer.cards.get');
             Route::get('/review', 'review')->name('card-dealer.review');
+            Route::get('/review/get', 'apiReview')->name('card-dealer.review.get');
             Route::post('/get/cards', 'getScopeCards')->name('card-dealer.get.cards');
         });
 
@@ -359,6 +275,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('/sound-booth')->group(function () {
             Route::controller(SoundBoothController::class)->group(function () {
                 Route::get('/', 'index')->name('sound-booth.index');
+                Route::get('/speaker', 'fetchSpeaker')->name('sound-booth.speaker');
                 Route::post('/pronunciations', 'getAutoItems')->name('sound-booth.get.auto');
                 Route::post('/decks/{deck}', 'getDeckItems')->name('sound-booth.get.deck');
             });
@@ -382,11 +299,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/relatives', 'relatives')->name('word-logger.relatives');
             Route::get('/sentences', 'sentences')->name('word-logger.sentences');
             Route::get('/inflections', 'inflections')->name('word-logger.inflections');
+            Route::get('/editor-data', 'editorData')->name('word-logger.editor-data');
             Route::get('/term/{term?}', 'term')->name('word-logger.term');
         });
 
         Route::prefix('/speech-maker')->controller(SpeechMakerController::class)->group(function () {
             Route::get('/', 'index')->name('speech-maker.index');
+            Route::get('/get', 'apiIndex')->name('speech-maker.get');
             Route::get('/dialog/{dialog?}', 'dialog')->name('speech-maker.dialog');
             Route::get('/dialog/{dialog}/sentence', 'dialogSentence')->name('speech-maker.dialog-sentence');
             Route::get('/sentence/{sentence?}', 'sentence')->name('speech-maker.sentence');
@@ -397,9 +316,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/lesson-planner')->controller(LessonPlannerController::class)->group(function () {
             Route::get('/', 'index')->name('lesson-planner.index');
+            Route::get('/get', 'apiCourse')->name('lesson-planner.get');
             Route::patch('/', 'update')->name('lesson-planner.update');
             Route::get('/unit/{unit?}', 'unit')->name('lesson-planner.unit');
             Route::get('/unit/{unit}/decks', 'unitDecks')->name('lesson-planner.unit-decks');
+            Route::get('/unit/{unit}/decks/get', 'apiUnitDecks')->name('lesson-planner.unit-decks.get');
             Route::get('/unit/{unit}/lesson', 'unitLesson')->name('lesson-planner.unit-lesson');
             Route::get('/lesson/{lesson?}', 'lesson')->name('lesson-planner.lesson');
             Route::get('/lesson/{lesson}/activity', 'lessonActivity')->name('lesson-planner.lesson-activity');
@@ -407,6 +328,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
             Route::get('/', 'index')->name('feedback.index');
+            Route::get('/get', 'apiIndex')->name('feedback.get');
             Route::post('/', 'store')->name('todo.store');
             Route::delete('/{feedbackComment}', 'destroy')->name('todo.destroy');
         });
@@ -418,9 +340,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::prefix('/api')->group(function () {
+    Route::get('/home', [HomeController::class, 'apiIndex'])->name('api.home.index');
+
     Route::middleware(['auth', 'verified', 'student'])->prefix('/academy')->group(function () {
         Route::get('/state', [AcademyStateController::class, 'show'])->name('api.academy.state');
+        Route::get('/units', [UnitController::class, 'apiIndex'])->name('api.academy.units.index');
+        Route::get('/dialogs', [DialogController::class, 'apiIndex'])->name('api.academy.dialogs.index');
+        Route::get('/scores', [ScoreController::class, 'apiIndex'])->name('api.academy.scores.index');
+        Route::get('/scores/{scorable_type}/{scorable_id}', [ScoreController::class, 'apiHistory'])->name('api.academy.scores.history');
     });
+
+    Route::middleware('auth')->get('/community', [CommunityController::class, 'apiIndex'])->name('api.community.index');
 
     Route::prefix('/users')->controller(UserController::class)->group(function () {
         Route::get('/{user}', 'fetch')->name('api.users.fetch');
@@ -464,6 +394,7 @@ Route::prefix('/api')->group(function () {
             Route::get('/', 'apiIndex')->name('api.terms.index');
             Route::get('/{term}', 'fetch')->name('api.terms.fetch');
         });
+        Route::get('/roots/{root}', [RootController::class, 'fetch'])->name('api.roots.fetch');
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'apiIndex')->name('api.sentences.index');
             Route::get('/{sentence}', 'fetch')->name('api.sentences.fetch');

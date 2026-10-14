@@ -23,16 +23,21 @@ import TermFlashcard from "../components/TermFlashcard.vue";
 
 const {t} = useI18n();
 
-defineProps({
-    count: Object,
-    users: Array,
-    decks: Array,
-    sentences: Array,
-    testimonials: Array,
-    featuredTerm: Object,
-    featuredUser: Object,
-    featuredDeck: Object,
+const count = ref({
+    terms: 0,
+    sentences: 0,
+    users: 0,
+    decks: 0,
+    dialogs: 0,
+    audios: 0,
 });
+const users = ref([]);
+const decks = ref([]);
+const sentences = ref([]);
+const testimonials = ref([]);
+const featuredTerm = ref(null);
+const featuredUser = ref(null);
+const featuredDeck = ref(null);
 
 const NotificationStore = useNotificationStore();
 const NavigationStore = useNavigationStore();
@@ -66,6 +71,17 @@ const profileDialects = computed(() =>
 let intervalId = null;
 
 onMounted(async () => {
+    const {data} = await axios.get(route('api.home.index'));
+
+    count.value = data.count;
+    users.value = data.users?.data ?? data.users ?? [];
+    decks.value = data.decks?.data ?? data.decks ?? [];
+    sentences.value = data.sentences?.data ?? data.sentences ?? [];
+    testimonials.value = data.testimonials;
+    featuredTerm.value = data.featuredTerm;
+    featuredUser.value = data.featuredUser;
+    featuredDeck.value = data.featuredDeck;
+
     await nextTick();
 
     intervalId = setInterval(() => {

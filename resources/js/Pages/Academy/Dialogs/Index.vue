@@ -3,13 +3,17 @@ import Layout from "../../../Shared/Layout.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import {route} from "ziggy-js";
+import {onMounted, ref} from "vue";
 
 defineOptions({
     layout: Layout
 });
 
-defineProps({
-    dialogs: Object,
+const dialogs = ref({data: [], meta: {links: []}});
+
+onMounted(async () => {
+    const {data} = await axios.get(route('api.academy.dialogs.index'));
+    dialogs.value = data.dialogs;
 });
 </script>
 <template>

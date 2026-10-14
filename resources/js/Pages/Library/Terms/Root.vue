@@ -1,18 +1,27 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import RootContainer from "../../../components/RootContainer.vue";
+import {onMounted, ref} from "vue";
+import {route} from "ziggy-js";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
-    root: Object,
+    rootId: Number,
+});
+
+const root = ref(null);
+
+onMounted(async () => {
+    const {data} = await axios.get(route('api.roots.fetch', props.rootId));
+    root.value = data.root;
 });
 </script>
 <template>
-    <Head :title="`Dictionary: ${root.ar} (${root.en})`"/>
+    <Head :title="root ? `Dictionary: ${root.ar} (${root.en})` : 'Dictionary'"/>
     <div id="app-body">
-        <RootContainer :root="root"/>
+        <RootContainer v-if="root" :root="root"/>
     </div>
 </template>

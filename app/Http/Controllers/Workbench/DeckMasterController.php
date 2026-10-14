@@ -44,6 +44,14 @@ class DeckMasterController extends Controller
 
     public function study(Deck $deck): \Inertia\Response|RedirectResponse
     {
+        return Inertia::render('Workbench/DeckMaster/Study', [
+            'section' => 'academy',
+            'deckId' => $deck->id,
+        ]);
+    }
+
+    public function fetchStudyDeck(Deck $deck): JsonResponse|RedirectResponse
+    {
         $deck->load([
             'terms' => fn ($q) => $q
                 ->whereNotNull('deck_term.gloss_id')
@@ -64,8 +72,7 @@ class DeckMasterController extends Controller
 
         $this->termService->hydratePronunciations($deck->terms);
 
-        return Inertia::render('Workbench/DeckMaster/Study', [
-            'section' => 'academy',
+        return response()->json([
             'deck' => new DeckResource($deck),
         ]);
     }

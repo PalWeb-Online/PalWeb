@@ -17,10 +17,16 @@ class SoundBoothController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
-
         return Inertia::render('Workbench/SoundBooth/SoundBooth', [
             'section' => 'workbench',
+        ]);
+    }
+
+    public function fetchSpeaker(): JsonResponse
+    {
+        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
+
+        return response()->json([
             'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
     }

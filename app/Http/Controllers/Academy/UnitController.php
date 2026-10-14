@@ -22,12 +22,8 @@ class UnitController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $lessons = Lesson::where('unit_id', null)->get();
-
         return Inertia::render('Academy/Units/Index', [
             'section' => 'academy',
-            'units' => UnitResource::collection(Unit::all()),
-            'lessons' => LessonResource::collection($lessons),
         ]);
     }
 
@@ -53,6 +49,16 @@ class UnitController extends Controller
         return response()->json([
             'unit' => new UnitResource($unit),
             'lessons' => $includes->contains('show') ? LessonResource::collection($unit->lessons) : [],
+        ]);
+    }
+
+    public function apiIndex(): JsonResponse
+    {
+        $lessons = Lesson::where('unit_id', null)->get();
+
+        return response()->json([
+            'units' => UnitResource::collection(Unit::all()),
+            'lessons' => LessonResource::collection($lessons),
         ]);
     }
 

@@ -17,11 +17,8 @@ const NavigationStore = useNavigationStore();
 
 defineOptions({layout: Layout});
 
-const props = defineProps({
-    featuredTerm: Object,
-})
-
 const terms = ref(null);
+const featuredTerm = ref(null);
 const totalCount = ref(0);
 const filters = ref({sort: 'alphabetical'});
 const loading = ref(true);
@@ -40,6 +37,7 @@ async function fetchTerms(params = {}) {
         const response = await fetch(route('api.terms.index', params));
         const data = await response.json();
         terms.value = data.terms;
+        featuredTerm.value = data.featuredTerm;
         totalCount.value = data.totalCount;
         filters.value = data.filters;
         updatePagination(data.terms.meta);
@@ -86,7 +84,7 @@ function updateFilter({filter, value}) {
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.terms.index.title') }}</h1></div>
 
-            <TermFeatured :model="featuredTerm"/>
+            <TermFeatured v-if="featuredTerm" :model="featuredTerm"/>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
 
             <div class="letters-array">

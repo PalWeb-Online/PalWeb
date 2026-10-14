@@ -95,6 +95,12 @@ class WordLoggerController extends Controller
         return Inertia::render('Office/WordLogger/Term', [
             'section' => 'office',
             'termId' => $term?->id,
+        ]);
+    }
+
+    public function editorData(): JsonResponse
+    {
+        return response()->json([
             'editorData' => [
                 'attributes' => Attribute::query()
                     ->select(['id', 'model', 'attribute', 'category'])

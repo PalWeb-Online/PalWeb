@@ -21,11 +21,7 @@ const SearchStore = useSearchStore();
 
 const props = defineProps({
     scope: String,
-    deck: Object,
-    cards: Array,
-    terms_count: Number,
-    review_history: Object,
-    session_stats: Object,
+    deckId: Number,
 })
 
 const scope = ref(props.scope ?? 'all');
@@ -37,17 +33,31 @@ const mode = computed(() => {
 const isLoading = ref(false);
 
 const allData = reactive({
-    cards: props.cards,
-    termsCount: props.terms_count,
-    sessionStats: props.session_stats,
-})
-
-const scopeData = reactive({
-    deck: props.deck,
     cards: [],
     termsCount: 0,
     sessionStats: null,
 })
+
+const scopeData = reactive({
+    deck: null,
+    cards: [],
+    termsCount: 0,
+    sessionStats: null,
+})
+
+const reviewHistory = ref({});
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('card-dealer.get', params));
+
+    scope.value = data.scope ?? scope.value;
+    scopeData.deck = data.deck;
+    allData.cards = data.cards;
+    allData.termsCount = data.terms_count;
+    allData.sessionStats = data.session_stats;
+    reviewHistory.value = data.review_history;
+});
 
 const allSessionStats = computed(() => mapSessionStats(allData.sessionStats))
 const scopeSessionStats = computed(() => mapSessionStats(scopeData.sessionStats))
@@ -110,18 +120,6 @@ watch(
         scope.value = 'deck';
         SearchStore.deselectModel();
     }
-);
-
-watch(
-    () => ({
-        cards: props.cards,
-        sessionStats: props.session_stats,
-    }),
-    ({cards, sessionStats}) => {
-        allData.cards = cards;
-        allData.sessionStats = sessionStats;
-    },
-    {deep: false}
 );
 
 const openDeckSelector = () => {
@@ -188,13 +186,6 @@ const handleSessionDataRefresh = async () => {
     await refreshSessionData();
 };
 
-onMounted(async () => {
-    if (props.deck) {
-        scopeData.deck = props.deck;
-        scope.value = 'deck';
-        await fetchScopeData();
-    }
-});
 </script>
 
 <template>
@@ -276,7 +267,7 @@ onMounted(async () => {
                     </div>
                     <div class="score-stats-container__content">
                         <ReviewQueue :cards="activeCards"/>
-                        <ReviewHistory :review_history="review_history"/>
+                        <ReviewHistory :review_history="reviewHistory"/>
                     </div>
                 </div>
             </div>

@@ -17,10 +17,16 @@ class FeedbackCommentController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $comments = FeedbackComment::with('user')->get();
-
         return Inertia::render('Office/ViewFeedback', [
             'section' => 'office',
+        ]);
+    }
+
+    public function apiIndex(): JsonResponse
+    {
+        $comments = FeedbackComment::with('user')->get();
+
+        return response()->json([
             'feedbackComments' => CommentResource::collection($comments),
         ]);
     }

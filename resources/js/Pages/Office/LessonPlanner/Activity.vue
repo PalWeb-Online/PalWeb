@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -24,7 +24,13 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    initialLessonId: {
+        type: Number,
+        default: null,
+    },
 });
+
+const initialLesson = ref(props.initialLesson);
 
 const {
     form,
@@ -42,10 +48,15 @@ const {
     deleteActivity,
 } = useActivityEditor({
     activityId: computed(() => props.activityId),
-    initialLesson: computed(() => props.initialLesson),
+    initialLesson: computed(() => initialLesson.value),
 });
 
 onMounted(async () => {
+    if (props.initialLessonId) {
+        const {data} = await axios.get(route('api.lessons.fetch', props.initialLessonId));
+        initialLesson.value = data.lesson;
+    }
+
     await loadForm();
 });
 

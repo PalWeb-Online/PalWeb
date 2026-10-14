@@ -3,7 +3,7 @@ import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {useForm} from "@inertiajs/vue3";
 import Draggable from 'vuedraggable';
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -13,14 +13,20 @@ defineOptions({
     layout: Layout,
 })
 
-const props = defineProps({
-    units: Object,
-    lessons: Object
-})
+const units = ref([]);
+const lessons = ref([]);
 
 const form = useForm({
-    units: props.units || [],
+    units: [],
 })
+
+onMounted(async () => {
+    const {data} = await axios.get(route('lesson-planner.get'));
+    units.value = data.units?.data ?? data.units ?? [];
+    lessons.value = data.lessons?.data ?? data.lessons ?? [];
+    form.units = [...units.value];
+    form.defaults();
+});
 
 const addUnit = () => {
     form.units.push({
@@ -81,15 +87,9 @@ const updateUnitPositions = () => {
     });
 };
 
-watch(
-    () => props.units,
-    (newValue) => {
-        if (newValue) {
-            Object.assign(form.units, newValue);
-        }
-    },
-    {deep: true}
-);
+watch(units, (newValue) => {
+    form.units = [...newValue];
+}, {deep: true});
 </script>
 <template>
     <Head title="Academy: Lessons"/>

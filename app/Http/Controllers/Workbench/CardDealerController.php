@@ -25,6 +25,17 @@ class CardDealerController extends Controller
 
     public function index(Request $request, ReviewService $reviewService): \Inertia\Response
     {
+        $options = $this->makeReviewOptions($request, auth()->user());
+
+        return Inertia::render('Workbench/CardDealer/Index', [
+            'section' => 'academy',
+            'scope' => $options->scope,
+            'deckId' => $options->deckId,
+        ]);
+    }
+
+    public function apiIndex(Request $request, ReviewService $reviewService): JsonResponse
+    {
         $user = auth()->user();
         $options = $this->makeReviewOptions($request, $user);
 
@@ -48,8 +59,7 @@ class CardDealerController extends Controller
             ->get()
             ->keyBy(fn ($item) => $item->reviewed_at->format('Y-m-d'));
 
-        return Inertia::render('Workbench/CardDealer/Index', [
-            'section' => 'academy',
+        return response()->json([
             'scope' => $options->scope,
             'deck' => $deck ? new DeckResource($deck) : null,
             'cards' => CardResource::collection(Card::forUser($user->id)->get()),
@@ -60,6 +70,17 @@ class CardDealerController extends Controller
     }
 
     public function review(Request $request, ReviewService $reviewService): \Inertia\Response|RedirectResponse
+    {
+        $options = $this->makeReviewOptions($request, auth()->user());
+
+        return Inertia::render('Workbench/CardDealer/Review', [
+            'section' => 'academy',
+            'scope' => $options->scope,
+            'deckId' => $options->deckId,
+        ]);
+    }
+
+    public function apiReview(Request $request, ReviewService $reviewService): JsonResponse
     {
         $user = auth()->user();
         $options = $this->makeReviewOptions($request, $user);
@@ -75,18 +96,17 @@ class CardDealerController extends Controller
             ->filter();
 
         if ($cards->isEmpty()) {
-            session()->flash('notification', [
-                'type' => 'info',
-                'message' => 'There were no Cards to review.',
+            return response()->json([
+                'deck' => $deck ? new DeckResource($deck) : null,
+                'cards' => [],
+                'options' => $options,
+                'empty' => true,
             ]);
-
-            return redirect()->route('card-dealer.index');
         }
 
         $this->termService->hydratePronunciations($terms);
 
-        return Inertia::render('Workbench/CardDealer/Review', [
-            'section' => 'academy',
+        return response()->json([
             'deck' => $deck ? new DeckResource($deck) : null,
             'cards' => CardResource::collection($cards),
             'options' => $options,
@@ -94,6 +114,13 @@ class CardDealerController extends Controller
     }
 
     public function cards(Request $request): \Inertia\Response
+    {
+        return Inertia::render('Workbench/CardDealer/Cards', [
+            'section' => 'academy',
+        ]);
+    }
+
+    public function apiCards(Request $request): JsonResponse
     {
         $filters = array_merge(['sort' => 'due'], $request->only(['status', 'level', 'sort']));
 
@@ -115,11 +142,19 @@ class CardDealerController extends Controller
             ->filter();
 
         $this->termService->hydratePronunciations($terms);
+        $cardResource = CardResource::collection($cards);
 
-        return Inertia::render('Workbench/CardDealer/Cards', [
-            'section' => 'academy',
+        return response()->json([
             'filters' => $filters,
-            'cards' => CardResource::collection($cards),
+            'cards' => [
+                'data' => $cardResource->toArray($request),
+                'meta' => [
+                    'links' => $cards->linkCollection()->toArray(),
+                    'current_page' => $cards->currentPage(),
+                    'last_page' => $cards->lastPage(),
+                    'total' => $cards->total(),
+                ],
+            ],
             'totalCount' => $cards->total(),
         ]);
     }

@@ -2,20 +2,24 @@
 import Layout from "../../../Shared/Layout.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import TermItem from "../../../components/TermItem.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import AppTip from "../../../components/AppTip.vue";
 import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 
 defineOptions({
     layout: Layout
 });
 
-const props = defineProps({
-    dialogs: {type: Array, default: []},
-    terms: {type: Array, default: []}
-});
-
 const mode = ref('dialog');
+const dialogs = ref([]);
+const terms = ref([]);
+
+onMounted(async () => {
+    const {data} = await axios.get(route('speech-maker.get'));
+    dialogs.value = data.dialogs?.data ?? data.dialogs ?? [];
+    terms.value = data.terms?.data ?? data.terms ?? [];
+});
 
 const toBuild = () => {
     mode.value === 'dialog'

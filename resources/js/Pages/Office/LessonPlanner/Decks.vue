@@ -3,26 +3,22 @@ import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 
 defineOptions({
     layout: Layout,
 })
 
 const props = defineProps({
-    unit: {
-        type: Object,
-        required: true,
-    },
-    decks: {
-        type: Array,
-        default: () => [],
-    },
+    unitId: Number,
 })
+
+const unit = ref(null);
+const decks = ref([]);
 
 const sortMode = ref('deck');
 
-const deckGroups = computed(() => props.decks.map((deck) => ({
+const deckGroups = computed(() => decks.value.map((deck) => ({
     key: `deck-${deck.id}`,
     count: deck.terms.length,
     heading: deck.lesson.global_position,
@@ -33,7 +29,7 @@ const deckGroups = computed(() => props.decks.map((deck) => ({
 const categoryGroups = computed(() => {
     const groups = new Map();
 
-    props.decks.forEach((deck) => {
+    decks.value.forEach((deck) => {
         deck.terms.forEach((term) => {
             const category = term.category || 'Uncategorized';
 
@@ -68,17 +64,23 @@ const toggleGroup = (key) => {
 };
 
 const isGroupOpen = (key) => Boolean(openGroups[key]);
+
+onMounted(async () => {
+    const {data} = await axios.get(route('lesson-planner.unit-decks.get', props.unitId));
+    unit.value = data.unit;
+    decks.value = data.decks?.data ?? data.decks ?? [];
+});
 </script>
 
 <template>
-    <Head :title="`Lesson Planner: Unit ${unit.position} Decks`"/>
+    <Head :title="unit ? `Lesson Planner: Unit ${unit.position} Decks` : 'Lesson Planner: Unit Decks'"/>
 
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
 
     <div id="app-body">
-        <div class="form-body" style="width: min(96rem, 100%); padding: 0">
+        <div v-if="unit" class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
                 <Link :href="route('lesson-planner.unit', unit.id)">
                     <- to Unit

@@ -8,37 +8,53 @@ import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
 import UserActions from "../../../components/Actions/UserActions.vue";
 import {useUser} from "../../../composables/users/useUser.js";
 import AppHeading from "../../../components/AppHeading.vue";
 
 const props = defineProps({
-    user: Object,
-    decks: Array,
-    badges: Array,
-    speaker: Object,
-    filters: Object,
+    userId: Number,
+    username: String,
 });
 
 const UserStore = useUserStore();
-const {isStudent} = useUser(props.user);
+const user = ref(null);
+const decks = ref({data: [], meta: {links: []}});
+const badges = ref([]);
+const speaker = ref(null);
+const filters = ref({sort: 'latest'});
+const {isStudent} = useUser(user);
 
 const canCreateTeacher = computed(() => {
     return isStudent.value && UserStore.isAdmin
 });
 
-const filters = ref({
-    sort: props.filters.sort || 'latest',
-});
-
 const {updateFilter} = useQueryFilters(filters);
 
-const unlockedBadges = props.badges.map(badge => ({
+const unlockedBadges = computed(() => badges.value.map(badge => ({
     ...badge,
-    unlocked: props.user.badges.some(unlockedBadge => unlockedBadge.id === badge.id)
-}));
+    unlocked: user.value?.badges?.some(unlockedBadge => unlockedBadge.id === badge.id) ?? false,
+})));
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('api.users.fetch', {
+        user: props.userId,
+        ...params,
+    }), {
+        params: {
+            include: 'show',
+        },
+    });
+
+    user.value = data.user;
+    decks.value = data.decks;
+    badges.value = data.badges;
+    speaker.value = data.speaker;
+    filters.value = data.filters;
+});
 
 defineOptions({
     layout: Layout
@@ -46,8 +62,8 @@ defineOptions({
 </script>
 
 <template>
-    <Head :title="`Pal: ${user.username}`"/>
-    <div id="app-body">
+    <Head :title="user ? `Pal: ${user.username}` : 'Pal'"/>
+    <div id="app-body" v-if="user">
         <div class="window-container">
             <div class="window-header">
                 <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>

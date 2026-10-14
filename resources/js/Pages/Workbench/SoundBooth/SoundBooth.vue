@@ -1,6 +1,7 @@
 <script setup>
-import {computed, onBeforeUnmount, onMounted, watch} from "vue";
+import {computed, onBeforeUnmount, onMounted} from "vue";
 import {merge} from "lodash";
+import {route} from "ziggy-js";
 import Layout from "../../../Shared/Layout.vue";
 import {useSoundBoothStore} from "./stores/SoundBoothStore.js";
 import {useQueueStore} from "./stores/QueueStore.js";
@@ -12,10 +13,6 @@ import Record from "./pages/Record.vue";
 import Check from "./pages/Check.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-
-const props = defineProps({
-    speaker: Object,
-});
 
 defineOptions({
     layout: Layout
@@ -31,19 +28,11 @@ const hasNavigationGuard = computed(() => {
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
-watch(
-    () => props.speaker,
-    (newValue) => {
-        if (newValue) {
-            Object.assign(SoundBoothStore.speaker, newValue);
-        }
-    },
-    {deep: true}
-);
+onMounted(async () => {
+    const {data} = await axios.get(route('sound-booth.speaker'));
 
-onMounted(() => {
-    if (props.speaker) {
-        merge(SoundBoothStore.speaker, props.speaker);
+    if (data.speaker) {
+        merge(SoundBoothStore.speaker, data.speaker);
     }
 });
 

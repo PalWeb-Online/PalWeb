@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\RootResource;
 use App\Models\Root;
 use App\Services\TermService;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 
 class RootController extends Controller
@@ -15,6 +16,14 @@ class RootController extends Controller
 
     public function show(Root $root): \Inertia\Response
     {
+        return Inertia::render('Library/Terms/Root', [
+            'section' => 'library',
+            'rootId' => $root->id,
+        ]);
+    }
+
+    public function fetch(Root $root): JsonResponse
+    {
         $root->load([
             'terms' => fn ($q) => $q
                 ->withItemData()
@@ -22,8 +31,7 @@ class RootController extends Controller
 
         $this->termService->hydratePronunciations($root->terms);
 
-        return Inertia::render('Library/Terms/Root', [
-            'section' => 'library',
+        return response()->json([
             'root' => new RootResource($root),
         ]);
     }

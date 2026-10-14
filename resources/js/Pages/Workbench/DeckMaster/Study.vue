@@ -4,32 +4,28 @@ import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
 import Settings from "./Pages/Settings.vue";
 import Quiz from "./Pages/Quiz.vue";
 import Results from "./Pages/Results.vue";
-import {onBeforeUnmount, onMounted, watch} from "vue";
+import {onBeforeUnmount, onMounted} from "vue";
 import Practice from "./Pages/Practice.vue";
+import {route} from "ziggy-js";
 
 defineOptions({
     layout: Layout
 });
 
 const props = defineProps({
-    deck: Object,
+    deckId: Number,
 });
 
 const DeckStudyStore = useDeckStudyStore();
 
-onMounted(() => {
+onMounted(async () => {
     DeckStudyStore.reset();
-    DeckStudyStore.data.deck = props.deck;
+    const {data} = await axios.get(route('deck-master.study.get', props.deckId));
+    DeckStudyStore.data.deck = data.deck;
 });
 
 onBeforeUnmount(() => {
     DeckStudyStore.reset();
-});
-
-watch(() => props.deck, (newDeck) => {
-    DeckStudyStore.data.deck = newDeck;
-}, {
-    deep: true
 });
 
 </script>

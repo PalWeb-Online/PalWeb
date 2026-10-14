@@ -10,11 +10,19 @@ use App\Models\Deck;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 
 class CommunityController extends Controller
 {
     public function index(): \Inertia\Response
+    {
+        return Inertia::render('Community/Users/Index', [
+            'section' => 'community',
+        ]);
+    }
+
+    public function apiIndex(): JsonResponse
     {
         $teachers = User::query()
             ->public()
@@ -25,6 +33,7 @@ class CommunityController extends Controller
             ->orderByDesc('teachers.id')
             ->paginate(5)
             ->withQueryString();
+        $teacherResource = UserResource::collection($teachers);
 
         $latestDecks = Deck::query()
             ->orderByDesc('id')
@@ -81,9 +90,16 @@ class CommunityController extends Controller
             ->take(5)
             ->get();
 
-        return Inertia::render('Community/Users/Index', [
-            'section' => 'community',
-            'teachers' => UserResource::collection($teachers),
+        return response()->json([
+            'teachers' => [
+                'data' => $teacherResource->toArray(request()),
+                'meta' => [
+                    'links' => $teachers->linkCollection()->toArray(),
+                    'current_page' => $teachers->currentPage(),
+                    'last_page' => $teachers->lastPage(),
+                    'total' => $teachers->total(),
+                ],
+            ],
             'teachersCount' => $teachers->total(),
             'latestDecks' => DeckResource::collection($latestDecks),
             'popularDecks' => DeckResource::collection($popularDecks),

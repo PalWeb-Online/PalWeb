@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import draggable from 'vuedraggable';
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -23,6 +23,10 @@ const props = defineProps({
         type: Object,
         required: false,
     },
+    initialDialogId: {
+        type: Number,
+        default: null,
+    },
     sentenceId: {
         type: Number,
         default: null,
@@ -30,6 +34,7 @@ const props = defineProps({
 });
 
 const SearchStore = useSearchStore();
+const initialDialog = ref(props.initialDialog);
 
 const {
     form,
@@ -49,7 +54,7 @@ const {
     updatePosition,
 } = useSentenceEditor({
     sentenceId: computed(() => props.sentenceId),
-    initialDialog: computed(() => props.initialDialog),
+    initialDialog: computed(() => initialDialog.value),
 });
 
 const {
@@ -64,6 +69,11 @@ const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 onMounted(async () => {
+    if (props.initialDialogId) {
+        const {data} = await axios.get(route('api.dialogs.fetch', props.initialDialogId));
+        initialDialog.value = data.dialog;
+    }
+
     await loadForm();
 });
 

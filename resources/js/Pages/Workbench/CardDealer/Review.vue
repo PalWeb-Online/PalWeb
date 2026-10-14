@@ -1,6 +1,6 @@
 <script setup>
 import {Carousel, Slide} from "vue3-carousel";
-import {computed, onBeforeUnmount, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
@@ -21,12 +21,19 @@ const AcademyStateStore = useAcademyStateStore();
 const appTooltip = ref(null);
 
 const props = defineProps({
-    deck: Object,
-    cards: Array,
-    options: Object
+    scope: String,
+    deckId: Number,
 })
 
-const queue = ref([...props.cards, {isFinalSlide: true}]);
+const deck = ref(null);
+const cards = ref([]);
+const options = ref({
+    scope: props.scope ?? 'all',
+    deckId: props.deckId ?? null,
+    learningSteps: 3,
+    promptType: 'gloss',
+});
+const queue = ref([{isFinalSlide: true}]);
 const remainingCards = computed(() => {
     const slice = queue.value.slice(currentSlideIndex.value);
 
@@ -47,7 +54,7 @@ const remainingCards = computed(() => {
     return uniqueCards;
 });
 const processedCount = computed(() => {
-    return props.cards.length - remainingCards.value.length;
+    return cards.value.length - remainingCards.value.length;
 });
 
 const buckets = computed(() => {
@@ -77,11 +84,11 @@ const flashcardRefs = ref({});
 const currentSlideIndex = ref(0);
 
 const audioOnly = computed(() => {
-    return props.options.promptType === 'audio'
+    return options.value.promptType === 'audio'
 })
 
 const flipDefault = computed(() => {
-    return props.options.promptType === 'gloss';
+    return options.value.promptType === 'gloss';
 });
 
 const flipDefaultInflections = ref(false);
@@ -92,7 +99,7 @@ const gradeCommitted = ref(false);
 const shouldRefreshAcademyProgress = ref(false);
 
 const progressFill = computed(() => ({
-    width: formatter.format(processedCount.value / props.cards.length),
+    width: formatter.format(cards.value.length ? processedCount.value / cards.value.length : 0),
 }));
 
 const cardStartTime = ref(Date.now());
@@ -108,7 +115,7 @@ const gradeCard = async (gradeValue) => {
         grade: gradeValue,
         seconds_spent: secondsSpent,
         next_interval: card.next_intervals[gradeValue]?.days,
-        learning_steps: props.options.learningSteps
+        learning_steps: options.value.learningSteps
     });
     shouldRefreshAcademyProgress.value = true;
 
@@ -121,7 +128,7 @@ const gradeCard = async (gradeValue) => {
     gradeCommitted.value = true;
 
     const staysInSession = card.step !== null || gradeValue === 0;
-    const isGraduated = gradeValue >= 3 || (card.step === props.options.learningSteps - 1 && gradeValue === 2)
+    const isGraduated = gradeValue >= 3 || (card.step === options.value.learningSteps - 1 && gradeValue === 2)
 
     if (staysInSession && !isGraduated) {
         const cardCopy = JSON.parse(JSON.stringify(card));
@@ -133,7 +140,7 @@ const gradeCard = async (gradeValue) => {
             cardCopy.step++;
         }
 
-        cardCopy.next_intervals = calculateLocalNextIntervals(cardCopy.step, props.options.learningSteps);
+        cardCopy.next_intervals = calculateLocalNextIntervals(cardCopy.step, options.value.learningSteps);
 
         const minInsertIndex = index + 4;
         const maxInsertIndex = queue.value.length - 1;
@@ -192,6 +199,16 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
     gradeCommitted.value = false;
     cardStartTime.value = Date.now();
 };
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('card-dealer.review.get', params));
+
+    deck.value = data.deck;
+    cards.value = data.cards?.data ?? data.cards ?? [];
+    options.value = data.options;
+    queue.value = [...cards.value, {isFinalSlide: true}];
+});
 
 onBeforeUnmount(() => {
     if (shouldRefreshAcademyProgress.value) {

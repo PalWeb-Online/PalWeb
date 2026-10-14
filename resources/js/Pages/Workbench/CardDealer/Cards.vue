@@ -5,16 +5,25 @@ import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
+import {onMounted, ref} from "vue";
 
-const props = defineProps({
-    filters: Object,
-    cards: Array,
-    totalCount: Number
-})
+const filters = ref({sort: 'due'});
+const cards = ref({data: [], meta: {links: []}});
+const totalCount = ref(0);
+
+const fetchCards = async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('card-dealer.cards.get', params));
+    filters.value = data.filters;
+    cards.value = data.cards;
+    totalCount.value = data.totalCount;
+};
+
+onMounted(fetchCards);
 
 const setFilter = (key, value) => {
     router.get(route('card-dealer.cards'), {
-        ...props.filters,
+        ...filters.value,
         [key]: value
     }, {preserveState: true});
 }

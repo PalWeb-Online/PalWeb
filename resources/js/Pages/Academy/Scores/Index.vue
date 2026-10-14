@@ -5,19 +5,24 @@ import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import ActivityItem from "../../../components/ActivityItem.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 
 defineOptions({
     layout: Layout
 });
 
-const props = defineProps({
-    scoredLessonModels: Object,
-    latestScoredDecks: Object,
-    totalCount: Number,
-})
-
 const mode = ref('decks');
+const scoredLessonModels = ref({});
+const latestScoredDecks = ref({data: [], meta: {links: []}});
+const totalCount = ref(0);
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('api.academy.scores.index', params));
+    scoredLessonModels.value = data.scoredLessonModels;
+    latestScoredDecks.value = data.latestScoredDecks;
+    totalCount.value = data.totalCount;
+});
 </script>
 <template>
     <Head title="Academy: Scores"/>
@@ -49,7 +54,7 @@ const mode = ref('decks');
                 </div>
             </template>
             <template v-if="mode === 'lessons'">
-                <AppTip v-if="scoredLessonModels.length === 0">
+                <AppTip v-if="Object.keys(scoredLessonModels).length === 0">
                     <p>You don't have any Scores for any Lesson Decks or Activities. Have you started the Lessons in the
                         Academy yet? If not, <Link :href="route('units.index')">click here</Link> to get started!
                     </p>

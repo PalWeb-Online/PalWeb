@@ -23,27 +23,10 @@ class UserController extends Controller
     {
         Gate::authorize('interact', $user);
 
-        $filters = array_merge(['sort' => 'latest'], $request->only(['sort',]));
-
-        $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
-
-        $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
-
-        $sort = $request->string('sort')->toString();
-
-        $decks = $user->decks()
-            ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
-            ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
-            ->paginate(25)
-            ->withQueryString();
-
         return Inertia::render('Community/Users/Show', [
             'section' => 'community',
-            'filters' => $filters,
-            'user' => new UserShowResource($user),
-            'decks' => DeckResource::collection($decks),
-            'badges' => Badge::all(),
-            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+            'userId' => $user->id,
+            'username' => $user->username,
         ]);
     }
 
@@ -58,10 +41,47 @@ class UserController extends Controller
         ]);
     }
 
-    public function fetch(User $user): JsonResponse
+    public function fetch(Request $request, User $user): JsonResponse
     {
-        Gate::authorize('modify', $user);
+        $includes = collect(explode(',', (string) $request->query('include')))
+            ->map(fn (string $include) => trim($include))
+            ->filter()
+            ->values();
 
+        if ($includes->contains('show')) {
+            Gate::authorize('interact', $user);
+
+            $filters = array_merge(['sort' => 'latest'], $request->only(['sort']));
+
+            $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
+            $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
+
+            $sort = $request->string('sort')->toString();
+            $decks = $user->decks()
+                ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
+                ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
+                ->paginate(25)
+                ->withQueryString();
+            $deckResource = DeckResource::collection($decks);
+
+            return response()->json([
+                'filters' => $filters,
+                'user' => new UserShowResource($user),
+                'decks' => [
+                    'data' => $deckResource->toArray($request),
+                    'meta' => [
+                        'links' => $decks->linkCollection()->toArray(),
+                        'current_page' => $decks->currentPage(),
+                        'last_page' => $decks->lastPage(),
+                        'total' => $decks->total(),
+                    ],
+                ],
+                'badges' => Badge::all(),
+                'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+            ]);
+        }
+
+        Gate::authorize('modify', $user);
         $user->load(['dialect', 'teacher', 'roles', 'uploadedAvatars']);
 
         return response()->json([

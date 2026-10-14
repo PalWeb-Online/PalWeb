@@ -9,15 +9,26 @@ import Paginator from "../../../Shared/Paginator.vue";
 import CommentItem from "../../../components/CommentItem.vue";
 import AppHeading from "../../../components/AppHeading.vue";
 import AppTip from "../../../components/AppTip.vue";
+import {onMounted, ref} from "vue";
 
-defineProps({
-    teachers: Object,
-    teachersCount: Number,
-    latestDecks: Array,
-    popularDecks: Array,
-    featuredDeck: Object,
-    latestAudios: Array,
-    topUsers: Array,
+const teachers = ref({data: [], meta: {links: []}});
+const teachersCount = ref(0);
+const latestDecks = ref([]);
+const popularDecks = ref([]);
+const featuredDeck = ref(null);
+const latestAudios = ref([]);
+const topUsers = ref([]);
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get(route('api.community.index', params));
+    teachers.value = data.teachers;
+    teachersCount.value = data.teachersCount;
+    latestDecks.value = data.latestDecks?.data ?? data.latestDecks ?? [];
+    popularDecks.value = data.popularDecks?.data ?? data.popularDecks ?? [];
+    featuredDeck.value = data.featuredDeck;
+    latestAudios.value = data.latestAudios?.data ?? data.latestAudios ?? [];
+    topUsers.value = data.topUsers?.data ?? data.topUsers ?? [];
 });
 
 defineOptions({
@@ -60,7 +71,7 @@ defineOptions({
                 {{ $t('pages.users.index.decks') }}
             </AppHeading>
             <div class="decks-featured">
-                <DeckFlashcard :model="featuredDeck"/>
+                <DeckFlashcard v-if="featuredDeck" :model="featuredDeck"/>
                 <div class="model-list">
                     <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                     <DeckItem v-for="deck in latestDecks" :model="deck" size="s"/>

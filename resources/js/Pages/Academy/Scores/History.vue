@@ -24,11 +24,12 @@ defineOptions({
 });
 
 const props = defineProps({
-    model: Object,
     scorable_type: String,
-    scores: Array,
-    totalCount: Number,
-    selectedScore: Object,
+    scorable_id: Number,
+    scoreId: {
+        type: Number,
+        default: null,
+    },
 })
 
 const {getScoreStats} = useScoreManager();
@@ -36,6 +37,24 @@ const {t} = useI18n();
 const NotificationStore = useNotificationStore();
 
 const showPurgeScores = ref(false);
+const model = ref(null);
+const scores = ref({data: [], meta: {links: []}});
+const totalCount = ref(0);
+const selectedScore = ref(null);
+
+const fetchHistory = async () => {
+    const params = props.scoreId ? {score: props.scoreId} : {};
+    const {data} = await axios.get(route('api.academy.scores.history', {
+        scorable_type: props.scorable_type,
+        scorable_id: props.scorable_id,
+        ...params,
+    }));
+
+    model.value = data.model;
+    scores.value = data.scores;
+    totalCount.value = data.totalCount;
+    selectedScore.value = data.selectedScore;
+};
 
 const deleteScore = async (id) => {
     if (!confirm(t('forms.notifications.delete-confirm', {model: t('actions.models.score')}))) return;
@@ -45,10 +64,10 @@ const deleteScore = async (id) => {
     if (data.success) {
         NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t('actions.models.score')}));
 
-        if (props.selectedScore?.id === id) {
+        if (selectedScore.value?.id === id) {
             router.get(route('scores.history', {
                 scorable_type: props.scorable_type,
-                scorable_id: props.model.id,
+                scorable_id: model.value.id,
             }));
             return;
         }
@@ -66,20 +85,22 @@ function scrollToDetail() {
     });
 }
 
-onMounted(() => {
-    if (props.selectedScore) {
+onMounted(async () => {
+    await fetchHistory();
+
+    if (selectedScore.value) {
         scrollToDetail();
     }
 });
 
-watch(() => props.selectedScore, (newVal) => {
+watch(selectedScore, (newVal) => {
     if (newVal) {
         scrollToDetail();
     }
 });
 </script>
 <template>
-    <Head :title="`Academy: Score History for ${model.id}`"/>
+    <Head :title="`Academy: Score History${model ? ` for ${model.id}` : ''}`"/>
     <div id="app-head">
         <Link :href="route('scores.index')"><h1>{{ $t('pages.scores.index.title') }}</h1></Link>
     </div>
@@ -90,6 +111,7 @@ watch(() => props.selectedScore, (newVal) => {
                 <div class="window-header-url">www.palweb.app/academy/scores/history/{{ '{' + scorable_type + '}' }}
                 </div>
             </div>
+            <template v-if="model">
             <div class="window-section-head">
                 <h1>{{ $t(`components.${scorable_type}.title`) }}</h1>
                 <PinButton :modelType="scorable_type" :model="model"/>
@@ -166,6 +188,7 @@ watch(() => props.selectedScore, (newVal) => {
                     <Paginator :links="scores.meta.links"/>
                 </template>
             </template>
+            </template>
         </div>
 
         <div v-if="selectedScore && scorable_type === 'activity'" class="activity-blocks-wrapper">
@@ -174,7 +197,7 @@ watch(() => props.selectedScore, (newVal) => {
     </div>
 
     <ModalWrapper v-model="showPurgeScores">
-        <PurgeScores :scorable_type="scorable_type" :scorable_id="model.id"/>
+        <PurgeScores v-if="model" :scorable_type="scorable_type" :scorable_id="model.id"/>
     </ModalWrapper>
 </template>
 

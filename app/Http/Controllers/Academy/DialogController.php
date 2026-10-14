@@ -21,7 +21,6 @@ class DialogController extends Controller
     {
         return Inertia::render('Academy/Dialogs/Index', [
             'section' => 'academy',
-            'dialogs' => DialogResource::collection(Dialog::paginate(25)->onEachSide(1)),
         ]);
     }
 
@@ -50,6 +49,24 @@ class DialogController extends Controller
 
         return response()->json([
             'dialog' => new DialogResource($dialog),
+        ]);
+    }
+
+    public function apiIndex(): JsonResponse
+    {
+        $dialogs = Dialog::paginate(25)->onEachSide(1);
+        $resource = DialogResource::collection($dialogs);
+
+        return response()->json([
+            'dialogs' => [
+                'data' => $resource->toArray(request()),
+                'meta' => [
+                    'links' => $dialogs->linkCollection()->toArray(),
+                    'current_page' => $dialogs->currentPage(),
+                    'last_page' => $dialogs->lastPage(),
+                    'total' => $dialogs->total(),
+                ],
+            ],
         ]);
     }
 
