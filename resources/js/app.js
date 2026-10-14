@@ -1,13 +1,12 @@
-import {createApp, h} from "vue/dist/vue.esm-bundler";
-import {createInertiaApp} from "@inertiajs/vue3";
+import {createApp} from "vue";
 import {createPinia} from 'pinia';
 import axios from 'axios';
+import App from './App.vue';
 import i18n from './i18n';
 import router from './router.js';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import {registerSW} from 'virtual:pwa-register'
-import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import 'vue3-carousel/dist/carousel.css';
 import {syncCsrfToken} from "./utils/csrfToken.js";
 
@@ -59,26 +58,8 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
-createInertiaApp({
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue')
-        ),
-    setup({el, App, props, plugin}) {
-        i18n.global.locale.value = props.initialPage.props.locale;
-
-        syncCsrfToken(props.initialPage.props.csrfToken);
-
-        createApp({render: () => h(App, props)})
-            .use(plugin)
-            .use(i18n)
-            .use(pinia)
-            .use(router)
-            .mount(el);
-    },
-    title: title => "PalWeb | " + title
-});
+i18n.global.locale.value = document.documentElement.lang || i18n.global.locale.value;
+syncCsrfToken(document.querySelector('meta[name="csrf-token"]')?.content);
 
 router.beforeEach((to) => {
     if (navigator.onLine) {
@@ -94,3 +75,9 @@ router.beforeEach((to) => {
         replace: true,
     };
 });
+
+createApp(App)
+    .use(i18n)
+    .use(pinia)
+    .use(router)
+    .mount('#app');

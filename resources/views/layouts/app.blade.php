@@ -44,10 +44,10 @@
 
     @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    @inertiaHead
+    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
 </head>
 
 <body class="{{ $bodyBackground ?? '' }}">
-    @inertia
+    <div id="app"></div>
 </body>
 </html>

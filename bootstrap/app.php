@@ -5,7 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,6 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
+        then: function () {
+            Route::fallback(function (Request $request) {
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    abort(404);
+                }
+
+                return view('layouts.app');
+            });
+        },
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(AppServiceProvider::HOME);
@@ -27,7 +36,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web([
             \App\Http\Middleware\SetSiteLocale::class,
             \App\Http\Middleware\TrackPageViews::class,
-            \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
 
         $middleware->throttleApi();
@@ -41,28 +49,29 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
-            if (app()->isProduction() && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+            $status = $response->getStatusCode();
+
+            if (app()->isProduction() && in_array($status, [500, 503])) {
                 report($exception);
+            }
 
-                Inertia::setRootView('layouts.app');
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => match ($status) {
+                        403 => 'Forbidden',
+                        404 => 'Not Found',
+                        419 => 'CSRF token mismatch.',
+                        500 => 'Server error',
+                        503 => 'Service unavailable',
+                        default => $exception->getMessage(),
+                    },
+                    'status' => $status,
+                ], $status);
+            }
 
-                return Inertia::render('Error', [
-                    'section' => 'community',
-                    'status' => $response->getStatusCode(),
-                ])
-                    ->toResponse($request)
-                    ->setStatusCode($response->getStatusCode());
-
-            } elseif ($response->getStatusCode() === 419) {
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'message' => 'CSRF token mismatch.',
-                    ], 419);
-                }
-
+            if ($status === 419) {
                 session()->flash('notification', ['type' => 'error', 'message' => 'The page expired, please try again.']);
-
-                return back();
+                return redirect()->back();
             }
 
             return $response;
