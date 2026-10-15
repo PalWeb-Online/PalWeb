@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import {useQueueStore} from '../stores/QueueStore.js';
+import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import Draggable from 'vuedraggable';
 import {useSearchStore} from "../../../../stores/SearchStore.js";
 import AppTooltip from "../../../../components/AppTooltip.vue";
@@ -8,19 +8,19 @@ import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 
 const SearchStore = useSearchStore();
-const QueueStore = useQueueStore();
+const session = useSoundBoothSession();
 
 const tooltip = ref(null);
 
 const remove = (index) => {
-    QueueStore.removeItem(QueueStore.queue[index]);
+    session.queue.removeItem(session.queue.queue[index]);
 };
 
 watch(
     () => SearchStore.data.selectedModel,
     (newModel) => {
         if (newModel) {
-            QueueStore.fetchDeckItems(newModel.id)
+            session.queue.fetchDeckItems(newModel.id)
             SearchStore.deselectModel();
         }
     }
@@ -63,9 +63,9 @@ watch(
 
     <div class="rw-page__queue">
         <div class="rw-queue-body"
-             v-if="QueueStore.queue.length > 0">
-            <draggable v-if="QueueStore.queue.length > 0"
-                       :list="QueueStore.queue" itemKey="id" handle=".handle"
+             v-if="session.queue.queue.length > 0">
+            <draggable v-if="session.queue.queue.length > 0"
+                       :list="session.queue.queue" itemKey="id" handle=".handle"
                        id="rw-item-queue">
                 <template #item="{ element, index }">
                     <li class="draggable-item">
@@ -84,29 +84,29 @@ watch(
 
         <div class="rw-queue-foot">
             <div class="rw-queue-buttons">
-                <button :disabled="QueueStore.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? $t('sound-booth.queue.load.message') : $t('sound-booth.queue.status.full'), $event);"
+                <button :disabled="session.queue.queue.length >= 100"
+                        @mousemove="tooltip.showTooltip(session.queue.queue.length < 100 ? $t('sound-booth.queue.load.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
                         @click="SearchStore.openSearchGenie('insert', 'decks')">
                     {{ $t('sound-booth.queue.load.button') }}
                 </button>
 
-                <button :disabled="QueueStore.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length < 100 ? $t('sound-booth.queue.auto.message') : $t('sound-booth.queue.status.full'), $event);"
+                <button :disabled="session.queue.queue.length >= 100"
+                        @mousemove="tooltip.showTooltip(session.queue.queue.length < 100 ? $t('sound-booth.queue.auto.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="QueueStore.fetchAutoItems">
+                        @click="session.queue.fetchAutoItems">
                     {{ $t('sound-booth.queue.auto.button') }}
                 </button>
 
-                <button :disabled="QueueStore.queue.length <= 0"
-                        @mousemove="tooltip.showTooltip(QueueStore.queue.length > 0 ? $t('sound-booth.queue.clear.message') : $t('sound-booth.queue.status.empty'), $event);"
+                <button :disabled="session.queue.queue.length <= 0"
+                        @mousemove="tooltip.showTooltip(session.queue.queue.length > 0 ? $t('sound-booth.queue.clear.message') : $t('sound-booth.queue.status.empty'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="QueueStore.flushQueue()">
+                        @click="session.queue.flushQueue()">
                     {{ $t('sound-booth.queue.clear.button') }}
                 </button>
             </div>
 
-            <div class="rw-item-counter">{{ QueueStore.queue.length }} / 100</div>
+            <div class="rw-item-counter">{{ session.queue.queue.length }} / 100</div>
         </div>
     </div>
 

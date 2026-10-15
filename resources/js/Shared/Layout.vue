@@ -90,24 +90,24 @@ watch(browserOnline, (isOnline) => {
     });
 }, {immediate: true});
 
-watch(
-    () => page.props.flash.notification,
-    (notification) => {
-        if (notification) {
-            NotificationStore.notify({notification});
-        }
-    },
-    {immediate: true}
-);
-
-watch(
-    () => page.props.locale,
-    (newLocale) => {
-        if (newLocale) {
-            i18n.global.locale.value = newLocale;
-        }
-    }
-);
+// watch(
+//     () => page.props.flash.notification,
+//     (notification) => {
+//         if (notification) {
+//             Notifier.notify({notification});
+//         }
+//     },
+//     {immediate: true}
+// );
+//
+// watch(
+//     () => page.props.locale,
+//     (newLocale) => {
+//         if (newLocale) {
+//             i18n.global.locale.value = newLocale;
+//         }
+//     }
+// );
 </script>
 
 <template>

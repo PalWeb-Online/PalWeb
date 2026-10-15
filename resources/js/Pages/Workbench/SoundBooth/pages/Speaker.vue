@@ -1,7 +1,6 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
-import {useRecordStore} from "../stores/RecordStore.js";
+import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import {useForm} from "../../../../composables/useForm.js";
 import {route} from "ziggy-js";
@@ -17,8 +16,7 @@ import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
 
 const UserStore = useUserStore();
 const Notifier = useNotifier();
-const SoundBoothStore = useSoundBoothStore();
-const RecordStore = useRecordStore();
+const session = useSoundBoothSession();
 
 const testStates = [
     'waiting',
@@ -49,13 +47,13 @@ const {
     setErrors,
     clearErrors,
 } = useForm({
-    dialect_id: SoundBoothStore.speaker.dialect?.id || '',
-    location_id: SoundBoothStore.speaker.location?.id || '',
-    fluency: SoundBoothStore.speaker.fluency || '',
-    gender: SoundBoothStore.speaker.gender || '',
+    dialect_id: session.speaker.dialect?.id || '',
+    location_id: session.speaker.location?.id || '',
+    fluency: session.speaker.fluency || '',
+    gender: session.speaker.gender || '',
 })
 
-watch(() => SoundBoothStore.speaker, (newSpeaker) => {
+watch(() => session.speaker, (newSpeaker) => {
     if (newSpeaker && newSpeaker.id !== null) {
         form.dialect_id = newSpeaker.dialect?.id || '';
         form.location_id = newSpeaker.location?.id || '';
@@ -100,7 +98,7 @@ const saveSpeaker = async () => {
         const {data} = await axios.get(route('sound-booth.speaker'));
 
         if (data.speaker) {
-            Object.assign(SoundBoothStore.speaker, data.speaker);
+            Object.assign(session.speaker, data.speaker);
         }
 
         defaults();
@@ -121,10 +119,10 @@ const saveSpeaker = async () => {
 };
 
 onMounted(async () => {
-    RecordStore.openRecorder(RecordStore.audioParams);
-    SoundBoothStore.data.testState = 'waiting';
+    session.record.openRecorder(session.record.audioParams);
+    session.data.testState = 'waiting';
     await fetchSpeakerOptions();
-    await RecordStore.clearStash();
+    await session.record.clearStash();
 });
 </script>
 
@@ -177,17 +175,17 @@ onMounted(async () => {
         </PopupWindow>
     </div>
 
-    <template v-if="!SoundBoothStore.data.hasPermission">
+    <template v-if="!session.data.hasPermission">
         <AppTip>
             <p>Allow the browser to use your mic in order to proceed.
-                <button @click="RecordStore.openRecorder(RecordStore.audioParams)">Click here to prompt again.</button>
+                <button @click="session.record.openRecorder(session.record.audioParams)">Click here to prompt again.</button>
             </p>
         </AppTip>
     </template>
 
     <template v-else>
         <AppTip>
-            <p v-if="!SoundBoothStore.speaker.id">It looks like you don't have a Speaker profile yet.
+            <p v-if="!session.speaker.id">It looks like you don't have a Speaker profile yet.
                 Let's get you set up: fill out this form & click Create to get started. Refer to the Info
                 box in
                 the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
@@ -204,15 +202,15 @@ onMounted(async () => {
                 <div class="rw-test-booth">
                     <UserAvatarWrapper :user="!UserStore.user.private ? UserStore.user : null"/>
                     <img
-                        v-if="SoundBoothStore.data.testState !== 'waiting'"
+                        v-if="session.data.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
-                        :src="`/img/${SoundBoothStore.data.testState === 'recording' ? 'speak' : 'listen'}.svg`"
+                        :src="`/img/${session.data.testState === 'recording' ? 'speak' : 'listen'}.svg`"
                         alt="Prompt"
                     />
                 </div>
 
                 <div class="user-data-wrapper">
-                    <UserNametag :user="UserStore.user" :speaker="SoundBoothStore.speaker"/>
+                    <UserNametag :user="UserStore.user" :speaker="session.speaker"/>
 
                     <div class="speaker-data">
                         <div class="speaker-data-head">
@@ -227,7 +225,7 @@ onMounted(async () => {
                             <WizardDropdown
                                 v-model="form.dialect_id"
                                 :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                                :disabled="!!SoundBoothStore.speaker.id"
+                                :disabled="!!session.speaker.id"
                             />
                         </div>
                         <div class="speaker-data-row">
@@ -256,20 +254,20 @@ onMounted(async () => {
             </div>
             <div class="rw-test-status">
                 <template v-for="state in testStates" :key="state">
-                    <div class="rw-test-status-info" v-if="SoundBoothStore.data.testState === state">
+                    <div class="rw-test-status-info" v-if="session.data.testState === state">
                         <div>{{ $t('sound-booth.test.' + state + '.title') }}</div>
                         <div>{{ $t('sound-booth.test.' + state + '.subtitle') }}</div>
                     </div>
                 </template>
 
                 <img
-                    :class="`rw-test-button ${SoundBoothStore.data.testState !== 'waiting' ? 'disabled' : ''}`"
+                    :class="`rw-test-button ${session.data.testState !== 'waiting' ? 'disabled' : ''}`"
                     :src="`/img/${
-                                                SoundBoothStore.data.testState === 'recording' ? 'record' :
-                                                SoundBoothStore.data.testState === 'listening' ? 'stop' : 'play'
+                                                session.data.testState === 'recording' ? 'record' :
+                                                session.data.testState === 'listening' ? 'stop' : 'play'
                                             }.svg`"
                     alt="Test"
-                    @click="RecordStore.testRecord"
+                    @click="session.record.testRecord"
                 />
             </div>
         </div>

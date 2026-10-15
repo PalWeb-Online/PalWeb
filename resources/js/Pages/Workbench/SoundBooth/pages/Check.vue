@@ -1,17 +1,15 @@
 <script setup>
 import {computed} from 'vue';
-import {useRecordStore} from "../stores/RecordStore.js";
-import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
+import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import AppTip from "../../../../components/AppTip.vue";
 import PronunciationItem from "../../../../components/PronunciationItem.vue";
 
-const SoundBoothStore = useSoundBoothStore();
-const RecordStore = useRecordStore();
+const session = useSoundBoothSession();
 
 const audios = computed(() =>
-    Object.entries(RecordStore.data.status)
+    Object.entries(session.record.data.status)
         .filter(([id, status]) => status === 'done')
-        .map(([id]) => RecordStore.data.records[id])
+        .map(([id]) => session.record.data.records[id])
 );
 </script>
 
@@ -21,7 +19,7 @@ const audios = computed(() =>
     </div>
     <AppTip>
         <p>Check the Audios you have just published. Only the Audios published in this session of the Sound Booth
-            are shown here. Go to <a :href="route('speaker.show', SoundBoothStore.speaker.id)" target="_blank">
+            are shown here. Go to <a :href="route('speaker.show', session.speaker.id)" target="_blank">
                 your Speaker profile</a> to see a full list of all the Audios you have ever published. If you would like
             to continue recording more, simply return to the <b>Queue</b> step to add more items — rinse & repeat!</p>
     </AppTip>
