@@ -6,7 +6,6 @@ import Footer from "./Footer.vue";
 import AppNotification from "../components/AppNotification.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
-import {usePage} from "@inertiajs/vue3";
 import {onMounted, watch} from "vue";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import {useUserStore} from "../stores/UserStore.js";
@@ -15,8 +14,9 @@ import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 import {useI18n} from "vue-i18n";
 import {useAcademyStateStore} from "../stores/AcademyStateStore.js";
+import {useNotifier} from "../composables/useNotifier.js";
 
-const {t, locale} = useI18n();
+const {locale} = useI18n();
 
 defineProps({
     section: {
@@ -29,20 +29,16 @@ const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 const AcademyStateStore = useAcademyStateStore();
+const Notifier = useNotifier();
 
-const page = usePage();
 const {browserOnline} = useConnectionStatus(Echo);
-
-const syncDocumentLocale = (newLocale) => {
-    document.documentElement.lang = newLocale;
-};
 
 watch(
     locale,
     (newLocale) => {
         if (newLocale) {
             i18n.global.locale.value = newLocale;
-            syncDocumentLocale(newLocale);
+            document.documentElement.lang = newLocale;
         }
     },
     {immediate: true}
@@ -57,7 +53,7 @@ onMounted(() => {
     if (userId) {
         window.Echo.private(`users.${userId}`)
             .listen('UserNotificationSent', (e) => {
-                NotificationStore.notify(e);
+                Notifier.notify(e);
             })
             .listen('AcademyStateUpdated', () => {
                 AcademyStateStore.refreshState().catch(() => {
@@ -80,11 +76,16 @@ watch(browserOnline, (isOnline) => {
     lastBrowserOnlineState = isOnline;
 
     if (!isOnline) {
-        NotificationStore.addNotification(t('layout.notifications.offline'), 'warning');
+        Notifier.notify({
+            key: 'layout.notifications.offline',
+            type: 'warning',
+        });
         return;
     }
 
-    NotificationStore.addNotification(t('layout.notifications.online'));
+    Notifier.notify({
+        key: 'layout.notifications.online',
+    });
 }, {immediate: true});
 
 watch(

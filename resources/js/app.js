@@ -9,6 +9,7 @@ import Pusher from 'pusher-js';
 import {registerSW} from 'virtual:pwa-register'
 import 'vue3-carousel/dist/carousel.css';
 import {syncCsrfToken} from "./utils/csrfToken.js";
+import {useUserStore} from "./stores/UserStore.js";
 
 registerSW({
     immediate: true,
@@ -76,8 +77,17 @@ router.beforeEach((to) => {
     };
 });
 
-createApp(App)
+const app = createApp(App)
     .use(i18n)
-    .use(pinia)
+    .use(pinia);
+
+try {
+    await useUserStore(pinia).fetchCurrentUser();
+
+} catch (error) {
+    console.error('Failed to bootstrap the current user:', error);
+}
+
+app
     .use(router)
     .mount('#app');

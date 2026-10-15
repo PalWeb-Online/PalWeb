@@ -1,13 +1,34 @@
 <script setup>
 import ContextActions from "./ContextActions.vue";
 import {useUser} from "../../composables/users/useUser.js";
-
+import {useNotifier} from "../../composables/useNotifier.js";
 
 const props = defineProps({
     model: Object,
 });
 
-const {isStudent, toggleStudentRole} = useUser(props.model);
+const {isStudent, user} = useUser(props.model);
+
+const Notifier = useNotifier();
+
+const toggleStudentRole = async () => {
+    try {
+        const {data} = await axios.patch(route('api.users.roles.toggle-student', user.value.id));
+
+        user.value.roles = data.user.roles;
+        Notifier.notify({
+            key: isStudent.value
+                ? 'user.notifications.role-granted'
+                : 'user.notifications.role-revoked',
+        });
+
+    } catch (e) {
+        Notifier.notify({
+            key: 'user.notifications.role-toggle-error',
+            type: 'error',
+        });
+    }
+};
 </script>
 
 <template>
