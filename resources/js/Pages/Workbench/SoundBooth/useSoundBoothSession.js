@@ -12,7 +12,7 @@ export function createSoundBoothSession() {
     const {t} = useI18n();
     const NotificationStore = useNotificationStore();
 
-    const data = reactive({
+    const state = reactive({
         step: 'speaker',
         testState: 'waiting',
         errorMessage: false,
@@ -43,12 +43,12 @@ export function createSoundBoothSession() {
         gender: '',
     });
 
-    const queueItems = reactive([]);
-    const selected = ref(0);
+    const queue = reactive([]);
+    const selectedItem = ref(0);
     const selectedArray = reactive([]);
 
-    const recordData = reactive({
-        records: {},
+    const recordings = reactive({
+        items: {},
         status: {},
         errors: {},
         statusCount: {
@@ -86,13 +86,13 @@ export function createSoundBoothSession() {
 
     const requestQueue = new RequestQueue();
 
-    watch(selected, (newIndex) => {
+    watch(selectedItem, (newIndex) => {
         const container = document.querySelector('section:first-child');
-        const selectedItem = container?.querySelectorAll('.rw-record-queue > div')[newIndex];
+        const selectedElement = container?.querySelectorAll('.rw-record-queue > div')[newIndex];
 
-        if (selectedItem && container) {
-            const itemOffsetTop = selectedItem.offsetTop;
-            const itemHeight = selectedItem.offsetHeight;
+        if (selectedElement && container) {
+            const itemOffsetTop = selectedElement.offsetTop;
+            const itemHeight = selectedElement.offsetHeight;
             const containerHeight = container.offsetHeight;
 
             const scrollPosition = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
@@ -104,17 +104,17 @@ export function createSoundBoothSession() {
     });
 
     const isSelectable = (element) => {
-        return !['up', 'ready', 'stashing'].includes(recordData.status[element]);
+        return !['up', 'ready', 'stashing'].includes(recordings.status[element]);
     };
 
     const initSelection = () => {
         selectedArray.splice(0, selectedArray.length);
-        for (let i = 0; i < queueItems.length; i++) {
+        for (let i = 0; i < queue.length; i++) {
             selectedArray.push(false);
         }
 
-        for (let i = 0; i < queueItems.length; i++) {
-            if (isSelectable(queueItems[i])) {
+        for (let i = 0; i < queue.length; i++) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 break;
             }
@@ -122,20 +122,20 @@ export function createSoundBoothSession() {
     };
 
     const selectItem = (index) => {
-        selectedArray[selected.value] = false;
-        selected.value = index;
+        selectedArray[selectedItem.value] = false;
+        selectedItem.value = index;
         selectedArray[index] = 'selected';
 
-        const newSelected = queueItems[index];
-        if (recordData.status[newSelected.id] === 'stashed') {
-            if (data.isRecording) stopRecording();
+        const newSelected = queue[index];
+        if (recordings.status[newSelected.id] === 'stashed') {
+            if (state.isRecording) stopRecording();
             playRecord();
         }
     };
 
     const moveBackward = () => {
-        for (let i = selected.value - 1; i >= 0; i--) {
-            if (isSelectable(queueItems[i])) {
+        for (let i = selectedItem.value - 1; i >= 0; i--) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 return true;
             }
@@ -144,8 +144,8 @@ export function createSoundBoothSession() {
     };
 
     const moveForward = () => {
-        for (let i = selected.value + 1; i < queueItems.length; i++) {
-            if (isSelectable(queueItems[i])) {
+        for (let i = selectedItem.value + 1; i < queue.length; i++) {
+            if (isSelectable(queue[i])) {
                 selectItem(i);
                 return true;
             }
@@ -158,10 +158,10 @@ export function createSoundBoothSession() {
             const {data} = await axios.post(route('sound-booth.get.auto'), {
                 speaker_id: speaker.id,
                 dialect_id: speaker.dialect.id,
-                queuedItems: queueItems,
+                queuedItems: queue,
             });
 
-            queueItems.push(...data.items);
+            queue.push(...data.items);
             NotificationStore.addNotification(t('sound-booth.notifications.auto-queue-success', {count: data.items.length}));
 
         } catch (e) {
@@ -175,10 +175,10 @@ export function createSoundBoothSession() {
             const {data} = await axios.post(route('sound-booth.get.deck', id), {
                 speaker_id: speaker.id,
                 dialect_id: speaker.dialect.id,
-                queuedItems: queueItems,
+                queuedItems: queue,
             });
 
-            queueItems.push(...data.items);
+            queue.push(...data.items);
             NotificationStore.addNotification(t('sound-booth.notifications.deck-queue-success', {count: data.items.length}));
 
         } catch (e) {
@@ -188,22 +188,22 @@ export function createSoundBoothSession() {
     };
 
     const removeItem = async (pronunciation) => {
-        const index = queueItems.indexOf(pronunciation);
+        const index = queue.indexOf(pronunciation);
 
-        if (recordData.records[pronunciation.id]) {
+        if (recordings.items[pronunciation.id]) {
             if (!confirm(t('sound-booth.notifications.remove-item-confirm'))) return false;
 
             const discarded = await discardRecord(pronunciation.id);
             if (!discarded) return false;
         }
 
-        queueItems.splice(index, 1);
+        queue.splice(index, 1);
         return true;
     };
 
     const flushQueue = async () => {
-        if (queueItems.length === 0 || confirm(t('sound-booth.notifications.flush-queue-confirm'))) {
-            queueItems.splice(0, queueItems.length);
+        if (queue.length === 0 || confirm(t('sound-booth.notifications.flush-queue-confirm'))) {
+            queue.splice(0, queue.length);
 
             await clearStash();
             return true;
@@ -227,7 +227,7 @@ export function createSoundBoothSession() {
         console.log('Recorder has been created!');
 
         recorder.value.on('ready', () => {
-            data.hasPermission = true;
+            state.hasPermission = true;
             console.log('Recorder is ready to go!');
         });
 
@@ -239,7 +239,7 @@ export function createSoundBoothSession() {
         });
 
         recorder.value.on('stopped', (record) => {
-            if (data.step === 'speaker') {
+            if (state.step === 'speaker') {
                 testPlay(record);
             } else {
                 onDataAvailable(record);
@@ -258,13 +258,13 @@ export function createSoundBoothSession() {
         recorder.value.close();
         recorder.value = null;
 
-        data.hasPermission = false;
+        state.hasPermission = false;
         console.log('Recorder has been destroyed!');
     };
 
     const testRecord = () => {
-        if (data.testState === 'waiting') {
-            data.testState = 'recording';
+        if (state.testState === 'waiting') {
+            state.testState = 'recording';
             recorder.value.start();
 
             timer.value = setTimeout(() => {
@@ -276,21 +276,21 @@ export function createSoundBoothSession() {
     };
 
     const testPlay = (record) => {
-        data.testState = 'listening';
+        state.testState = 'listening';
         clearTimeout(timer.value);
 
         const audioNode = record.getAudioElement();
         audioNode.play();
 
         setTimeout(() => {
-            data.testState = 'waiting';
+            state.testState = 'waiting';
         }, record.getDuration() * 1000 + 300);
     };
 
     const startRecording = () => {
         if (!recorder.value) return;
 
-        data.isRecording = true;
+        state.isRecording = true;
         recorder.value.start();
         console.log('Recorder is listening!');
     };
@@ -298,7 +298,7 @@ export function createSoundBoothSession() {
     const stopRecording = () => {
         if (!recorder.value) return;
 
-        data.isRecording = false;
+        state.isRecording = false;
         vumeter.value = 0;
         saturated.value = false;
         recorder.value.cancel();
@@ -306,10 +306,10 @@ export function createSoundBoothSession() {
     };
 
     const toggleRecording = () => {
-        if (data.isRecording) {
+        if (state.isRecording) {
             stopRecording();
         } else {
-            if (queueItems[selected.value]) startRecording();
+            if (queue[selectedItem.value]) startRecording();
         }
     };
 
@@ -325,13 +325,13 @@ export function createSoundBoothSession() {
     const showError = (error) => {
         let message = errorMessageAssociation[error.name] || 'An unknown microphone error occurred.';
 
-        data.errorMessage = message;
+        state.errorMessage = message;
         console.error('Microphone Error:', error);
         alert(message);
     };
 
     const onDataAvailable = async (record) => {
-        const currentItem = queueItems[selected.value];
+        const currentItem = queue[selectedItem.value];
 
         if (currentItem) {
             const blob = record.getBlob();
@@ -340,11 +340,11 @@ export function createSoundBoothSession() {
                 try {
                     await stashRecord(currentItem, blob);
 
-                    if (recordData.status[currentItem.id] === 'stashed') {
+                    if (recordings.status[currentItem.id] === 'stashed') {
                         stopRecording();
                         moveForward();
 
-                        if (recordData.status[queueItems[selected.value]?.id] !== 'stashed') startRecording();
+                        if (recordings.status[queue[selectedItem.value]?.id] !== 'stashed') startRecording();
                     }
 
                 } catch (error) {
@@ -356,39 +356,39 @@ export function createSoundBoothSession() {
     };
 
     const setStatus = (item, status) => {
-        if (!recordData.status[item]) {
-            recordData.status[item] = status;
+        if (!recordings.status[item]) {
+            recordings.status[item] = status;
         } else {
-            recordData.statusCount[recordData.status[item]]--;
-            recordData.status[item] = status;
+            recordings.statusCount[recordings.status[item]]--;
+            recordings.status[item] = status;
         }
-        recordData.statusCount[status]++;
+        recordings.statusCount[status]++;
     };
 
     const setError = (item, error, message) => {
-        if (!recordData.errors[item]) {
-            recordData.errors[item] = error;
-            data.errorMessage = message;
+        if (!recordings.errors[item]) {
+            recordings.errors[item] = error;
+            state.errorMessage = message;
 
         } else {
-            if (recordData.errors[item] !== false) {
-                recordData.statusCount.error--;
+            if (recordings.errors[item] !== false) {
+                recordings.statusCount.error--;
             }
-            recordData.errors[item] = error;
+            recordings.errors[item] = error;
         }
 
         if (error !== false) {
-            recordData.statusCount.error++;
+            recordings.statusCount.error++;
         }
     };
 
     const stashRecord = async (item, blob) => {
-        if (!recordData.records[item.id]) {
-            recordData.records[item.id] = new Record(item);
-            recordData.records[item.id].setSpeaker(speaker);
+        if (!recordings.items[item.id]) {
+            recordings.items[item.id] = new Record(item);
+            recordings.items[item.id].setSpeaker(speaker);
         }
 
-        const record = recordData.records[item.id];
+        const record = recordings.items[item.id];
         setError(item.id, false, false);
 
         setStatus(item.id, 'ready');
@@ -405,7 +405,7 @@ export function createSoundBoothSession() {
         setStatus(item.id, 'stashing');
         try {
             await record.stashRecord();
-            recordData.records[item.id].url = record.url;
+            recordings.items[item.id].url = record.url;
 
             setStatus(item.id, 'stashed');
 
@@ -416,10 +416,10 @@ export function createSoundBoothSession() {
     };
 
     const playRecord = () => {
-        const id = queueItems[selected.value].id;
+        const id = queue[selectedItem.value].id;
 
-        if (recordData.status[id] === 'stashed') {
-            const record = recordData.records[id];
+        if (recordings.status[id] === 'stashed') {
+            const record = recordings.items[id];
 
             if (record?.url) {
                 const audio = new Audio(record.url);
@@ -431,7 +431,7 @@ export function createSoundBoothSession() {
     const discardRecord = async (id) => {
         if (!confirm('Are you sure you want to discard this recording?')) return;
 
-        const record = recordData.records[id];
+        const record = recordings.items[id];
         if (!record) {
             console.warn(`Record with ID ${id} not found.`);
             return false;
@@ -446,29 +446,29 @@ export function createSoundBoothSession() {
         try {
             await axios.delete(route('stash.destroy', stashKey));
 
-            delete recordData.records[id];
-            delete recordData.status[id];
-            delete recordData.errors[id];
-            recordData.statusCount.stashed--;
-            recordData.errors[id] && recordData.statusCount.error--;
+            delete recordings.items[id];
+            delete recordings.status[id];
+            delete recordings.errors[id];
+            recordings.statusCount.stashed--;
+            recordings.errors[id] && recordings.statusCount.error--;
             return true;
 
-            // const recordIds = Object.keys(recordData.records);
+            // const recordIds = Object.keys(recordings.items);
             //
             // if (recordIds.length > 0) {
             //     const currentIndex = recordIds.indexOf(String(id));
             //     const nextIndex = (currentIndex + 1) < recordIds.length ? currentIndex + 1 : 0;
             //     const nextRecordId = recordIds[nextIndex];
-            //     const nextPronunciationIndex = queueItems.findIndex(p => p.id === Number(nextRecordId));
+            //     const nextPronunciationIndex = queue.findIndex(p => p.id === Number(nextRecordId));
             //     selectItem(nextPronunciationIndex);
             //
             // } else {
-            //     console.log("No more records available to select.");
+            //     console.log("No more items available to select.");
             // }
 
         } catch (error) {
             console.error(`Error discarding recording with stashKey ${stashKey}:`, error);
-            data.errorMessage = 'Record could not be discarded. Please try again.';
+            state.errorMessage = 'Record could not be discarded. Please try again.';
             return false;
         }
     };
@@ -478,12 +478,12 @@ export function createSoundBoothSession() {
             // todo: Ziggy error: 'speakerId' parameter is required for route 'stash.clear'.
             await axios.delete(route('stash.clear', speaker.id));
 
-            Object.keys(recordData.status).forEach(key => {
-                if (recordData.status[key] === 'stashed') {
-                    delete recordData.records[key];
-                    delete recordData.status[key];
-                    delete recordData.errors[key];
-                    recordData.statusCount.stashed--;
+            Object.keys(recordings.status).forEach(key => {
+                if (recordings.status[key] === 'stashed') {
+                    delete recordings.items[key];
+                    delete recordings.status[key];
+                    delete recordings.errors[key];
+                    recordings.statusCount.stashed--;
                 }
             });
 
@@ -496,16 +496,16 @@ export function createSoundBoothSession() {
 
     const uploadRecords = async () => {
         if (confirm('Are you sure you want to upload all of your recordings?')) {
-            data.isUploading = true;
+            state.isUploading = true;
 
-            const stashedIds = Object.keys(recordData.status).filter(
-                (id) => recordData.status[id] === 'stashed'
+            const stashedIds = Object.keys(recordings.status).filter(
+                (id) => recordings.status[id] === 'stashed'
             );
 
             for (const id of stashedIds) {
                 await requestQueue.push(async () => {
                     try {
-                        const itemIndex = queueItems.findIndex(
+                        const itemIndex = queue.findIndex(
                             (p) => p.id === Number(id)
                         );
 
@@ -516,7 +516,7 @@ export function createSoundBoothSession() {
                         setError(id, false, false);
                         setStatus(id, 'uploading');
 
-                        const record = recordData.records[id];
+                        const record = recordings.items[id];
                         if (!record) {
                             throw new Error(`Record with ID ${id} not found.`);
                         }
@@ -526,7 +526,7 @@ export function createSoundBoothSession() {
                         setStatus(id, 'uploaded');
 
                         if (itemIndex !== -1) {
-                            queueItems.splice(itemIndex, 1);
+                            queue.splice(itemIndex, 1);
                             selectedArray.splice(itemIndex, 1);
                         }
 
@@ -537,7 +537,7 @@ export function createSoundBoothSession() {
                 });
             }
 
-            data.isUploading = false;
+            state.isUploading = false;
             console.log('All recordings uploaded successfully.');
         }
     };
@@ -547,19 +547,19 @@ export function createSoundBoothSession() {
             backStep: null,
             nextStep: 'queue',
             canMoveBack: () => false,
-            canMoveNext: () => speaker.id && data.hasPermission,
+            canMoveNext: () => speaker.id && state.hasPermission,
         },
         queue: {
             backStep: null,
             nextStep: 'record',
             canMoveBack: () => false,
-            canMoveNext: () => queueItems.length > 0 || recordData.statusCount.done > 0,
+            canMoveNext: () => queue.length > 0 || recordings.statusCount.done > 0,
         },
         record: {
             backStep: 'queue',
             nextStep: 'check',
             canMoveBack: () => true,
-            canMoveNext: () => recordData.statusCount.done > 0,
+            canMoveNext: () => recordings.statusCount.done > 0,
         },
         check: {
             backStep: 'record',
@@ -569,72 +569,81 @@ export function createSoundBoothSession() {
         }
     };
 
-    const backDisabled = computed(() => {
-        const canMoveBack = steps[data.step]?.canMoveBack();
-        return data.isFrozen || !canMoveBack;
-        // return data.isFrozen || hasPendingRequests || !canMoveNext;
+    const prevDisabled = computed(() => {
+        const canMoveBack = steps[state.step]?.canMoveBack();
+        return state.isFrozen || !canMoveBack;
+        // return state.isFrozen || hasPendingRequests || !canMoveNextPage;
     });
 
     const nextDisabled = computed(() => {
-        const canMoveNext = steps[data.step]?.canMoveNext();
-        return data.isFrozen || !canMoveNext;
-        // return data.isFrozen || hasPendingRequests || !canMoveNext;
+        const canMoveNext = steps[state.step]?.canMoveNext();
+        return state.isFrozen || !canMoveNext;
+        // return state.isFrozen || hasPendingRequests || !canMoveNextPage;
     });
 
     const showRetry = computed(() => {
-        return data.step === 'record' && recordData.statusCount.error > 0;
+        return state.step === 'record' && recordings.statusCount.error > 0;
     });
 
     // TODO: this can kind of be replaced with isRecording (i.e. stashing) & isUploading (i.e. uploading)
     //  since there is no "finalizing"
     const hasPendingRequests = computed(() => {
-        const {stashing, uploading, finalizing} = recordData.statusCount;
+        const {stashing, uploading, finalizing} = recordings.statusCount;
         return (stashing + uploading + finalizing) > 1;
     });
 
-    const back = async () => {
-        const currentStep = steps[data.step];
+    const prevPage = async () => {
+        const currentStep = steps[state.step];
 
         if (currentStep?.canMoveBack()) {
-            data.step = currentStep.backStep;
+            state.step = currentStep.backStep;
 
         } else {
             freeze();
             currentStep?.canMoveBack()
-                .then(() => data.step = currentStep.backStep)
+                .then(() => state.step = currentStep.backStep)
                 .finally(() => unfreeze());
         }
     };
 
-    const next = async () => {
-        const currentStep = steps[data.step];
+    const nextPage = async () => {
+        const currentStep = steps[state.step];
 
         if (currentStep?.canMoveNext()) {
-            if (currentStep === 'record' && recordData.statusCount.stashed > 0) {
+            if (currentStep === 'record' && recordings.statusCount.stashed > 0) {
                 if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Sound Booth without uploading your stashed recordings, they will be deleted.')) return;
             }
 
-            data.step = currentStep.nextStep;
+            state.step = currentStep.nextStep;
 
         } else {
             freeze();
             currentStep?.canMoveNext()
-                .then(() => data.step = currentStep.nextStep)
+                .then(() => state.step = currentStep.nextStep)
                 .finally(() => unfreeze());
         }
     };
 
     function freeze() {
-        data.isFrozen = true;
+        state.isFrozen = true;
     }
 
     function unfreeze() {
-        data.isFrozen = false;
+        state.isFrozen = false;
     }
 
-    const queue = reactive({
-        queue: queueItems,
-        selected,
+    return reactive({
+        state,
+        speaker,
+        steps,
+        showRetry,
+        hasPendingRequests,
+        prevDisabled,
+        nextDisabled,
+        prevPage,
+        nextPage,
+        queue,
+        selectedItem,
         selectedArray,
         initSelection,
         selectItem,
@@ -645,10 +654,7 @@ export function createSoundBoothSession() {
         fetchAutoItems,
         removeItem,
         flushQueue,
-    });
-
-    const record = reactive({
-        data: recordData,
+        recordings,
         vumeter,
         recorder,
         saturated,
@@ -667,20 +673,6 @@ export function createSoundBoothSession() {
         discardRecord,
         clearStash,
         uploadRecords,
-    });
-
-    return reactive({
-        data,
-        speaker,
-        steps,
-        showRetry,
-        hasPendingRequests,
-        backDisabled,
-        nextDisabled,
-        back,
-        next,
-        queue,
-        record,
     });
 }
 

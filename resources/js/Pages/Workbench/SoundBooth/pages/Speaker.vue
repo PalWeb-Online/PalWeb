@@ -119,10 +119,10 @@ const saveSpeaker = async () => {
 };
 
 onMounted(async () => {
-    session.record.openRecorder(session.record.audioParams);
-    session.data.testState = 'waiting';
+    session.openRecorder(session.audioParams);
+    session.state.testState = 'waiting';
     await fetchSpeakerOptions();
-    await session.record.clearStash();
+    await session.clearStash();
 });
 </script>
 
@@ -175,10 +175,10 @@ onMounted(async () => {
         </PopupWindow>
     </div>
 
-    <template v-if="!session.data.hasPermission">
+    <template v-if="!session.state.hasPermission">
         <AppTip>
             <p>Allow the browser to use your mic in order to proceed.
-                <button @click="session.record.openRecorder(session.record.audioParams)">Click here to prompt again.</button>
+                <button @click="session.openRecorder(session.audioParams)">Click here to prompt again.</button>
             </p>
         </AppTip>
     </template>
@@ -202,9 +202,9 @@ onMounted(async () => {
                 <div class="rw-test-booth">
                     <UserAvatarWrapper :user="!UserStore.user.private ? UserStore.user : null"/>
                     <img
-                        v-if="session.data.testState !== 'waiting'"
+                        v-if="session.state.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
-                        :src="`/img/${session.data.testState === 'recording' ? 'speak' : 'listen'}.svg`"
+                        :src="`/img/${session.state.testState === 'recording' ? 'speak' : 'listen'}.svg`"
                         alt="Prompt"
                     />
                 </div>
@@ -254,20 +254,20 @@ onMounted(async () => {
             </div>
             <div class="rw-test-status">
                 <template v-for="state in testStates" :key="state">
-                    <div class="rw-test-status-info" v-if="session.data.testState === state">
+                    <div class="rw-test-status-info" v-if="session.state.testState === state">
                         <div>{{ $t('sound-booth.test.' + state + '.title') }}</div>
                         <div>{{ $t('sound-booth.test.' + state + '.subtitle') }}</div>
                     </div>
                 </template>
 
                 <img
-                    :class="`rw-test-button ${session.data.testState !== 'waiting' ? 'disabled' : ''}`"
+                    :class="`rw-test-button ${session.state.testState !== 'waiting' ? 'disabled' : ''}`"
                     :src="`/img/${
-                                                session.data.testState === 'recording' ? 'record' :
-                                                session.data.testState === 'listening' ? 'stop' : 'play'
+                                                session.state.testState === 'recording' ? 'record' :
+                                                session.state.testState === 'listening' ? 'stop' : 'play'
                                             }.svg`"
                     alt="Test"
-                    @click="session.record.testRecord"
+                    @click="session.testRecord"
                 />
             </div>
         </div>

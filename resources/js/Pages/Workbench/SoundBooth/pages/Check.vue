@@ -7,9 +7,9 @@ import PronunciationItem from "../../../../components/PronunciationItem.vue";
 const session = useSoundBoothSession();
 
 const audios = computed(() =>
-    Object.entries(session.record.data.status)
+    Object.entries(session.recordings.status)
         .filter(([id, status]) => status === 'done')
-        .map(([id]) => session.record.data.records[id])
+        .map(([id]) => session.recordings.items[id])
 );
 </script>
 

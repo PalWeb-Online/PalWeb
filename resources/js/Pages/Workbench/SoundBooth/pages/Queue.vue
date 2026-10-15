@@ -12,15 +12,11 @@ const session = useSoundBoothSession();
 
 const tooltip = ref(null);
 
-const remove = (index) => {
-    session.queue.removeItem(session.queue.queue[index]);
-};
-
 watch(
     () => SearchStore.data.selectedModel,
     (newModel) => {
         if (newModel) {
-            session.queue.fetchDeckItems(newModel.id)
+            session.fetchDeckItems(newModel.id)
             SearchStore.deselectModel();
         }
     }
@@ -63,14 +59,14 @@ watch(
 
     <div class="rw-page__queue">
         <div class="rw-queue-body"
-             v-if="session.queue.queue.length > 0">
-            <draggable v-if="session.queue.queue.length > 0"
-                       :list="session.queue.queue" itemKey="id" handle=".handle"
+             v-if="session.queue.length > 0">
+            <draggable v-if="session.queue.length > 0"
+                       :list="session.queue" itemKey="id" handle=".handle"
                        id="rw-item-queue">
                 <template #item="{ element, index }">
                     <li class="draggable-item">
                         <span class="delete material-symbols-rounded" style="cursor: pointer"
-                              @click="remove(index)">delete</span>
+                              @click="session.removeItem(session.queue[index])">delete</span>
                         <span>{{ index + 1 }}.</span>
                         <div><span>{{ element.term.term }}</span> ({{ element.translit }})</div>
                         <span class="handle material-symbols-rounded">drag_indicator</span>
@@ -84,29 +80,29 @@ watch(
 
         <div class="rw-queue-foot">
             <div class="rw-queue-buttons">
-                <button :disabled="session.queue.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(session.queue.queue.length < 100 ? $t('sound-booth.queue.load.message') : $t('sound-booth.queue.status.full'), $event);"
+                <button :disabled="session.queue.length >= 100"
+                        @mousemove="tooltip.showTooltip(session.queue.length < 100 ? $t('sound-booth.queue.load.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
                         @click="SearchStore.openSearchGenie('insert', 'decks')">
                     {{ $t('sound-booth.queue.load.button') }}
                 </button>
 
-                <button :disabled="session.queue.queue.length >= 100"
-                        @mousemove="tooltip.showTooltip(session.queue.queue.length < 100 ? $t('sound-booth.queue.auto.message') : $t('sound-booth.queue.status.full'), $event);"
+                <button :disabled="session.queue.length >= 100"
+                        @mousemove="tooltip.showTooltip(session.queue.length < 100 ? $t('sound-booth.queue.auto.message') : $t('sound-booth.queue.status.full'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="session.queue.fetchAutoItems">
+                        @click="session.fetchAutoItems">
                     {{ $t('sound-booth.queue.auto.button') }}
                 </button>
 
-                <button :disabled="session.queue.queue.length <= 0"
-                        @mousemove="tooltip.showTooltip(session.queue.queue.length > 0 ? $t('sound-booth.queue.clear.message') : $t('sound-booth.queue.status.empty'), $event);"
+                <button :disabled="session.queue.length <= 0"
+                        @mousemove="tooltip.showTooltip(session.queue.length > 0 ? $t('sound-booth.queue.clear.message') : $t('sound-booth.queue.status.empty'), $event);"
                         @mouseleave="tooltip.hideTooltip()"
-                        @click="session.queue.flushQueue()">
+                        @click="session.flushQueue()">
                     {{ $t('sound-booth.queue.clear.button') }}
                 </button>
             </div>
 
-            <div class="rw-item-counter">{{ session.queue.queue.length }} / 100</div>
+            <div class="rw-item-counter">{{ session.queue.length }} / 100</div>
         </div>
     </div>
 
