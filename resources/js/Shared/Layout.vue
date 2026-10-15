@@ -47,7 +47,9 @@ watch(
 let lastBrowserOnlineState = browserOnline.value;
 let hasSeenInitialConnectionState = false;
 
-onMounted(() => {
+onMounted(async () => {
+    await NotificationStore.refreshBrowserSubscriptionState();
+
     const userId = UserStore.user?.id ?? null;
 
     if (userId) {

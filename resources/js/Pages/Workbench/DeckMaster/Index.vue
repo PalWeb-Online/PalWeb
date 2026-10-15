@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
@@ -8,10 +8,8 @@ import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import QuizzerWindow from "./UI/QuizzerWindow.vue";
 import ScoreStats from "../../../components/ScoreStats.vue";
-import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
 import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
 
-const DeckStudyStore = useDeckStudyStore();
 const router = useRouter();
 
 const props = defineProps({
@@ -25,7 +23,6 @@ const collapsed = ref(true);
 
 const toggleMode = async () => {
     selectedDeck.value = null;
-    DeckStudyStore.reset();
     mode.value = mode.value === 'build' ? 'study' : 'build';
     await fetchDecks(mode.value);
 }
@@ -51,17 +48,10 @@ const fetchDecks = async (mode) => {
 };
 
 const toggleSelectDeck = (index) => {
-    if (mode.value === 'build') {
-        selectedDeck.value =
-            selectedDeck.value?.id === decks.value[index].id
-                ? null
-                : decks.value[index];
-    } else {
-        DeckStudyStore.data.deck =
-            DeckStudyStore.data.deck?.id === decks.value[index].id
-                ? null
-                : decks.value[index];
-    }
+    selectedDeck.value =
+        selectedDeck.value?.id === decks.value[index].id
+            ? null
+            : decks.value[index];
 };
 
 const toBuild = () => {
@@ -71,10 +61,10 @@ const toBuild = () => {
 };
 
 const toStudy = () => {
-    if (DeckStudyStore.data.deck.id) {
+    if (selectedDeck.value?.id) {
         router.push({
             name: 'deck-master.study',
-            params: {deck: DeckStudyStore.data.deck.id},
+            params: {deck: selectedDeck.value.id},
         });
     }
 };
@@ -82,13 +72,6 @@ const toStudy = () => {
 onMounted(async () => {
     await fetchDecks(props.mode);
     selectedDeck.value = props.deck;
-
-    DeckStudyStore.reset();
-    DeckStudyStore.data.step = 'select';
-});
-
-onBeforeUnmount(() => {
-    DeckStudyStore.reset();
 });
 
 defineOptions({
@@ -120,7 +103,7 @@ defineOptions({
                      :class="{ collapsed: mode === 'study' && collapsed }">
                     <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
                                    :disabled="mode === 'study' && !deck.terms.length"
-                                   :active="selectedDeck?.id === deck.id || DeckStudyStore.data.deck?.id === deck.id"
+                                   :active="selectedDeck?.id === deck.id"
                                    @flip="toggleSelectDeck(index)"
                     />
                 </div>
@@ -140,13 +123,13 @@ defineOptions({
             </div>
         </div>
 
-        <QuizzerWindow v-if="mode === 'study'">
+        <QuizzerWindow v-if="mode === 'study'" :deck="selectedDeck" step="select">
             <ReviewProgress
-                :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
-                :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
+                :cards="selectedDeck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
+                :terms_count="selectedDeck?.terms.length ?? 0"
             />
-            <ScoreStats :model="DeckStudyStore.data.deck"/>
-            <div v-if="DeckStudyStore.data.deck" class="window-footer">
+            <ScoreStats :model="selectedDeck"/>
+            <div v-if="selectedDeck" class="window-footer">
                 <button @click="toStudy">
                     {{ $t('pages.deck-master.select-deck') }}
                 </button>

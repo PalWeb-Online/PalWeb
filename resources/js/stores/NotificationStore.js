@@ -91,10 +91,6 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         }
     };
 
-    onMounted(async () => {
-        await refreshBrowserSubscriptionState();
-    });
-
     return {
         notifications,
         addNotification,
