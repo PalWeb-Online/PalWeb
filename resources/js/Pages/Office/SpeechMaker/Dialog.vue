@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import DialogActions from "../../../components/Actions/DialogActions.vue";
-import {route} from "ziggy-js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import SentenceActions from "../../../components/Actions/SentenceActions.vue";
@@ -96,7 +95,7 @@ watch(() => props.dialogId, async () => {
                 </button>
                 <div class="window-header-url">www.palweb.app/academy/dialogs/{dialog}</div>
                 <RouterLink v-if="dialog?.id" class="material-symbols-rounded"
-                      :to="route('speech-maker.dialog-sentence', dialog.id)">
+                      :to="{ name: 'speech-maker.dialog-sentence', params: { dialog: dialog.id } }">
                     add
                 </RouterLink>
                 <button class="material-symbols-rounded" @click="SearchStore.openSearchGenie('insert', 'sentences')">

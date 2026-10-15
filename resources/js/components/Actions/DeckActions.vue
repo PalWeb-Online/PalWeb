@@ -34,7 +34,7 @@ const tooltip = ref(null);
 <template>
     <ContextActions v-slot="{ closeMenu }">
         <RouterLink v-if="currentRoute.name !== 'decks.show'"
-            :to="route('decks.show', model.id)" role="menuitem" tabindex="-1">
+            :to="{ name: 'decks.show', params: { deck: model.id } }" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.deck') }) }}
         </RouterLink>
         <template v-if="isAuthor || UserStore.isAdmin">
@@ -47,7 +47,7 @@ const tooltip = ref(null);
         </template>
 
         <template v-if="UserStore.isUser">
-            <RouterLink :to="model.terms_count > 0 ? route('deck-master.study', model.id) : '#'" role="menuitem"
+            <RouterLink :to="model.terms_count > 0 ? { name: 'deck-master.study', params: { deck: model.id } } : '#'" role="menuitem"
                   tabindex="-1"
                   :class="{'disabled': model.terms_count < 1}"
                   @mousemove="model.terms_count < 1 && tooltip.showTooltip($t('actions.deck.empty'), $event);"

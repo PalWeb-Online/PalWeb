@@ -1,6 +1,5 @@
 <script setup>
 import {computed} from "vue";
-import {route} from "ziggy-js";
 import ProgressTaskItem from "./ProgressTaskItem.vue";
 
 const props = defineProps({
@@ -58,7 +57,7 @@ const progressItems = computed(() => {
             total: 3,
             completed: scoreCount('deck') >= 3,
             active: stage.value === 1,
-            route: props.lesson.deck ? route('deck-master.study', props.lesson.deck) : null,
+            route: props.lesson.deck ? {name: 'deck-master.study', params: {deck: props.lesson.deck}} : null,
         },
     ];
 
@@ -74,7 +73,7 @@ const progressItems = computed(() => {
             total: 1,
             completed: scoreCount('activity') >= 1,
             active: stage.value === 2,
-            route: props.lesson.activity ? route('activities.activity', props.lesson.activity) : null,
+            route: props.lesson.activity ? {name: 'activities.activity', params: {activity: props.lesson.activity}} : null,
         });
     }
 

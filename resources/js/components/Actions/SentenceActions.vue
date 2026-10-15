@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useSentence} from "../../composables/sentences/useSentence.js";
@@ -17,7 +16,7 @@ const props = defineProps({
 <template>
     <ContextActions v-slot="{ closeMenu }">
         <RouterLink v-if="currentRoute.name !== 'sentences.show'"
-              :to="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
+              :to="{ name: 'sentences.show', params: { sentence: model.id } }" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.sentence') }) }}
         </RouterLink>
         <template v-if="UserStore.isAdmin">

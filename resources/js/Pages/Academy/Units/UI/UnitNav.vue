@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -197,7 +196,7 @@ watch(() => props.unit, () => {
                 </RouterLink>
                 <RouterLink v-if="UserStore.isAdmin && unit.lessons?.length < 9"
                       class="new-lesson-link"
-                      :to="route('lesson-planner.unit-lesson', unit)">+
+                      :to="{ name: 'lesson-planner.unit-lesson', params: { unit: unit.id } }">+
                 </RouterLink>
             </div>
         </div>

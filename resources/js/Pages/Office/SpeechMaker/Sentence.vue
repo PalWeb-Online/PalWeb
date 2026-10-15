@@ -107,8 +107,8 @@ watch(() => props.sentenceId, async () => {
         <div v-else class="window-container">
             <div class="window-header">
                 <RouterLink :to="initialDialog
-                        ? route('speech-maker.dialog', initialDialog.id)
-                        : route('speech-maker.index')"
+                        ? { name: 'speech-maker.dialog', params: { dialog: initialDialog.id } }
+                        : { name: 'speech-maker.index' }"
                       class="material-symbols-rounded">arrow_back
                 </RouterLink>
                 <div class="window-header-url">www.palweb.app/library/sentences/{sentence}</div>

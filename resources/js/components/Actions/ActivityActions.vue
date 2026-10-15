@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useActivity} from "../../composables/activities/useActivity.js";
@@ -17,7 +16,7 @@ const props = defineProps({
 <template>
     <ContextActions v-slot="{ closeMenu }">
         <RouterLink v-if="currentRoute.name !== 'activities.show'"
-              :to="route('activities.show', model.id)" role="menuitem" tabindex="-1">
+              :to="{ name: 'activities.show', params: { activity: model.id } }" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.activity') }) }}
         </RouterLink>
         <template v-if="UserStore.isAdmin">

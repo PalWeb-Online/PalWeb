@@ -12,7 +12,6 @@ import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import ReviewProgress from "../../CardDealer/UI/ReviewProgress.vue";
-import {route} from "ziggy-js";
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
 const Notifier = useNotifier();
@@ -153,7 +152,13 @@ watch(() => DeckStudyStore.settings.quizType, (newVal) => {
             <p v-else style="font-weight: 700">{{ $t('pages.deck-master.messages.student-required') }}</p>
         </AppTip>
         <RouterLink class="quiz-type card-dealer"
-              :to="route('card-dealer.index', {scope: 'deck', deck: DeckStudyStore.data.deck?.id})">
+              :to="{
+                  name: 'card-dealer.index',
+                  query: {
+                      scope: 'deck',
+                      deck: DeckStudyStore.data.deck?.id,
+                  },
+              }">
             <div>{{ $t('pages.deck-master.buttons.card-dealer') }}</div>
         </RouterLink>
 

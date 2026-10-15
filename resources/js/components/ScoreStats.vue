@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {computed, watch} from "vue";
 import {useUserStore} from "../stores/UserStore.js";
 import {useTooltip} from "../composables/useTooltip.js";
@@ -138,7 +137,14 @@ const trendLinePoints = computed(() => {
                              :style="{ height: `${s.score * 100}%` }"
                         >
                             <RouterLink
-                                :to="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id, score: s.id })"
+                                :to="{
+                                    name: 'scores.history',
+                                    params: {
+                                        scorable_type: model.model_class,
+                                        scorable_id: model.id,
+                                    },
+                                    query: {score: s.id},
+                                }"
                                 class="interact-button"
                                 @mousemove="showTooltip(s, $event)"
                                 @mouseleave="hideTooltip()"

@@ -73,7 +73,7 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                     </div>
                     <template v-else>
                         <RouterLink v-if="term.id"
-                              :to="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                              :to="isCurrentTerm(term) ? '#' : { name: 'terms.show', params: { term: term.slug } }"
                               :target="isCurrentTerm(term) ? '' : '_blank'"
                               :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
                             <div>{{ term.sentencePivot.sent_term }}</div>
