@@ -4,16 +4,16 @@ import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import {generateArabicName} from "../../utils/NameGenerator.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 
-const {t, locale} = useI18n();
+const {locale} = useI18n();
 const router = useRouter();
 const emit = defineEmits(['close', 'signIn']);
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const {
@@ -52,11 +52,12 @@ const signUp = async () => {
 
         emit('close');
 
-        NotificationStore.addNotification(t('user.notifications.signed-up', {
-            user: locale.value === 'ar'
-                ? UserStore.user.ar_name
-                : UserStore.user.name
-        }));
+        Notifier.notify({
+            key: 'user.notifications.signed-up',
+            params: {
+                user: UserStore.user,
+            },
+        });
 
         router.push({
             name: 'users.show',

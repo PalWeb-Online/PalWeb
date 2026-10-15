@@ -3,7 +3,7 @@ import {useRouter} from "vue-router";
 import {useDeckLoader} from "./useDeckLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useDeckEditor({
@@ -12,7 +12,7 @@ export function useDeckEditor({
     const {t} = useI18n();
     const router = useRouter();
     const deckLoader = useDeckLoader();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const UserStore = useUserStore();
     const author = computed(() => ({
@@ -113,10 +113,13 @@ export function useDeckEditor({
         });
 
         updatePosition();
-        NotificationStore.addNotification(t('forms.notifications.model-added', {
-            model: t('actions.models.term'),
-            target: t('actions.models.deck'),
-        }));
+        Notifier.notify({
+            key: 'forms.notifications.model-added',
+            params: {
+                model: t('actions.models.term'),
+                target: t('actions.models.deck'),
+            },
+        });
     };
 
     const removeTerm = (index) => {

@@ -6,7 +6,7 @@ import WizardDropdown from '../ui/WizardDropdown.vue';
 import {useForm} from "../../../../composables/useForm.js";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
@@ -16,7 +16,7 @@ import UserNametag from "../../../../components/UserNametag.vue";
 import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
 
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const SoundBoothStore = useSoundBoothStore();
 const RecordStore = useRecordStore();
 
@@ -109,7 +109,10 @@ const saveSpeaker = async () => {
         if (error?.response?.status === 422) {
             setErrors(error.response.data.errors ?? {});
         } else {
-            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.', 'error');
+            Notifier.notify({
+                message: 'Oh no! Your Speaker profile could not be saved.',
+                type: 'error',
+            });
         }
 
     } finally {

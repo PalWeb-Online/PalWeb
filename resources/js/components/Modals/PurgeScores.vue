@@ -3,11 +3,11 @@ import {computed, reactive} from 'vue';
 import {route} from 'ziggy-js';
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 
 const {t, locale} = useI18n();
 const router = useRouter();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const props = defineProps({
     scorable_type: {type: String, required: true},
@@ -49,7 +49,12 @@ const purgeScores = async () => {
         });
 
         if (data.success) {
-            NotificationStore.addNotification(t('modals.purge-scores.notifications.purge-success', {count: data.count}));
+            Notifier.notify({
+                key: 'modals.purge-scores.notifications.purge-success',
+                params: {
+                    count: data.count,
+                },
+            });
             emit('close');
             router.go(0);
         }

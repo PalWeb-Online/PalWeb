@@ -1,7 +1,7 @@
 import {useRouter} from "vue-router";
 import {useDialogLoader} from "./useDialogLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useDialogEditor({
@@ -10,7 +10,7 @@ export function useDialogEditor({
     const {t} = useI18n();
     const router = useRouter();
     const dialogLoader = useDialogLoader();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         dialogLoader.setDialog(model);
@@ -68,17 +68,25 @@ export function useDialogEditor({
         const sentenceExists = editor.form.sentences.some(existingSentence => existingSentence.id === sentence.id);
 
         if (sentenceExists) {
-            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
-                model: t('actions.models.sentence'),
-                target: t('actions.models.dialog'),
-            }), 'error');
+            Notifier.notify({
+                key: 'forms.notifications.model-already-present',
+                params: {
+                    model: t('actions.models.sentence'),
+                    target: t('actions.models.dialog'),
+                },
+                type: 'error',
+            });
             return;
 
         } else if (sentence.dialog) {
-            NotificationStore.addNotification(t('forms.notifications.model-already-present', {
-                model: t('actions.models.sentence'),
-                target: t('dialog.key'),
-            }), 'error');
+            Notifier.notify({
+                key: 'forms.notifications.model-already-present',
+                params: {
+                    model: t('actions.models.sentence'),
+                    target: t('dialog.key'),
+                },
+                type: 'error',
+            });
             return;
         }
 
@@ -90,10 +98,13 @@ export function useDialogEditor({
         });
 
         updatePosition();
-        NotificationStore.addNotification(t('forms.notifications.model-added', {
-            model: t('actions.models.sentence'),
-            target: t('actions.models.dialog'),
-        }));
+        Notifier.notify({
+            key: 'forms.notifications.model-added',
+            params: {
+                model: t('actions.models.sentence'),
+                target: t('actions.models.dialog'),
+            },
+        });
     }
 
     const removeSentence = (index) => {

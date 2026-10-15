@@ -1,7 +1,7 @@
 import {route} from "ziggy-js";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useResourceDelete({
@@ -16,7 +16,7 @@ export function useResourceDelete({
                                   } = {}) {
     const {t} = useI18n();
     const router = useRouter();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const isDeleting = ref(false);
 
@@ -73,14 +73,25 @@ export function useResourceDelete({
                     await router.push({name: 'homepage'});
                 }
 
-                NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t(`actions.models.${label}`)}), 'success');
+                Notifier.notify({
+                    key: 'forms.notifications.delete-success',
+                    params: {
+                        model: t(`actions.models.${label}`),
+                    },
+                });
 
                 return response;
 
             } catch (error) {
                 await onDeleteError?.(error, model, identifier, options);
                 await options.onError?.(error, model, identifier, options);
-                NotificationStore.addNotification(t('forms.notifications.delete-error', {model: t(`actions.models.${label}`)}), 'error');
+                Notifier.notify({
+                    key: 'forms.notifications.delete-error',
+                    params: {
+                        model: t(`actions.models.${label}`),
+                    },
+                    type: 'error',
+                });
 
                 return null;
             }

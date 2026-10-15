@@ -1,11 +1,11 @@
 import {reactive, ref} from "vue";
 import {route} from 'ziggy-js';
 import {useI18n} from "vue-i18n";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useNotifier} from "./useNotifier.js";
 
 export function useScoreManager() {
     const {t} = useI18n();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const score = reactive({
         scorable_type: '',
@@ -92,7 +92,12 @@ export function useScoreManager() {
 
             if (data.success) {
                 isSaved.value = true;
-                NotificationStore.addNotification(t('forms.notifications.save-success', {model: t('actions.models.score')}));
+                Notifier.notify({
+                    key: 'forms.notifications.save-success',
+                    params: {
+                        model: t('actions.models.score'),
+                    },
+                });
                 if (options.onSuccess) options.onSuccess(data);
             }
 

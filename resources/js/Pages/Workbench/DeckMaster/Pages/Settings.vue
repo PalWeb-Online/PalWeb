@@ -7,24 +7,23 @@ import QuizzerWindow from "../UI/QuizzerWindow.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {watch} from "vue";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import ReviewProgress from "../../CardDealer/UI/ReviewProgress.vue";
 import {route} from "ziggy-js";
-import {useI18n} from "vue-i18n";
-
-const { t } = useI18n();
-
 const UserStore = useUserStore();
 const DeckStudyStore = useDeckStudyStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 watch(() => DeckStudyStore.settings.quizType, (newVal) => {
     if (newVal !== 'practice' && !UserStore.isStudent) {
         DeckStudyStore.settings.quizType = 'practice';
-        NotificationStore.addNotification(t('pages.deck-master.messages.student-required'), 'error');
+        Notifier.notify({
+            key: 'pages.deck-master.messages.student-required',
+            type: 'error',
+        });
     }
 })
 </script>

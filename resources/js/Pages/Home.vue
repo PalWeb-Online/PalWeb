@@ -13,7 +13,7 @@ import {useSearchStore} from "../stores/SearchStore.js";
 import SentenceItem from "../components/SentenceItem.vue";
 import AppButton from "../components/AppButton.vue";
 import {useUserStore} from "../stores/UserStore.js";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useNotifier} from "../composables/useNotifier.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
 import CommentItem from "../components/CommentItem.vue";
@@ -39,7 +39,7 @@ const featuredTerm = ref(null);
 const featuredUser = ref(null);
 const featuredDeck = ref(null);
 
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
 const UserStore = useUserStore();
@@ -49,7 +49,10 @@ const showSignUp = () => {
         NavigationStore.showSignUp = true
 
     } else {
-        NotificationStore.addNotification(t('pages.home.notifications.signed-in'), 'info')
+        Notifier.notify({
+            key: 'pages.home.notifications.signed-in',
+            type: 'info',
+        })
     }
 }
 

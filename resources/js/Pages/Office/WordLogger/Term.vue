@@ -8,7 +8,7 @@ import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {useTermEditor} from "../../../composables/terms/useTermEditor.js";
 import {useTermValidation} from "../../../composables/terms/useTermValidation.js";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../composables/useNotifier.js";
 import {route} from "ziggy-js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import PinButton from "../../../components/PinButton.vue";
@@ -29,7 +29,7 @@ const editorData = ref({
 });
 
 const SearchStore = useSearchStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const {
     form,
@@ -90,7 +90,9 @@ watch(
             console.log(newModel.id, term?.id)
             if (newModel.id === term?.id) {
                 SearchStore.deselectModel();
-                NotificationStore.addNotification('Term cannot be a relative of itself.');
+                Notifier.notify({
+                    message: 'Term cannot be a relative of itself.',
+                });
                 return;
             }
 

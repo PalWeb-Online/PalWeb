@@ -4,14 +4,12 @@ import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import ToggleSingle from "../ToggleSingle.vue";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {useI18n} from "vue-i18n";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useAuth} from "../../composables/useAuth.js";
 
-const {t, locale} = useI18n();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const {
@@ -58,11 +56,12 @@ const signIn = async () => {
         emit('close');
 
         setTimeout(() => {
-            NotificationStore.addNotification(t('user.notifications.signed-in', {
-                user: locale.value === 'ar'
-                    ? UserStore.user.ar_name
-                    : UserStore.user.name
-            }));
+            Notifier.notify({
+                key: 'user.notifications.signed-in',
+                params: {
+                    user: UserStore.user,
+                },
+            });
         }, 300);
 
     } catch (error) {
@@ -96,7 +95,10 @@ const sendLink = async () => {
     try {
         const {data} = await axios.post(route('password.email'), sendLinkPayload());
 
-        NotificationStore.addNotification(t(data.status), data.success ? 'success' : 'warning');
+        Notifier.notify({
+            key: data.status,
+            type: data.success ? 'success' : 'warning',
+        });
 
         emit('close');
 

@@ -1,7 +1,7 @@
 import {useRouter} from "vue-router";
 import {useSentenceLoader} from "./useSentenceLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useSentenceEditor({
@@ -11,7 +11,7 @@ export function useSentenceEditor({
     const {t} = useI18n();
     const router = useRouter();
     const sentenceLoader = useSentenceLoader();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         sentenceLoader.setSentence(model);
@@ -122,10 +122,13 @@ export function useSentenceEditor({
         );
 
         updatePosition();
-        NotificationStore.addNotification(t('forms.notifications.model-added', {
-            model: t('actions.models.term'),
-            target: t('actions.models.sentence'),
-        }));
+        Notifier.notify({
+            key: 'forms.notifications.model-added',
+            params: {
+                model: t('actions.models.term'),
+                target: t('actions.models.sentence'),
+            },
+        });
     };
 
     const removeTerm = (index) => {

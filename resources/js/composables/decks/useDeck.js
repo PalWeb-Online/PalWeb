@@ -1,5 +1,5 @@
 import {reactive, ref, watch} from "vue";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
@@ -8,7 +8,7 @@ import {useI18n} from "vue-i18n";
 export function useDeck(props = {}, options = {}) {
     const {t, locale} = useI18n();
     const router = useRouter();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const {
         isDeleting: isDeletingDeck,
@@ -103,10 +103,13 @@ export function useDeck(props = {}, options = {}) {
                 }
             }
 
-            NotificationStore.addNotification(t('forms.notifications.model-' + (response.data.isPresent ? 'added' : 'removed'), {
-                model: t('actions.models.term'),
-                target: t('actions.models.deck'),
-            }));
+            Notifier.notify({
+                key: 'forms.notifications.model-' + (response.data.isPresent ? 'added' : 'removed'),
+                params: {
+                    model: t('actions.models.term'),
+                    target: t('actions.models.deck'),
+                },
+            });
 
             return response.data.isPresent;
 
@@ -122,7 +125,9 @@ export function useDeck(props = {}, options = {}) {
         const {data} = await axios.post(route('decks.copy', targetDeck.id));
 
         if (data.success) {
-            NotificationStore.addNotification(t('deck.notifications.copy-success'));
+            Notifier.notify({
+                key: 'deck.notifications.copy-success',
+            });
             router.push({
                 name: 'decks.show',
                 params: {deck: data.deckId},

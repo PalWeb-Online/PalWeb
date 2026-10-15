@@ -8,7 +8,7 @@ import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../composables/useNotifier.js";
 
 defineOptions({
     layout: Layout,
@@ -16,7 +16,7 @@ defineOptions({
 
 const units = ref([]);
 const lessons = ref([]);
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const {
     form,
@@ -86,7 +86,10 @@ const saveCourse = async () => {
         if (error?.response?.status === 422) {
             setErrors(error.response.data.errors ?? {});
         } else {
-            NotificationStore.addNotification('Oh no! The Course could not be saved.', 'error');
+            Notifier.notify({
+                message: 'Oh no! The Course could not be saved.',
+                type: 'error',
+            });
         }
 
     } finally {

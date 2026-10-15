@@ -1,17 +1,15 @@
 import {ref} from "vue";
 import {route} from "ziggy-js";
-import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useUserStore} from "../stores/UserStore.js";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useNotifier} from "./useNotifier.js";
 import {syncCsrfToken} from "../utils/csrfToken.js";
 
 export function useAuth() {
-    const {t, locale} = useI18n();
     const router = useRouter();
 
     const UserStore = useUserStore();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const signingOut = ref(false);
     const startingDiscordAuth = ref(false);
@@ -20,17 +18,17 @@ export function useAuth() {
     const notifyFromResponse = (data, fallbackType = 'success') => {
         if (!data?.message) return;
 
-        NotificationStore.addNotification(
-            data.message,
-            data.success === false ? 'error' : fallbackType,
-        );
+        Notifier.notify({
+            message: data.message,
+            type: data.success === false ? 'error' : fallbackType,
+        });
     };
 
     const notifyFromError = (error, fallbackMessage = 'Something went wrong.') => {
-        NotificationStore.addNotification(
-            error?.response?.data?.message ?? fallbackMessage,
-            'error',
-        );
+        Notifier.notify({
+            message: error?.response?.data?.message ?? fallbackMessage,
+            type: 'error',
+        });
     };
 
     const startDiscordAuth = async () => {
@@ -51,10 +49,10 @@ export function useAuth() {
         } catch (error) {
             const status = error?.response?.status;
 
-            NotificationStore.addNotification(
-                error?.response?.data?.message ?? 'Failed to start Discord authentication.',
-                status === 409 ? 'info' : 'error',
-            );
+            Notifier.notify({
+                message: error?.response?.data?.message ?? 'Failed to start Discord authentication.',
+                type: status === 409 ? 'info' : 'error',
+            });
 
         } finally {
             startingDiscordAuth.value = false;
@@ -73,10 +71,10 @@ export function useAuth() {
                 UserStore.setUser(data.user);
             }
 
-            NotificationStore.addNotification(
-                data.message,
-                data.success ? 'success' : 'error',
-            );
+            Notifier.notify({
+                message: data.message,
+                type: data.success ? 'success' : 'error',
+            });
 
         } catch (error) {
             notifyFromError(error, 'Failed to disconnect Discord account.');
@@ -101,9 +99,12 @@ export function useAuth() {
             await afterSignOut?.(data);
 
             setTimeout(() => {
-                NotificationStore.addNotification(t('user.notifications.signed-out', {
-                    user: locale.value === 'ar' ? data.user.ar_name : data.user.name,
-                }));
+                Notifier.notify({
+                    key: 'user.notifications.signed-out',
+                    params: {
+                        user: data.user,
+                    },
+                });
             }, 300);
 
             router.push({name: 'homepage'});

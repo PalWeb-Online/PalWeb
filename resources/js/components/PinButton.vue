@@ -3,12 +3,10 @@ import {ref, watch} from "vue";
 import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import AppTooltip from "./AppTooltip.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import {useI18n} from "vue-i18n";
+import {useNotifier} from "../composables/useNotifier.js";
 
-const {t} = useI18n();
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const tooltip = ref(null);
 
@@ -29,17 +27,20 @@ const pin = async () => {
         }
 
         isPinned.value = !isPinned.value;
-        NotificationStore.addNotification(
-            t(`components.pin-button.notifications.pin-${
+        Notifier.notify({
+            key: `components.pin-button.notifications.pin-${
                 data.isPinned ? 'added' : 'removed'
-            }`, {
+            }`,
+            params: {
                 model: data.modelKey
-            })
-        );
+            },
+        });
 
     } catch (error) {
-        console.error(t('components.pin-button.notifications.pin-error'), error);
-        NotificationStore.addNotification(t('components.pin-button.notifications.pin-error'), 'error');
+        Notifier.notify({
+            key: 'components.pin-button.notifications.pin-error',
+            type: 'error',
+        });
     }
 };
 
@@ -67,5 +68,3 @@ watch(() => props.model, (newModel) => {
         <AppTooltip ref="tooltip"/>
     </template>
 </template>
-
-

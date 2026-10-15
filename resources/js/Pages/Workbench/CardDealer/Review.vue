@@ -4,18 +4,16 @@ import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../composables/useNotifier.js";
 import WindowSection from "../../../components/WindowSection.vue";
 import PopupWindow from "../../../components/Modals/PopupWindow.vue";
 import AppTooltip from "../../../components/AppTooltip.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppButton from "../../../components/AppButton.vue";
-import {useI18n} from "vue-i18n";
 import {useAcademyStateStore} from "../../../stores/AcademyStateStore.js";
 import TermFlashcard from "../../../components/TermFlashcard.vue";
 
-const { t } = useI18n();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const AcademyStateStore = useAcademyStateStore();
 
 const appTooltip = ref(null);
@@ -161,12 +159,18 @@ const dismissCard = async (action) => {
     if (action === 'master') {
         await axios.post(route('cards.master', card.id));
         shouldRefreshAcademyProgress.value = true;
-        NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
+        Notifier.notify({
+            key: 'card.notifications.master-success',
+            type: 'info',
+        });
 
     } else if (action === 'suspend') {
         await axios.post(route('cards.suspend', card.id));
         shouldRefreshAcademyProgress.value = true;
-        NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
+        Notifier.notify({
+            key: 'card.notifications.suspend-success',
+            type: 'info',
+        });
     }
 
     const key = `${card.id}-${index}`;

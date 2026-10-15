@@ -2,7 +2,7 @@ import {ref, watch} from "vue";
 import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
 import {useResourceDelete} from "./useResourceDelete.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useResourceEditor({
@@ -32,9 +32,9 @@ export function useResourceEditor({
                                       onSaveError = null,
                                       onDeleteSuccess = null,
                                       onDeleteError = null,
-                                  }) {
+}) {
     const {t} = useI18n();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const isSaving = ref(false);
     const isLoadingForm = ref(false);
@@ -184,7 +184,12 @@ export function useResourceEditor({
                 setRecentlySuccessful();
 
                 onSaveSuccess?.(response, savedModel, options);
-                NotificationStore.addNotification(t('forms.notifications.save-success', {model: t(`actions.models.${label}`)}), 'success');
+                Notifier.notify({
+                    key: 'forms.notifications.save-success',
+                    params: {
+                        model: t(`actions.models.${label}`),
+                    },
+                });
 
                 return response;
 
@@ -196,7 +201,13 @@ export function useResourceEditor({
                 }
 
                 onSaveError?.(error);
-                NotificationStore.addNotification(t('forms.notifications.save-error', {model: t(`actions.models.${label}`)}), 'error');
+                Notifier.notify({
+                    key: 'forms.notifications.save-error',
+                    params: {
+                        model: t(`actions.models.${label}`),
+                    },
+                    type: 'error',
+                });
 
                 return null;
             }

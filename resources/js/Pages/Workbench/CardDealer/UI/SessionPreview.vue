@@ -7,11 +7,11 @@ import AppTooltip from "../../../../components/AppTooltip.vue";
 import SessionSettings from "./SessionSettings.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useI18n} from "vue-i18n";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 
 const {t} = useI18n();
 const router = useRouter();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const appTooltip = ref(null);
@@ -81,7 +81,12 @@ const purgeNew = async () => {
         const {data} = await axios.post(route('cards.purge'));
 
         if (data.success) {
-            NotificationStore.addNotification(t('card-dealer.session-preview.notifications.purge-success', {count: data.count}));
+            Notifier.notify({
+                key: 'card-dealer.session-preview.notifications.purge-success',
+                params: {
+                    count: data.count,
+                },
+            });
             emit('refresh');
         }
     }

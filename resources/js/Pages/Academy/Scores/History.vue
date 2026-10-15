@@ -17,7 +17,7 @@ import ActivityActions from "../../../components/Actions/ActivityActions.vue";
 import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {useScoreManager} from "../../../composables/useScoreManager.js";
 import {useI18n} from "vue-i18n";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../composables/useNotifier.js";
 
 defineOptions({
     layout: Layout
@@ -35,7 +35,7 @@ const props = defineProps({
 const {getScoreStats} = useScoreManager();
 const {t} = useI18n();
 const router = useRouter();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const showPurgeScores = ref(false);
 const model = ref(null);
@@ -63,7 +63,12 @@ const deleteScore = async (id) => {
     const {data} = await axios.delete(route('scores.destroy', id));
 
     if (data.success) {
-        NotificationStore.addNotification(t('forms.notifications.delete-success', {model: t('actions.models.score')}));
+        Notifier.notify({
+            key: 'forms.notifications.delete-success',
+            params: {
+                model: t('actions.models.score'),
+            },
+        });
 
         if (selectedScore.value?.id === id) {
             router.push({

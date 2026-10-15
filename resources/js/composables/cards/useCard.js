@@ -1,13 +1,13 @@
 import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
 import {useI18n} from "vue-i18n";
 
 export function useCard() {
     const {t} = useI18n();
     const router = useRouter();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const {
         isDeleting: isDeletingCard,
@@ -24,17 +24,26 @@ export function useCard() {
         if (!confirm(t('card.notifications.master-confirm'))) return;
 
         await axios.post(route('cards.master', card.id));
-        NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
+        Notifier.notify({
+            key: 'card.notifications.master-success',
+            type: 'info',
+        });
     };
 
     const toggleSuspend = async (card) => {
         await axios.post(route('cards.suspend', card.id));
 
         if (card.suspended_at) {
-            NotificationStore.addNotification(t('card.notifications.restore-success'), 'info');
+            Notifier.notify({
+                key: 'card.notifications.restore-success',
+                type: 'info',
+            });
 
         } else {
-            NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
+            Notifier.notify({
+                key: 'card.notifications.suspend-success',
+                type: 'info',
+            });
         }
     };
 
@@ -42,7 +51,10 @@ export function useCard() {
         if (!confirm(t('card.notifications.reset-confirm'))) return;
 
         await axios.post(route('cards.reset', card.id));
-        NotificationStore.addNotification(t('card.notifications.reset-success'), 'info');
+        Notifier.notify({
+            key: 'card.notifications.reset-success',
+            type: 'info',
+        });
     };
 
     return {
