@@ -1,12 +1,12 @@
 <script setup>
 import Layout from "../../../Shared/Layout.vue";
-import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
 import Settings from "./Pages/Settings.vue";
 import Quiz from "./Pages/Quiz.vue";
 import Results from "./Pages/Results.vue";
-import {onBeforeUnmount, onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import Practice from "./Pages/Practice.vue";
 import {route} from "ziggy-js";
+import {createDeckStudySession, provideDeckStudySession} from "../../../composables/decks/useDeckStudySession.js";
 
 defineOptions({
     layout: Layout
@@ -16,24 +16,27 @@ const props = defineProps({
     deckId: Number,
 });
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = provideDeckStudySession(createDeckStudySession());
 
-onMounted(async () => {
-    DeckStudyStore.reset();
+const openDeck = async () => {
+    DeckStudySession.reset();
     const {data} = await axios.get(route('deck-master.study.get', props.deckId));
-    DeckStudyStore.data.deck = data.deck;
+    DeckStudySession.data.deck = data.deck;
+};
+
+onMounted(() => {
+    void openDeck();
 });
 
-onBeforeUnmount(() => {
-    DeckStudyStore.reset();
+watch(() => props.deckId, () => {
+    void openDeck();
 });
-
 </script>
 <template>
     <div id="app-body">
-        <Settings v-if="DeckStudyStore.data.step === 'settings'"/>
-        <Practice v-if="DeckStudyStore.data.step === 'practice'"/>
-        <Quiz v-if="DeckStudyStore.data.step === 'quiz'"/>
-        <Results v-if="DeckStudyStore.data.step === 'results'"/>
+        <Settings v-if="DeckStudySession.data.step === 'settings'"/>
+        <Practice v-if="DeckStudySession.data.step === 'practice'"/>
+        <Quiz v-if="DeckStudySession.data.step === 'quiz'"/>
+        <Results v-if="DeckStudySession.data.step === 'results'"/>
     </div>
 </template>

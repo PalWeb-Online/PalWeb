@@ -7,12 +7,12 @@ import TermItem from "../../../../components/TermItem.vue";
 import ToggleSingle from "../../../../components/ToggleSingle.vue";
 import ToggleDouble from "../../../../components/ToggleDouble.vue";
 import QuizzerWindow from "../UI/QuizzerWindow.vue";
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import {useDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
 import AppButton from "../../../../components/AppButton.vue";
 import TermFlashcard from "../../../../components/TermFlashcard.vue";
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = useDeckStudySession();
 
 const cards = reactive([]);
 const carouselRef = ref(null);
@@ -46,7 +46,7 @@ const toStart = () => {
 }
 
 const resetCards = () => {
-    cards.splice(0, cards.length, ...DeckStudyStore.data.terms);
+    cards.splice(0, cards.length, ...DeckStudySession.data.terms);
     currentSlideIndex.value = 0;
     toStart();
 };
@@ -78,7 +78,7 @@ const handleGlobalKeydown = (event) => {
 };
 
 onMounted(() => {
-    cards.splice(0, cards.length, ...DeckStudyStore.data.terms);
+    cards.splice(0, cards.length, ...DeckStudySession.data.terms);
     window.addEventListener('keydown', handleGlobalKeydown);
 });
 
@@ -86,7 +86,7 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleGlobalKeydown);
 });
 
-watch(() => DeckStudyStore.data.terms, (newVal) => {
+watch(() => DeckStudySession.data.terms, (newVal) => {
     cards.splice(0, cards.length, ...newVal);
     currentSlideIndex.value = 0;
     toStart();
@@ -152,7 +152,7 @@ watch(() => DeckStudyStore.data.terms, (newVal) => {
 
     <Carousel
         class="flashcard-carousel"
-        v-if="!DeckStudyStore.data.isLoading"
+        v-if="!DeckStudySession.data.isLoading"
         :items-to-show="1"
         :wrap-around="true"
         ref="carouselRef"

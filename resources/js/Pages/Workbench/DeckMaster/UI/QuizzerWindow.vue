@@ -1,19 +1,28 @@
 <script setup>
 import PinButton from "../../../../components/PinButton.vue";
 import DeckActions from "../../../../components/Actions/DeckActions.vue";
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
 import LessonStatus from "../../../../components/LessonStatus.vue";
+import {computed} from "vue";
+import {injectDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 
-const DeckStudyStore = useDeckStudyStore();
+const props = defineProps({
+    deck: {type: Object, default: null},
+    step: {type: String, default: null},
+});
+
+const DeckStudySession = injectDeckStudySession();
+
+const deck = computed(() => props.deck ?? DeckStudySession?.data.deck ?? null);
+const step = computed(() => props.step ?? DeckStudySession?.data.step ?? 'select');
 </script>
 <template>
     <div class="window-container">
         <div class="window-header">
-            <template v-if="DeckStudyStore.data.step !== 'select'">
-                <RouterLink v-if="DeckStudyStore.data.step === 'settings'" :to="{ name: 'deck-master.index', query: { mode: 'study' } }"
+            <template v-if="step !== 'select'">
+                <RouterLink v-if="step === 'settings'" :to="{ name: 'deck-master.index', query: { mode: 'study' } }"
                       class="material-symbols-rounded">close
                 </RouterLink>
-                <RouterLink v-else :to="{ name: 'deck-master.study', params: { deck: DeckStudyStore.data.deck.id } }" class="material-symbols-rounded">
+                <RouterLink v-else :to="{ name: 'deck-master.study', params: { deck: deck.id } }" class="material-symbols-rounded">
                     arrow_back
                 </RouterLink>
                 <div class="window-header-url">www.palweb.app/workbench/deck-master/study/{deck}</div>
@@ -25,15 +34,15 @@ const DeckStudyStore = useDeckStudyStore();
         </div>
         <div class="window-section-head">
             <h1>{{ $t('components.deck.title') }}</h1>
-            <template v-if="DeckStudyStore.data.deck">
-                <PinButton modelType="deck" :model="DeckStudyStore.data.deck"/>
-                <DeckActions :model="DeckStudyStore.data.deck"/>
+            <template v-if="deck">
+                <PinButton modelType="deck" :model="deck"/>
+                <DeckActions :model="deck"/>
             </template>
         </div>
 
-        <LessonStatus v-if="DeckStudyStore.data.deck?.lesson" :lesson="DeckStudyStore.data.deck.lesson" :model="DeckStudyStore.data.deck"/>
+        <LessonStatus v-if="deck?.lesson" :lesson="deck.lesson" :model="deck"/>
         <div class="window-content-head">
-            <div class="window-content-head-title">{{ DeckStudyStore.data.deck?.name }}</div>
+            <div class="window-content-head-title">{{ deck?.name }}</div>
         </div>
         <slot/>
     </div>

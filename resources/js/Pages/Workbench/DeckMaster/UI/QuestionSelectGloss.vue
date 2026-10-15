@@ -1,9 +1,9 @@
 <script setup>
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import {useDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 import {ref} from "vue";
 import AudioButton from "../../../../components/AudioButton.vue";
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = useDeckStudySession();
 
 const props = defineProps({
     question: Object,
@@ -13,10 +13,10 @@ const props = defineProps({
 })
 
 const toggleSelection = (index) => {
-    if (DeckStudyStore.quiz[props.index].response === Number(index)) {
-        DeckStudyStore.quiz[props.index].response = null;
+    if (DeckStudySession.quiz[props.index].response === Number(index)) {
+        DeckStudySession.quiz[props.index].response = null;
     } else {
-        DeckStudyStore.quiz[props.index].response = Number(index);
+        DeckStudySession.quiz[props.index].response = Number(index);
         startTypingEffect(props.question.options[index]);
     }
 }
@@ -46,7 +46,7 @@ const startTypingEffect = (text) => {
 </script>
 <template>
     <div class="quiz-question">
-        <div v-if="DeckStudyStore.settings.options.promptTerm" class="term-flashcard quiz-glosses flipped" style="cursor: default">
+        <div v-if="DeckStudySession.settings.options.promptTerm" class="term-flashcard quiz-glosses flipped" style="cursor: default">
             <div class="term-flashcard-back">
                 <div class="term-flashcard-head">
                     <div class="term-flashcard-headword">
@@ -64,7 +64,7 @@ const startTypingEffect = (text) => {
                     </div>
                 </div>
                 <div class="term-flashcard-glosses">
-                    <div v-show="DeckStudyStore.quiz[props.index].response" style="line-height: 1.5">
+                    <div v-show="DeckStudySession.quiz[props.index].response" style="line-height: 1.5">
                         {{ displayedText }}
                     </div>
                     <div></div>

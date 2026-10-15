@@ -1,5 +1,5 @@
 <script setup>
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import {useDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 import {computed} from "vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
@@ -12,10 +12,10 @@ import ScoreDetail from "../../../../components/ScoreDetail.vue";
 import WindowSection from "../../../../components/WindowSection.vue";
 import DeckAnswerItem from "../UI/DeckAnswerItem.vue";
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = useDeckStudySession();
 
 const hasNavigationGuard = computed(() => {
-    return !DeckStudyStore.isSaved;
+    return !DeckStudySession.isSaved;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -27,7 +27,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                 <h2>{{ $t('components.common.sections.stats') }}</h2>
             </template>
             <template #content>
-                <ScoreStats :model="DeckStudyStore.data.deck"/>
+                <ScoreStats :model="DeckStudySession.data.deck"/>
             </template>
         </WindowSection>
 
@@ -64,18 +64,18 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             </p>
         </AppTip>
 
-        <ScoreDetail :score="DeckStudyStore.score" :model="DeckStudyStore.data.deck">
+        <ScoreDetail :score="DeckStudySession.score" :model="DeckStudySession.data.deck">
             <div class="quiz-answer-array">
-                <DeckAnswerItem v-for="exercise in DeckStudyStore.score.results" :key="exercise.id"
+                <DeckAnswerItem v-for="exercise in DeckStudySession.score.results" :key="exercise.id"
                                 :exercise="exercise"
-                                :deck="DeckStudyStore.data.deck"
-                                :markCorrect="() => DeckStudyStore.markCorrect(exercise.id)"
+                                :deck="DeckStudySession.data.deck"
+                                :markCorrect="() => DeckStudySession.markCorrect(exercise.id)"
                 />
             </div>
         </ScoreDetail>
 
         <div class="window-footer">
-            <button @click="DeckStudyStore.saveScore" :disabled="DeckStudyStore.isSaved">save & quit</button>
+            <button @click="DeckStudySession.saveScore" :disabled="DeckStudySession.isSaved">save & quit</button>
         </div>
     </QuizzerWindow>
 
