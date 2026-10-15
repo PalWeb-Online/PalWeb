@@ -1415,7 +1415,8 @@
             "queue": "queue",
             "status": {
                 "full": "You already have 100 items in the Queue.",
-                "empty": "The Queue is already empty."
+                "empty": "The Queue is already empty.",
+                "no-valid-items": "There are no valid items in your Dialect currently available for you to record."
             },
             "load": {
                 "button": "load deck",
@@ -1433,16 +1434,51 @@
         "record": {
             "record": "record",
             "upload": "upload",
-            "prompt-start": "Record something to get started!"
+            "prompt-start": "Record something to get started!",
+            "limit-reached": "Limit Reached",
+            "queue-completed": "Queue Completed"
         },
         "check": "check",
+        "titles": {
+            "speaker": "Sound Booth (Speaker)",
+            "queue": "Sound Booth (Queue)"
+        },
+        "microphone": {
+            "allow": "Allow the browser to use your mic in order to proceed.",
+            "prompt-again": "Click here to prompt again."
+        },
+        "alt": {
+            "prompt": "Prompt",
+            "test": "Test",
+            "back": "Back",
+            "forward": "Forward",
+            "record": "Record",
+            "stop": "Stop",
+            "discard": "Discard",
+            "listen": "Listen",
+            "upload": "Upload"
+        },
+        "errors": {
+            "microphone-technical": "There was a technical issue with the microphone.",
+            "microphone-access": "Microphone access was not allowed.",
+            "microphone-not-found": "Microphone not found.",
+            "microphone-unknown": "An unknown microphone error occurred.",
+            "record-init": "Recording could not be initialized.",
+            "record-stash": "Recording could not be stashed. Please try to record the item again.",
+            "record-discard": "Recording could not be discarded. Please try again.",
+            "record-upload": "Recording could not be uploaded. Please try again."
+        },
         "notifications": {
             "flush-queue-confirm": "Are you sure you want to clear the Queue, deleting all your currently stashed recordings (if any)?",
             "remove-item-confirm": "You have a stashed recording for this item. Are you sure you would like to remove it from the Queue before uploading? Your stashed recording will be lost.",
             "auto-queue-success": "Added {count} Pronunciations to the Queue!",
             "auto-queue-error": "Failed to automatically queue Pronunciations.",
             "deck-queue-success": "Added {count} Pronunciations to the Queue from the Deck!",
-            "deck-queue-error": "Failed to queue Pronunciations from the Deck."
+            "deck-queue-error": "Failed to queue Pronunciations from the Deck.",
+            "discard-record-confirm": "Are you sure you want to discard this recording?",
+            "upload-records-confirm": "Are you sure you want to upload all of your recordings?",
+            "stashed-recordings-confirm": "Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the SoundBooth without uploading your stashed recordings, they will be deleted.",
+            "leave-confirm": "Are you sure you want to leave the Sound Booth? Your {count} stashed recordings will be lost."
         }
     },
     "footer": {

@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
 
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            :message="`Are you sure you want to leave the Sound Booth? Your ${session.recordings.statusCount.stashed} stashed recordings will be lost.`"
+            :message="$t('sound-booth.notifications.leave-confirm', { count: session.recordings.statusCount.stashed })"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

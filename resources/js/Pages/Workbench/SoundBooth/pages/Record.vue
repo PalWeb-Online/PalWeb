@@ -75,9 +75,9 @@ onMounted(() => {
                     :class="{
                             'arrow': true,
                             'disabled': session.selectedItem - 1 < 0
-                        }"
+                    }"
                     src="/img/reverse.svg"
-                    alt="Back"
+                    :alt="$t('sound-booth.alt.back')"
                     @click="session.moveBackward"
                 />
                 <div class="rw-record-item">
@@ -92,9 +92,9 @@ onMounted(() => {
                     :class="{
                             'arrow': true,
                             'disabled': session.selectedItem + 1 >= session.queue.length
-                        }"
+                    }"
                     src="/img/play.svg"
-                    alt="Forward"
+                    :alt="$t('sound-booth.alt.forward')"
                     @click="session.moveForward"
                 />
             </div>
@@ -112,7 +112,7 @@ onMounted(() => {
                                 <img
                                     class="toggle-record"
                                     :src="`/img/${!session.state.isRecording ? 'record' : 'stop'}.svg`"
-                                    :alt="!session.state.isRecording ? 'Record' : 'Stop'"
+                                    :alt="!session.state.isRecording ? $t('sound-booth.alt.record') : $t('sound-booth.alt.stop')"
                                     @click="session.toggleRecording"
                                 />
                                 <WizardVUMeter id="rw-vumeter"
@@ -125,13 +125,13 @@ onMounted(() => {
                             <img
                                 class="trash"
                                 src="/img/trash.svg"
-                                alt="Discard"
+                                :alt="$t('sound-booth.alt.discard')"
                                 @click="session.discardRecord(session.queue[session.selectedItem]?.id)"
                             />
                             <img
                                 class="audio"
                                 src="/img/audio.svg"
-                                alt="Listen"
+                                :alt="$t('sound-booth.alt.listen')"
                                 @click="session.playRecord"
                             />
                         </template>
@@ -171,7 +171,7 @@ onMounted(() => {
                                 v-if="session.recordings.statusCount.done < Object.keys(session.recordings.items).length"
                                 class="upload"
                                 src="/img/upload.svg"
-                                alt="Upload"
+                                :alt="$t('sound-booth.alt.upload')"
                                 @click="session.uploadRecords"
                             />
                             <!--                    :disabled="SoundBoothStore.hasPendingRequests"-->
@@ -184,7 +184,7 @@ onMounted(() => {
 
                         <div class="rw-item-counter">
                             <span>{{ session.recordings.statusCount.done }}</span>
-                            of
+                            /
                             <span>{{ Object.keys(session.recordings.items).length }}</span>
                         </div>
                     </template>
@@ -209,12 +209,12 @@ onMounted(() => {
         </section>
     </div>
 
-    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" title="Limit Reached">
+    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" :title="$t('sound-booth.record.limit-reached')">
         <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
             Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
             more.</p>
     </PopupWindow>
-    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" title="Queue Completed">
+    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" :title="$t('sound-booth.record.queue-completed')">
         <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
             uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
     </PopupWindow>

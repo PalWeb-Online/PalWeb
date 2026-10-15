@@ -13,10 +13,12 @@ import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import UserNametag from "../../../../components/UserNametag.vue";
 import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
+import {useI18n} from "vue-i18n";
 
 const UserStore = useUserStore();
 const Notifier = useNotifier();
 const session = useSoundBoothSession();
+const {t} = useI18n();
 
 const testStates = [
     'waiting',
@@ -26,17 +28,17 @@ const testStates = [
 
 const dialects = ref([]);
 const locations = ref([]);
-const genders = ref([
-    {data: 'male', label: 'Male'},
-    {data: 'female', label: 'Female'},
-    {data: 'other', label: 'Other'},
+const genders = computed(() => [
+    {data: 'male', label: t('speaker.gender.male')},
+    {data: 'female', label: t('speaker.gender.female')},
+    {data: 'other', label: t('speaker.gender.other')},
 ]);
-const levels = ref([
-    {data: '1', label: 'Beginner'},
-    {data: '2', label: 'Intermediate'},
-    {data: '3', label: 'Advanced'},
-    {data: '4', label: 'Fluent'},
-    {data: '5', label: 'Native'},
+const levels = computed(() => [
+    {data: '1', label: t('speaker.fluency.1')},
+    {data: '2', label: t('speaker.fluency.2')},
+    {data: '3', label: t('speaker.fluency.3')},
+    {data: '4', label: t('speaker.fluency.4')},
+    {data: '5', label: t('speaker.fluency.5')},
 ]);
 
 const {
@@ -101,6 +103,13 @@ const saveSpeaker = async () => {
             Object.assign(session.speaker, data.speaker);
         }
 
+        Notifier.notify({
+            key: 'forms.notifications.save-success',
+            params: {
+                model: t('actions.models.speaker'),
+            },
+        });
+
         defaults();
 
     } catch (error) {
@@ -108,7 +117,10 @@ const saveSpeaker = async () => {
             setErrors(error.response.data.errors ?? {});
         } else {
             Notifier.notify({
-                message: 'Oh no! Your Speaker profile could not be saved.',
+                key: 'forms.notifications.save-error',
+                params: {
+                    model: t('actions.models.speaker'),
+                },
                 type: 'error',
             });
         }
@@ -130,7 +142,7 @@ onMounted(async () => {
     <div class="window-section-head">
         <h2>{{ $t('speaker.title') }}</h2>
 
-        <PopupWindow title="Sound Booth (Speaker)">
+        <PopupWindow :title="$t('sound-booth.titles.speaker')">
             <div>What is my Speaker profile?</div>
             <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
                 create, so that others can know the dialect & other sociolinguistic information behind what they're
@@ -177,8 +189,10 @@ onMounted(async () => {
 
     <template v-if="!session.state.hasPermission">
         <AppTip>
-            <p>Allow the browser to use your mic in order to proceed.
-                <button @click="session.openRecorder(session.audioParams)">Click here to prompt again.</button>
+            <p>{{ $t('sound-booth.microphone.allow') }}
+                <button @click="session.openRecorder(session.audioParams)">
+                    {{ $t('sound-booth.microphone.prompt-again') }}
+                </button>
             </p>
         </AppTip>
     </template>
@@ -205,7 +219,7 @@ onMounted(async () => {
                         v-if="session.state.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
                         :src="`/img/${session.state.testState === 'recording' ? 'speak' : 'listen'}.svg`"
-                        alt="Prompt"
+                        :alt="$t('sound-booth.alt.prompt')"
                     />
                 </div>
 
@@ -216,6 +230,8 @@ onMounted(async () => {
                         <div class="speaker-data-head">
                             <div>{{ $t('speaker.title')}}</div>
                             <button :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
+                                    :title="$t('forms.actions.save')"
+                                    :aria-label="$t('forms.actions.save')"
                                     class="material-symbols-rounded" @click="saveSpeaker">
                                 save
                             </button>
@@ -266,7 +282,7 @@ onMounted(async () => {
                                                 session.state.testState === 'recording' ? 'record' :
                                                 session.state.testState === 'listening' ? 'stop' : 'play'
                                             }.svg`"
-                    alt="Test"
+                    :alt="$t('sound-booth.alt.test')"
                     @click="session.testRecord"
                 />
             </div>
@@ -274,7 +290,7 @@ onMounted(async () => {
     </template>
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('settings.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

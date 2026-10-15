@@ -314,16 +314,16 @@ export function createSoundBoothSession() {
     };
 
     const errorMessageAssociation = reactive({
-        AbortError: 'Technical issue with the microphone.',
-        NotAllowedError: 'Microphone access was not allowed.',
-        NotFoundError: 'Microphone not found.',
-        NotReadableError: 'Technical issue with the microphone.',
-        OverconstrainedError: 'Microphone not found.',
-        SecurityError: 'Technical issue with the microphone.',
+        AbortError: 'sound-booth.errors.microphone-technical',
+        NotAllowedError: 'sound-booth.errors.microphone-access',
+        NotFoundError: 'sound-booth.errors.microphone-not-found',
+        NotReadableError: 'sound-booth.errors.microphone-technical',
+        OverconstrainedError: 'sound-booth.errors.microphone-not-found',
+        SecurityError: 'sound-booth.errors.microphone-technical',
     });
 
     const showError = (error) => {
-        let message = errorMessageAssociation[error.name] || 'An unknown microphone error occurred.';
+        let message = t(errorMessageAssociation[error.name] || 'sound-booth.errors.microphone-unknown');
 
         state.errorMessage = message;
         console.error('Microphone Error:', error);
@@ -397,7 +397,7 @@ export function createSoundBoothSession() {
                 await record.setBlob(blob);
 
             } catch (error) {
-                setError(item.id, error.message, 'Record could not be initialized.');
+                setError(item.id, error.message, t('sound-booth.errors.record-init'));
                 throw error;
             }
         }
@@ -410,7 +410,7 @@ export function createSoundBoothSession() {
             setStatus(item.id, 'stashed');
 
         } catch (error) {
-            setError(item.id, error.message, 'Record could not be stashed. Please try to record the item again.');
+            setError(item.id, error.message, t('sound-booth.errors.record-stash'));
             throw error;
         }
     };
@@ -429,7 +429,7 @@ export function createSoundBoothSession() {
     };
 
     const discardRecord = async (id) => {
-        if (!confirm('Are you sure you want to discard this recording?')) return;
+        if (!confirm(t('sound-booth.notifications.discard-record-confirm'))) return;
 
         const record = recordings.items[id];
         if (!record) {
@@ -468,7 +468,7 @@ export function createSoundBoothSession() {
 
         } catch (error) {
             console.error(`Error discarding recording with stashKey ${stashKey}:`, error);
-            state.errorMessage = 'Record could not be discarded. Please try again.';
+            state.errorMessage = t('sound-booth.errors.record-discard');
             return false;
         }
     };
@@ -495,7 +495,7 @@ export function createSoundBoothSession() {
     };
 
     const uploadRecords = async () => {
-        if (confirm('Are you sure you want to upload all of your recordings?')) {
+        if (confirm(t('sound-booth.notifications.upload-records-confirm'))) {
             state.isUploading = true;
 
             const stashedIds = Object.keys(recordings.status).filter(
@@ -532,7 +532,7 @@ export function createSoundBoothSession() {
 
                         setStatus(id, 'done');
                     } catch (error) {
-                        setError(id, error.message, 'Record could not be uploaded. Please try again.');
+                        setError(id, error.message, t('sound-booth.errors.record-upload'));
                     }
                 });
             }
@@ -611,7 +611,7 @@ export function createSoundBoothSession() {
 
         if (currentStep?.canMoveNext()) {
             if (currentStep === 'record' && recordings.statusCount.stashed > 0) {
-                if (!confirm('Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the Sound Booth without uploading your stashed recordings, they will be deleted.')) return;
+                if (!confirm(t('sound-booth.notifications.stashed-recordings-confirm'))) return;
             }
 
             state.step = currentStep.nextStep;

@@ -77,7 +77,7 @@ class SpeakerController extends Controller
 
     // -------------------------------------------------------------------------
 
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $user = $request->user();
 
@@ -92,10 +92,9 @@ class SpeakerController extends Controller
         );
         $user->update(['speaker_id' => $speaker->id]);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => 'Your Speaker profile has been saved!']);
-
-        return to_route('sound-booth.index');
+        return response()->json([
+            'term' => new SpeakerResource($speaker),
+        ]);
     }
 
     public function getSpeakerOptions(): JsonResponse

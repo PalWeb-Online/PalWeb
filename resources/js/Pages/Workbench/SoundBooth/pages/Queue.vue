@@ -27,7 +27,7 @@ watch(
     <div class="window-section-head">
         <h2>{{ $t('sound-booth.queue.queue') }}</h2>
 
-        <PopupWindow title="Sound Booth (Queue)">
+        <PopupWindow :title="$t('sound-booth.titles.queue')">
             <div>What is the Queue?</div>
             <p>Terms have many Pronunciations. The <b>Queue</b> is the list of Pronunciation items you will be
                 recording with the <b>Sound Booth</b>.</p>
@@ -74,7 +74,7 @@ watch(
                 </template>
             </draggable>
             <div v-else>
-                Sorry, there are no valid items in your Dialect available for you to record.
+                {{ $t('sound-booth.queue.status.no-valid-items') }}
             </div>
         </div>
 
