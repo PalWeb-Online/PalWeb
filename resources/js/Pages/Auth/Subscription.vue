@@ -3,7 +3,6 @@ import Layout from "../../Shared/Layout.vue";
 import AppTip from "../../components/AppTip.vue";
 import {useNavigationStore} from "../../stores/NavigationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {usePage} from "@inertiajs/vue3";
 
 const NavigationStore = useNavigationStore();
 const UserStore = useUserStore();
@@ -12,7 +11,7 @@ defineOptions({
     layout: Layout,
 });
 
-const page = usePage();
+const showDeniedMessage = false;
 
 const navigate = () => {
     if (!UserStore.isUser) {
@@ -28,7 +27,7 @@ const navigate = () => {
         <h1>{{ $t('subscription.title') }}</h1>
     </div>
     <div id="app-body">
-        <AppTip v-if="page.props.flash.denied">
+        <AppTip v-if="showDeniedMessage">
             <p>{{ $t('subscription.messages.access-denied') }}
                 {{ !UserStore.isUser
                     ? $t('subscription.messages.sign-in-prompt')

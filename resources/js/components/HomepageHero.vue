@@ -2,12 +2,9 @@
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import AppLogo from "../Shared/AppLogo.vue";
 import {useI18n} from "vue-i18n";
-import {usePage} from "@inertiajs/vue3";
 import ZatuneNeutral from "../Shared/ZatuneNeutral.vue";
 
-const {t} = useI18n();
-
-const page = usePage();
+const {t, locale} = useI18n();
 
 const fullText = ref(t('meta.app.subtitle'));
 const displayedText = ref("");
@@ -49,9 +46,10 @@ onBeforeUnmount(() => {
 });
 
 watch(
-    () => page.props.locale,
+    locale,
     (newLocale) => {
         if (newLocale) {
+            clearInterval(typingInterval);
             fullText.value = t('meta.app.subtitle');
             displayedText.value = "";
             startTypingEffect();

@@ -5,8 +5,10 @@ import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 import AppTooltip from "../AppTooltip.vue";
 import {useDeck} from "../../composables/decks/useDeck.js";
+import {useRoute} from "vue-router";
 
 const UserStore = useUserStore();
+const currentRoute = useRoute();
 
 const props = defineProps({
     model: Object,
@@ -31,7 +33,7 @@ const tooltip = ref(null);
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <RouterLink v-if="$page.component !== 'Library/Decks/Show'"
+        <RouterLink v-if="currentRoute.name !== 'decks.show'"
             :to="route('decks.show', model.id)" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.deck') }) }}
         </RouterLink>

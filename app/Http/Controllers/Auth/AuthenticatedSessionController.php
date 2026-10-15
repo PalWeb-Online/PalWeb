@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function show(Request $request): JsonResponse
+    {
+        return response()->json([
+            'user' => $request->user()
+                ? new UserAuthResource($request->user())
+                : null,
+        ]);
+    }
+
     public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();

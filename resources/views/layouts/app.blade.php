@@ -47,7 +47,10 @@
     <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
 </head>
 
-<body class="{{ $bodyBackground ?? '' }}">
-    <div id="app"></div>
+<body>
+    <div
+        id="app"
+        data-utc-offset-minutes="{{ now()->setTimezone('Asia/Jerusalem')->utcOffset() }}"
+    ></div>
 </body>
 </html>

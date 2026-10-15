@@ -3,7 +3,6 @@ import {useNavigationStore} from "../stores/NavigationStore.js";
 import {useSearchStore} from "../stores/SearchStore.js";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import GlobalSettings from "../components/Modals/GlobalSettings.vue";
-import {usePage} from "@inertiajs/vue3";
 import ModalWrapper from "../components/Modals/ModalWrapper.vue";
 import InstallButton from "./InstallButton.vue";
 import {useNotificationStore} from "../stores/NotificationStore.js";
@@ -15,9 +14,9 @@ const SearchStore = useSearchStore();
 
 const showGlobalSettings = ref(false);
 
-const {
-    props: {utcOffsetMinutes},
-} = usePage();
+const utcOffsetMinutes = Number(
+    document.getElementById('app')?.dataset.utcOffsetMinutes ?? 0
+);
 
 const utcOffsetHours = utcOffsetMinutes / 60;
 

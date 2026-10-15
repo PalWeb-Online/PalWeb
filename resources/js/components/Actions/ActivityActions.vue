@@ -3,8 +3,10 @@ import {route} from 'ziggy-js';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useActivity} from "../../composables/activities/useActivity.js";
+import {useRoute} from "vue-router";
 
 const UserStore = useUserStore();
+const currentRoute = useRoute();
 const {deleteActivity} = useActivity();
 
 const props = defineProps({
@@ -14,7 +16,7 @@ const props = defineProps({
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <RouterLink v-if="$page.component !== 'Academy/Activities/Show'"
+        <RouterLink v-if="currentRoute.name !== 'activities.show'"
               :to="route('activities.show', model.id)" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.activity') }) }}
         </RouterLink>

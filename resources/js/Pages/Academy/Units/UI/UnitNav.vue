@@ -2,20 +2,19 @@
 import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {usePage} from "@inertiajs/vue3";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {useAcademyStateStore} from "../../../../stores/AcademyStateStore.js";
 
 const UserStore = useUserStore();
 const AcademyStateStore = useAcademyStateStore();
 const router = useRouter();
+const currentRoute = useRoute();
 
 const props = defineProps({
     unit: {type: Object, required: true},
     activeLesson: {type: Object, required: false},
 })
 
-const page = usePage();
 const isHovering = ref(false);
 const collapseProgress = ref(0);
 const collapsibleInner = ref(null);
@@ -42,10 +41,10 @@ const editRoute = computed(() => {
 });
 
 const isDraft = computed(() => {
-    if (page.component === 'Academy/Units/Show' && !props.unit.published) {
+    if (currentRoute.name === 'units.show' && !props.unit.published) {
         return true;
 
-    } else if (page.component === 'Academy/Lessons/Show' && props.activeLesson && !props.activeLesson.published) {
+    } else if (currentRoute.name === 'lessons.show' && props.activeLesson && !props.activeLesson.published) {
         return true;
     }
 
@@ -176,7 +175,7 @@ watch(() => props.unit, () => {
         </div>
         <div class="unit-progress-bar-wrapper">
             <RouterLink :to="{ name: 'units.show', params: { unit: unit.position } }" class="material-symbols-rounded"
-                  :class="{ active: $page.component === 'Academy/Units/Show' }">
+                  :class="{ active: currentRoute.name === 'units.show' }">
                 home
             </RouterLink>
             <div class="unit-progress-bar">

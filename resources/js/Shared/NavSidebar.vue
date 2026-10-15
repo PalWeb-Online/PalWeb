@@ -3,7 +3,7 @@ import {useUserStore} from "../stores/UserStore.js";
 import {useNavigationStore} from "../stores/NavigationStore.js";
 import {route} from 'ziggy-js';
 import {onMounted, onUnmounted, ref} from "vue";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {Carousel, Slide} from "vue3-carousel";
 import NavAuth from "./NavAuth.vue";
 import SignIn from "../components/Modals/SignIn.vue";
@@ -16,6 +16,7 @@ import {useAuth} from "../composables/useAuth.js";
 
 const {locale} = useI18n();
 const router = useRouter();
+const currentRoute = useRoute();
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -33,6 +34,8 @@ const carouselRef = ref(null);
 const sidebarRef = ref(null);
 
 const showSendMail = ref(false);
+
+const routeIs = (...names) => names.includes(currentRoute.name);
 
 const zIndices = ref({
     home: -1,
@@ -178,7 +181,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('units.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                        'active': ['Academy/Units/Index', 'Academy/Units/Show', 'Academy/Lessons/Show'].includes($page.component),
+                                        'active': routeIs('units.index', 'units.show', 'lessons.show'),
                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -188,7 +191,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('dialogs.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Academy/Dialogs/Index', 'Academy/Dialogs/Show'].includes($page.component),
+                                         'active': routeIs('dialogs.index', 'dialogs.show'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -198,7 +201,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Academy/Scores/Index', 'Academy/Scores/History'].includes($page.component),
+                                         'active': routeIs('scores.index', 'scores.history'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -209,14 +212,14 @@ onMounted(() => {
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
                                 <RouterLink :to="{ name: 'terms.index' }"
                                       class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Terms/Index', 'Library/Terms/Show'].includes($page.component) }"
+                                      :class="{ 'active': routeIs('terms.index', 'terms.show') }"
                                 >
                                     <div>{{ $t('pages.terms.index.title') }}</div>
                                     <div>{{ $t('pages.terms.index.subtitle') }}</div>
                                 </RouterLink>
                                 <RouterLink :to="{ name: 'sentences.index' }"
                                       class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
+                                      :class="{ 'active': routeIs('sentences.index', 'sentences.show') }"
                                 >
                                     <div>{{ $t('pages.sentences.index.title') }}</div>
                                     <div>{{ $t('pages.sentences.index.subtitle') }}</div>
@@ -224,7 +227,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('decks.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Library/Decks/Index', 'Library/Decks/Show'].includes($page.component),
+                                         'active': routeIs('decks.index', 'decks.show'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -234,7 +237,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('audios.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Library/Audios/Index', 'Library/Audios/Speaker'].includes($page.component),
+                                         'active': routeIs('audios.index', 'speaker.show'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -246,7 +249,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('deck-master.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Workbench/DeckMaster/Index', 'Workbench/DeckMaster/Build', 'Workbench/DeckMaster/Study'].includes($page.component),
+                                         'active': routeIs('deck-master.index', 'deck-master.build', 'deck-master.study'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -256,7 +259,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('card-dealer.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Workbench/CardDealer/Index', 'Workbench/CardDealer/Review'].includes($page.component),
+                                         'active': routeIs('card-dealer.index', 'card-dealer.cards', 'card-dealer.review'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -266,7 +269,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('sound-booth.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': $page.component === 'Workbench/SoundBooth/SoundBooth',
+                                         'active': routeIs('sound-booth.index'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -278,7 +281,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('word-logger.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/WordLogger/Index' }"
+                                    :class="{ 'active': routeIs('word-logger.index', 'word-logger.term') }"
                                 >
                                     <div>{{ $t('pages.word-logger.title') }}</div>
                                     <div>{{ $t('pages.word-logger.subtitle') }}</div>
@@ -286,7 +289,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('speech-maker.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/SpeechMaker/SpeechMaker' }"
+                                    :class="{ 'active': routeIs('speech-maker.index', 'speech-maker.dialog', 'speech-maker.dialog-sentence', 'speech-maker.sentence') }"
                                 >
                                     <div>{{ $t('pages.speech-maker.title') }}</div>
                                     <div>{{ $t('pages.speech-maker.subtitle') }}</div>
@@ -294,7 +297,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('lesson-planner.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/LessonPlanner/Course' }"
+                                    :class="{ 'active': routeIs('lesson-planner.index', 'lesson-planner.unit', 'lesson-planner.unit-decks', 'lesson-planner.unit-lesson', 'lesson-planner.lesson', 'lesson-planner.lesson-activity') }"
                                 >
                                     <div>{{ $t('pages.lesson-planner.title') }}</div>
                                     <div>{{ $t('pages.lesson-planner.subtitle') }}</div>

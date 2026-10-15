@@ -3,8 +3,10 @@ import {route} from 'ziggy-js';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useSentence} from "../../composables/sentences/useSentence.js";
+import {useRoute} from "vue-router";
 
 const UserStore = useUserStore();
+const currentRoute = useRoute();
 const {deleteSentence} = useSentence();
 
 const props = defineProps({
@@ -14,7 +16,7 @@ const props = defineProps({
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <RouterLink v-if="$page.component !== 'Library/Sentences/Show'"
+        <RouterLink v-if="currentRoute.name !== 'sentences.show'"
               :to="route('sentences.show', model.id)" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.sentence') }) }}
         </RouterLink>

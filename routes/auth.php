@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('auth/user', [AuthenticatedSessionController::class, 'show'])->name('auth.user');
+
 Route::prefix('auth/discord')->controller(OAuthController::class)->group(function () {
     Route::get('/', 'redirect')->name('auth.discord');
     Route::get('callback', 'callback')->name('auth.discord.callback');

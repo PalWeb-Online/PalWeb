@@ -3,8 +3,10 @@ import {route} from 'ziggy-js';
 import ContextActions from "./ContextActions.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {useDialog} from "../../composables/dialogs/useDialog.js";
+import {useRoute} from "vue-router";
 
 const UserStore = useUserStore();
+const currentRoute = useRoute();
 const {deleteDialog} = useDialog();
 
 const props = defineProps({
@@ -14,7 +16,7 @@ const props = defineProps({
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <RouterLink v-if="$page.component !== 'Academy/Dialogs/Show'"
+        <RouterLink v-if="currentRoute.name !== 'dialogs.show'"
               :to="route('dialogs.show', model.id)" role="menuitem" tabindex="-1">
             {{ $t('actions.common.view', { model: $t('actions.models.dialog') }) }}
         </RouterLink>
