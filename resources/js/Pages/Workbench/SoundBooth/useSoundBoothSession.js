@@ -19,8 +19,6 @@ export function createSoundBoothSession() {
         hasPermission: false,
         isRecording: false,
         isUploading: false,
-        isFrozen: false,
-        // isContentVisible: false,
     });
 
     const speaker = reactive({
@@ -79,8 +77,8 @@ export function createSoundBoothSession() {
     });
 
     watch(audioParams, (newParams) => {
-        if (recorder) {
-            recorder.setConfig(newParams);
+        if (recorder.value) {
+            recorder.value.setConfig(newParams);
         }
     }, {deep: true});
 
@@ -104,7 +102,7 @@ export function createSoundBoothSession() {
     });
 
     const isSelectable = (element) => {
-        return !['up', 'ready', 'stashing'].includes(recordings.status[element]);
+        return element && !['up', 'ready', 'stashing'].includes(recordings.status[element.id]);
     };
 
     const initSelection = () => {
@@ -122,6 +120,8 @@ export function createSoundBoothSession() {
     };
 
     const selectItem = (index) => {
+        if (!queue[index]) return false;
+
         selectedArray[selectedItem.value] = false;
         selectedItem.value = index;
         selectedArray[index] = 'selected';
@@ -131,6 +131,8 @@ export function createSoundBoothSession() {
             if (state.isRecording) stopRecording();
             playRecord();
         }
+
+        return true;
     };
 
     const moveBackward = () => {
@@ -189,6 +191,7 @@ export function createSoundBoothSession() {
 
     const removeItem = async (pronunciation) => {
         const index = queue.indexOf(pronunciation);
+        if (index === -1) return false;
 
         if (recordings.items[pronunciation.id]) {
             if (!confirm(t('sound-booth.notifications.remove-item-confirm'))) return false;
@@ -379,6 +382,8 @@ export function createSoundBoothSession() {
 
         if (error !== false) {
             recordings.statusCount.error++;
+        } else if (recordings.statusCount.error === 0) {
+            state.errorMessage = false;
         }
     };
 
@@ -450,7 +455,7 @@ export function createSoundBoothSession() {
             delete recordings.status[id];
             delete recordings.errors[id];
             recordings.statusCount.stashed--;
-            recordings.errors[id] && recordings.statusCount.error--;
+            !!recordings.errors[id] && recordings.statusCount.error--;
             return true;
 
             // const recordIds = Object.keys(recordings.items);
@@ -474,8 +479,9 @@ export function createSoundBoothSession() {
     };
 
     const clearStash = async () => {
+        if (!speaker.id) return false;
+
         try {
-            // todo: Ziggy error: 'speakerId' parameter is required for route 'stash.clear'.
             await axios.delete(route('stash.clear', speaker.id));
 
             Object.keys(recordings.status).forEach(key => {
@@ -488,9 +494,11 @@ export function createSoundBoothSession() {
             });
 
             console.log('Stash directory cleaned up successfully.');
+            return true;
 
         } catch (error) {
             console.error('Error during stash cleanup:', error.response?.data?.message || error.message);
+            return false;
         }
     };
 
@@ -569,68 +577,42 @@ export function createSoundBoothSession() {
         }
     };
 
+    const hasPendingRequests = computed(() => {
+        return state.isRecording || state.isUploading;
+    });
+
     const prevDisabled = computed(() => {
-        const canMoveBack = steps[state.step]?.canMoveBack();
-        return state.isFrozen || !canMoveBack;
-        // return state.isFrozen || hasPendingRequests || !canMoveNextPage;
+        return hasPendingRequests.value || !steps[state.step]?.canMoveBack();
     });
 
     const nextDisabled = computed(() => {
-        const canMoveNext = steps[state.step]?.canMoveNext();
-        return state.isFrozen || !canMoveNext;
-        // return state.isFrozen || hasPendingRequests || !canMoveNextPage;
+        return hasPendingRequests.value || !steps[state.step]?.canMoveNext();
     });
 
+    // todo: unused
     const showRetry = computed(() => {
         return state.step === 'record' && recordings.statusCount.error > 0;
     });
 
-    // TODO: this can kind of be replaced with isRecording (i.e. stashing) & isUploading (i.e. uploading)
-    //  since there is no "finalizing"
-    const hasPendingRequests = computed(() => {
-        const {stashing, uploading, finalizing} = recordings.statusCount;
-        return (stashing + uploading + finalizing) > 1;
-    });
-
     const prevPage = async () => {
         const currentStep = steps[state.step];
+        if (!currentStep?.canMoveBack()) return false;
 
-        if (currentStep?.canMoveBack()) {
-            state.step = currentStep.backStep;
-
-        } else {
-            freeze();
-            currentStep?.canMoveBack()
-                .then(() => state.step = currentStep.backStep)
-                .finally(() => unfreeze());
-        }
+        state.step = currentStep.backStep;
+        return true;
     };
 
     const nextPage = async () => {
         const currentStep = steps[state.step];
+        if (!currentStep?.canMoveNext()) return false;
 
-        if (currentStep?.canMoveNext()) {
-            if (currentStep === 'record' && recordings.statusCount.stashed > 0) {
-                if (!confirm(t('sound-booth.notifications.stashed-recordings-confirm'))) return;
-            }
-
-            state.step = currentStep.nextStep;
-
-        } else {
-            freeze();
-            currentStep?.canMoveNext()
-                .then(() => state.step = currentStep.nextStep)
-                .finally(() => unfreeze());
+        if (state.step === 'record' && recordings.statusCount.stashed > 0) {
+            if (!confirm(t('sound-booth.notifications.stashed-recordings-confirm'))) return false;
         }
+
+        state.step = currentStep.nextStep;
+        return true;
     };
-
-    function freeze() {
-        state.isFrozen = true;
-    }
-
-    function unfreeze() {
-        state.isFrozen = false;
-    }
 
     return reactive({
         state,
@@ -644,7 +626,6 @@ export function createSoundBoothSession() {
         nextPage,
         queue,
         selectedItem,
-        selectedArray,
         initSelection,
         selectItem,
         moveBackward,
@@ -664,8 +645,6 @@ export function createSoundBoothSession() {
         toggleRecording,
         testRecord,
         testPlay,
-        startRecording,
-        stopRecording,
         setStatus,
         setError,
         stashRecord,

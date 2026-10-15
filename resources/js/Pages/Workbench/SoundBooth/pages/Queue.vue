@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue';
+import {ref, watch} from 'vue';
 import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import Draggable from 'vuedraggable';
 import {useSearchStore} from "../../../../stores/SearchStore.js";

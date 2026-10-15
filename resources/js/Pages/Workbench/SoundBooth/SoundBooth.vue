@@ -29,6 +29,7 @@ onMounted(async () => {
 
     if (data.speaker) {
         merge(session.speaker, data.speaker);
+        await session.clearStash();
     }
 });
 
@@ -73,10 +74,6 @@ onBeforeUnmount(() => {
             <Queue v-if="session.state.step === 'queue'"/>
             <Record v-if="session.state.step === 'record'"/>
             <Check v-if="session.state.step === 'check'"/>
-
-            <!--            <div v-if="!session.state.isContentVisible" class="rw-page-loading">-->
-            <!--                <img class="loading" src="/img/wait.svg" alt="Loading"/>-->
-            <!--            </div>-->
         </div>
     </div>
 

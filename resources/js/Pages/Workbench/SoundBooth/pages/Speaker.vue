@@ -134,7 +134,6 @@ onMounted(async () => {
     session.openRecorder(session.audioParams);
     session.state.testState = 'waiting';
     await fetchSpeakerOptions();
-    await session.clearStash();
 });
 </script>
 
