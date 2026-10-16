@@ -33,7 +33,7 @@ const toggleStudentRole = async () => {
 
 <template>
     <ContextActions v-slot="{ closeMenu }">
-        <RouterLink :to="{ name: 'users.edit', params: { user: model.username } }" role="menuitem" tabindex="-1">
+        <RouterLink :to="{ name: 'users.edit', params: { user: model.id } }" role="menuitem" tabindex="-1">
             {{ $t('actions.common.edit', { model: $t('actions.models.user') }) }}
         </RouterLink>
         <button @click="toggleStudentRole(model.id)" role="menuitem" tabindex="-1">

@@ -20,10 +20,6 @@ const props = defineProps({
         type: Number,
         required: true,
     },
-    username: {
-        type: String,
-        required: true,
-    },
 });
 
 const UserStore = useUserStore();
@@ -42,7 +38,6 @@ const {
     userNotFound,
 } = useUserEditor({
     userId: computed(() => props.userId),
-    username: computed(() => props.username),
 });
 
 const {
@@ -178,7 +173,7 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 
         <div v-else class="window-container">
             <div class="window-header">
-                <RouterLink class="material-symbols-rounded" :to="{ name: 'users.show', params: { user: user?.username ?? props.username } }">
+                <RouterLink class="material-symbols-rounded" :to="{ name: 'users.show', params: { user: user?.username } }">
                     arrow_back
                 </RouterLink>
                 <button @click="userForm.private = !userForm.private" class="material-symbols-rounded">
@@ -188,7 +183,7 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
             </div>
             <div class="window-section-head">
                 <h1>{{ $t('user.profile') }}</h1>
-                <RouterLink :to="{ name: 'users.show', params: { user: user?.username ?? props.username } }" class="material-symbols-rounded">
+                <RouterLink :to="{ name: 'users.show', params: { user: user?.username } }" class="material-symbols-rounded">
                     visibility
                 </RouterLink>
             </div>

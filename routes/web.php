@@ -110,7 +110,7 @@ Route::middleware(['auth'])->prefix('/hub')->group(function () {
     Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
 
     Route::prefix('/users')->group(function () {
-        Route::patch('/{user:username}', [UserController::class, 'update'])->name('users.update');
+        Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
         Route::get('/{user:username}/avatars', [AvatarController::class, 'index'])->name('users.avatars.index');
         Route::post('/{user:username}/avatars', [AvatarController::class, 'store'])->name('users.avatars.store');
         Route::post('/{user:username}/teacher', [TeacherController::class, 'store'])->name('users.teacher.store');
@@ -264,7 +264,8 @@ Route::prefix('/api')->group(function () {
     Route::middleware('auth')->get('/community', [CommunityController::class, 'apiIndex'])->name('api.community.index');
 
     Route::prefix('/users')->controller(UserController::class)->group(function () {
-        Route::get('/{user}', 'fetch')->name('api.users.fetch');
+        Route::get('/{user:username}', 'show')->name('api.users.show');
+        Route::get('/{user}/edit', 'edit')->whereNumber('user')->name('api.users.edit');
         Route::patch('/{user}/roles/toggle-student', 'toggleStudentRole')->name('api.users.roles.toggle-student');
     });
 

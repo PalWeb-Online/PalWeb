@@ -5,56 +5,61 @@ import BadgeItem from "../../../components/BadgeItem.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, watch} from "vue";
 import {useQueryFilters} from "../../../composables/QueryFilters.js";
 import UserActions from "../../../components/Actions/UserActions.vue";
 import {useUser} from "../../../composables/users/useUser.js";
 import AppHeading from "../../../components/AppHeading.vue";
+import {useUserViewer} from "../../../composables/users/useUserViewer.js";
+import {useRoute} from "vue-router";
 
 const props = defineProps({
-    userId: Number,
-    username: String,
+    userUsername: {
+        type: String,
+        required: true,
+    },
 });
 
 const UserStore = useUserStore();
-const user = ref(null);
-const decks = ref({data: [], meta: {links: []}});
-const badges = ref([]);
-const speaker = ref(null);
-const filters = ref({sort: 'latest'});
+const route = useRoute();
+
+const {
+    user,
+    decks,
+    badges,
+    speaker,
+    filters,
+    loadUser,
+    reloadUser,
+} = useUserViewer();
+
 const {isStudent} = useUser(user);
 
 const canCreateTeacher = computed(() => {
     return isStudent.value && UserStore.isAdmin
 });
 
-const {updateFilter} = useQueryFilters(filters);
+useQueryFilters(filters);
 
 const unlockedBadges = computed(() => badges.value.map(badge => ({
     ...badge,
     unlocked: user.value?.badges?.some(unlockedBadge => unlockedBadge.id === badge.id) ?? false,
 })));
 
-onMounted(async () => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('api.users.fetch', {
-        user: props.userId,
-        ...params,
-    }), {
-        params: {
-            include: 'show',
-        },
-    });
+const currentQuery = () => ({...route.query});
 
-    user.value = data.user;
-    decks.value = data.decks;
-    badges.value = data.badges;
-    speaker.value = data.speaker;
-    filters.value = data.filters;
-});
+onMounted(() => loadUser(props.userUsername, {
+    params: currentQuery(),
+}));
+
+watch(
+    () => [props.userUsername, route.query],
+    () => reloadUser(props.userUsername, {
+        params: currentQuery(),
+    })
+);
 
 defineOptions({
     layout: Layout
@@ -75,7 +80,7 @@ defineOptions({
                 <h1>{{ $t('user.profile')}}</h1>
                 <UserActions v-if="UserStore.isAdmin" :model="user"/>
                 <RouterLink v-else-if="user.id === UserStore.user.id"
-                      :to="{ name: 'users.edit', params: { user: user.username } }" class="material-symbols-rounded">edit
+                      :to="{ name: 'users.edit', params: { user: user.id } }" class="material-symbols-rounded">edit
                 </RouterLink>
             </div>
             <AppTip v-if="user.id === UserStore.user.id && !UserStore.user.is_verified">
@@ -114,7 +119,7 @@ defineOptions({
                     </div>
                 </div>
                 <RouterLink v-else-if="canCreateTeacher" class="portal-button"
-                      :to="{ name: 'users.edit', params: { user: user.username } }"
+                      :to="{ name: 'users.edit', params: { user: user.id } }"
                       style="margin-block: 3.2rem; justify-self: center"
                 >
                     {{ $t('teacher.create') }}

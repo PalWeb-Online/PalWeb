@@ -14,11 +14,6 @@ export function useTermLoader() {
             term: termIdentifier,
             ...(options.params ?? {}),
         }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
         extractModel: (response) => response.data.terms ?? [],
     });
 

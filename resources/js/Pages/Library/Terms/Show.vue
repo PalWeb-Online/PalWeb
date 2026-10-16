@@ -40,7 +40,6 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-
     <LoadingSpinner v-if="isLoadingTerms"/>
     <AppTip v-else-if="termsNotFound">
         <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>

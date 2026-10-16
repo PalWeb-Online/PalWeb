@@ -315,8 +315,7 @@ const router = createRouter({
                             name: 'users.show',
                             component: UserShow,
                             props: route => ({
-                                userId: identifier(route.params.user),
-                                username: route.params.user,
+                                userUsername: String(route.params.user),
                             }),
                             meta: { title: route => `Pal: ${route.params.user}` },
                         },
@@ -326,7 +325,6 @@ const router = createRouter({
                             component: UserEdit,
                             props: route => ({
                                 userId: identifier(route.params.user),
-                                username: route.params.user,
                             }),
                             meta: { title: 'Edit Profile' },
                         },

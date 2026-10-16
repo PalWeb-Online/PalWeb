@@ -15,72 +15,45 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
-use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function show(User $user, Request $request): \Inertia\Response
+    public function show(Request $request, User $user): JsonResponse
     {
         Gate::authorize('interact', $user);
 
-        return Inertia::render('Community/Users/Show', [
-            'section' => 'community',
-            'userId' => $user->id,
-            'username' => $user->username,
-        ]);
-    }
+        $filters = array_merge(['sort' => 'latest'], $request->only(['sort']));
 
-    public function edit(User $user): \Inertia\Response
-    {
-        Gate::authorize('modify', $user);
+        $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
+        $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
-        return Inertia::render('Community/Users/Edit', [
-            'section' => 'community',
-            'userId' => $user->id,
-            'username' => $user->username,
-        ]);
-    }
+        $sort = $request->string('sort')->toString();
+        $decks = $user->decks()
+            ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
+            ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
+            ->paginate(25)
+            ->withQueryString();
+        $deckResource = DeckResource::collection($decks);
 
-    public function fetch(Request $request, User $user): JsonResponse
-    {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
-
-        if ($includes->contains('show')) {
-            Gate::authorize('interact', $user);
-
-            $filters = array_merge(['sort' => 'latest'], $request->only(['sort']));
-
-            $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
-            $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
-
-            $sort = $request->string('sort')->toString();
-            $decks = $user->decks()
-                ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
-                ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
-                ->paginate(25)
-                ->withQueryString();
-            $deckResource = DeckResource::collection($decks);
-
-            return response()->json([
-                'filters' => $filters,
-                'user' => new UserShowResource($user),
-                'decks' => [
-                    'data' => $deckResource->toArray($request),
-                    'meta' => [
-                        'links' => $decks->linkCollection()->toArray(),
-                        'current_page' => $decks->currentPage(),
-                        'last_page' => $decks->lastPage(),
-                        'total' => $decks->total(),
-                    ],
+        return response()->json([
+            'filters' => $filters,
+            'user' => new UserShowResource($user),
+            'decks' => [
+                'data' => $deckResource->toArray($request),
+                'meta' => [
+                    'links' => $decks->linkCollection()->toArray(),
+                    'current_page' => $decks->currentPage(),
+                    'last_page' => $decks->lastPage(),
+                    'total' => $decks->total(),
                 ],
-                'badges' => Badge::all(),
-                'speaker' => $speaker ? new SpeakerResource($speaker) : null,
-            ]);
-        }
+            ],
+            'badges' => Badge::all(),
+            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+        ]);
+    }
 
+    public function edit(User $user): JsonResponse
+    {
         Gate::authorize('modify', $user);
         $user->load(['dialect', 'teacher', 'roles', 'uploadedAvatars']);
 
@@ -143,7 +116,10 @@ class UserController extends Controller
             'srs_settings.review_limit' => ['integer', 'min:0', 'max:300'],
             'srs_settings.learning_steps' => ['integer', 'min:1', 'max:5'],
             'srs_settings.prompt_type' => ['string'],
-            'theme' => ['required_without:srs_settings', Rule::in(['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'])],
+            'theme' => [
+                'required_without:srs_settings',
+                Rule::in(['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'])
+            ],
         ]);
 
         $preferences = $user->preferences ?? [];
