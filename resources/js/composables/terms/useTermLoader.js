@@ -10,8 +10,8 @@ export function useTermLoader() {
         setModel: setTerms,
         fetchModel: fetchTerms,
     } = useResourceLoader({
-        getUrl: (termId, options = {}) => route(options.routeName ?? 'api.terms.fetch', {
-            term: termId,
+        getUrl: (termIdentifier, options = {}) => route(options.routeName, {
+            term: termIdentifier,
             ...(options.params ?? {}),
         }),
         getRequestConfig: (options = {}) => ({
@@ -24,6 +24,16 @@ export function useTermLoader() {
 
     const primaryTerm = computed(() => terms.value?.[0] ?? null);
 
+    const fetchShowTerms = (termSlug, options = {}) => fetchTerms(termSlug, {
+        ...options,
+        routeName: 'api.terms.show',
+    });
+
+    const fetchEditTerms = (termId, options = {}) => fetchTerms(termId, {
+        ...options,
+        routeName: 'api.terms.edit',
+    });
+
     return {
         terms,
         primaryTerm,
@@ -31,5 +41,7 @@ export function useTermLoader() {
         isLoadingTerms,
         setTerms,
         fetchTerms,
+        fetchShowTerms,
+        fetchEditTerms,
     };
 }

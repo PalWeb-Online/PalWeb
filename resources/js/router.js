@@ -197,7 +197,7 @@ const router = createRouter({
                             path: ':term',
                             name: 'terms.show',
                             component: TermShow,
-                            props: route => ({ termId: identifier(route.params.term) }),
+                            props: route => ({ termSlug: String(route.params.term) }),
                             meta: { title: 'Dictionary' },
                         },
                     ],

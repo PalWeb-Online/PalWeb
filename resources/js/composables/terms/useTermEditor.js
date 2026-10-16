@@ -108,10 +108,7 @@ export function useTermEditor({
         extractSavedModel: (response) => response.data.term ?? response.data.data ?? null,
         getLoadIdentifier: () => termId.value,
         fetchModel: async (termId) => {
-            const terms = await termLoader.fetchTerms(termId, {
-                include: 'edit',
-            });
-
+            const terms = await termLoader.fetchEditTerms(termId);
             return terms?.[0] ?? null;
         },
         resetModel: termLoader.setTerms,

@@ -9,8 +9,8 @@ import AppTip from "../../../components/AppTip.vue";
 defineOptions({layout: Layout});
 
 const props = defineProps({
-    termId: {
-        type: Number,
+    termSlug: {
+        type: String,
         required: true,
     },
 });
@@ -24,11 +24,11 @@ const {
     reloadTerms,
 } = useTermViewer();
 
-onMounted(() => loadTerms(props.termId));
+onMounted(() => loadTerms(props.termSlug));
 
 watch(
-    () => props.termId,
-    () => reloadTerms(props.termId)
+    () => props.termSlug,
+    () => reloadTerms(props.termSlug)
 );
 
 const pageTitle = computed(() => {

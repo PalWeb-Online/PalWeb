@@ -59,7 +59,7 @@ class TermController extends Controller
         ]);
     }
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 
@@ -98,63 +98,56 @@ class TermController extends Controller
         ]);
     }
 
-    public function fetch(Request $request, Term $term): JsonResponse
+    public function show(Term $term): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
+        $termIds = $this->termRepository->getLikeTermIds($term);
 
-        $payload = [];
+        $terms = Term::query()
+            ->whereIn('id', $termIds)
+            ->orderByRaw(
+                'FIELD(id, '.$termIds->map(fn () => '?')->implode(',').')',
+                $termIds->all()
+            )
+            ->with([
+                'spellings',
+                'attributes',
+                'root',
+                'patterns',
+                'pronunciations.audios.speaker',
+                'glosses.attributes',
+                'inflections',
+                'relatives',
+                'relatedBy',
+                'cards',
+                'decks' => fn ($q) => $q->limit(10),
+            ])
+            ->withCount('pronunciations')
+            ->get();
 
-        if ($includes->contains('show') || $includes->isEmpty()) {
-            $termIds = $this->termRepository->getLikeTermIds($term);
-
-            $terms = Term::query()
-                ->whereIn('id', $termIds)
-                ->orderByRaw(
-                    'FIELD(id, '.$termIds->map(fn () => '?')->implode(',').')',
-                    $termIds->all()
-                )
-                ->with([
-                    'spellings',
-                    'attributes',
-                    'root',
-                    'patterns',
-                    'pronunciations.audios.speaker',
-                    'glosses.attributes',
-                    'inflections',
-                    'relatives',
-                    'relatedBy',
-                    'cards',
-                    'decks' => fn ($q) => $q->limit(10),
-                ])
-                ->withCount('pronunciations')
-                ->get();
-
-            $this->termService->hydrateGlossSentences($terms);
-
-            $payload = TermShowResource::collection($terms);
-
-        } else {
-            if ($includes->contains('edit')) {
-                $term->load([
-                    'spellings',
-                    'attributes',
-                    'root',
-                    'patterns',
-                    'pronunciations',
-                    'glosses.attributes',
-                    'inflections',
-                    'relatives',
-                ]);
-
-                $payload[] = new TermShowResource($term);
-            }
-        }
+        $this->termService->hydrateGlossSentences($terms);
 
         return response()->json([
-            'terms' => $payload,
+            'terms' => TermShowResource::collection($terms),
+        ]);
+    }
+
+    public function edit(Term $term): JsonResponse
+    {
+        $term->load([
+            'spellings',
+            'attributes',
+            'root',
+            'patterns',
+            'pronunciations',
+            'glosses.attributes',
+            'inflections',
+            'relatives',
+        ]);
+
+        return response()->json([
+            'terms' => [
+                new TermShowResource($term)
+            ],
         ]);
     }
 
