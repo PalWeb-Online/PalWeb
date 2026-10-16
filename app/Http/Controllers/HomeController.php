@@ -16,16 +16,9 @@ use App\Models\User;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class HomeController extends Controller
 {
-    public function index(): Response
-    {
-        return Inertia::render('Home');
-    }
-
     public function apiIndex(TermService $termService): JsonResponse
     {
         $counts = Cache::remember('public_model_counts', now()->addHour(), function () {

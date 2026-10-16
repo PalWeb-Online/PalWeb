@@ -12,7 +12,7 @@ use Throwable;
 
 class CardController extends Controller
 {
-    public function update(Request $request, Card $card)
+    public function update(Request $request, Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
@@ -30,51 +30,36 @@ class CardController extends Controller
         ]);
     }
 
-    public function master(Request $request, Card $card)
+    public function master(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->master();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card mastered.',
         ]);
     }
 
-    public function suspend(Request $request, Card $card)
+    public function suspend(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->suspended_at ? $card->restore() : $card->suspend();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card suspended.',
         ]);
     }
 
-    public function reset(Request $request, Card $card)
+    public function reset(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->reset();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card reset.',
         ]);
     }
 

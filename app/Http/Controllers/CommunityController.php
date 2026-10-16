@@ -11,17 +11,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use Inertia\Inertia;
 
 class CommunityController extends Controller
 {
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Community/Users/Index', [
-            'section' => 'community',
-        ]);
-    }
-
     public function apiIndex(): JsonResponse
     {
         $teachers = User::query()

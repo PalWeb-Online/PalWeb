@@ -10,11 +10,11 @@ use App\Models\Sentence;
 use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
 use Throwable;
@@ -38,7 +38,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function getMany(Request $request)
+    public function getMany(Request $request): AnonymousResourceCollection
     {
         $request->validate([
             'ids' => 'required|array',
@@ -49,21 +49,6 @@ class SentenceController extends Controller
 
         return SentenceResource::collection($sentences)->keyBy('id');
     }
-
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Library/Sentences/Index');
-    }
-
-    public function show(Sentence $sentence): \Inertia\Response
-    {
-        return Inertia::render('Library/Sentences/Show', [
-            'sentenceId' => $sentence->id,
-        ]);
-    }
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
 
     public function apiIndex(Request $request, SearchService $searchService): JsonResponse
     {
@@ -121,8 +106,6 @@ class SentenceController extends Controller
             'sentence' => new SentenceResource($sentence),
         ]);
     }
-
-    // -------------------------------------------------------------------------
 
     public function store(UpsertSentenceRequest $request): JsonResponse
     {

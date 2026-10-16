@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
 use Throwable;
@@ -46,22 +45,6 @@ class DeckController extends Controller
             'modelKey' => $deck->name,
         ]);
     }
-
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Library/Decks/Index');
-    }
-
-    public function show(Deck $deck): \Inertia\Response
-    {
-        return Inertia::render('Library/Decks/Show', [
-            'deckId' => $deck->id,
-        ]);
-    }
-
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
 
     public function apiIndex(Request $request, SearchService $searchService): JsonResponse
     {
@@ -147,8 +130,6 @@ class DeckController extends Controller
             'deck' => new DeckResource($deck),
         ]);
     }
-
-    // -------------------------------------------------------------------------
 
     public function store(UpsertDeckRequest $request): JsonResponse
     {

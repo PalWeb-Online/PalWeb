@@ -11,17 +11,9 @@ use App\Models\Pronunciation;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class SoundBoothController extends Controller
 {
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Workbench/SoundBooth/SoundBooth', [
-            'section' => 'workbench',
-        ]);
-    }
-
     public function fetchSpeaker(): JsonResponse
     {
         $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
@@ -86,6 +78,7 @@ class SoundBoothController extends Controller
             foreach ($deck->terms as $term) {
                 foreach ($term->pronunciations as $pronunciation) {
                     if (count($queued) + count($pronunciationsToQueue) >= 100) {
+//                        todo: change notification delivery
                         session()->flash('notification',
                             [
                                 'type' => 'success',

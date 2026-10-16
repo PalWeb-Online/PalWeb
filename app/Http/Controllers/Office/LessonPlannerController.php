@@ -15,17 +15,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 
 class LessonPlannerController extends Controller
 {
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Course', [
-            'section' => 'office',
-        ]);
-    }
-
     public function apiCourse(): JsonResponse
     {
         return response()->json([
@@ -74,30 +66,6 @@ class LessonPlannerController extends Controller
         return to_route('lesson-planner.index');
     }
 
-    public function unit(?Unit $unit = null): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Unit', [
-            'section' => 'office',
-            'unitId' => $unit?->id,
-        ]);
-    }
-
-    public function unitLesson(Unit $unit): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Lesson', [
-            'section' => 'office',
-            'initialUnitId' => $unit->id,
-        ]);
-    }
-
-    public function unitDecks(Unit $unit, TermService $termService): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Decks', [
-            'section' => 'office',
-            'unitId' => $unit->id,
-        ]);
-    }
-
     public function apiUnitDecks(Unit $unit, TermService $termService): JsonResponse
     {
         $deckIds = $unit->lessons()
@@ -123,23 +91,6 @@ class LessonPlannerController extends Controller
         return response()->json([
             'unit' => new UnitResource($unit),
             'decks' => DeckResource::collection($decks),
-        ]);
-    }
-
-    public function lesson(?Lesson $lesson = null): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Lesson', [
-            'section' => 'office',
-            'lessonId' => $lesson?->id,
-        ]);
-    }
-
-    public function lessonActivity(Lesson $lesson): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Activity', [
-            'section' => 'office',
-            'activityId' => $lesson->activity_id,
-            'initialLessonId' => $lesson->id,
         ]);
     }
 }

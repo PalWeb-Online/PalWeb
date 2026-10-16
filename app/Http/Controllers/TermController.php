@@ -31,8 +31,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
-use Inertia\Inertia;
-use Inertia\Response;
 use Maize\Markable\Models\Bookmark;
 use Throwable;
 
@@ -60,22 +58,6 @@ class TermController extends Controller
             'modelKey' => $term->term,
         ]);
     }
-
-    public function index(): Response
-    {
-        return Inertia::render('Library/Terms/Index');
-    }
-
-    public function show(Term $term): Response
-    {
-        return Inertia::render('Library/Terms/Show', [
-            'termId' => $term->id,
-        ]);
-    }
-
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
 
     public function apiIndex(Request $request, SearchService $searchService): JsonResponse
     {
@@ -175,8 +157,6 @@ class TermController extends Controller
             'terms' => $payload,
         ]);
     }
-
-    // -------------------------------------------------------------------------
 
     public function getPronunciations(Term $term): AnonymousResourceCollection
     {

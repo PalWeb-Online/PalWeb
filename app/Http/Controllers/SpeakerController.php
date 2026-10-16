@@ -10,21 +10,9 @@ use App\Models\Location;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class SpeakerController extends Controller
 {
-    public function show(Speaker $speaker): \Inertia\Response
-    {
-        return Inertia::render('Library/Audios/Speaker', [
-            'speakerId' => $speaker->id,
-        ]);
-    }
-
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
-
     public function fetch(Request $request, Speaker $speaker): JsonResponse
     {
         $includes = collect(explode(',', (string) $request->query('include')))
@@ -74,8 +62,6 @@ class SpeakerController extends Controller
 
         return response()->json($payload);
     }
-
-    // -------------------------------------------------------------------------
 
     public function store(Request $request): JsonResponse
     {
