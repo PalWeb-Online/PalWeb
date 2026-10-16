@@ -1299,6 +1299,7 @@
                 "sentences-prompt": "Select the Term that best fits the blank in the Sentence."
             },
             "notifications": {
+                "empty-deck": "You can't Quiz an empty Deck!",
                 "insufficient-items": "Couldn't generate a Quiz with at least 5 questions.",
                 "quiz-generation-error": "Failed to generate Quiz."
             }

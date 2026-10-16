@@ -7,20 +7,34 @@ import {onMounted, watch} from "vue";
 import Practice from "./Pages/Practice.vue";
 import {route} from "ziggy-js";
 import {createDeckStudySession, provideDeckStudySession} from "../../../composables/decks/useDeckStudySession.js";
+import {useNotifier} from '../../../composables/useNotifier.js';
+import {useRouter} from 'vue-router';
 
 defineOptions({
     layout: Layout
 });
 
+const router = useRouter();
+const Notifier = useNotifier();
+const DeckStudySession = provideDeckStudySession(createDeckStudySession());
+
 const props = defineProps({
     deckId: Number,
 });
 
-const DeckStudySession = provideDeckStudySession(createDeckStudySession());
-
 const openDeck = async () => {
     DeckStudySession.reset();
     const {data} = await axios.get(route('deck-master.study.get', props.deckId));
+
+    if (!data.success) {
+        Notifier.notify({
+            key: 'pages.deck-master.notifications.empty-deck',
+            type: 'warning',
+        });
+
+        router.push({ name: 'deck-master.index', query: { mode: 'study' } });
+    }
+
     DeckStudySession.data.deck = data.deck;
 };
 

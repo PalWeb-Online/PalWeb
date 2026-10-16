@@ -30,27 +30,9 @@ class DeckMasterController extends Controller
         ]);
     }
 
-    public function build(?Deck $deck = null): \Inertia\Response
-    {
-        if ($deck) {
-            Gate::authorize('modify', $deck);
-        }
 
-        return Inertia::render('Workbench/DeckMaster/Build', [
-            'section' => 'workbench',
-            'deckId' => $deck?->id,
-        ]);
-    }
 
-    public function study(Deck $deck): \Inertia\Response|RedirectResponse
-    {
-        return Inertia::render('Workbench/DeckMaster/Study', [
-            'section' => 'academy',
-            'deckId' => $deck->id,
-        ]);
-    }
-
-    public function fetchStudyDeck(Deck $deck): JsonResponse|RedirectResponse
+    public function fetchStudyDeck(Deck $deck): JsonResponse
     {
         $deck->load([
             'terms' => fn ($q) => $q
@@ -61,18 +43,16 @@ class DeckMasterController extends Controller
         ]);
 
         if ($deck->terms->isEmpty()) {
-            session()->flash('notification',
-                [
-                    'type' => 'warning',
-                    'message' => __("You can't Quiz an empty Deck!"),
-                ]);
-
-            return to_route('deck-master.index', ['mode' => 'study']);
+            return response()->json([
+                'success' => false,
+                'key' => 'pages.deck-master.notifications.empty-deck',
+            ]);
         }
 
         $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
+            'success' => true,
             'deck' => new DeckResource($deck),
         ]);
     }

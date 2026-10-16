@@ -1299,6 +1299,7 @@
                 "sentences-prompt": "Selecciona el Término que mejor se ajusta al espacio en blanco en la frase."
             },
             "notifications": {
+                "empty-deck": "¡No puedes hacer un Quiz con una Baraja vacía!",
                 "insufficient-items": "No se pudo generar un Quiz con al menos 5 preguntas.",
                 "quiz-generation-error": "No se pudo generar el Quiz."
             }
