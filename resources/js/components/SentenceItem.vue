@@ -3,7 +3,6 @@ import {useSentence} from "../composables/sentences/useSentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import {useRouter} from "vue-router";
 
@@ -50,12 +49,10 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 <template>
     <div v-if="! isLoading && sentence.sentence" class="model-item-container sentence-item-container">
         <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
-            <a v-if="dialog && sentence.dialog"
-                  :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
-                  target="_blank">
-                <div>{{ $t('components.dialog.title') }}</div>
-                <div>{{ sentence.dialog.title }}</div>
-            </a>
+            <RouterLink v-if="dialog && sentence.dialog" :to="{ name: 'dialogs.show', params: { dialog: sentence.dialog.id }, hash: '#position-' + sentence.position}">
+              <div>{{ $t('components.dialog.title') }}</div>
+              <div>{{ sentence.dialog.title }}</div>
+            </RouterLink>
             <div v-if="speaker">
                 <div>{{ $t('components.sentence.speaker') }}</div>
                 <div>{{ sentence.speaker }}</div>

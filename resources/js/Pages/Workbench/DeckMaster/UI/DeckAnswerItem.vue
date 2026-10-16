@@ -1,6 +1,5 @@
 <script setup>
 import {computed} from "vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useDeck} from "../../../../composables/decks/useDeck.js";
 
@@ -45,7 +44,9 @@ const isCorrect = computed(() => {
             </div>
         </div>
         <div class="quiz-answer-options">
-            <a :href="route('terms.show', exercise.term.slug)" target="_blank">{{ $t('components.quiz.answer.see-dictionary') }}</a>
+            <RouterLink :to="{ name: 'terms.show', params: { term: exercise.term.slug } }" target="_blank">
+              {{ $t('components.quiz.answer.see-dictionary') }}
+            </RouterLink>
             <template v-if="deck">
                 <template v-if="UserStore.user.id === deck.author.id">
                     <button @click="toggleTerm(deck, exercise.term)">

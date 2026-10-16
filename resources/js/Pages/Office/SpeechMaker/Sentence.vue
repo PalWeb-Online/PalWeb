@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import PinButton from "../../../components/PinButton.vue";
@@ -154,10 +153,10 @@ watch(() => props.sentenceId, async () => {
             </AppTip>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="form.dialog?.id" class="sentence-dialog-data">
-                    <a :href="route('speech-maker.dialog', form.dialog.id)" target="_blank">
+                    <RouterLink :to="{ name: 'speech-maker.dialog', params: { dialog: form.dialog.id } }">
                         <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ form.dialog.title }}</div>
-                    </a>
+                    </RouterLink>
                     <div>
                         <div>{{ $t('components.sentence.speaker') }}</div>
                         <input v-model="form.speaker"/>

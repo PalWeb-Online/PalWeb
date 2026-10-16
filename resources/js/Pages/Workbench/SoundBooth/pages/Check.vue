@@ -19,8 +19,8 @@ const audios = computed(() =>
     </div>
     <AppTip>
         <p>Check the Audios you have just published. Only the Audios published in this session of the Sound Booth
-            are shown here. Go to <a :href="route('speaker.show', session.speaker.id)" target="_blank">
-                your Speaker profile</a> to see a full list of all the Audios you have ever published. If you would like
+            are shown here. Go to <RouterLink :to="{ name: 'speaker.show', params: { speaker: session.speaker.id } }" target="_blank">
+                your Speaker profile</RouterLink> to see a full list of all the Audios you have ever published. If you would like
             to continue recording more, simply return to the <b>Queue</b> step to add more items — rinse & repeat!</p>
     </AppTip>
 

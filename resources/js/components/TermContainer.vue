@@ -251,8 +251,9 @@ const etymology = computed(() => {
                             {{ constructForms[0].inflection }} ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="term.category === 'verb'">
-                            <a :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
-                                {{ $t('term.filters.form.option', {form: term.patterns[0]?.form}) }}.</a>
+                            <RouterLink :to="{ name: 'wiki.show', params: { page: 'verb-forms' } }" target="_blank" style="font-style: italic">
+                                {{ $t('term.filters.form.option', {form: term.patterns[0]?.form}) }}.
+                            </RouterLink>
                             {{ ' ' }}
                             <template v-for="derivative in derivatives">
                                 <span style="font-weight: 400">{{ derivative.type }}:</span>
@@ -264,8 +265,9 @@ const etymology = computed(() => {
                             </template>
                         </template>
                         <template v-if="term.derived_type">
-                            <a :href="route('wiki.show', 'verb-forms')" target="_blank" style="font-style: italic">
-                                {{ term.derived_type }}.</a>
+                            <RouterLink :to="{ name: 'wiki.show', params: { page: 'verb-forms' } }" target="_blank" style="font-style: italic">
+                                {{ term.derived_type }}.
+                            </RouterLink>
                             {{ ' ' }}
                             <span style="font-weight: 400">verb:</span>
                             {{ ' ' }}

@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {useSentence} from "../composables/sentences/useSentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
@@ -32,11 +31,10 @@ const {sentence, isLoading} = useSentence(props);
             </div>
             <div class="model-item-container sentence-item-container l">
                 <div v-if="sentence.dialog" class="sentence-dialog-data">
-                    <a :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
-                          target="_blank">
+                    <RouterLink :to="{ name: 'dialogs.show', params: { dialog: sentence.dialog.id }, hash: '#position-' + sentence.position}">
                         <div>{{ $t('components.dialog.title') }}</div>
                         <div>{{ sentence.dialog.title }}</div>
-                    </a>
+                    </RouterLink>
                     <div>
                         <div>{{ $t('components.sentence.speaker') }}</div>
                         <div>{{ sentence.speaker }}</div>
@@ -46,10 +44,10 @@ const {sentence, isLoading} = useSentence(props);
                     <div class="model-item-content">
                         <template v-if="sentence.terms.length > 0" v-for="term in sentence.terms">
                             <template v-if="term.id">
-                                <a class="sentence-term" :href="route('terms.show', term.slug)" target="_blank">
+                                <RouterLink class="sentence-term" :to="{ name: 'terms.show', params: { term: term.slug } }">
                                     <div>{{ term.sentencePivot.sent_term }}</div>
                                     <div>{{ term.sentencePivot.sent_translit }}</div>
-                                </a>
+                                </RouterLink>
                             </template>
                             <template v-else>
                                 <div class="sentence-term">
@@ -73,14 +71,14 @@ const {sentence, isLoading} = useSentence(props);
                 <h2>{{ $t('components.common.sections.terms') }}</h2>
             </div>
             <div class="model-list index-list">
-                <TermItem v-for="term in sentence.terms.filter(term => term.id)"
+                <TermItem v-for="term in sentence.terms.filter(t => t.id)"
                           :key="term.id"
                           :model="term"
                           :glossId="term.sentencePivot.gloss_id"
                 />
             </div>
             <div class="terms-count">
-                {{ $t('components.common.counts.terms', {count: sentence.terms.filter(term => term.id).length}) }}
+                {{ $t('components.common.counts.terms', {count: sentence.terms.filter(t => t.id).length}) }}
             </div>
         </div>
     </template>
