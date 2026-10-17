@@ -542,7 +542,10 @@
         "send-feedback": {
             "title": "إرسال تغدية راجعة",
             "placeholder": "هل هناك مشكلة؟ هل هناك كلمات مفقودة من القاموس؟ اخبرنا!",
-            "submit": "قدّم"
+            "submit": "قدّم",
+            "notifications": {
+                "sent-feedback": "شكرا على ملاحظاتك!"
+            }
         },
         "send-mail": {
             "title": "إرسال بريد إلكتروني",
@@ -550,7 +553,10 @@
                 "subject": "الموضوع"
             },
             "placeholder": "ماذا تريد أن تقول؟",
-            "submit": "إرسال"
+            "submit": "إرسال",
+            "notifications": {
+                "mail-queued": "تمّ وضع البريد في قائمة الانتظار!"
+            }
         },
         "sign-in": {
             "title": "تسجيل الدخول",

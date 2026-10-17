@@ -9,10 +9,8 @@ use App\Models\Deck;
 use App\Services\QuizService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
 
 class DeckMasterController extends Controller
 {
@@ -22,18 +20,35 @@ class DeckMasterController extends Controller
     ) {
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function getDecks(Request $request): JsonResponse
     {
-        return Inertia::render('Workbench/DeckMaster/Index', [
-            'section' => 'workbench',
-            'mode' => $request->query('mode', 'build'),
+        $user = $request->user();
+
+        $decks = $request->query('mode') === 'study'
+            ? Deck::query()
+                ->whereHasBookmark($user)
+                ->with([
+                    'terms' => fn ($q) => $q
+                        ->whereNotNull('deck_term.gloss_id')
+                        ->withUserCard(),
+                    'scores'
+                ])
+                ->get()
+            : $user->decks()
+                ->with([
+                    'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
+                ])
+                ->get();
+
+        return response()->json([
+            'decks' => DeckResource::collection($decks),
         ]);
     }
 
-
-
     public function fetchStudyDeck(Deck $deck): JsonResponse
     {
+        Gate::authorize('interact', $deck);
+
         $deck->load([
             'terms' => fn ($q) => $q
                 ->whereNotNull('deck_term.gloss_id')
@@ -68,35 +83,8 @@ class DeckMasterController extends Controller
         ]);
     }
 
-    public function getDecks(Request $request): JsonResponse
-    {
-        $user = $request->user();
-
-        $decks = $request->query('mode') === 'study'
-            ? Deck::query()
-                ->whereHasBookmark($user)
-                ->with([
-                    'terms' => fn ($q) => $q
-                        ->whereNotNull('deck_term.gloss_id')
-                        ->withUserCard(),
-                    'scores'
-                ])
-                ->get()
-            : $user->decks()
-                ->with([
-                    'terms' => fn ($q) => $q->whereNotNull('deck_term.gloss_id'),
-                ])
-                ->get();
-
-        return response()->json([
-            'decks' => DeckResource::collection($decks),
-        ]);
-    }
-
     public function getCards(Deck $deck): JsonResponse
     {
-        Gate::authorize('interact', $deck);
-
         $deck->load([
             'terms' => fn ($q) => $q
                 ->whereNotNull('deck_term.gloss_id')

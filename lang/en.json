@@ -542,7 +542,10 @@
         "send-feedback": {
             "title": "send feedback",
             "placeholder": "Is something broken? Is a word missing from the Dictionary? Let us know!",
-            "submit": "Submit"
+            "submit": "Submit",
+            "notifications": {
+                "sent-feedback": "Thank you for your feedback!"
+            }
         },
         "send-mail": {
             "title": "send mail",
@@ -550,7 +553,10 @@
                 "subject": "Subject"
             },
             "placeholder": "What would you like to say?",
-            "submit": "Send"
+            "submit": "Send",
+            "notifications": {
+                "mail-queued": "Mail has been queued!"
+            }
         },
         "sign-in": {
             "title": "sign in",

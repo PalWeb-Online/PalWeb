@@ -4,10 +4,12 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed, ref} from "vue";
 import CommentItem from "../CommentItem.vue";
+import {useNotifier} from '../../composables/useNotifier.js';
 
 const emit = defineEmits(['close']);
 
 const UserStore = useUserStore();
+const Notifier = useNotifier();
 
 const {
     form,
@@ -30,7 +32,12 @@ const sendFeedback = async () => {
 
     try {
         await axios.post(route('todo.store'), payload());
+
         emit('close');
+
+        Notifier.notify({
+            key: 'modals.send-feedback.notifications.sent-feedback',
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {

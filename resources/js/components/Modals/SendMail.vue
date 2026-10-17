@@ -4,10 +4,12 @@ import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed, ref} from "vue";
 import CommentItem from "../CommentItem.vue";
+import {useNotifier} from '../../composables/useNotifier.js';
 
 const emit = defineEmits(['close']);
 
 const UserStore = useUserStore();
+const Notifier = useNotifier();
 
 const {
     form,
@@ -19,6 +21,7 @@ const {
     subject: '',
     body: '',
 });
+
 const processing = ref(false);
 
 const isValidRequest = computed(() => {
@@ -31,7 +34,12 @@ const sendMail = async () => {
 
     try {
         await axios.post(route('email.store'), payload());
+
         emit('close');
+
+        Notifier.notify({
+            key: 'modals.send-mail.notifications.mail-queued',
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {

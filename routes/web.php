@@ -239,7 +239,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('/feedback')->controller(FeedbackCommentController::class)->group(function () {
-            Route::get('/get', 'apiIndex')->name('feedback.get');
+            Route::get('/get', 'index')->name('feedback.get');
             Route::post('/', 'store')->name('todo.store');
             Route::delete('/{feedbackComment}', 'destroy')->name('todo.destroy');
         });

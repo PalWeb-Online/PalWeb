@@ -6,13 +6,13 @@ use App\Http\Requests\StoreEmailAnnouncementRequest;
 use App\Mail\AnnouncementEmail;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class EmailAnnouncementController extends Controller
 {
-    public function store(StoreEmailAnnouncementRequest $request): RedirectResponse
+    public function store(StoreEmailAnnouncementRequest $request): JsonResponse
     {
         $subject = $request->input('subject');
         $body = $request->input('body');
@@ -27,8 +27,8 @@ class EmailAnnouncementController extends Controller
             }
         }
 
-        session()->flash('notification', ['type' => 'success', 'message' => 'Mail has been queued!']);
-
-        return to_route('homepage');
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

@@ -55,14 +55,12 @@ const signIn = async () => {
 
         emit('close');
 
-        setTimeout(() => {
-            Notifier.notify({
-                key: 'user.notifications.signed-in',
-                params: {
-                    user: UserStore.user,
-                },
-            });
-        }, 300);
+        Notifier.notify({
+            key: 'user.notifications.signed-in',
+            params: {
+                user: UserStore.user,
+            },
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {

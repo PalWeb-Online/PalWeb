@@ -542,7 +542,10 @@
         "send-feedback": {
             "title": "enviar feedback",
             "placeholder": "¿Algo no funciona? ¿Falta alguna palabra en el Diccionario? ¡Dínos!",
-            "submit": "Enviar"
+            "submit": "Enviar",
+            "notifications": {
+                "sent-feedback": "¡Gracias por tu feedback!"
+            }
         },
         "send-mail": {
             "title": "enviar correo",
@@ -550,7 +553,10 @@
                 "subject": "Asunto"
             },
             "placeholder": "¿Qué te gustaría decir?",
-            "submit": "Enviar"
+            "submit": "Enviar",
+            "notifications": {
+                "mail-queued": "¡El correo ha sido agregado a la cola!"
+            }
         },
         "sign-in": {
             "title": "iniciar sesión",
