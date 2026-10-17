@@ -143,7 +143,7 @@ const router = createRouter({
                     name: 'wiki.index',
                     redirect: {
                         name: 'wiki.show',
-                        params: { page: 'about' },
+                        params: { slug: 'about' },
                     },
                 },
                 {
@@ -159,11 +159,11 @@ const router = createRouter({
                     },
                 },
                 {
-                    path: ':page',
+                    path: ':slug',
                     name: 'wiki.show',
                     component: WikiShow,
                     props: route => ({
-                        pageId: identifier(route.params.page),
+                        pageSlug: String(route.params.slug),
                     }),
                     meta: { title: 'Wiki' },
                 },

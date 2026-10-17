@@ -2,10 +2,13 @@
 import {computed} from 'vue';
 import MarkdownIt from 'markdown-it';
 import DOMPurify from 'dompurify';
+import {useRouter} from 'vue-router';
 
 const props = defineProps({
     block: {type: Object, required: true}
 });
+
+const router = useRouter();
 
 const md = new MarkdownIt();
 
@@ -20,7 +23,7 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 
     if (href?.startsWith('wiki:')) {
         const slug = href.replace('wiki:', '');
-        tokens[idx].attrSet('href', route('wiki.show', slug));
+        tokens[idx].attrSet('href', router.resolve({name:'wiki.show', params: {slug: slug}}));
         tokens[idx].attrSet('data-internal', 'true');
 
     } else if (href?.startsWith('http')) {

@@ -294,7 +294,8 @@ Route::prefix('/api')->group(function () {
     Route::prefix('/wiki')->controller(PageController::class)->group(function () {
         Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
         Route::get('/search', 'search')->name('api.wiki.search');
-        Route::get('/{page}', 'fetch')->name('api.wiki.fetch');
+        Route::get('/{page:slug}', 'fetch')->name('api.wiki.show');
+        Route::get('/{page}/edit', 'fetch')->whereNumber('page')->name('api.wiki.edit');
     });
 
     // -------------------------------------------------------------------------

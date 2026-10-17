@@ -18,7 +18,9 @@ import {useUserStore} from "../stores/UserStore.js";
 import GlossItem from "./GlossItem.vue";
 import UserAvatarWrapper from "./UserAvatarWrapper.vue";
 import AppTip from "./AppTip.vue";
+import {useRouter} from 'vue-router';
 
+const router = useRouter();
 const UserStore = useUserStore();
 
 const props = defineProps({
@@ -120,11 +122,23 @@ const glossRelatives = (glossId, types) => {
 };
 
 const attributeLinks = {
-    collective: {text: "nouns", url: route("wiki.show", "nouns")},
-    demonym: {text: "adjectives", url: route("wiki.show", "adjectives")},
-    defect: {text: "adjectives", url: route("wiki.show", "adjectives")},
-    pseudo: {text: "verbs", url: route("wiki.show", "verbs")},
-};
+  collective: {
+    text: "nouns",
+    url: router.resolve({ name: "wiki.show", params: { slug: "nouns" } }).href,
+  },
+  demonym: {
+    text: "adjectives",
+    url: router.resolve({ name: "wiki.show", params: { slug: "adjectives" } }).href,
+  },
+  defect: {
+    text: "adjectives",
+    url: router.resolve({ name: "wiki.show", params: { slug: "adjectives" } }).href,
+  },
+  pseudo: {
+    text: "verbs",
+    url: router.resolve({ name: "wiki.show", params: { slug: "verbs" } }).href,
+  },
+}
 
 const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -251,7 +265,7 @@ const etymology = computed(() => {
                             {{ constructForms[0].inflection }} ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="term.category === 'verb'">
-                            <RouterLink :to="{ name: 'wiki.show', params: { page: 'verb-forms' } }" target="_blank" style="font-style: italic">
+                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank" style="font-style: italic">
                                 {{ $t('term.filters.form.option', {form: term.patterns[0]?.form}) }}.
                             </RouterLink>
                             {{ ' ' }}
@@ -265,7 +279,7 @@ const etymology = computed(() => {
                             </template>
                         </template>
                         <template v-if="term.derived_type">
-                            <RouterLink :to="{ name: 'wiki.show', params: { page: 'verb-forms' } }" target="_blank" style="font-style: italic">
+                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank" style="font-style: italic">
                                 {{ term.derived_type }}.
                             </RouterLink>
                             {{ ' ' }}

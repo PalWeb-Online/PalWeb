@@ -39,7 +39,7 @@ const toggleSection = (slug) => {
             :style="{ '--wiki-nav-depth': depth }"
         >
             <RouterLink
-                :to="{ name: 'wiki.show', params: { page: page.slug } }"
+                :to="{ name: 'wiki.show', params: { slug: page.slug } }"
 
             >
                 <span class="wiki-page-title">{{ page.title }}</span>

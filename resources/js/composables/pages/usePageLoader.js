@@ -14,7 +14,10 @@ export function usePageLoader() {
         setModel: setPage,
         fetchModel: fetchPage,
     } = useResourceLoader({
-        getUrl: (pageId) => route('api.wiki.fetch', pageId),
+        getUrl: (pageIdentifier, options = {}) => route(options.routeName, {
+            page: pageIdentifier,
+            ...(options.params ?? {}),
+        }),
         extractModel: (response) => response.data.page ?? null,
         extractMeta: (response) => ({
             descendantIds: response.data.descendant_ids ?? [],
@@ -36,6 +39,16 @@ export function usePageLoader() {
         }
     };
 
+    const fetchShowPage = (pageSlug, options = {}) => fetchPage(pageSlug, {
+        ...options,
+        routeName: 'api.wiki.show',
+    });
+
+    const fetchEditPage = (pageId, options = {}) => fetchPage(pageId, {
+        ...options,
+        routeName: 'api.wiki.edit',
+    });
+
     return {
         page,
         pageNotFound,
@@ -45,6 +58,8 @@ export function usePageLoader() {
         isLoadingTree,
         setPage,
         fetchPage,
+        fetchShowPage,
+        fetchEditPage,
         fetchWikiTree,
     };
 }

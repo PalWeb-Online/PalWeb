@@ -252,7 +252,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                         {{ $t('actions.common.delete', {model: $t('actions.models.page')}) }}
                     </button>
 
-                    <RouterLink v-if="page" :to="{ name: 'wiki.show', params: { page: page.slug } }">
+                    <RouterLink v-if="page" :to="{ name: 'wiki.show', params: { slug: page.slug } }">
                         {{ $t('actions.common.view', {model: $t('actions.models.page')}) }}
                     </RouterLink>
                     <RouterLink v-else :to="{ name: 'wiki.index' }">

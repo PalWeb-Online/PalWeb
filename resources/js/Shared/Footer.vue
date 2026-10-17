@@ -29,9 +29,9 @@ import AppLogo from "./AppLogo.vue";
             <div class="footer-links-wrapper">
                 <div class="footer-links">
                     <div>{{ $t('footer.links.about.title') }}</div>
-                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'faq' } }">{{ $t('footer.links.about.faq') }}</RouterLink>
-                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'about' } }">{{ $t('footer.links.about.palweb') }}</RouterLink>
-                    <RouterLink :to="{ name: 'wiki.show', params: { page: 'ajp' } }">{{ $t('footer.links.about.spoken-arabic') }}</RouterLink>
+                    <RouterLink :to="{ name: 'wiki.show', params: { slug: 'faq' } }">{{ $t('footer.links.about.faq') }}</RouterLink>
+                    <RouterLink :to="{ name: 'wiki.show', params: { slug: 'about' } }">{{ $t('footer.links.about.palweb') }}</RouterLink>
+                    <RouterLink :to="{ name: 'wiki.show', params: { slug: 'ajp' } }">{{ $t('footer.links.about.spoken-arabic') }}</RouterLink>
                 </div>
                 <div class="footer-links">
                     <div>{{ $t('footer.links.donate.title') }}</div>

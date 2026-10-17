@@ -15,9 +15,9 @@ defineOptions({
 });
 
 const props = defineProps({
-    pageId: {
-        type: Number,
-        required: false,
+    pageSlug: {
+        type: String,
+        required: true,
     },
 });
 
@@ -88,12 +88,12 @@ onMounted(async () => {
     // todo: is the Wiki tree blocking render? what about loading the page?
     await Promise.all([
         fetchWikiTree(),
-        loadPage(props.pageId),
+        loadPage(props.pageSlug),
     ]);
 });
 
-watch(() => props.pageId, async () => {
-    await reloadPage(props.pageId)
+watch(() => props.pageSlug, async () => {
+    await reloadPage(props.pageSlug)
 });
 </script>
 
@@ -139,8 +139,8 @@ watch(() => props.pageId, async () => {
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
                 <p>
-                    <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit', params: { page: page.id } }">Create this Page</RouterLink>
-                    <RouterLink v-else :to="{ name: 'wiki.show' }">Go to Wiki Home</RouterLink>
+                    <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit' }">Create this Page</RouterLink>
+                    <RouterLink v-else :to="{ name: 'wiki.index' }">Go to Wiki Home</RouterLink>
                 </p>
             </div>
             <div v-else-if="page" class="wiki-blocks-wrapper">

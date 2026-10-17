@@ -58,7 +58,7 @@ export function usePageEditor({
         populateForm,
         extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         getLoadIdentifier: () => pageId.value,
-        fetchModel: pageLoader.fetchPage,
+        fetchModel: pageLoader.fetchEditPage,
         resetModel: pageLoader.setPage,
         label: 'page',
         routeBase: 'wiki',
