@@ -1,74 +1,47 @@
 <script setup>
-import {ref, onMounted} from "vue";
+import {computed, ref} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
-import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
 import {useNavigationStore} from "../../../stores/NavigationStore.js";
-import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 
 defineOptions({layout: Layout});
 
-const terms = ref(null);
 const featuredTerm = ref(null);
-const totalCount = ref(0);
-const filters = ref({sort: 'alphabetical'});
-const loading = ref(true);
 
 const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
     'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
 ];
-const selectedLetter = ref(null);
 
-const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchTerms);
-
-async function fetchTerms(params = {}) {
-    loading.value = true;
-    try {
-        const response = await fetch(route('api.terms.index', params));
-        const data = await response.json();
-        terms.value = data.terms;
+const {
+    collection: terms,
+    totalCount,
+    filters,
+    loading,
+    currentPage,
+    pageNumbers,
+    goToPage,
+    updateFilter,
+} = useResourceIndex({
+    routeBase: 'terms',
+    defaultFilters: {sort: 'alphabetical'},
+    toggleFilters: ['letter'],
+    onResponse: (data) => {
         featuredTerm.value = data.featuredTerm;
-        totalCount.value = data.totalCount;
-        filters.value = data.filters;
-        updatePagination(data.terms.meta);
-    } catch (error) {
-        console.error('Failed to fetch terms:', error);
-    } finally {
-        loading.value = false;
-    }
-}
-
-onMounted(() => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    selectedLetter.value = params.letter || null;
-    currentPage.value = parseInt(params.page) || 1;
-    fetchTerms(params);
+    },
 });
 
-function updateFilter({filter, value}) {
-    const searchParams = new URLSearchParams(window.location.search);
-    if (filter === 'letter') {
-        const newLetter = selectedLetter.value === value ? null : value;
-        newLetter ? searchParams.set(filter, newLetter) : searchParams.delete(filter);
-        selectedLetter.value = newLetter;
-    } else {
-        value ? searchParams.set(filter, value) : searchParams.delete(filter);
-    }
-    searchParams.delete('page');
-    currentPage.value = 1;
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchTerms(Object.fromEntries(searchParams.entries()));
-}
+const selectedLetter = computed(() => filters.value.letter ?? null);
 </script>
 
 <template>

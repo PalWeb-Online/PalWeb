@@ -2,26 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
 class LanguageController
 {
-    public function store(Request $request, $language): RedirectResponse
+    public function store(Request $request, $locale): JsonResponse
     {
-        $allowedLanguages = collect(['en', 'es', 'ar']);
+        $allowedLocales = collect(['en', 'es', 'ar']);
 
-        if ($allowedLanguages->contains($language)) {
+        if ($allowedLocales->contains($locale)) {
             $user = $request->user();
             if ($user) {
-                $user->language = $language;
+                $user->language = $locale;
                 $user->save();
             }
 
-            Cookie::queue(Cookie::forever('language', $language));
+            Cookie::queue(Cookie::forever('language', $locale));
         }
 
-        return back();
+        return response()->json([
+            'success' => true,
+            'locale' => $locale
+        ]);
     }
 }

@@ -298,10 +298,6 @@ Route::prefix('/api')->group(function () {
         Route::get('/{page}/edit', 'fetch')->whereNumber('page')->name('api.wiki.edit');
     });
 
-    // -------------------------------------------------------------------------
-    // Library API Routes
-    // -------------------------------------------------------------------------
-
     Route::prefix('/library')->group(function () {
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'index')->name('api.terms.index');
@@ -310,20 +306,31 @@ Route::prefix('/api')->group(function () {
         });
         Route::get('/roots/{root}', [RootController::class, 'fetch'])->name('api.roots.fetch');
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
-            Route::get('/', 'apiIndex')->name('api.sentences.index');
+            Route::get('/', 'index')->name('api.sentences.index');
             Route::get('/{sentence}', 'fetch')->name('api.sentences.fetch');
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('/audios')->group(function () {
-                Route::get('/', [AudioController::class, 'apiIndex'])->name('api.audios.index');
+                Route::get('/', [AudioController::class, 'index'])->name('api.audios.index');
                 Route::get('/{speaker}', [SpeakerController::class, 'fetch'])->name('api.speakers.fetch');
             });
             Route::prefix('/decks')->controller(DeckController::class)->group(function () {
-                Route::get('/', 'apiIndex')->name('api.decks.index');
-                Route::get('/{deck}', 'fetch')->name('api.decks.fetch');
+                Route::get('/', 'index')->name('api.decks.index');
+                Route::get('/{deck}', 'show')->name('api.decks.show');
+                Route::get('/{deck}/edit', 'edit')->name('api.decks.edit');
                 Route::get('/{deck}/get/terms', 'getDeckTerms')->name('api.decks.get.terms');
             });
+        });
+    });
+
+    Route::prefix('/workbench')->group(function () {
+        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
+        ) {
+            Route::get('/', 'index')->name('api.card-dealer.index');
+            Route::post('/get/cards', 'getScopeCards')->name('api.card-dealer.get.cards');
+            Route::get('/cards', 'cards')->name('api.cards.index');
+            Route::get('/review', 'review')->name('api.card-dealer.review');
         });
     });
 });

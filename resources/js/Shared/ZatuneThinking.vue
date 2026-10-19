@@ -115,7 +115,7 @@ onUnmounted(() => clearTimeout(timer))
 }
 
 .cls-4, .cls-3, .cls-5 {
-    stroke: #000;
+    stroke: var(--color-dark-secondary);
 }
 
 .cls-5 {

@@ -31,10 +31,9 @@ const availableLocales = [
     }
 ];
 
-const changeLanguage = async (lang) => {
-    locale.value = lang;
-
-    await axios.post(route('language.store', lang));
+const changeLanguage = async (nextLocale) => {
+    const {data} = await axios.post(route('language.store', nextLocale));
+    locale.value = data.locale;
 };
 
 const toggleNotifications = async (nextValue) => {

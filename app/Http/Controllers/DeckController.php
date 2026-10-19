@@ -46,7 +46,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 
@@ -83,30 +83,28 @@ class DeckController extends Controller
         ]);
     }
 
-    public function fetch(Request $request, Deck $deck): JsonResponse
+    public function show(Deck $deck): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
-
-        if ($includes->contains('show') || $includes->isEmpty()) {
-            Gate::authorize('interact', $deck);
+        Gate::authorize('interact', $deck);
 
             $deck->load(['scores']);
+        $deck->load(['scores']);
 
-        } else {
-            if ($includes->contains('edit')) {
-                Gate::authorize('modify', $deck);
+        return response()->json([
+            'deck' => new DeckResource($deck),
+        ]);
+    }
 
-                $deck->load([
-                    'terms' => fn ($q) => $q
-                        ->withItemData(),
-                ]);
+    public function edit(Deck $deck): JsonResponse
+    {
+        Gate::authorize('modify', $deck);
 
-                $this->termService->hydratePronunciations($deck->terms);
-            }
-        }
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
 
         return response()->json([
             'deck' => new DeckResource($deck),

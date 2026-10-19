@@ -50,7 +50,7 @@ class SentenceController extends Controller
         return SentenceResource::collection($sentences)->keyBy('id');
     }
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 

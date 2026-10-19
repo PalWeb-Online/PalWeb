@@ -48,7 +48,7 @@ const reviewHistory = ref({});
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('card-dealer.get', params));
+    const {data} = await axios.get(route('api.card-dealer.index', params));
 
     scope.value = data.scope ?? scope.value;
     scopeData.deck = data.deck;
@@ -140,7 +140,7 @@ const fetchScopeData = async () => {
             payload.deck = scopeData.deck.id;
         }
 
-        const response = await axios.post(route('card-dealer.get.cards'), payload);
+        const response = await axios.post(route('api.card-dealer.get.cards'), payload);
 
         if (response.data) {
             scopeData.cards = response.data.cards;
@@ -172,7 +172,7 @@ const refreshSessionData = async () => {
         if (mode.value === 'deck') {
             await fetchScopeData();
         } else {
-            const {data} = await axios.get(route('card-dealer.get', {
+            const {data} = await axios.get(route('api.card-dealer.index', {
                 scope: scope.value,
             }));
 

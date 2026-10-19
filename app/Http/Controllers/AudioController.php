@@ -22,7 +22,7 @@ class AudioController extends Controller
     ) {
     }
 
-    public function apiIndex(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         URL::forceScheme('https');
 

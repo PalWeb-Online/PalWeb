@@ -113,14 +113,7 @@ class CardDealerController extends Controller
         ]);
     }
 
-    public function cards(Request $request): \Inertia\Response
-    {
-        return Inertia::render('Workbench/CardDealer/Cards', [
-            'section' => 'academy',
-        ]);
-    }
-
-    public function apiCards(Request $request): JsonResponse
+    public function cards(Request $request): JsonResponse
     {
         $filters = array_merge(['sort' => 'due'], $request->only(['status', 'level', 'sort']));
 
