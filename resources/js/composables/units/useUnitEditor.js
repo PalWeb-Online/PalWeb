@@ -30,7 +30,7 @@ export function useUnitEditor({
         populateForm,
         extractSavedModel: (response) => response.data.unit ?? response.data.data ?? null,
         getLoadIdentifier: () => unitId.value,
-        fetchModel: unitLoader.fetchUnit,
+        fetchModel: unitLoader.fetchEditUnit,
         resetModel: unitLoader.setUnit,
         label: 'unit',
         routeBase: 'units',

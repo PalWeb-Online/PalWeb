@@ -12,47 +12,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Throwable;
 
 class DialogController extends Controller
 {
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Academy/Dialogs/Index', [
-            'section' => 'academy',
-        ]);
-    }
-
-    public function show(Dialog $dialog): \Inertia\Response
-    {
-        Gate::authorize('view', $dialog);
-
-        return Inertia::render('Academy/Dialogs/Show', [
-            'section' => 'academy',
-            'dialogId' => $dialog->id,
-        ]);
-    }
-
-    public function fetch(Request $request, Dialog $dialog): JsonResponse
-    {
-        Gate::authorize('view', $dialog);
-
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
-
-        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
-            $dialog->load('sentences');
-        }
-
-        return response()->json([
-            'dialog' => new DialogResource($dialog),
-        ]);
-    }
-
-    public function apiIndex(): JsonResponse
+    public function index(): JsonResponse
     {
         $dialogs = Dialog::paginate(25)->onEachSide(1);
         $resource = DialogResource::collection($dialogs);
@@ -67,6 +31,29 @@ class DialogController extends Controller
                     'total' => $dialogs->total(),
                 ],
             ],
+        ]);
+    }
+
+    public function show(Dialog $dialog): JsonResponse
+    {
+        Gate::authorize('view', $dialog);
+
+        return $this->fetchDialog($dialog);
+    }
+
+    public function edit(Dialog $dialog): JsonResponse
+    {
+        Gate::authorize('view', $dialog);
+
+        return $this->fetchDialog($dialog);
+    }
+
+    private function fetchDialog(Dialog $dialog): JsonResponse
+    {
+        $dialog->load('sentences');
+
+        return response()->json([
+            'dialog' => new DialogResource($dialog),
         ]);
     }
 

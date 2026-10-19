@@ -1,6 +1,9 @@
 import {ref} from "vue";
+import {route} from "ziggy-js";
 
 export function useResourceLoader({
+                                         routeBase = null,
+                                         routeParam = null,
                                          getUrl,
                                          getRequestConfig = () => ({}),
                                          extractModel,
@@ -18,6 +21,23 @@ export function useResourceLoader({
         onSetModel?.(meta);
     };
 
+    const getRouteUrl = (identifier, action, options = {}) => {
+        if (!routeBase || !routeParam) {
+            throw new Error('routeBase and routeParam are required for convention-based resource loading.');
+        }
+
+        return route(`api.${routeBase}.${action}`, {
+            [routeParam]: identifier,
+            ...(options.params ?? {}),
+        });
+    };
+
+    const resolveUrl = (identifier, options = {}) => {
+        return getUrl
+            ? getUrl(identifier, options)
+            : getRouteUrl(identifier, options.routeAction ?? 'show', options);
+    };
+
     const fetchModel = async (identifier, options = {}) => {
         if (identifier === null || identifier === undefined || identifier === '') {
             setModel();
@@ -29,7 +49,7 @@ export function useResourceLoader({
 
         try {
             const response = await axios.get(
-                getUrl(identifier, options),
+                resolveUrl(identifier, options),
                 getRequestConfig(options),
             );
 
@@ -54,11 +74,22 @@ export function useResourceLoader({
         }
     };
 
+    const fetchShowModel = (identifier, options = {}) => fetchModel(identifier, {
+        ...options,
+        routeAction: 'show',
+    });
+
+    const fetchEditModel = (identifier, options = {}) => fetchModel(identifier, {
+        ...options,
+        routeAction: 'edit',
+    });
+
     return {
         model,
         notFound,
         isLoading,
         setModel,
-        fetchModel,
+        fetchShowModel,
+        fetchEditModel,
     };
 }

@@ -11,12 +11,10 @@ use App\Models\Unit;
 use App\Services\LessonService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Throwable;
 
 class LessonController extends Controller
@@ -26,46 +24,34 @@ class LessonController extends Controller
     ) {
     }
 
-    public function show(Lesson $lesson): \Inertia\Response
+    public function show(Lesson $lesson): JsonResponse
     {
         Gate::authorize('view', $lesson);
 
-        return Inertia::render('Academy/Lessons/Show', [
-            'section' => 'academy',
-            'unitId' => $lesson->unit_id,
-            'lessonId' => $lesson->id,
+        $lesson->load([
+            'unit',
+            'deck.scores',
+            'activity.scores',
+            'dialog.sentences'
         ]);
-    }
-
-    public function fetch(Request $request, Lesson $lesson): JsonResponse
-    {
-        Gate::authorize('view', $lesson);
-
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
-
-        if ($includes->contains('show')) {
-            $lesson->load([
-                'unit',
-                'deck.scores',
-                'activity.scores',
-                'dialog.sentences'
-            ]);
-
-        } else {
-            $lesson->load([
-                'unit',
-                'deck',
-                'activity',
-                'dialog',
-            ]);
-        }
 
         return response()->json([
             'lesson' => new LessonResource($lesson),
-            'unit' => $includes->contains('show') ? new UnitResource($lesson->unit) : [],
+            'unit' => new UnitResource($lesson->unit),
+        ]);
+    }
+
+    public function edit(Lesson $lesson): JsonResponse
+    {
+        $lesson->load([
+            'unit',
+            'deck',
+            'activity',
+            'dialog',
+        ]);
+
+        return response()->json([
+            'lesson' => new LessonResource($lesson),
         ]);
     }
 

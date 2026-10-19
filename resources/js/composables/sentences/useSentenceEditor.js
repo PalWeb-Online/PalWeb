@@ -57,9 +57,7 @@ export function useSentenceEditor({
         populateForm,
         extractSavedModel: (response) => response.data.sentence ?? response.data.data ?? null,
         getLoadIdentifier: () => sentenceId.value,
-        fetchModel: (identifier) => sentenceLoader.fetchSentence(identifier, {
-            include: 'edit',
-        }),
+        fetchModel: sentenceLoader.fetchEditSentence,
         resetModel: sentenceLoader.setSentence,
         label: 'sentence',
         routeBase: 'sentences',

@@ -91,16 +91,19 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function fetch(Request $request, Sentence $sentence): JsonResponse
+    public function show(Sentence $sentence): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
+        return $this->fetchSentence($sentence);
+    }
 
-        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
-            $sentence->load(['dialog']);
-        }
+    public function edit(Sentence $sentence): JsonResponse
+    {
+        return $this->fetchSentence($sentence);
+    }
+
+    private function fetchSentence(Sentence $sentence): JsonResponse
+    {
+        $sentence->load(['dialog']);
 
         return response()->json([
             'sentence' => new SentenceResource($sentence),

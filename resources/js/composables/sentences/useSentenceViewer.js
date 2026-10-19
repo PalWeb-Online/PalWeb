@@ -8,10 +8,7 @@ export function useSentenceViewer() {
         load: loadSentence,
         reload: reloadSentence,
     } = useResourceViewer({
-        fetchModel: (sentenceId, options = {}) => sentenceLoader.fetchSentence(sentenceId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: sentenceLoader.fetchShowSentence,
         resetModel: sentenceLoader.setSentence,
     });
 

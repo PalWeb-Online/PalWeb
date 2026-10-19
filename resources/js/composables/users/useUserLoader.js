@@ -1,5 +1,4 @@
 import {ref} from 'vue';
-import {route} from 'ziggy-js';
 import {useResourceLoader} from '../resources/useResourceLoader.js';
 
 export function useUserLoader() {
@@ -16,12 +15,11 @@ export function useUserLoader() {
         notFound: userNotFound,
         isLoading: isLoadingUser,
         setModel: setUser,
-        fetchModel: fetchUser,
+        fetchShowModel: fetchShowUser,
+        fetchEditModel: fetchEditUser,
     } = useResourceLoader({
-        getUrl: (userIdentifier, options = {}) => route(options.routeName, {
-            user: userIdentifier,
-            ...(options.params ?? {}),
-        }),
+        routeBase: 'users',
+        routeParam: 'user',
         extractModel: (response) => response.data.user ?? null,
         extractMeta: (response) => ({
             decks: response.data.decks ?? {
@@ -43,16 +41,6 @@ export function useUserLoader() {
         },
     });
     
-    const fetchShowUser = (userUsername, options = {}) => fetchUser(userUsername, {
-        ...options,
-        routeName: 'api.users.show',
-    });
-    
-    const fetchEditUser = (userId, options = {}) => fetchUser(userId, {
-        ...options,
-        routeName: 'api.users.edit',
-    });
-    
     return {
         user,
         decks,
@@ -62,7 +50,6 @@ export function useUserLoader() {
         userNotFound,
         isLoadingUser,
         setUser,
-        fetchUser,
         fetchShowUser,
         fetchEditUser,
     };

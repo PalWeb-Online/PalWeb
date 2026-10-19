@@ -94,7 +94,7 @@ export function useLessonEditor({
         populateForm,
         extractSavedModel: (response) => response.data.lesson ?? response.data.data ?? null,
         getLoadIdentifier: () => lessonId.value,
-        fetchModel: lessonLoader.fetchLesson,
+        fetchModel: lessonLoader.fetchEditLesson,
         resetModel: lessonLoader.setLesson,
         label: 'lesson',
         routeBase: 'lessons',

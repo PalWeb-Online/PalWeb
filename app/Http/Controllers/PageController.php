@@ -10,23 +10,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
-use Inertia\Response;
 use Throwable;
 
 class PageController extends Controller
 {
-    public function show(Page $page): Response
+    public function show(Page $page): JsonResponse
     {
-        Gate::authorize('view', $page);
-
-        return Inertia::render('Wiki/Show', [
-            'section' => 'wiki',
-            'pageId' => $page->id,
-        ]);
+        return $this->fetchPage($page);
     }
 
-    public function fetch(Page $page): JsonResponse
+    public function edit(Page $page): JsonResponse
+    {
+        return $this->fetchPage($page);
+    }
+
+    private function fetchPage(Page $page): JsonResponse
     {
         $page->load('parent:id,slug,title');
 
@@ -133,14 +131,6 @@ class PageController extends Controller
             })
             ->values()
             ->all();
-    }
-
-    public function edit(?Page $page = null): Response
-    {
-        return Inertia::render('Wiki/Edit', [
-            'section' => 'wiki',
-            'pageId' => $page?->id,
-        ]);
     }
 
     public function store(UpsertPageRequest $request): JsonResponse

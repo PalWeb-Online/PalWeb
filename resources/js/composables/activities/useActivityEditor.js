@@ -43,7 +43,7 @@ export function useActivityEditor({
         populateForm,
         extractSavedModel: (response) => response.data.activity ?? response.data.data ?? null,
         getLoadIdentifier: () => activityId.value,
-        fetchModel: activityLoader.fetchActivity,
+        fetchModel: activityLoader.fetchEditActivity,
         resetModel: activityLoader.setActivity,
         label: 'activity',
         routeBase: 'activities',

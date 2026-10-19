@@ -8,10 +8,7 @@ export function useDeckViewer() {
         load: loadDeck,
         reload: reloadDeck,
     } = useResourceViewer({
-        fetchModel: (deckId, options = {}) => deckLoader.fetchDeck(deckId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: deckLoader.fetchShowDeck,
         resetModel: deckLoader.setDeck,
     });
 

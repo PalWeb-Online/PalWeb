@@ -177,14 +177,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
 
-        Route::prefix('/card-dealer')->middleware(['student'])->controller(CardDealerController::class)->group(function (
-        ) {
-            Route::get('/get', 'apiIndex')->name('card-dealer.get');
-            Route::get('/cards/get', 'apiCards')->name('card-dealer.cards.get');
-            Route::get('/review/get', 'apiReview')->name('card-dealer.review.get');
-            Route::post('/get/cards', 'getScopeCards')->name('card-dealer.get.cards');
-        });
-
         Route::prefix('/cards')->controller(CardController::class)->group(function () {
             Route::post('/purge', 'purge')->name('cards.purge');
 
@@ -255,10 +247,11 @@ Route::prefix('/api')->group(function () {
 
     Route::middleware(['auth', 'verified', 'student'])->prefix('/academy')->group(function () {
         Route::get('/state', [AcademyStateController::class, 'show'])->name('api.academy.state');
-        Route::get('/units', [UnitController::class, 'apiIndex'])->name('api.academy.units.index');
-        Route::get('/dialogs', [DialogController::class, 'apiIndex'])->name('api.academy.dialogs.index');
+        Route::get('/units', [UnitController::class, 'index'])->name('api.academy.units.index');
+        Route::get('/dialogs', [DialogController::class, 'index'])->name('api.academy.dialogs.index');
         Route::get('/scores', [ScoreController::class, 'apiIndex'])->name('api.academy.scores.index');
-        Route::get('/scores/{scorable_type}/{scorable_id}', [ScoreController::class, 'apiHistory'])->name('api.academy.scores.history');
+        Route::get('/scores/{scorable_type}/{scorable_id}',
+            [ScoreController::class, 'apiHistory'])->name('api.academy.scores.history');
     });
 
     Route::middleware('auth')->get('/community', [CommunityController::class, 'apiIndex'])->name('api.community.index');
@@ -270,7 +263,8 @@ Route::prefix('/api')->group(function () {
     });
 
     Route::prefix('/activities')->controller(ActivityController::class)->group(function () {
-        Route::get('/{activity}', 'fetch')->name('api.activities.fetch');
+        Route::get('/{activity}', 'show')->name('api.activities.show');
+        Route::get('/{activity}/edit', 'edit')->whereNumber('activity')->name('api.activities.edit');
     });
 
     Route::prefix('/decks')->controller(DeckController::class)->group(function () {
@@ -279,23 +273,26 @@ Route::prefix('/api')->group(function () {
 
     Route::prefix('/dialogs')->controller(DialogController::class)->group(function () {
         Route::get('/search', 'search')->name('api.dialogs.search');
-        Route::get('/{dialog}', 'fetch')->name('api.dialogs.fetch');
+        Route::get('/{dialog}', 'show')->name('api.dialogs.show');
+        Route::get('/{dialog}/edit', 'edit')->whereNumber('dialog')->name('api.dialogs.edit');
     });
 
     Route::prefix('/lessons')->controller(LessonController::class)->group(function () {
-        Route::get('/{lesson}', 'fetch')->name('api.lessons.fetch');
+        Route::get('/{lesson:global_position}', 'show')->name('api.lessons.show');
+        Route::get('/{lesson}/edit', 'edit')->whereNumber('lesson')->name('api.lessons.edit');
     });
 
     Route::prefix('/units')->controller(UnitController::class)->group(function () {
         Route::get('/search', 'search')->name('api.units.search');
-        Route::get('/{unit}', 'fetch')->name('api.units.fetch');
+        Route::get('/{unit}', 'show')->name('api.units.show');
+        Route::get('/{unit}/edit', 'edit')->whereNumber('unit')->name('api.units.edit');
     });
 
     Route::prefix('/wiki')->controller(PageController::class)->group(function () {
         Route::get('/tree', 'getWikiTree')->name('api.wiki.tree');
         Route::get('/search', 'search')->name('api.wiki.search');
-        Route::get('/{page:slug}', 'fetch')->name('api.wiki.show');
-        Route::get('/{page}/edit', 'fetch')->whereNumber('page')->name('api.wiki.edit');
+        Route::get('/{page:slug}', 'show')->name('api.wiki.show');
+        Route::get('/{page}/edit', 'edit')->whereNumber('page')->name('api.wiki.edit');
     });
 
     Route::prefix('/library')->group(function () {
@@ -307,7 +304,8 @@ Route::prefix('/api')->group(function () {
         Route::get('/roots/{root}', [RootController::class, 'fetch'])->name('api.roots.fetch');
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'index')->name('api.sentences.index');
-            Route::get('/{sentence}', 'fetch')->name('api.sentences.fetch');
+            Route::get('/{sentence}', 'show')->name('api.sentences.show');
+            Route::get('/{sentence}/edit', 'edit')->whereNumber('sentence')->name('api.sentences.edit');
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {

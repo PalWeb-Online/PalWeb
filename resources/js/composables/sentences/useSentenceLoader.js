@@ -1,4 +1,3 @@
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useSentenceLoader() {
@@ -7,12 +6,11 @@ export function useSentenceLoader() {
         notFound: sentenceNotFound,
         isLoading: isLoadingSentence,
         setModel: setSentence,
-        fetchModel: fetchSentence,
+        fetchShowModel: fetchShowSentence,
+        fetchEditModel: fetchEditSentence,
     } = useResourceLoader({
-        getUrl: (sentenceId, options = {}) => route(options.routeName ?? 'api.sentences.fetch', {
-            sentence: sentenceId,
-            ...(options.params ?? {}),
-        }),
+        routeBase: 'sentences',
+        routeParam: 'sentence',
         getRequestConfig: (options = {}) => ({
             params: {
                 include: options.include ?? null,
@@ -26,6 +24,7 @@ export function useSentenceLoader() {
         sentenceNotFound,
         isLoadingSentence,
         setSentence,
-        fetchSentence,
+        fetchShowSentence,
+        fetchEditSentence,
     };
 }

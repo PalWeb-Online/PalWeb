@@ -74,9 +74,7 @@ export function useDeckEditor({
         populateForm,
         extractSavedModel: (response) => response.data.deck ?? response.data.data ?? null,
         getLoadIdentifier: () => deckId.value,
-        fetchModel: (identifier) => deckLoader.fetchDeck(identifier, {
-            include: 'edit',
-        }),
+        fetchModel: deckLoader.fetchEditDeck,
         resetModel: deckLoader.setDeck,
         label: 'deck',
         routeBase: 'decks',

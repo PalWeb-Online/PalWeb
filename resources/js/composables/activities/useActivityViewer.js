@@ -8,11 +8,7 @@ export function useActivityViewer() {
         load: loadActivity,
         reload: reloadActivity,
     } = useDocumentResourceViewer({
-        fetchModel: (activityId) => activityLoader.fetchActivity(activityId, {
-            include: [
-                'scores'
-            ],
-        }),
+        fetchModel: activityLoader.fetchShowActivity,
         resetModel: activityLoader.setActivity,
         getBlocks: (document) => document?.blocks ?? [],
     });

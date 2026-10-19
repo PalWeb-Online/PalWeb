@@ -12,12 +12,11 @@ export function usePageLoader() {
         notFound: pageNotFound,
         isLoading: isLoadingPage,
         setModel: setPage,
-        fetchModel: fetchPage,
+        fetchShowModel: fetchShowPage,
+        fetchEditModel: fetchEditPage,
     } = useResourceLoader({
-        getUrl: (pageIdentifier, options = {}) => route(options.routeName, {
-            page: pageIdentifier,
-            ...(options.params ?? {}),
-        }),
+        routeBase: 'wiki',
+        routeParam: 'page',
         extractModel: (response) => response.data.page ?? null,
         extractMeta: (response) => ({
             descendantIds: response.data.descendant_ids ?? [],
@@ -39,16 +38,6 @@ export function usePageLoader() {
         }
     };
 
-    const fetchShowPage = (pageSlug, options = {}) => fetchPage(pageSlug, {
-        ...options,
-        routeName: 'api.wiki.show',
-    });
-
-    const fetchEditPage = (pageId, options = {}) => fetchPage(pageId, {
-        ...options,
-        routeName: 'api.wiki.edit',
-    });
-
     return {
         page,
         pageNotFound,
@@ -57,7 +46,6 @@ export function usePageLoader() {
         pageTree,
         isLoadingTree,
         setPage,
-        fetchPage,
         fetchShowPage,
         fetchEditPage,
         fetchWikiTree,

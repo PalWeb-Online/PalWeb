@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useUnitLoader() {
@@ -10,14 +9,11 @@ export function useUnitLoader() {
         notFound: unitNotFound,
         isLoading: isLoadingUnit,
         setModel: setUnit,
-        fetchModel: fetchUnit,
+        fetchShowModel: fetchShowUnit,
+        fetchEditModel: fetchEditUnit,
     } = useResourceLoader({
-        getUrl: (unitId) => route('api.units.fetch', unitId),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
+        routeBase: 'units',
+        routeParam: 'unit',
         extractModel: (response) => response.data.unit ?? null,
         extractMeta: (response) => ({
             lessons: response.data.lessons ?? null,
@@ -33,6 +29,7 @@ export function useUnitLoader() {
         isLoadingUnit,
         lessons,
         setUnit,
-        fetchUnit,
+        fetchShowUnit,
+        fetchEditUnit,
     };
 }

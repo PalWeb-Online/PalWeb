@@ -47,9 +47,7 @@ export function useDialogEditor({
         populateForm,
         extractSavedModel: (response) => response.data.dialog ?? response.data.data ?? null,
         getLoadIdentifier: () => dialogId.value,
-        fetchModel: (identifier) => dialogLoader.fetchDialog(identifier, {
-            include: 'edit',
-        }),
+        fetchModel: dialogLoader.fetchEditDialog,
         resetModel: dialogLoader.setDialog,
         label: 'dialog',
         routeBase: 'dialogs',

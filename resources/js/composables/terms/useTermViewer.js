@@ -8,9 +8,7 @@ export function useTermViewer() {
         load: loadTerms,
         reload: reloadTerms,
     } = useResourceViewer({
-        fetchModel: (termSlug, options = {}) => termLoader.fetchShowTerms(termSlug, {
-            ...options,
-        }),
+        fetchModel: termLoader.fetchShowTerms,
         resetModel: termLoader.setTerms,
     });
 

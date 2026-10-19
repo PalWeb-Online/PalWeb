@@ -8,9 +8,7 @@ export function useUserViewer() {
         load: loadUser,
         reload: reloadUser,
     } = useResourceViewer({
-        fetchModel: (userUsername, options = {}) => userLoader.fetchShowUser(userUsername, {
-            ...options,
-        }),
+        fetchModel: userLoader.fetchShowUser,
         resetModel: () => userLoader.setUser,
     });
 
