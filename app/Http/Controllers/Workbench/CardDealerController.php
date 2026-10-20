@@ -12,9 +12,7 @@ use App\Services\CardDealer\ReviewOptions;
 use App\Services\CardDealer\ReviewService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class CardDealerController extends Controller
 {
@@ -23,18 +21,7 @@ class CardDealerController extends Controller
     ) {
     }
 
-    public function index(Request $request, ReviewService $reviewService): \Inertia\Response
-    {
-        $options = $this->makeReviewOptions($request, auth()->user());
-
-        return Inertia::render('Workbench/CardDealer/Index', [
-            'section' => 'academy',
-            'scope' => $options->scope,
-            'deckId' => $options->deckId,
-        ]);
-    }
-
-    public function apiIndex(Request $request, ReviewService $reviewService): JsonResponse
+    public function index(Request $request, ReviewService $reviewService): JsonResponse
     {
         $user = auth()->user();
         $options = $this->makeReviewOptions($request, $user);
@@ -69,18 +56,7 @@ class CardDealerController extends Controller
         ]);
     }
 
-    public function review(Request $request, ReviewService $reviewService): \Inertia\Response|RedirectResponse
-    {
-        $options = $this->makeReviewOptions($request, auth()->user());
-
-        return Inertia::render('Workbench/CardDealer/Review', [
-            'section' => 'academy',
-            'scope' => $options->scope,
-            'deckId' => $options->deckId,
-        ]);
-    }
-
-    public function apiReview(Request $request, ReviewService $reviewService): JsonResponse
+    public function review(Request $request, ReviewService $reviewService): JsonResponse
     {
         $user = auth()->user();
         $options = $this->makeReviewOptions($request, $user);

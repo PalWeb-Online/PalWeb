@@ -206,7 +206,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('card-dealer.review.get', params));
+    const {data} = await axios.get(route('api.card-dealer.review', params));
 
     deck.value = data.deck;
     cards.value = data.cards?.data ?? data.cards ?? [];

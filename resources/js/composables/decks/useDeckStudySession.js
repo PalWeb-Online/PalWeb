@@ -2,13 +2,11 @@ import {inject, nextTick, provide, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import {shuffle} from "lodash";
 import {useScoreManager} from "../useScoreManager.js";
-import {useI18n} from "vue-i18n";
 import {useNotifier} from "../useNotifier.js";
 
 const deckStudySessionKey = Symbol("DeckStudySession");
 
 export function createDeckStudySession() {
-    const {t} = useI18n();
     const scoreManager = useScoreManager();
     const Notifier = useNotifier();
 

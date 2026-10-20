@@ -10,7 +10,6 @@ use App\Services\QuizService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class DeckMasterController extends Controller
 {
@@ -45,33 +44,6 @@ class DeckMasterController extends Controller
         ]);
     }
 
-    public function fetchStudyDeck(Deck $deck): JsonResponse
-    {
-        Gate::authorize('interact', $deck);
-
-        $deck->load([
-            'terms' => fn ($q) => $q
-                ->whereNotNull('deck_term.gloss_id')
-                ->withItemData()
-                ->withUserCard(),
-            'scores'
-        ]);
-
-        if ($deck->terms->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'key' => 'pages.deck-master.notifications.empty-deck',
-            ]);
-        }
-
-        $this->termService->hydratePronunciations($deck->terms);
-
-        return response()->json([
-            'success' => true,
-            'deck' => new DeckResource($deck),
-        ]);
-    }
-
     public function getQuiz(Request $request, Deck $deck): JsonResponse
     {
         $settings = $request->input('settings', []);
@@ -85,6 +57,7 @@ class DeckMasterController extends Controller
 
     public function getCards(Deck $deck): JsonResponse
     {
+//        todo: the only data that is not already loaded is Inflections
         $deck->load([
             'terms' => fn ($q) => $q
                 ->whereNotNull('deck_term.gloss_id')

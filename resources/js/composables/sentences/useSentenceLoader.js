@@ -11,11 +11,6 @@ export function useSentenceLoader() {
     } = useResourceLoader({
         routeBase: 'sentences',
         routeParam: 'sentence',
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
         extractModel: (response) => response.data.sentence ?? null,
     });
 

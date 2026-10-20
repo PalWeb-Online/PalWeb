@@ -11,11 +11,6 @@ export function useDeckLoader() {
     } = useResourceLoader({
         routeBase: 'decks',
         routeParam: 'deck',
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
         extractModel: (response) => response.data.deck ?? null,
     });
 

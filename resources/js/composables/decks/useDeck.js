@@ -65,7 +65,7 @@ export function useDeck(props = {}, options = {}) {
         loadTermsError.value = false;
 
         try {
-            const response = await axios.get(route('api.decks.get.terms', deck.id));
+            const response = await axios.get(route('api.decks.show', deck.id));
             initDeck(response.data.deck);
         } catch (error) {
             console.error('Deck Detail Load Failed', error);
