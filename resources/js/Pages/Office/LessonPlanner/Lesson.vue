@@ -26,17 +26,13 @@ const props = defineProps({
         type: Number,
         default: null,
     },
-    initialUnit: {
-        type: Object,
-        default: null,
-    },
     initialUnitId: {
         type: Number,
         default: null,
     },
 })
 
-const initialUnit = ref(props.initialUnit);
+const initialUnit = ref(null);
 
 const {
     form,
@@ -85,7 +81,7 @@ provide('documentSentenceModels', sentenceModels);
 
 onMounted(async () => {
     if (props.initialUnitId) {
-        const {data} = await axios.get(route('api.units.fetch', props.initialUnitId));
+        const {data} = await axios.get(route('api.units.edit', props.initialUnitId));
         initialUnit.value = data.unit;
     }
 

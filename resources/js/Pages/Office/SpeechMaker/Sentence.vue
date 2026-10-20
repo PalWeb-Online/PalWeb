@@ -18,22 +18,19 @@ defineOptions({
 });
 
 const props = defineProps({
-    initialDialog: {
-        type: Object,
-        required: false,
-    },
-    initialDialogId: {
+    sentenceId: {
         type: Number,
         default: null,
     },
-    sentenceId: {
+    initialDialogId: {
         type: Number,
         default: null,
     },
 });
 
 const SearchStore = useSearchStore();
-const initialDialog = ref(props.initialDialog);
+
+const initialDialog = ref(null);
 
 const {
     form,
@@ -69,7 +66,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
 onMounted(async () => {
     if (props.initialDialogId) {
-        const {data} = await axios.get(route('api.dialogs.fetch', props.initialDialogId));
+        const {data} = await axios.get(route('api.dialogs.edit', props.initialDialogId));
         initialDialog.value = data.dialog;
     }
 

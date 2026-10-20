@@ -20,17 +20,13 @@ const props = defineProps({
         type: Number,
         default: null,
     },
-    initialLesson: {
-        type: Object,
-        default: null,
-    },
     initialLessonId: {
         type: Number,
         default: null,
     },
 });
 
-const initialLesson = ref(props.initialLesson);
+const initialLesson = ref(null);
 
 const {
     form,
@@ -53,7 +49,7 @@ const {
 
 onMounted(async () => {
     if (props.initialLessonId) {
-        const {data} = await axios.get(route('api.lessons.fetch', props.initialLessonId));
+        const {data} = await axios.get(route('api.lessons.edit', props.initialLessonId));
         initialLesson.value = data.lesson;
     }
 
