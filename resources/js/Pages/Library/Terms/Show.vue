@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, computed, watch} from "vue";
+import {onMounted, watch} from "vue";
 import Layout from "../../../Shared/Layout.vue";
 import TermContainer from "../../../components/TermContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
@@ -31,12 +31,15 @@ watch(
     () => reloadTerms(props.termSlug)
 );
 
-const pageTitle = computed(() => {
-    if (primaryTerm.value) {
-        return `Dictionary: ${primaryTerm.value.term} (${primaryTerm.value.translit})`;
-    }
-    return 'Dictionary';
-});
+watch(
+    primaryTerm,
+    (term) => {
+        document.title = term
+            ? `Dictionary: ${term.term} (${term.translit})`
+            : 'Dictionary';
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
