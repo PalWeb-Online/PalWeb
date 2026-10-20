@@ -667,10 +667,6 @@ router.beforeEach(async (to) => {
             return { name: 'subscription.index' };
         }
     }
-    
-    // if (to.meta.requiresSubscription && !UserStore.isSubscribed) {
-    //     return { name: 'subscription.index' };
-    // }
 });
 
 router.afterEach((to) => {
