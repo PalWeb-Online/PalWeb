@@ -1,10 +1,13 @@
 <script setup>
-import {computed, onMounted} from "vue";
-import ProgressTaskItem from "../../Lessons/UI/ProgressTaskItem.vue";
-import {useAcademyStateStore} from "../../../../stores/AcademyStateStore.js";
-import AppTip from "../../../../components/AppTip.vue";
-import LoadingSpinner from "../../../../Shared/LoadingSpinner.vue";
-import ZatuneThinking from "../../../../Shared/ZatuneThinking.vue";
+import {computed, onMounted} from 'vue';
+import ProgressTaskItem from '../../Lessons/UI/ProgressTaskItem.vue';
+import {useAcademyStateStore} from '../../../../stores/AcademyStateStore.js';
+import AppTip from '../../../../components/AppTip.vue';
+import LoadingSpinner from '../../../../Shared/LoadingSpinner.vue';
+import ZatuneThinking from '../../../../Shared/ZatuneThinking.vue';
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
 
 const AcademyStateStore = useAcademyStateStore();
 const studyPlan = computed(() => AcademyStateStore.studyPlan);
@@ -22,9 +25,9 @@ const cardTask = computed(() => {
         metaKey: studyPlan.value.cards.completed
             ? 'pages.academy.study-plan.cards.complete'
             : 'pages.academy.study-plan.cards.meta',
-        metaParams: {count: remainingDue},
+        metaParams: { count: remainingDue },
         actionKey: 'pages.academy.study-plan.cards.action',
-        route: studyPlan.value.cards.route,
+        route: router.resolve({ name: 'card-dealer.review' }).href,
     };
 });
 
@@ -34,21 +37,29 @@ const lessonTask = computed(() => {
     const lesson = studyPlan.value.lesson.lesson;
     const lessonPosition = lesson?.global_position ?? '';
 
-    const isDeckTask = studyPlan.value.lesson.key === 'deck';
+    const isDeckTask = studyPlan.value.lesson.action.model_type === 'deck';
 
     return {
-        key: `lesson-${studyPlan.value.lesson.key}`,
+        key: `lesson-${studyPlan.value.lesson.action.model_typee}`,
         icon: isDeckTask ? 'style' : 'assignment',
         completed: studyPlan.value.lesson.completed,
         labelKey: 'pages.academy.study-plan.lesson.label',
-        labelParams: {lesson: lessonPosition},
+        labelParams: { lesson: lessonPosition },
         metaKey: isDeckTask
             ? 'pages.academy.study-plan.lesson.continue-deck'
             : 'pages.academy.study-plan.lesson.continue-activity',
         actionKey: isDeckTask
             ? 'pages.deck-master.buttons.start-quiz'
             : 'components.activity.start',
-        route: studyPlan.value.lesson.action?.route,
+        route: isDeckTask
+            ? router.resolve({
+                name: 'deck-master.study',
+                params: { deck: studyPlan.value.lesson.action.model_id },
+            }).href
+            : router.resolve({
+                name: 'activities.activity',
+                params: { activity: studyPlan.value.lesson.action.model_id },
+            }).href,
     };
 });
 
@@ -80,7 +91,7 @@ onMounted(() => {
                 <div class="featured-title m">{{ $t('pages.academy.study-plan.title') }}</div>
             </div>
 
-            <LoadingSpinner  v-if="AcademyStateStore.isLoading || (!studyPlan && !AcademyStateStore.hasError)"/>
+            <LoadingSpinner v-if="AcademyStateStore.isLoading || (!studyPlan && !AcademyStateStore.hasError)"/>
 
             <AppTip v-else-if="AcademyStateStore.hasError">
                 <p>{{ $t('pages.academy.study-plan.error') }}</p>

@@ -172,7 +172,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/workbench')->group(function () {
         Route::prefix('/deck-master')->controller(DeckMasterController::class)->group(function () {
             Route::get('/get-decks', 'getDecks')->name('deck-master.get-decks');
-            Route::get('/study/{deck}/get', 'fetchStudyDeck')->name('deck-master.study.get');
             Route::get('/study/{deck}/getCards', 'getCards')->name('deck-master.get-cards');
             Route::post('/study/{deck}/getQuiz', 'getQuiz')->name('deck-master.get-quiz');
         });
