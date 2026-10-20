@@ -1,20 +1,20 @@
 <script setup>
-import {useUserStore} from "../stores/UserStore.js";
-import {useNavigationStore} from "../stores/NavigationStore.js";
+import {useUserStore} from '../stores/UserStore.js';
+import {useNavigationStore} from '../stores/NavigationStore.js';
 import {route} from 'ziggy-js';
-import {onMounted, onUnmounted, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {Carousel, Slide} from "vue3-carousel";
-import NavAuth from "./NavAuth.vue";
-import SignIn from "../components/Modals/SignIn.vue";
-import SignUp from "../components/Modals/SignUp.vue";
-import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import SendFeedback from "../components/Modals/SendFeedback.vue";
-import SendMail from "../components/Modals/SendMail.vue";
-import {useI18n} from "vue-i18n";
-import {useAuth} from "../composables/useAuth.js";
+import {onMounted, onUnmounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {Carousel, Slide} from 'vue3-carousel';
+import NavAuth from './NavAuth.vue';
+import SignIn from '../components/Modals/SignIn.vue';
+import SignUp from '../components/Modals/SignUp.vue';
+import ModalWrapper from '../components/Modals/ModalWrapper.vue';
+import SendFeedback from '../components/Modals/SendFeedback.vue';
+import SendMail from '../components/Modals/SendMail.vue';
+import {useI18n} from 'vue-i18n';
+import {useAuth} from '../composables/useAuth.js';
 
-const {locale} = useI18n();
+const { locale } = useI18n();
 const router = useRouter();
 const currentRoute = useRoute();
 
@@ -48,24 +48,33 @@ const zIndices = ref({
 const toSection = async (section, key) => {
     NavigationStore.data.section = section;
     carouselRef.value?.slideTo(key);
-}
+};
 
 const navigateOrPrompt = (page) => {
     if (UserStore.isUser) {
-        router.push({name: page});
+        router.push({ name: page });
 
     } else {
         NavigationStore.showSignIn = true;
     }
-}
+};
 
 const toggleAdminView = async (role = null) => {
-    await axios.get(role
-        ? route('admin.toggle-view', role)
-        : route('admin.toggle-view')
-    );
+    try {
+        if (role) {
+            await axios.get(route('admin.toggle-view', role));
+            UserStore.user.roles = [role];
 
-    router.go(0);
+        } else {
+            const {data} = await axios.get(route('admin.toggle-view'));
+            UserStore.user.roles = data.roles;
+        }
+
+        router.go(0);
+
+    } catch (error) {
+        console.error('Error toggling admin view:', error);
+    }
 };
 
 const onSlideStart = () => {
@@ -75,7 +84,7 @@ const onSlideStart = () => {
         });
         zIndices.value[NavigationStore.data.section] = 1;
     }
-}
+};
 
 const onSlideEnd = () => {
     if (NavigationStore.data.section === 'home') {
@@ -83,7 +92,7 @@ const onSlideEnd = () => {
             zIndices.value[sectionKey] = -1;
         });
     }
-}
+};
 
 const handleClickOutside = (event) => {
     if (NavigationStore.data.isOpen && !sidebarRef.value.contains(event.target)) {
@@ -97,7 +106,7 @@ const handleSignOut = async () => {
             NavigationStore.closeSidebar();
         },
     });
-}
+};
 
 onMounted(() => {
     const removeNavigationListener = router.afterEach(() => {
@@ -211,15 +220,15 @@ onMounted(() => {
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
                                 <RouterLink :to="{ name: 'terms.index' }"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': routeIs('terms.index', 'terms.show') }"
+                                            class="nav-carousel-page-item"
+                                            :class="{ 'active': routeIs('terms.index', 'terms.show') }"
                                 >
                                     <div>{{ $t('pages.terms.index.title') }}</div>
                                     <div>{{ $t('pages.terms.index.subtitle') }}</div>
                                 </RouterLink>
                                 <RouterLink :to="{ name: 'sentences.index' }"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': routeIs('sentences.index', 'sentences.show') }"
+                                            class="nav-carousel-page-item"
+                                            :class="{ 'active': routeIs('sentences.index', 'sentences.show') }"
                                 >
                                     <div>{{ $t('pages.sentences.index.title') }}</div>
                                     <div>{{ $t('pages.sentences.index.subtitle') }}</div>
@@ -340,7 +349,9 @@ onMounted(() => {
                 <div v-if="UserStore.isUser" class="nav-user-menu">
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-account') }}</div>
                     <div class="nav-user-menu-items">
-                        <RouterLink :to="{ name: 'subscription.index' }">{{ $t('nav.sidebar.manage-subscription') }}</RouterLink>
+                        <RouterLink :to="{ name: 'subscription.index' }">
+                            {{ $t('nav.sidebar.manage-subscription') }}
+                        </RouterLink>
                         <RouterLink :to="{ name: 'password.edit' }">{{ $t('nav.sidebar.change-password') }}</RouterLink>
                         <button v-if="!UserStore.user.has_discord"
                                 @click="startDiscordAuth"

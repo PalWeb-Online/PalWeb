@@ -162,9 +162,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function toggleView(Request $request, string $role = 'student')
+    public function toggleView(Request $request, string $role = 'student'): JsonResponse
     {
-        if (! $request->user()->isSuperuser()) {
+        $user = $request->user();
+
+        if (! $user->isSuperuser()) {
             abort(403);
         }
 
@@ -175,6 +177,8 @@ class UserController extends Controller
             session()->put('view_as_role', $role);
         }
 
-        return back();
+        return response()->json([
+            'roles' => $user->roles->pluck('name'),
+        ]);
     }
 }
