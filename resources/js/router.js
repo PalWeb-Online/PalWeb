@@ -57,7 +57,6 @@ const WikiEdit = () => import('./Pages/Wiki/Edit.vue');
 
 // Auth & General
 const Home = () => import('./Pages/Home.vue');
-const ComingSoon = () => import('./Pages/ComingSoon.vue');
 const Subscription = () => import('./Pages/Auth/Subscription.vue');
 const NewPassword = () => import('./Pages/Auth/NewPassword.vue');
 const ErrorPage = () => import('./Pages/Error.vue');
@@ -91,12 +90,6 @@ const router = createRouter({
             component: ErrorPage,
             props: { status: 911 },
             meta: { title: 'Offline' },
-        },
-        {
-            path: '/coming-soon',
-            name: 'coming-soon',
-            component: ComingSoon,
-            meta: { title: 'Coming Soon' },
         },
         {
             path: '/subscription',
@@ -198,7 +191,10 @@ const router = createRouter({
                             path: 'featured',
                             name: 'terms.featured',
                             component: FeaturedTerm,
-                            meta: { title: 'Dictionary | Word of the Day', section: 'community' },
+                            meta: {
+                                title: 'Dictionary | Word of the Day',
+                                section: 'community',
+                            },
                         },
                         {
                             path: ':term',
@@ -642,6 +638,7 @@ const router = createRouter({
             component: ThemeTesting,
             meta: {
                 requiresAuth: true,
+                layout: false,
                 roles: ['admin'],
                 title: 'Theme Testing',
             },

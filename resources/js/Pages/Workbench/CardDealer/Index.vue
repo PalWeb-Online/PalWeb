@@ -1,7 +1,6 @@
 <script setup>
 import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import DeckItem from "../../../components/DeckItem.vue";
@@ -10,10 +9,6 @@ import ReviewHistory from "./UI/ReviewHistory.vue";
 import SessionPreview from "./UI/SessionPreview.vue";
 import ReviewProgress from "./UI/ReviewProgress.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const UserStore = useUserStore();
 const SearchStore = useSearchStore();

@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {route} from "ziggy-js";
 import StudyPlan from "./UI/StudyPlan.vue";
@@ -10,10 +9,6 @@ import DividerBlock from "../../../Shared/DividerBlock.vue";
 
 const units = ref([]);
 const lessons = ref([]);
-
-defineOptions({
-    layout: Layout,
-})
 
 const UserStore = useUserStore()
 const AcademyStateStore = useAcademyStateStore()

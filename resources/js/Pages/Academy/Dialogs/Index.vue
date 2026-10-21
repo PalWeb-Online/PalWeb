@@ -1,13 +1,8 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import {route} from "ziggy-js";
 import {onMounted, ref} from "vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const dialogs = ref({data: [], meta: {links: []}});
 

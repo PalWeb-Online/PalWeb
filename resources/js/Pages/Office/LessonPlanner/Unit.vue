@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import Draggable from 'vuedraggable';
 import {computed, onMounted, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -9,10 +8,6 @@ import AppTip from "../../../components/AppTip.vue";
 import {useUnitEditor} from "../../../composables/units/useUnitEditor.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useUnitValidation} from "../../../composables/units/useUnitValidation.js";
-
-defineOptions({
-    layout: Layout,
-})
 
 const props = defineProps({
     unitId: {

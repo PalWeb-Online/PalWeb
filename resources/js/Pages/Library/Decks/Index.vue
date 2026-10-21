@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
@@ -9,7 +8,6 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
 
 const {
     collection: decks,

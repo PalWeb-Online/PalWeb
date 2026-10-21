@@ -1,13 +1,10 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
-import Layout from "../../../Shared/Layout.vue";
 import SentenceContainer from "../../../components/SentenceContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useSentenceViewer} from "../../../composables/sentences/useSentenceViewer.js";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({layout: Layout});
 
 const router = useRouter();
 const resolvedRandomSentenceId = ref(null);

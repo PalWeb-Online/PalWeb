@@ -7,15 +7,10 @@ import DialogActions from "../../../components/Actions/DialogActions.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import SentenceActions from "../../../components/Actions/SentenceActions.vue";
-import Layout from "../../../Shared/Layout.vue";
 import {useDialogEditor} from "../../../composables/dialogs/useDialogEditor.js";
 import {useDialogValidation} from "../../../composables/dialogs/useDialogValidation.js";
 import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     dialogId: {

@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import UserItem from "../../../components/UserItem.vue";
 import BadgeItem from "../../../components/BadgeItem.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
@@ -60,10 +59,6 @@ watch(
         params: currentQuery(),
     })
 );
-
-defineOptions({
-    layout: Layout
-});
 </script>
 
 <template>

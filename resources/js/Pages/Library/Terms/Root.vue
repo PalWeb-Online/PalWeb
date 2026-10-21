@@ -1,12 +1,7 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import RootContainer from "../../../components/RootContainer.vue";
 import {onMounted, ref} from "vue";
 import {route} from "ziggy-js";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     rootId: Number,

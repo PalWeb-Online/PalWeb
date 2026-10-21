@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -16,10 +15,6 @@ import DeckItem from "../../../components/DeckItem.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import {useLessonEditor} from "../../../composables/lessons/useLessonEditor.js";
 import {useLessonValidation} from "../../../composables/lessons/useLessonValidation.js";
-
-defineOptions({
-    layout: Layout,
-})
 
 const props = defineProps({
     lessonId: {

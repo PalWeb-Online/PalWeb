@@ -1,14 +1,9 @@
 <script setup>
 import {onMounted, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useDialogViewer} from "../../../composables/dialogs/useDialogViewer.js";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     dialogId: {

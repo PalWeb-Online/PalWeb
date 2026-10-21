@@ -1,13 +1,10 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
 import {computed} from "vue";
-
-defineOptions({ layout: Layout });
 
 const {
     collection: cards,

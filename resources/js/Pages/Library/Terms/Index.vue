@@ -1,6 +1,5 @@
 <script setup>
 import {computed, ref} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
@@ -13,8 +12,6 @@ import {useResourceIndex} from "../../../composables/resources/useResourceIndex.
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
-
-defineOptions({layout: Layout});
 
 const featuredTerm = ref(null);
 

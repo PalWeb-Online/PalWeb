@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
@@ -29,10 +28,6 @@ onMounted(async () => {
     featuredDeck.value = data.featuredDeck;
     latestAudios.value = data.latestAudios?.data ?? data.latestAudios ?? [];
     topUsers.value = data.topUsers?.data ?? data.topUsers ?? [];
-});
-
-defineOptions({
-    layout: Layout
 });
 </script>
 

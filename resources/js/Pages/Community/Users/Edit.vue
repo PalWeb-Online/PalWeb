@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {computed, onMounted, ref, watch} from "vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -151,10 +150,6 @@ const updateUploadedAvatars = (avatars) => {
 const updateUser = (updatedUser) => {
     user.value = updatedUser;
 };
-
-defineOptions({
-    layout: Layout
-});
 
 const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 </script>

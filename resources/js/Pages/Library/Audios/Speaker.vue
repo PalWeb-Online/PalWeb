@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import SpeakerItem from "../../../components/SpeakerItem.vue";
@@ -12,7 +11,6 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useSpeakerViewer} from "../../../composables/speakers/useSpeakerViewer.js";
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
 
 const props = defineProps({
     speakerId: {

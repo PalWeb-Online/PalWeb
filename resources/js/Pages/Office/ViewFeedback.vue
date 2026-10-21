@@ -1,12 +1,7 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import CommentItem from "../../components/CommentItem.vue";
 import {onMounted, ref} from "vue";
 import {route} from "ziggy-js";
-
-defineOptions({
-    layout: Layout
-})
 
 const feedbackComments = ref([]);
 

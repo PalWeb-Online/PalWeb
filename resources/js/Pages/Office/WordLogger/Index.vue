@@ -1,6 +1,5 @@
 <script setup>
 import {route} from "ziggy-js";
-import Layout from "../../../Shared/Layout.vue";
 import {onMounted, reactive, ref} from "vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import TermItem from "../../../components/TermItem.vue";
@@ -49,10 +48,6 @@ const selectTab = async (tabKey) => {
 onMounted(async () => {
     await loadTab(activeTab.value);
 });
-
-defineOptions({
-    layout: Layout
-})
 </script>
 <template>
     <div id="app-head">

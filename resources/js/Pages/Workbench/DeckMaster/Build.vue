@@ -8,7 +8,6 @@ import DeckActions from "../../../components/Actions/DeckActions.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import UserItem from "../../../components/UserItem.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import Layout from "../../../Shared/Layout.vue";
 import {useDeckEditor} from "../../../composables/decks/useDeckEditor.js";
 import {useDeckValidation} from "../../../composables/decks/useDeckValidation.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
@@ -16,10 +15,6 @@ import AppTip from "../../../components/AppTip.vue";
 import {useI18n} from "vue-i18n";
 
 const {locale} = useI18n();
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     deckId: {

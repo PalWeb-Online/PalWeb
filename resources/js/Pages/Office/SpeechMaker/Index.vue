@@ -1,15 +1,10 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import DialogItem from "../../../components/DialogItem.vue";
 import TermItem from "../../../components/TermItem.vue";
 import {onMounted, ref} from "vue";
 import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
-
-defineOptions({
-    layout: Layout
-});
 
 const mode = ref('dialog');
 const router = useRouter();

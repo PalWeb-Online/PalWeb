@@ -1,13 +1,10 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
-import Layout from "../../../Shared/Layout.vue";
 import TermContainer from "../../../components/TermContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useTermViewer} from "../../../composables/terms/useTermViewer.js";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({layout: Layout});
 
 const router = useRouter();
 const resolvedRandomTermSlug = ref(null);

@@ -2,17 +2,12 @@
 import WikiNav from "./UI/WikiNav.vue";
 import AppTip from "../../components/AppTip.vue";
 import {computed, onMounted, ref, watch} from "vue";
-import Layout from "../../Shared/Layout.vue";
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {getHeadingAnchorId} from "../../components/Blocks/headingAnchors.js";
 import PageContents from "./UI/PageContents.vue";
 import DocumentBlocksRenderer from "../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {usePageViewer} from "../../composables/pages/usePageViewer.js";
-
-defineOptions({
-    layout: Layout,
-});
 
 const props = defineProps({
     pageSlug: {

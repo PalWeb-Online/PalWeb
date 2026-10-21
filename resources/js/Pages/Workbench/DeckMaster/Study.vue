@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import Settings from "./Pages/Settings.vue";
 import Quiz from "./Pages/Quiz.vue";
 import Results from "./Pages/Results.vue";
@@ -11,10 +10,6 @@ import {useRouter} from 'vue-router';
 import {useDeckViewer} from "../../../composables/decks/useDeckViewer.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const router = useRouter();
 const Notifier = useNotifier();

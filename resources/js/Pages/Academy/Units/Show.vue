@@ -1,15 +1,10 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import LessonItem from "../../../components/LessonItem.vue";
 import UnitNav from "./UI/UnitNav.vue";
 import {useUnitViewer} from "../../../composables/units/useUnitViewer.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {onMounted, watch} from "vue";
-
-defineOptions({
-    layout: Layout,
-})
 
 const props = defineProps({
     unitId: {

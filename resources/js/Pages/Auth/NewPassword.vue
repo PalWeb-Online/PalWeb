@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import {useForm} from "../../composables/useForm.js";
 import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
@@ -56,10 +55,6 @@ const setNewPassword = async () => {
 const isValidRequest = computed(() => {
     return form.password.length >= 8 && form.password_confirmation;
 });
-
-defineOptions({
-    layout: Layout
-})
 </script>
 <template>
     <div id="app-body">

@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {useForm} from "../../../composables/useForm.js";
 import Draggable from 'vuedraggable';
@@ -9,10 +8,6 @@ import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {useNotifier} from "../../../composables/useNotifier.js";
-
-defineOptions({
-    layout: Layout,
-})
 
 const units = ref([]);
 const lessons = ref([]);

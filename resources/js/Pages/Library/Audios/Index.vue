@@ -1,6 +1,5 @@
 <script setup>
 import {ref} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
@@ -9,7 +8,6 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
 
 const dialects = ref([]);
 const locations = ref([]);

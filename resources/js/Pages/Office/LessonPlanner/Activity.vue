@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
@@ -10,10 +9,6 @@ import {useActivityValidation} from "../../../composables/activities/useActivity
 import {useActivityEditor} from "../../../composables/activities/useActivityEditor.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import DocumentBlocksManager from "../../../components/Blocks/Editors/DocumentBlocksManager.vue";
-
-defineOptions({
-    layout: Layout,
-})
 
 const props = defineProps({
     activityId: {

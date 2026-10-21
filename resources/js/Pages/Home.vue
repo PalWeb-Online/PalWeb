@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import {computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
@@ -114,10 +113,6 @@ const handleScroll = () => {
 
 onBeforeUnmount(() => {
     clearInterval(intervalId);
-});
-
-defineOptions({
-    layout: Layout
 });
 </script>
 <template>

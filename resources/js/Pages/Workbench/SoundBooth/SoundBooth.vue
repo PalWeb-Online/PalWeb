@@ -2,7 +2,6 @@
 import {computed, onBeforeUnmount, onMounted} from "vue";
 import {merge} from "lodash";
 import {route} from "ziggy-js";
-import Layout from "../../../Shared/Layout.vue";
 import {createSoundBoothSession, provideSoundBoothSession} from "./useSoundBoothSession.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import Speaker from "./pages/Speaker.vue";
@@ -11,10 +10,6 @@ import Record from "./pages/Record.vue";
 import Check from "./pages/Check.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const session = provideSoundBoothSession(createSoundBoothSession());
 

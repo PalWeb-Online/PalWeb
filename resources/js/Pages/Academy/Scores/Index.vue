@@ -1,15 +1,10 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import ActivityItem from "../../../components/ActivityItem.vue";
 import {onMounted, ref} from "vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const mode = ref('decks');
 const scoredLessonModels = ref({});

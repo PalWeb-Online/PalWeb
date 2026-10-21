@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../Shared/Layout.vue";
 import {computed, watch} from "vue";
 import {useRouter} from "vue-router";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
@@ -38,10 +37,6 @@ watch(browserOnline, (isOnline) => {
         router.replace({name: 'homepage'});
     }
 }, {immediate: true});
-
-defineOptions({
-    layout: Layout
-});
 </script>
 <template>
     <div id="app-body">

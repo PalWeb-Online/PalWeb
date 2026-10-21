@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../composables/NavGuard.js";
 import NavGuard from "../../components/Modals/NavGuard.vue";
@@ -12,10 +11,6 @@ import {usePageSearch} from "../../composables/pages/usePageSearch.js";
 import {usePageEditor} from "../../composables/pages/usePageEditor.js";
 import {usePageValidation} from "../../composables/pages/usePageValidation.js";
 import PagePositionModal from "./UI/PagePositionModal.vue";
-
-defineOptions({
-    layout: Layout,
-});
 
 const props = defineProps({
     pageId: {

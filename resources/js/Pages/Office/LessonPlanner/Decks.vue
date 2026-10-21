@@ -1,13 +1,8 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref} from "vue";
-
-defineOptions({
-    layout: Layout,
-})
 
 const props = defineProps({
     unitId: Number,

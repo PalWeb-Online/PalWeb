@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ScoreStats from "../../../components/ScoreStats.vue";
 import AppTip from "../../../components/AppTip.vue";
@@ -18,10 +17,6 @@ import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/Documen
 import {useScoreManager} from "../../../composables/useScoreManager.js";
 import {useI18n} from "vue-i18n";
 import {useNotifier} from "../../../composables/useNotifier.js";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     scorable_type: String,

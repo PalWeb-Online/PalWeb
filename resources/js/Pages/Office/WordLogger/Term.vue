@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
@@ -104,10 +103,6 @@ watch(
 
 watch(() => props.termId, async () => {
     await reloadForm();
-});
-
-defineOptions({
-    layout: Layout
 });
 </script>
 

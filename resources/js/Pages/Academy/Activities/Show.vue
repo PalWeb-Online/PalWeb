@@ -1,14 +1,9 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import ActivityContainer from "../../../components/ActivityContainer.vue";
 import {onMounted, watch} from "vue";
 import {useActivityViewer} from "../../../composables/activities/useActivityViewer.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     activityId: {

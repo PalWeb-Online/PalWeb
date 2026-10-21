@@ -1,13 +1,10 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
-import Layout from "../../../Shared/Layout.vue";
 import DeckContainer from "../../../components/DeckContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useDeckViewer} from "../../../composables/decks/useDeckViewer.js";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({layout: Layout});
 
 const router = useRouter();
 const resolvedRandomDeckId = ref(null);

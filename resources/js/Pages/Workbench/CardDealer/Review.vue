@@ -1,7 +1,6 @@
 <script setup>
 import {Carousel, Slide} from "vue3-carousel";
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
 import {useNotifier} from "../../../composables/useNotifier.js";
@@ -71,10 +70,6 @@ const buckets = computed(() => {
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'percent',
     maximumFractionDigits: 0,
-});
-
-defineOptions({
-    layout: Layout
 });
 
 const carouselRef = ref(null);

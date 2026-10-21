@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {computed, onMounted, watch} from "vue";
 import Results from "./Pages/Results.vue";
 import {createActivitySession, provideActivitySession} from "../../../composables/activities/useActivitySession.js";
@@ -10,10 +9,6 @@ import {useNavGuard} from "../../../composables/NavGuard.js";
 import {useActivityViewer} from "../../../composables/activities/useActivityViewer.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import AppTip from "../../../components/AppTip.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     activityId: {

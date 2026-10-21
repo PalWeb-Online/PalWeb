@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
@@ -72,10 +71,6 @@ const toStudy = () => {
 onMounted(async () => {
     await fetchDecks(props.mode);
     selectedDeck.value = props.deck;
-});
-
-defineOptions({
-    layout: Layout
 });
 </script>
 

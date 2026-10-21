@@ -1,5 +1,4 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import DialogContainer from "../../../components/DialogContainer.vue";
 import {onMounted, ref, watch} from "vue";
 import UnitNav from "../Units/UI/UnitNav.vue";
@@ -10,10 +9,6 @@ import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useLessonViewer} from "../../../composables/lessons/useLessonViewer.js";
 import ProgressSummary from "./UI/ProgressSummary.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     unitId: {

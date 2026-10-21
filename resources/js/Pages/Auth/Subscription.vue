@@ -1,15 +1,10 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import AppTip from "../../components/AppTip.vue";
 import {useNavigationStore} from "../../stores/NavigationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
 
 const NavigationStore = useNavigationStore();
 const UserStore = useUserStore();
-
-defineOptions({
-    layout: Layout,
-});
 
 const showDeniedMessage = false;
 

@@ -11,11 +11,6 @@ import SentenceActions from "../../../components/Actions/SentenceActions.vue";
 import {useSentenceEditor} from "../../../composables/sentences/useSentenceEditor.js";
 import {useSentenceValidation} from "../../../composables/sentences/useSentenceValidation.js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import Layout from "../../../Shared/Layout.vue";
-
-defineOptions({
-    layout: Layout
-});
 
 const props = defineProps({
     sentenceId: {
