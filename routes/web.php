@@ -297,6 +297,7 @@ Route::prefix('/api')->group(function () {
     Route::prefix('/library')->group(function () {
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'index')->name('api.terms.index');
+            Route::get('/random', 'random')->name('api.terms.random');
             Route::get('/featured', 'showFeatured')->name('api.terms.featured');
             Route::get('/{term:slug}', 'show')->name('api.terms.show');
             Route::get('/{term}/edit', 'edit')->whereNumber('term')->name('api.terms.edit');
