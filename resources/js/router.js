@@ -191,7 +191,7 @@ const router = createRouter({
                             path: 'random',
                             name: 'terms.random',
                             component: TermShow,
-                            props: { termSlug: 'random' },
+                            props: { random: true },
                             meta: { title: 'Dictionary' },
                         },
                         {
@@ -230,7 +230,7 @@ const router = createRouter({
                             path: 'random',
                             name: 'sentences.random',
                             component: SentenceShow,
-                            props: { sentenceId: 'random' },
+                            props: { random: true },
                             meta: { title: 'Library: Corpus' },
                         },
                         {
@@ -260,7 +260,7 @@ const router = createRouter({
                             path: 'random',
                             name: 'decks.random',
                             component: DeckShow,
-                            props: { deckId: 'random' },
+                            props: { random: true },
                             meta: { title: 'Library: Decks' },
                         },
                         {

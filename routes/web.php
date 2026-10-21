@@ -304,6 +304,7 @@ Route::prefix('/api')->group(function () {
         Route::get('/roots/{root}', [RootController::class, 'fetch'])->name('api.roots.fetch');
         Route::prefix('/sentences')->controller(SentenceController::class)->group(function () {
             Route::get('/', 'index')->name('api.sentences.index');
+            Route::get('/random', 'random')->name('api.sentences.random');
             Route::get('/{sentence}', 'show')->name('api.sentences.show');
             Route::get('/{sentence}/edit', 'edit')->whereNumber('sentence')->name('api.sentences.edit');
         });
@@ -315,6 +316,7 @@ Route::prefix('/api')->group(function () {
             });
             Route::prefix('/decks')->controller(DeckController::class)->group(function () {
                 Route::get('/', 'index')->name('api.decks.index');
+                Route::get('/random', 'random')->name('api.decks.random');
                 Route::get('/{deck}', 'show')->name('api.decks.show');
                 Route::get('/{deck}/edit', 'edit')->name('api.decks.edit');
             });

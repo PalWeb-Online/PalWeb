@@ -1,5 +1,6 @@
 <script setup>
-import {onMounted, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
+import {useRouter} from "vue-router";
 import Layout from "../../../Shared/Layout.vue";
 import TermContainer from "../../../components/TermContainer.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
@@ -8,10 +9,17 @@ import AppTip from "../../../components/AppTip.vue";
 
 defineOptions({layout: Layout});
 
+const router = useRouter();
+const resolvedRandomTermSlug = ref(null);
+
 const props = defineProps({
     termSlug: {
         type: String,
-        required: true,
+        default: null,
+    },
+    random: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -21,14 +29,41 @@ const {
     termsNotFound,
     isLoadingTerms,
     loadTerms,
+    loadRandomTerms,
     reloadTerms,
+    reloadRandomTerms,
 } = useTermViewer();
 
-onMounted(() => loadTerms(props.termSlug));
+const openTerms = async (reload = false) => {
+    if (props.random) {
+        const randomTerms = await (reload ? reloadRandomTerms : loadRandomTerms)();
+        const term = randomTerms?.[0];
+
+        if (term?.slug) {
+            resolvedRandomTermSlug.value = term.slug;
+            await router.replace({ name: 'terms.show', params: { term: term.slug } });
+        }
+
+        return;
+    }
+
+    await (reload ? reloadTerms : loadTerms)(props.termSlug);
+};
+
+onMounted(() => {
+    void openTerms();
+});
 
 watch(
-    () => props.termSlug,
-    () => reloadTerms(props.termSlug)
+    () => [props.termSlug, props.random],
+    ([termSlug, random]) => {
+        if (!random && termSlug === resolvedRandomTermSlug.value) {
+            resolvedRandomTermSlug.value = null;
+            return;
+        }
+
+        void openTerms(true);
+    }
 );
 
 watch(

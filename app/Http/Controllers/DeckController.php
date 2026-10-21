@@ -85,6 +85,16 @@ class DeckController extends Controller
 
     public function show(Deck $deck): JsonResponse
     {
+        return $this->fetchDeck($deck);
+    }
+
+    public function random(): JsonResponse
+    {
+        return $this->fetchDeck(Deck::query()->inRandomOrder()->firstOrFail());
+    }
+
+    private function fetchDeck(Deck $deck): JsonResponse
+    {
         Gate::authorize('interact', $deck);
 
         $deck->load([

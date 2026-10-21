@@ -113,6 +113,16 @@ class TermController extends Controller
 
     public function show(Term $term): JsonResponse
     {
+        return $this->fetchTerm($term);
+    }
+
+    public function random(): JsonResponse
+    {
+        return $this->fetchTerm(Term::query()->inRandomOrder()->firstOrFail());
+    }
+
+    private function fetchTerm(Term $term): JsonResponse
+    {
         $termIds = $this->termRepository->getLikeTermIds($term);
 
         $terms = Term::query()

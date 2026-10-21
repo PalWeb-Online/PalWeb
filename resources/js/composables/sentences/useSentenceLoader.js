@@ -8,6 +8,7 @@ export function useSentenceLoader() {
         setModel: setSentence,
         fetchShowModel: fetchShowSentence,
         fetchEditModel: fetchEditSentence,
+        fetchRandomModel: fetchRandomSentence,
     } = useResourceLoader({
         routeBase: 'sentences',
         routeParam: 'sentence',
@@ -21,5 +22,6 @@ export function useSentenceLoader() {
         setSentence,
         fetchShowSentence,
         fetchEditSentence,
+        fetchRandomSentence,
     };
 }

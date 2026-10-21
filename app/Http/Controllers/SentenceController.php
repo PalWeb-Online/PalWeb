@@ -101,6 +101,11 @@ class SentenceController extends Controller
         return $this->fetchSentence($sentence);
     }
 
+    public function random(): JsonResponse
+    {
+        return $this->fetchSentence(Sentence::query()->inRandomOrder()->firstOrFail());
+    }
+
     private function fetchSentence(Sentence $sentence): JsonResponse
     {
         $sentence->load(['dialog']);

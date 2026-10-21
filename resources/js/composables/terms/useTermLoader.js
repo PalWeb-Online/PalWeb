@@ -9,6 +9,7 @@ export function useTermLoader() {
         setModel: setTerms,
         fetchShowModel: fetchShowTerms,
         fetchEditModel: fetchEditTerms,
+        fetchRandomModel: fetchRandomTerms,
     } = useResourceLoader({
         routeBase: 'terms',
         routeParam: 'term',
@@ -25,5 +26,6 @@ export function useTermLoader() {
         setTerms,
         fetchShowTerms,
         fetchEditTerms,
+        fetchRandomTerms,
     };
 }

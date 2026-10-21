@@ -32,6 +32,14 @@ export function useResourceLoader({
         });
     };
 
+    const getRandomRouteUrl = (options = {}) => {
+        if (!routeBase) {
+            throw new Error('routeBase is required for convention-based random resource loading.');
+        }
+
+        return route(`api.${routeBase}.random`, options.params ?? {});
+    };
+
     const resolveUrl = (identifier, options = {}) => {
         return getUrl
             ? getUrl(identifier, options)
@@ -74,6 +82,37 @@ export function useResourceLoader({
         }
     };
 
+    const fetchRandomModel = async (options = {}) => {
+        isLoading.value = true;
+        notFound.value = false;
+
+        try {
+            const response = await axios.get(
+                getRandomRouteUrl(options),
+                getRequestConfig(options),
+            );
+
+            setModel(
+                extractModel(response),
+                extractMeta(response),
+            );
+
+            return model.value;
+
+        } catch (error) {
+            if (error?.response?.status === 404) {
+                setModel();
+                notFound.value = true;
+                return null;
+            }
+
+            throw error;
+
+        } finally {
+            isLoading.value = false;
+        }
+    };
+
     const fetchShowModel = (identifier, options = {}) => fetchModel(identifier, {
         ...options,
         routeAction: 'show',
@@ -91,5 +130,6 @@ export function useResourceLoader({
         setModel,
         fetchShowModel,
         fetchEditModel,
+        fetchRandomModel,
     };
 }

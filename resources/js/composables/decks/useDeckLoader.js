@@ -8,6 +8,7 @@ export function useDeckLoader() {
         setModel: setDeck,
         fetchShowModel: fetchShowDeck,
         fetchEditModel: fetchEditDeck,
+        fetchRandomModel: fetchRandomDeck,
     } = useResourceLoader({
         routeBase: 'decks',
         routeParam: 'deck',
@@ -21,5 +22,6 @@ export function useDeckLoader() {
         setDeck,
         fetchShowDeck,
         fetchEditDeck,
+        fetchRandomDeck,
     };
 }
