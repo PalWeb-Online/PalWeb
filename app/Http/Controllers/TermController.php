@@ -98,6 +98,19 @@ class TermController extends Controller
         ]);
     }
 
+    public function showFeatured(): JsonResponse
+    {
+        $featuredTerm = Term::with(['attributes', 'inflections', 'glosses.attributes'])->inRandomOrder()->first();
+
+        $terms = collect([$featuredTerm]);
+
+        $this->termService->hydrateGlossSentences($terms);
+
+        return response()->json([
+            'term' => $featuredTerm ? new TermShowResource($featuredTerm) : null,
+        ]);
+    }
+
     public function show(Term $term): JsonResponse
     {
         $termIds = $this->termRepository->getLikeTermIds($term);

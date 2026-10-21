@@ -120,6 +120,7 @@ onUnmounted(() => clearTimeout(timer))
 
 .cls-5 {
     fill: none;
+    stroke: black;
 }
 
 .cls-6 {

@@ -297,6 +297,7 @@ Route::prefix('/api')->group(function () {
     Route::prefix('/library')->group(function () {
         Route::prefix('/terms')->controller(TermController::class)->group(function () {
             Route::get('/', 'index')->name('api.terms.index');
+            Route::get('/featured', 'showFeatured')->name('api.terms.featured');
             Route::get('/{term:slug}', 'show')->name('api.terms.show');
             Route::get('/{term}/edit', 'edit')->whereNumber('term')->name('api.terms.edit');
         });
@@ -316,7 +317,6 @@ Route::prefix('/api')->group(function () {
                 Route::get('/', 'index')->name('api.decks.index');
                 Route::get('/{deck}', 'show')->name('api.decks.show');
                 Route::get('/{deck}/edit', 'edit')->name('api.decks.edit');
-                Route::get('/{deck}/get/terms', 'getDeckTerms')->name('api.decks.get.terms');
             });
         });
     });

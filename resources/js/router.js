@@ -62,12 +62,13 @@ const Subscription = () => import('./Pages/Auth/Subscription.vue');
 const NewPassword = () => import('./Pages/Auth/NewPassword.vue');
 const ErrorPage = () => import('./Pages/Error.vue');
 const ThemeTesting = () => import('./Pages/ThemeTesting.vue');
+const FeaturedTerm = () => import('./Pages/FeaturedTerm.vue');
 
 const identifier = (value) => {
     if (value === undefined || value === null || value === '') {
         return null;
     }
-    
+
     const numeric = Number(value);
     return Number.isNaN(numeric) ? value : numeric;
 };
@@ -106,7 +107,7 @@ const router = createRouter({
                 section: 'account',
             },
         },
-        
+
         // Auth
         {
             path: '/reset-password/:token',
@@ -131,7 +132,7 @@ const router = createRouter({
                 section: 'account',
             },
         },
-        
+
         // Wiki
         {
             path: '/wiki',
@@ -169,7 +170,7 @@ const router = createRouter({
                 },
             ],
         },
-        
+
         // Library
         {
             path: '/library',
@@ -192,6 +193,12 @@ const router = createRouter({
                             component: TermShow,
                             props: { termSlug: 'random' },
                             meta: { title: 'Dictionary' },
+                        },
+                        {
+                            path: 'featured',
+                            name: 'terms.featured',
+                            component: FeaturedTerm,
+                            meta: { title: 'Dictionary | Word of the Day', section: 'community' },
                         },
                         {
                             path: ':term',
@@ -290,7 +297,7 @@ const router = createRouter({
                 },
             ],
         },
-        
+
         // Hub
         {
             path: '/hub',
@@ -332,7 +339,7 @@ const router = createRouter({
                 },
             ],
         },
-        
+
         // Academy
         {
             path: '/academy',
@@ -428,7 +435,7 @@ const router = createRouter({
                 },
             ],
         },
-        
+
         // Workbench
         {
             path: '/workbench',
@@ -510,7 +517,7 @@ const router = createRouter({
                 },
             ],
         },
-        
+
         // Office
         {
             path: '/office',
@@ -645,16 +652,16 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     const UserStore = useUserStore();
     const NavigationStore = useNavigationStore();
-    
+
     if (to.matched.some(record => record.meta.requiresAuth) && !UserStore.isUser) {
         NavigationStore.showSignIn = true;
         return false;
     }
-    
+
     const requiredRoles = to.matched.reduce((roles, record) => {
         return record.meta.roles || roles;
     }, null);
-    
+
     if (requiredRoles && UserStore.isUser) {
         const hasRole = requiredRoles.some(role => {
             if (role === 'admin') return UserStore.isAdmin;
@@ -662,7 +669,7 @@ router.beforeEach(async (to) => {
             if (role === 'pal') return UserStore.isUser;
             return false;
         });
-        
+
         if (!hasRole) {
             return { name: 'subscription.index' };
         }

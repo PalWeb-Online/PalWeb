@@ -1,24 +1,24 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref} from 'vue';
 import {route} from 'ziggy-js';
-import {useTerm} from "../composables/terms/useTerm.js";
-import TermActions from "./Actions/TermActions.vue";
-import PinButton from "./PinButton.vue";
-import TermDeckToggleButton from "./TermDeckToggleButton.vue";
-import PronunciationItem from "./PronunciationItem.vue";
-import SentenceItem from "./SentenceItem.vue";
-import DeckItem from "./DeckItem.vue";
-import ChartCliticization from "./Charts/ChartCliticization.vue";
-import ChartInflection from "./Charts/ChartInflection.vue";
-import ChartConjugation from "./Charts/ChartConjugation.vue";
-import DialogLine from "./Charts/DialogLine.vue";
-import LoadingSpinner from "../Shared/LoadingSpinner.vue";
-import CardItem from "./CardItem.vue";
-import {useUserStore} from "../stores/UserStore.js";
-import GlossItem from "./GlossItem.vue";
-import UserAvatarWrapper from "./UserAvatarWrapper.vue";
-import AppTip from "./AppTip.vue";
+import {useTerm} from '../composables/terms/useTerm.js';
+import TermActions from './Actions/TermActions.vue';
+import PinButton from './PinButton.vue';
+import TermDeckToggleButton from './TermDeckToggleButton.vue';
+import PronunciationItem from './PronunciationItem.vue';
+import SentenceItem from './SentenceItem.vue';
+import DeckItem from './DeckItem.vue';
+import ChartCliticization from './Charts/ChartCliticization.vue';
+import ChartInflection from './Charts/ChartInflection.vue';
+import ChartConjugation from './Charts/ChartConjugation.vue';
+import DialogLine from './Charts/DialogLine.vue';
+import LoadingSpinner from '../Shared/LoadingSpinner.vue';
+import CardItem from './CardItem.vue';
+import {useUserStore} from '../stores/UserStore.js';
+import GlossItem from './GlossItem.vue';
+import AppTip from './AppTip.vue';
 import {useRouter} from 'vue-router';
+import ZatuneComment from './ZatuneComment.vue';
 
 const router = useRouter();
 const UserStore = useUserStore();
@@ -31,16 +31,27 @@ const props = defineProps({
     },
 });
 
-const {term, isLoading} = useTerm(props);
+const {
+    term,
+    variants,
+    references,
+    derivatives,
+    source,
+    hostForms,
+    responseForms,
+    constructForms,
+    inflections,
+    isLoading,
+} = useTerm(() => props.model);
 
 const showPronunciations = ref(false);
 const pronunciationsFetched = ref(false);
 
 const fetchPronunciations = async () => {
     try {
-        const response = await axios.get(route('terms.get.pronunciations', {term: term.id}));
+        const response = await axios.get(route('terms.get.pronunciations', { term: term.id }));
         const pronunciations = response.data.filter(pronunciation =>
-            !term.pronunciations.some(existing => existing.id === pronunciation.id)
+            !term.pronunciations.some(existing => existing.id === pronunciation.id),
         );
 
         term.pronunciations.push(...pronunciations);
@@ -50,7 +61,7 @@ const fetchPronunciations = async () => {
     } catch (error) {
         console.error('Error fetching Pronunciations:', error);
     }
-}
+};
 
 const showSentences = ref(new Map());
 const sentencesFetched = ref(new Map());
@@ -62,9 +73,12 @@ const fetchSentences = async (glossId) => {
     try {
         const gloss = term.glosses.find(gloss => gloss.id === glossId);
 
-        const response = await axios.get(route('terms.get.sentences', {term: term.id, gloss: glossId}));
+        const response = await axios.get(route('terms.get.sentences', {
+            term: term.id,
+            gloss: glossId,
+        }));
         const sentences = response.data.filter(sentence =>
-            !gloss.sentences.some(existing => existing.id === sentence.id)
+            !gloss.sentences.some(existing => existing.id === sentence.id),
         );
 
         gloss.sentences.push(...sentences);
@@ -76,44 +90,12 @@ const fetchSentences = async (glossId) => {
         console.error('Error fetching Pronunciations:', error);
         loadingSentences.value.set(glossId, false);
     }
-}
+};
 
 const toggleShowSentences = (glossId) => {
     const currentState = showSentences.value.get(glossId) || false;
     showSentences.value.set(glossId, !currentState);
 };
-
-const variants = computed(() =>
-    term.relatives.filter(relative => relative.type === "variant") ?? []
-);
-
-const references = computed(() =>
-    term.relatives.filter(relative => relative.type === "reference") ?? []
-);
-
-const derivatives = computed(() =>
-    term.relatives.filter(relative => ['ap', 'pp', 'vn'].includes(relative.type)) ?? []
-);
-
-const source = computed(() =>
-    term.relatives.find(relative => relative.type === 'source')
-);
-
-const hostForms = computed(() =>
-    term.inflections.filter(inflection => ['genitive', 'accusative'].includes(inflection.form)) ?? []
-);
-
-const responseForms = computed(() =>
-    term.inflections.filter(inflection => inflection.form === 'resp') ?? []
-);
-
-const constructForms = computed(() =>
-    term.inflections.filter(inflection => inflection.form === 'cnst') ?? []
-);
-
-const inflections = computed(() =>
-    term.inflections.filter(inflection => !['cnst', 'resp', 'genitive', 'accusative'].includes(inflection.form)) ?? []
-);
 
 const glossRelatives = (glossId, types) => {
     return term.relatives.filter(relative => {
@@ -122,23 +104,35 @@ const glossRelatives = (glossId, types) => {
 };
 
 const attributeLinks = {
-  collective: {
-    text: "nouns",
-    url: router.resolve({ name: "wiki.show", params: { slug: "nouns" } }).href,
-  },
-  demonym: {
-    text: "adjectives",
-    url: router.resolve({ name: "wiki.show", params: { slug: "adjectives" } }).href,
-  },
-  defect: {
-    text: "adjectives",
-    url: router.resolve({ name: "wiki.show", params: { slug: "adjectives" } }).href,
-  },
-  pseudo: {
-    text: "verbs",
-    url: router.resolve({ name: "wiki.show", params: { slug: "verbs" } }).href,
-  },
-}
+    collective: {
+        text: 'nouns',
+        url: router.resolve({
+            name: 'wiki.show',
+            params: { slug: 'nouns' },
+        }).href,
+    },
+    demonym: {
+        text: 'adjectives',
+        url: router.resolve({
+            name: 'wiki.show',
+            params: { slug: 'adjectives' },
+        }).href,
+    },
+    defect: {
+        text: 'adjectives',
+        url: router.resolve({
+            name: 'wiki.show',
+            params: { slug: 'adjectives' },
+        }).href,
+    },
+    pseudo: {
+        text: 'verbs',
+        url: router.resolve({
+            name: 'wiki.show',
+            params: { slug: 'verbs' },
+        }).href,
+    },
+};
 
 const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -150,20 +144,23 @@ const etymology = computed(() => {
     data.singPatterns = term.patterns
         .filter(pattern => pattern.type === 'singular')
         .map(pattern =>
-            `In the ${pattern.form ? `<b>Form ${pattern.form}</b>` : ''} <b ${pattern.form ? `style="text-transform: uppercase"` : ''}>${pattern.pattern}</b> pattern. `
+            `In the ${pattern.form ? `<b>Form ${pattern.form}</b>` : ''} <b ${pattern.form ? `style="text-transform: uppercase"` : ''}>${pattern.pattern}</b> pattern. `,
         ).join('');
 
     data.plurPatterns = term.patterns
         .filter(pattern => pattern.type === 'plural')
         .map(pattern =>
-            `Has a <b>${pattern.pattern}</b> ${['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken'} plural. `
+            `Has a <b>${pattern.pattern}</b> ${['-īn', '-āt'].includes(pattern.pattern) ? 'sound' : 'broken'} plural. `,
         ).join('');
 
     const components = term.relatives.filter(relative => relative.type === 'component') ?? [];
     data.components = [];
 
     if (components.length > 0) {
-        data.components.push({type: 'text', value: 'Idiom from '});
+        data.components.push({
+            type: 'text',
+            value: 'Idiom from ',
+        });
         components.forEach((comp, index) => {
             data.components.push({
                 type: 'link',
@@ -181,7 +178,10 @@ const etymology = computed(() => {
     data.descendants = [];
 
     if (descendants.length > 0) {
-        data.descendants.push({type: 'text', value: `Component of `});
+        data.descendants.push({
+            type: 'text',
+            value: `Component of `,
+        });
         descendants.forEach((comp, index) => {
             data.descendants.push({
                 type: 'link',
@@ -204,13 +204,19 @@ const etymology = computed(() => {
     data.source = [];
 
     if (source.value && term.derived_type) {
-        data.source.push({type: 'text', value: `<b>${derivativeMap[term.derived_type]}</b> of `});
+        data.source.push({
+            type: 'text',
+            value: `<b>${derivativeMap[term.derived_type]}</b> of `,
+        });
         data.source.push({
             type: 'link',
             slug: source.value.slug,
             label: `${source.value.term} (${source.value.translit})`,
         });
-        data.source.push({type: 'text', value: '. '});
+        data.source.push({
+            type: 'text',
+            value: '. ',
+        });
     }
 
     return data;
@@ -224,7 +230,9 @@ const etymology = computed(() => {
                 <RouterLink :to="{ name: 'terms.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/terms/{term}</div>
                 <TermDeckToggleButton :model="term"/>
-                <RouterLink :to="{ name: 'terms.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
+                <RouterLink :to="{ name: 'terms.random' }" class="material-symbols-rounded">
+                    keyboard_double_arrow_right
+                </RouterLink>
             </div>
             <div class="window-section-head">
                 <h1>{{ $t('actions.models.term') }}</h1>
@@ -265,8 +273,9 @@ const etymology = computed(() => {
                             {{ constructForms[0].inflection }} ({{ constructForms[0].translit }})
                         </template>
                         <template v-if="term.category === 'verb'">
-                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank" style="font-style: italic">
-                                {{ $t('term.filters.form.option', {form: term.patterns[0]?.form}) }}.
+                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank"
+                                        style="font-style: italic">
+                                {{ $t('term.filters.form.option', { form: term.patterns[0]?.form }) }}.
                             </RouterLink>
                             {{ ' ' }}
                             <template v-for="derivative in derivatives">
@@ -279,7 +288,8 @@ const etymology = computed(() => {
                             </template>
                         </template>
                         <template v-if="term.derived_type">
-                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank" style="font-style: italic">
+                            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'verb-forms' } }" target="_blank"
+                                        style="font-style: italic">
                                 {{ term.derived_type }}.
                             </RouterLink>
                             {{ ' ' }}
@@ -295,13 +305,15 @@ const etymology = computed(() => {
                      v-if="term.spellings.length + variants.length + references.length > 0">
                     <div v-if="references.length > 0">
                         <div>{{ $t('components.term.references.see') }}</div>
-                        <RouterLink v-for="reference in references" :to="{ name: 'terms.show', params: { term: reference.slug } }">
+                        <RouterLink v-for="reference in references"
+                                    :to="{ name: 'terms.show', params: { term: reference.slug } }">
                             {{ reference.term }} ({{ reference.translit }})
                         </RouterLink>
                     </div>
                     <div v-if="variants.length > 0">
                         <div>{{ $t('components.term.references.alt') }}</div>
-                        <RouterLink v-for="variant in variants" :to="{ name: 'terms.show', params: { term: variant.slug } }">
+                        <RouterLink v-for="variant in variants"
+                                    :to="{ name: 'terms.show', params: { term: variant.slug } }">
                             {{ variant.term }} ({{ variant.translit }})
                         </RouterLink>
                     </div>
@@ -324,7 +336,8 @@ const etymology = computed(() => {
 
                     <span v-for="(token, index) in etymology.source" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
+                            <RouterLink v-else-if="token.type === 'link'"
+                                        :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
                             </RouterLink>
                         </span>
@@ -334,19 +347,22 @@ const etymology = computed(() => {
 
                     <span v-for="(token, index) in etymology.components" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
+                            <RouterLink v-else-if="token.type === 'link'"
+                                        :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
                             </RouterLink>
                         </span>
 
                     <span v-for="(token, index) in etymology.descendants" :key="index">
                             <span v-if="token.type === 'text'" v-html="token.value"></span>
-                            <RouterLink v-else-if="token.type === 'link'" :to="{ name: 'terms.show', params: { term: token.slug } }">
+                            <RouterLink v-else-if="token.type === 'link'"
+                                        :to="{ name: 'terms.show', params: { term: token.slug } }">
                               {{ token.label }}
                             </RouterLink>
                         </span>
                 </div>
-                <RouterLink class="term-root" v-if="term.root" :to="{ name: 'roots.show', params: { root: term.root.id  } }">
+                <RouterLink class="term-root" v-if="term.root"
+                            :to="{ name: 'roots.show', params: { root: term.root.id  } }">
                     <div class="term-root-ar">{{ term.root.ar }}</div>
                     <div class="term-root-en">({{ term.root.en }})</div>
                 </RouterLink>
@@ -385,14 +401,14 @@ const etymology = computed(() => {
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['synonym']).length > 0">
                             {{ $t('components.term.relatives.synonym-abbr') }}
                             <RouterLink v-for="synonym in glossRelatives(gloss.id, ['synonym'])" :key="synonym.id"
-                                  :to="{ name: 'terms.show', params: { term: synonym.slug } }">
+                                        :to="{ name: 'terms.show', params: { term: synonym.slug } }">
                                 {{ synonym.term }} ({{ synonym.translit }})
                             </RouterLink>
                         </div>
                         <div class="gloss-item-relatives" v-if="glossRelatives(gloss.id, ['antonym']).length > 0">
                             {{ $t('components.term.relatives.antonym-abbr') }}
                             <RouterLink v-for="antonym in glossRelatives(gloss.id, ['antonym'])" :key="antonym.id"
-                                  :to="{ name: 'terms.show', params: { term: antonym.slug } }">
+                                        :to="{ name: 'terms.show', params: { term: antonym.slug } }">
                                 {{ antonym.term }} ({{ antonym.translit }})
                             </RouterLink>
                         </div>
@@ -434,6 +450,8 @@ const etymology = computed(() => {
                 </GlossItem>
             </div>
 
+            <ZatuneComment v-if="term.usage" :comment="term.usage"/>
+
             <ChartConjugation
                 v-if="term.category === 'verb' && !term.attributes.map(attribute => attribute.attribute).includes('idiom') && !hostForms.length"
                 :roots="term.root.all"
@@ -456,26 +474,6 @@ const etymology = computed(() => {
                 <DialogLine speaker="جواب" align="ltr" v-for="response in responseForms"
                             :ar="response.inflection"
                             :en="response.translit"/>
-            </div>
-
-            <!--            note that my user is hard-coded -->
-            <div v-if="term.usage" class="user-item comment-item l" style="padding: 2.4rem">
-                <UserAvatarWrapper
-                    :user="{username: 'permanent.intifada', avatar_url: '/img/avatars/character02.webp'}"/>
-                <div class="user-data-wrapper">
-                    <div class="user-comment">
-                        <div class="user-comment-title">
-                            <img class="popout" src="/img/star.svg" :alt="$t('components.common.alt.star')"/>
-                            <span>{{ $t('components.term.editor-note') }}</span>
-                        </div>
-                        <div class="user-comment-content">
-                            {{ term.usage }}
-                        </div>
-                        <div class="user-comment-data">
-                            — R. Adrian (permanent.intifada)
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="term-image">
