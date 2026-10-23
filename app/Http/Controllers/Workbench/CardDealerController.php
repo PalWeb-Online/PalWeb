@@ -89,45 +89,6 @@ class CardDealerController extends Controller
         ]);
     }
 
-    public function cards(Request $request): JsonResponse
-    {
-        $filters = array_merge(['sort' => 'due'], $request->only(['status', 'level', 'sort']));
-
-        $cards = Card::query()
-            ->forUser(auth()->id())
-            ->with([
-                'term' => fn ($q) => $q->withItemData(),
-            ])
-            ->filterStatus($filters['status'] ?? null)
-            ->filterLevel($filters['level'] ?? null)
-            ->sort($filters['sort'] ?? 'due')
-            ->latest()
-            ->paginate(25)
-            ->withQueryString();
-
-        $terms = $cards
-            ->getCollection()
-            ->pluck('term')
-            ->filter();
-
-        $this->termService->hydratePronunciations($terms);
-        $cardResource = CardResource::collection($cards);
-
-        return response()->json([
-            'filters' => $filters,
-            'cards' => [
-                'data' => $cardResource->toArray($request),
-                'meta' => [
-                    'links' => $cards->linkCollection()->toArray(),
-                    'current_page' => $cards->currentPage(),
-                    'last_page' => $cards->lastPage(),
-                    'total' => $cards->total(),
-                ],
-            ],
-            'totalCount' => $cards->total(),
-        ]);
-    }
-
     public function getScopeCards(Request $request, ReviewService $reviewService): JsonResponse
     {
         try {

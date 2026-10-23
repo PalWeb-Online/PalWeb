@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 
 class CommunityController extends Controller
 {
-    public function apiIndex(): JsonResponse
+    public function index(): JsonResponse
     {
         $teachers = User::query()
             ->public()

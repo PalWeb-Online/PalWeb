@@ -108,7 +108,7 @@ const startReview = () => {
 };
 
 const sessionSettings = ref({
-    new_limit: UserStore.user?.preferences?.srs?.new_limit ?? 25,
+    new_limit: UserStore.user?.preferences?.srs?.new_limit ?? 12,
     review_limit: UserStore.user?.preferences?.srs?.review_limit ?? 100,
     learning_steps: UserStore.user?.preferences?.srs?.learning_steps ?? 3,
     prompt_type: UserStore.user?.preferences?.srs?.prompt_type ?? false,

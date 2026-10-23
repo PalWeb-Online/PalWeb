@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Teacher;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -21,6 +22,7 @@ class StoreTeacherRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => ['required', 'integer', 'exists:users,id'],
             'email' => ['required', 'email', 'max:255'],
             'bio' => ['nullable', 'string', 'max:5000'],
         ];
@@ -29,10 +31,14 @@ class StoreTeacherRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            $targetUser = $this->route('user');
+            if ($validator->errors()->has('user_id')) {
+                return;
+            }
+
+            $targetUser = User::find($this->input('user_id'));
 
             if ($targetUser?->teacher()->exists()) {
-                $validator->errors()->add('teacher', 'This User already has a Teacher profile.');
+                $validator->errors()->add('user_id', 'This User already has a Teacher profile.');
             }
         });
     }

@@ -4,22 +4,20 @@ namespace App\Http\Controllers\Workbench;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PronunciationResource;
-use App\Http\Resources\SpeakerResource;
 use App\Models\Deck;
 use App\Models\Dialect;
+use App\Models\Location;
 use App\Models\Pronunciation;
-use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SoundBoothController extends Controller
 {
-    public function fetchSpeaker(): JsonResponse
+    public function getSpeakerOptions(): JsonResponse
     {
-        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
-
         return response()->json([
-            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+            'dialects' => Dialect::find([6, 7, 8, 9, 10, 11, 12])->toArray(),
+            'locations' => Location::all()->makeHidden('coordinates')->toArray(),
         ]);
     }
 

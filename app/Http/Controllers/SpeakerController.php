@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AudioResource;
 use App\Http\Resources\SpeakerResource;
 use App\Models\Audio;
-use App\Models\Dialect;
-use App\Models\Location;
 use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SpeakerController extends Controller
 {
-    public function fetch(Request $request, Speaker $speaker): JsonResponse
+    public function show(): JsonResponse
+    {
+        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
+
+        return response()->json([
+            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+        ]);
+    }
+
+    public function getAudios(Request $request, Speaker $speaker): JsonResponse
     {
         $includes = collect(explode(',', (string) $request->query('include')))
             ->map(fn (string $include) => trim($include))
@@ -80,14 +87,6 @@ class SpeakerController extends Controller
 
         return response()->json([
             'term' => new SpeakerResource($speaker),
-        ]);
-    }
-
-    public function getSpeakerOptions(): JsonResponse
-    {
-        return response()->json([
-            'dialects' => Dialect::find([6, 7, 8, 9, 10, 11, 12])->toArray(),
-            'locations' => Location::all()->makeHidden('coordinates')->toArray(),
         ]);
     }
 }

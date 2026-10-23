@@ -13,12 +13,11 @@ use App\Services\LessonService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
 class LessonPlannerController extends Controller
 {
-    public function apiCourse(): JsonResponse
+    public function index(): JsonResponse
     {
         return response()->json([
             'units' => UnitResource::collection(Unit::all()),
@@ -26,7 +25,7 @@ class LessonPlannerController extends Controller
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'units' => ['required', 'array'],
@@ -61,12 +60,12 @@ class LessonPlannerController extends Controller
             LessonService::reorderAllUnitsAndLessons();
         });
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => 'the Course'])]);
-        return to_route('lesson-planner.index');
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
-    public function apiUnitDecks(Unit $unit, TermService $termService): JsonResponse
+    public function unitDecks(Unit $unit, TermService $termService): JsonResponse
     {
         $deckIds = $unit->lessons()
             ->whereNotNull('deck_id')

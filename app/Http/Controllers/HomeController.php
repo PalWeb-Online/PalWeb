@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-    public function apiIndex(TermService $termService): JsonResponse
+    public function index(TermService $termService): JsonResponse
     {
         $counts = Cache::remember('public_model_counts', now()->addHour(), function () {
             return [

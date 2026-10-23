@@ -25,17 +25,7 @@ use Throwable;
 
 class ScoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request): \Inertia\Response
-    {
-        return Inertia::render('Academy/Scores/Index', [
-            'section' => 'academy',
-        ]);
-    }
-
-    public function apiIndex(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $latestScoreIds = Score::query()
             ->where('user_id', $request->user()->id)

@@ -23,6 +23,7 @@ export function useTeacherEditor({
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         setTeacher(model);
 
+        form.user_id = user.value?.id ?? null;
         form.email = model?.email ?? '';
         form.bio = model?.bio ?? '';
 
@@ -32,6 +33,7 @@ export function useTeacherEditor({
 
     const editor = useResourceEditor({
         initialForm: {
+            user_id: user.value?.id ?? null,
             email: '',
             bio: '',
         },
@@ -42,7 +44,7 @@ export function useTeacherEditor({
         resetModel: setTeacher,
         label: 'teacher',
         routeBase: 'teachers',
-        getStoreUrl: () => route('users.teacher.store', user.value?.username),
+        getStoreUrl: () => route('teachers.store'),
         onDeleteSuccess: () => {
             router.push({
                 name: 'users.show',
@@ -58,6 +60,7 @@ export function useTeacherEditor({
 
         editor.form.email = '';
         editor.form.bio = '';
+        editor.form.user_id = user.value?.id ?? null;
         editor.defaults();
         editor.clearErrors();
     };

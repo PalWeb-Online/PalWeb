@@ -112,7 +112,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'srs_settings' => ['required_without:theme', 'array'],
-            'srs_settings.new_limit' => ['integer', 'min:0', 'max:100'],
+            'srs_settings.new_limit' => ['integer', 'min:0', 'max:50'],
             'srs_settings.review_limit' => ['integer', 'min:0', 'max:300'],
             'srs_settings.learning_steps' => ['integer', 'min:1', 'max:5'],
             'srs_settings.prompt_type' => ['string'],

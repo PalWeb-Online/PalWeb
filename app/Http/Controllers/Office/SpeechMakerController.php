@@ -17,7 +17,7 @@ class SpeechMakerController extends Controller
     ) {
     }
 
-    public function apiIndex(): JsonResponse
+    public function index(): JsonResponse
     {
         $termsMissingSentences = collect();
 

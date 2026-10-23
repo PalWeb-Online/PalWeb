@@ -77,6 +77,11 @@ const saveCourse = async () => {
         await axios.patch(route('lesson-planner.update'), payload());
         defaults();
 
+        Notifier.notify({
+            message: 'The Course has been saved.',
+            type: 'success',
+        });
+
     } catch (error) {
         if (error?.response?.status === 422) {
             setErrors(error.response.data.errors ?? {});

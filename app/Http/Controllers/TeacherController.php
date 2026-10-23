@@ -15,11 +15,17 @@ use Throwable;
 
 class TeacherController extends Controller
 {
-    public function store(StoreTeacherRequest $request, User $user): JsonResponse
+    public function store(StoreTeacherRequest $request): JsonResponse
     {
+        $validated = $request->validated();
+        $user = User::findOrFail($validated['user_id']);
+
         Gate::authorize('create', [Teacher::class, $user]);
 
-        $teacher = $user->teacher()->create($request->validated());
+        $teacher = $user->teacher()->create($request->safe()->only([
+            'email',
+            'bio',
+        ]));
 
         return response()->json([
             'teacher' => new TeacherResource($teacher),
