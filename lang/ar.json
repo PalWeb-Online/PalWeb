@@ -1336,7 +1336,11 @@
         },
         "new-password": {
             "title": "كلمة سرّ جديدة",
-            "set-password": "تعيين كلمة السرّ"
+            "set-password": "تعيين كلمة السرّ",
+            "notifications": {
+                "password-set-success": "تم تعيين كلمة السرّ الجديدة!",
+                "password-set-failure": "تعذّر تعيين كلمة السرّ الجديدة."
+            }
         }
     },
     "card-dealer": {

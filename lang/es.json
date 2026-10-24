@@ -1265,7 +1265,11 @@
             },
             "new-password": {
                 "title": "nueva contraseña",
-                "set-password": "establecer contraseña"
+                "set-password": "establecer contraseña",
+                "notifications": {
+                    "password-set-success": "Se ha establecido la nueva contraseña!",
+                    "password-set-failure": "No se pudo establecer la nueva contraseña."
+                }
             }
         },
         "wiki": {

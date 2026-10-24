@@ -1,11 +1,14 @@
-import {reactive, ref, watch} from "vue";
-import {useNotifier} from "../useNotifier.js";
-import {useRouter} from "vue-router";
-import {useResourceDelete} from "../resources/useResourceDelete.js";
-import {useI18n} from "vue-i18n";
+import {reactive, ref, watch} from 'vue';
+import {useNotifier} from '../useNotifier.js';
+import {useRouter} from 'vue-router';
+import {useResourceDelete} from '../resources/useResourceDelete.js';
+import {useI18n} from 'vue-i18n';
 
 export function useDeck(props = {}, options = {}) {
-    const {t, locale} = useI18n();
+    const {
+        t,
+        locale,
+    } = useI18n();
     const router = useRouter();
     const Notifier = useNotifier();
 
@@ -16,7 +19,7 @@ export function useDeck(props = {}, options = {}) {
         label: 'deck',
         routeBase: 'decks',
         onDeleteSuccess: () => {
-            router.push({name: 'decks.index'});
+            router.push({ name: 'decks.index' });
         },
     });
 
@@ -52,7 +55,7 @@ export function useDeck(props = {}, options = {}) {
 
         } else {
             blurb.value = t('components.deck.description-placeholder', {
-                author: locale.value === 'ar' ? deck.author.ar_name : deck.author.name
+                author: locale.value === 'ar' ? deck.author.ar_name : deck.author.name,
             });
         }
     };
@@ -84,7 +87,7 @@ export function useDeck(props = {}, options = {}) {
         }
 
         isLoading.value = false;
-    }, {immediate: true});
+    }, { immediate: true });
 
     const toggleTerm = async (targetDeck, term) => {
         try {
@@ -118,7 +121,7 @@ export function useDeck(props = {}, options = {}) {
     const copyDeck = async (targetDeck = deck) => {
         if (!confirm(t('deck.notifications.copy-confirm'))) return;
 
-        const {data} = await axios.post(`/api/decks/${targetDeck.id}/copy`);
+        const { data } = await axios.post(`/api/decks/${targetDeck.id}/copy`);
 
         if (data.success) {
             Notifier.notify({
@@ -126,14 +129,24 @@ export function useDeck(props = {}, options = {}) {
             });
             router.push({
                 name: 'decks.show',
-                params: {deck: data.deckId},
+                params: { deck: data.deckId },
             });
         }
     };
 
     const copyLink = (targetDeck = deck) => {
-        navigator.clipboard.writeText(route('decks.show', targetDeck.id)).then(function () {
-            alert(t('deck.notifications.copy-link-success'));
+        const path = router.resolve({
+            name: 'decks.show',
+            params: { deck: targetDeck.id },
+        }).href;
+
+        const url = new URL(path, window.location.origin).href;
+
+        navigator.clipboard.writeText(url).then(function () {
+            Notifier.notify({
+                key: 'deck.notifications.copy-link-success',
+            });
+
         }, function (err) {
             alert('Could not copy text: ', err);
         });

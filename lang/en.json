@@ -1265,7 +1265,11 @@
             },
             "new-password": {
                 "title": "new password",
-                "set-password": "set password"
+                "set-password": "set password",
+                "notifications": {
+                    "password-set-success": "New password has been set!",
+                    "password-set-failure": "Failed to set new password."
+                }
             }
         },
         "wiki": {
