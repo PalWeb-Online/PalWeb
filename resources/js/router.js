@@ -103,27 +103,32 @@ const router = createRouter({
 
         // Auth
         {
-            path: '/reset-password/:token',
-            name: 'password.reset',
-            component: NewPassword,
-            props: route => ({
-                token: route.params.token ?? '',
-                email: route.query.email ?? '',
-            }),
-            meta: {
-                title: 'Reset Password',
-                section: 'account',
-            },
-        },
-        {
-            path: '/change-password',
-            name: 'password.edit',
-            component: NewPassword,
-            meta: {
-                requiresAuth: true,
-                title: 'Change Password',
-                section: 'account',
-            },
+            path: '/account',
+            component: RouterView,
+            meta: { section: 'account' },
+            children: [
+                {
+                    path: '/reset-password/:token',
+                    name: 'password.reset',
+                    component: NewPassword,
+                    props: route => ({
+                        token: route.params.token ?? '',
+                        email: route.query.email ?? '',
+                    }),
+                    meta: {
+                        title: 'Reset Password',
+                    },
+                },
+                {
+                    path: '/change-password',
+                    name: 'password.edit',
+                    component: NewPassword,
+                    meta: {
+                        requiresAuth: true,
+                        title: 'Change Password',
+                    },
+                }
+            ],
         },
 
         // Wiki

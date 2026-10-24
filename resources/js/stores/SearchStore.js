@@ -97,7 +97,7 @@ export const useSearchStore = defineStore('SearchStore', () => {
         isLoading.value = true;
 
         try {
-            const response = await axios.post('/search', {
+            const response = await axios.post('/api/search', {
                     search: data.filters['search'] || '',
                     ...data.filters,
                 }, {

@@ -7,24 +7,13 @@ use App\Http\Requests\Auth\StorePasswordRequest;
 use App\Http\Requests\Auth\UpdatePasswordRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {
-    public function show(Request $request, $token = null): \Inertia\Response
-    {
-        return Inertia::render('Auth/NewPassword', [
-            'section' => 'account',
-            'token' => $token ?? '',
-            'email' => $token ? $request->email : '',
-        ]);
-    }
-
     public function store(StorePasswordRequest $request): RedirectResponse
     {
         $status = Password::reset(

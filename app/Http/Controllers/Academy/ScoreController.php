@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Inertia\Inertia;
 use Throwable;
 
 class ScoreController extends Controller
@@ -112,21 +111,7 @@ class ScoreController extends Controller
         ]);
     }
 
-    public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
-    {
-        $request->validate([
-            'score' => ['nullable', 'integer', 'exists:scores,id'],
-        ]);
-
-        return Inertia::render('Academy/Scores/History', [
-            'section' => 'academy',
-            'scorable_type' => $scorable_type,
-            'scorable_id' => $scorable_id,
-            'scoreId' => $request->integer('score') ?: null,
-        ]);
-    }
-
-    public function apiHistory(Request $request, string $scorable_type, int $scorable_id): JsonResponse
+    public function history(Request $request, string $scorable_type, int $scorable_id): JsonResponse
     {
         $request->validate([
             'score' => ['nullable', 'integer', 'exists:scores,id'],

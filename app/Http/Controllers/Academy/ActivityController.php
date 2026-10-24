@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Throwable;
 
 class ActivityController extends Controller
@@ -24,16 +23,6 @@ class ActivityController extends Controller
 
         return response()->json([
             'activity' => new ActivityResource($activity),
-        ]);
-    }
-
-    public function activity(Activity $activity): \Inertia\Response
-    {
-        Gate::authorize('view', $activity);
-
-        return Inertia::render('Academy/Activities/Activity', [
-            'section' => 'academy',
-            'activityId' => $activity->id,
         ]);
     }
 
