@@ -3,7 +3,6 @@ import DialogItem from "../../../components/DialogItem.vue";
 import TermItem from "../../../components/TermItem.vue";
 import {onMounted, ref} from "vue";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 
 const mode = ref('dialog');
@@ -12,7 +11,7 @@ const dialogs = ref([]);
 const terms = ref([]);
 
 onMounted(async () => {
-    const {data} = await axios.get(route('speech-maker.get'));
+    const {data} = await axios.get('/api/speech-maker');
     dialogs.value = data.dialogs?.data ?? data.dialogs ?? [];
     terms.value = data.terms?.data ?? data.terms ?? [];
 });

@@ -1,7 +1,6 @@
 <script setup>
 import {computed, onBeforeUnmount, onMounted} from "vue";
 import {merge} from "lodash";
-import {route} from "ziggy-js";
 import {createSoundBoothSession, provideSoundBoothSession} from "./useSoundBoothSession.js";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import Speaker from "./pages/Speaker.vue";
@@ -20,7 +19,7 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 onMounted(async () => {
-    const {data} = await axios.get(route('sound-booth.speaker'));
+    const {data} = await axios.get('/api/speakers/auth');
 
     if (data.speaker) {
         merge(session.speaker, data.speaker);

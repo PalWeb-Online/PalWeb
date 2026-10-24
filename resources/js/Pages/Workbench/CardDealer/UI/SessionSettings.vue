@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import RangeSlider from "../../../../components/RangeSlider.vue";
 import {useNotifier} from "../../../../composables/useNotifier.js";
 import {useUserStore} from "../../../../stores/UserStore.js";
@@ -20,7 +19,7 @@ const saveSettings = async () => {
     }
 
     try {
-        const {data} = await axios.patch(route('users.preferences.update', UserStore.user.username), {
+        const {data} = await axios.patch('/api/auth/preferences', {
             srs_settings: {
                 new_limit: props.settings.new_limit,
                 review_limit: props.settings.review_limit,

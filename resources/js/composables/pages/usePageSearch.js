@@ -7,7 +7,7 @@ export function usePageSearch({
     const {
         searchResource: searchPages,
     } = useResourceSearch({
-        routeName: 'api.wiki.search',
+        url: '/api/wiki/search',
         params: () => ({
             page_id: unref(currentPageId) ?? null,
         }),

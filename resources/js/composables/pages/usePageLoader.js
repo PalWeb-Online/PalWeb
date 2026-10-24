@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function usePageLoader() {
@@ -30,7 +29,7 @@ export function usePageLoader() {
         isLoadingTree.value = true;
 
         try {
-            const response = await axios.get(route('api.wiki.tree'));
+            const response = await axios.get('/api/wiki/tree');
             pageTree.value = response.data.page_tree ?? [];
 
         } finally {

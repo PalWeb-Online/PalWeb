@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
 import {reactive, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "./UserStore.js";
 
 export const useNavigationStore = defineStore('NavigationStore', () => {
@@ -66,7 +65,7 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         }
 
         try {
-            const {data} = await axios.patch(route('users.preferences.update'), {
+            const {data} = await axios.patch('/api/auth/preferences', {
                 theme: nextTheme,
             });
 

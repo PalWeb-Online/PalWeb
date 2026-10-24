@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
 import {computed, ref, watch} from 'vue';
-import {route} from 'ziggy-js';
 import {useNotificationStore} from "./NotificationStore.js";
 import {useUser} from "../composables/users/useUser.js";
 
@@ -37,7 +36,7 @@ export const useUserStore = defineStore('UserStore', () => {
         }
 
         try {
-            const {data} = await axios.get(route('auth.user'));
+            const {data} = await axios.get('/api/auth/user');
             setUser(data.user || null);
             return user.value;
 
@@ -59,7 +58,7 @@ export const useUserStore = defineStore('UserStore', () => {
     const fetchDecks = async () => {
         if (!hasFetchedDecks.value) {
             try {
-                const response = await axios.get(route('users.decks.get'));
+                const response = await axios.get('/api/auth/decks');
                 decks.value = response.data.decks || [];
                 hasFetchedDecks.value = true;
 

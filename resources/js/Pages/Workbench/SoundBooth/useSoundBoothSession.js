@@ -1,5 +1,4 @@
 import {computed, inject, provide, reactive, ref, watch} from 'vue';
-import {route} from "ziggy-js";
 import {useNotificationStore} from "../../../stores/NotificationStore.js";
 import {useI18n} from "vue-i18n";
 import Record from "../../../utils/Record.js";
@@ -157,7 +156,7 @@ export function createSoundBoothSession() {
 
     const fetchAutoItems = async () => {
         try {
-            const {data} = await axios.post(route('sound-booth.get.auto'), {
+            const {data} = await axios.post('/api/sound-booth/get-auto-items', {
                 speaker_id: speaker.id,
                 dialect_id: speaker.dialect.id,
                 queuedItems: queue,
@@ -174,7 +173,7 @@ export function createSoundBoothSession() {
 
     const fetchDeckItems = async (id) => {
         try {
-            const {data} = await axios.post(route('sound-booth.get.deck', id), {
+            const {data} = await axios.post(`/api/sound-booth/get-deck-items/${id}`, {
                 speaker_id: speaker.id,
                 dialect_id: speaker.dialect.id,
                 queuedItems: queue,
@@ -449,7 +448,7 @@ export function createSoundBoothSession() {
         }
 
         try {
-            await axios.delete(route('stash.destroy', stashKey));
+            await axios.delete(`/api/sound-booth/stash/${stashKey}`);
 
             delete recordings.items[id];
             delete recordings.status[id];
@@ -482,7 +481,7 @@ export function createSoundBoothSession() {
         if (!speaker.id) return false;
 
         try {
-            await axios.delete(route('stash.clear', speaker.id));
+            await axios.delete(`/api/sound-booth/stash/clear/${speaker.id}`);
 
             Object.keys(recordings.status).forEach(key => {
                 if (recordings.status[key] === 'stashed') {

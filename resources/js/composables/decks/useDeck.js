@@ -1,6 +1,5 @@
 import {reactive, ref, watch} from "vue";
 import {useNotifier} from "../useNotifier.js";
-import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
 import {useI18n} from "vue-i18n";
@@ -65,7 +64,7 @@ export function useDeck(props = {}, options = {}) {
         loadTermsError.value = false;
 
         try {
-            const response = await axios.get(route('api.decks.show', deck.id));
+            const response = await axios.get(`/api/decks/${deck.id}`);
             initDeck(response.data.deck);
         } catch (error) {
             console.error('Deck Detail Load Failed', error);
@@ -89,10 +88,7 @@ export function useDeck(props = {}, options = {}) {
 
     const toggleTerm = async (targetDeck, term) => {
         try {
-            const response = await axios.post(route('decks.term.toggle', {
-                deck: targetDeck.id,
-                term: term.id
-            }));
+            const response = await axios.post(`/api/decks/${targetDeck.id}/terms/${term.id}/toggle`);
 
             if (targetDeck.terms) {
                 if (response.data.isPresent) {
@@ -122,7 +118,7 @@ export function useDeck(props = {}, options = {}) {
     const copyDeck = async (targetDeck = deck) => {
         if (!confirm(t('deck.notifications.copy-confirm'))) return;
 
-        const {data} = await axios.post(route('decks.copy', targetDeck.id));
+        const {data} = await axios.post(`/api/decks/${targetDeck.id}/copy`);
 
         if (data.success) {
             Notifier.notify({

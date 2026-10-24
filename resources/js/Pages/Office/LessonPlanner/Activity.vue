@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
@@ -44,7 +43,7 @@ const {
 
 onMounted(async () => {
     if (props.initialLessonId) {
-        const {data} = await axios.get(route('api.lessons.edit', props.initialLessonId));
+        const {data} = await axios.get(`/api/lessons/${props.initialLessonId}/edit`);
         initialLesson.value = data.lesson;
     }
 

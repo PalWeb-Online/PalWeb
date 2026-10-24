@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import Paginator from "../../../Shared/Paginator.vue";
@@ -13,7 +12,7 @@ const totalCount = ref(0);
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('api.academy.scores.index', params));
+    const {data} = await axios.get('/api/scores', {params});
     scoredLessonModels.value = data.scoredLessonModels;
     latestScoredDecks.value = data.latestScoredDecks;
     totalCount.value = data.totalCount;

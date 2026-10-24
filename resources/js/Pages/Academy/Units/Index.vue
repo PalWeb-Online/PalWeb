@@ -1,6 +1,5 @@
 <script setup>
 import {useUserStore} from "../../../stores/UserStore.js";
-import {route} from "ziggy-js";
 import StudyPlan from "./UI/StudyPlan.vue";
 import AppHeading from "../../../components/AppHeading.vue";
 import {onMounted, ref} from "vue";
@@ -14,7 +13,7 @@ const UserStore = useUserStore()
 const AcademyStateStore = useAcademyStateStore()
 
 onMounted(async () => {
-    const {data} = await axios.get(route('api.academy.units.index'));
+    const {data} = await axios.get('/api/units');
     units.value = data.units?.data ?? data.units ?? [];
     lessons.value = data.lessons?.data ?? data.lessons ?? [];
 

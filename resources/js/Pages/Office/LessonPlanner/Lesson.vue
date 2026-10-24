@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
@@ -76,7 +75,7 @@ provide('documentSentenceModels', sentenceModels);
 
 onMounted(async () => {
     if (props.initialUnitId) {
-        const {data} = await axios.get(route('api.units.edit', props.initialUnitId));
+        const {data} = await axios.get(`/api/units/${props.initialUnitId}/edit`);
         initialUnit.value = data.unit;
     }
 

@@ -1,6 +1,5 @@
 <script setup>
 import {computed, reactive} from 'vue';
-import {route} from 'ziggy-js';
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
 import {useNotifier} from "../../composables/useNotifier.js";
@@ -41,7 +40,7 @@ const purgeScores = async () => {
     form.processing = true;
 
     try {
-        const {data} = await axios.post(route('scores.purge'), {
+        const {data} = await axios.post('/api/scores/purge', {
             scorable_type: form.scorable_type,
             scorable_id: form.scorable_id,
             older_than: form.older_than,

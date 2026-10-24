@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
@@ -43,7 +42,7 @@ const reviewHistory = ref({});
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('api.card-dealer.index', params));
+    const {data} = await axios.get('/api/card-dealer', {params});
 
     scope.value = data.scope ?? scope.value;
     scopeData.deck = data.deck;
@@ -135,7 +134,7 @@ const fetchScopeData = async () => {
             payload.deck = scopeData.deck.id;
         }
 
-        const response = await axios.post(route('api.card-dealer.get.cards'), payload);
+        const response = await axios.post('/api/card-dealer/get-scope-cards', payload);
 
         if (response.data) {
             scopeData.cards = response.data.cards;
@@ -167,9 +166,9 @@ const refreshSessionData = async () => {
         if (mode.value === 'deck') {
             await fetchScopeData();
         } else {
-            const {data} = await axios.get(route('api.card-dealer.index', {
-                scope: scope.value,
-            }));
+            const {data} = await axios.get('/api/card-dealer', {
+                params: {scope: scope.value},
+            });
 
             allData.cards = data.cards;
             allData.termsCount = data.terms_count;

@@ -1,7 +1,6 @@
 <script setup>
 import {Carousel, Slide} from "vue3-carousel";
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import {route} from "ziggy-js";
 import ToggleSingle from "../../../components/ToggleSingle.vue";
 import {useNotifier} from "../../../composables/useNotifier.js";
 import WindowSection from "../../../components/WindowSection.vue";
@@ -104,7 +103,7 @@ const gradeCard = async (gradeValue) => {
 
     const secondsSpent = Math.floor((Date.now() - cardStartTime.value) / 1000);
 
-    await axios.post(route('cards.update', card.id), {
+    await axios.post(`/api/cards/${card.id}`, {
         grade: gradeValue,
         seconds_spent: secondsSpent,
         next_interval: card.next_intervals[gradeValue]?.days,
@@ -152,7 +151,7 @@ const dismissCard = async (action) => {
     if (!card) return;
 
     if (action === 'master') {
-        await axios.post(route('cards.master', card.id));
+        await axios.post(`/api/cards/${card.id}/master`);
         shouldRefreshAcademyProgress.value = true;
         Notifier.notify({
             key: 'card.notifications.master-success',
@@ -160,7 +159,7 @@ const dismissCard = async (action) => {
         });
 
     } else if (action === 'suspend') {
-        await axios.post(route('cards.suspend', card.id));
+        await axios.post(`/api/cards/${card.id}/suspend`);
         shouldRefreshAcademyProgress.value = true;
         Notifier.notify({
             key: 'card.notifications.suspend-success',
@@ -201,7 +200,7 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('api.card-dealer.review', params));
+    const {data} = await axios.get('/api/card-dealer/review', {params});
 
     deck.value = data.deck;
     cards.value = data.cards?.data ?? data.cards ?? [];

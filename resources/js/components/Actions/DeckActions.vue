@@ -1,6 +1,5 @@
 <script setup>
 import {computed, ref} from "vue";
-import {route} from 'ziggy-js';
 import {useUserStore} from "../../stores/UserStore.js";
 import ContextActions from "./ContextActions.vue";
 import AppTooltip from "../AppTooltip.vue";
@@ -75,7 +74,7 @@ const tooltip = ref(null);
             <button @click="shareDeck" role="menuitem" tabindex="-1">
                 {{ $t('actions.deck.share-link') }}
             </button>
-            <form :action="route('decks.export', model.id)" method="POST">
+            <form :action="`/api/decks/${model.id}/export`" method="POST">
                 <input type="hidden" name="_token" :value="csrfToken">
                 <button type="submit" role="menuitem" tabindex="-1">
                     {{ $t('actions.deck.export-csv') }}

@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import AudioItem from "./AudioItem.vue";
 import {onMounted, reactive, ref} from "vue";
 
@@ -16,7 +15,7 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 
 const fetchAudios = async () => {
     try {
-        const response = await axios.get(route('terms.get.pronunciations.audios', {pronunciation: props.model.id}));
+        const response = await axios.get(`/api/pronunciations/${props.model.id}/audios`);
         const audios = response.data.filter(audio =>
             !props.model.audios.some(existing => existing.id === audio.id)
         );

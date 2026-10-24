@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
@@ -73,7 +72,7 @@ const profileDialects = computed(() =>
 let intervalId = null;
 
 onMounted(async () => {
-    const {data} = await axios.get(route('api.home.index'));
+    const {data} = await axios.get('/api/home');
 
     count.value = data.count;
     users.value = data.users?.data ?? data.users ?? [];

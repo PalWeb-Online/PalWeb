@@ -2,7 +2,6 @@
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
-import {route} from "ziggy-js";
 import UserScorecard from "../../../components/UserScorecard.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import CommentItem from "../../../components/CommentItem.vue";
@@ -20,7 +19,7 @@ const topUsers = ref([]);
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get(route('api.community.index', params));
+    const {data} = await axios.get('/api/community', {params});
     teachers.value = data.teachers;
     teachersCount.value = data.teachersCount;
     latestDecks.value = data.latestDecks?.data ?? data.latestDecks ?? [];

@@ -1,13 +1,12 @@
 <script setup>
 import Paginator from "../../../Shared/Paginator.vue";
 import DialogItem from "../../../components/DialogItem.vue";
-import {route} from "ziggy-js";
 import {onMounted, ref} from "vue";
 
 const dialogs = ref({data: [], meta: {links: []}});
 
 onMounted(async () => {
-    const {data} = await axios.get(route('api.academy.dialogs.index'));
+    const {data} = await axios.get('/api/dialogs');
     dialogs.value = data.dialogs;
 });
 </script>

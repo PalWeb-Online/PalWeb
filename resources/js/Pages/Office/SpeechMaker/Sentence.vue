@@ -61,7 +61,7 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
 
 onMounted(async () => {
     if (props.initialDialogId) {
-        const {data} = await axios.get(route('api.dialogs.edit', props.initialDialogId));
+        const {data} = await axios.get(`/api/dialogs/${props.initialDialogId}/edit`);
         initialDialog.value = data.dialog;
     }
 

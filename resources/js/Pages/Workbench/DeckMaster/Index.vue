@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
-import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
@@ -33,7 +32,7 @@ const fetchDecks = async (mode) => {
     decks.value = [];
 
     try {
-        const response = await axios.get(route('deck-master.get-decks'), {
+        const response = await axios.get('/api/deck-master/decks', {
             params: {mode}
         });
 

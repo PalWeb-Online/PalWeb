@@ -1,12 +1,11 @@
 <script setup>
 import CommentItem from "../../components/CommentItem.vue";
 import {onMounted, ref} from "vue";
-import {route} from "ziggy-js";
 
 const feedbackComments = ref([]);
 
 onMounted(async () => {
-    const {data} = await axios.get(route('feedback.get'));
+    const {data} = await axios.get('/api/feedback');
     feedbackComments.value = data.feedbackComments?.data ?? data.feedbackComments ?? [];
 });
 </script>

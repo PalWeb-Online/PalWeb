@@ -1,5 +1,4 @@
 import {onMounted, reactive, ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
 import {useRouter} from "vue-router";
 
@@ -54,7 +53,7 @@ export function useDialog(props = {}) {
         }
 
         try {
-            const response = await axios.post(route('sentences.get-many'), {
+            const response = await axios.post('/api/sentences/many', {
                 ids: Array.from(ids)
             });
 

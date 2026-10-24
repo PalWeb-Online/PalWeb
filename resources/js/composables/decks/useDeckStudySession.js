@@ -1,5 +1,4 @@
 import {inject, nextTick, provide, reactive, ref} from "vue";
-import {route} from "ziggy-js";
 import {shuffle} from "lodash";
 import {useScoreManager} from "../useScoreManager.js";
 import {useNotifier} from "../useNotifier.js";
@@ -37,7 +36,7 @@ export function createDeckStudySession() {
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
-        const response = await axios.get(route('deck-master.get-cards', data.deck.id));
+        const response = await axios.get(`/api/deck-master/decks/${data.deck.id}/cards`);
         data.terms = response.data.terms;
 
         data.isLoading = false;
@@ -80,7 +79,7 @@ export function createDeckStudySession() {
     };
 
     const generateQuiz = async () => {
-        const response = await axios.post(route('deck-master.get-quiz', data.deck.id), {
+        const response = await axios.post(`/api/deck-master/decks/${data.deck.id}/quiz`, {
             settings: settings
         });
 

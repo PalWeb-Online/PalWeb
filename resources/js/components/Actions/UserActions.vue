@@ -13,7 +13,7 @@ const Notifier = useNotifier();
 
 const toggleStudentRole = async () => {
     try {
-        const {data} = await axios.patch(route('api.users.roles.toggle-student', user.value.id));
+        const {data} = await axios.patch(`/api/users/${user.value.id}/roles/toggle-student`);
 
         user.value.roles = data.user.roles;
         Notifier.notify({

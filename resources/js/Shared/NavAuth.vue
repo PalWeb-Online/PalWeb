@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import UserNametag from "../components/UserNametag.vue";
 import {useNotifier} from "../composables/useNotifier.js";
@@ -9,7 +8,7 @@ const Notifier = useNotifier();
 
 const sendVerificationLink = async () => {
     try {
-        const { data } = await axios.post(route('verification.send'));
+        const { data } = await axios.post('/api/email/verification/link');
 
         switch (data.outcome) {
             case 'sent':

@@ -1,7 +1,6 @@
 <script setup>
 import RootContainer from "../../../components/RootContainer.vue";
 import {onMounted, ref} from "vue";
-import {route} from "ziggy-js";
 
 const props = defineProps({
     rootId: Number,
@@ -10,7 +9,7 @@ const props = defineProps({
 const root = ref(null);
 
 onMounted(async () => {
-    const {data} = await axios.get(route('api.roots.fetch', props.rootId));
+    const {data} = await axios.get(`/api/roots/${props.rootId}`);
     root.value = data.root;
 });
 </script>

@@ -1,13 +1,12 @@
 <script setup>
-import {route} from "ziggy-js";
 import {onMounted, reactive, ref} from "vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import TermItem from "../../../components/TermItem.vue";
 
 const tabs = [
-    {key: 'relatives', label: 'Relatives', routeName: 'word-logger.relatives'},
-    {key: 'sentences', label: 'Sentences', routeName: 'word-logger.sentences'},
-    {key: 'inflections', label: 'Inflections', routeName: 'word-logger.inflections'},
+    {key: 'relatives', label: 'Relatives', url: '/api/word-logger/relatives'},
+    {key: 'sentences', label: 'Sentences', url: '/api/word-logger/sentences'},
+    {key: 'inflections', label: 'Inflections', url: '/api/word-logger/inflections'},
 ];
 
 const activeTab = ref('relatives');
@@ -33,7 +32,7 @@ const loadTab = async (tabKey) => {
     isLoading[tabKey] = true;
 
     try {
-        const response = await axios.get(route(tab.routeName));
+        const response = await axios.get(tab.url);
         tabData[tabKey] = response.data;
     } finally {
         isLoading[tabKey] = false;

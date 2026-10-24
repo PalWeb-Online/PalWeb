@@ -1,11 +1,9 @@
-import {route} from "ziggy-js";
-
 export function useResourceSearch({
-                                      routeName,
+                                      url,
                                       params = () => ({}),
                                   }) {
     const searchResource = async (q = '') => {
-        const response = await axios.get(route(routeName), {
+        const response = await axios.get(url, {
             params: {
                 q,
                 ...params(q),

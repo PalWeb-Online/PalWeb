@@ -1,6 +1,5 @@
 <script setup>
 import {useForm} from "../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import ToggleSingle from "../ToggleSingle.vue";
@@ -47,7 +46,7 @@ const signIn = async () => {
     clearSignInErrors();
 
     try {
-        const {data} = await axios.post(route('signin'), signInPayload());
+        const {data} = await axios.post('/api/auth/signin', signInPayload());
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);
@@ -91,7 +90,7 @@ const sendLink = async () => {
     clearSendLinkErrors();
 
     try {
-        const {data} = await axios.post(route('password.email'), sendLinkPayload());
+        const {data} = await axios.post('/api/auth/forgot-password', sendLinkPayload());
 
         Notifier.notify({
             key: data.status,

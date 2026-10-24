@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import {route} from 'ziggy-js';
 import ZatuneNeutral from '../Shared/ZatuneNeutral.vue';
 import ZatuneComment from '../components/ZatuneComment.vue';
 import GlossItem from '../components/GlossItem.vue';
@@ -15,7 +14,7 @@ const {
 } = useTerm(term);
 
 onMounted(async () => {
-    const { data } = await axios.get(route('api.terms.featured'));
+    const { data } = await axios.get('/api/terms/featured');
     term.value = data.term;
     term.value.glosses.forEach(gloss => gloss.attributes = []);
 });

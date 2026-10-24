@@ -1,7 +1,6 @@
 <script setup>
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref} from "vue";
 
 const props = defineProps({
@@ -61,7 +60,7 @@ const toggleGroup = (key) => {
 const isGroupOpen = (key) => Boolean(openGroups[key]);
 
 onMounted(async () => {
-    const {data} = await axios.get(route('lesson-planner.unit-decks.get', props.unitId));
+    const {data} = await axios.get(`/api/lesson-planner/units/${props.unitId}/decks`);
     unit.value = data.unit;
     decks.value = data.decks?.data ?? data.decks ?? [];
 });

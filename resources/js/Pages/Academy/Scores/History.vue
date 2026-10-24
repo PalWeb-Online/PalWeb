@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import ScoreStats from "../../../components/ScoreStats.vue";
 import AppTip from "../../../components/AppTip.vue";
 import PinButton from "../../../components/PinButton.vue";
@@ -40,11 +39,7 @@ const selectedScore = ref(null);
 
 const fetchHistory = async () => {
     const params = props.scoreId ? {score: props.scoreId} : {};
-    const {data} = await axios.get(route('api.academy.scores.history', {
-        scorable_type: props.scorable_type,
-        scorable_id: props.scorable_id,
-        ...params,
-    }));
+    const {data} = await axios.get(`/api/scores/history/${props.scorable_type}/${props.scorable_id}`, {params});
 
     model.value = data.model;
     scores.value = data.scores;
@@ -55,7 +50,7 @@ const fetchHistory = async () => {
 const deleteScore = async (id) => {
     if (!confirm(t('forms.notifications.delete-confirm', {model: t('actions.models.score')}))) return;
 
-    const {data} = await axios.delete(route('scores.destroy', id));
+    const {data} = await axios.delete(`/api/scores/${id}`);
 
     if (data.success) {
         Notifier.notify({

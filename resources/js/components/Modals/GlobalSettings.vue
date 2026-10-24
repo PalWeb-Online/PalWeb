@@ -4,7 +4,6 @@ import {useNotificationStore} from "../../stores/NotificationStore.js";
 import {computed, ref} from "vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import ToggleSingle from "../ToggleSingle.vue";
-import {route} from "ziggy-js";
 import {useI18n} from "vue-i18n";
 
 const UserStore = useUserStore();
@@ -32,7 +31,7 @@ const availableLocales = [
 ];
 
 const changeLanguage = async (nextLocale) => {
-    const {data} = await axios.post(route('language.store', nextLocale));
+    const {data} = await axios.post(`/api/language/${nextLocale}`);
     locale.value = data.locale;
 };
 

@@ -1,7 +1,6 @@
 <script setup>
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import {computed, ref} from "vue";
-import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 import AppTooltip from "../../../../components/AppTooltip.vue";
 import SessionSettings from "./SessionSettings.vue";
@@ -78,7 +77,7 @@ const hasReachedReviewLimit = computed(() => {
 
 const purgeNew = async () => {
     if (confirm(t('card-dealer.session-preview.notifications.purge-confirm'))) {
-        const {data} = await axios.post(route('cards.purge'));
+        const {data} = await axios.post('/api/cards/purge');
 
         if (data.success) {
             Notifier.notify({

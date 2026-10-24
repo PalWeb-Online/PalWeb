@@ -1,6 +1,5 @@
 <script setup>
 import {useForm} from "../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import {generateArabicName} from "../../utils/NameGenerator.js";
@@ -44,7 +43,7 @@ const signUp = async () => {
     clearErrors();
 
     try {
-        const {data} = await axios.post(route('signup'), payload());
+        const {data} = await axios.post('/api/auth/signup', payload());
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);

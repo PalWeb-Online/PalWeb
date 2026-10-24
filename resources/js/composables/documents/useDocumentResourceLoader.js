@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 
 export function useDocumentResourceLoader() {
     const sentenceModels = ref({});
@@ -34,7 +33,7 @@ export function useDocumentResourceLoader() {
             return;
         }
 
-        const response = await axios.post(route('sentences.get-many'), {
+        const response = await axios.post('/api/sentences/many', {
             ids,
         });
 

@@ -1,6 +1,5 @@
 <script setup>
 import {computed, ref} from 'vue';
-import {route} from 'ziggy-js';
 import {useTerm} from '../composables/terms/useTerm.js';
 import TermActions from './Actions/TermActions.vue';
 import PinButton from './PinButton.vue';
@@ -49,7 +48,7 @@ const pronunciationsFetched = ref(false);
 
 const fetchPronunciations = async () => {
     try {
-        const response = await axios.get(route('terms.get.pronunciations', { term: term.id }));
+        const response = await axios.get(`/api/terms/${term.id}/pronunciations`);
         const pronunciations = response.data.filter(pronunciation =>
             !term.pronunciations.some(existing => existing.id === pronunciation.id),
         );
@@ -73,10 +72,7 @@ const fetchSentences = async (glossId) => {
     try {
         const gloss = term.glosses.find(gloss => gloss.id === glossId);
 
-        const response = await axios.get(route('terms.get.sentences', {
-            term: term.id,
-            gloss: glossId,
-        }));
+        const response = await axios.get(`/api/terms/${term.id}/sentences/${glossId}`);
         const sentences = response.data.filter(sentence =>
             !gloss.sentences.some(existing => existing.id === sentence.id),
         );

@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useForm} from "../../../composables/useForm.js";
 import Draggable from 'vuedraggable';
 import {computed, onMounted, ref, watch} from "vue";
@@ -25,7 +24,7 @@ const {
 })
 
 onMounted(async () => {
-    const {data} = await axios.get(route('lesson-planner.get'));
+    const {data} = await axios.get('/api/lesson-planner');
     units.value = data.units?.data ?? data.units ?? [];
     lessons.value = data.lessons?.data ?? data.lessons ?? [];
     form.units = [...units.value];
@@ -74,7 +73,7 @@ const saveCourse = async () => {
     clearErrors();
 
     try {
-        await axios.patch(route('lesson-planner.update'), payload());
+        await axios.patch('/api/lesson-planner', payload());
         defaults();
 
         Notifier.notify({

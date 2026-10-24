@@ -1,6 +1,5 @@
 <script setup>
 import {ref, watch} from "vue";
-import {route} from 'ziggy-js';
 import {useUserStore} from "../stores/UserStore.js";
 import AppTooltip from "./AppTooltip.vue";
 import {useNotifier} from "../composables/useNotifier.js";
@@ -20,7 +19,7 @@ let isPinned = ref(props.model.isPinned);
 
 const pin = async () => {
     try {
-        const {data} = await axios.post(route(`${props.modelType}s.pin`, props.model.id));
+        const {data} = await axios.post(`/api/${props.modelType}s/${props.model.id}/pin`);
 
         if (props.modelType === 'deck') {
             pinCount.value = data.pinCount;

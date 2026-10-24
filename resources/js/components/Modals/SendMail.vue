@@ -1,6 +1,5 @@
 <script setup>
 import {useForm} from "../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {computed, ref} from "vue";
 import CommentItem from "../CommentItem.vue";
@@ -33,7 +32,7 @@ const sendMail = async () => {
     clearErrors();
 
     try {
-        await axios.post(route('email.store'), payload());
+        await axios.post('/api/admin/email', payload());
 
         emit('close');
 

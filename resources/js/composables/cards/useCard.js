@@ -1,4 +1,3 @@
-import {route} from "ziggy-js";
 import {useRouter} from "vue-router";
 import {useNotifier} from "../useNotifier.js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
@@ -23,7 +22,7 @@ export function useCard() {
     const masterCard = async (card) => {
         if (!confirm(t('card.notifications.master-confirm'))) return;
 
-        await axios.post(route('cards.master', card.id));
+        await axios.post(`/api/cards/${card.id}/master`);
         Notifier.notify({
             key: 'card.notifications.master-success',
             type: 'info',
@@ -31,7 +30,7 @@ export function useCard() {
     };
 
     const toggleSuspend = async (card) => {
-        await axios.post(route('cards.suspend', card.id));
+        await axios.post(`/api/cards/${card.id}/suspend`);
 
         if (card.suspended_at) {
             Notifier.notify({
@@ -50,7 +49,7 @@ export function useCard() {
     const resetCard = async (card) => {
         if (!confirm(t('card.notifications.reset-confirm'))) return;
 
-        await axios.post(route('cards.reset', card.id));
+        await axios.post(`/api/cards/${card.id}/reset`);
         Notifier.notify({
             key: 'card.notifications.reset-success',
             type: 'info',

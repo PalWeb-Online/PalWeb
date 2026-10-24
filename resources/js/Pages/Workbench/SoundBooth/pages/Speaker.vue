@@ -3,7 +3,6 @@ import {computed, onMounted, ref, watch} from 'vue';
 import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
 import {useForm} from "../../../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useNotifier} from "../../../../composables/useNotifier.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
@@ -79,7 +78,7 @@ const isValidRequest = computed(() => {
 
 const fetchSpeakerOptions = async () => {
     try {
-        const response = await axios.get(route('speaker.options'));
+        const response = await axios.get('/api/sound-booth/get-speaker-options');
 
         if (response.data) {
             dialects.value = response.data.dialects;
@@ -96,8 +95,8 @@ const saveSpeaker = async () => {
     clearErrors();
 
     try {
-        await axios.post(route('speaker.store'), payload());
-        const {data} = await axios.get(route('sound-booth.speaker'));
+        await axios.post('/api/speakers', payload());
+        const {data} = await axios.get('/api/speakers/auth');
 
         if (data.speaker) {
             Object.assign(session.speaker, data.speaker);

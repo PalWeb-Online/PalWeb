@@ -1,7 +1,6 @@
 <script setup>
 import {useUserStore} from '../stores/UserStore.js';
 import {useNavigationStore} from '../stores/NavigationStore.js';
-import {route} from 'ziggy-js';
 import {onMounted, onUnmounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {Carousel, Slide} from 'vue3-carousel';
@@ -62,11 +61,11 @@ const navigateOrPrompt = (page) => {
 const toggleAdminView = async (role = null) => {
     try {
         if (role) {
-            await axios.get(route('admin.toggle-view', role));
+            await axios.get(`/api/admin/toggle-view/${role}`);
             UserStore.user.roles = [role];
 
         } else {
-            const {data} = await axios.get(route('admin.toggle-view'));
+            const {data} = await axios.get('/api/admin/toggle-view');
             UserStore.user.roles = data.roles;
         }
 

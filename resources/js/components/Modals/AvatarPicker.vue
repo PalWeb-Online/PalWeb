@@ -1,6 +1,5 @@
 <script setup>
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {CircleStencil, Cropper} from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import ModalWrapper from "./../Modals/ModalWrapper.vue";
@@ -77,7 +76,7 @@ watch(
 );
 
 onMounted(async () => {
-    const response = await axios.get(route('avatars.get'));
+    const response = await axios.get('/api/avatars');
     defaultAvatars.value = response.data;
 });
 
@@ -177,7 +176,7 @@ const uploadAvatar = async () => {
         const payload = new FormData();
         payload.append('avatar', croppedAvatar, uploadFile.value.name);
 
-        const response = await axios.post(route('users.avatars.store', props.user.username), payload);
+        const response = await axios.post(`/api/users/${props.user.username}/avatars`, payload);
         const avatar = response.data.avatar;
 
         syncUploadedAvatars([
@@ -215,7 +214,7 @@ const deleteAvatar = async (avatar) => {
     deletingAvatarIds.value = new Set([...deletingAvatarIds.value, avatar.id]);
 
     try {
-        const response = await axios.delete(route('avatars.destroy', avatar.id));
+        const response = await axios.delete(`/api/avatars/${avatar.id}`);
         const savedUser = response.data.user;
         const avatars = savedUser?.uploaded_avatars
             ?? localUploadedAvatars.value.filter((uploadedAvatar) => uploadedAvatar.id !== avatar.id);

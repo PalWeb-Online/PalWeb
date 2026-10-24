@@ -7,7 +7,7 @@ export function useDeckSearch({
     const {
         searchResource: searchDecks,
     } = useResourceSearch({
-        routeName: 'api.decks.search',
+        url: '/api/decks/search',
         params: () => ({
             lesson_id: unref(currentLessonId) ?? null,
         }),

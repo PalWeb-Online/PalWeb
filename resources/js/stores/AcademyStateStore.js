@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
 import {computed, ref} from 'vue';
-import {route} from 'ziggy-js';
 import {useUserStore} from "./UserStore.js";
 
 export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
@@ -40,7 +39,7 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
         isLoading.value = true;
         hasError.value = false;
 
-        fetchPromise.value = axios.get(route('api.academy.state'))
+        fetchPromise.value = axios.get('/api/academy/state')
             .then(({data}) => {
                 academyState.value = data;
 

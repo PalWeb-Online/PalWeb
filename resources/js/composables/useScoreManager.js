@@ -1,5 +1,4 @@
 import {reactive, ref} from "vue";
-import {route} from 'ziggy-js';
 import {useI18n} from "vue-i18n";
 import {useNotifier} from "./useNotifier.js";
 
@@ -82,7 +81,7 @@ export function useScoreManager() {
 
     const saveScore = async (scorableId, options = {}) => {
         try {
-            const {data} = await axios.post(route('scores.store'), {
+            const {data} = await axios.post('/api/scores', {
                 scorable_type: score.scorable_type,
                 scorable_id: scorableId,
                 settings: score.settings,

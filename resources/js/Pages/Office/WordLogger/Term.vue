@@ -8,7 +8,6 @@ import AppTip from "../../../components/AppTip.vue";
 import {useTermEditor} from "../../../composables/terms/useTermEditor.js";
 import {useTermValidation} from "../../../composables/terms/useTermValidation.js";
 import {useNotifier} from "../../../composables/useNotifier.js";
-import {route} from "ziggy-js";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import PinButton from "../../../components/PinButton.vue";
 import TermActions from "../../../components/Actions/TermActions.vue";
@@ -76,7 +75,7 @@ const removeRelative = (index) => {
 };
 
 onMounted(async () => {
-    const {data} = await axios.get(route('word-logger.editor-data'));
+    const {data} = await axios.get('/api/word-logger/editor-data');
     editorData.value = data.editorData;
 
     await loadForm();
