@@ -7,6 +7,8 @@ import {useNotifier} from "../../composables/useNotifier.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useAuth} from "../../composables/useAuth.js";
+import i18n from "../../i18n.js";
+import {flushLocalePreferenceSync, reconcileLocaleWithUser} from "../../runtime/locale.js";
 
 const Notifier = useNotifier();
 const UserStore = useUserStore();
@@ -50,6 +52,10 @@ const signIn = async () => {
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);
+        reconcileLocaleWithUser(i18n, data.user);
+        flushLocalePreferenceSync(i18n).catch((error) => {
+            console.error('Failed to sync locale preference:', error);
+        });
         setSignInRecentlySuccessful();
 
         emit('close');

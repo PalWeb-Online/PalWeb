@@ -22,7 +22,6 @@ use App\Http\Controllers\Office\WordLoggerController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\RootController;
-use App\Http\Controllers\RuntimeController;
 use App\Http\Controllers\SearchGenieController;
 use App\Http\Controllers\SentenceController;
 use App\Http\Controllers\SpeakerController;
@@ -48,7 +47,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/api')->group(function () {
     Route::get('/home', [HomeController::class, 'index']);
-    Route::get('/runtime', [RuntimeController::class, 'show']);
+    Route::get('/csrf-token', fn () => response()->json(['csrfToken' => csrf_token()]));
     Route::post('/language/{lang}', [LanguageController::class, 'store']);
 
     Route::prefix('/terms')->controller(TermController::class)->group(function () {
@@ -153,11 +152,11 @@ Route::prefix('/api')->group(function () {
             Route::delete('/{avatar}', [AvatarController::class, 'destroy']);
         });
 
-        Route::prefix('/push-subscriptions')->controller(PushSubscriptionController::class)->group(function (
-        ) {
-            Route::post('/', 'store');
-            Route::delete('/', 'destroy');
-        });
+        Route::prefix('/push-subscriptions')->controller(PushSubscriptionController::class)
+            ->group(function () {
+                Route::post('/', 'store');
+                Route::delete('/', 'destroy');
+            });
     });
 
     Route::middleware(['auth', 'verified'])->group(function () {

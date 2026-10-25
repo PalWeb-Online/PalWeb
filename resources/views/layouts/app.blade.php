@@ -42,15 +42,11 @@
 
     <link rel="manifest" href="/build/manifest.webmanifest">
 
-    @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
 </head>
 
 <body>
-    <div
-        id="app"
-        data-utc-offset-minutes="{{ now()->setTimezone('Asia/Jerusalem')->utcOffset() }}"
-    ></div>
+    <div id="app"></div>
 </body>
 </html>

@@ -5,6 +5,8 @@ import {computed, ref} from "vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import ToggleSingle from "../ToggleSingle.vue";
 import {useI18n} from "vue-i18n";
+import i18n from "../../i18n.js";
+import {changeApplicationLocale} from "../../runtime/locale.js";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -31,8 +33,7 @@ const availableLocales = [
 ];
 
 const changeLanguage = async (nextLocale) => {
-    const {data} = await axios.post(`/api/language/${nextLocale}`);
-    locale.value = data.locale;
+    selectedLocale.value = await changeApplicationLocale(i18n, nextLocale);
 };
 
 const toggleNotifications = async (nextValue) => {

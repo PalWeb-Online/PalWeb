@@ -1,15 +1,17 @@
-import {createApp} from "vue";
+import {createApp} from 'vue';
 import {createPinia} from 'pinia';
-import axios from 'axios';
 import App from './App.vue';
 import i18n from './i18n';
 import router from './router.js';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import {registerSW} from 'virtual:pwa-register'
+import {registerSW} from 'virtual:pwa-register';
 import 'vue3-carousel/dist/carousel.css';
-import {syncCsrfToken} from "./utils/csrfToken.js";
-import {useUserStore} from "./stores/UserStore.js";
+import {useUserStore} from './stores/UserStore.js';
+import {bootstrapHttp} from './runtime/bootstrap.js';
+import {
+    flushLocalePreferenceSync, initializeClientLocale, reconcileLocaleWithUser,
+} from './runtime/locale.js';
 
 registerSW({
     immediate: true,
@@ -35,18 +37,9 @@ registerSW({
 
 const pinia = createPinia();
 
-window.axios = axios;
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.interceptors.response.use((response) => {
-    const csrfToken = response?.data?.csrf_token;
-
-    if (csrfToken) {
-        syncCsrfToken(csrfToken);
-    }
-
-    return response;
-});
+// todo: merge into this file?
+await bootstrapHttp();
+initializeClientLocale(i18n);
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
@@ -58,9 +51,6 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
-
-i18n.global.locale.value = document.documentElement.lang || i18n.global.locale.value;
-syncCsrfToken(document.querySelector('meta[name="csrf-token"]')?.content);
 
 router.beforeEach((to) => {
     if (navigator.onLine) {
@@ -82,11 +72,21 @@ const app = createApp(App)
     .use(pinia);
 
 try {
-    await useUserStore(pinia).fetchCurrentUser();
+    const user = await useUserStore(pinia).fetchCurrentUser();
+    reconcileLocaleWithUser(i18n, user);
+    flushLocalePreferenceSync(i18n).catch((error) => {
+        console.error('Failed to sync locale preference:', error);
+    });
 
 } catch (error) {
     console.error('Failed to bootstrap the current user:', error);
 }
+
+window.addEventListener('online', () => {
+    flushLocalePreferenceSync(i18n).catch((error) => {
+        console.error('Failed to sync locale preference:', error);
+    });
+});
 
 app
     .use(router)
