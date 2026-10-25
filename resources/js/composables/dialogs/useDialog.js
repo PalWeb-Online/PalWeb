@@ -53,12 +53,12 @@ export function useDialog(props = {}) {
         }
 
         try {
-            const response = await axios.post('/api/sentences/many', {
+            const { data } = await axios.post('/api/sentences/many', {
                 ids: Array.from(ids)
             });
 
             dialog.sentences.forEach(sentence => {
-                sentence.terms = response.data[sentence.id].terms
+                sentence.terms = data.sentences[sentence.id].terms
             })
 
         } catch (error) {

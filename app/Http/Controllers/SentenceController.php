@@ -10,7 +10,6 @@ use App\Models\Sentence;
 use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -38,7 +37,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function getMany(Request $request): AnonymousResourceCollection
+    public function getMany(Request $request): JsonResponse
     {
         $request->validate([
             'ids' => 'required|array',
@@ -47,7 +46,9 @@ class SentenceController extends Controller
 
         $sentences = Sentence::whereIn('id', $request->input('ids'))->get();
 
-        return SentenceResource::collection($sentences)->keyBy('id');
+        return response()->json([
+            'sentences' => SentenceResource::collection($sentences)->keyBy('id'),
+        ]);
     }
 
     public function index(Request $request, SearchService $searchService): JsonResponse

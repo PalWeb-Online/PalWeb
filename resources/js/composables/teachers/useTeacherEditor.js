@@ -1,5 +1,4 @@
 import {computed, ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useRouter} from "vue-router";
 
@@ -44,7 +43,6 @@ export function useTeacherEditor({
         resetModel: setTeacher,
         label: 'teacher',
         routeBase: 'teachers',
-        getStoreUrl: () => route('teachers.store'),
         onDeleteSuccess: () => {
             router.push({
                 name: 'users.show',
