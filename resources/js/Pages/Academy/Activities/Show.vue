@@ -30,7 +30,6 @@ watch(() => props.activityId, async () => {
 </script>
 
 <template>
-
     <LoadingSpinner v-if="isLoadingActivity"/>
     <AppTip v-else-if="activityNotFound">
         <p>{{ $t('pages.common.not-found', {model: $t('actions.models.activity')}) }}</p>

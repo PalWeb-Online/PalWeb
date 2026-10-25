@@ -1,10 +1,10 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useRouter} from "vue-router";
-import TermContainer from "../../../components/TermContainer.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useTermViewer} from "../../../composables/terms/useTermViewer.js";
-import AppTip from "../../../components/AppTip.vue";
+import {onMounted, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import TermContainer from '../../../components/TermContainer.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
+import {useTermViewer} from '../../../composables/terms/useTermViewer.js';
+import AppTip from '../../../components/AppTip.vue';
 
 const router = useRouter();
 const resolvedRandomTermSlug = ref(null);
@@ -38,7 +38,10 @@ const openTerms = async (reload = false) => {
 
         if (term?.slug) {
             resolvedRandomTermSlug.value = term.slug;
-            await router.replace({ name: 'terms.show', params: { term: term.slug } });
+            router.replace({
+                name: 'terms.show',
+                params: { term: term.slug },
+            });
         }
 
         return;
@@ -60,7 +63,7 @@ watch(
         }
 
         void openTerms(true);
-    }
+    },
 );
 
 watch(
@@ -70,7 +73,7 @@ watch(
             ? `Dictionary: ${term.term} (${term.translit})`
             : 'Dictionary';
     },
-    { immediate: true }
+    { immediate: true },
 );
 </script>
 

@@ -1,25 +1,28 @@
 <script setup>
-import {Carousel, Slide} from "vue3-carousel";
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import ToggleSingle from "../../../components/ToggleSingle.vue";
-import {useNotifier} from "../../../composables/useNotifier.js";
-import WindowSection from "../../../components/WindowSection.vue";
-import PopupWindow from "../../../components/Modals/PopupWindow.vue";
-import AppTooltip from "../../../components/AppTooltip.vue";
-import TermItem from "../../../components/TermItem.vue";
-import AppButton from "../../../components/AppButton.vue";
-import {useAcademyStateStore} from "../../../stores/AcademyStateStore.js";
-import TermFlashcard from "../../../components/TermFlashcard.vue";
+import {Carousel, Slide} from 'vue3-carousel';
+import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
+import ToggleSingle from '../../../components/ToggleSingle.vue';
+import {useNotifier} from '../../../composables/useNotifier.js';
+import WindowSection from '../../../components/WindowSection.vue';
+import PopupWindow from '../../../components/Modals/PopupWindow.vue';
+import AppTooltip from '../../../components/AppTooltip.vue';
+import TermItem from '../../../components/TermItem.vue';
+import AppButton from '../../../components/AppButton.vue';
+import {useAcademyStateStore} from '../../../stores/AcademyStateStore.js';
+import TermFlashcard from '../../../components/TermFlashcard.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 
 const Notifier = useNotifier();
 const AcademyStateStore = useAcademyStateStore();
+
+const isLoading = ref(true);
 
 const appTooltip = ref(null);
 
 const props = defineProps({
     scope: String,
     deckId: Number,
-})
+});
 
 const deck = ref(null);
 const cards = ref([]);
@@ -29,7 +32,7 @@ const options = ref({
     learningSteps: 3,
     promptType: 'gloss',
 });
-const queue = ref([{isFinalSlide: true}]);
+const queue = ref([{ isFinalSlide: true }]);
 const remainingCards = computed(() => {
     const slice = queue.value.slice(currentSlideIndex.value);
 
@@ -76,8 +79,8 @@ const flashcardRefs = ref({});
 const currentSlideIndex = ref(0);
 
 const audioOnly = computed(() => {
-    return options.value.promptType === 'audio'
-})
+    return options.value.promptType === 'audio';
+});
 
 const flipDefault = computed(() => {
     return options.value.promptType === 'gloss';
@@ -97,7 +100,7 @@ const progressFill = computed(() => ({
 const cardStartTime = ref(Date.now());
 
 const gradeCard = async (gradeValue) => {
-    const index = currentSlideIndex.value
+    const index = currentSlideIndex.value;
     const card = queue.value[index];
     if (!card) return;
 
@@ -107,7 +110,7 @@ const gradeCard = async (gradeValue) => {
         grade: gradeValue,
         seconds_spent: secondsSpent,
         next_interval: card.next_intervals[gradeValue]?.days,
-        learning_steps: options.value.learningSteps
+        learning_steps: options.value.learningSteps,
     });
     shouldRefreshAcademyProgress.value = true;
 
@@ -120,7 +123,7 @@ const gradeCard = async (gradeValue) => {
     gradeCommitted.value = true;
 
     const staysInSession = card.step !== null || gradeValue === 0;
-    const isGraduated = gradeValue >= 3 || (card.step === options.value.learningSteps - 1 && gradeValue === 2)
+    const isGraduated = gradeValue >= 3 || (card.step === options.value.learningSteps - 1 && gradeValue === 2);
 
     if (staysInSession && !isGraduated) {
         const cardCopy = JSON.parse(JSON.stringify(card));
@@ -143,10 +146,10 @@ const gradeCard = async (gradeValue) => {
     setTimeout(() => {
         carouselRef.value.next();
     }, 300);
-}
+};
 
 const dismissCard = async (action) => {
-    const index = currentSlideIndex.value
+    const index = currentSlideIndex.value;
     const card = queue.value[index];
     if (!card) return;
 
@@ -178,21 +181,33 @@ const dismissCard = async (action) => {
     setTimeout(() => {
         carouselRef.value.next();
     }, 300);
-}
+};
 
 const calculateLocalNextIntervals = (currentStep, maxSteps) => {
     const getDays = (s) => (s < maxSteps) ? 0 : 1;
     const getLabel = (s) => (s < maxSteps) ? `step ${s}` : '1d';
 
     return {
-        0: {days: 0, label: 'step 0'},
-        1: {days: getDays(currentStep), label: getLabel(currentStep)},
-        2: {days: getDays(currentStep + 1), label: getLabel(currentStep + 1)},
-        3: {days: 1, label: '1d'}
+        0: {
+            days: 0,
+            label: 'step 0',
+        },
+        1: {
+            days: getDays(currentStep),
+            label: getLabel(currentStep),
+        },
+        2: {
+            days: getDays(currentStep + 1),
+            label: getLabel(currentStep + 1),
+        },
+        3: {
+            days: 1,
+            label: '1d',
+        },
     };
 };
 
-const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
+const handleSlideEnd = ({ currentSlideIndex: newIndex }) => {
     currentSlideIndex.value = newIndex;
     gradeCommitted.value = false;
     cardStartTime.value = Date.now();
@@ -200,12 +215,14 @@ const handleSlideEnd = ({currentSlideIndex: newIndex}) => {
 
 onMounted(async () => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get('/api/card-dealer/review', {params});
+    const { data } = await axios.get('/api/card-dealer/review', { params });
 
     deck.value = data.deck;
     cards.value = data.cards?.data ?? data.cards ?? [];
     options.value = data.options;
-    queue.value = [...cards.value, {isFinalSlide: true}];
+    queue.value = [...cards.value, { isFinalSlide: true }];
+
+    isLoading.value = false;
 });
 
 onBeforeUnmount(() => {
@@ -216,7 +233,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div id="app-body">
+    <LoadingSpinner v-if="isLoading"/>
+    <div v-else id="app-body">
         <div class="window-container">
             <div class="window-header">
                 <RouterLink :to="{
@@ -234,27 +252,36 @@ onBeforeUnmount(() => {
                 <h1>{{ $t('pages.cards.review.title') }}</h1>
                 <PopupWindow title="Card Dealer (Review)">
                     <div class="h1">Tutorial</div>
-                    <p>Welcome to the Review area of the Card Dealer. Here, you will be shown <b>Owned</b> Cards that
-                        are due for review or <b>New</b> Cards to begin learning. All you have to do is look at the Card
-                        & see if you know the meaning of the Term. Once you're ready to check yourself, flip the Card &
+                    <p>Welcome to the Review area of the Card Dealer. Here, you will be shown <b>Owned</b> Cards
+                        that
+                        are due for review or <b>New</b> Cards to begin learning. All you have to do is look at the
+                        Card
+                        & see if you know the meaning of the Term. Once you're ready to check yourself, flip the
+                        Card &
                         rate your knowledge of the Term.</p>
                     <p>Cards are processed differently depending on whether they're in the Review or Learning
                         buckets.</p>
                     <div class="h2">Learning Cards</div>
                     <p>When a Card is created, it automatically starts off in the Learning bucket. At this stage, it
-                        must pass a series of <b>Steps</b> before it can "graduate" to an Owned Card. Starting from Step
+                        must pass a series of <b>Steps</b> before it can "graduate" to an Owned Card. Starting from
+                        Step
                         0, every time you rate the Card "Know" you increase the Step by 1 (rating it "Easy" always
-                        graduates the Card, skipping the Steps entirely); rating the Card "Barely" keeps you on the same
-                        Step, while rating it "Wrong" returns the Card to Step 0. Essentially, the Steps are the minimum
+                        graduates the Card, skipping the Steps entirely); rating the Card "Barely" keeps you on the
+                        same
+                        Step, while rating it "Wrong" returns the Card to Step 0. Essentially, the Steps are the
+                        minimum
                         number of times you must see the Card & grade it "Know" before graduating the Card. You can
                         adjust the number of Learning Steps in the Card Dealer dashboard; the default is 3.</p>
                     <div class="h2">Review Cards</div>
                     <p>Once you're in the groove, most Cards you see in your review sessions will be in the Review
                         bucket. Unlike Learning Cards, these only require one grading Action to process. As for the
                         grading options, they will determine how soon the Card will be due again; higher ratings,
-                        naturally, will make the Card be due further away in the future. However, if the Card is ever
-                        graded as "Wrong", then it returns to the Learning bucket & must pass through the Learning Steps
-                        again to graduate to the Review bucket. Note that none of your review stats for an Owned Card
+                        naturally, will make the Card be due further away in the future. However, if the Card is
+                        ever
+                        graded as "Wrong", then it returns to the Learning bucket & must pass through the Learning
+                        Steps
+                        again to graduate to the Review bucket. Note that none of your review stats for an Owned
+                        Card
                         will ever be lost & your Mastery Score will not necessarily revert to zero.</p>
 
                     <div class="h1">Options</div>
@@ -266,24 +293,31 @@ onBeforeUnmount(() => {
                         </li>
                     </ul>
                     <div class="h2">Card Options</div>
-                    <p>When generating Cards within the Dictionary scope, it's inevitable that you will encounter Terms
-                        that are trivial for you if you already have some Arabic knowledge. Also, there may be certain
+                    <p>When generating Cards within the Dictionary scope, it's inevitable that you will encounter
+                        Terms
+                        that are trivial for you if you already have some Arabic knowledge. Also, there may be
+                        certain
                         Terms that you're completely uninterested in learning, such as potentially offensive
                         terminology. Because of that, two options are provided to skip over these situations:</p>
                     <ul>
-                        <li><b>Master</b> — Set very high stats for this Card so that the Mastery Level reaches 100%.
+                        <li><b>Master</b> — Set very high stats for this Card so that the Mastery Level reaches
+                            100%.
                         </li>
-                        <li><b>Suspend</b> — Set a null due date for this Card, meaning it won't be shown to you again.
+                        <li><b>Suspend</b> — Set a null due date for this Card, meaning it won't be shown to you
+                            again.
                         </li>
                     </ul>
                     <p>Suspended Cards are ignored by all progress metrics, so there is no penalty for suspending
                         Cards. Also, suspended Cards do not count toward Card limits when building the review
                         session. So, if your new Card limit is set to 10 & you generated 10 new Cards today &
                         suspended 5 of them that you were not interested in, you will be able to generate 5 more
-                        Cards. You may manage your suspended Cards in the Card management portal & restore them at any
+                        Cards. You may manage your suspended Cards in the Card management portal & restore them at
+                        any
                         time; restoring them will automatically make them due tomorrow.</p>
-                    <p>When you select <b>Master</b>, the Card is automatically suspended, because it is assumed that
-                        the Card is trivial to you & you aren't interested in seeing it in your review sessions. You may
+                    <p>When you select <b>Master</b>, the Card is automatically suspended, because it is assumed
+                        that
+                        the Card is trivial to you & you aren't interested in seeing it in your review sessions. You
+                        may
                         restore a mastered Card if you wish, but the due date will be extremely far away.</p>
                 </PopupWindow>
             </div>
@@ -293,7 +327,8 @@ onBeforeUnmount(() => {
                 </template>
                 <template #content>
                     <div class="settings-wrapper">
-                        <ToggleSingle v-model="showTranscription" :label="$t('components.common.options.show-transcription')"/>
+                        <ToggleSingle v-model="showTranscription"
+                                      :label="$t('components.common.options.show-transcription')"/>
                     </div>
                 </template>
             </WindowSection>
@@ -407,19 +442,23 @@ onBeforeUnmount(() => {
 
                         <div class="answer-buttons" :class="{disabled: gradeCommitted || !answerShown}">
                             <div>
-                                <button class="portal-button" @click="gradeCard(0)">{{ $t('card.grade.fail')}}</button>
+                                <button class="portal-button" @click="gradeCard(0)">{{ $t('card.grade.fail') }}
+                                </button>
                                 <div class="interval-preview">{{ card.next_intervals[0]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(1)">{{ $t('card.grade.low')}}</button>
+                                <button class="portal-button" @click="gradeCard(1)">{{ $t('card.grade.low') }}
+                                </button>
                                 <div class="interval-preview">{{ card.next_intervals[1]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(2)">{{ $t('card.grade.medium')}}</button>
+                                <button class="portal-button" @click="gradeCard(2)">{{ $t('card.grade.medium') }}
+                                </button>
                                 <div class="interval-preview">{{ card.next_intervals[2]?.label }}</div>
                             </div>
                             <div>
-                                <button class="portal-button" @click="gradeCard(3)">{{ $t('card.grade.high')}}</button>
+                                <button class="portal-button" @click="gradeCard(3)">{{ $t('card.grade.high') }}
+                                </button>
                                 <div class="interval-preview">{{ card.next_intervals[3]?.label }}</div>
                             </div>
 
@@ -430,9 +469,11 @@ onBeforeUnmount(() => {
                                     <li><b>Wrong</b> — You didn't know the meaning of the Term or otherwise guessed
                                         incorrectly.
                                     </li>
-                                    <li><b>Barely</b> — You were eventually able to produce the meaning of the Term with
+                                    <li><b>Barely</b> — You were eventually able to produce the meaning of the Term
+                                        with
                                         a lot of
-                                        effort, or you guessed with a low degree of certainty; you could've easily been
+                                        effort, or you guessed with a low degree of certainty; you could've easily
+                                        been
                                         wrong.
                                     </li>
                                     <li><b>Know</b> — You were able to produce the meaning of the Term.</li>

@@ -19,7 +19,7 @@ class CardController extends Controller
     ) {
     }
 
-    public function cards(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $filters = array_merge(['sort' => 'due'], $request->only(['status', 'level', 'sort']));
 

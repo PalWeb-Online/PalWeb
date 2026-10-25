@@ -63,7 +63,7 @@ class DialogController extends Controller
         $this->linkSentences($dialog, $request->sentences);
 
         return response()->json([
-            'deck' => new DialogResource($dialog),
+            'dialog' => new DialogResource($dialog),
         ], 201);
     }
 
@@ -73,7 +73,7 @@ class DialogController extends Controller
         $this->linkSentences($dialog, $request->sentences);
 
         return response()->json([
-            'deck' => new DialogResource($dialog),
+            'dialog' => new DialogResource($dialog),
         ]);
     }
 

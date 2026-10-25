@@ -13,6 +13,7 @@ import {useUser} from "../../../composables/users/useUser.js";
 import AppHeading from "../../../components/AppHeading.vue";
 import {useUserViewer} from "../../../composables/users/useUserViewer.js";
 import {useRoute} from "vue-router";
+import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
 const props = defineProps({
     userUsername: {
@@ -30,6 +31,8 @@ const {
     badges,
     speaker,
     filters,
+    userNotFound,
+    isLoadingUser,
     loadUser,
     reloadUser,
 } = useUserViewer();
@@ -62,7 +65,11 @@ watch(
 </script>
 
 <template>
-    <div id="app-body" v-if="user">
+    <LoadingSpinner v-if="isLoadingUser"/>
+    <AppTip v-else-if="userNotFound">
+        <p>{{ $t('pages.common.not-found', { model: $t('actions.models.user') }) }}</p>
+    </AppTip>
+    <div v-else-if="user" id="app-body">
         <div class="window-container">
             <div class="window-header">
                 <RouterLink :to="{ name: 'users.index' }" class="material-symbols-rounded">home</RouterLink>

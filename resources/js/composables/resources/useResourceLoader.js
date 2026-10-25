@@ -1,15 +1,17 @@
-import {ref} from "vue";
-import {route} from "ziggy-js";
+import {ref} from 'vue';
+import {apiUrl, pathSegment} from '../../utils/apiUrl.js';
+import {useRouter} from 'vue-router';
 
 export function useResourceLoader({
-                                         routeBase = null,
-                                         routeParam = null,
-                                         getUrl,
-                                         getRequestConfig = () => ({}),
-                                         extractModel,
-                                         extractMeta = () => ({}),
-                                         onSetModel = null,
-                                     }) {
+                                      routeBase = null,
+                                      routeParam = null,
+                                      getUrl,
+                                      getRequestConfig = () => ({}),
+                                      extractModel,
+                                      extractMeta = () => ({}),
+                                      onSetModel = null,
+                                  }) {
+    const router = useRouter();
     const model = ref(null);
     const notFound = ref(false);
     const isLoading = ref(false);
@@ -19,6 +21,27 @@ export function useResourceLoader({
         notFound.value = false;
 
         onSetModel?.(meta);
+    };
+
+    const setError = (error) => {
+        if (!error?.isAxiosError && !error?.response && !error?.request) {
+            throw error;
+        }
+
+        setModel();
+
+        if (error.response?.status === 404) {
+            notFound.value = true;
+        }
+
+        router.replace({
+            name: 'error',
+            query: {
+                status: error?.response?.status,
+            },
+        });
+
+        return null;
     };
 
     const getRouteUrl = (identifier, action, options = {}) => {
@@ -69,13 +92,7 @@ export function useResourceLoader({
             return model.value;
 
         } catch (error) {
-            if (error?.response?.status === 404) {
-                setModel();
-                notFound.value = true;
-                return null;
-            }
-
-            throw error;
+            return setError(error);
 
         } finally {
             isLoading.value = false;
@@ -100,13 +117,7 @@ export function useResourceLoader({
             return model.value;
 
         } catch (error) {
-            if (error?.response?.status === 404) {
-                setModel();
-                notFound.value = true;
-                return null;
-            }
-
-            throw error;
+            return setError(error);
 
         } finally {
             isLoading.value = false;

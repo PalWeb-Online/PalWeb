@@ -296,11 +296,11 @@ const selectStage = (lessonStage) => {
 @keyframes current-stage-pulse {
     0%,
     100% {
-        box-shadow: 0 0 2.4rem 0 rgb(255 255 255 / 20%);
+        box-shadow: 0 0 2.4rem 0 hsl(from var(--color-accent-light) h s l / 25%);
     }
 
     50% {
-        box-shadow: 0 0 2.4rem 1.2rem rgb(255 255 255 / 40%);
+        box-shadow: 0 0 2.4rem 1.2rem hsl(from var(--color-accent-light) h s l / 75%);
     }
 }
 </style>

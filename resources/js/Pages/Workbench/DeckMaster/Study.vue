@@ -16,6 +16,7 @@ const Notifier = useNotifier();
 const DeckStudySession = provideDeckStudySession(createDeckStudySession());
 
 const {
+    deck,
     deckNotFound,
     isLoadingDeck,
     loadDeck,
@@ -54,16 +55,14 @@ watch(() => props.deckId, () => {
 });
 </script>
 <template>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingDeck"/>
-        <AppTip v-else-if="deckNotFound">
-            <p>{{ $t('pages.common.not-found', {model: $t('actions.models.deck')}) }}</p>
-        </AppTip>
-        <template v-else>
-            <Settings v-if="DeckStudySession.data.step === 'settings'"/>
-            <Practice v-if="DeckStudySession.data.step === 'practice'"/>
-            <Quiz v-if="DeckStudySession.data.step === 'quiz'"/>
-            <Results v-if="DeckStudySession.data.step === 'results'"/>
-        </template>
+    <LoadingSpinner v-if="isLoadingDeck"/>
+    <AppTip v-else-if="deckNotFound">
+        <p>{{ $t('pages.common.not-found', { model: $t('actions.models.deck') }) }}</p>
+    </AppTip>
+    <div v-else-if="deck" id="app-body">
+        <Settings v-if="DeckStudySession.data.step === 'settings'"/>
+        <Practice v-if="DeckStudySession.data.step === 'practice'"/>
+        <Quiz v-if="DeckStudySession.data.step === 'quiz'"/>
+        <Results v-if="DeckStudySession.data.step === 'results'"/>
     </div>
 </template>

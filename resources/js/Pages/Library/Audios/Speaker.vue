@@ -52,7 +52,11 @@ watch(
 </script>
 
 <template>
-    <div id="app-body">
+    <LoadingSpinner v-if="isLoadingSpeaker"/>
+    <AppTip v-else-if="speakerNotFound">
+        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
+    </AppTip>
+    <div v-else-if="speaker" id="app-body">
         <div class="window-container">
             <div class="window-header">
                 <RouterLink :to="{ name: 'audios.index' }" class="material-symbols-rounded">home</RouterLink>
@@ -60,40 +64,34 @@ watch(
             </div>
             <div class="window-section-head"><h1>{{ $t('actions.models.speaker') }}</h1></div>
 
-            <LoadingSpinner v-if="isLoadingSpeaker"/>
-            <AppTip v-else-if="speakerNotFound">
-                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.speaker')}) }}</p>
+            <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
+                <p>{{ $t('pages.audios.speaker.is-private') }}</p>
             </AppTip>
-            <template v-else-if="speaker">
-                <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
-                    <p>{{ $t('pages.audios.speaker.is-private') }}</p>
-                </AppTip>
-                <UserItem :user="speaker.user" size="l" :speaker="speaker">
-                    <SpeakerItem :speaker="speaker"/>
-                </UserItem>
-                <div class="window-section-head"><h2>{{ $t('models.audios') }}</h2></div>
-                <template v-if="audios.length > 0">
-                    <div class="model-list index-list">
-                        <PronunciationItem
-                            v-for="audio in audios"
-                            :key="audio.id"
-                            :model="audio.pronunciation"
-                            :audio="audio"
-                        />
-                    </div>
-                    <Paginator
-                        :pageNumbers="pageNumbers"
-                        :currentPage="currentPage"
-                        :goToPage="goToPage"
+            <UserItem :user="speaker.user" size="l" :speaker="speaker">
+                <SpeakerItem :speaker="speaker"/>
+            </UserItem>
+            <div class="window-section-head"><h2>{{ $t('models.audios') }}</h2></div>
+            <template v-if="audios.length > 0">
+                <div class="model-list index-list">
+                    <PronunciationItem
+                        v-for="audio in audios"
+                        :key="audio.id"
+                        :model="audio.pronunciation"
+                        :audio="audio"
                     />
-                </template>
-                <template v-else>
-                    <AppTip>
-                        <p>{{
-                                $t('pages.audios.speaker.empty', {speaker: speaker.user.private ? 'This Speaker' : speaker.user.name})
-                            }}</p>
-                    </AppTip>
-                </template>
+                </div>
+                <Paginator
+                    :pageNumbers="pageNumbers"
+                    :currentPage="currentPage"
+                    :goToPage="goToPage"
+                />
+            </template>
+            <template v-else>
+                <AppTip>
+                    <p>{{
+                            $t('pages.audios.speaker.empty', {speaker: speaker.user.private ? 'This Speaker' : speaker.user.name})
+                        }}</p>
+                </AppTip>
             </template>
         </div>
     </div>

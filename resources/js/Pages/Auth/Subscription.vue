@@ -6,7 +6,12 @@ import {useUserStore} from "../../stores/UserStore.js";
 const NavigationStore = useNavigationStore();
 const UserStore = useUserStore();
 
-const showDeniedMessage = false;
+const props = defineProps({
+    redirected: {
+        type: Boolean,
+        default: false,
+    },
+});
 
 const navigate = () => {
     if (!UserStore.isUser) {
@@ -22,7 +27,7 @@ const navigate = () => {
         <h1>{{ $t('subscription.title') }}</h1>
     </div>
     <div id="app-body">
-        <AppTip v-if="showDeniedMessage">
+        <AppTip v-if="redirected">
             <p>{{ $t('subscription.messages.access-denied') }}
                 {{ !UserStore.isUser
                     ? $t('subscription.messages.sign-in-prompt')

@@ -2,6 +2,7 @@
 import {computed, watch} from "vue";
 import {useRouter} from "vue-router";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
+import ZatuneThinking from '../Shared/ZatuneThinking.vue';
 
 const props = defineProps({status: Number})
 const router = useRouter();
@@ -13,7 +14,7 @@ const title = computed(() => {
         503: 'Unavailable',
         500: 'Server Error',
         404: 'Not Found',
-        403: 'Forbidden!',
+        403: 'Forbidden',
         911: 'Offline'
     }[props.status]
 })
@@ -44,16 +45,23 @@ watch(browserOnline, (isOnline) => {
             <div class="error-status">{{ status }}</div>
             <div class="error-title">{{ title }}</div>
             <div class="error-message">{{ message }}</div>
+            <ZatuneThinking/>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+svg {
+    width: 32rem;
+    margin-block-start: 6.4rem;
+}
+
 .error-container {
     display: grid;
     gap: 1.6rem;
     text-align: center;
-    margin-block: 9.6rem;
+    justify-items: center;
+    margin: 9.6rem 3.2rem;
 
     .error-status {
         font-family: var(--display-font);

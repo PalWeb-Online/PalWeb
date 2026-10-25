@@ -22,6 +22,7 @@ class AcademyStateController extends Controller
         $lessonProgress = $user->getLessonProgress();
 
         $remainingDue = (int) $reviewService->getSessionStats($user, ReviewOptions::forUser($user))['remaining_due'];
+        $cardsCount = $user->cards()->count();
 
         return response()->json([
             'study_plan' => [
@@ -29,6 +30,7 @@ class AcademyStateController extends Controller
                 'cards' => [
                     'remaining_due' => $remainingDue,
                     'completed' => $remainingDue === 0,
+                    'started' => $cardsCount > 0,
                 ],
                 'lesson' => $currentLesson ? $this->lessonTask($user, $currentLesson) : null,
             ],

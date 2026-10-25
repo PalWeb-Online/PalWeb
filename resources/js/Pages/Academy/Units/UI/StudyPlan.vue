@@ -16,15 +16,16 @@ const cardTask = computed(() => {
     if (!studyPlan.value?.cards) return null;
 
     const remainingDue = studyPlan.value.cards.remaining_due ?? 0;
+    const isDoneToday = studyPlan.value.cards.started && studyPlan.value.cards.completed;
 
     return {
         key: 'cards',
         icon: 'style',
-        completed: studyPlan.value.cards.completed,
-        labelKey: 'pages.academy.study-plan.cards.label',
-        metaKey: studyPlan.value.cards.completed
+        completed: isDoneToday,
+        labelKey: `pages.academy.study-plan.cards.${studyPlan.value.cards.started ? 'review' : 'start'}-label`,
+        metaKey: isDoneToday
             ? 'pages.academy.study-plan.cards.complete'
-            : 'pages.academy.study-plan.cards.meta',
+            : `pages.academy.study-plan.cards.${studyPlan.value.cards.started ? 'review' : 'start'}-meta`,
         metaParams: { count: remainingDue },
         actionKey: 'pages.academy.study-plan.cards.action',
         route: router.resolve({ name: 'card-dealer.review' }).href,
