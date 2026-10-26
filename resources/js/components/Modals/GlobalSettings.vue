@@ -1,18 +1,21 @@
 <script setup>
-import {useNavigationStore} from "../../stores/NavigationStore.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
-import {computed, ref} from "vue";
-import {useUserStore} from "../../stores/UserStore.js";
-import ToggleSingle from "../ToggleSingle.vue";
-import {useI18n} from "vue-i18n";
-import i18n from "../../i18n.js";
-import {changeApplicationLocale} from "../../runtime/locale.js";
+import {useNavigationStore} from '../../stores/NavigationStore.js';
+import {useNotificationStore} from '../../stores/NotificationStore.js';
+import {computed, ref} from 'vue';
+import {useUserStore} from '../../stores/UserStore.js';
+import ToggleSingle from '../ToggleSingle.vue';
+import {useI18n} from 'vue-i18n';
+import i18n from '../../i18n.js';
+import {changeApplicationLocale} from '../../runtime/locale.js';
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 const NotificationStore = useNotificationStore();
 
-const {locale, t} = useI18n();
+const {
+    t,
+    locale,
+} = useI18n();
 
 const description = computed(() => t('modals.settings.theme-description.' + NavigationStore.activeTheme));
 
@@ -29,10 +32,10 @@ const availableLocales = [
     {
         value: 'ar',
         label: 'العربيّة',
-    }
+    },
 ];
 
-const changeLanguage = async (nextLocale) => {
+const selectLocale = async (nextLocale) => {
     selectedLocale.value = await changeApplicationLocale(i18n, nextLocale);
 };
 
@@ -43,7 +46,7 @@ const toggleNotifications = async (nextValue) => {
         console.error(error);
         alert(error.message || t(nextValue
             ? 'modals.settings.notifications.enable-error'
-            : 'modals.settings.notifications.disable-error'
+            : 'modals.settings.notifications.disable-error',
         ));
     }
 };
@@ -82,10 +85,10 @@ const toggleNotifications = async (nextValue) => {
                 <label>{{ $t('modals.settings.fields.language') }}</label>
                 <select
                     v-model="selectedLocale"
-                    @change="changeLanguage(selectedLocale)"
+                    @change="selectLocale(selectedLocale)"
                 >
-                    <option v-for="(locale, i) in availableLocales" :key="i" :value="locale.value">
-                        {{ locale.label }}
+                    <option v-for="(loc, i) in availableLocales" :key="i" :value="loc.value">
+                        {{ loc.label }}
                     </option>
                 </select>
             </div>

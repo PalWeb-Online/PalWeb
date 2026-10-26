@@ -85,6 +85,18 @@ const router = createRouter({
             },
         },
         {
+            path: '/error',
+            name: 'error',
+            component: ErrorPage,
+            props: route => ({
+                status: route.query.status ?? 500,
+            }),
+            meta: {
+                title: 'Error',
+                section: 'community',
+            },
+        },
+        {
             path: '/offline',
             name: 'offline',
             component: ErrorPage,
@@ -95,6 +107,9 @@ const router = createRouter({
             path: '/subscription',
             name: 'subscription.index',
             component: Subscription,
+            props: route => ({
+                redirected: route.query.redirected === 'true',
+            }),
             meta: {
                 title: 'Subscribe',
                 section: 'account',
@@ -127,7 +142,7 @@ const router = createRouter({
                         requiresAuth: true,
                         title: 'Change Password',
                     },
-                }
+                },
             ],
         },
 
@@ -288,7 +303,7 @@ const router = createRouter({
                             meta: { title: 'Library: Audios' },
                         },
                         {
-                            path: ':speaker',
+                            path: 'speaker/:speaker',
                             name: 'speaker.show',
                             component: SpeakerShow,
                             props: route => ({ speakerId: identifier(route.params.speaker) }),
@@ -673,7 +688,10 @@ router.beforeEach(async (to) => {
         });
 
         if (!hasRole) {
-            return { name: 'subscription.index' };
+            return {
+                name: 'subscription.index',
+                query: { redirected: 'true' },
+            };
         }
     }
 });

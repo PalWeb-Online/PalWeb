@@ -153,8 +153,11 @@ const trendLinePoints = computed(() => {
                         </div>
 
                         <div v-if="isVisible" :style="tooltipStyle" ref="tooltip" class="data-tooltip">
-                            <div style="text-transform: capitalize">
-                                {{ $t(`components.score.quiz.types.${tooltipData.settings.quizType}`) }}
+                            <div style="text-transform: capitalize">{{
+                                    tooltipData.scorable_type === 'deck'
+                                        ? $t(`components.score.quiz.types.${tooltipData.settings.quizType}`)
+                                        : $t('activity.key')
+                                }}
                             </div>
                             <div>{{ formatter.format(tooltipData.score) }}
                                 <span style="font-size: 1.2rem">

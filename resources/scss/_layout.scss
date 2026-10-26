@@ -61,6 +61,7 @@ body {
 }
 
 #app-head {
+    align-self: start;
     background: white;
     padding: 1.6rem 3.2rem 2.4rem;
     border-block-end: 0.2rem solid var(--color-dark-primary);
@@ -105,8 +106,12 @@ body {
         }
     }
 
-    & > .app-tip {
-        margin-inline: 0.8rem;
+    @media (width < 960px) {
+        & > .app-tip {
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
     }
 }
 

@@ -1,28 +1,28 @@
 <script setup>
-import NavSticky from "./NavSticky.vue";
-import NavSidebar from "./NavSidebar.vue";
-import SearchGenie from "./SearchGenie.vue";
-import Footer from "./Footer.vue";
-import AppNotification from "../components/AppNotification.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import {useSearchStore} from "../stores/SearchStore.js";
-import {onMounted, watch} from "vue";
-import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import {useUserStore} from "../stores/UserStore.js";
-import i18n from "../i18n.js";
-import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
-import {useConnectionStatus} from "../composables/useConnectionStatus.js";
-import {useI18n} from "vue-i18n";
-import {useAcademyStateStore} from "../stores/AcademyStateStore.js";
-import {useNotifier} from "../composables/useNotifier.js";
+import NavSticky from './NavSticky.vue';
+import NavSidebar from './NavSidebar.vue';
+import SearchGenie from './SearchGenie.vue';
+import Footer from './Footer.vue';
+import AppNotification from '../components/AppNotification.vue';
+import {useNotificationStore} from '../stores/NotificationStore.js';
+import {useSearchStore} from '../stores/SearchStore.js';
+import {computed, onMounted, onUnmounted, watch} from 'vue';
+import ModalWrapper from '../components/Modals/ModalWrapper.vue';
+import {useUserStore} from '../stores/UserStore.js';
+import i18n from '../i18n.js';
+import BackgroundPattern from './Backgrounds/BackgroundPattern.vue';
+import {useConnectionStatus} from '../composables/useConnectionStatus.js';
+import {useI18n} from 'vue-i18n';
+import {useAcademyStateStore} from '../stores/AcademyStateStore.js';
+import {useNotifier} from '../composables/useNotifier.js';
 
-const {locale} = useI18n();
+const { locale } = useI18n();
 
 defineProps({
     section: {
         type: String,
         default: 'library',
-    }
+    },
 });
 
 const UserStore = useUserStore();
@@ -32,6 +32,7 @@ const AcademyStateStore = useAcademyStateStore();
 const Notifier = useNotifier();
 
 const {browserOnline} = useConnectionStatus(Echo);
+const { browserOnline } = useConnectionStatus(Echo);
 
 watch(
     locale,
@@ -41,7 +42,7 @@ watch(
             document.documentElement.lang = newLocale;
         }
     },
-    {immediate: true}
+    { immediate: true },
 );
 
 let lastBrowserOnlineState = browserOnline.value;
@@ -88,26 +89,7 @@ watch(browserOnline, (isOnline) => {
     Notifier.notify({
         key: 'layout.notifications.online',
     });
-}, {immediate: true});
-
-// watch(
-//     () => page.props.flash.notification,
-//     (notification) => {
-//         if (notification) {
-//             Notifier.notify({notification});
-//         }
-//     },
-//     {immediate: true}
-// );
-//
-// watch(
-//     () => page.props.locale,
-//     (newLocale) => {
-//         if (newLocale) {
-//             i18n.global.locale.value = newLocale;
-//         }
-//     }
-// );
+}, { immediate: true });
 </script>
 
 <template>
