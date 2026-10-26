@@ -9,6 +9,9 @@ import Record from "./pages/Record.vue";
 import Check from "./pages/Check.vue";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
+import {useUserStore} from '../../../stores/UserStore.js';
+
+const UserStore = useUserStore();
 
 const session = provideSoundBoothSession(createSoundBoothSession());
 
@@ -19,7 +22,7 @@ const hasNavigationGuard = computed(() => {
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 onMounted(async () => {
-    const {data} = await axios.get('/api/speakers/auth');
+    const {data} = await axios.get(`/api/speakers/${UserStore.user?.id}/edit`);
 
     if (data.speaker) {
         merge(session.speaker, data.speaker);

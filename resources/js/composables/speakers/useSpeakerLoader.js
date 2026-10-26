@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useSpeakerLoader() {
@@ -13,13 +12,10 @@ export function useSpeakerLoader() {
         setModel: setSpeaker,
         fetchModel: fetchSpeaker,
     } = useResourceLoader({
-        getUrl: (speakerId, options = {}) => route(options.routeName ?? 'api.speakers.fetch', {
-            speaker: speakerId,
-            ...(options.params ?? {}),
-        }),
+        routeBase: 'speakers',
+        routeParam: 'speaker',
         getRequestConfig: (options = {}) => ({
             params: {
-                include: options.include ?? null,
                 page: options.page ?? null,
             },
         }),

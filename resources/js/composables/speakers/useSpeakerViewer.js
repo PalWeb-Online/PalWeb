@@ -8,10 +8,7 @@ export function useSpeakerViewer() {
         load: loadSpeaker,
         reload: reloadSpeaker,
     } = useResourceViewer({
-        fetchModel: (speakerId, options = {}) => speakerLoader.fetchSpeaker(speakerId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: speakerLoader.fetchSpeaker,
         resetModel: speakerLoader.setSpeaker,
     });
 

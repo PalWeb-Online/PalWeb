@@ -253,8 +253,8 @@ Route::prefix('/api')->group(function () {
 
         Route::prefix('/speakers')->controller(SpeakerController::class)->group(function () {
             Route::post('/', 'store');
-            Route::get('/auth', 'show');
-            Route::get('/{speaker}/audios', 'getAudios');
+            Route::get('/{speaker}', 'show');
+            Route::get('/{user}/edit', 'edit');
         });
 
         Route::prefix('/units')->controller(UnitController::class)->group(function () {
