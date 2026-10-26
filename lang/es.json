@@ -1341,6 +1341,28 @@
                 "info-lesson-removal": "Eliminar una Lección de esta lista la desvinculará de esta Unidad. Debes ir a su página de edición para eliminar la Lección por completo.",
                 "warning-incomplete": "Esta Unidad está incompleta, ya que contiene menos de 9 Lecciones publicadas."
             }
+        },
+        "error": {
+            "503": {
+                "title": "No Disponible",
+                "message": "Estamos haciendo algo de mantenimiento. Vuelve a revisar en breve."
+            },
+            "500": {
+                "title": "Error del Servidor",
+                "message": "¡Uy! Algo salió mal."
+            },
+            "404": {
+                "title": "No Encontrado",
+                "message": "Lo que buscas no existe."
+            },
+            "403": {
+                "title": "Prohibido",
+                "message": "Lo que acabas de hacer — no lo hagas."
+            },
+            "911": {
+                "title": "Desconectado",
+                "message": "Rayos. Intenta de nuevo más tarde."
+            }
         }
     },
     "card-dealer": {

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, watch} from "vue";
+import {watch} from "vue";
 import {useRouter} from "vue-router";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
 import ZatuneThinking from '../Shared/ZatuneThinking.vue';
@@ -8,26 +8,6 @@ const props = defineProps({status: Number})
 const router = useRouter();
 
 const {browserOnline} = useConnectionStatus(Echo);
-
-const title = computed(() => {
-    return {
-        503: 'Unavailable',
-        500: 'Server Error',
-        404: 'Not Found',
-        403: 'Forbidden',
-        911: 'Offline'
-    }[props.status]
-})
-
-const message = computed(() => {
-    return {
-        503: 'We\'re doing some maintenance. Check back soon.',
-        500: 'Oops! Something went wrong.',
-        404: 'What you\'re looking for doesn\'t exist.',
-        403: 'Whatever you just did — don\'t.',
-        911: 'Womp womp. Try again later.',
-    }[props.status]
-})
 
 watch(browserOnline, (isOnline) => {
     if (props.status !== 911) {
@@ -43,8 +23,8 @@ watch(browserOnline, (isOnline) => {
     <div id="app-body">
         <div class="error-container">
             <div class="error-status">{{ status }}</div>
-            <div class="error-title">{{ title }}</div>
-            <div class="error-message">{{ message }}</div>
+            <div class="error-title">{{ $t(`pages.error.${status}.title`) }}</div>
+            <div class="error-message">{{ $t(`pages.error.${status}.message`) }}</div>
             <ZatuneThinking/>
         </div>
     </div>

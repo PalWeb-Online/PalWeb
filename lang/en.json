@@ -1153,8 +1153,10 @@
                 "error": "Unable to load today's Study Plan.",
                 "tasks-completed": "You got everything done for today! See you tomorrow!",
                 "cards": {
-                    "label": "Review your Due Cards",
-                    "meta": "You have {count} Due Cards in the Card Dealer.",
+                    "start-label": "Create some New Cards",
+                    "start-meta": "Go to the Card Dealer to generate New Cards for review.",
+                    "review-label": "Review your Due Cards",
+                    "review-meta": "You have {count} Due Cards in the Card Dealer.",
                     "complete": "No more Due Cards left for today!",
                     "action": "review cards"
                 },
@@ -1340,6 +1342,28 @@
                 "info-unit-removal": "You must go to the edit page for a Unit to delete it.",
                 "info-lesson-removal": "Removing a Lesson from this list will unlink it from this Unit. You must go to its edit page to delete the Lesson altogether.",
                 "warning-incomplete": "This Unit is incomplete, as it contains fewer than 9 published Lessons."
+            }
+        },
+        "error": {
+            "503": {
+                "title": "Unavailable",
+                "message": "We're doing some maintenance. Check back soon."
+            },
+            "500": {
+                "title": "Server Error",
+                "message": "Oops! Something went wrong."
+            },
+            "404": {
+                "title": "Not Found",
+                "message": "What you're looking for doesn't exist."
+            },
+            "403": {
+                "title": "Forbidden",
+                "message": "Whatever you just did — don't."
+            },
+            "911": {
+                "title": "Offline",
+                "message": "Womp womp. Try again later."
             }
         }
     },
