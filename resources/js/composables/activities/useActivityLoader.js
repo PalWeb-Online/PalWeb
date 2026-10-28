@@ -14,14 +14,6 @@ export function useActivityLoader() {
     } = useResourceLoader({
         routeBase: 'activities',
         routeParam: 'activity',
-        getRequestConfig: (options = {}) => ({
-            params: {
-                profile: options.profile ?? null,
-                include: Array.isArray(options.include)
-                    ? options.include.join(',')
-                    : options.include ?? null,
-            },
-        }),
         extractModel: (response) => response.data.activity ?? null,
     });
 

@@ -1,8 +1,8 @@
-import {route} from "ziggy-js";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
+import {apiUrl, pathSegment} from "../../utils/apiUrl.js";
 
 export function useResourceDelete({
                                       routeBase,
@@ -39,7 +39,7 @@ export function useResourceDelete({
     const resolveDestroyUrl = (model, options = {}) => {
         const identifier = getIdentifier(model, options);
 
-        return getDestroyUrl?.(model, identifier, options) ?? route(`${routeBase}.destroy`, identifier);
+        return getDestroyUrl?.(model, identifier, options) ?? apiUrl(`${routeBase}/${pathSegment(identifier)}`);
     };
 
     const deleteResource = async (model = null, options = {}) => {

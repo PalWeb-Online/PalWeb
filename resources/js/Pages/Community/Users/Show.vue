@@ -16,15 +16,17 @@ import {useRoute} from 'vue-router';
 import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {usePaginator} from '../../../composables/usePaginator.js';
 
+const UserStore = useUserStore();
+
+const route = useRoute();
+const currentQuery = () => ({ ...route.query });
+
 const props = defineProps({
     userUsername: {
         type: String,
         required: true,
     },
 });
-
-const UserStore = useUserStore();
-const route = useRoute();
 
 const {
     user,
@@ -50,12 +52,8 @@ const unlockedBadges = computed(() => badges.value.map(badge => ({
     unlocked: user.value?.badges?.some(unlockedBadge => unlockedBadge.id === badge.id) ?? false,
 })));
 
-const currentQuery = () => ({ ...route.query });
-
 const fetchUserPage = async (params = {}) => {
-    await reloadUser(props.userUsername, {
-        params,
-    });
+    await reloadUser(props.userUsername, { params });
 };
 
 const {

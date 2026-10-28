@@ -8,7 +8,7 @@ export function useSpeakerViewer() {
         load: loadSpeaker,
         reload: reloadSpeaker,
     } = useResourceViewer({
-        fetchModel: speakerLoader.fetchSpeaker,
+        fetchModel: speakerLoader.fetchShowSpeaker,
         resetModel: speakerLoader.setSpeaker,
     });
 

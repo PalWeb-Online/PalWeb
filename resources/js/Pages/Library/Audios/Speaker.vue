@@ -9,8 +9,12 @@ import UserItem from '../../../components/UserItem.vue';
 import {usePaginator} from '../../../composables/usePaginator.js';
 import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {useSpeakerViewer} from '../../../composables/speakers/useSpeakerViewer.js';
+import {useRoute} from 'vue-router';
 
 const UserStore = useUserStore();
+
+const route = useRoute();
+const currentQuery = () => ({ ...route.query });
 
 const props = defineProps({
     speakerId: {
@@ -40,18 +44,15 @@ const {
     updatePagination,
 } = usePaginator(fetchSpeakerPage);
 
-onMounted(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    fetchSpeakerPage(Object.fromEntries(searchParams.entries()));
-});
+onMounted(() => fetchSpeakerPage(currentQuery()));
 
 watch(() => audios.value.meta, (pagination) => {
     updatePagination(pagination);
 });
 
 watch(
-    () => props.speakerId,
-    () => reloadSpeaker(props.speakerId),
+    () => [props.speakerId, route.query],
+    () => reloadSpeaker(currentQuery()),
 );
 </script>
 

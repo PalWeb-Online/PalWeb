@@ -1,9 +1,9 @@
 import {ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {useForm} from "../useForm.js";
 import {useResourceDelete} from "./useResourceDelete.js";
 import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
+import {apiUrl, pathSegment} from "../../utils/apiUrl.js";
 
 export function useResourceEditor({
                                       initialForm,
@@ -62,11 +62,11 @@ export function useResourceEditor({
     };
 
     const resolveStoreUrl = (options = {}) => {
-        return getStoreUrl?.(options) ?? route(`${routeBase}.store`);
+        return getStoreUrl?.(options) ?? apiUrl(`${routeBase}`);
     };
 
     const resolveUpdateUrl = (identifier, options = {}) => {
-        return getUpdateUrl?.(identifier, options) ?? route(`${routeBase}.update`, identifier);
+        return getUpdateUrl?.(identifier, options) ?? apiUrl(`${routeBase}/${pathSegment(identifier)}`);
     };
 
     const {

@@ -6,7 +6,6 @@ export function useResourceLoader({
                                       routeBase = null,
                                       routeParam = null,
                                       getUrl,
-                                      getRequestConfig = () => ({}),
                                       extractModel,
                                       extractMeta = () => ({}),
                                       onSetModel = null,
@@ -44,32 +43,31 @@ export function useResourceLoader({
         return null;
     };
 
-    const getRouteUrl = (identifier, action, options = {}) => {
+    const getRouteUrl = (identifier, action) => {
         if (!routeBase || !routeParam) {
             throw new Error('routeBase and routeParam are required for convention-based resource loading.');
         }
 
-        return route(`api.${routeBase}.${action}`, {
-            [routeParam]: identifier,
-            ...(options.params ?? {}),
-        });
+        const actionPath = action === 'edit' ? '/edit' : '';
+
+        return apiUrl(`${routeBase}/${pathSegment(identifier)}${actionPath}`);
     };
 
-    const getRandomRouteUrl = (options = {}) => {
+    const getRandomRouteUrl = () => {
         if (!routeBase) {
             throw new Error('routeBase is required for convention-based random resource loading.');
         }
 
-        return route(`api.${routeBase}.random`, options.params ?? {});
+        return apiUrl(`${routeBase}/random`);
     };
 
-    const resolveUrl = (identifier, options = {}) => {
+    const resolveUrl = (identifier, action) => {
         return getUrl
-            ? getUrl(identifier, options)
-            : getRouteUrl(identifier, options.routeAction ?? 'show', options);
+            ? getUrl(identifier)
+            : getRouteUrl(identifier, action);
     };
 
-    const fetchModel = async (identifier, options = {}) => {
+    const fetchModel = async (identifier, action = 'show', options = {}) => {
         if (identifier === null || identifier === undefined || identifier === '') {
             setModel();
             return null;
@@ -80,8 +78,8 @@ export function useResourceLoader({
 
         try {
             const response = await axios.get(
-                resolveUrl(identifier, options),
-                getRequestConfig(options),
+                resolveUrl(identifier, action),
+                options,
             );
 
             setModel(
@@ -105,8 +103,8 @@ export function useResourceLoader({
 
         try {
             const response = await axios.get(
-                getRandomRouteUrl(options),
-                getRequestConfig(options),
+                getRandomRouteUrl(),
+                options,
             );
 
             setModel(
@@ -124,15 +122,8 @@ export function useResourceLoader({
         }
     };
 
-    const fetchShowModel = (identifier, options = {}) => fetchModel(identifier, {
-        ...options,
-        routeAction: 'show',
-    });
-
-    const fetchEditModel = (identifier, options = {}) => fetchModel(identifier, {
-        ...options,
-        routeAction: 'edit',
-    });
+    const fetchShowModel = (identifier, options = {}) => fetchModel(identifier, 'show', options);
+    const fetchEditModel = (identifier, options = {}) => fetchModel(identifier, 'edit', options);
 
     return {
         model,

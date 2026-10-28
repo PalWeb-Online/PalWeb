@@ -19,15 +19,10 @@ export function useSpeakerLoader() {
         notFound: speakerNotFound,
         isLoading: isLoadingSpeaker,
         setModel: setSpeaker,
-        fetchModel: fetchSpeaker,
+        fetchShowModel: fetchShowSpeaker,
     } = useResourceLoader({
         routeBase: 'speakers',
         routeParam: 'speaker',
-        getRequestConfig: (options = {}) => ({
-            params: {
-                page: options.page ?? null,
-            },
-        }),
         extractModel: (response) => response.data.speaker ?? null,
         extractMeta: (response) => ({
             audios: response.data.audios ?? emptyAudios(),
@@ -43,6 +38,6 @@ export function useSpeakerLoader() {
         isLoadingSpeaker,
         audios,
         setSpeaker,
-        fetchSpeaker,
+        fetchShowSpeaker,
     };
 }

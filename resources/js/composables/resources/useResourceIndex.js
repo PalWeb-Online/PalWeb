@@ -1,6 +1,6 @@
 import {computed, onMounted, ref} from 'vue';
-import {route} from 'ziggy-js';
 import {usePaginator} from '../usePaginator.js';
+import {apiUrl} from '../../utils/apiUrl.js';
 
 const emptyCollection = () => ({
     data: [],
@@ -18,7 +18,7 @@ const hasValue = (value) => value !== null && value !== undefined && value !== '
 
 export function useResourceIndex({
                                      routeBase,
-                                     routeName = `api.${routeBase}.index`,
+                                     url = apiUrl(`${routeBase}`),
                                      resourceKey = routeBase,
                                      defaultFilters = {},
                                      toggleFilters = [],
@@ -29,37 +29,37 @@ export function useResourceIndex({
     const filters = ref({ ...defaultFilters });
     const loading = ref(true);
     const error = ref(null);
-    
+
     async function fetchIndex(params = {}) {
         loading.value = true;
         error.value = null;
-        
+
         try {
-            const { data } = await axios.get(route(routeName, params));
+            const { data } = await axios.get(url, { params });
             const resource = data[resourceKey] ?? emptyCollection();
-            
+
             collection.value = resource;
             totalCount.value = data.totalCount ?? resource.meta?.total ?? 0;
             filters.value = {
                 ...defaultFilters,
                 ...(data.filters ?? {}),
             };
-            
+
             updatePagination(resource.meta ?? emptyCollection().meta);
             onResponse?.(data);
-            
+
             return data;
-            
+
         } catch (caughtError) {
             error.value = caughtError;
             console.error(`Failed to fetch ${resourceKey}:`, caughtError);
             return null;
-            
+
         } finally {
             loading.value = false;
         }
     }
-    
+
     const {
         currentPage,
         lastPage,
@@ -67,49 +67,46 @@ export function useResourceIndex({
         goToPage,
         updatePagination,
     } = usePaginator(fetchIndex);
-    
+
     onMounted(() => {
         const params = queryParams();
-        
+
         filters.value = {
             ...filters.value,
             ...params,
         };
         currentPage.value = parseInt(params.page) || 1;
-        
+
         fetchIndex(params);
     });
-    
+
     function updateFilter({
                               filter,
                               value,
                           }) {
         const searchParams = new URLSearchParams(window.location.search);
         const currentValue = searchParams.get(filter) ?? filters.value[filter] ?? '';
-        const nextValue = toggleFilters.includes(filter) && String(currentValue) === String(value)
-            ? ''
-            : value;
-        
+        const nextValue = toggleFilters.includes(filter) && String(currentValue) === String(value) ? '' : value;
+
         if (hasValue(nextValue)) {
             searchParams.set(filter, nextValue);
         } else {
             searchParams.delete(filter);
         }
-        
+
         searchParams.delete('page');
         currentPage.value = 1;
-        
+
         const params = Object.fromEntries(searchParams.entries());
         const queryString = searchParams.toString();
-        
+
         window.history.pushState({}, '', queryString ? `?${queryString}` : window.location.pathname);
-        
-        
+
         fetchIndex(params);
     }
-    
+
     const hasResults = computed(() => totalCount.value > 0);
-    
+
     return {
         collection,
         totalCount,

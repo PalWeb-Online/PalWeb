@@ -1,6 +1,6 @@
-import {route} from 'ziggy-js';
 import {useResourceEditor} from '../resources/useResourceEditor.js';
 import {useUserLoader} from './useUserLoader.js';
+import {apiUrl, pathSegment} from "../../utils/apiUrl.js";
 
 export function useUserEditor({
                                   userId,
@@ -45,7 +45,7 @@ export function useUserEditor({
         fetchModel: userLoader.fetchEditUser,
         resetModel: userLoader.setUser,
         label: 'user',
-        getUpdateUrl: (identifier) => route('users.update', identifier),
+        getUpdateUrl: (identifier) => apiUrl(`users/${pathSegment(identifier)}`),
         getLoadIdentifier: () => userId.value,
     });
     

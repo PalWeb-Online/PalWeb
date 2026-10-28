@@ -27,19 +27,34 @@ class UserController extends Controller
         $user->load(['dialect', 'badges', 'speaker', 'teacher', 'roles']);
         $speaker = $user->speaker?->load(['dialect'])->loadCount(['audios']);
 
+        $perPage = 25;
+        $currentPage = $request->integer('page', 1);
+
+
         $sort = $request->string('sort')->toString();
-        $decks = $user->decks()
+
+        $decksCollection = $user->decks()
             ->when($sort === 'alphabetical', fn ($query) => $query->orderBy('name'))
             ->when($sort !== 'alphabetical', fn ($query) => $query->orderByDesc('id'))
-            ->paginate(25)
-            ->withQueryString();
-        $deckResource = DeckResource::collection($decks);
+            ->get();
+
+        $decks = new \Illuminate\Pagination\LengthAwarePaginator(
+            $decksCollection->forPage($currentPage, $perPage)->values(),
+            $decksCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        $resource = DeckResource::collection($decks);
 
         return response()->json([
             'filters' => $filters,
             'user' => new UserShowResource($user),
+            'badges' => Badge::all(),
+            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
             'decks' => [
-                'data' => $deckResource->toArray($request),
+                'data' => $resource->toArray($request),
                 'meta' => [
                     'links' => $decks->linkCollection()->toArray(),
                     'current_page' => $decks->currentPage(),
@@ -47,8 +62,6 @@ class UserController extends Controller
                     'total' => $decks->total(),
                 ],
             ],
-            'badges' => Badge::all(),
-            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
         ]);
     }
 

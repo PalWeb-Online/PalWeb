@@ -9,7 +9,7 @@ export function useUserViewer() {
         reload: reloadUser,
     } = useResourceViewer({
         fetchModel: userLoader.fetchShowUser,
-        resetModel: () => userLoader.setUser,
+        resetModel: userLoader.setUser,
     });
 
     return {
