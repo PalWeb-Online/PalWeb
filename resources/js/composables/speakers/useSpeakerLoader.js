@@ -1,9 +1,18 @@
 import {ref} from "vue";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
+const emptyAudios = () => ({
+    data: [],
+    meta: {
+        links: [],
+        current_page: 1,
+        last_page: 1,
+        total: 0,
+    },
+});
+
 export function useSpeakerLoader() {
-    const audios = ref([]);
-    const audioPagination = ref(null);
+    const audios = ref(emptyAudios());
 
     const {
         model: speaker,
@@ -21,12 +30,10 @@ export function useSpeakerLoader() {
         }),
         extractModel: (response) => response.data.speaker ?? null,
         extractMeta: (response) => ({
-            audios: response.data.audios.data ?? [],
-            audioPagination: response.data.audios.meta ?? null,
+            audios: response.data.audios ?? emptyAudios(),
         }),
         onSetModel: (meta = {}) => {
-            audios.value = meta.audios ?? [];
-            audioPagination.value = meta.audioPagination ?? null;
+            audios.value = meta.audios ?? emptyAudios();
         },
     });
 
@@ -35,7 +42,6 @@ export function useSpeakerLoader() {
         speakerNotFound,
         isLoadingSpeaker,
         audios,
-        audioPagination,
         setSpeaker,
         fetchSpeaker,
     };
