@@ -1,7 +1,7 @@
-import {inject, nextTick, provide, reactive, ref} from "vue";
-import {useRouter} from "vue-router";
-import {useScoreManager} from "../useScoreManager.js";
-import {shuffle} from "lodash";
+import {inject, nextTick, provide, reactive, ref} from 'vue';
+import {useRouter} from 'vue-router';
+import {useScoreManager} from '../useScoreManager.js';
+import {shuffle} from 'lodash';
 
 const activitySessionKey = Symbol("ActivitySession");
 
@@ -140,11 +140,5 @@ export function provideActivitySession(session) {
 }
 
 export function useActivitySession() {
-    const session = inject(activitySessionKey);
-
-    if (!session) {
-        throw new Error("useActivitySession must be used inside an Activity page provider.");
-    }
-
-    return session;
+    return inject(activitySessionKey, null);
 }

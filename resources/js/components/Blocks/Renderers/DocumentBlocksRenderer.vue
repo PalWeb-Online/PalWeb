@@ -1,18 +1,18 @@
 <script setup>
-import SentenceItem from "../../../components/SentenceItem.vue";
-import HeadingBlock from "../../../components/Blocks/Renderers/HeadingBlock.vue";
-import ContainerBlock from "./ContainerBlock.vue";
-import TextBlock from "./TextBlock.vue";
-import AudioBlock from "./AudioBlock.vue";
-import ChartBlock from "./ChartBlock.vue";
-import TableBlock from "./TableBlock.vue";
-import SentenceBlock from "./SentenceBlock.vue";
-import InputExercisesBlock from "./InputExercisesBlock.vue";
-import MatchExercisesBlock from "./MatchExercisesBlock.vue";
-import SelectExercisesBlock from "./SelectExercisesBlock.vue";
-import SortExercisesBlock from "./SortExercisesBlock.vue";
-import ImageBlock from "./ImageBlock.vue";
-import DividerBlock from "../../../Shared/DividerBlock.vue";
+import SentenceItem from '../../../components/SentenceItem.vue';
+import HeadingBlock from '../../../components/Blocks/Renderers/HeadingBlock.vue';
+import ContainerBlock from './ContainerBlock.vue';
+import TextBlock from './TextBlock.vue';
+import AudioBlock from './AudioBlock.vue';
+import ChartBlock from './ChartBlock.vue';
+import TableBlock from './TableBlock.vue';
+import SentenceBlock from './SentenceBlock.vue';
+import InputExercisesBlock from './InputExercisesBlock.vue';
+import MatchExercisesBlock from './MatchExercisesBlock.vue';
+import SelectExercisesBlock from './SelectExercisesBlock.vue';
+import SortExercisesBlock from './SortExercisesBlock.vue';
+import ImageBlock from './ImageBlock.vue';
+import DividerBlock from '../../../Shared/DividerBlock.vue';
 
 const props = defineProps({
     blocks: {
@@ -25,9 +25,7 @@ const props = defineProps({
 <template>
     <template v-for="block in blocks" :key="block.id">
         <ContainerBlock v-if="block.type === 'container'" :block="block">
-            <DocumentBlocksRenderer
-                :blocks="block.blocks ?? []"
-            />
+            <DocumentBlocksRenderer :blocks="block.blocks ?? []"/>
         </ContainerBlock>
 
         <DividerBlock v-else-if="block.type === 'divider'" :block="block"/>

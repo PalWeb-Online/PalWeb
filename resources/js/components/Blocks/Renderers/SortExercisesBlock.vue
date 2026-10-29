@@ -10,12 +10,15 @@ const props = defineProps({
 });
 
 const {
-    ActivitySession,
+    isViewingResults,
+    getExerciseById,
     processedItems,
 } = useExerciseBlock(props);
 
 const handleDragEnd = (exerciseId) => {
-    const exercise = ActivitySession.getExerciseById(exerciseId);
+    if (isViewingResults.value) return;
+
+    const exercise = getExerciseById(exerciseId);
     if (!exercise) return;
 
     exercise.response = exercise.shuffledItems;
@@ -29,16 +32,16 @@ const handleDragEnd = (exerciseId) => {
 
         <template v-for="ex in processedItems">
             <div class="exercise--sort" :class="{
-                    'correct': ActivitySession.isViewingResults && ex.correct,
-                    'incorrect': ActivitySession.isViewingResults && !ex.correct
+                    'correct': isViewingResults && ex.correct,
+                    'incorrect': isViewingResults && !ex.correct
                 }">
                 <ExerciseItemPrompts
-                    :exercise="ex" :isViewingResults="ActivitySession.isViewingResults"/>
+                    :exercise="ex" :isViewingResults="isViewingResults"/>
 
                 <Draggable
-                    v-if="!ActivitySession.isViewingResults"
+                    v-if="!isViewingResults"
                     class="exercise--sort-items"
-                    :list="ActivitySession.getExerciseById(ex.id)?.shuffledItems"
+                    :list="getExerciseById(ex.id)?.shuffledItems"
                     item-key="id"
                     @end="handleDragEnd(ex.id)"
                 >
@@ -65,7 +68,7 @@ const handleDragEnd = (exerciseId) => {
                         </div>
                     </div>
                 </div>
-                <AppTip v-if="ActivitySession.isViewingResults && ex.tip">
+                <AppTip v-if="isViewingResults && ex.tip">
                     <p>{{ ex.tip }}</p>
                 </AppTip>
             </div>

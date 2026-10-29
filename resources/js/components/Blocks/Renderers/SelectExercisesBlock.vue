@@ -9,12 +9,16 @@ const props = defineProps({
 });
 
 const {
-    ActivitySession,
+    isViewingResults,
+    getExerciseById,
     processedItems,
 } = useExerciseBlock(props);
 
 const selectOption = (itemId, optionId) => {
-    const exercise = ActivitySession.getExerciseById(itemId);
+    if (isViewingResults.value) return;
+
+    const exercise = getExerciseById(itemId);
+    if (!exercise) return;
 
     exercise.response === optionId
         ? exercise.response = null
@@ -28,12 +32,12 @@ const selectOption = (itemId, optionId) => {
         <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems">
             <div class="exercise--select">
-                <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <div class="exercise--select-options">
                     <template v-for="option in item.displayOptions" :key="option.id">
-                        <button v-if="!ActivitySession.isViewingResults"
-                                :class="{ 'selected': ActivitySession.getExerciseById(item.id)?.response === option.id }"
+                        <button v-if="!isViewingResults"
+                                :class="{ 'selected': getExerciseById(item.id)?.response === option.id }"
                                 @click="selectOption(item.id, option.id)"
                         >
                             {{ option.text }}
@@ -48,7 +52,7 @@ const selectOption = (itemId, optionId) => {
                         </button>
                     </template>
                 </div>
-                <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+                <AppTip v-if="isViewingResults && item.tip">
                     <p>{{ item.tip }}</p>
                 </AppTip>
             </div>

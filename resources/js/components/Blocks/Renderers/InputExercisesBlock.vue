@@ -10,7 +10,11 @@ const props = defineProps({
 });
 
 const {
-    ActivitySession,
+    activity,
+    isViewingResults,
+    markCorrect,
+    getExerciseResponse,
+    setExerciseResponse,
     processedItems,
 } = useExerciseBlock(props);
 </script>
@@ -26,28 +30,28 @@ const {
         </div>
         <div v-for="item in processedItems"
              class="exercise--input" :class="{
-                    'correct': ActivitySession.isViewingResults && item.correct,
-                    'incorrect': ActivitySession.isViewingResults && !item.correct
+                    'correct': isViewingResults && item.correct,
+                    'incorrect': isViewingResults && !item.correct
                 }">
-            <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
+            <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
             <input type="text" placeholder="جواب"
-                   :disabled="ActivitySession.isViewingResults"
-                   :value="ActivitySession.isViewingResults ? item.response : ActivitySession.getExerciseById(item.id)?.response"
-                   @input="ActivitySession.getExerciseById(item.id).response = $event.target.value"
+                   :disabled="isViewingResults"
+                   :value="getExerciseResponse(item)"
+                   @input="setExerciseResponse(item.id, $event.target.value)"
             >
-            <div class="exercise--input-answers" v-if="ActivitySession.isViewingResults && !item.correct">
+            <div class="exercise--input-answers" v-if="isViewingResults && !item.correct">
                 <div>
                     ->
                     <span v-for="answer in item.answers">
                                 {{ answer }}
                             </span>
                 </div>
-                <button v-if="ActivitySession.activity"
-                        type="button" @click="ActivitySession.markCorrect(item.id)">Mark as Correct
+                <button v-if="activity"
+                        type="button" @click="markCorrect(item.id)">Mark as Correct
                 </button>
             </div>
-            <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+            <AppTip v-if="isViewingResults && item.tip">
                 <p>{{ item.tip }}</p>
             </AppTip>
         </div>
