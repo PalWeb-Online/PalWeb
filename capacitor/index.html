@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" class="theme-Msaxxan">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>PalWeb</title>
+    <script>
+        (() => {
+            const themes = ['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'];
+            const locales = ['en', 'es', 'ar'];
+            const root = document.documentElement;
+
+            try {
+                const theme = localStorage.getItem('palweb.theme');
+                const locale = localStorage.getItem('palweb.locale');
+
+                if (themes.includes(theme)) {
+                    root.classList.remove(...themes.map((value) => `theme-${value}`));
+                    root.classList.add(`theme-${theme}`);
+                }
+
+                if (locales.includes(locale)) {
+                    root.lang = locale;
+                }
+            } catch (error) {
+            }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+
+    <link rel="stylesheet" href="https://use.typekit.net/wob8zmj.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Vazirmatn:wght@400;700;900&family=Lalezar&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../resources/scss/app.scss" />
+</head>
+<body class="capacitor-app">
+    <div id="app"></div>
+    <script type="module" src="../resources/js/app.js"></script>
+</body>
+</html>

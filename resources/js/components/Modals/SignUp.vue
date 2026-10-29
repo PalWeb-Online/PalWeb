@@ -9,7 +9,10 @@ import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import i18n from "../../i18n.js";
-import {flushLocalePreferenceSync, reconcileLocaleWithUser} from "../../runtime/locale.js";
+import {
+    flushUserInterfacePreferenceSync,
+    reconcileUserInterfacePreferencesWithUser,
+} from "../../runtime/preferences.js";
 
 const {locale} = useI18n();
 const router = useRouter();
@@ -49,9 +52,16 @@ const signUp = async () => {
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);
-        reconcileLocaleWithUser(i18n, data.user);
-        flushLocalePreferenceSync(i18n).catch((error) => {
-            console.error('Failed to sync locale preference:', error);
+        reconcileUserInterfacePreferencesWithUser(i18n, data.user);
+        flushUserInterfacePreferenceSync(i18n, data.user).then((result) => {
+            if (result.theme?.preferences) {
+                UserStore.setUser({
+                    ...UserStore.user,
+                    preferences: result.theme.preferences,
+                });
+            }
+        }).catch((error) => {
+            console.error('Failed to sync interface preferences:', error);
         });
         setRecentlySuccessful();
 

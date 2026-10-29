@@ -39,7 +39,7 @@ export function useTeacherEditor({
         populateForm,
         extractSavedModel: (response) => response.data.teacher ?? response.data.data ?? null,
         getLoadIdentifier: () => user.value?.teacher?.id ?? null,
-        fetchModel: async () => user.value?.teacher ?? null,
+        fetchModel: () => user.value?.teacher ?? null,
         resetModel: setTeacher,
         label: 'teacher',
         routeBase: 'teachers',

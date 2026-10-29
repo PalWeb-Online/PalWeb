@@ -6,6 +6,7 @@ import {useUser} from "../composables/users/useUser.js";
 export const useUserStore = defineStore('UserStore', () => {
     const currentUser = ref(null);
     const hasFetchedCurrentUser = ref(false);
+    let currentUserRequest = null;
 
     const user = computed(() => currentUser.value);
 
@@ -35,14 +36,23 @@ export const useUserStore = defineStore('UserStore', () => {
             return user.value;
         }
 
-        try {
-            const {data} = await axios.get('/api/auth/user');
-            setUser(data.user || null);
-            return user.value;
-
-        } finally {
-            hasFetchedCurrentUser.value = true;
+        if (currentUserRequest) {
+            return currentUserRequest;
         }
+
+        currentUserRequest = (async () => {
+            try {
+                const {data} = await axios.get('/api/auth/user');
+                setUser(data.user || null);
+                return user.value;
+
+            } finally {
+                hasFetchedCurrentUser.value = true;
+                currentUserRequest = null;
+            }
+        })();
+
+        return currentUserRequest;
     };
 
     watch(

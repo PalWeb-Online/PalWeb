@@ -6,7 +6,7 @@ import {useUserStore} from '../../stores/UserStore.js';
 import ToggleSingle from '../ToggleSingle.vue';
 import {useI18n} from 'vue-i18n';
 import i18n from '../../i18n.js';
-import {changeApplicationLocale} from '../../runtime/locale.js';
+import {changeApplicationLocale} from '../../runtime/preferences.js';
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -19,7 +19,7 @@ const {
 
 const description = computed(() => t('modals.settings.theme-description.' + NavigationStore.activeTheme));
 
-const selectedLocale = ref(UserStore.user?.language ?? locale.value ?? 'en');
+const selectedLocale = ref(locale.value ?? 'en');
 const availableLocales = [
     {
         value: 'en',
@@ -70,17 +70,6 @@ const toggleNotifications = async (nextValue) => {
                     </option>
                 </select>
             </div>
-            <!--            <div class="field-item">-->
-            <!--                <label>Font Theme</label>-->
-            <!--                <select-->
-            <!--                    v-model="NavigationStore.activeFontTheme"-->
-            <!--                    @change="NavigationStore.updateFontTheme(NavigationStore.activeFontTheme)"-->
-            <!--                >-->
-            <!--                    <option v-for="theme in NavigationStore.fontThemes" :key="theme" :value="theme">-->
-            <!--                        {{ theme }}-->
-            <!--                    </option>-->
-            <!--                </select>-->
-            <!--            </div>-->
             <div class="field-item">
                 <label>{{ $t('modals.settings.fields.language') }}</label>
                 <select

@@ -8,10 +8,12 @@ import Pusher from 'pusher-js';
 import {registerSW} from 'virtual:pwa-register';
 import 'vue3-carousel/dist/carousel.css';
 import {useUserStore} from './stores/UserStore.js';
-import {bootstrapHttp} from './runtime/bootstrap.js';
+import {bootstrapHttp} from './http.js';
 import {
-    flushLocalePreferenceSync, initializeClientLocale, reconcileLocaleWithUser,
-} from './runtime/locale.js';
+    flushUserInterfacePreferenceSync,
+    initializeUserInterfacePreferences,
+    reconcileUserInterfacePreferencesWithUser,
+} from './runtime/preferences.js';
 
 registerSW({
     immediate: true,
@@ -37,9 +39,41 @@ registerSW({
 
 const pinia = createPinia();
 
-// todo: merge into this file?
-await bootstrapHttp();
-initializeClientLocale(i18n);
+const httpReady = bootstrapHttp().catch((error) => {
+    console.error('Failed to bootstrap HTTP:', error);
+});
+
+initializeUserInterfacePreferences(i18n);
+
+const syncUserInterfacePreferences = async (user = null) => {
+    const result = await flushUserInterfacePreferenceSync(i18n, user);
+
+    if (result.theme?.preferences && user) {
+        useUserStore(pinia).setUser({
+            ...user,
+            preferences: result.theme.preferences,
+        });
+    }
+
+    return result;
+};
+
+const bootstrapCurrentUser = async () => {
+    try {
+        await httpReady;
+
+        const user = await useUserStore(pinia).fetchCurrentUser();
+
+        reconcileUserInterfacePreferencesWithUser(i18n, user);
+
+        syncUserInterfacePreferences(user).catch((error) => {
+            console.error('Failed to sync interface preferences:', error);
+        });
+
+    } catch (error) {
+        console.error('Failed to bootstrap the current user:', error);
+    }
+};
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
@@ -67,27 +101,16 @@ router.beforeEach((to) => {
     };
 });
 
-const app = createApp(App)
-    .use(i18n)
-    .use(pinia);
-
-try {
-    const user = await useUserStore(pinia).fetchCurrentUser();
-    reconcileLocaleWithUser(i18n, user);
-    flushLocalePreferenceSync(i18n).catch((error) => {
-        console.error('Failed to sync locale preference:', error);
-    });
-
-} catch (error) {
-    console.error('Failed to bootstrap the current user:', error);
-}
-
 window.addEventListener('online', () => {
-    flushLocalePreferenceSync(i18n).catch((error) => {
-        console.error('Failed to sync locale preference:', error);
+    syncUserInterfacePreferences(useUserStore(pinia).user).catch((error) => {
+        console.error('Failed to sync interface preferences:', error);
     });
 });
 
-app
+createApp(App)
+    .use(i18n)
+    .use(pinia)
     .use(router)
     .mount('#app');
+
+bootstrapCurrentUser();

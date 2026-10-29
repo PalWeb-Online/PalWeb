@@ -8,7 +8,12 @@ body {
     font-size: 1.6rem;
     hyphens: auto;
     margin: 0;
-    background: var(--color-pastel-light);
+    background: var(--color-dark-primary);
+}
+
+body.capacitor-app {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
 }
 
 #app-container {

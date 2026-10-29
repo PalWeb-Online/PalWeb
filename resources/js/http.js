@@ -1,7 +1,5 @@
 import axios from 'axios';
-import {syncCsrfToken} from '../utils/csrfToken.js';
-
-// todo: location of this file?
+import {syncCsrfToken} from './utils/csrfToken.js';
 
 const csrfTokenEndpoint = '/api/csrf-token';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? import.meta.env.VITE_WEB_APP_URL ?? null;
@@ -75,9 +73,10 @@ function bootstrapAxios() {
 }
 
 export async function bootstrapHttp() {
+    bootstrapAxios();
+
     const csrfToken = await resolveCsrfToken();
 
-    bootstrapAxios();
     syncCsrfToken(csrfToken);
 
     return csrfToken;

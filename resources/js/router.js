@@ -669,15 +669,23 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     const UserStore = useUserStore();
     const NavigationStore = useNavigationStore();
-
-    if (to.matched.some(record => record.meta.requiresAuth) && !UserStore.isUser) {
-        NavigationStore.showSignIn = true;
-        return false;
-    }
-
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiredRoles = to.matched.reduce((roles, record) => {
         return record.meta.roles || roles;
     }, null);
+
+    if ((requiresAuth || requiredRoles) && !UserStore.hasFetchedCurrentUser) {
+        try {
+            await UserStore.fetchCurrentUser();
+        } catch (error) {
+            console.error('Failed to resolve current user for route guard:', error);
+        }
+    }
+
+    if (requiresAuth && !UserStore.isUser) {
+        NavigationStore.showSignIn = true;
+        return false;
+    }
 
     if (requiredRoles && UserStore.isUser) {
         const hasRole = requiredRoles.some(role => {
