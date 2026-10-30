@@ -1,17 +1,20 @@
 <script setup>
-import {onMounted, ref} from "vue";
-import DeckFlashcard from "../../../components/DeckFlashcard.vue";
-import {useRouter} from "vue-router";
-import AppTip from "../../../components/AppTip.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import QuizzerWindow from "./UI/QuizzerWindow.vue";
-import ScoreStats from "../../../components/ScoreStats.vue";
-import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
+import {onMounted, ref} from 'vue';
+import DeckFlashcard from '../../../components/DeckFlashcard.vue';
+import {useRouter} from 'vue-router';
+import AppTip from '../../../components/AppTip.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
+import QuizzerWindow from './UI/QuizzerWindow.vue';
+import ScoreStats from '../../../components/ScoreStats.vue';
+import ReviewProgress from '../CardDealer/UI/ReviewProgress.vue';
 
 const router = useRouter();
 
 const props = defineProps({
-    mode: {type: String, default: 'build'},
+    mode: {
+        type: String,
+        default: 'build',
+    },
 });
 
 const mode = ref(props.mode);
@@ -23,7 +26,7 @@ const toggleMode = async () => {
     selectedDeck.value = null;
     mode.value = mode.value === 'build' ? 'study' : 'build';
     await fetchDecks(mode.value);
-}
+};
 
 const isLoading = ref(false);
 
@@ -33,13 +36,13 @@ const fetchDecks = async (mode) => {
 
     try {
         const response = await axios.get('/api/deck-master/decks', {
-            params: {mode}
+            params: { mode },
         });
 
         decks.value = response.data.decks;
 
     } catch (error) {
-        console.error("Failed to fetch decks", error);
+        console.error('Failed to fetch decks', error);
     }
 
     isLoading.value = false;
@@ -54,15 +57,18 @@ const toggleSelectDeck = (index) => {
 
 const toBuild = () => {
     selectedDeck.value?.id
-        ? router.push({name: 'deck-master.build', params: {deck: selectedDeck.value?.id}})
-        : router.push({name: 'deck-master.build'})
+        ? router.push({
+            name: 'deck-master.build',
+            params: { deck: selectedDeck.value?.id },
+        })
+        : router.push({ name: 'deck-master.build' });
 };
 
 const toStudy = () => {
     if (selectedDeck.value?.id) {
         router.push({
             name: 'deck-master.study',
-            params: {deck: selectedDeck.value.id},
+            params: { deck: selectedDeck.value.id },
         });
     }
 };
@@ -84,16 +90,16 @@ onMounted(async () => {
     </div>
 
     <div id="app-body" :class="{ 'dm-mode-study': mode === 'study' }">
-        <div id="dm-select">
-            <div class="deck-item-grid-wrapper">
+        <div class="deck-item-grid-wrapper">
+            <LoadingSpinner v-if="isLoading"/>
+            <template v-else>
                 <button v-if="mode === 'build'" class="material-symbols-rounded" @click="toBuild">
                     {{ selectedDeck ? 'edit' : 'add' }}
                 </button>
                 <button v-else-if="mode === 'study'" class="material-symbols-rounded" @click="collapsed = !collapsed">
                     {{ !collapsed ? 'collapse_all' : 'expand_all' }}
                 </button>
-
-                <div v-if="!isLoading && decks.length" class="deck-item-grid"
+                <div v-if="decks.length" class="deck-item-grid"
                      :class="{ collapsed: mode === 'study' && collapsed }">
                     <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
                                    :disabled="mode === 'study' && !deck.terms.length"
@@ -101,7 +107,7 @@ onMounted(async () => {
                                    @flip="toggleSelectDeck(index)"
                     />
                 </div>
-                <div v-else-if="!isLoading && !decks.length" class="deck-item-grid">
+                <div v-else-if="!decks.length" class="deck-item-grid">
                     <AppTip>
                         <p v-if="mode === 'build'">
                             {{ $t('pages.deck-master.messages.no-created-decks') }}
@@ -111,10 +117,7 @@ onMounted(async () => {
                         </p>
                     </AppTip>
                 </div>
-                <div v-show="isLoading" class="deck-item-grid">
-                    <LoadingSpinner/>
-                </div>
-            </div>
+            </template>
         </div>
 
         <QuizzerWindow v-if="mode === 'study'" :deck="selectedDeck" step="select">

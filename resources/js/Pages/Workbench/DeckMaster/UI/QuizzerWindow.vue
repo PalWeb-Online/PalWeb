@@ -22,9 +22,9 @@ const step = computed(() => props.step ?? DeckStudySession?.data.step ?? 'select
                 <RouterLink v-if="step === 'settings'" :to="{ name: 'deck-master.index', query: { mode: 'study' } }"
                       class="material-symbols-rounded">close
                 </RouterLink>
-                <RouterLink v-else :to="{ name: 'deck-master.study', params: { deck: deck.id } }" class="material-symbols-rounded">
+                <button v-else @click="DeckStudySession.data.step = 'settings'" class="material-symbols-rounded">
                     arrow_back
-                </RouterLink>
+                </button>
                 <div class="window-header-url">www.palweb.app/workbench/deck-master/study/{deck}</div>
             </template>
             <template v-else>

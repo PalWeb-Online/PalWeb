@@ -770,29 +770,12 @@
     }
 }
 
-.loading-dialog {
-    display: flex;
-    justify-content: center;
-    gap: 2.4rem;
-    margin: 2.4rem 2.4rem 4.8rem;
-
-    .app-tip {
-        margin: 0;
-    }
-
-    .loading-spinner svg {
-        width: 3.2rem;
-    }
-}
-
 .loading-spinner {
     display: flex;
     justify-content: center;
-
-    svg {
-        width: 6.4rem;
-        animation: spinner 1s infinite;
-    }
+    height: 100%;
+    width: 6.4rem;
+    animation: spinner 1s infinite;
 }
 
 .model-list.index-list:has(.sentence-item-container) {

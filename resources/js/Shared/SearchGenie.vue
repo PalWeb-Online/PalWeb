@@ -312,7 +312,7 @@ watch(() => SearchStore.data.results, () => {
         padding-block: 1.2rem;
     }
 
-    .loading-spinner svg {
+    .loading-spinner {
         width: 4.8rem;
     }
 

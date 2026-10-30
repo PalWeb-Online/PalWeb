@@ -118,6 +118,15 @@ body.capacitor-app {
             box-shadow: none;
         }
     }
+
+    & > .zatune-loading {
+        width: min(32rem, 50%);
+        padding-block: 6.4rem;
+
+        .mascot-wrapper {
+            width: 100%;
+        }
+    }
 }
 
 .app-body-section {

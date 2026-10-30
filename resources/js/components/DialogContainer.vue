@@ -1,12 +1,12 @@
 <script setup>
-import {useDialog} from "../composables/dialogs/useDialog.js";
-import SentenceItem from "./SentenceItem.vue";
-import DialogActions from "./Actions/DialogActions.vue";
-import AppTip from "./AppTip.vue";
-import {ref} from "vue";
-import ToggleSingle from "./ToggleSingle.vue";
-import LoadingSpinner from "../Shared/LoadingSpinner.vue";
-import LessonStatus from "./LessonStatus.vue";
+import {useDialog} from '../composables/dialogs/useDialog.js';
+import SentenceItem from './SentenceItem.vue';
+import DialogActions from './Actions/DialogActions.vue';
+import AppTip from './AppTip.vue';
+import {ref} from 'vue';
+import ToggleSingle from './ToggleSingle.vue';
+import LessonStatus from './LessonStatus.vue';
+import ZatuneLoading from '../Shared/ZatuneLoading.vue';
 
 const props = defineProps({
     model: {
@@ -19,7 +19,11 @@ const props = defineProps({
 const showTerms = ref(true);
 const showTranscription = ref(false);
 
-const {dialog, isLoading, isLoadingTerms} = useDialog(props);
+const {
+    dialog,
+    isLoading,
+    isLoadingTerms,
+} = useDialog(props);
 </script>
 
 <template>
@@ -57,19 +61,16 @@ const {dialog, isLoading, isLoadingTerms} = useDialog(props);
                 </div>
                 <div class="settings-wrapper">
                     <ToggleSingle v-model="showTerms" :label="$t('components.dialog.options.show-terms')"/>
-                    <ToggleSingle v-model="showTranscription" :label="$t('components.common.options.show-transcription')"/>
+                    <ToggleSingle v-model="showTranscription"
+                                  :label="$t('components.common.options.show-transcription')"/>
                 </div>
             </template>
 
             <div class="window-section-head">
                 <h2>{{ $t('components.dialog.sections.transcript') }}</h2>
             </div>
-            <div class="loading-dialog" v-if="isLoadingTerms">
-                <AppTip>
-                    <p>Please wait for a moment while we load the data for all the Terms in every Sentence.</p>
-                </AppTip>
-                <LoadingSpinner/>
-            </div>
+            <ZatuneLoading v-if="isLoadingTerms"
+                           message="Please wait for a moment while we load the data for all the Terms in every Sentence."/>
             <div class="model-list index-list">
                 <template v-for="sentence in dialog.sentences">
                     <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker

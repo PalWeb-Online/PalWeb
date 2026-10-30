@@ -219,7 +219,6 @@ watch(() => props.unit, () => {
 
     @media (width >= 960px) {
         --unit-nav-sticky-offset: 3.6rem;
-        margin-block-end: 3.2rem;
         padding-inline: 0;
     }
 

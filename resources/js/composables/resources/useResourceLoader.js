@@ -29,16 +29,16 @@ export function useResourceLoader({
 
         setModel();
 
-        if (error.response?.status === 404) {
-            notFound.value = true;
-        }
-
         router.replace({
             name: 'error',
             query: {
                 status: error?.response?.status,
             },
         });
+
+        if (error.response?.status === 404) {
+            notFound.value = true;
+        }
 
         return null;
     };

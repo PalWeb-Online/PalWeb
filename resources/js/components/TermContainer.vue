@@ -589,7 +589,7 @@ const etymology = computed(() => {
         }
     }
 
-    .loading-spinner svg {
+    .loading-spinner {
         width: 3.2rem;
     }
 }
