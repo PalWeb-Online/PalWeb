@@ -8,7 +8,6 @@ use App\Http\Resources\UserAuthResource;
 use App\Models\Badge;
 use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +44,7 @@ class OAuthController extends Controller
                 'message' => __('oauth.discord.link-canceled'),
             ]);
 
-            return to_route('homepage');
+            return redirect('/');
         }
 
         try {
@@ -115,7 +114,7 @@ class OAuthController extends Controller
             ]);
         }
 
-        return to_route('homepage');
+        return redirect('/');
     }
 
     protected function updateUser($user, $discordUser): void
