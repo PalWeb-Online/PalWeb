@@ -12,41 +12,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Throwable;
 
 class DialogController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): JsonResponse
     {
-        return Inertia::render('Academy/Dialogs/Index', [
-            'section' => 'academy',
-            'dialogs' => DialogResource::collection(Dialog::paginate(25)->onEachSide(1)),
+        $dialogs = Dialog::paginate(25)->onEachSide(1);
+        $resource = DialogResource::collection($dialogs);
+
+        return response()->json([
+            'dialogs' => [
+                'data' => $resource->toArray(request()),
+                'meta' => [
+                    'links' => $dialogs->linkCollection()->toArray(),
+                    'current_page' => $dialogs->currentPage(),
+                    'last_page' => $dialogs->lastPage(),
+                    'total' => $dialogs->total(),
+                ],
+            ],
         ]);
     }
 
-    public function show(Dialog $dialog): \Inertia\Response
+    public function show(Dialog $dialog): JsonResponse
     {
         Gate::authorize('view', $dialog);
 
-        return Inertia::render('Academy/Dialogs/Show', [
-            'section' => 'academy',
-            'dialogId' => $dialog->id,
-        ]);
+        return $this->fetchDialog($dialog);
     }
 
-    public function fetch(Request $request, Dialog $dialog): JsonResponse
+    public function edit(Dialog $dialog): JsonResponse
     {
         Gate::authorize('view', $dialog);
 
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
+        return $this->fetchDialog($dialog);
+    }
 
-        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
-            $dialog->load('sentences');
-        }
+    private function fetchDialog(Dialog $dialog): JsonResponse
+    {
+        $dialog->load('sentences');
 
         return response()->json([
             'dialog' => new DialogResource($dialog),
@@ -59,7 +63,7 @@ class DialogController extends Controller
         $this->linkSentences($dialog, $request->sentences);
 
         return response()->json([
-            'deck' => new DialogResource($dialog),
+            'dialog' => new DialogResource($dialog),
         ], 201);
     }
 
@@ -69,7 +73,7 @@ class DialogController extends Controller
         $this->linkSentences($dialog, $request->sentences);
 
         return response()->json([
-            'deck' => new DialogResource($dialog),
+            'dialog' => new DialogResource($dialog),
         ]);
     }
 

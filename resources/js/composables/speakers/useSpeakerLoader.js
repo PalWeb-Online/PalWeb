@@ -1,46 +1,50 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
+const emptyAudios = () => ({
+    data: [],
+    meta: {
+        links: [],
+        current_page: 1,
+        last_page: 1,
+        total: 0,
+    },
+});
+
 export function useSpeakerLoader() {
-    const audios = ref([]);
-    const audioPagination = ref(null);
+    const audios = ref(emptyAudios());
 
     const {
         model: speaker,
         notFound: speakerNotFound,
         isLoading: isLoadingSpeaker,
         setModel: setSpeaker,
-        fetchModel: fetchSpeaker,
+        fetchShowModel: fetchShowSpeaker,
     } = useResourceLoader({
-        getUrl: (speakerId, options = {}) => route(options.routeName ?? 'api.speakers.fetch', {
-            speaker: speakerId,
-            ...(options.params ?? {}),
-        }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-                page: options.page ?? null,
-            },
-        }),
+        routeBase: 'speakers',
+        routeParam: 'speaker',
         extractModel: (response) => response.data.speaker ?? null,
         extractMeta: (response) => ({
-            audios: response.data.audios.data ?? [],
-            audioPagination: response.data.audios.meta ?? null,
+            audios: response.data.audios ?? emptyAudios(),
         }),
         onSetModel: (meta = {}) => {
-            audios.value = meta.audios ?? [];
-            audioPagination.value = meta.audioPagination ?? null;
+            audios.value = meta.audios ?? emptyAudios();
         },
     });
+
+    const fetchSpeakerAudios = async (speakerId, params = {}) => {
+        const response = await axios.get(`/api/speakers/${encodeURIComponent(speakerId)}`, { params });
+        audios.value = response.data.audios ?? emptyAudios();
+        return audios.value;
+    };
 
     return {
         speaker,
         speakerNotFound,
         isLoadingSpeaker,
         audios,
-        audioPagination,
         setSpeaker,
-        fetchSpeaker,
+        fetchShowSpeaker,
+        fetchSpeakerAudios,
     };
 }

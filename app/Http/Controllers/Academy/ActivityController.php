@@ -8,43 +8,29 @@ use App\Http\Resources\ActivityResource;
 use App\Models\Activity;
 use App\Models\Lesson;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Throwable;
 
 class ActivityController extends Controller
 {
-    /**
-     * Display the specified resource.
-     */
-    public function show(Activity $activity): \Inertia\Response
+    public function show(Activity $activity): JsonResponse
     {
         Gate::authorize('view', $activity);
 
-        return Inertia::render('Academy/Activities/Show', [
-            'section' => 'academy',
-            'activityId' => $activity->id,
+        $activity->load(['scores']);
+
+        return response()->json([
+            'activity' => new ActivityResource($activity),
         ]);
     }
 
-    public function activity(Activity $activity): \Inertia\Response
+    public function edit(Activity $activity): JsonResponse
     {
         Gate::authorize('view', $activity);
 
-        return Inertia::render('Academy/Activities/Activity', [
-            'section' => 'academy',
-            'activityId' => $activity->id,
-        ]);
-    }
-
-    public function fetch(Request $request, Activity $activity): JsonResponse
-    {
-        Gate::authorize('view', $activity);
-
-        $activity->load($this->resolveActivityIncludes($this->requestedActivityIncludes($request)));
+        $activity->load(['lesson']);
 
         return response()->json([
             'activity' => new ActivityResource($activity),
@@ -124,53 +110,4 @@ class ActivityController extends Controller
         }
     }
 
-    private function requestedActivityIncludes(Request $request): array
-    {
-//        $profileIncludes = self::ACTIVITY_INCLUDE_PROFILES[$request->query('profile')] ?? [];
-        $profileIncludes = [];
-
-        $explicitIncludes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->all();
-
-        return collect($profileIncludes)
-            ->merge($explicitIncludes)
-            ->unique()
-            ->values()
-            ->all();
-    }
-
-    private function resolveActivityIncludes(array $includes): array
-    {
-        $allowedIncludes = [
-            'scores' => 'scores',
-        ];
-
-        $loads = [];
-
-        foreach ($includes as $include) {
-            if (! array_key_exists($include, $allowedIncludes)) {
-                continue;
-            }
-
-            $load = $allowedIncludes[$include];
-
-            if (is_array($load)) {
-                foreach ($load as $relation => $constraint) {
-                    if (is_int($relation)) {
-                        $loads[] = $constraint;
-                    } else {
-                        $loads[$relation] = $constraint;
-                    }
-                }
-
-                continue;
-            }
-
-            $loads[] = $load;
-        }
-
-        return $loads;
-    }
 }

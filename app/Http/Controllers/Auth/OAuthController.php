@@ -8,7 +8,6 @@ use App\Http\Resources\UserAuthResource;
 use App\Models\Badge;
 use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +44,7 @@ class OAuthController extends Controller
                 'message' => __('oauth.discord.link-canceled'),
             ]);
 
-            return to_route('homepage');
+            return redirect('/');
         }
 
         try {
@@ -115,7 +114,7 @@ class OAuthController extends Controller
             ]);
         }
 
-        return to_route('homepage');
+        return redirect('/');
     }
 
     protected function updateUser($user, $discordUser): void
@@ -230,33 +229,5 @@ class OAuthController extends Controller
                 'message' => __('oauth.discord.revoke-failed'),
             ], 500);
         }
-    }
-
-    protected function createUser($discordUser)
-    {
-        $baseUsername = $discordUser->name;
-        $username = $baseUsername;
-        $counter = 1;
-
-        while (User::where('username', $username)->exists()) {
-            $username = $baseUsername.$counter;
-            $counter++;
-        }
-
-        $user = User::create([
-            'name' => 'Pal',
-            'ar_name' => 'رفيق',
-            'email' => $discordUser->email,
-            'username' => $discordUser->name,
-            'password' => null,
-            'dialect_id' => '1',
-            'discord_id' => $discordUser->id,
-            'discord_token' => $discordUser->token,
-            'discord_refresh_token' => $discordUser->refreshToken,
-        ]);
-
-        event(new Registered($user));
-
-        return $user;
     }
 }

@@ -2,11 +2,9 @@
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import AppLogo from "../Shared/AppLogo.vue";
 import {useI18n} from "vue-i18n";
-import {usePage} from "@inertiajs/vue3";
+import ZatuneNeutral from "../Shared/ZatuneNeutral.vue";
 
-const { t } = useI18n();
-
-const page = usePage();
+const {t, locale} = useI18n();
 
 const fullText = ref(t('meta.app.subtitle'));
 const displayedText = ref("");
@@ -48,9 +46,10 @@ onBeforeUnmount(() => {
 });
 
 watch(
-    () => page.props.locale,
+    locale,
     (newLocale) => {
         if (newLocale) {
+            clearInterval(typingInterval);
             fullText.value = t('meta.app.subtitle');
             displayedText.value = "";
             startTypingEffect();
@@ -61,6 +60,7 @@ watch(
 <template>
     <div class="app-logo-wrapper">
         <AppLogo/>
+        <ZatuneNeutral/>
         <h1>
             <span>{{ displayedText }}</span>
             <span class="typing-cursor"
@@ -92,6 +92,14 @@ watch(
         .typing-cursor {
             transition: opacity 0.2s;
         }
+    }
+
+    .mascot-zatune {
+        position: absolute;
+        top: 20%;
+        right: 0;
+        max-width: 20%;
+        z-index: 1;
     }
 }
 </style>

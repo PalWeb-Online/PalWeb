@@ -1,5 +1,6 @@
 export function useResourceViewer({
                                       fetchModel,
+                                      fetchRandomModel = null,
                                       resetModel,
                                       afterLoad = null,
                                       beforeReload = null,
@@ -9,6 +10,18 @@ export function useResourceViewer({
         const model = await fetchModel(...args);
 
         await afterLoad?.(model, ...args);
+
+        return model;
+    };
+
+    const loadRandom = async (options = {}) => {
+        if (!fetchRandomModel) {
+            throw new Error('fetchRandomModel is required for random resource loading.');
+        }
+
+        const model = await fetchRandomModel(options);
+
+        await afterLoad?.(model, options);
 
         return model;
     };
@@ -25,8 +38,22 @@ export function useResourceViewer({
         return model;
     };
 
+    const reloadRandom = async (options = {}) => {
+        resetModel();
+
+        await beforeReload?.(options);
+
+        const model = await loadRandom(options);
+
+        await afterReload?.(model, options);
+
+        return model;
+    };
+
     return {
         load,
+        loadRandom,
         reload,
+        reloadRandom,
     };
 }

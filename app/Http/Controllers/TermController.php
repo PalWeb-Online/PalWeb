@@ -31,8 +31,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
-use Inertia\Inertia;
-use Inertia\Response;
 use Maize\Markable\Models\Bookmark;
 use Throwable;
 
@@ -61,33 +59,12 @@ class TermController extends Controller
         ]);
     }
 
-    public function index(): Response
-    {
-        $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
-        $featuredTerm?->load(['attributes', 'glosses.attributes']);
-
-        return Inertia::render('Library/Terms/Index', [
-            'featuredTerm' => new TermShowResource($featuredTerm),
-        ]);
-    }
-
-    public function show(Term $term): Response
-    {
-        return Inertia::render('Library/Terms/Show', [
-            'termId' => $term->id,
-        ]);
-    }
-
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
-
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 
         $filters = array_merge(['sort' => 'alphabetical'], $request->only([
-            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'attribute', 'form', 'singular', 'plural',
+            'search', 'match', 'sort', 'pinned', 'letter', 'category', 'rootType', 'attribute', 'form', 'singular', 'plural',
         ]));
 
         $perPage = 25;
@@ -102,6 +79,9 @@ class TermController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
+        $featuredTerm = Cache::get('word-of-the-day') ?? Term::whereNotNull('image')->inRandomOrder()->first();
+        $featuredTerm?->load(['attributes', 'glosses.attributes']);
+
         return response()->json([
             'terms' => [
                 'data' => TermResource::collection($terms)->toArray($request),
@@ -114,70 +94,85 @@ class TermController extends Controller
             ],
             'totalCount' => $terms->total(),
             'filters' => $filters,
+            'featuredTerm' => $featuredTerm ? new TermShowResource($featuredTerm) : null,
         ]);
     }
 
-    public function fetch(Request $request, Term $term): JsonResponse
+    public function showFeatured(): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
+        $featuredTerm = Term::with(['attributes', 'inflections', 'glosses.attributes'])->inRandomOrder()->first();
 
-        $payload = [];
+        $terms = collect([$featuredTerm]);
 
-        if ($includes->contains('show') || $includes->isEmpty()) {
-            $termIds = $this->termRepository->getLikeTermIds($term);
-
-            $terms = Term::query()
-                ->whereIn('id', $termIds)
-                ->orderByRaw(
-                    'FIELD(id, '.$termIds->map(fn () => '?')->implode(',').')',
-                    $termIds->all()
-                )
-                ->with([
-                    'spellings',
-                    'attributes',
-                    'root',
-                    'patterns',
-                    'pronunciations.audios.speaker',
-                    'glosses.attributes',
-                    'inflections',
-                    'relatives',
-                    'relatedBy',
-                    'cards',
-                    'decks' => fn ($q) => $q->limit(10),
-                ])
-                ->withCount('pronunciations')
-                ->get();
-
-            $this->termService->hydrateGlossSentences($terms);
-
-            $payload = TermShowResource::collection($terms);
-
-        } else {
-            if ($includes->contains('edit')) {
-                $term->load([
-                    'spellings',
-                    'attributes',
-                    'root',
-                    'patterns',
-                    'pronunciations',
-                    'glosses.attributes',
-                    'inflections',
-                    'relatives',
-                ]);
-
-                $payload[] = new TermShowResource($term);
-            }
-        }
+        $this->termService->hydrateGlossSentences($terms);
 
         return response()->json([
-            'terms' => $payload,
+            'term' => $featuredTerm ? new TermShowResource($featuredTerm) : null,
         ]);
     }
 
-    // -------------------------------------------------------------------------
+    public function show(Term $term): JsonResponse
+    {
+        return $this->fetchTerm($term);
+    }
+
+    public function random(): JsonResponse
+    {
+        return $this->fetchTerm(Term::query()->inRandomOrder()->firstOrFail());
+    }
+
+    private function fetchTerm(Term $term): JsonResponse
+    {
+        $termIds = $this->termRepository->getLikeTermIds($term);
+
+        $terms = Term::query()
+            ->whereIn('id', $termIds)
+            ->orderByRaw(
+                'FIELD(id, '.$termIds->map(fn () => '?')->implode(',').')',
+                $termIds->all()
+            )
+            ->with([
+                'spellings',
+                'attributes',
+                'root',
+                'patterns',
+                'pronunciations.audios.speaker',
+                'glosses.attributes',
+                'inflections',
+                'relatives',
+                'relatedBy',
+                'cards',
+                'decks' => fn ($q) => $q->limit(10),
+            ])
+            ->withCount('pronunciations')
+            ->get();
+
+        $this->termService->hydrateGlossSentences($terms);
+
+        return response()->json([
+            'terms' => TermShowResource::collection($terms),
+        ]);
+    }
+
+    public function edit(Term $term): JsonResponse
+    {
+        $term->load([
+            'spellings',
+            'attributes',
+            'root',
+            'patterns',
+            'pronunciations',
+            'glosses.attributes',
+            'inflections',
+            'relatives',
+        ]);
+
+        return response()->json([
+            'terms' => [
+                new TermShowResource($term)
+            ],
+        ]);
+    }
 
     public function getPronunciations(Term $term): AnonymousResourceCollection
     {

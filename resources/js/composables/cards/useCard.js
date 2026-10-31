@@ -1,12 +1,12 @@
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useRouter} from "vue-router";
+import {useNotifier} from "../useNotifier.js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
 import {useI18n} from "vue-i18n";
 
 export function useCard() {
     const {t} = useI18n();
-    const NotificationStore = useNotificationStore();
+    const router = useRouter();
+    const Notifier = useNotifier();
 
     const {
         isDeleting: isDeletingCard,
@@ -15,33 +15,45 @@ export function useCard() {
         label: 'card',
         routeBase: 'cards',
         onDeleteSuccess: () => {
-            router.get(route('card-dealer.cards'));
+            router.push({name: 'card-dealer.cards'});
         },
     });
 
-    const masterCard = (card) => {
+    const masterCard = async (card) => {
         if (!confirm(t('card.notifications.master-confirm'))) return;
 
-        router.post(route('cards.master', card.id));
-        NotificationStore.addNotification(t('card.notifications.master-success'), 'info');
+        await axios.post(`/api/cards/${card.id}/master`);
+        Notifier.notify({
+            key: 'card.notifications.master-success',
+            type: 'info',
+        });
     };
 
-    const toggleSuspend = (card) => {
-        router.post(route('cards.suspend', card.id));
+    const toggleSuspend = async (card) => {
+        await axios.post(`/api/cards/${card.id}/suspend`);
 
         if (card.suspended_at) {
-            NotificationStore.addNotification(t('card.notifications.restore-success'), 'info');
+            Notifier.notify({
+                key: 'card.notifications.restore-success',
+                type: 'info',
+            });
 
         } else {
-            NotificationStore.addNotification(t('card.notifications.suspend-success'), 'info');
+            Notifier.notify({
+                key: 'card.notifications.suspend-success',
+                type: 'info',
+            });
         }
     };
 
-    const resetCard = (card) => {
+    const resetCard = async (card) => {
         if (!confirm(t('card.notifications.reset-confirm'))) return;
 
-        router.post(route('cards.reset', card.id));
-        NotificationStore.addNotification(t('card.notifications.reset-success'), 'info');
+        await axios.post(`/api/cards/${card.id}/reset`);
+        Notifier.notify({
+            key: 'card.notifications.reset-success',
+            type: 'info',
+        });
     };
 
     return {

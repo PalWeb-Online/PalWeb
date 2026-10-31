@@ -1,14 +1,12 @@
 <script setup>
-import {route} from "ziggy-js";
-import {useNavigationStore} from "../stores/NavigationStore.js";
-import {useSearchStore} from "../stores/SearchStore.js";
-import {onBeforeUnmount, onMounted, ref} from "vue";
-import GlobalSettings from "../components/Modals/GlobalSettings.vue";
-import {usePage} from "@inertiajs/vue3";
-import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import InstallButton from "./InstallButton.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import AppHint from "../components/AppHint.vue";
+import {useNavigationStore} from '../stores/NavigationStore.js';
+import {useSearchStore} from '../stores/SearchStore.js';
+import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
+import GlobalSettings from '../components/Modals/GlobalSettings.vue';
+import ModalWrapper from '../components/Modals/ModalWrapper.vue';
+import InstallButton from './InstallButton.vue';
+import {useNotificationStore} from '../stores/NotificationStore.js';
+import AppHint from '../components/AppHint.vue';
 
 const NavigationStore = useNavigationStore();
 const NotificationStore = useNotificationStore();
@@ -16,100 +14,94 @@ const SearchStore = useSearchStore();
 
 const showGlobalSettings = ref(false);
 
-const {
-    props: {utcOffsetMinutes},
-} = usePage();
-
-const utcOffsetHours = utcOffsetMinutes / 60;
-
+const timeZone = 'Asia/Jerusalem';
 const displayedTime = ref(Date.now());
 
-let animationFrameId = null;
-let previousAnimationTime = 0;
+const updateDisplayedTime = () => {
+    displayedTime.value = Date.now();
+};
 
-const updateDisplayedTime = (currentAnimationTime) => {
-    const elapsed = currentAnimationTime - previousAnimationTime;
+const formattedTime = computed(() =>
+    new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone,
+    }).format(displayedTime.value),
+);
 
-    if (elapsed >= 1000) {
-        displayedTime.value = Date.now();
+const utcOffsetHours = computed(() => {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        timeZoneName: 'longOffset',
+    }).formatToParts(displayedTime.value);
 
-        previousAnimationTime = currentAnimationTime;
+    const offset = parts.find(part => part.type === 'timeZoneName')?.value;
+    const match = offset?.match(/GMT([+-])(\d{2}):(\d{2})/);
+
+    if (!match) return 0;
+
+    const [, sign, hours, minutes] = match;
+    const value = Number(hours) + Number(minutes) / 60;
+
+    return sign === '+' ? value : -value;
+});
+
+let intervalId;
+
+const globalListener = (event) => {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+    if (
+        (isMac && event.metaKey && event.key === 'k') ||
+        (!isMac && event.ctrlKey && event.key === 'k')
+    ) {
+        event.preventDefault();
+
+        if (
+            SearchStore.data.isOpen &&
+            SearchStore.data.action === 'search'
+        ) {
+            SearchStore.data.isOpen = false;
+        } else if (!SearchStore.data.isOpen) {
+            SearchStore.openSearchGenie('search');
+        }
     }
 
-    animationFrameId = requestAnimationFrame(updateDisplayedTime);
+    if (
+        ((isMac && event.metaKey) || (!isMac && event.ctrlKey)) &&
+        event.key === 'm'
+    ) {
+        event.preventDefault();
+        NavigationStore.toggleSidebar();
+    }
+};
+
+const visibilityListener = () => {
+    if (document.visibilityState === 'visible') {
+        updateDisplayedTime();
+    }
 };
 
 onMounted(() => {
-    animationFrameId = requestAnimationFrame(updateDisplayedTime);
+    intervalId = window.setInterval(updateDisplayedTime, 1000);
+    document.addEventListener('visibilitychange', visibilityListener);
+    window.addEventListener('keydown', globalListener);
+});
 
-    const globalListener = (event) => {
-        const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
-
-        if (
-            (isMac && event.metaKey && event.key === "k") ||
-            (!isMac && event.ctrlKey && event.key === "k")
-        ) {
-            event.preventDefault();
-
-            if (
-                SearchStore.data.isOpen &&
-                SearchStore.data.action === "search"
-            ) {
-                SearchStore.data.isOpen = false;
-            } else if (!SearchStore.data.isOpen) {
-                SearchStore.openSearchGenie("search");
-            }
-        }
-
-        if (
-            ((isMac && event.metaKey) || (!isMac && event.ctrlKey)) &&
-            event.key === "m"
-        ) {
-            event.preventDefault();
-            NavigationStore.toggleSidebar();
-        }
-    };
-
-    const handleVisibilityChange = () => {
-        if (document.visibilityState === "visible") {
-            displayedTime.value = Date.now();
-
-            if (animationFrameId === null) {
-                animationFrameId = requestAnimationFrame(updateDisplayedTime);
-            }
-        } else {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-    };
-
-    window.addEventListener("keydown", globalListener);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    onBeforeUnmount(() => {
-        window.removeEventListener("keydown", globalListener);
-        document.removeEventListener(
-            "visibilitychange",
-            handleVisibilityChange,
-        );
-    });
+onBeforeUnmount(() => {
+    window.clearInterval(intervalId);
+    document.removeEventListener('visibilitychange', visibilityListener);
+    window.removeEventListener('keydown', globalListener);
 });
 </script>
 <template>
     <div class="nav-sticky">
         <div class="nav-sticky-info">
-            <div>
-                JER
-                {{
-                    new Date(displayedTime).toLocaleTimeString("en-US", {
-                        timeZone: "Asia/Jerusalem",
-                        hour12: false,
-                    })
-                }}
-                (UTC +{{ utcOffsetHours }})
-            </div>
+            <div>JER {{ formattedTime }} (UTC +{{ utcOffsetHours }})</div>
             <InstallButton/>
-            <Link :href="route('homepage')">PalWeb 2.4 (Msaxxan)</Link>
+            <RouterLink :to="{ name: 'homepage' }">PalWeb 3.0 (α)</RouterLink>
         </div>
         <div class="nav-sticky-buttons">
             <button
@@ -154,6 +146,8 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .nav-sticky {
+    --inset-top: env(safe-area-inset-top, 0);
+
     position: sticky;
     top: 0;
     display: flex;
@@ -161,7 +155,8 @@ onMounted(() => {
     color: white;
     background: var(--color-medium-secondary);
     width: 100%;
-    height: 3em;
+    height: calc(3em + var(--inset-top));
+    padding-top: var(--inset-top);
     font-size: 1.6rem;
     z-index: 1;
     user-select: none;
@@ -209,7 +204,7 @@ onMounted(() => {
     }
 
     a:hover {
-        text-decoration: 0.1rem solid underline;
+        text-decoration: 1px solid underline;
     }
 }
 </style>

@@ -1,4 +1,3 @@
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useDialogLoader() {
@@ -7,17 +6,11 @@ export function useDialogLoader() {
         notFound: dialogNotFound,
         isLoading: isLoadingDialog,
         setModel: setDialog,
-        fetchModel: fetchDialog,
+        fetchShowModel: fetchShowDialog,
+        fetchEditModel: fetchEditDialog,
     } = useResourceLoader({
-        getUrl: (dialogId, options = {}) => route(options.routeName ?? 'api.dialogs.fetch', {
-            dialog: dialogId,
-            ...(options.params ?? {}),
-        }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
+        routeBase: 'dialogs',
+        routeParam: 'dialog',
         extractModel: (response) => response.data.dialog ?? null,
     });
 
@@ -26,6 +19,7 @@ export function useDialogLoader() {
         dialogNotFound,
         isLoadingDialog,
         setDialog,
-        fetchDialog,
+        fetchShowDialog,
+        fetchEditDialog,
     };
 }

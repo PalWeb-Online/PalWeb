@@ -1,92 +1,61 @@
 <script setup>
-import {computed, ref, onMounted} from "vue";
-import Layout from "../../../Shared/Layout.vue";
+import {computed, ref} from "vue";
 import TermItem from "../../../components/TermItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
-import {route} from "ziggy-js";
 import TermFeatured from "../../../components/TermFeatured.vue";
 import {useNavigationStore} from "../../../stores/NavigationStore.js";
-import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 
-defineOptions({layout: Layout});
-
-const props = defineProps({
-    featuredTerm: Object,
-})
-
-const terms = ref(null);
-const totalCount = ref(0);
-const filters = ref({sort: 'alphabetical'});
-const loading = ref(true);
+const featuredTerm = ref(null);
 
 const letters = [
     'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق',
     'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي', 'ء'
 ];
-const selectedLetter = ref(null);
 
-const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchTerms);
-
-async function fetchTerms(params = {}) {
-    loading.value = true;
-    try {
-        const response = await fetch(route('api.terms.index', params));
-        const data = await response.json();
-        terms.value = data.terms;
-        totalCount.value = data.totalCount;
-        filters.value = data.filters;
-        updatePagination(data.terms.meta);
-    } catch (error) {
-        console.error('Failed to fetch terms:', error);
-    } finally {
-        loading.value = false;
-    }
-}
-
-onMounted(() => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    selectedLetter.value = params.letter || null;
-    currentPage.value = parseInt(params.page) || 1;
-    fetchTerms(params);
+const {
+    collection: terms,
+    totalCount,
+    filters,
+    loading,
+    currentPage,
+    pageNumbers,
+    isLoadingPaginator,
+    goToPage,
+    updateFilter,
+} = useResourceIndex({
+    routeBase: 'terms',
+    defaultFilters: {sort: 'alphabetical'},
+    toggleFilters: ['letter'],
+    onResponse: (data) => {
+        featuredTerm.value = data.featuredTerm;
+    },
 });
 
-function updateFilter({filter, value}) {
-    const searchParams = new URLSearchParams(window.location.search);
-    if (filter === 'letter') {
-        const newLetter = selectedLetter.value === value ? null : value;
-        newLetter ? searchParams.set(filter, newLetter) : searchParams.delete(filter);
-        selectedLetter.value = newLetter;
-    } else {
-        value ? searchParams.set(filter, value) : searchParams.delete(filter);
-    }
-    searchParams.delete('page');
-    currentPage.value = 1;
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchTerms(Object.fromEntries(searchParams.entries()));
-}
+const selectedLetter = computed(() => filters.value.letter ?? null);
 </script>
 
 <template>
-    <Head title="Dictionary"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'terms.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/terms</div>
-                <Link v-if="UserStore.isAdmin" :href="route('word-logger.term')" class="material-symbols-rounded">add
-                </Link>
-                <Link :href="route('terms.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+                <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'word-logger.term' }" class="material-symbols-rounded">add
+                </RouterLink>
+                <RouterLink :to="{ name: 'terms.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.terms.index.title') }}</h1></div>
 
-            <TermFeatured :model="featuredTerm"/>
+            <TermFeatured v-if="featuredTerm" :model="featuredTerm"/>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
 
             <div class="letters-array">
@@ -121,9 +90,9 @@ function updateFilter({filter, value}) {
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

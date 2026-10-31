@@ -1,4 +1,3 @@
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useDeckLoader() {
@@ -7,17 +6,12 @@ export function useDeckLoader() {
         notFound: deckNotFound,
         isLoading: isLoadingDeck,
         setModel: setDeck,
-        fetchModel: fetchDeck,
+        fetchShowModel: fetchShowDeck,
+        fetchEditModel: fetchEditDeck,
+        fetchRandomModel: fetchRandomDeck,
     } = useResourceLoader({
-        getUrl: (deckId, options = {}) => route(options.routeName ?? 'api.decks.fetch', {
-            deck: deckId,
-            ...(options.params ?? {}),
-        }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
+        routeBase: 'decks',
+        routeParam: 'deck',
         extractModel: (response) => response.data.deck ?? null,
     });
 
@@ -26,6 +20,8 @@ export function useDeckLoader() {
         deckNotFound,
         isLoadingDeck,
         setDeck,
-        fetchDeck,
+        fetchShowDeck,
+        fetchEditDeck,
+        fetchRandomDeck,
     };
 }

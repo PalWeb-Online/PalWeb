@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useSlots} from "vue";
 import UserAvatarFrame from "./UserAvatarFrame.vue";
 
@@ -12,10 +11,10 @@ const slots = useSlots()
 
 <template>
     <div class="user-avatar-wrapper">
-        <Link class="user-avatar" :href="user ? route('users.show', user.username) : '#'">
+        <RouterLink class="user-avatar" :to="user ? { name: 'users.show', params: { user: user.username } } : '#'">
             <UserAvatarFrame/>
             <img :alt="$t('components.common.alt.avatar')" :src="user?.avatar_url ?? '/img/avatars/palweb01.webp'"/>
-        </Link>
+        </RouterLink>
         <div v-if="slots.default" class="user-interact-buttons">
             <slot/>
         </div>

@@ -262,7 +262,7 @@ onBeforeUnmount(() => {
     left: 0;
     right: 0;
     background: var(--color-pastel-light);
-    border: 0.1rem solid var(--color-pastel-dark);
+    border: 1px solid var(--color-pastel-dark);
     max-height: 16rem;
     overflow-y: auto;
     margin: 0.6rem 0.4rem 0;

@@ -1,19 +1,21 @@
 <script setup>
-import {onMounted, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
-import PronunciationItem from "../../../components/PronunciationItem.vue";
-import Paginator from "../../../Shared/Paginator.vue";
-import SpeakerItem from "../../../components/SpeakerItem.vue";
-import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
-import {useUserStore} from "../../../stores/UserStore.js";
-import UserItem from "../../../components/UserItem.vue";
-import {usePaginator} from "../../../composables/usePaginator.js";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useSpeakerViewer} from "../../../composables/speakers/useSpeakerViewer.js";
+import {onMounted, watch} from 'vue';
+import PronunciationItem from '../../../components/PronunciationItem.vue';
+import Paginator from '../../../Shared/Paginator.vue';
+import SpeakerItem from '../../../components/SpeakerItem.vue';
+import AppTip from '../../../components/AppTip.vue';
+import {useUserStore} from '../../../stores/UserStore.js';
+import UserItem from '../../../components/UserItem.vue';
+import {usePaginator} from '../../../composables/usePaginator.js';
+import {useSpeakerViewer} from '../../../composables/speakers/useSpeakerViewer.js';
+import {useRoute} from 'vue-router';
+import PaginationPage from '../../../components/PaginationPage.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
+
+const route = useRoute();
+const currentQuery = () => ({ ...route.query });
 
 const props = defineProps({
     speakerId: {
@@ -24,51 +26,63 @@ const props = defineProps({
 
 const {
     speaker,
-    speakerNotFound,
     isLoadingSpeaker,
     audios,
-    audioPagination,
     reloadSpeaker,
+    fetchSpeakerAudios,
 } = useSpeakerViewer();
 
 const fetchSpeakerPage = async (params = {}) => {
-    await reloadSpeaker(props.speakerId, {
-        page: params.page ?? 1,
-    });
+    await reloadSpeaker(props.speakerId, { params });
 };
 
-const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchSpeakerPage);
+const fetchAudioPage = async (params = {}) => {
+    isLoadingPaginator.value = true;
 
-onMounted(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    fetchSpeakerPage(Object.fromEntries(searchParams.entries()));
-});
+    try {
+        await fetchSpeakerAudios(props.speakerId, params);
+    } finally {
+        isLoadingPaginator.value = false;
+    }
+};
 
-watch(audioPagination, (pagination) => {
-    if (pagination) updatePagination(pagination);
+const {
+    currentPage,
+    pageNumbers,
+    goToPage,
+    updatePagination,
+    isLoadingPaginator,
+} = usePaginator(fetchAudioPage);
+
+onMounted(() => fetchSpeakerPage(currentQuery()));
+
+watch(() => audios.value.meta, (pagination) => {
+    updatePagination(pagination);
 });
 
 watch(
-    () => props.speakerId,
-    () => reloadSpeaker(props.speakerId)
+    () => [props.speakerId, route.query.page],
+    ([speakerId], [oldSpeakerId]) => {
+        if (speakerId !== oldSpeakerId) {
+            fetchSpeakerPage(currentQuery());
+            return;
+        }
+
+        fetchAudioPage(currentQuery());
+    },
 );
 </script>
 
 <template>
-    <Head :title="speaker ? `Library: Audios by ${speaker.user.name}` : 'Library: Audios'"/>
-    <div id="app-body">
-        <div class="window-container">
-            <div class="window-header">
-                <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
-                <div class="window-header-url">www.palweb.app/library/audios/{speaker}</div>
-            </div>
-            <div class="window-section-head"><h1>{{ $t('actions.models.speaker') }}</h1></div>
+    <LoadingWrapper :is-loading="isLoadingSpeaker || !speaker">
+        <div id="app-body">
+            <div class="window-container">
+                <div class="window-header">
+                    <RouterLink :to="{ name: 'audios.index' }" class="material-symbols-rounded">home</RouterLink>
+                    <div class="window-header-url">www.palweb.app/library/audios/{speaker}</div>
+                </div>
+                <div class="window-section-head"><h1>{{ $t('actions.models.speaker') }}</h1></div>
 
-            <LoadingSpinner v-if="isLoadingSpeaker"/>
-            <AppTip v-else-if="speakerNotFound">
-                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.speaker')}) }}</p>
-            </AppTip>
-            <template v-else-if="speaker">
                 <AppTip v-if="speaker.user.id === UserStore.user?.id && speaker.user.private">
                     <p>{{ $t('pages.audios.speaker.is-private') }}</p>
                 </AppTip>
@@ -76,15 +90,15 @@ watch(
                     <SpeakerItem :speaker="speaker"/>
                 </UserItem>
                 <div class="window-section-head"><h2>{{ $t('models.audios') }}</h2></div>
-                <template v-if="audios.length > 0">
-                    <div class="model-list index-list">
+                <template v-if="audios.data.length > 0">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <PronunciationItem
-                            v-for="audio in audios"
+                            v-for="audio in audios.data"
                             :key="audio.id"
                             :model="audio.pronunciation"
                             :audio="audio"
                         />
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"
@@ -94,11 +108,11 @@ watch(
                 <template v-else>
                     <AppTip>
                         <p>{{
-                                $t('pages.audios.speaker.empty', {speaker: speaker.user.private ? 'This Speaker' : speaker.user.name})
+                                $t('pages.audios.speaker.empty', { speaker: speaker.user.private ? 'This Speaker' : speaker.user.name })
                             }}</p>
                     </AppTip>
                 </template>
-            </template>
+            </div>
         </div>
-    </div>
+    </LoadingWrapper>
 </template>

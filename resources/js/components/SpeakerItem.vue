@@ -1,8 +1,9 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
+import {useRoute} from "vue-router";
 
 const UserStore = useUserStore();
+const currentRoute = useRoute();
 
 const props = defineProps({
     speaker: Object,
@@ -15,10 +16,10 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
     <div class="speaker-data">
         <div class="speaker-data-head">
             <div>{{ $t('speaker.data-title') }}</div>
-            <Link v-if="$page.component === 'Community/Users/Show'" :href="route('speaker.show', speaker.id)"
-                  class="material-symbols-rounded">open_in_new</Link>
-            <Link v-else-if="speaker.user.id === UserStore.user.id" :href="route('sound-booth.index')"
-                  class="material-symbols-rounded">edit</Link>
+            <RouterLink v-if="currentRoute.name === 'users.show'" :to="{ name: 'speaker.show', params: { speaker: speaker.id } }"
+                  class="material-symbols-rounded">open_in_new</RouterLink>
+            <RouterLink v-else-if="speaker.user.id === UserStore.user.id" :to="{ name: 'sound-booth.index' }"
+                  class="material-symbols-rounded">edit</RouterLink>
         </div>
         <div class="speaker-data-row">
             <div>{{ $t('speaker.fields.dialect') }}</div>

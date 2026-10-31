@@ -1,14 +1,14 @@
-import {route} from "ziggy-js";
 import {useActivityLoader} from "./useActivityLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
-import {router} from "@inertiajs/vue3";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 export function useActivityEditor({
-                                      activityId = null,
-                                      initialLesson = null,
-                                  } = {}) {
+                                  activityId = null,
+                                  initialLesson = null,
+                              } = {}) {
+    const router = useRouter();
     const documentPreset = getDocumentPreset('activity');
     const activityLoader = useActivityLoader();
 
@@ -43,7 +43,7 @@ export function useActivityEditor({
         populateForm,
         extractSavedModel: (response) => response.data.activity ?? response.data.data ?? null,
         getLoadIdentifier: () => activityId.value,
-        fetchModel: activityLoader.fetchActivity,
+        fetchModel: activityLoader.fetchEditActivity,
         resetModel: activityLoader.setActivity,
         label: 'activity',
         routeBase: 'activities',
@@ -63,7 +63,7 @@ export function useActivityEditor({
             };
         },
         onDeleteSuccess: () => {
-            router.get(route('lesson-planner.index'));
+            router.push({name: 'lesson-planner.index'});
         },
     });
 

@@ -1,32 +1,27 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
-import {route} from "ziggy-js";
 import StudyPlan from "./UI/StudyPlan.vue";
 import AppHeading from "../../../components/AppHeading.vue";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {useAcademyStateStore} from "../../../stores/AcademyStateStore.js";
 import DividerBlock from "../../../Shared/DividerBlock.vue";
 
-defineProps({
-    units: Object,
-    lessons: Object,
-})
-
-defineOptions({
-    layout: Layout,
-})
+const units = ref([]);
+const lessons = ref([]);
 
 const UserStore = useUserStore()
 const AcademyStateStore = useAcademyStateStore()
 
-onMounted(() => {
+onMounted(async () => {
+    const {data} = await axios.get('/api/units');
+    units.value = data.units?.data ?? data.units ?? [];
+    lessons.value = data.lessons?.data ?? data.lessons ?? [];
+
     AcademyStateStore.ensureState().catch(() => {
     });
 })
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
     <div id="app-head">
         <h1>{{ $t('pages.academy.index.title') }}</h1>
         <DividerBlock/>
@@ -43,8 +38,8 @@ onMounted(() => {
                     <div class="unit-map-lesson-button" v-for="lesson in unit.lessons" :key="lesson.id"
                          :class="{current: AcademyStateStore.isCurrentLesson(lesson.id)}"
                     >
-                        <Link
-                            :href="route('lessons.show', lesson)"
+                        <RouterLink
+                            :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }"
                             :class="{
                                 locked: !UserStore.isAdmin && !AcademyStateStore.hasUnlockedLesson(lesson.id),
                                 completed: AcademyStateStore.isCompletedLesson(lesson.id, lesson.completed),
@@ -53,7 +48,7 @@ onMounted(() => {
                               }"
                         >
                             <span>{{ lesson.unit_position }}</span>
-                        </Link>
+                        </RouterLink>
                     </div>
                 </div>
             </div>

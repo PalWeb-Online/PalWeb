@@ -1,15 +1,9 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import LessonItem from "../../../components/LessonItem.vue";
 import UnitNav from "./UI/UnitNav.vue";
 import {useUnitViewer} from "../../../composables/units/useUnitViewer.js";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import AppTip from "../../../components/AppTip.vue";
 import {onMounted, watch} from "vue";
-
-defineOptions({
-    layout: Layout,
-})
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const props = defineProps({
     unitId: {
@@ -20,7 +14,6 @@ const props = defineProps({
 
 const {
     unit,
-    unitNotFound,
     isLoadingUnit,
     lessons,
     loadUnit,
@@ -36,16 +29,11 @@ watch(() => props.unitId, async () => {
 });
 </script>
 <template>
-    <Head :title="`Academy: Unit ${unit?.position}`"/>
     <UnitNav v-if="unit" :unit="unit"/>
 
-    <LoadingSpinner v-if="isLoadingUnit"/>
-    <AppTip v-else-if="unitNotFound">
-        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.unit')}) }}</p>
-    </AppTip>
-    <template v-else-if="unit">
+    <LoadingWrapper :is-loading="isLoadingUnit || !unit">
         <div id="app-body">
             <LessonItem v-for="lesson in lessons" :key="lesson.id" :lesson="lesson"/>
         </div>
-    </template>
+    </LoadingWrapper>
 </template>

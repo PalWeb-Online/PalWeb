@@ -6,18 +6,20 @@ export function useTermViewer() {
 
     const {
         load: loadTerms,
+        loadRandom: loadRandomTerms,
         reload: reloadTerms,
+        reloadRandom: reloadRandomTerms,
     } = useResourceViewer({
-        fetchModel: (termId, options = {}) => termLoader.fetchTerms(termId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: termLoader.fetchShowTerms,
+        fetchRandomModel: termLoader.fetchRandomTerms,
         resetModel: termLoader.setTerms,
     });
 
     return {
         ...termLoader,
         loadTerms,
+        loadRandomTerms,
         reloadTerms,
+        reloadRandomTerms,
     };
 }

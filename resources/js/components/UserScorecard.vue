@@ -1,5 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
 import UserNametag from "./UserNametag.vue";
 
 defineProps({
@@ -10,10 +9,10 @@ defineProps({
 
 <template>
     <div class="user-scorecard">
-        <Link class="user-avatar" :href="route('users.show', user.username)">
+        <RouterLink class="user-avatar" :to="{ name: 'users.show', params: { user: user.username } }">
             <img :alt="$t('components.common.alt.avatar')"
                  :src="user.avatar_url"/>
-        </Link>
+        </RouterLink>
         <UserNametag :user="user"/>
         <div v-if="scores" class="user-scorecard-body">
             <div class="user-creations">
@@ -80,7 +79,7 @@ defineProps({
         &:not(:last-child) {
             margin-block-end: 0.4rem;
             padding-block-end: 0.4rem;
-            border-block-end: 0.1rem solid var(--color-pastel-medium);
+            border-block-end: 1px solid var(--color-pastel-medium);
         }
     }
 }

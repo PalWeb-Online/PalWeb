@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CardResource;
 use App\Models\Card;
+use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +14,51 @@ use Throwable;
 
 class CardController extends Controller
 {
-    public function update(Request $request, Card $card)
+    public function __construct(
+        protected TermService $termService,
+    ) {
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        $filters = array_merge(['sort' => 'due'], $request->only(['status', 'level', 'sort']));
+
+        $cards = Card::query()
+            ->forUser(auth()->id())
+            ->with([
+                'term' => fn ($q) => $q->withItemData(),
+            ])
+            ->filterStatus($filters['status'] ?? null)
+            ->filterLevel($filters['level'] ?? null)
+            ->sort($filters['sort'] ?? 'due')
+            ->latest()
+            ->paginate(25)
+            ->withQueryString();
+
+        $terms = $cards
+            ->getCollection()
+            ->pluck('term')
+            ->filter();
+
+        $this->termService->hydratePronunciations($terms);
+        $cardResource = CardResource::collection($cards);
+
+        return response()->json([
+            'filters' => $filters,
+            'cards' => [
+                'data' => $cardResource->toArray($request),
+                'meta' => [
+                    'links' => $cards->linkCollection()->toArray(),
+                    'current_page' => $cards->currentPage(),
+                    'last_page' => $cards->lastPage(),
+                    'total' => $cards->total(),
+                ],
+            ],
+            'totalCount' => $cards->total(),
+        ]);
+    }
+
+    public function update(Request $request, Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
@@ -30,51 +76,36 @@ class CardController extends Controller
         ]);
     }
 
-    public function master(Request $request, Card $card)
+    public function master(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->master();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card mastered.',
         ]);
     }
 
-    public function suspend(Request $request, Card $card)
+    public function suspend(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->suspended_at ? $card->restore() : $card->suspend();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card suspended.',
         ]);
     }
 
-    public function reset(Request $request, Card $card)
+    public function reset(Card $card): JsonResponse
     {
         Gate::authorize('update', $card);
 
         $card->reset();
 
-        if ($request->header('X-Inertia')) {
-            return back();
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Card reset.',
         ]);
     }
 

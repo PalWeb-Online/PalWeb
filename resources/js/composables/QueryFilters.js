@@ -1,11 +1,12 @@
 import { watch } from "vue";
-import { router } from "@inertiajs/vue3";
+import {useRoute, useRouter} from "vue-router";
 
 export function useQueryFilters(filters, options = {}) {
+    const router = useRouter();
+    const currentRoute = useRoute();
+
     const {
         pageParam = "page",
-        preserveState = true,
-        preserveScroll = true,
         mode = "replace",
     } = options;
 
@@ -19,10 +20,9 @@ export function useQueryFilters(filters, options = {}) {
 
         const params = Object.fromEntries(searchParams.entries());
 
-        router.get(window.location.pathname, params, {
-            preserveState,
-            preserveScroll,
-            replace: mode === "replace",
+        router[mode === "replace" ? "replace" : "push"]({
+            path: currentRoute.path,
+            query: params,
         });
     }
 

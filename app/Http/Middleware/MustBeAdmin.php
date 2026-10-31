@@ -15,7 +15,7 @@ class MustBeAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()->isAdmin()) {
+        if (! $request->user()->isSuperuser()) {
             abort(403);
         }
 

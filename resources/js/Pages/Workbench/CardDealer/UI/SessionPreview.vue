@@ -1,16 +1,16 @@
 <script setup>
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import {computed, ref} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import AppTooltip from "../../../../components/AppTooltip.vue";
 import SessionSettings from "./SessionSettings.vue";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useI18n} from "vue-i18n";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 
 const {t} = useI18n();
-const NotificationStore = useNotificationStore();
+const router = useRouter();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const appTooltip = ref(null);
@@ -77,10 +77,15 @@ const hasReachedReviewLimit = computed(() => {
 
 const purgeNew = async () => {
     if (confirm(t('card-dealer.session-preview.notifications.purge-confirm'))) {
-        const {data} = await axios.post(route('cards.purge'));
+        const {data} = await axios.post('/api/cards/purge');
 
         if (data.success) {
-            NotificationStore.addNotification(t('card-dealer.session-preview.notifications.purge-success', {count: data.count}));
+            Notifier.notify({
+                key: 'card-dealer.session-preview.notifications.purge-success',
+                params: {
+                    count: data.count,
+                },
+            });
             emit('refresh');
         }
     }
@@ -95,11 +100,14 @@ const startReview = () => {
         payload.deck = props.deckId;
     }
 
-    router.get(route('card-dealer.review'), payload);
+    router.push({
+        name: 'card-dealer.review',
+        query: payload,
+    });
 };
 
 const sessionSettings = ref({
-    new_limit: UserStore.user?.preferences?.srs?.new_limit ?? 25,
+    new_limit: UserStore.user?.preferences?.srs?.new_limit ?? 12,
     review_limit: UserStore.user?.preferences?.srs?.review_limit ?? 100,
     learning_steps: UserStore.user?.preferences?.srs?.learning_steps ?? 3,
     prompt_type: UserStore.user?.preferences?.srs?.prompt_type ?? false,

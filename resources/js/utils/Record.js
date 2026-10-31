@@ -76,7 +76,7 @@ export default class Record {
         formData.append('speakerId', this.speaker.id);
 
         try {
-            const response = await axios.post('/api/record-wizard/store', formData);
+            const response = await axios.post('/api/sound-booth/stash/store', formData);
 
             this.stashKey = response.data.stashKey;
             this.url = response.data.url;
@@ -92,7 +92,7 @@ export default class Record {
         }
 
         try {
-            const response = await axios.post('/api/record-wizard/upload', {
+            const response = await axios.post('/api/sound-booth/stash/upload', {
                 stashKey: this.stashKey,
                 filename: this.getFilename(),
                 speaker: this.speaker,

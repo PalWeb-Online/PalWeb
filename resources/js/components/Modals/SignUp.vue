@@ -1,18 +1,23 @@
 <script setup>
 import {useForm} from "../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import {generateArabicName} from "../../utils/NameGenerator.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 import {useUserStore} from "../../stores/UserStore.js";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
 import {useI18n} from "vue-i18n";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
+import i18n from "../../i18n.js";
+import {
+    flushUserInterfacePreferenceSync,
+    reconcileUserInterfacePreferencesWithUser,
+} from "../../runtime/preferences.js";
 
-const {t, locale} = useI18n();
+const {locale} = useI18n();
+const router = useRouter();
 const emit = defineEmits(['close', 'signIn']);
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const {
@@ -43,21 +48,36 @@ const signUp = async () => {
     clearErrors();
 
     try {
-        const {data} = await axios.post(route('signup'), payload());
+        const {data} = await axios.post('/api/auth/signup', payload());
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);
+        reconcileUserInterfacePreferencesWithUser(i18n, data.user);
+        flushUserInterfacePreferenceSync(i18n, data.user).then((result) => {
+            if (result.theme?.preferences) {
+                UserStore.setUser({
+                    ...UserStore.user,
+                    preferences: result.theme.preferences,
+                });
+            }
+        }).catch((error) => {
+            console.error('Failed to sync interface preferences:', error);
+        });
         setRecentlySuccessful();
 
         emit('close');
 
-        NotificationStore.addNotification(t('user.notifications.signed-up', {
-            user: locale.value === 'ar'
-                ? UserStore.user.ar_name
-                : UserStore.user.name
-        }));
+        Notifier.notify({
+            key: 'user.notifications.signed-up',
+            params: {
+                user: UserStore.user,
+            },
+        });
 
-        router.get(route('users.show', UserStore.user.username));
+        router.push({
+            name: 'users.show',
+            params: {user: UserStore.user.username},
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {

@@ -2,36 +2,45 @@
 
 namespace Tests\Feature\NoAuth;
 
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Tests\TestCase;
 
 class ChangeLanguageTest extends TestCase
 {
-    public function test_change_language_sets_language_in_the_session(): void
+    protected function setUp(): void
     {
-        // Should not have a language set to start
-        $this->assertFalse(session()->has('language'));
+        parent::setUp();
 
-        // Only some strings are accepted
-        foreach (['en', 'es', 'ar'] as $val) {
-            // language should be set after posting to the change language route
-            $result = $this->post(route('language.store', $val));
-            $this->assertEquals($val, session()->get('language'));
+        $this->withoutMiddleware(ValidateCsrfToken::class);
+    }
 
-            // Should redirect back to prev page
-            $result->assertStatus(302);
+    public function test_change_language_sets_language_cookie(): void
+    {
+        foreach (['en', 'es', 'ar'] as $locale) {
+            $response = $this->postJson("/api/language/{$locale}");
+
+            $response
+                ->assertOk()
+                ->assertJson([
+                    'success' => true,
+                    'locale' => $locale,
+                ])
+                ->assertCookie('language', $locale);
         }
+    }
 
-        // set the session so we know what it is
-        session()->put('language', 'en');
+    public function test_change_language_ignores_unsupported_locales(): void
+    {
+        foreach (['1', '4', 'potato', 'hello world', 'dog'] as $locale) {
+            $response = $this->postJson("/api/language/{$locale}");
 
-        // we dont accept these things
-        foreach (['1', 4, 'potato', 'hello world', 'dog'] as $val) {
-            // language should NOT be set after posting to the change language route
-            $result = $this->post(route('language.store', $val));
-            $this->assertNotEquals($val, session()->get('language'));
-
-            // Should redirect back to prev page
-            $result->assertStatus(302);
+            $response
+                ->assertOk()
+                ->assertJson([
+                    'success' => true,
+                    'locale' => $locale,
+                ])
+                ->assertCookieMissing('language');
         }
     }
 }

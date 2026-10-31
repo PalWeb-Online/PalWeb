@@ -1,32 +1,64 @@
-import {route} from "ziggy-js";
-import {useResourceLoader} from "../resources/useResourceLoader.js";
+import {ref} from 'vue';
+import {useResourceLoader} from '../resources/useResourceLoader.js';
+
+const emptyDecks = () => ({
+    data: [],
+    meta: {
+        links: [],
+        current_page: 1,
+        last_page: 1,
+        total: 0,
+    },
+});
 
 export function useUserLoader() {
+    const decks = ref(emptyDecks());
+    const badges = ref([]);
+    const speaker = ref(null);
+    const filters = ref({ sort: 'latest' });
 
     const {
         model: user,
         notFound: userNotFound,
         isLoading: isLoadingUser,
         setModel: setUser,
-        fetchModel: fetchUser,
+        fetchShowModel: fetchShowUser,
+        fetchEditModel: fetchEditUser,
     } = useResourceLoader({
-        getUrl: (userId, options = {}) => route(options.routeName ?? 'api.users.fetch', {
-            user: userId,
-            ...(options.params ?? {}),
-        }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
+        routeBase: 'users',
+        routeParam: 'user',
         extractModel: (response) => response.data.user ?? null,
+        extractMeta: (response) => ({
+            decks: response.data.decks ?? emptyDecks(),
+            badges: response.data.badges ?? [],
+            speaker: response.data.speaker ?? null,
+            filters: response.data.filters ?? { sort: 'latest' },
+        }),
+        onSetModel: (meta = {}) => {
+            decks.value = meta.decks ?? emptyDecks();
+            badges.value = meta.badges ?? [];
+            speaker.value = meta.speaker ?? null;
+            filters.value = meta.filters ?? { sort: 'latest' };
+        },
     });
+
+    const fetchUserDecks = async (username, params = {}) => {
+        const response = await axios.get(`/api/users/${encodeURIComponent(username)}`, { params });
+        decks.value = response.data.decks ?? emptyDecks();
+        return decks.value;
+    };
 
     return {
         user,
+        decks,
+        badges,
+        speaker,
+        filters,
         userNotFound,
         isLoadingUser,
         setUser,
-        fetchUser,
+        fetchShowUser,
+        fetchEditUser,
+        fetchUserDecks,
     };
 }

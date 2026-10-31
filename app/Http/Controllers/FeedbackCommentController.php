@@ -6,35 +6,32 @@ use App\Http\Requests\StoreFeedbackCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\FeedbackComment;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Throwable;
 
 class FeedbackCommentController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): JsonResponse
     {
         $comments = FeedbackComment::with('user')->get();
 
-        return Inertia::render('Office/ViewFeedback', [
-            'section' => 'office',
+        return response()->json([
             'feedbackComments' => CommentResource::collection($comments),
         ]);
     }
 
-    public function store(StoreFeedbackCommentRequest $request): RedirectResponse
+    public function store(StoreFeedbackCommentRequest $request): JsonResponse
     {
         FeedbackComment::create([
             'comment' => $request['comment'],
             'user_id' => auth()->id(),
         ]);
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => 'Thank you for your feedback!']);
-        return back();
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     public function destroy(FeedbackComment $feedbackComment): JsonResponse

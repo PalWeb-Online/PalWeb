@@ -22,6 +22,7 @@ class AcademyStateController extends Controller
         $lessonProgress = $user->getLessonProgress();
 
         $remainingDue = (int) $reviewService->getSessionStats($user, ReviewOptions::forUser($user))['remaining_due'];
+        $cardsCount = $user->cards()->count();
 
         return response()->json([
             'study_plan' => [
@@ -29,7 +30,7 @@ class AcademyStateController extends Controller
                 'cards' => [
                     'remaining_due' => $remainingDue,
                     'completed' => $remainingDue === 0,
-                    'route' => route('card-dealer.review'),
+                    'started' => $cardsCount > 0,
                 ],
                 'lesson' => $currentLesson ? $this->lessonTask($user, $currentLesson) : null,
             ],
@@ -59,7 +60,6 @@ class AcademyStateController extends Controller
 
         if ($stage <= 1) {
             return [
-                'key' => 'deck',
                 'lesson_id' => $lesson->id,
                 'model_type' => 'deck',
                 'model_id' => $lesson->deck_id,
@@ -68,7 +68,6 @@ class AcademyStateController extends Controller
 
         if ($stage === 2) {
             return [
-                'key' => 'activity',
                 'lesson_id' => $lesson->id,
                 'model_type' => 'activity',
                 'model_id' => $lesson->activity_id,
@@ -93,28 +92,13 @@ class AcademyStateController extends Controller
                 ->exists();
 
         return [
-            'key' => $assignment['key'],
             'completed' => $completed,
             'lesson' => $lesson ? $this->formatLesson($lesson, $user) : null,
             'action' => [
                 'model_type' => $modelType,
                 'model_id' => $modelId,
-                'route' => $this->actionRoute($assignment, $lesson),
             ],
         ];
-    }
-
-    private function actionRoute(array $assignment, ?Lesson $lesson): ?string
-    {
-        if (! $lesson) {
-            return null;
-        }
-
-        return match ($assignment['key'] ?? null) {
-            'deck' => $lesson->deck_id ? route('deck-master.study', $lesson->deck_id) : null,
-            'activity' => $lesson->activity_id ? route('activities.activity', $lesson->activity_id) : null,
-            default => null,
-        };
     }
 
     private function isValidLessonTask(User $user, mixed $assignment): bool

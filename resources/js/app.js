@@ -1,15 +1,19 @@
-import {createApp, h} from "vue/dist/vue.esm-bundler";
-import {createInertiaApp, Head, Link, router} from "@inertiajs/vue3";
+import {createApp} from 'vue';
 import {createPinia} from 'pinia';
-import axios from 'axios';
+import App from './App.vue';
 import i18n from './i18n';
+import router from './router.js';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import {registerSW} from 'virtual:pwa-register'
-import {route} from 'ziggy-js';
-import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
+import {registerSW} from 'virtual:pwa-register';
 import 'vue3-carousel/dist/carousel.css';
-import {syncCsrfToken} from "./utils/csrfToken.js";
+import {useUserStore} from './stores/UserStore.js';
+import {bootstrapHttp} from './http.js';
+import {
+    flushUserInterfacePreferenceSync,
+    initializeUserInterfacePreferences,
+    reconcileUserInterfacePreferencesWithUser,
+} from './runtime/preferences.js';
 
 registerSW({
     immediate: true,
@@ -35,9 +39,41 @@ registerSW({
 
 const pinia = createPinia();
 
-window.axios = axios;
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+const httpReady = bootstrapHttp().catch((error) => {
+    console.error('Failed to bootstrap HTTP:', error);
+});
+
+initializeUserInterfacePreferences(i18n);
+
+const syncUserInterfacePreferences = async (user = null) => {
+    const result = await flushUserInterfacePreferenceSync(i18n, user);
+
+    if (result.theme?.preferences && user) {
+        useUserStore(pinia).setUser({
+            ...user,
+            preferences: result.theme.preferences,
+        });
+    }
+
+    return result;
+};
+
+const bootstrapCurrentUser = async () => {
+    try {
+        await httpReady;
+
+        const user = await useUserStore(pinia).fetchCurrentUser();
+
+        reconcileUserInterfacePreferencesWithUser(i18n, user);
+
+        syncUserInterfacePreferences(user).catch((error) => {
+            console.error('Failed to sync interface preferences:', error);
+        });
+
+    } catch (error) {
+        console.error('Failed to bootstrap the current user:', error);
+    }
+};
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
@@ -50,47 +86,31 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
-createInertiaApp({
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue')
-        ),
-    setup({el, App, props, plugin}) {
-        i18n.global.locale.value = props.initialPage.props.locale;
-
-        syncCsrfToken(props.initialPage.props.csrfToken);
-
-        router.on('success', (event) => {
-            syncCsrfToken(event.detail.page.props.csrfToken);
-        });
-
-        createApp({render: () => h(App, props)})
-            .use(plugin)
-            .use(i18n)
-            .component("Link", Link)
-            .component("Head", Head)
-            .use(pinia)
-            .mount(el);
-    },
-    title: title => "PalWeb | " + title
-});
-
-router.on('before', (event) => {
+router.beforeEach((to) => {
     if (navigator.onLine) {
         return;
     }
 
-    const url = event.detail.visit.url;
-
-    if (typeof url === 'string' && url.includes(route('offline'))) {
+    if (to.name === 'offline') {
         return;
     }
 
-    event.preventDefault();
-
-    router.visit(route('offline'), {
+    return {
+        name: 'offline',
         replace: true,
-        preserveState: true,
+    };
+});
+
+window.addEventListener('online', () => {
+    syncUserInterfacePreferences(useUserStore(pinia).user).catch((error) => {
+        console.error('Failed to sync interface preferences:', error);
     });
 });
+
+createApp(App)
+    .use(i18n)
+    .use(pinia)
+    .use(router)
+    .mount('#app');
+
+bootstrapCurrentUser();

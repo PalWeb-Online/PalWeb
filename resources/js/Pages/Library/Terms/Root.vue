@@ -1,18 +1,20 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import RootContainer from "../../../components/RootContainer.vue";
-
-defineOptions({
-    layout: Layout
-});
+import {onMounted, ref} from "vue";
 
 const props = defineProps({
-    root: Object,
+    rootId: Number,
+});
+
+const root = ref(null);
+
+onMounted(async () => {
+    const {data} = await axios.get(`/api/roots/${props.rootId}`);
+    root.value = data.root;
 });
 </script>
 <template>
-    <Head :title="`Dictionary: ${root.ar} (${root.en})`"/>
     <div id="app-body">
-        <RootContainer :root="root"/>
+        <RootContainer v-if="root" :root="root"/>
     </div>
 </template>

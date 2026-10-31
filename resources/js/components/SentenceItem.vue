@@ -3,11 +3,11 @@ import {useSentence} from "../composables/sentences/useSentence.js";
 import PinButton from "./PinButton.vue";
 import SentenceActions from "./Actions/SentenceActions.vue";
 import {nextTick, onMounted} from "vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 const UserStore = useUserStore();
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -49,12 +49,10 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
 <template>
     <div v-if="! isLoading && sentence.sentence" class="model-item-container sentence-item-container">
         <div class="sentence-dialog-data" v-if="(dialog && sentence.dialog) || speaker">
-            <Link v-if="dialog && sentence.dialog"
-                  :href="route('dialogs.show', sentence.dialog.id) + '#position-' + sentence.position"
-                  target="_blank">
-                <div>{{ $t('components.dialog.title') }}</div>
-                <div>{{ sentence.dialog.title }}</div>
-            </Link>
+            <RouterLink v-if="dialog && sentence.dialog" :to="{ name: 'dialogs.show', params: { dialog: sentence.dialog.id }, hash: '#position-' + sentence.position}">
+              <div>{{ $t('components.dialog.title') }}</div>
+              <div>{{ sentence.dialog.title }}</div>
+            </RouterLink>
             <div v-if="speaker">
                 <div>{{ $t('components.sentence.speaker') }}</div>
                 <div>{{ sentence.speaker }}</div>
@@ -71,13 +69,13 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                         <div v-if="showTranscription">[]</div>
                     </div>
                     <template v-else>
-                        <Link v-if="term.id"
-                              :href="isCurrentTerm(term) ? '#' : route('terms.show', term.slug)"
+                        <RouterLink v-if="term.id"
+                              :to="isCurrentTerm(term) ? '#' : { name: 'terms.show', params: { term: term.slug } }"
                               :target="isCurrentTerm(term) ? '' : '_blank'"
                               :class="['sentence-term', isCurrentTerm(term) ? 'active' : '']">
                             <div>{{ term.sentencePivot.sent_term }}</div>
                             <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
-                        </Link>
+                        </RouterLink>
                         <div v-else class="sentence-term">
                             <div>{{ term.sentencePivot.sent_term }}</div>
                             <div v-if="showTranscription">{{ term.sentencePivot.sent_translit }}</div>
@@ -91,7 +89,7 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
             </div>
             <SentenceActions v-if="UserStore.isAdmin" :model="sentence"/>
             <div v-else class="popup-menu-wrapper">
-                <button class="material-symbols-rounded" @click="router.get(route('sentences.show', sentence.id))">
+                <button class="material-symbols-rounded" @click="router.push({name: 'sentences.show', params: {sentence: sentence.id}})">
                     visibility
                 </button>
             </div>

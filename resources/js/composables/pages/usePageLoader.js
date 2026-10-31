@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function usePageLoader() {
@@ -12,9 +11,11 @@ export function usePageLoader() {
         notFound: pageNotFound,
         isLoading: isLoadingPage,
         setModel: setPage,
-        fetchModel: fetchPage,
+        fetchShowModel: fetchShowPage,
+        fetchEditModel: fetchEditPage,
     } = useResourceLoader({
-        getUrl: (pageId) => route('api.wiki.fetch', pageId),
+        routeBase: 'wiki',
+        routeParam: 'page',
         extractModel: (response) => response.data.page ?? null,
         extractMeta: (response) => ({
             descendantIds: response.data.descendant_ids ?? [],
@@ -28,7 +29,7 @@ export function usePageLoader() {
         isLoadingTree.value = true;
 
         try {
-            const response = await axios.get(route('api.wiki.tree'));
+            const response = await axios.get('/api/wiki/tree');
             pageTree.value = response.data.page_tree ?? [];
 
         } finally {
@@ -44,7 +45,8 @@ export function usePageLoader() {
         pageTree,
         isLoadingTree,
         setPage,
-        fetchPage,
+        fetchShowPage,
+        fetchEditPage,
         fetchWikiTree,
     };
 }

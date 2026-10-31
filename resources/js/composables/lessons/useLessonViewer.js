@@ -8,9 +8,7 @@ export function useLessonViewer() {
         load: loadLesson,
         reload: reloadLesson,
     } = useDocumentResourceViewer({
-        fetchModel: (lessonId) => lessonLoader.fetchLesson(lessonId, {
-            include: 'show',
-        }),
+        fetchModel: lessonLoader.fetchShowLesson,
         resetModel: lessonLoader.setLesson,
         getBlocks: (document) => document?.skills?.flatMap((skill) => skill.blocks ?? []) ?? [],
     });

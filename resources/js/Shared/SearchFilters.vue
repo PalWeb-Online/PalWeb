@@ -30,6 +30,7 @@ const filters = ref({
     sort: props.filters.sort || '',
     pinned: props.filters.pinned || false,
     category: props.filters.category || '',
+    rootType: props.filters.rootType || '',
     attribute: props.filters.attribute || '',
     form: props.filters.form || '',
     singular: props.filters.singular || '',
@@ -210,6 +211,14 @@ const isCCC = computed(() => {
                 </option>
                 <option value="clitic">{{ $t('term.filters.attributes.clitic') }}</option>
                 <option value="idiom">{{ $t('term.filters.attributes.idiom') }}</option>
+            </select>
+            <select v-model="filters.rootType" :class="filters.rootType ? 'persisting' : ''">
+                <option value="">{{ $t('term.filters.root-type.label') }}</option>
+                <option value="A">{{ $t('term.filters.root-type.option', { type: 'A' }) }}</option>
+                <option value="B">{{ $t('term.filters.root-type.option', { type: 'B' }) }}</option>
+                <option value="C">{{ $t('term.filters.root-type.option', { type: 'C' }) }}</option>
+                <option value="D">{{ $t('term.filters.root-type.option', { type: 'D' }) }}</option>
+                <option value="E">{{ $t('term.filters.root-type.option', { type: 'E' }) }}</option>
             </select>
             <select v-model="filters.form" :class="filters.form ? 'persisting' : ''">
                 <option value="">{{ $t('term.filters.form.label') }}</option>

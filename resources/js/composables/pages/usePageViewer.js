@@ -8,7 +8,7 @@ export function usePageViewer() {
         load: loadPage,
         reload: reloadPage,
     } = useDocumentResourceViewer({
-        fetchModel: pageLoader.fetchPage,
+        fetchModel: pageLoader.fetchShowPage,
         resetModel: pageLoader.setPage,
         getBlocks: (document) => document?.blocks ?? [],
     });

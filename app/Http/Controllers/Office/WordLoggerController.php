@@ -12,21 +12,12 @@ use App\Services\TermRelativeService;
 use App\Services\TermService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class WordLoggerController extends Controller
 {
     public function __construct(
         protected TermService $termService,
     ) {}
-
-    public function index(): Response
-    {
-        return Inertia::render('Office/WordLogger/Index', [
-            'section' => 'office',
-        ]);
-    }
 
     public function relatives(): JsonResponse
     {
@@ -90,11 +81,9 @@ class WordLoggerController extends Controller
         ]);
     }
 
-    public function term(?Term $term = null): Response
+    public function editorData(): JsonResponse
     {
-        return Inertia::render('Office/WordLogger/Term', [
-            'section' => 'office',
-            'termId' => $term?->id,
+        return response()->json([
             'editorData' => [
                 'attributes' => Attribute::query()
                     ->select(['id', 'model', 'attribute', 'category'])

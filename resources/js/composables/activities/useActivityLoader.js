@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useActivityLoader() {
@@ -10,17 +9,11 @@ export function useActivityLoader() {
         notFound: activityNotFound,
         isLoading: isLoadingActivity,
         setModel: setActivity,
-        fetchModel: fetchActivity,
+        fetchShowModel: fetchShowActivity,
+        fetchEditModel: fetchEditActivity,
     } = useResourceLoader({
-        getUrl: (activityId) => route('api.activities.fetch', activityId),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                profile: options.profile ?? null,
-                include: Array.isArray(options.include)
-                    ? options.include.join(',')
-                    : options.include ?? null,
-            },
-        }),
+        routeBase: 'activities',
+        routeParam: 'activity',
         extractModel: (response) => response.data.activity ?? null,
     });
 
@@ -30,6 +23,7 @@ export function useActivityLoader() {
         isLoadingActivity,
         lesson,
         setActivity,
-        fetchActivity,
+        fetchShowActivity,
+        fetchEditActivity,
     };
 }

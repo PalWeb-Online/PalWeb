@@ -11,23 +11,21 @@ use App\Models\Lesson;
 use App\Models\Unit;
 use App\Services\LessonService;
 use App\Services\TermService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 
 class LessonPlannerController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): JsonResponse
     {
-        return Inertia::render('Office/LessonPlanner/Course', [
-            'section' => 'office',
+        return response()->json([
             'units' => UnitResource::collection(Unit::all()),
             'lessons' => LessonResource::collection(Lesson::where('unit_id', null)->get()),
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'units' => ['required', 'array'],
@@ -62,32 +60,12 @@ class LessonPlannerController extends Controller
             LessonService::reorderAllUnitsAndLessons();
         });
 
-        session()->flash('notification',
-            ['type' => 'success', 'message' => __('updated', ['thing' => 'the Course'])]);
-        return to_route('lesson-planner.index');
-    }
-
-    public function unit(?Unit $unit = null): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Unit', [
-            'section' => 'office',
-            'unitId' => $unit?->id,
+        return response()->json([
+            'success' => true,
         ]);
     }
 
-    public function unitLesson(Unit $unit): \Inertia\Response
-    {
-        return Inertia::render('Office/LessonPlanner/Lesson', [
-            'section' => 'office',
-            'initialUnit' => [
-                'id' => $unit->id,
-                'title' => $unit->title,
-                'position' => $unit->position,
-            ],
-        ]);
-    }
-
-    public function unitDecks(Unit $unit, TermService $termService): \Inertia\Response
+    public function unitDecks(Unit $unit, TermService $termService): JsonResponse
     {
         $deckIds = $unit->lessons()
             ->whereNotNull('deck_id')
@@ -109,41 +87,9 @@ class LessonPlannerController extends Controller
 
         $decks->each(fn (Deck $deck) => $termService->hydratePronunciations($deck->terms));
 
-        return Inertia::render('Office/LessonPlanner/Decks', [
-            'section' => 'office',
+        return response()->json([
             'unit' => new UnitResource($unit),
             'decks' => DeckResource::collection($decks),
-        ]);
-    }
-
-    public function lesson(?Lesson $lesson = null): \Inertia\Response
-    {
-        $lesson?->load([
-            'unit',
-            'deck',
-            'activity',
-            'dialog'
-        ]);
-
-        return Inertia::render('Office/LessonPlanner/Lesson', [
-            'section' => 'office',
-            'lessonId' => $lesson?->id,
-        ]);
-    }
-
-    public function lessonActivity(Lesson $lesson): \Inertia\Response
-    {
-        $activity = $lesson->activity;
-
-        return Inertia::render('Office/LessonPlanner/Activity', [
-            'section' => 'office',
-            'activityId' => $activity?->id,
-            'initialLesson' => [
-                'id' => $lesson->id,
-                'title' => $lesson->title,
-                'global_position' => $lesson->global_position,
-                'published' => $lesson->published,
-            ],
         ]);
     }
 }

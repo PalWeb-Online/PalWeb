@@ -1,73 +1,48 @@
 <script setup>
-import {ref, onMounted} from "vue";
-import Layout from "../../../Shared/Layout.vue";
+import {ref} from "vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
 import AppTip from "../../../components/AppTip.vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
-import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
 
-const audios = ref(null);
 const dialects = ref([]);
 const locations = ref([]);
-const totalCount = ref(0);
-const loading = ref(true);
-const filters = ref({sort: 'latest', dialect: '', location: '', gender: ''});
 
-const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchAudios);
-
-async function fetchAudios(params = {}) {
-    loading.value = true;
-    try {
-        const response = await fetch(route('api.audios.index', params));
-        const data = await response.json();
-        audios.value = data.audios;
-        dialects.value = data.dialects;
-        locations.value = data.locations;
-        totalCount.value = data.totalCount;
-        filters.value = {...filters.value, ...data.filters};
-        updatePagination(data.audios.meta);
-    } catch (error) {
-        console.error('Failed to fetch audios:', error);
-    } finally {
-        loading.value = false;
-    }
-}
-
-onMounted(() => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    filters.value = {...filters.value, ...params};
-    currentPage.value = parseInt(params.page) || 1;
-    fetchAudios(params);
+const {
+    collection: audios,
+    totalCount,
+    filters,
+    loading,
+    currentPage,
+    pageNumbers,
+    isLoadingPaginator,
+    goToPage,
+    updateFilter,
+} = useResourceIndex({
+    routeBase: 'audios',
+    defaultFilters: {sort: 'latest', dialect: '', location: '', gender: ''},
+    onResponse: (data) => {
+        dialects.value = data.dialects ?? [];
+        locations.value = data.locations ?? [];
+    },
 });
-
-function updateFilter(key, value) {
-    filters.value[key] = value;
-    const params = Object.fromEntries(Object.entries(filters.value).filter(([, v]) => v !== ''));
-    const searchParams = new URLSearchParams(params);
-    searchParams.delete('page');
-    currentPage.value = 1;
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchAudios(Object.fromEntries(searchParams.entries()));
-}
 
 const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 </script>
 
 <template>
-    <Head title="Library: Audios"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('audios.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'audios.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/audios</div>
-                <Link v-if="UserStore.isUser" :href="route('sound-booth.index')" class="material-symbols-rounded">add
-                </Link>
+                <RouterLink v-if="UserStore.isUser" :to="{ name: 'sound-booth.index' }" class="material-symbols-rounded">add
+                </RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.audios.index.title') }}</h1></div>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
@@ -75,26 +50,26 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
             <div class="search-filters-container">
                 <div class="search-filters">
                     <select v-model="filters.dialect" :class="filters.dialect ? 'persisting' : ''"
-                            @change="updateFilter('dialect', filters.dialect)">
+                            @change="updateFilter({filter: 'dialect', value: filters.dialect})">
                         <option value="">{{ $t('speaker.fields.dialect') }}</option>
                         <option v-for="dialect in dialects" :key="dialect.id" :value="dialect.id">
                             {{ $t(`dialect.${localeKey(dialect.name)}`) }}
                         </option>
                     </select>
                     <select v-model="filters.location" :class="filters.location ? 'persisting' : ''"
-                            @change="updateFilter('location', filters.location)">
+                            @change="updateFilter({filter: 'location', value: filters.location})">
                         <option value="">{{ $t('speaker.fields.location') }}</option>
                         <option v-for="location in locations" :key="location.id" :value="location.id">
                             {{ location.name_ar }}
                         </option>
                     </select>
                     <select v-model="filters.gender" :class="filters.gender ? 'persisting' : ''"
-                            @change="updateFilter('gender', filters.gender)">
+                            @change="updateFilter({filter: 'gender', value: filters.gender})">
                         <option value="">{{ $t('speaker.fields.gender') }}</option>
                         <option value="male">{{ $t('speaker.gender.male') }}</option>
                         <option value="female">{{ $t('speaker.gender.female') }}</option>
                     </select>
-                    <select v-model="filters.sort" @change="updateFilter('sort', filters.sort)">
+                    <select v-model="filters.sort" @change="updateFilter({filter: 'sort', value: filters.sort})">
                         <option value="latest">{{ $t('search.filters.sort.latest') }}</option>
                         <option value="fluency">{{ $t('search.filters.sort.fluency') }}</option>
                     </select>
@@ -116,9 +91,9 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
                     <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.audios') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <PronunciationItem v-for="audio in audios.data" :model="audio.pronunciation" :audio="audio"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

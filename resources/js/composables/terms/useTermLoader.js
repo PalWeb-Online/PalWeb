@@ -1,5 +1,4 @@
 import {computed} from "vue";
-import {route} from "ziggy-js";
 import {useResourceLoader} from "../resources/useResourceLoader.js";
 
 export function useTermLoader() {
@@ -8,17 +7,12 @@ export function useTermLoader() {
         notFound: termsNotFound,
         isLoading: isLoadingTerms,
         setModel: setTerms,
-        fetchModel: fetchTerms,
+        fetchShowModel: fetchShowTerms,
+        fetchEditModel: fetchEditTerms,
+        fetchRandomModel: fetchRandomTerms,
     } = useResourceLoader({
-        getUrl: (termId, options = {}) => route(options.routeName ?? 'api.terms.fetch', {
-            term: termId,
-            ...(options.params ?? {}),
-        }),
-        getRequestConfig: (options = {}) => ({
-            params: {
-                include: options.include ?? null,
-            },
-        }),
+        routeBase: 'terms',
+        routeParam: 'term',
         extractModel: (response) => response.data.terms ?? [],
     });
 
@@ -30,6 +24,8 @@ export function useTermLoader() {
         termsNotFound,
         isLoadingTerms,
         setTerms,
-        fetchTerms,
+        fetchShowTerms,
+        fetchEditTerms,
+        fetchRandomTerms,
     };
 }

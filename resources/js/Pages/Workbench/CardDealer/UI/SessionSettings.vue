@@ -1,16 +1,12 @@
 <script setup>
-import {route} from "ziggy-js";
 import RangeSlider from "../../../../components/RangeSlider.vue";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import WindowSection from "../../../../components/WindowSection.vue";
 import ToggleMulti from "../../../../components/ToggleMulti.vue";
 import AppTip from "../../../../components/AppTip.vue";
-import {useI18n} from "vue-i18n";
 
-const {t} = useI18n();
-
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const props = defineProps({
@@ -23,7 +19,7 @@ const saveSettings = async () => {
     }
 
     try {
-        const {data} = await axios.patch(route('users.preferences.update', UserStore.user.username), {
+        const {data} = await axios.patch('/api/auth/preferences', {
             srs_settings: {
                 new_limit: props.settings.new_limit,
                 review_limit: props.settings.review_limit,
@@ -33,11 +29,15 @@ const saveSettings = async () => {
         });
 
         UserStore.user.preferences.srs = data.preferences.srs;
-        NotificationStore.addNotification(t('user.notifications.preferences-saved'), 'success')
+        Notifier.notify({
+            key: 'user.notifications.preferences-saved',
+        })
 
     } catch (e) {
-        console.error(t('user.notifications.preferences-saved-error'), e);
-        NotificationStore.addNotification(t('user.notifications.preferences-saved-error'), 'error');
+        Notifier.notify({
+            key: 'user.notifications.preferences-saved-error',
+            type: 'error',
+        });
     }
 }
 </script>

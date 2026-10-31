@@ -1,67 +1,40 @@
 <script setup>
-import {ref, onMounted} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import SearchFilters from "../../../Shared/SearchFilters.vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../stores/UserStore.js";
-import {usePaginator} from "../../../composables/usePaginator.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const UserStore = useUserStore();
-defineOptions({layout: Layout});
 
-const decks = ref(null);
-const totalCount = ref(0);
-const filters = ref({sort: 'latest'});
-const loading = ref(true);
-
-const {currentPage, pageNumbers, goToPage, updatePagination} = usePaginator(fetchDecks);
-
-async function fetchDecks(params = {}) {
-    loading.value = true;
-    try {
-        const response = await fetch(route('api.decks.index', params));
-        const data = await response.json();
-        decks.value = data.decks;
-        totalCount.value = data.totalCount;
-        filters.value = data.filters;
-        updatePagination(data.decks.meta);
-    } catch (error) {
-        console.error('Failed to fetch decks:', error);
-    } finally {
-        loading.value = false;
-    }
-}
-
-onMounted(() => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    currentPage.value = parseInt(params.page) || 1;
-    fetchDecks(params);
+const {
+    collection: decks,
+    totalCount,
+    filters,
+    loading,
+    currentPage,
+    pageNumbers,
+    isLoadingPaginator,
+    goToPage,
+    updateFilter,
+} = useResourceIndex({
+    routeBase: 'decks',
+    defaultFilters: {sort: 'latest'},
 });
-
-function updateFilter({filter, value}) {
-    const searchParams = new URLSearchParams(window.location.search);
-    value ? searchParams.set(filter, value) : searchParams.delete(filter);
-    searchParams.delete('page');
-    currentPage.value = 1;
-    window.history.pushState({}, '', '?' + searchParams.toString());
-    fetchDecks(Object.fromEntries(searchParams.entries()));
-}
 </script>
 
 <template>
-    <Head title="Library: Decks"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-header">
-                <Link :href="route('decks.index')" class="material-symbols-rounded">home</Link>
+                <RouterLink :to="{ name: 'decks.index' }" class="material-symbols-rounded">home</RouterLink>
                 <div class="window-header-url">www.palweb.app/library/decks</div>
-                <Link v-if="UserStore.isUser" :href="route('deck-master.build')" class="material-symbols-rounded">add
-                </Link>
-                <Link :href="route('decks.random')" class="material-symbols-rounded">keyboard_double_arrow_right</Link>
+                <RouterLink v-if="UserStore.isUser" :to="{ name: 'deck-master.build' }" class="material-symbols-rounded">add
+                </RouterLink>
+                <RouterLink :to="{ name: 'decks.random' }" class="material-symbols-rounded">keyboard_double_arrow_right</RouterLink>
             </div>
             <div class="window-section-head"><h1>{{ $t('pages.decks.index.title') }}</h1></div>
             <div class="window-section-head"><h2>{{ $t('pages.common.index') }}</h2></div>
@@ -84,9 +57,9 @@ function updateFilter({filter, value}) {
                     <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.decks') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

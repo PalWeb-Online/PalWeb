@@ -1,36 +1,18 @@
-import {ref} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useI18n} from "vue-i18n";
-import {useUserStore} from "../stores/UserStore.js";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import {syncCsrfToken} from "../utils/csrfToken.js";
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
+import {useUserStore} from '../stores/UserStore.js';
+import {useNotifier} from './useNotifier.js';
+import {syncCsrfToken} from '../utils/csrfToken.js';
 
 export function useAuth() {
-    const {t, locale} = useI18n();
+    const router = useRouter();
 
     const UserStore = useUserStore();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const signingOut = ref(false);
     const startingDiscordAuth = ref(false);
     const revokingDiscord = ref(false);
-
-    const notifyFromResponse = (data, fallbackType = 'success') => {
-        if (!data?.message) return;
-
-        NotificationStore.addNotification(
-            data.message,
-            data.success === false ? 'error' : fallbackType,
-        );
-    };
-
-    const notifyFromError = (error, fallbackMessage = 'Something went wrong.') => {
-        NotificationStore.addNotification(
-            error?.response?.data?.message ?? fallbackMessage,
-            'error',
-        );
-    };
 
     const startDiscordAuth = async () => {
         if (startingDiscordAuth.value) return;
@@ -38,22 +20,25 @@ export function useAuth() {
         startingDiscordAuth.value = true;
 
         try {
-            const {data} = await axios.get(route('auth.discord'));
+            const { data } = await axios.get('/api/auth/discord');
 
             if (data.redirect_url) {
                 window.location.href = data.redirect_url;
                 return;
             }
 
-            notifyFromResponse(data, 'info');
+            Notifier.notify({
+                message: data.message,
+                type: data.success === true ? 'success' : 'error',
+            });
 
         } catch (error) {
             const status = error?.response?.status;
 
-            NotificationStore.addNotification(
-                error?.response?.data?.message ?? 'Failed to start Discord authentication.',
-                status === 409 ? 'info' : 'error',
-            );
+            Notifier.notify({
+                message: error?.response?.data?.message ?? 'Failed to start Discord authentication.',
+                type: status === 409 ? 'info' : 'error',
+            });
 
         } finally {
             startingDiscordAuth.value = false;
@@ -66,36 +51,35 @@ export function useAuth() {
         revokingDiscord.value = true;
 
         try {
-            const {data} = await axios.post(route('auth.discord.revoke'));
+            const { data } = await axios.post('/api/auth/discord/revoke');
 
             if (data.user) {
                 UserStore.setUser(data.user);
             }
 
-            NotificationStore.addNotification(
-                data.message,
-                data.success ? 'success' : 'error',
-            );
-
-            router.reload({
-                only: ['auth'],
+            Notifier.notify({
+                message: data.message,
+                type: data.success ? 'success' : 'error',
             });
 
         } catch (error) {
-            notifyFromError(error, 'Failed to disconnect Discord account.');
+            Notifier.notify({
+                message: error?.response?.data?.message ?? 'Failed to disconnect Discord account.',
+                type: 'error',
+            });
 
         } finally {
             revokingDiscord.value = false;
         }
     };
 
-    const signOut = async ({afterSignOut = null} = {}) => {
+    const signOut = async ({ afterSignOut = null } = {}) => {
         if (signingOut.value) return;
 
         signingOut.value = true;
 
         try {
-            const {data} = await axios.post(route('signout'));
+            const { data } = await axios.post('/api/auth/signout');
 
             syncCsrfToken(data.csrf_token);
 
@@ -103,13 +87,14 @@ export function useAuth() {
 
             await afterSignOut?.(data);
 
-            setTimeout(() => {
-                NotificationStore.addNotification(t('user.notifications.signed-out', {
-                    user: locale.value === 'ar' ? data.user.ar_name : data.user.name,
-                }));
-            }, 300);
+            Notifier.notify({
+                key: 'user.notifications.signed-out',
+                params: {
+                    user: data.user,
+                },
+            });
 
-            router.get(route('homepage'));
+            router.push({ name: 'homepage' });
 
         } finally {
             signingOut.value = false;

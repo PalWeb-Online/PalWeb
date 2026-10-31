@@ -20,15 +20,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Inertia\Inertia;
 use Throwable;
 
 class ScoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): JsonResponse
     {
         $latestScoreIds = Score::query()
             ->where('user_id', $request->user()->id)
@@ -81,11 +77,19 @@ class ScoreController extends Controller
             $currentPage,
             ['path' => $request->url(), 'query' => $request->query()]
         );
+        $latestScoredDecks = DeckResource::collection($paginatedDecks);
 
-        return Inertia::render('Academy/Scores/Index', [
-            'section' => 'academy',
+        return response()->json([
             'scoredLessonModels' => $scoredLessonModels,
-            'latestScoredDecks' => DeckResource::collection($paginatedDecks),
+            'latestScoredDecks' => [
+                'data' => $latestScoredDecks->toArray($request),
+                'meta' => [
+                    'links' => $paginatedDecks->linkCollection()->toArray(),
+                    'current_page' => $paginatedDecks->currentPage(),
+                    'last_page' => $paginatedDecks->lastPage(),
+                    'total' => $paginatedDecks->total(),
+                ],
+            ],
             'totalCount' => $totalCount,
         ]);
     }
@@ -107,7 +111,7 @@ class ScoreController extends Controller
         ]);
     }
 
-    public function history(Request $request, string $scorable_type, int $scorable_id): \Inertia\Response
+    public function history(Request $request, string $scorable_type, int $scorable_id): JsonResponse
     {
         $request->validate([
             'score' => ['nullable', 'integer', 'exists:scores,id'],
@@ -124,17 +128,25 @@ class ScoreController extends Controller
 
         $scores = $model->scores()->paginate(10)->onEachSide(1);
         $totalCount = $scores->total();
+        $scoreResource = ScoreResource::collection($scores);
 
         $selectedScore = null;
         if ($request->filled('score')) {
             $selectedScore = Score::with('scorable')->findOrFail($request->input('score'));
         }
 
-        return Inertia::render('Academy/Scores/History', [
-            'section' => 'academy',
+        return response()->json([
             'model' => $scorable_type === 'deck' ? new DeckResource($model) : new ActivityResource($model),
             'scorable_type' => $scorable_type,
-            'scores' => ScoreResource::collection($scores),
+            'scores' => [
+                'data' => $scoreResource->toArray($request),
+                'meta' => [
+                    'links' => $scores->linkCollection()->toArray(),
+                    'current_page' => $scores->currentPage(),
+                    'last_page' => $scores->lastPage(),
+                    'total' => $scores->total(),
+                ],
+            ],
             'totalCount' => $totalCount,
             'selectedScore' => $selectedScore ? new ScoreResource($selectedScore) : null,
         ]);

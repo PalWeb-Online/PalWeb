@@ -1,6 +1,5 @@
 <script setup>
 import {computed} from "vue";
-import {route} from "ziggy-js";
 import ProgressTaskItem from "./ProgressTaskItem.vue";
 
 const props = defineProps({
@@ -58,7 +57,7 @@ const progressItems = computed(() => {
             total: 3,
             completed: scoreCount('deck') >= 3,
             active: stage.value === 1,
-            route: props.lesson.deck ? route('deck-master.study', props.lesson.deck) : null,
+            route: props.lesson.deck ? {name: 'deck-master.study', params: {deck: props.lesson.deck}} : null,
         },
     ];
 
@@ -74,7 +73,7 @@ const progressItems = computed(() => {
             total: 1,
             completed: scoreCount('activity') >= 1,
             active: stage.value === 2,
-            route: props.lesson.activity ? route('activities.activity', props.lesson.activity) : null,
+            route: props.lesson.activity ? {name: 'activities.activity', params: {activity: props.lesson.activity}} : null,
         });
     }
 
@@ -297,11 +296,11 @@ const selectStage = (lessonStage) => {
 @keyframes current-stage-pulse {
     0%,
     100% {
-        box-shadow: 0 0 2.4rem 0 rgb(255 255 255 / 20%);
+        box-shadow: 0 0 2.4rem 0 hsl(from var(--color-accent-light) h s l / 25%);
     }
 
     50% {
-        box-shadow: 0 0 2.4rem 1.2rem rgb(255 255 255 / 40%);
+        box-shadow: 0 0 2.4rem 1.2rem hsl(from var(--color-accent-light) h s l / 75%);
     }
 }
 </style>

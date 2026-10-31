@@ -394,6 +394,10 @@
                 "label": "form",
                 "option": "form {form}"
             },
+            "root-type": {
+                "label": "Root Type",
+                "option": "type {type}"
+            },
             "singular": "singular",
             "plural": "plural",
             "pattern-groups": {
@@ -538,7 +542,10 @@
         "send-feedback": {
             "title": "send feedback",
             "placeholder": "Is something broken? Is a word missing from the Dictionary? Let us know!",
-            "submit": "Submit"
+            "submit": "Submit",
+            "notifications": {
+                "sent-feedback": "Thank you for your feedback!"
+            }
         },
         "send-mail": {
             "title": "send mail",
@@ -546,7 +553,10 @@
                 "subject": "Subject"
             },
             "placeholder": "What would you like to say?",
-            "submit": "Send"
+            "submit": "Send",
+            "notifications": {
+                "mail-queued": "Mail has been queued!"
+            }
         },
         "sign-in": {
             "title": "sign in",
@@ -731,6 +741,7 @@
         "type": {
             "container": "container",
             "heading": "heading",
+            "divider": "divider",
             "text": "text",
             "image": "image",
             "audio": "audio",
@@ -1142,8 +1153,10 @@
                 "error": "Unable to load today's Study Plan.",
                 "tasks-completed": "You got everything done for today! See you tomorrow!",
                 "cards": {
-                    "label": "Review your Due Cards",
-                    "meta": "You have {count} Due Cards in the Card Dealer.",
+                    "start-label": "Create some New Cards",
+                    "start-meta": "Go to the Card Dealer to generate New Cards for review.",
+                    "review-label": "Review your Due Cards",
+                    "review-meta": "You have {count} Due Cards in the Card Dealer.",
                     "complete": "No more Due Cards left for today!",
                     "action": "review cards"
                 },
@@ -1254,7 +1267,11 @@
             },
             "new-password": {
                 "title": "new password",
-                "set-password": "set password"
+                "set-password": "set password",
+                "notifications": {
+                    "password-set-success": "New password has been set!",
+                    "password-set-failure": "Failed to set new password."
+                }
             }
         },
         "wiki": {
@@ -1294,6 +1311,7 @@
                 "sentences-prompt": "Select the Term that best fits the blank in the Sentence."
             },
             "notifications": {
+                "empty-deck": "You can't Quiz an empty Deck!",
                 "insufficient-items": "Couldn't generate a Quiz with at least 5 questions.",
                 "quiz-generation-error": "Failed to generate Quiz."
             }
@@ -1324,6 +1342,28 @@
                 "info-unit-removal": "You must go to the edit page for a Unit to delete it.",
                 "info-lesson-removal": "Removing a Lesson from this list will unlink it from this Unit. You must go to its edit page to delete the Lesson altogether.",
                 "warning-incomplete": "This Unit is incomplete, as it contains fewer than 9 published Lessons."
+            }
+        },
+        "error": {
+            "503": {
+                "title": "Unavailable",
+                "message": "We're doing some maintenance. Check back soon."
+            },
+            "500": {
+                "title": "Server Error",
+                "message": "Oops! Something went wrong."
+            },
+            "404": {
+                "title": "Not Found",
+                "message": "What you're looking for doesn't exist."
+            },
+            "403": {
+                "title": "Forbidden",
+                "message": "Whatever you just did — don't."
+            },
+            "911": {
+                "title": "Offline",
+                "message": "Womp womp. Try again later."
             }
         }
     },
@@ -1410,7 +1450,8 @@
             "queue": "queue",
             "status": {
                 "full": "You already have 100 items in the Queue.",
-                "empty": "The Queue is already empty."
+                "empty": "The Queue is already empty.",
+                "no-valid-items": "There are no valid items in your Dialect currently available for you to record."
             },
             "load": {
                 "button": "load deck",
@@ -1428,16 +1469,51 @@
         "record": {
             "record": "record",
             "upload": "upload",
-            "prompt-start": "Record something to get started!"
+            "prompt-start": "Record something to get started!",
+            "limit-reached": "Limit Reached",
+            "queue-completed": "Queue Completed"
         },
         "check": "check",
+        "titles": {
+            "speaker": "Sound Booth (Speaker)",
+            "queue": "Sound Booth (Queue)"
+        },
+        "microphone": {
+            "allow": "Allow the browser to use your mic in order to proceed.",
+            "prompt-again": "Click here to prompt again."
+        },
+        "alt": {
+            "prompt": "Prompt",
+            "test": "Test",
+            "back": "Back",
+            "forward": "Forward",
+            "record": "Record",
+            "stop": "Stop",
+            "discard": "Discard",
+            "listen": "Listen",
+            "upload": "Upload"
+        },
+        "errors": {
+            "microphone-technical": "There was a technical issue with the microphone.",
+            "microphone-access": "Microphone access was not allowed.",
+            "microphone-not-found": "Microphone not found.",
+            "microphone-unknown": "An unknown microphone error occurred.",
+            "record-init": "Recording could not be initialized.",
+            "record-stash": "Recording could not be stashed. Please try to record the item again.",
+            "record-discard": "Recording could not be discarded. Please try again.",
+            "record-upload": "Recording could not be uploaded. Please try again."
+        },
         "notifications": {
             "flush-queue-confirm": "Are you sure you want to clear the Queue, deleting all your currently stashed recordings (if any)?",
             "remove-item-confirm": "You have a stashed recording for this item. Are you sure you would like to remove it from the Queue before uploading? Your stashed recording will be lost.",
             "auto-queue-success": "Added {count} Pronunciations to the Queue!",
             "auto-queue-error": "Failed to automatically queue Pronunciations.",
             "deck-queue-success": "Added {count} Pronunciations to the Queue from the Deck!",
-            "deck-queue-error": "Failed to queue Pronunciations from the Deck."
+            "deck-queue-error": "Failed to queue Pronunciations from the Deck.",
+            "discard-record-confirm": "Are you sure you want to discard this recording?",
+            "upload-records-confirm": "Are you sure you want to upload all of your recordings?",
+            "stashed-recordings-confirm": "Some of your stashed recordings have not been uploaded yet! You can check your uploaded recordings in the Check step & return to the Record step to continue, but if you exit the SoundBooth without uploading your stashed recordings, they will be deleted.",
+            "leave-confirm": "Are you sure you want to leave the Sound Booth? Your {count} stashed recordings will be lost."
         }
     },
     "footer": {

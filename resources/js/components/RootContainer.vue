@@ -1,6 +1,5 @@
 <script setup>
 import TermItem from "./TermItem.vue";
-import {route} from "ziggy-js";
 
 defineProps({
     root: Object,
@@ -9,7 +8,7 @@ defineProps({
 <template>
     <div class="window-container">
         <div class="window-header">
-            <Link :href="route('terms.index')" class="material-symbols-rounded">home</Link>
+            <RouterLink :to="{ name: 'terms.index' }" class="material-symbols-rounded">home</RouterLink>
             <div class="window-header-url">www.palweb.app/library/roots/{root}</div>
         </div>
         <div class="window-section-head">
@@ -26,7 +25,7 @@ defineProps({
         <div class="window-section-head">
             <h2>{{ $t('components.common.sections.terms') }}</h2>
         </div>
-        <div v-if="Object.keys(root.terms).length > 0" class="model-list index-list">
+        <div v-if="Object.keys(root.terms).length > 0" class="model-list">
             <template v-for="term in root.terms" :key="term.id">
                 <TermItem :model="term"/>
             </template>

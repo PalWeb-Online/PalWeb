@@ -1,79 +1,114 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
-import {useForm} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useUserStore} from "../../stores/UserStore.js";
-import {computed} from "vue";
+import {useForm} from '../../composables/useForm.js';
+import {useUserStore} from '../../stores/UserStore.js';
+import {computed, ref} from 'vue';
+import {useRouter} from 'vue-router';
 
+const router = useRouter();
 const UserStore = useUserStore();
 
 const props = defineProps({
-    token: {type: String, default: ''},
-    email: {type: String, default: ''},
+    token: {
+        type: String,
+        default: '',
+    },
+    email: {
+        type: String,
+        default: '',
+    },
 });
 
-const form = useForm({
+const {
+    form,
+    errors,
+    clearErrors,
+    setErrors,
+    payload,
+} = useForm({
     token: props.token || '',
     email: props.email || '',
     password: '',
     password_confirmation: '',
 });
+const processing = ref(false);
 
-const setNewPassword = () => {
-    const method = !UserStore.isUser
-        ? form.post.bind(form)
-        : form.patch.bind(form);
+const setNewPassword = async () => {
+    processing.value = true;
+    clearErrors();
 
-    const url = !UserStore.isUser
-        ? route('password.update')
-        : route('password.change');
+    try {
+        const { data } = !UserStore.isUser
+            ? await axios.post('/api/auth/reset-password', payload())
+            : await axios.patch('/api/auth/change-password', payload());
 
-    method(url);
-}
+        if (data.success) {
+            router.push({
+                name: 'users.show',
+                params: { userUsername: UserStore.user.username },
+            });
+
+            Notifier.notify({
+                key: 'pages.users.new-password.notifications.password-set-success',
+            });
+        }
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        }
+        Notifier.notify({
+            key: 'pages.users.new-password.notifications.password-set-failure',
+        });
+
+    } finally {
+        processing.value = false;
+    }
+};
 
 const isValidRequest = computed(() => {
     return form.password.length >= 8 && form.password_confirmation;
 });
-
-defineOptions({
-    layout: Layout
-})
 </script>
 <template>
-    <Head title="New Password"/>
     <div id="app-body">
         <div class="window-container">
             <div class="window-section-head">
                 <h1>{{ $t('pages.users.new-password.title') }}</h1>
             </div>
-            <div class="form-body">
-                <div class="field-item">
-                    <label>{{ $t('user.fields.password') }}</label>
-                    <div class="field-input">
-                        <input type="password" v-model="form.password" placeholder="Lenin1917!" required>
-                        <div class="field-chars"
-                             :class="{'invalid': form.password.length < 8}"
-                             v-text="form.password.length + `/8`"
-                        />
+
+            <form @submit.prevent="setNewPassword">
+                <div class="form-body">
+                    <div class="field-item">
+                        <label>{{ $t('user.fields.password') }}</label>
+                        <div class="field-input">
+                            <input type="password" autocomplete="new-password"
+                                   v-model="form.password" placeholder="Lenin1917!" required>
+                            <div class="field-chars"
+                                 :class="{'invalid': form.password.length < 8}"
+                                 v-text="form.password.length + `/8`"
+                            />
+                        </div>
+                        <div v-if="errors.password" v-text="errors.password" class="field-error"/>
                     </div>
-                    <div v-if="form.errors.password" v-text="form.errors.password" class="field-error"/>
-                </div>
-                <div class="field-item">
-                    <label>{{ $t('user.fields.confirm-password') }}</label>
-                    <div class="field-input">
-                        <input type="password" v-model="form.password_confirmation" placeholder="Lenin1917!" required>
-                        <div class="field-chars"
-                             :class="{'invalid': form.password_confirmation.length < 8}"
-                             v-text="form.password_confirmation.length + `/8`"
-                        />
+                    <div class="field-item">
+                        <label>{{ $t('user.fields.confirm-password') }}</label>
+                        <div class="field-input">
+                            <input type="password" autocomplete="new-password"
+                                   v-model="form.password_confirmation" placeholder="Lenin1917!"
+                                   required>
+                            <div class="field-chars"
+                                 :class="{'invalid': form.password_confirmation.length < 8}"
+                                 v-text="form.password_confirmation.length + `/8`"
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="window-footer">
-                <button @click="setNewPassword" :disabled="form.processing || !isValidRequest">
-                    {{ $t('pages.users.new-password.set-password') }}
-                </button>
-            </div>
+                <div class="window-footer">
+                    <button type="submit" :disabled="processing || !isValidRequest">
+                        {{ $t('pages.users.new-password.set-password') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>

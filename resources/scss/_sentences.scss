@@ -78,7 +78,7 @@
 .sentence-dialog-data {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.1rem;
+    gap: 1px;
     background: var(--color-dark-primary);
 
     & > * {

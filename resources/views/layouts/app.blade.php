@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="{{ app()->getLocale() }}">
+<html lang="en" class="theme-Msaxxan">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +25,28 @@
     <meta name="twitter:image" content="{{ url('/img/palweb.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        (() => {
+            const themes = ['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'];
+            const locales = ['en', 'es', 'ar'];
+            const root = document.documentElement;
+
+            try {
+                const theme = localStorage.getItem('palweb.theme');
+                const locale = localStorage.getItem('palweb.locale');
+
+                if (themes.includes(theme)) {
+                    root.classList.remove(...themes.map((value) => `theme-${value}`));
+                    root.classList.add(`theme-${theme}`);
+                }
+
+                if (locales.includes(locale)) {
+                    root.lang = locale;
+                }
+            } catch (error) {
+            }
+        })();
+    </script>
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -42,12 +64,11 @@
 
     <link rel="manifest" href="/build/manifest.webmanifest">
 
-    @routes
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    @inertiaHead
+    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ config('app.name') }}</title>
 </head>
 
-<body class="{{ $bodyBackground ?? '' }}">
-    @inertia
+<body>
+    <div id="app"></div>
 </body>
 </html>

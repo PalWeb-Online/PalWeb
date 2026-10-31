@@ -1,9 +1,9 @@
 import {onMounted, reactive, ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceDelete} from "../resources/useResourceDelete.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useDialog(props = {}) {
+    const router = useRouter();
     const dialog = reactive({});
     const isLoading = ref(true);
     const isLoadingTerms = ref(true);
@@ -15,7 +15,7 @@ export function useDialog(props = {}) {
         label: 'dialog',
         routeBase: 'dialogs',
         onDeleteSuccess: () => {
-            router.get(route('dialogs.index'));
+            router.push({name: 'dialogs.index'});
         },
     });
 
@@ -53,12 +53,12 @@ export function useDialog(props = {}) {
         }
 
         try {
-            const response = await axios.post(route('sentences.get-many'), {
+            const { data } = await axios.post('/api/sentences/many', {
                 ids: Array.from(ids)
             });
 
             dialog.sentences.forEach(sentence => {
-                sentence.terms = response.data[sentence.id].terms
+                sentence.terms = data.sentences[sentence.id].terms
             })
 
         } catch (error) {

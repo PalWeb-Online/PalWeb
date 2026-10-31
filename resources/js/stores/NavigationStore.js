@@ -1,7 +1,12 @@
 import {defineStore} from 'pinia';
 import {reactive, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {useUserStore} from "./UserStore.js";
+import {
+    changeApplicationTheme,
+    initializeClientTheme,
+    reconcileThemeWithUser,
+    themes as availableThemes,
+} from '../runtime/preferences.js';
 
 export const useNavigationStore = defineStore('NavigationStore', () => {
     const UserStore = useUserStore();
@@ -25,93 +30,40 @@ export const useNavigationStore = defineStore('NavigationStore', () => {
         document.body.style.overflow = ''
     }
 
-    const themes = ['PalWebOS', 'Watermelon', 'Nabatean', 'Jerusalem', 'Falastin', 'Msaxxan'];
-    const defaultTheme = 'Msaxxan';
-
-    const isValidTheme = (theme) => themes.includes(theme);
-
-    const userTheme = () => UserStore.user?.preferences?.theme;
-    const storedTheme = () => localStorage.getItem('selectedTheme');
-
-    const initialTheme = () => {
-        if (isValidTheme(userTheme())) {
-            return userTheme();
-        }
-
-        if (isValidTheme(storedTheme())) {
-            return storedTheme();
-        }
-
-        return defaultTheme;
-    };
-
-    const activeTheme = ref(initialTheme());
-
-    const applyTheme = (theme) => {
-        const nextTheme = isValidTheme(theme) ? theme : defaultTheme;
-
-        document.body.classList.remove(...themes.map((t) => `theme-${t}`));
-        document.body.classList.add(`theme-${nextTheme}`);
-        activeTheme.value = nextTheme;
-        localStorage.setItem('selectedTheme', nextTheme);
-
-        return nextTheme;
-    };
+    const themes = availableThemes;
+    const activeTheme = ref(initializeClientTheme());
 
     const updateTheme = async (theme) => {
-        const nextTheme = applyTheme(theme);
+        const result = await changeApplicationTheme(theme, UserStore.user);
 
-        if (!UserStore.user) {
-            return;
-        }
+        activeTheme.value = result.theme;
 
-        try {
-            const {data} = await axios.patch(route('users.preferences.update'), {
-                theme: nextTheme,
-            });
-
+        if (result.preferences && UserStore.user) {
             const currentUser = UserStore.user;
 
             UserStore.setUser({
                 ...currentUser,
-                preferences: data.preferences,
+                preferences: result.preferences,
             });
-        } catch (error) {
-            console.error('Failed to save theme preference:', error);
         }
     };
-
-    applyTheme(activeTheme.value);
 
     watch(
         () => UserStore.user?.preferences?.theme,
         (theme) => {
-            if (isValidTheme(theme) && theme !== activeTheme.value) {
-                updateTheme(theme);
-            }
-        }
+            activeTheme.value = reconcileThemeWithUser({
+                preferences: {
+                    theme,
+                },
+            });
+        },
     );
-
-    const fontThemes = ['GoldStar', 'Banksy', 'Pal2K'];
-    const activeFontTheme = ref(localStorage.getItem('selectedFontTheme') || 'GoldStar');
-
-    const updateFontTheme = (theme) => {
-        document.body.classList.remove(...fontThemes.map((t) => `font-theme-${t}`));
-        document.body.classList.add(`font-theme-${theme}`);
-        activeFontTheme.value = theme;
-        localStorage.setItem('selectedFontTheme', theme);
-    };
-
-    updateFontTheme(activeFontTheme.value);
 
     return {
         data,
         themes,
         activeTheme,
         updateTheme,
-        fontThemes,
-        activeFontTheme,
-        updateFontTheme,
         showSignIn,
         showSignUp,
         showSendFeedback,

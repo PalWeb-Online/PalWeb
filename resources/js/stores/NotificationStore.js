@@ -1,61 +1,19 @@
 import {defineStore} from 'pinia';
 import {onMounted, reactive, ref} from 'vue';
 import {disableWebPush, enableWebPush} from "../push.js";
-import {useI18n} from "vue-i18n";
 
 export const useNotificationStore = defineStore('NotificationStore', () => {
-    const {t, locale} = useI18n();
     const notifications = reactive([]);
     const currentBrowserSubscribed = ref(false);
     const currentBrowserSubscription = ref(null);
     const showPushSubscribeHint = ref(false);
     const isUpdatingBrowserSubscription = ref(false);
 
-    const localizedName = (value) => {
-        if (!value || typeof value !== 'object') {
-            return value;
-        }
-
-        if ('ar_name' in value || 'name' in value) {
-            return locale.value === 'ar'
-                ? value.ar_name ?? value.name
-                : value.name;
-        }
-
-        return value;
-    };
-
-    const resolveParams = (params = {}) => {
-        return Object.fromEntries(
-            Object.entries(params).map(([key, value]) => [
-                key,
-                localizedName(value),
-            ])
-        );
-    };
-
-    const resolveMessage = (notification) => {
-        if (notification?.key) {
-            return t(notification.key, resolveParams(notification.params));
-        }
-
-        return notification?.message ?? '';
-    };
-
-    const notify = ({notification}) => {
-        const message = resolveMessage(notification);
-
+    const addNotification = ({message, type = 'success', duration = 3000} = {}) => {
         if (!message) {
             return;
         }
 
-        const type = notification.type ?? 'success';
-        const duration = notification.duration ?? 3000;
-
-        addNotification(message, type, duration);
-    };
-
-    const addNotification = (message, type = 'success', duration = 3000) => {
         const id = Date.now();
         notifications.push({ id, message, type });
 
@@ -133,13 +91,8 @@ export const useNotificationStore = defineStore('NotificationStore', () => {
         }
     };
 
-    onMounted(async () => {
-        await refreshBrowserSubscriptionState();
-    });
-
     return {
         notifications,
-        notify,
         addNotification,
         removeNotification,
         currentBrowserSubscribed,

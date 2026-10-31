@@ -1,12 +1,11 @@
 <script setup>
 import UserNametag from "./UserNametag.vue";
 import UserAvatarWrapper from "./UserAvatarWrapper.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useNotifier} from "../composables/useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n();
-
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const props = defineProps({
     user: Object,
@@ -22,7 +21,9 @@ const copyText = (event) => {
     event.preventDefault();
 
     navigator.clipboard.writeText(props.user.teacher?.email).then(function () {
-        NotificationStore.addNotification(t('components.common.copied'));
+        Notifier.notify({
+            key: 'components.common.copied',
+        });
     }, function (err) {
         alert(`${t('components.common.copy-error')} ${err}`);
     });

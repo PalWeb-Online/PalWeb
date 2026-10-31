@@ -1,34 +1,38 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
 import DeckFlashcard from "../../../components/DeckFlashcard.vue";
 import DeckItem from "../../../components/DeckItem.vue";
 import PronunciationItem from "../../../components/PronunciationItem.vue";
-import {route} from "ziggy-js";
 import UserScorecard from "../../../components/UserScorecard.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import CommentItem from "../../../components/CommentItem.vue";
 import AppHeading from "../../../components/AppHeading.vue";
 import AppTip from "../../../components/AppTip.vue";
+import {onMounted, ref} from "vue";
 
-defineProps({
-    teachers: Object,
-    teachersCount: Number,
-    latestDecks: Array,
-    popularDecks: Array,
-    featuredDeck: Object,
-    latestAudios: Array,
-    topUsers: Array,
-});
+const teachers = ref({data: [], meta: {links: []}});
+const teachersCount = ref(0);
+const latestDecks = ref([]);
+const popularDecks = ref([]);
+const featuredDeck = ref(null);
+const latestAudios = ref([]);
+const topUsers = ref([]);
 
-defineOptions({
-    layout: Layout
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get('/api/community', {params});
+    teachers.value = data.teachers;
+    teachersCount.value = data.teachersCount;
+    latestDecks.value = data.latestDecks?.data ?? data.latestDecks ?? [];
+    popularDecks.value = data.popularDecks?.data ?? data.popularDecks ?? [];
+    featuredDeck.value = data.featuredDeck;
+    latestAudios.value = data.latestAudios?.data ?? data.latestAudios ?? [];
+    topUsers.value = data.topUsers?.data ?? data.topUsers ?? [];
 });
 </script>
 
 <template>
-    <Head title="Community Hub"/>
     <div id="app-head">
-        <Link :href="route('users.index')"><h1>{{ $t('pages.users.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'users.index' }"><h1>{{ $t('pages.users.index.title') }}</h1></RouterLink>
     </div>
 
     <div id="app-body">
@@ -60,7 +64,7 @@ defineOptions({
                 {{ $t('pages.users.index.decks') }}
             </AppHeading>
             <div class="decks-featured">
-                <DeckFlashcard :model="featuredDeck"/>
+                <DeckFlashcard v-if="featuredDeck" :model="featuredDeck"/>
                 <div class="model-list">
                     <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                     <DeckItem v-for="deck in latestDecks" :model="deck" size="s"/>
@@ -70,9 +74,9 @@ defineOptions({
                     <DeckItem v-for="deck in popularDecks" :model="deck" size="l"/>
                 </div>
             </div>
-            <Link class="portal-button" style="justify-self: center" :href="route('deck-master.build')">
+            <RouterLink class="portal-button" style="justify-self: center" :to="{ name: 'deck-master.build' }">
                 {{ $t('pages.users.index.create-prompt') }}
-            </Link>
+            </RouterLink>
 
             <AppHeading>
                 {{ $t('pages.users.index.audios') }}
@@ -81,9 +85,9 @@ defineOptions({
                 <div class="featured-title m" style="text-transform: none">{{ $t('pages.users.index.latest') }}</div>
                 <PronunciationItem v-for="audio in latestAudios" :model="audio.pronunciation" :audio="audio"/>
             </div>
-            <Link class="portal-button" style="justify-self: center" :href="route('sound-booth.index')">
+            <RouterLink class="portal-button" style="justify-self: center" :to="{ name: 'sound-booth.index' }">
                 {{ $t('pages.users.index.record-prompt') }}
-            </Link>
+            </RouterLink>
 
             <AppHeading>
                 {{ $t('pages.users.index.creators') }}

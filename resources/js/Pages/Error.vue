@@ -1,33 +1,13 @@
 <script setup>
-import Layout from "../Shared/Layout.vue";
-import {computed, watch} from "vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {watch} from "vue";
+import {useRouter} from "vue-router";
 import {useConnectionStatus} from "../composables/useConnectionStatus.js";
+import ZatuneThinking from '../Shared/ZatuneThinking.vue';
 
 const props = defineProps({status: Number})
+const router = useRouter();
 
 const {browserOnline} = useConnectionStatus(Echo);
-
-const title = computed(() => {
-    return {
-        503: 'Unavailable',
-        500: 'Server Error',
-        404: 'Not Found',
-        403: 'Forbidden!',
-        911: 'Offline'
-    }[props.status]
-})
-
-const message = computed(() => {
-    return {
-        503: 'We\'re doing some maintenance. Check back soon.',
-        500: 'Oops! Something went wrong.',
-        404: 'What you\'re looking for doesn\'t exist.',
-        403: 'Whatever you just did — don\'t.',
-        911: 'Womp womp. Try again later.',
-    }[props.status]
-})
 
 watch(browserOnline, (isOnline) => {
     if (props.status !== 911) {
@@ -35,34 +15,33 @@ watch(browserOnline, (isOnline) => {
     }
 
     if (isOnline) {
-        router.visit(route('homepage'), {
-            replace: true,
-            preserveScroll: true,
-        });
+        router.replace({name: 'homepage'});
     }
 }, {immediate: true});
-
-defineOptions({
-    layout: Layout
-});
 </script>
 <template>
-    <Head title="Error"/>
     <div id="app-body">
         <div class="error-container">
             <div class="error-status">{{ status }}</div>
-            <div class="error-title">{{ title }}</div>
-            <div class="error-message">{{ message }}</div>
+            <div class="error-title">{{ $t(`pages.error.${status}.title`) }}</div>
+            <div class="error-message">{{ $t(`pages.error.${status}.message`) }}</div>
+            <ZatuneThinking/>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+svg {
+    width: 32rem;
+    margin-block-start: 6.4rem;
+}
+
 .error-container {
     display: grid;
     gap: 1.6rem;
     text-align: center;
-    margin-block: 9.6rem;
+    justify-items: center;
+    margin: 9.6rem 3.2rem;
 
     .error-status {
         font-family: var(--display-font);

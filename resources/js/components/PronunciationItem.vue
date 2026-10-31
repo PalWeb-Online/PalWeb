@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import AudioItem from "./AudioItem.vue";
 import {onMounted, reactive, ref} from "vue";
 
@@ -16,7 +15,7 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 
 const fetchAudios = async () => {
     try {
-        const response = await axios.get(route('terms.get.pronunciations.audios', {pronunciation: props.model.id}));
+        const response = await axios.get(`/api/pronunciations/${props.model.id}/audios`);
         const audios = response.data.filter(audio =>
             !props.model.audios.some(existing => existing.id === audio.id)
         );
@@ -38,9 +37,9 @@ onMounted(() => {
 <template>
     <div class="model-item-container pronunciation-item-container">
         <div class="pronunciation-item">
-            <Link v-if="audio" class="pronunciation-item-term"
-                  :href="route('terms.show', model.term.slug)">{{ model.term.term }}
-            </Link>
+            <RouterLink v-if="audio" class="pronunciation-item-term"
+                  :to="{ name: 'terms.show', params: { term: model.term.slug } }">{{ model.term.term }}
+            </RouterLink>
             <div class="pronunciation-item-data">
                 <span class="pronunciation-item-dialect">
                     {{ $t(`dialect.${localeKey(model.dialect.name)}`) }}
@@ -76,7 +75,7 @@ onMounted(() => {
     .pronunciation-audios {
         flex-shrink: 0;
         display: grid;
-        gap: 0.1rem;
+        gap: 1px;
         justify-items: start;
         border-inline-start: none;
         background: var(--color-pastel-dark);
@@ -87,7 +86,9 @@ onMounted(() => {
     }
 
     & > button {
+        font-size: 1.6rem;
         text-align: center;
+        color: var(--color-dark-primary);
         background: var(--color-pastel-medium);
         padding-block-end: 0.2rem;
 
@@ -124,7 +125,7 @@ onMounted(() => {
 
     .pronunciation-item-term {
         flex-basis: 20%;
-        padding-block-start: 0.1rem;
+        padding-block-start: 1px;
         font-family: var(--ar-body-font), serif;
         font-size: 1.8rem;
         font-weight: 700;
@@ -150,7 +151,7 @@ onMounted(() => {
     }
 
     .pronunciation-item-dialect {
-        padding-block-end: 0.1rem;
+        padding-block-end: 1px;
         margin-inline-end: 0.8rem;
         font-family: var(--body-font), serif;
         font-weight: 700;

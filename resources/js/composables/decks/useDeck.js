@@ -1,13 +1,16 @@
-import {reactive, ref, watch} from "vue";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useResourceDelete} from "../resources/useResourceDelete.js";
-import {useI18n} from "vue-i18n";
+import {reactive, ref, watch} from 'vue';
+import {useNotifier} from '../useNotifier.js';
+import {useRouter} from 'vue-router';
+import {useResourceDelete} from '../resources/useResourceDelete.js';
+import {useI18n} from 'vue-i18n';
 
 export function useDeck(props = {}, options = {}) {
-    const {t, locale} = useI18n();
-    const NotificationStore = useNotificationStore();
+    const {
+        t,
+        locale,
+    } = useI18n();
+    const router = useRouter();
+    const Notifier = useNotifier();
 
     const {
         isDeleting: isDeletingDeck,
@@ -16,7 +19,7 @@ export function useDeck(props = {}, options = {}) {
         label: 'deck',
         routeBase: 'decks',
         onDeleteSuccess: () => {
-            router.get(route('decks.index'));
+            router.push({ name: 'decks.index' });
         },
     });
 
@@ -52,7 +55,7 @@ export function useDeck(props = {}, options = {}) {
 
         } else {
             blurb.value = t('components.deck.description-placeholder', {
-                author: locale.value === 'ar' ? deck.author.ar_name : deck.author.name
+                author: locale.value === 'ar' ? deck.author.ar_name : deck.author.name,
             });
         }
     };
@@ -64,7 +67,7 @@ export function useDeck(props = {}, options = {}) {
         loadTermsError.value = false;
 
         try {
-            const response = await axios.get(route('api.decks.get.terms', deck.id));
+            const response = await axios.get(`/api/decks/${deck.id}`);
             initDeck(response.data.deck);
         } catch (error) {
             console.error('Deck Detail Load Failed', error);
@@ -84,14 +87,11 @@ export function useDeck(props = {}, options = {}) {
         }
 
         isLoading.value = false;
-    }, {immediate: true});
+    }, { immediate: true });
 
     const toggleTerm = async (targetDeck, term) => {
         try {
-            const response = await axios.post(route('decks.term.toggle', {
-                deck: targetDeck.id,
-                term: term.id
-            }));
+            const response = await axios.post(`/api/decks/${targetDeck.id}/terms/${term.id}/toggle`);
 
             if (targetDeck.terms) {
                 if (response.data.isPresent) {
@@ -102,10 +102,13 @@ export function useDeck(props = {}, options = {}) {
                 }
             }
 
-            NotificationStore.addNotification(t('forms.notifications.model-' + (response.data.isPresent ? 'added' : 'removed'), {
-                model: t('actions.models.term'),
-                target: t('actions.models.deck'),
-            }));
+            Notifier.notify({
+                key: 'forms.notifications.model-' + (response.data.isPresent ? 'added' : 'removed'),
+                params: {
+                    model: t('actions.models.term'),
+                    target: t('actions.models.deck'),
+                },
+            });
 
             return response.data.isPresent;
 
@@ -118,17 +121,32 @@ export function useDeck(props = {}, options = {}) {
     const copyDeck = async (targetDeck = deck) => {
         if (!confirm(t('deck.notifications.copy-confirm'))) return;
 
-        const {data} = await axios.post(route('decks.copy', targetDeck.id));
+        const { data } = await axios.post(`/api/decks/${targetDeck.id}/copy`);
 
         if (data.success) {
-            NotificationStore.addNotification(t('deck.notifications.copy-success'));
-            router.get(route('decks.show', data.deckId));
+            Notifier.notify({
+                key: 'deck.notifications.copy-success',
+            });
+            router.push({
+                name: 'decks.show',
+                params: { deck: data.deckId },
+            });
         }
     };
 
     const copyLink = (targetDeck = deck) => {
-        navigator.clipboard.writeText(route('decks.show', targetDeck.id)).then(function () {
-            alert(t('deck.notifications.copy-link-success'));
+        const path = router.resolve({
+            name: 'decks.show',
+            params: { deck: targetDeck.id },
+        }).href;
+
+        const url = new URL(path, window.location.origin).href;
+
+        navigator.clipboard.writeText(url).then(function () {
+            Notifier.notify({
+                key: 'deck.notifications.copy-link-success',
+            });
+
         }, function (err) {
             alert('Could not copy text: ', err);
         });

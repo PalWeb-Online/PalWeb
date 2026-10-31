@@ -1,22 +1,25 @@
 <script setup>
-import {useNavigationStore} from "../../stores/NavigationStore.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
-import {computed, ref} from "vue";
-import {useUserStore} from "../../stores/UserStore.js";
-import ToggleSingle from "../ToggleSingle.vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
-import {useI18n} from "vue-i18n";
+import {useNavigationStore} from '../../stores/NavigationStore.js';
+import {useNotificationStore} from '../../stores/NotificationStore.js';
+import {computed, ref} from 'vue';
+import {useUserStore} from '../../stores/UserStore.js';
+import ToggleSingle from '../ToggleSingle.vue';
+import {useI18n} from 'vue-i18n';
+import i18n from '../../i18n.js';
+import {changeApplicationLocale} from '../../runtime/preferences.js';
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
 const NotificationStore = useNotificationStore();
 
-const {locale, t} = useI18n();
+const {
+    t,
+    locale,
+} = useI18n();
 
 const description = computed(() => t('modals.settings.theme-description.' + NavigationStore.activeTheme));
 
-const selectedLocale = ref(UserStore.user?.language ?? locale.value ?? 'en');
+const selectedLocale = ref(locale.value ?? 'en');
 const availableLocales = [
     {
         value: 'en',
@@ -29,15 +32,11 @@ const availableLocales = [
     {
         value: 'ar',
         label: 'العربيّة',
-    }
+    },
 ];
 
-const changeLanguage = (lang) => {
-    locale.value = lang;
-
-    router.post(route('language.store', lang), {}, {
-        preserveScroll: true,
-    });
+const selectLocale = async (nextLocale) => {
+    selectedLocale.value = await changeApplicationLocale(i18n, nextLocale);
 };
 
 const toggleNotifications = async (nextValue) => {
@@ -47,7 +46,7 @@ const toggleNotifications = async (nextValue) => {
         console.error(error);
         alert(error.message || t(nextValue
             ? 'modals.settings.notifications.enable-error'
-            : 'modals.settings.notifications.disable-error'
+            : 'modals.settings.notifications.disable-error',
         ));
     }
 };
@@ -71,25 +70,14 @@ const toggleNotifications = async (nextValue) => {
                     </option>
                 </select>
             </div>
-            <!--            <div class="field-item">-->
-            <!--                <label>Font Theme</label>-->
-            <!--                <select-->
-            <!--                    v-model="NavigationStore.activeFontTheme"-->
-            <!--                    @change="NavigationStore.updateFontTheme(NavigationStore.activeFontTheme)"-->
-            <!--                >-->
-            <!--                    <option v-for="theme in NavigationStore.fontThemes" :key="theme" :value="theme">-->
-            <!--                        {{ theme }}-->
-            <!--                    </option>-->
-            <!--                </select>-->
-            <!--            </div>-->
             <div class="field-item">
                 <label>{{ $t('modals.settings.fields.language') }}</label>
                 <select
                     v-model="selectedLocale"
-                    @change="changeLanguage(selectedLocale)"
+                    @change="selectLocale(selectedLocale)"
                 >
-                    <option v-for="(locale, i) in availableLocales" :key="i" :value="locale.value">
-                        {{ locale.label }}
+                    <option v-for="(loc, i) in availableLocales" :key="i" :value="loc.value">
+                        {{ loc.label }}
                     </option>
                 </select>
             </div>

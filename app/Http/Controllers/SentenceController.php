@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
 use Throwable;
@@ -38,7 +37,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function getMany(Request $request)
+    public function getMany(Request $request): JsonResponse
     {
         $request->validate([
             'ids' => 'required|array',
@@ -47,25 +46,12 @@ class SentenceController extends Controller
 
         $sentences = Sentence::whereIn('id', $request->input('ids'))->get();
 
-        return SentenceResource::collection($sentences)->keyBy('id');
-    }
-
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Library/Sentences/Index');
-    }
-
-    public function show(Sentence $sentence): \Inertia\Response
-    {
-        return Inertia::render('Library/Sentences/Show', [
-            'sentenceId' => $sentence->id,
+        return response()->json([
+            'sentences' => SentenceResource::collection($sentences)->keyBy('id'),
         ]);
     }
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
 
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 
@@ -106,23 +92,29 @@ class SentenceController extends Controller
         ]);
     }
 
-    public function fetch(Request $request, Sentence $sentence): JsonResponse
+    public function show(Sentence $sentence): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
+        return $this->fetchSentence($sentence);
+    }
 
-        if ($includes->contains('show') || $includes->contains('edit') || $includes->isEmpty()) {
-            $sentence->load(['dialog']);
-        }
+    public function edit(Sentence $sentence): JsonResponse
+    {
+        return $this->fetchSentence($sentence);
+    }
+
+    public function random(): JsonResponse
+    {
+        return $this->fetchSentence(Sentence::query()->inRandomOrder()->firstOrFail());
+    }
+
+    private function fetchSentence(Sentence $sentence): JsonResponse
+    {
+        $sentence->load(['dialog']);
 
         return response()->json([
             'sentence' => new SentenceResource($sentence),
         ]);
     }
-
-    // -------------------------------------------------------------------------
 
     public function store(UpsertSentenceRequest $request): JsonResponse
     {

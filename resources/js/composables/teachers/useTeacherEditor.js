@@ -1,11 +1,11 @@
 import {computed, ref} from "vue";
-import {route} from "ziggy-js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useTeacherEditor({
-                                      user,
-                                  }) {
+                                  user,
+                              }) {
+    const router = useRouter();
     // normally there would be a use*Loader composable here, but the Teacher model is loaded in
     // with the User model, so we just need to provide the ref & set method
 
@@ -22,6 +22,7 @@ export function useTeacherEditor({
     const populateForm = (model = null, {form, defaults, clearErrors}) => {
         setTeacher(model);
 
+        form.user_id = user.value?.id ?? null;
         form.email = model?.email ?? '';
         form.bio = model?.bio ?? '';
 
@@ -31,19 +32,22 @@ export function useTeacherEditor({
 
     const editor = useResourceEditor({
         initialForm: {
+            user_id: user.value?.id ?? null,
             email: '',
             bio: '',
         },
         populateForm,
         extractSavedModel: (response) => response.data.teacher ?? response.data.data ?? null,
         getLoadIdentifier: () => user.value?.teacher?.id ?? null,
-        fetchModel: async () => user.value?.teacher ?? null,
+        fetchModel: () => user.value?.teacher ?? null,
         resetModel: setTeacher,
         label: 'teacher',
         routeBase: 'teachers',
-        getStoreUrl: () => route('users.teacher.store', user.value?.username),
         onDeleteSuccess: () => {
-            router.get(route('users.show', user.value?.username));
+            router.push({
+                name: 'users.show',
+                params: {user: user.value?.username},
+            });
         },
     });
 
@@ -54,6 +58,7 @@ export function useTeacherEditor({
 
         editor.form.email = '';
         editor.form.bio = '';
+        editor.form.user_id = user.value?.id ?? null;
         editor.defaults();
         editor.clearErrors();
     };

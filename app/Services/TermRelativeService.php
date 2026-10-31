@@ -206,13 +206,18 @@ class TermRelativeService
         if ($this->shouldSyncReciprocalType($pivot)) {
             $reciprocalType = $this->reciprocalRelativeType($type);
 
+            $reciprocalUpdates = [
+                'gloss_id' => $this->requiresGloss($reciprocalType) ? DB::raw('gloss_id') : null,
+                'updated_at' => $now,
+            ];
+
+            if ($reciprocalType !== null) {
+                $reciprocalUpdates['type'] = $reciprocalType;
+            }
+
             DB::table('term_relative')
                 ->where('id', $reciprocalId)
-                ->update([
-                    'type' => $reciprocalType,
-                    'gloss_id' => $this->requiresGloss($reciprocalType) ? DB::raw('gloss_id') : null,
-                    'updated_at' => $now,
-                ]);
+                ->update($reciprocalUpdates);
         }
     }
 

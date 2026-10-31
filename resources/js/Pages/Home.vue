@@ -1,6 +1,4 @@
 <script setup>
-import Layout from "../Shared/Layout.vue";
-import {route} from "ziggy-js";
 import {computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import DeckFlashcard from "../components/DeckFlashcard.vue";
 import UserItem from "../components/UserItem.vue";
@@ -13,7 +11,7 @@ import {useSearchStore} from "../stores/SearchStore.js";
 import SentenceItem from "../components/SentenceItem.vue";
 import AppButton from "../components/AppButton.vue";
 import {useUserStore} from "../stores/UserStore.js";
-import {useNotificationStore} from "../stores/NotificationStore.js";
+import {useNotifier} from "../composables/useNotifier.js";
 import {Carousel, Pagination, Slide} from "vue3-carousel";
 import Kufiyye from "../Shared/Backgrounds/Kufiyye.vue";
 import CommentItem from "../components/CommentItem.vue";
@@ -23,18 +21,23 @@ import TermFlashcard from "../components/TermFlashcard.vue";
 
 const {t} = useI18n();
 
-defineProps({
-    count: Object,
-    users: Array,
-    decks: Array,
-    sentences: Array,
-    testimonials: Array,
-    featuredTerm: Object,
-    featuredUser: Object,
-    featuredDeck: Object,
+const count = ref({
+    terms: 0,
+    sentences: 0,
+    users: 0,
+    decks: 0,
+    dialogs: 0,
+    audios: 0,
 });
+const users = ref([]);
+const decks = ref([]);
+const sentences = ref([]);
+const testimonials = ref([]);
+const featuredTerm = ref(null);
+const featuredUser = ref(null);
+const featuredDeck = ref(null);
 
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const NavigationStore = useNavigationStore();
 const SearchStore = useSearchStore();
 const UserStore = useUserStore();
@@ -44,7 +47,10 @@ const showSignUp = () => {
         NavigationStore.showSignUp = true
 
     } else {
-        NotificationStore.addNotification(t('pages.home.notifications.signed-in'), 'info')
+        Notifier.notify({
+            key: 'pages.home.notifications.signed-in',
+            type: 'info',
+        })
     }
 }
 
@@ -66,6 +72,17 @@ const profileDialects = computed(() =>
 let intervalId = null;
 
 onMounted(async () => {
+    const {data} = await axios.get('/api/home');
+
+    count.value = data.count;
+    users.value = data.users?.data ?? data.users ?? [];
+    decks.value = data.decks?.data ?? data.decks ?? [];
+    sentences.value = data.sentences?.data ?? data.sentences ?? [];
+    testimonials.value = data.testimonials;
+    featuredTerm.value = data.featuredTerm;
+    featuredUser.value = data.featuredUser;
+    featuredDeck.value = data.featuredDeck;
+
     await nextTick();
 
     intervalId = setInterval(() => {
@@ -96,13 +113,8 @@ const handleScroll = () => {
 onBeforeUnmount(() => {
     clearInterval(intervalId);
 });
-
-defineOptions({
-    layout: Layout
-});
 </script>
 <template>
-    <Head title="Home"/>
     <div class="homepage-head-container">
         <div class="kufiyye-strip">
             <Kufiyye v-for="n in 4" :key="n" class="kufiyye-tile"/>
@@ -110,7 +122,7 @@ defineOptions({
         <div class="homepage-hero-wrapper"
              :style="{ transform: `translateY(${heroOffset}px)` }"
         >
-            <Link :href="route('wiki.show', 'release-notes')" class="feature-callout">{{ $t('pages.home.release-notes', {version: 'v2.4'}) }}</Link>
+            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'release-notes' } }" class="feature-callout">{{ $t('pages.home.release-notes', {version: '3.0 (alpha)'}) }}</RouterLink>
             <HomepageHero/>
         </div>
     </div>
@@ -148,7 +160,7 @@ defineOptions({
                         {{ $t('pages.home.prompts.join-discord.message') }}
                     </div>
                     <div class="portal-button-body">
-                        <a class="portal-button" href="https://discord.gg/3Wf7Q6RCjV" target="_blank">
+                        <a class="portal-button" to="https://discord.gg/3Wf7Q6RCjV" target="_blank">
                             {{ $t('pages.home.prompts.join-discord.button') }}
                         </a>
                     </div>
@@ -419,7 +431,7 @@ defineOptions({
                 </div>
                 <div class="window-container">
                     <div class="window-header">
-                        <Link :href="route('users.index')" class="material-symbols-rounded">home</Link>
+                        <RouterLink :to="{ name: 'users.index' }" class="material-symbols-rounded">home</RouterLink>
                         <div class="material-symbols-rounded">public</div>
                         <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
                     </div>

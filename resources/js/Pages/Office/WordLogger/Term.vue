@@ -1,38 +1,33 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
-import {computed, onMounted, watch} from "vue";
-import {useNavGuard} from "../../../composables/NavGuard.js";
-import {useSearchStore} from "../../../stores/SearchStore.js";
-import NavGuard from "../../../components/Modals/NavGuard.vue";
-import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import AppTip from "../../../components/AppTip.vue";
-import {useTermEditor} from "../../../composables/terms/useTermEditor.js";
-import {useTermValidation} from "../../../composables/terms/useTermValidation.js";
-import {useNotificationStore} from "../../../stores/NotificationStore.js";
-import {route} from "ziggy-js";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import PinButton from "../../../components/PinButton.vue";
-import TermActions from "../../../components/Actions/TermActions.vue";
-import {Link} from "@inertiajs/vue3";
-import TermRelativesEditor from "./TermRelativesEditor.vue";
+import {computed, onMounted, ref, watch} from 'vue';
+import {useNavGuard} from '../../../composables/NavGuard.js';
+import {useSearchStore} from '../../../stores/SearchStore.js';
+import NavGuard from '../../../components/Modals/NavGuard.vue';
+import ModalWrapper from '../../../components/Modals/ModalWrapper.vue';
+import AppTip from '../../../components/AppTip.vue';
+import {useTermEditor} from '../../../composables/terms/useTermEditor.js';
+import {useTermValidation} from '../../../composables/terms/useTermValidation.js';
+import {useNotifier} from '../../../composables/useNotifier.js';
+import PinButton from '../../../components/PinButton.vue';
+import TermActions from '../../../components/Actions/TermActions.vue';
+import TermRelativesEditor from './TermRelativesEditor.vue';
 import draggable from 'vuedraggable';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const props = defineProps({
     termId: {
         type: Number,
         default: null,
     },
-    editorData: {
-        type: Object,
-        default: () => ({
-            attributes: [],
-            dialects: [],
-        }),
-    },
+});
+
+const editorData = ref({
+    attributes: [],
+    dialects: [],
 });
 
 const SearchStore = useSearchStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const {
     form,
@@ -42,7 +37,6 @@ const {
     isSaving,
     isLoadingForm,
     term,
-    termsNotFound,
     loadForm,
     reloadForm,
     saveTerm,
@@ -69,7 +63,11 @@ const {
 });
 
 const hasNavigationGuard = computed(() => isDirty.value);
-const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
+const {
+    showAlert,
+    handleConfirm,
+    handleCancel,
+} = useNavGuard(hasNavigationGuard);
 
 const openRelativeSearch = () => {
     SearchStore.openSearchGenie('insert', 'terms');
@@ -80,6 +78,9 @@ const removeRelative = (index) => {
 };
 
 onMounted(async () => {
+    const { data } = await axios.get('/api/word-logger/editor-data');
+    editorData.value = data.editorData;
+
     await loadForm();
 });
 
@@ -87,46 +88,36 @@ watch(
     () => SearchStore.data.selectedModel,
     (newModel) => {
         if (newModel) {
-            console.log(newModel.id, term?.id)
+            console.log(newModel.id, term?.id);
             if (newModel.id === term?.id) {
                 SearchStore.deselectModel();
-                NotificationStore.addNotification('Term cannot be a relative of itself.');
+                Notifier.notify({
+                    message: 'Term cannot be a relative of itself.',
+                });
                 return;
             }
 
             insertRelative(newModel);
             SearchStore.deselectModel();
         }
-    }
+    },
 );
 
 watch(() => props.termId, async () => {
     await reloadForm();
 });
-
-defineOptions({
-    layout: Layout
-});
 </script>
 
 <template>
-    <Head title="Word Logger: Build Term"/>
     <div id="app-head">
         <h1>{{ $t('pages.word-logger.title') }}</h1>
     </div>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingForm"/>
-        <template v-else-if="termsNotFound">
-            <AppTip>
-                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
-            </AppTip>
-            <Link class="portal-button" :href="route('word-logger.index')">Back to Word Logger</Link>
-        </template>
-
-        <template v-else>
+    <LoadingWrapper :is-loading="isLoadingForm">
+        <div id="app-body">
             <div class="window-container">
                 <div class="window-header">
-                    <Link :href="route('word-logger.index')" class="material-symbols-rounded">arrow_back</Link>
+                    <RouterLink :to="{ name: 'word-logger.index' }" class="material-symbols-rounded">arrow_back
+                    </RouterLink>
                     <div class="window-header-url">www.palweb.app/library/terms/{term}</div>
                     <button class="material-symbols-rounded" @click="saveTerm()"
                             :disabled="isSaving || !hasNavigationGuard || !isValidRequest">
@@ -141,15 +132,17 @@ defineOptions({
                     <p>{{
                             $t('forms.messages.current-status', {
                                 model: $t('actions.models.term'),
-                                status: term?.id ? $t('forms.status.published') : $t('forms.status.draft')
+                                status: term?.id ? $t('forms.status.published') : $t('forms.status.draft'),
                             })
                         }}</p>
                     <p v-if="Object.keys(validationErrors).length" style="font-weight: 700">
-                        {{ $t('forms.messages.has-validation-errors', {model: $t('actions.models.term')}) }}
+                        {{ $t('forms.messages.has-validation-errors', { model: $t('actions.models.term') }) }}
                         Please review the form inputs.
                     </p>
                     <template v-if="confirmableIssues.length">
-                        <p><b>{{ $t('forms.messages.has-confirmable-issues', {model: $t('actions.models.term')}) }}</b></p>
+                        <p><b>{{
+                                $t('forms.messages.has-confirmable-issues', { model: $t('actions.models.term') })
+                            }}</b></p>
                         <ul>
                             <li v-for="issue in confirmableIssues">{{ issue }}</li>
                         </ul>
@@ -651,7 +644,9 @@ defineOptions({
                                                     <div
                                                         v-if="validationErrors[`glosses.${index}.attributes.${i}.attribute`]"
                                                         class="field-error">
-                                                        {{ validationErrors[`glosses.${index}.attributes.${i}.attribute`] }}
+                                                        {{
+                                                            validationErrors[`glosses.${index}.attributes.${i}.attribute`]
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -663,8 +658,8 @@ defineOptions({
                     </div>
                 </div>
             </div>
-        </template>
-    </div>
+        </div>
+    </LoadingWrapper>
 
     <ModalWrapper v-model="showAlert">
         <NavGuard

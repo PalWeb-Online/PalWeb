@@ -1,18 +1,19 @@
 <script setup>
 import {useForm} from "../../composables/useForm.js";
-import {route} from "ziggy-js";
 import {computed, ref} from "vue";
 import AppTip from "../AppTip.vue";
 import ToggleSingle from "../ToggleSingle.vue";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {useI18n} from "vue-i18n";
 import {syncCsrfToken} from "../../utils/csrfToken.js";
-import {router} from "@inertiajs/vue3";
 import {useAuth} from "../../composables/useAuth.js";
+import i18n from "../../i18n.js";
+import {
+    flushUserInterfacePreferenceSync,
+    reconcileUserInterfacePreferencesWithUser,
+} from "../../runtime/preferences.js";
 
-const {t, locale} = useI18n();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const UserStore = useUserStore();
 
 const {
@@ -50,23 +51,31 @@ const signIn = async () => {
     clearSignInErrors();
 
     try {
-        const {data} = await axios.post(route('signin'), signInPayload());
+        const {data} = await axios.post('/api/auth/signin', signInPayload());
         syncCsrfToken(data.csrf_token);
 
         UserStore.setUser(data.user);
+        reconcileUserInterfacePreferencesWithUser(i18n, data.user);
+        flushUserInterfacePreferenceSync(i18n, data.user).then((result) => {
+            if (result.theme?.preferences) {
+                UserStore.setUser({
+                    ...UserStore.user,
+                    preferences: result.theme.preferences,
+                });
+            }
+        }).catch((error) => {
+            console.error('Failed to sync interface preferences:', error);
+        });
         setSignInRecentlySuccessful();
-
-        router.reload();
 
         emit('close');
 
-        setTimeout(() => {
-            NotificationStore.addNotification(t('user.notifications.signed-in', {
-                user: locale.value === 'ar'
-                    ? UserStore.user.ar_name
-                    : UserStore.user.name
-            }));
-        }, 300);
+        Notifier.notify({
+            key: 'user.notifications.signed-in',
+            params: {
+                user: UserStore.user,
+            },
+        });
 
     } catch (error) {
         if (error?.response?.status === 422) {
@@ -97,9 +106,12 @@ const sendLink = async () => {
     clearSendLinkErrors();
 
     try {
-        const {data} = await axios.post(route('password.email'), sendLinkPayload());
+        const {data} = await axios.post('/api/auth/forgot-password', sendLinkPayload());
 
-        NotificationStore.addNotification(t(data.status), data.success ? 'success' : 'warning');
+        Notifier.notify({
+            key: data.status,
+            type: data.success ? 'success' : 'warning',
+        });
 
         emit('close');
 

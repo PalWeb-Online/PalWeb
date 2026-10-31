@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Office;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DialogResource;
-use App\Http\Resources\SentenceResource;
 use App\Http\Resources\TermResource;
 use App\Models\Dialog;
-use App\Models\Gloss;
-use App\Models\Sentence;
 use App\Models\Term;
 use App\Services\TermService;
-use Inertia\Inertia;
+use Illuminate\Http\JsonResponse;
 
 class SpeechMakerController extends Controller
 {
@@ -20,7 +17,7 @@ class SpeechMakerController extends Controller
     ) {
     }
 
-    public function index(): \Inertia\Response
+    public function index(): JsonResponse
     {
         $termsMissingSentences = collect();
 
@@ -44,37 +41,9 @@ class SpeechMakerController extends Controller
 
         $this->termService->hydratePronunciations($termsMissingSentences);
 
-        return Inertia::render('Office/SpeechMaker/Index', [
-            'section' => 'office',
+        return response()->json([
             'dialogs' => DialogResource::collection(Dialog::orderByDesc('id')->take(10)->get()),
             'terms' => TermResource::collection($termsMissingSentences),
-        ]);
-    }
-
-    public function dialog(?Dialog $dialog = null): \Inertia\Response
-    {
-        return Inertia::render('Office/SpeechMaker/Dialog', [
-            'section' => 'office',
-            'dialogId' => $dialog?->id,
-        ]);
-    }
-
-    public function dialogSentence(Dialog $dialog): \Inertia\Response
-    {
-        return Inertia::render('Office/SpeechMaker/Sentence', [
-            'section' => 'office',
-            'initialDialog' => [
-                'id' => $dialog->id,
-                'title' => $dialog->title,
-            ]
-        ]);
-    }
-
-    public function sentence(?Sentence $sentence = null): \Inertia\Response
-    {
-        return Inertia::render('Office/SpeechMaker/Sentence', [
-            'section' => 'office',
-            'sentenceId' => $sentence?->id,
         ]);
     }
 }

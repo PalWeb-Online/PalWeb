@@ -1,18 +1,17 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import AppTip from "../../components/AppTip.vue";
 import {useNavigationStore} from "../../stores/NavigationStore.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {usePage} from "@inertiajs/vue3";
 
 const NavigationStore = useNavigationStore();
 const UserStore = useUserStore();
 
-defineOptions({
-    layout: Layout,
+const props = defineProps({
+    redirected: {
+        type: Boolean,
+        default: false,
+    },
 });
-
-const page = usePage();
 
 const navigate = () => {
     if (!UserStore.isUser) {
@@ -24,12 +23,11 @@ const navigate = () => {
 }
 </script>
 <template>
-    <Head title="Subscribe"/>
     <div id="app-head">
         <h1>{{ $t('subscription.title') }}</h1>
     </div>
     <div id="app-body">
-        <AppTip v-if="page.props.flash.denied">
+        <AppTip v-if="redirected">
             <p>{{ $t('subscription.messages.access-denied') }}
                 {{ !UserStore.isUser
                     ? $t('subscription.messages.sign-in-prompt')
@@ -37,7 +35,7 @@ const navigate = () => {
                 }}
             </p>
         </AppTip>
-        <Link href="/billing" v-if="UserStore.isUser" class="portal-button">{{ $t('subscription.manage') }}</Link>
+        <a href="/billing" v-if="UserStore.isUser" class="portal-button">{{ $t('subscription.manage') }}</a>
         <div class="subscription-tiers">
             <div v-if="!UserStore.isUser" class="tier-item window-container">
                 <div class="window-section-head">
@@ -134,7 +132,7 @@ const navigate = () => {
         }
 
         & > *:not(:first-child) {
-            border-block-start: 0.1rem solid var(--color-pastel-dark);
+            border-block-start: 1px solid var(--color-pastel-dark);
         }
 
         & > *:last-child {

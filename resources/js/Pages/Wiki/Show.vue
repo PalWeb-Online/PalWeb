@@ -2,8 +2,6 @@
 import WikiNav from "./UI/WikiNav.vue";
 import AppTip from "../../components/AppTip.vue";
 import {computed, onMounted, ref, watch} from "vue";
-import {route} from "ziggy-js";
-import Layout from "../../Shared/Layout.vue";
 import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
 import {useUserStore} from "../../stores/UserStore.js";
 import {getHeadingAnchorId} from "../../components/Blocks/headingAnchors.js";
@@ -11,14 +9,10 @@ import PageContents from "./UI/PageContents.vue";
 import DocumentBlocksRenderer from "../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
 import {usePageViewer} from "../../composables/pages/usePageViewer.js";
 
-defineOptions({
-    layout: Layout,
-});
-
 const props = defineProps({
-    pageId: {
-        type: Number,
-        required: false,
+    pageSlug: {
+        type: String,
+        required: true,
     },
 });
 
@@ -89,18 +83,16 @@ onMounted(async () => {
     // todo: is the Wiki tree blocking render? what about loading the page?
     await Promise.all([
         fetchWikiTree(),
-        loadPage(props.pageId),
+        loadPage(props.pageSlug),
     ]);
 });
 
-watch(() => props.pageId, async () => {
-    await reloadPage(props.pageId)
+watch(() => props.pageSlug, async () => {
+    await reloadPage(props.pageSlug)
 });
 </script>
 
 <template>
-    <Head :title="page ? `Wiki: ${page?.title}` : 'Wiki'"/>
-
     <div id="app-head">
         <h1>{{ $t('pages.wiki.title') }}</h1>
     </div>
@@ -118,8 +110,8 @@ watch(() => props.pageId, async () => {
             <h1>{{ page?.title }}</h1>
 
             <template v-if="UserStore.isAdmin">
-                <Link :href="route('wiki.edit', page)" class="material-symbols-rounded">edit</Link>
-                <Link :href="route('wiki.edit')" class="material-symbols-rounded">add</Link>
+                <RouterLink :to="{ name: 'wiki.edit', params: { page: page?.id } }" class="material-symbols-rounded">edit</RouterLink>
+                <RouterLink :to="{ name: 'wiki.edit' }" class="material-symbols-rounded">add</RouterLink>
             </template>
         </div>
 
@@ -140,9 +132,10 @@ watch(() => props.pageId, async () => {
             <LoadingSpinner v-if="isLoadingPage"/>
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
+<!--                todo: this is useful, but currently will never be reached-->
                 <p>
-                    <Link v-if="UserStore.isAdmin" :href="route('wiki.edit', page)">Create this Page</Link>
-                    <Link v-else :href="route('wiki.show')">Go to Wiki Home</Link>
+                    <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit' }">Create this Page</RouterLink>
+                    <RouterLink v-else :to="{ name: 'wiki.index' }">Go to Wiki Home</RouterLink>
                 </p>
             </div>
             <div v-else-if="page" class="wiki-blocks-wrapper">

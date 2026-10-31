@@ -7,8 +7,39 @@
     max-width: 96rem;
     justify-self: center;
 
-    &.index-list {
-        padding: 3.2rem 1.6rem;
+    &:has(.sentence-item-container) {
+        justify-items: normal;
+    }
+
+    @media (width >= 960px) {
+        &:has(.sentence-item-container) {
+            justify-items: right;
+        }
+
+        &.draggable {
+            padding-inline: 1.6rem;
+        }
+    }
+}
+
+.window-container .model-list {
+    padding: 3.2rem 1.6rem;
+
+    @media (width < 960px) {
+        gap: 1px;
+        padding: 0;
+        padding-block: 1px;
+        background: var(--color-dark-secondary);
+
+        & + .window-section-head {
+            border: none;
+        }
+
+        .model-item-container {
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
     }
 }
 
@@ -288,7 +319,7 @@
     }
 
     .window-header + .app-tip {
-        border-block-start: 0.1rem solid var(--color-dark-primary);
+        border-block-start: 1px solid var(--color-dark-primary);
     }
 
     & > p {
@@ -336,7 +367,7 @@
 .window-header, .window-page-nav, .window-footer {
     display: flex;
     background: var(--color-dark-secondary);
-    gap: 0.1rem;
+    gap: 1px;
 
     & > * {
         background: white;
@@ -393,7 +424,7 @@
 
     & > * {
         text-align: center;
-        border-block-end: 0.1rem solid var(--color-dark-primary);
+        border-block-end: 1px solid var(--color-dark-primary);
     }
 
     div {
@@ -404,7 +435,7 @@
 
     div.active {
         background: var(--color-medium-primary);
-        border-block-end: 0.1rem solid var(--color-medium-primary);
+        border-block-end: 1px solid var(--color-medium-primary);
     }
 
     div.active ~ div {
@@ -414,7 +445,7 @@
 }
 
 .window-footer {
-    border-block-start: 0.1rem solid var(--color-dark-primary);
+    border-block-start: 1px solid var(--color-dark-primary);
 
     & > * {
         color: var(--color-dark-primary);
@@ -425,7 +456,7 @@
         flex: 1 0 50%;
 
         &:not(:last-child) {
-            border-inline-end: 0.1rem solid var(--color-dark-primary);
+            border-inline-end: 1px solid var(--color-dark-primary);
         }
     }
 
@@ -451,7 +482,7 @@
     height: 2em;
 
     &:not(:first-child) {
-        border-block-start: 0.1rem solid var(--color-dark-secondary);
+        border-block-start: 1px solid var(--color-dark-secondary);
     }
 
     & > * {
@@ -648,7 +679,7 @@
     position: fixed;
     color: var(--color-dark-primary);
     background-color: white;
-    border: 0.1rem solid var(--color-dark-primary);
+    border: 1px solid var(--color-dark-primary);
     box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.25);
     padding: 0.4rem 0.8rem;
     border-radius: 0.4rem;
@@ -665,7 +696,7 @@
     padding-block-end: 0.8rem;
     color: var(--color-dark-primary);
     background-color: white;
-    border: 0.1rem solid var(--color-dark-primary);
+    border: 1px solid var(--color-dark-primary);
     box-shadow: -0.3rem 0.3rem 0 rgb(0 0 0 / 0.25);
     border-radius: 0.8rem;
     overflow: hidden;
@@ -770,56 +801,11 @@
     }
 }
 
-.loading-dialog {
-    display: flex;
-    justify-content: center;
-    gap: 2.4rem;
-    margin: 2.4rem 2.4rem 4.8rem;
-
-    .app-tip {
-        margin: 0;
-    }
-
-    .loading-spinner svg {
-        width: 3.2rem;
-    }
-}
-
 .loading-spinner {
     display: flex;
     justify-content: center;
-
-    svg {
-        width: 6.4rem;
-        animation: spinner 1s infinite;
-    }
-}
-
-.model-list.index-list:has(.sentence-item-container) {
-    justify-items: right;
-
-    @media (width < 960px) {
-        justify-items: normal;
-    }
-}
-
-@media (width < 960px) {
-    .model-list.index-list {
-        gap: 0.1rem;
-        padding: 0;
-        padding-block: 0.1rem;
-        background: var(--color-dark-secondary);
-
-        .model-item-container {
-            border: 0;
-            border-radius: 0;
-            box-shadow: none;
-        }
-    }
-}
-
-@media (width >= 960px) {
-    .model-list.draggable {
-        padding-inline: 1.6rem;
-    }
+    margin: auto;
+    height: 100%;
+    width: 6.4rem;
+    animation: spinner 1s infinite;
 }

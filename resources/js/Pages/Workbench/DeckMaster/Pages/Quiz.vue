@@ -1,5 +1,5 @@
 <script setup>
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import {useDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 import {computed, ref} from "vue";
 import QuestionSelectGloss from "../UI/QuestionSelectGloss.vue";
 import AppTip from "../../../../components/AppTip.vue";
@@ -12,10 +12,10 @@ import {useNavGuard} from "../../../../composables/NavGuard.js";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = useDeckStudySession();
 
 const isValidRequest = computed(() => {
-    return !DeckStudyStore.quiz.some(question => !question.response)
+    return !DeckStudySession.quiz.some(question => !question.response)
 });
 
 const showInflections = ref(false);
@@ -33,13 +33,13 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             <h2>{{ $t('pages.deck-master.quiz') }}</h2>
         </div>
         <AppTip>
-            <p v-if="DeckStudyStore.settings.quizType === 'glosses'">
+            <p v-if="DeckStudySession.settings.quizType === 'glosses'">
                 {{ $t('pages.deck-master.messages.glosses-prompt') }}
             </p>
-            <p v-else-if="DeckStudyStore.settings.quizType === 'inflections'">
+            <p v-else-if="DeckStudySession.settings.quizType === 'inflections'">
                 {{ $t('pages.deck-master.messages.inflections-prompt') }}
             </p>
-            <p v-else-if="DeckStudyStore.settings.quizType === 'sentences'">
+            <p v-else-if="DeckStudySession.settings.quizType === 'sentences'">
                 {{ $t('pages.deck-master.messages.sentences-prompt') }}
                 <b>Terms are listed in their Dictionary form,
                 not necessarily as they would be expected to appear in the Sentence.</b>
@@ -47,33 +47,33 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
         </AppTip>
         <div class="settings-wrapper" style="justify-content: space-around">
             <ToggleSingle v-model="showTranslit" :label="$t('components.common.options.show-transcription')"/>
-            <ToggleSingle v-if="DeckStudyStore.settings.quizType === 'glosses'"
+            <ToggleSingle v-if="DeckStudySession.settings.quizType === 'glosses'"
                           v-model="showInflections" :label="$t('pages.deck-master.options.show-inflections')"/>
         </div>
     </QuizzerWindow>
 
-    <LoadingSpinner v-if="DeckStudyStore.data.isLoading"/>
+    <LoadingSpinner v-if="DeckStudySession.data.isLoading"/>
     <div class="quiz-container" v-else>
-        <QuestionSelectGloss v-if="DeckStudyStore.settings.quizType === 'glosses'"
-                             v-for="(question, index) in DeckStudyStore.quiz"
+        <QuestionSelectGloss v-if="DeckStudySession.settings.quizType === 'glosses'"
+                             v-for="(question, index) in DeckStudySession.quiz"
                              :question="question"
                              :index="index"
                              :showTranslit="showTranslit"
                              :showInflections="showInflections"
         />
-        <QuestionInputInflection v-if="DeckStudyStore.settings.quizType === 'inflections'"
-                                 v-for="(question, index) in DeckStudyStore.quiz"
+        <QuestionInputInflection v-if="DeckStudySession.settings.quizType === 'inflections'"
+                                 v-for="(question, index) in DeckStudySession.quiz"
                                  :question="question"
                                  :index="index"
                                  :showTranslit="showTranslit"
         />
-        <QuestionSelectTerm v-if="DeckStudyStore.settings.quizType === 'sentences'"
-                            v-for="(question, index) in DeckStudyStore.quiz"
+        <QuestionSelectTerm v-if="DeckStudySession.settings.quizType === 'sentences'"
+                            v-for="(question, index) in DeckStudySession.quiz"
                             :question="question" :index="index"
                             :showTranslit="showTranslit"
         />
 
-        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudyStore.submitQuiz()">
+        <button class="material-symbols-rounded" :disabled="!isValidRequest" @click="DeckStudySession.submitQuiz()">
             check
         </button>
     </div>

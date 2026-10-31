@@ -1,14 +1,13 @@
-import {defineStore} from 'pinia';
-import {nextTick, reactive, ref} from 'vue';
+import {inject, nextTick, provide, reactive, ref} from "vue";
 import {shuffle} from "lodash";
-import {useNotificationStore} from "../../../../stores/NotificationStore.js";
-import {useScoreManager} from "../../../../composables/useScoreManager.js";
-import {useI18n} from "vue-i18n";
+import {useScoreManager} from "../useScoreManager.js";
+import {useNotifier} from "../useNotifier.js";
 
-export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
-    const {t} = useI18n();
+const deckStudySessionKey = Symbol("DeckStudySession");
+
+export function createDeckStudySession() {
     const scoreManager = useScoreManager();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const data = reactive({
         step: 'settings',
@@ -37,11 +36,11 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
-        const response = await axios.get(route('deck-master.get-cards', data.deck.id));
+        const response = await axios.get(`/api/deck-master/decks/${data.deck.id}/cards`);
         data.terms = response.data.terms;
 
         data.isLoading = false;
-    }
+    };
 
     const startQuiz = async () => {
         scoreManager.score.scorable_type = 'deck';
@@ -58,14 +57,19 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
             await generateQuiz();
 
             if (quiz.value.length < 5) {
-                NotificationStore.addNotification(t('pages.deck-master.notifications.insufficient-items'), 'warning');
+                Notifier.notify({
+                    key: 'pages.deck-master.notifications.insufficient-items',
+                    type: 'warning'
+                });
 
                 data.step = 'settings';
             }
 
         } catch (e) {
-            console.error(t('pages.deck-master.notifications.quiz-generation-error'), e);
-            NotificationStore.addNotification(t('pages.deck-master.notifications.quiz-generation-error'), 'error');
+            Notifier.notify({
+                key: 'pages.deck-master.notifications.quiz-generation-error',
+                type: 'error'
+            });
 
             data.step = 'settings';
 
@@ -75,7 +79,7 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     };
 
     const generateQuiz = async () => {
-        const response = await axios.post(route('deck-master.get-quiz', data.deck.id), {
+        const response = await axios.post(`/api/deck-master/decks/${data.deck.id}/quiz`, {
             settings: settings
         });
 
@@ -148,18 +152,20 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
     const reset = () => {
         data.step = 'settings';
         data.deck = null;
+        data.terms = [];
+        data.isLoading = false;
         settings.quizType = 'practice';
         settings.options = {
             promptTerm: true,
             strictTerms: true,
             strictGloss: true,
             withTranslation: true,
-        }
+        };
         quiz.value = [];
         scoreManager.resetScore();
     };
 
-    return {
+    return reactive({
         data,
         settings,
         score: scoreManager.score,
@@ -170,6 +176,25 @@ export const useDeckStudyStore = defineStore('DeckStudyStore', () => {
         submitQuiz,
         markCorrect: scoreManager.markCorrect,
         saveScore,
-        reset
-    };
-});
+        reset,
+    });
+}
+
+export function provideDeckStudySession(session) {
+    provide(deckStudySessionKey, session);
+    return session;
+}
+
+export function injectDeckStudySession() {
+    return inject(deckStudySessionKey, null);
+}
+
+export function useDeckStudySession() {
+    const session = injectDeckStudySession();
+
+    if (!session) {
+        throw new Error("useDeckStudySession must be used inside a Deck Master study page provider.");
+    }
+
+    return session;
+}

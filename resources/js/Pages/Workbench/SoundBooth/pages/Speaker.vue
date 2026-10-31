@@ -1,11 +1,10 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
-import {useRecordStore} from "../stores/RecordStore.js";
+import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import WizardDropdown from '../ui/WizardDropdown.vue';
-import {useForm} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useForm} from "../../../../composables/useForm.js";
 import {useUserStore} from "../../../../stores/UserStore.js";
+import {useNotifier} from "../../../../composables/useNotifier.js";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import {useNavGuard} from "../../../../composables/NavGuard.js";
@@ -13,10 +12,12 @@ import ModalWrapper from "../../../../components/Modals/ModalWrapper.vue";
 import NavGuard from "../../../../components/Modals/NavGuard.vue";
 import UserNametag from "../../../../components/UserNametag.vue";
 import UserAvatarWrapper from "../../../../components/UserAvatarWrapper.vue";
+import {useI18n} from "vue-i18n";
 
 const UserStore = useUserStore();
-const SoundBoothStore = useSoundBoothStore();
-const RecordStore = useRecordStore();
+const Notifier = useNotifier();
+const session = useSoundBoothSession();
+const {t} = useI18n();
 
 const testStates = [
     'waiting',
@@ -26,51 +27,58 @@ const testStates = [
 
 const dialects = ref([]);
 const locations = ref([]);
-const genders = ref([
-    {data: 'male', label: 'Male'},
-    {data: 'female', label: 'Female'},
-    {data: 'other', label: 'Other'},
+const genders = computed(() => [
+    {data: 'male', label: t('speaker.gender.male')},
+    {data: 'female', label: t('speaker.gender.female')},
+    {data: 'other', label: t('speaker.gender.other')},
 ]);
-const levels = ref([
-    {data: '1', label: 'Beginner'},
-    {data: '2', label: 'Intermediate'},
-    {data: '3', label: 'Advanced'},
-    {data: '4', label: 'Fluent'},
-    {data: '5', label: 'Native'},
+const levels = computed(() => [
+    {data: '1', label: t('speaker.fluency.1')},
+    {data: '2', label: t('speaker.fluency.2')},
+    {data: '3', label: t('speaker.fluency.3')},
+    {data: '4', label: t('speaker.fluency.4')},
+    {data: '5', label: t('speaker.fluency.5')},
 ]);
 
-const form = useForm({
-    dialect_id: SoundBoothStore.speaker.dialect?.id || '',
-    location_id: SoundBoothStore.speaker.location?.id || '',
-    fluency: SoundBoothStore.speaker.fluency || '',
-    gender: SoundBoothStore.speaker.gender || '',
+const {
+    form,
+    isDirty,
+    defaults,
+    payload,
+    setErrors,
+    clearErrors,
+} = useForm({
+    dialect_id: session.speaker.dialect?.id || '',
+    location_id: session.speaker.location?.id || '',
+    fluency: session.speaker.fluency || '',
+    gender: session.speaker.gender || '',
 })
 
-watch(() => SoundBoothStore.speaker, (newSpeaker) => {
+watch(() => session.speaker, (newSpeaker) => {
     if (newSpeaker && newSpeaker.id !== null) {
         form.dialect_id = newSpeaker.dialect?.id || '';
         form.location_id = newSpeaker.location?.id || '';
         form.fluency = newSpeaker.fluency || '';
         form.gender = newSpeaker.gender || '';
-        form.defaults();
+        defaults();
     }
 }, {deep: true});
 
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return form.isDirty && !isSaving.value;
+    return isDirty.value && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 
 const isValidRequest = computed(() => {
-    return Object.values(form.data()).every(value => value);
+    return Object.values(payload()).every(value => value);
 });
 
 const fetchSpeakerOptions = async () => {
     try {
-        const response = await axios.get(route('speaker.options'));
+        const response = await axios.get('/api/sound-booth/get-speaker-options');
 
         if (response.data) {
             dialects.value = response.data.dialects;
@@ -84,25 +92,47 @@ const fetchSpeakerOptions = async () => {
 
 const saveSpeaker = async () => {
     isSaving.value = true;
+    clearErrors();
 
-    form.post(route('speaker.store'), {
-        onSuccess: () => {
-            form.defaults();
-        },
-        onError: () => {
-            NotificationStore.addNotification('Oh no! Your Speaker profile could not be saved.', 'error');
-        },
-        onFinish: () => {
-            isSaving.value = false;
+    try {
+        await axios.post('/api/speakers', payload());
+        const {data} = await axios.get('/api/speakers/auth');
+
+        if (data.speaker) {
+            Object.assign(session.speaker, data.speaker);
         }
-    });
+
+        Notifier.notify({
+            key: 'forms.notifications.save-success',
+            params: {
+                model: t('actions.models.speaker'),
+            },
+        });
+
+        defaults();
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        } else {
+            Notifier.notify({
+                key: 'forms.notifications.save-error',
+                params: {
+                    model: t('actions.models.speaker'),
+                },
+                type: 'error',
+            });
+        }
+
+    } finally {
+        isSaving.value = false;
+    }
 };
 
 onMounted(async () => {
-    RecordStore.openRecorder(RecordStore.audioParams);
-    SoundBoothStore.data.testState = 'waiting';
+    session.openRecorder(session.audioParams);
+    session.state.testState = 'waiting';
     await fetchSpeakerOptions();
-    await RecordStore.clearStash();
 });
 </script>
 
@@ -110,7 +140,7 @@ onMounted(async () => {
     <div class="window-section-head">
         <h2>{{ $t('speaker.title') }}</h2>
 
-        <PopupWindow title="Sound Booth (Speaker)">
+        <PopupWindow :title="$t('sound-booth.titles.speaker')">
             <div>What is my Speaker profile?</div>
             <p>Your Speaker profile contains linguistic data about you that will be connected to every Recording you
                 create, so that others can know the dialect & other sociolinguistic information behind what they're
@@ -155,17 +185,19 @@ onMounted(async () => {
         </PopupWindow>
     </div>
 
-    <template v-if="!SoundBoothStore.data.hasPermission">
+    <template v-if="!session.state.hasPermission">
         <AppTip>
-            <p>Allow the browser to use your mic in order to proceed.
-                <button @click="RecordStore.openRecorder(RecordStore.audioParams)">Click here to prompt again.</button>
+            <p>{{ $t('sound-booth.microphone.allow') }}
+                <button @click="session.openRecorder(session.audioParams)">
+                    {{ $t('sound-booth.microphone.prompt-again') }}
+                </button>
             </p>
         </AppTip>
     </template>
 
     <template v-else>
         <AppTip>
-            <p v-if="!SoundBoothStore.speaker.id">It looks like you don't have a Speaker profile yet.
+            <p v-if="!session.speaker.id">It looks like you don't have a Speaker profile yet.
                 Let's get you set up: fill out this form & click Create to get started. Refer to the Info
                 box in
                 the top-right corner for more detail on the meaning of these fields. <b>Once your Speaker
@@ -182,20 +214,22 @@ onMounted(async () => {
                 <div class="rw-test-booth">
                     <UserAvatarWrapper :user="!UserStore.user.private ? UserStore.user : null"/>
                     <img
-                        v-if="SoundBoothStore.data.testState !== 'waiting'"
+                        v-if="session.state.testState !== 'waiting'"
                         class="rw-test-booth-prompt"
-                        :src="`/img/${SoundBoothStore.data.testState === 'recording' ? 'speak' : 'listen'}.svg`"
-                        alt="Prompt"
+                        :src="`/img/${session.state.testState === 'recording' ? 'speak' : 'listen'}.svg`"
+                        :alt="$t('sound-booth.alt.prompt')"
                     />
                 </div>
 
                 <div class="user-data-wrapper">
-                    <UserNametag :user="UserStore.user" :speaker="SoundBoothStore.speaker"/>
+                    <UserNametag :user="UserStore.user" :speaker="session.speaker"/>
 
                     <div class="speaker-data">
                         <div class="speaker-data-head">
                             <div>{{ $t('speaker.title')}}</div>
-                            <button :disabled="form.processing || !hasNavigationGuard || !isValidRequest"
+                            <button :disabled="isSaving || !hasNavigationGuard || !isValidRequest"
+                                    :title="$t('forms.actions.save')"
+                                    :aria-label="$t('forms.actions.save')"
                                     class="material-symbols-rounded" @click="saveSpeaker">
                                 save
                             </button>
@@ -205,7 +239,7 @@ onMounted(async () => {
                             <WizardDropdown
                                 v-model="form.dialect_id"
                                 :options="dialects.map(dialect => ({ data: dialect.id, label: dialect.name }))"
-                                :disabled="!!SoundBoothStore.speaker.id"
+                                :disabled="!!session.speaker.id"
                             />
                         </div>
                         <div class="speaker-data-row">
@@ -234,27 +268,27 @@ onMounted(async () => {
             </div>
             <div class="rw-test-status">
                 <template v-for="state in testStates" :key="state">
-                    <div class="rw-test-status-info" v-if="SoundBoothStore.data.testState === state">
+                    <div class="rw-test-status-info" v-if="session.state.testState === state">
                         <div>{{ $t('sound-booth.test.' + state + '.title') }}</div>
                         <div>{{ $t('sound-booth.test.' + state + '.subtitle') }}</div>
                     </div>
                 </template>
 
                 <img
-                    :class="`rw-test-button ${SoundBoothStore.data.testState !== 'waiting' ? 'disabled' : ''}`"
+                    :class="`rw-test-button ${session.state.testState !== 'waiting' ? 'disabled' : ''}`"
                     :src="`/img/${
-                                                SoundBoothStore.data.testState === 'recording' ? 'record' :
-                                                SoundBoothStore.data.testState === 'listening' ? 'stop' : 'play'
+                                                session.state.testState === 'recording' ? 'record' :
+                                                session.state.testState === 'listening' ? 'stop' : 'play'
                                             }.svg`"
-                    alt="Test"
-                    @click="RecordStore.testRecord"
+                    :alt="$t('sound-booth.alt.test')"
+                    @click="session.testRecord"
                 />
             </div>
         </div>
     </template>
     <ModalWrapper v-model="showAlert">
         <NavGuard
-            message="You have unsaved changes. Are you sure you want to leave this page? Unsaved changes will be lost."
+            :message="$t('settings.nav-guard.messages.unsaved-changes')"
             @confirm="handleConfirm"
             @cancel="handleCancel"
         />

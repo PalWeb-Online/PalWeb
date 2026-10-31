@@ -5,11 +5,11 @@ import {useDeck} from "../composables/decks/useDeck.js";
 import PinButton from "./PinButton.vue";
 import DeckActions from "./Actions/DeckActions.vue";
 import AppTooltip from "./AppTooltip.vue";
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
+import {useRouter} from "vue-router";
 import {useUserStore} from "../stores/UserStore.js";
 
 const UserStore = useUserStore();
+const router = useRouter();
 
 const props = defineProps({
     model: {
@@ -90,7 +90,7 @@ const {deck, blurb, isLoading} = useDeck(props);
 
                 <div class="model-item-container deck-item-container">
                     <div class="model-item deck-item">
-                        <img v-if="!deck.author.private" @click="router.get(route('users.show', deck.author.username))"
+                        <img v-if="!deck.author.private" @click="router.push({name: 'users.show', params: {user: deck.author.username}})"
                              class="deck-author-avatar" :alt="$t('components.common.alt.avatar')"
                              :src="deck.author.avatar_url"/>
                         <DeckActions :model="deck"/>

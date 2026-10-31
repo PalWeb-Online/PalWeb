@@ -6,18 +6,20 @@ export function useSentenceViewer() {
 
     const {
         load: loadSentence,
+        loadRandom: loadRandomSentence,
         reload: reloadSentence,
+        reloadRandom: reloadRandomSentence,
     } = useResourceViewer({
-        fetchModel: (sentenceId, options = {}) => sentenceLoader.fetchSentence(sentenceId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: sentenceLoader.fetchShowSentence,
+        fetchRandomModel: sentenceLoader.fetchRandomSentence,
         resetModel: sentenceLoader.setSentence,
     });
 
     return {
         ...sentenceLoader,
         loadSentence,
+        loadRandomSentence,
         reloadSentence,
+        reloadRandomSentence,
     };
 }

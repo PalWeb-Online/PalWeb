@@ -1,26 +1,35 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
-import {route} from "ziggy-js";
-import {useForm} from "@inertiajs/vue3";
+import {useForm} from "../../../composables/useForm.js";
 import Draggable from 'vuedraggable';
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
 import AppTip from "../../../components/AppTip.vue";
+import {useNotifier} from "../../../composables/useNotifier.js";
 
-defineOptions({
-    layout: Layout,
+const units = ref([]);
+const lessons = ref([]);
+const Notifier = useNotifier();
+
+const {
+    form,
+    isDirty,
+    defaults,
+    payload,
+    setErrors,
+    clearErrors,
+} = useForm({
+    units: [],
 })
 
-const props = defineProps({
-    units: Object,
-    lessons: Object
-})
-
-const form = useForm({
-    units: props.units || [],
-})
+onMounted(async () => {
+    const {data} = await axios.get('/api/lesson-planner');
+    units.value = data.units?.data ?? data.units ?? [];
+    lessons.value = data.lessons?.data ?? data.lessons ?? [];
+    form.units = [...units.value];
+    defaults();
+});
 
 const addUnit = () => {
     form.units.push({
@@ -38,7 +47,7 @@ const removeUnit = (unit) => {
 const isSaving = ref(false);
 
 const hasNavigationGuard = computed(() => {
-    return form.isDirty && !isSaving.value;
+    return isDirty.value && !isSaving.value;
 });
 
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
@@ -61,18 +70,30 @@ const isValidRequest = computed(() => validationIssues.value.length === 0);
 
 const saveCourse = async () => {
     isSaving.value = true;
+    clearErrors();
 
-    form.patch(route('lesson-planner.update'), {
-        onSuccess: () => {
-            form.defaults();
-        },
-        onError: () => {
-            NotificationStore.addNotification('Oh no! The Course could not be saved.', 'error');
-        },
-        onFinish: () => {
-            isSaving.value = false;
+    try {
+        await axios.patch('/api/lesson-planner', payload());
+        defaults();
+
+        Notifier.notify({
+            message: 'The Course has been saved.',
+            type: 'success',
+        });
+
+    } catch (error) {
+        if (error?.response?.status === 422) {
+            setErrors(error.response.data.errors ?? {});
+        } else {
+            Notifier.notify({
+                message: 'Oh no! The Course could not be saved.',
+                type: 'error',
+            });
         }
-    });
+
+    } finally {
+        isSaving.value = false;
+    }
 };
 
 const updateUnitPositions = () => {
@@ -81,27 +102,20 @@ const updateUnitPositions = () => {
     });
 };
 
-watch(
-    () => props.units,
-    (newValue) => {
-        if (newValue) {
-            Object.assign(form.units, newValue);
-        }
-    },
-    {deep: true}
-);
+watch(units, (newValue) => {
+    form.units = [...newValue];
+}, {deep: true});
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
     <div id="app-body">
         <div class="form-body" style="width: min(96rem, 100%); padding: 0">
             <div class="unit-meta">
-                <Link :href="route('units.index')">
+                <RouterLink :to="{ name: 'units.index' }">
                     <- to Academy
-                </Link>
+                </RouterLink>
             </div>
             <div class="featured-title l">
                 {{ $t('pages.lesson-planner.course') }}
@@ -121,9 +135,9 @@ watch(
                         <div>
                             <div>{{ element.position }}</div>
                             <input v-model="element.title">
-                            <Link v-if="element.id" :href="route('lesson-planner.unit', element.id)"
+                            <RouterLink v-if="element.id" :to="{ name: 'lesson-planner.unit', params: { unit: element.id } }"
                                   class="material-symbols-rounded">edit
-                            </Link>
+                            </RouterLink>
                         </div>
                         <span class="handle material-symbols-rounded">drag_indicator</span>
                     </li>
@@ -145,8 +159,8 @@ watch(
                         <div>
                             <div>{{ lesson.id }}</div>
                             <div style="width: 100%">{{ lesson.title }}</div>
-                            <Link :href="route('lesson-planner.lesson', lesson)" class="material-symbols-rounded">edit
-                            </Link>
+                            <RouterLink :to="{ name: 'lesson-planner.lesson', params: { lesson: lesson.id } }" class="material-symbols-rounded">edit
+                            </RouterLink>
                         </div>
                     </li>
                 </ul>

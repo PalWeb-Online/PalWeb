@@ -1,7 +1,5 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
-import {route} from "ziggy-js";
-import {computed, onMounted, provide, watch} from "vue";
+import {computed, onMounted, provide, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -17,20 +15,18 @@ import DialogItem from "../../../components/DialogItem.vue";
 import {useLessonEditor} from "../../../composables/lessons/useLessonEditor.js";
 import {useLessonValidation} from "../../../composables/lessons/useLessonValidation.js";
 
-defineOptions({
-    layout: Layout,
-})
-
 const props = defineProps({
     lessonId: {
         type: Number,
         default: null,
     },
-    initialUnit: {
-        type: Object,
+    initialUnitId: {
+        type: Number,
         default: null,
     },
 })
+
+const initialUnit = ref(null);
 
 const {
     form,
@@ -56,7 +52,7 @@ const {
     setSelectedDialog,
 } = useLessonEditor({
     lessonId: computed(() => props.lessonId),
-    initialUnit: computed(() => props.initialUnit),
+    initialUnit: computed(() => initialUnit.value),
 });
 
 const {
@@ -78,6 +74,11 @@ const {
 provide('documentSentenceModels', sentenceModels);
 
 onMounted(async () => {
+    if (props.initialUnitId) {
+        const {data} = await axios.get(`/api/units/${props.initialUnitId}/edit`);
+        initialUnit.value = data.unit;
+    }
+
     await loadForm();
 });
 
@@ -144,7 +145,6 @@ const removeUnlockCondition = (i) => {
 }
 </script>
 <template>
-    <Head :title="`Lesson Planner: Lesson ${lesson?.global_position}`"/>
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
@@ -154,18 +154,18 @@ const removeUnlockCondition = (i) => {
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.lesson')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('lesson-planner.index')">
+            <RouterLink class="portal-button" :to="{ name: 'lesson-planner.index' }">
                 Back to Lesson Planner
-            </Link>
+            </RouterLink>
         </template>
 
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link v-if="lesson?.unit?.id || initialUnit"
-                          :href="route('lesson-planner.unit', lesson?.unit?.id ?? initialUnit.id)">
+                    <RouterLink v-if="lesson?.unit?.id || initialUnit"
+                          :to="{ name: 'lesson-planner.unit', params: { unit: lesson?.unit?.id ?? initialUnit.id } }">
                         <- to Unit
-                    </Link>
+                    </RouterLink>
                 </div>
                 <div class="featured-title l">
                     <span v-if="lesson?.id">{{
@@ -308,7 +308,7 @@ const removeUnlockCondition = (i) => {
                 </div>
                 <button v-if="form.document.skills.length < 3" type="button" @click="addSkill">Add Skill</button>
 
-                <Link v-if="lesson?.id" :href="route('lesson-planner.lesson-activity', lesson.id)"
+                <RouterLink v-if="lesson?.id" :to="{ name: 'lesson-planner.lesson-activity', params: { lesson: lesson.id } }"
                       class="portal-button" style="justify-self: center"
                 >
                     {{
@@ -316,7 +316,7 @@ const removeUnlockCondition = (i) => {
                             ? $t('forms.actions.edit', {title: $t('actions.models.activity')})
                             : $t('forms.actions.create', {title: $t('actions.models.activity')})
                     }}
-                </Link>
+                </RouterLink>
                 <AppTip v-else>
                     <p>You must create the Lesson first to create the Activity.</p>
                 </AppTip>
@@ -378,9 +378,9 @@ const removeUnlockCondition = (i) => {
                     <button type="button" @click="deleteLesson()">
                         {{ $t('actions.common.delete', {model: $t('actions.models.lesson')}) }}
                     </button>
-                    <Link v-if="lesson?.id" :href="route('lessons.show', lesson.global_position)">
+                    <RouterLink v-if="lesson?.id" :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }">
                         {{ $t('actions.common.view', {model: $t('actions.models.lesson')}) }}
-                    </Link>
+                    </RouterLink>
                 </div>
             </div>
         </template>

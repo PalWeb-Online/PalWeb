@@ -1,7 +1,7 @@
 <script setup>
-import {useDeckStudyStore} from "../Stores/DeckStudyStore.js";
+import {useDeckStudySession} from "../../../../composables/decks/useDeckStudySession.js";
 
-const DeckStudyStore = useDeckStudyStore();
+const DeckStudySession = useDeckStudySession();
 
 const props = defineProps({
     question: Object,
@@ -10,10 +10,10 @@ const props = defineProps({
 })
 
 const toggleSelection = (index) => {
-    if (DeckStudyStore.quiz[props.index].response === Number(index)) {
-        DeckStudyStore.quiz[props.index].response = null;
+    if (DeckStudySession.quiz[props.index].response === Number(index)) {
+        DeckStudySession.quiz[props.index].response = null;
     } else {
-        DeckStudyStore.quiz[props.index].response = Number(index);
+        DeckStudySession.quiz[props.index].response = Number(index);
     }
 }
 </script>
@@ -28,13 +28,13 @@ const toggleSelection = (index) => {
                             <div v-if="showTranslit">{{ term.sentencePivot.sent_translit }}</div>
                         </div>
                         <div v-else class="sentence-term missing">
-                            <div>{{ question.options[DeckStudyStore.quiz[props.index].response]?.term ?? 'ــــــــ' }}</div>
-                            <div v-if="showTranslit">{{ question.options[DeckStudyStore.quiz[props.index].response]?.translit ?? '[]'}}</div>
+                            <div>{{ question.options[DeckStudySession.quiz[props.index].response]?.term ?? 'ــــــــ' }}</div>
+                            <div v-if="showTranslit">{{ question.options[DeckStudySession.quiz[props.index].response]?.translit ?? '[]'}}</div>
                         </div>
                     </template>
                 </div>
             </div>
-            <div class="model-item-description" v-if="DeckStudyStore.settings.options.withTranslation">
+            <div class="model-item-description" v-if="DeckStudySession.settings.options.withTranslation">
                 {{ question.sentence.trans }}
             </div>
         </div>

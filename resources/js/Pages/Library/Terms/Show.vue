@@ -1,52 +1,84 @@
 <script setup>
-import {onMounted, computed, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
-import TermContainer from "../../../components/TermContainer.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useTermViewer} from "../../../composables/terms/useTermViewer.js";
-import AppTip from "../../../components/AppTip.vue";
+import {onMounted, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import TermContainer from '../../../components/TermContainer.vue';
+import {useTermViewer} from '../../../composables/terms/useTermViewer.js';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
-defineOptions({layout: Layout});
+const router = useRouter();
+const resolvedRandomTermSlug = ref(null);
 
 const props = defineProps({
-    termId: {
-        type: Number,
-        required: true,
+    termSlug: {
+        type: String,
+        default: null,
+    },
+    random: {
+        type: Boolean,
+        default: false,
     },
 });
 
 const {
     terms,
     primaryTerm,
-    termsNotFound,
     isLoadingTerms,
     loadTerms,
+    loadRandomTerms,
     reloadTerms,
+    reloadRandomTerms,
 } = useTermViewer();
 
-onMounted(() => loadTerms(props.termId));
+const openTerms = async (reload = false) => {
+    if (props.random) {
+        const randomTerms = await (reload ? reloadRandomTerms : loadRandomTerms)();
+        const term = randomTerms?.[0];
+
+        if (term?.slug) {
+            resolvedRandomTermSlug.value = term.slug;
+            router.replace({
+                name: 'terms.show',
+                params: { term: term.slug },
+            });
+        }
+
+        return;
+    }
+
+    await (reload ? reloadTerms : loadTerms)(props.termSlug);
+};
+
+onMounted(() => {
+    void openTerms();
+});
 
 watch(
-    () => props.termId,
-    () => reloadTerms(props.termId)
+    () => [props.termSlug, props.random],
+    ([termSlug, random]) => {
+        if (!random && termSlug === resolvedRandomTermSlug.value) {
+            resolvedRandomTermSlug.value = null;
+            return;
+        }
+
+        void openTerms(true);
+    },
 );
 
-const pageTitle = computed(() => {
-    if (primaryTerm.value) {
-        return `Dictionary: ${primaryTerm.value.term} (${primaryTerm.value.translit})`;
-    }
-    return 'Dictionary';
-});
+watch(
+    primaryTerm,
+    (term) => {
+        document.title = term
+            ? `Dictionary: ${term.term} (${term.translit})`
+            : 'Dictionary';
+    },
+    { immediate: true },
+);
 </script>
 
 <template>
-    <Head :title="pageTitle"/>
-
-    <LoadingSpinner v-if="isLoadingTerms"/>
-    <AppTip v-else-if="termsNotFound">
-        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.term')}) }}</p>
-    </AppTip>
-    <div v-else-if="terms?.length > 0" id="app-body">
-        <TermContainer v-for="term in terms" :key="term.id" :model="term"/>
-    </div>
+    <LoadingWrapper :is-loading="isLoadingTerms || !terms">
+        <div id="app-body">
+            <TermContainer v-for="term in terms" :key="term.id" :model="term"/>
+        </div>
+    </LoadingWrapper>
 </template>

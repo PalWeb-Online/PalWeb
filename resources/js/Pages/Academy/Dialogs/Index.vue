@@ -1,28 +1,38 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
-import Paginator from "../../../Shared/Paginator.vue";
-import DialogItem from "../../../components/DialogItem.vue";
-import {route} from "ziggy-js";
+import Paginator from '../../../Shared/Paginator.vue';
+import DialogItem from '../../../components/DialogItem.vue';
+import {useResourceIndex} from '../../../composables/resources/useResourceIndex.js';
+import PaginationPage from '../../../components/PaginationPage.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 
-defineOptions({
-    layout: Layout
-});
-
-defineProps({
-    dialogs: Object,
+const {
+    collection: dialogs,
+    loading,
+    currentPage,
+    pageNumbers,
+    isLoadingPaginator,
+    goToPage,
+} = useResourceIndex({
+    routeBase: 'dialogs',
+    defaultFilters: { sort: 'latest' },
 });
 </script>
 <template>
-    <Head title="Academy: Dialogs"/>
     <div id="app-head">
-        <Link :href="route('dialogs.index')"><h1>{{ $t('pages.dialogs.index.title') }}</h1></Link>
+        <RouterLink :to="{ name: 'dialogs.index' }"><h1>{{ $t('pages.dialogs.index.title') }}</h1></RouterLink>
     </div>
     <div id="app-body">
-        <div class="app-body-section">
-            <div class="model-list">
+        <LoadingSpinner v-if="loading"/>
+        <div v-else class="app-body-section">
+<!--            todo: occasional flash when switching pages-->
+            <PaginationPage :is-loading="isLoadingPaginator">
                 <DialogItem v-for="dialog in dialogs.data" :key="dialog.id" :model="dialog"/>
-            </div>
-            <Paginator :links="dialogs.meta.links"/>
+            </PaginationPage>
+            <Paginator
+                :pageNumbers="pageNumbers"
+                :currentPage="currentPage"
+                :goToPage="goToPage"
+            />
         </div>
     </div>
 </template>

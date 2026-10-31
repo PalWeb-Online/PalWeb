@@ -1,69 +1,93 @@
 <script setup>
-import NavSticky from "./NavSticky.vue";
-import NavSidebar from "./NavSidebar.vue";
-import SearchGenie from "./SearchGenie.vue";
-import Footer from "./Footer.vue";
-import AppNotification from "../components/AppNotification.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import {useSearchStore} from "../stores/SearchStore.js";
-import {usePage} from "@inertiajs/vue3";
-import {onMounted, watch} from "vue";
-import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import {useUserStore} from "../stores/UserStore.js";
-import i18n from "../i18n.js";
-import BackgroundPattern from "./Backgrounds/BackgroundPattern.vue";
-import {useConnectionStatus} from "../composables/useConnectionStatus.js";
-import {useI18n} from "vue-i18n";
-import {useAcademyStateStore} from "../stores/AcademyStateStore.js";
+import NavSticky from './NavSticky.vue';
+import NavSidebar from './NavSidebar.vue';
+import SearchGenie from './SearchGenie.vue';
+import Footer from './Footer.vue';
+import AppNotification from '../components/AppNotification.vue';
+import {useNotificationStore} from '../stores/NotificationStore.js';
+import {useSearchStore} from '../stores/SearchStore.js';
+import {onMounted, onUnmounted, watch} from 'vue';
+import ModalWrapper from '../components/Modals/ModalWrapper.vue';
+import {useUserStore} from '../stores/UserStore.js';
+import i18n from '../i18n.js';
+import BackgroundPattern from './Backgrounds/BackgroundPattern.vue';
+import {useConnectionStatus} from '../composables/useConnectionStatus.js';
+import {useI18n} from 'vue-i18n';
+import {useAcademyStateStore} from '../stores/AcademyStateStore.js';
+import {useNotifier} from '../composables/useNotifier.js';
 
-const {t, locale} = useI18n();
+const { locale } = useI18n();
 
 defineProps({
     section: {
         type: String,
         default: 'library',
-    }
+    },
 });
 
 const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 const NotificationStore = useNotificationStore();
 const AcademyStateStore = useAcademyStateStore();
+const Notifier = useNotifier();
 
-const page = usePage();
-const {browserOnline} = useConnectionStatus(Echo);
-
-const syncDocumentLocale = (newLocale) => {
-    document.documentElement.lang = newLocale;
-};
+const { browserOnline } = useConnectionStatus(Echo);
 
 watch(
     locale,
     (newLocale) => {
         if (newLocale) {
             i18n.global.locale.value = newLocale;
-            syncDocumentLocale(newLocale);
+            document.documentElement.lang = newLocale;
         }
     },
-    {immediate: true}
+    { immediate: true },
 );
 
 let lastBrowserOnlineState = browserOnline.value;
 let hasSeenInitialConnectionState = false;
+let activeUserChannel = null;
 
-onMounted(() => {
-    const userId = UserStore.user?.id ?? null;
-
-    if (userId) {
-        window.Echo.private(`users.${userId}`)
-            .listen('UserNotificationSent', (e) => {
-                NotificationStore.notify(e);
-            })
-            .listen('AcademyStateUpdated', () => {
-                AcademyStateStore.refreshState().catch(() => {
-                });
-            });
+const leaveActiveUserChannel = () => {
+    if (!activeUserChannel) {
+        return;
     }
+
+    window.Echo.leave(`users.${activeUserChannel}`);
+    activeUserChannel = null;
+};
+
+const listenToUserChannel = (userId) => {
+    leaveActiveUserChannel();
+
+    if (!userId) {
+        return;
+    }
+
+    activeUserChannel = userId;
+
+    window.Echo.private(`users.${userId}`)
+        .listen('UserNotificationSent', (e) => {
+            Notifier.notify(e);
+        })
+        .listen('AcademyStateUpdated', () => {
+            AcademyStateStore.refreshState().catch(() => {
+            });
+        });
+};
+
+onMounted(async () => {
+    await NotificationStore.refreshBrowserSubscriptionState();
+});
+
+watch(
+    () => UserStore.user?.id ?? null,
+    listenToUserChannel,
+    { immediate: true },
+);
+
+onUnmounted(() => {
+    leaveActiveUserChannel();
 });
 
 watch(browserOnline, (isOnline) => {
@@ -80,31 +104,17 @@ watch(browserOnline, (isOnline) => {
     lastBrowserOnlineState = isOnline;
 
     if (!isOnline) {
-        NotificationStore.addNotification(t('layout.notifications.offline'), 'warning');
+        Notifier.notify({
+            key: 'layout.notifications.offline',
+            type: 'warning',
+        });
         return;
     }
 
-    NotificationStore.addNotification(t('layout.notifications.online'));
-}, {immediate: true});
-
-watch(
-    () => page.props.flash.notification,
-    (notification) => {
-        if (notification) {
-            NotificationStore.notify({notification});
-        }
-    },
-    {immediate: true}
-);
-
-watch(
-    () => page.props.locale,
-    (newLocale) => {
-        if (newLocale) {
-            i18n.global.locale.value = newLocale;
-        }
-    }
-);
+    Notifier.notify({
+        key: 'layout.notifications.online',
+    });
+}, { immediate: true });
 </script>
 
 <template>
@@ -152,7 +162,8 @@ watch(
         position: relative;
         z-index: 1;
         display: grid;
-        grid-template-rows: min-content 1fr;
+        grid-template-areas: "head" "body" "foot";
+        grid-template-rows: min-content 1fr min-content;
         align-content: start;
         min-height: inherit;
     }
@@ -183,16 +194,6 @@ watch(
 
     &.wiki, &.account {
         background: var(--color-pastel-light);
-    }
-
-    &.account {
-        @media (width <= 960px) {
-            #app-body > .app-tip {
-                border-radius: 0;
-                border: none;
-                box-shadow: 0 0.2rem 0 rgb(0 0 0 / 0.1);
-            }
-        }
     }
 }
 </style>

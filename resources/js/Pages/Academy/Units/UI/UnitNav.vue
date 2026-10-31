@@ -1,19 +1,19 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {router, usePage} from "@inertiajs/vue3";
+import {useRoute, useRouter} from "vue-router";
 import {useAcademyStateStore} from "../../../../stores/AcademyStateStore.js";
 
 const UserStore = useUserStore();
 const AcademyStateStore = useAcademyStateStore();
+const router = useRouter();
+const currentRoute = useRoute();
 
 const props = defineProps({
     unit: {type: Object, required: true},
     activeLesson: {type: Object, required: false},
 })
 
-const page = usePage();
 const isHovering = ref(false);
 const collapseProgress = ref(0);
 const collapsibleInner = ref(null);
@@ -23,21 +23,27 @@ let resizeObserver = null;
 
 const editRoute = computed(() => {
     if (props.activeLesson) {
-        return route('lesson-planner.lesson', props.activeLesson.id);
+        return {
+            name: 'lesson-planner.lesson',
+            params: {lesson: props.activeLesson.id},
+        };
 
     } else if (props.unit) {
-        return route('lesson-planner.unit', props.unit.id);
+        return {
+            name: 'lesson-planner.unit',
+            params: {unit: props.unit.id},
+        };
 
     } else {
-        return route('lesson-planner.index');
+        return {name: 'lesson-planner.index'};
     }
 });
 
 const isDraft = computed(() => {
-    if (page.component === 'Academy/Units/Show' && !props.unit.published) {
+    if (currentRoute.name === 'units.show' && !props.unit.published) {
         return true;
 
-    } else if (page.component === 'Academy/Lessons/Show' && props.activeLesson && !props.activeLesson.published) {
+    } else if (currentRoute.name === 'lessons.show' && props.activeLesson && !props.activeLesson.published) {
         return true;
     }
 
@@ -152,7 +158,7 @@ watch(() => props.unit, () => {
             <div ref="collapsibleInner" class="unit-nav-collapsible-inner">
                 <div class="unit-meta" v-if="isDraft">draft</div>
                 <div class="unit-title">
-                    <Link :href="route('units.index')" class="material-symbols-rounded">arrow_back</Link>
+                    <RouterLink :to="{ name: 'units.index' }" class="material-symbols-rounded">arrow_back</RouterLink>
                     <div class="unit-title-text">
                         {{ $t('unit.number', {number: unit.position}) }}: {{ unit.title }}
                     </div>
@@ -161,20 +167,20 @@ watch(() => props.unit, () => {
                         check
                     </div>
                     <button v-if="UserStore.isAdmin"
-                            @click="router.get(editRoute)" class="material-symbols-rounded">edit
+                            @click="router.push(editRoute)" class="material-symbols-rounded">edit
                     </button>
                 </div>
             </div>
         </div>
         <div class="unit-progress-bar-wrapper">
-            <Link :href="route('units.show', unit.position)" class="material-symbols-rounded"
-                  :class="{ active: $page.component === 'Academy/Units/Show' }">
+            <RouterLink :to="{ name: 'units.show', params: { unit: unit.position } }" class="material-symbols-rounded"
+                  :class="{ active: currentRoute.name === 'units.show' }">
                 home
-            </Link>
+            </RouterLink>
             <div class="unit-progress-bar">
-                <Link v-for="lesson in unit.lessons"
+                <RouterLink v-for="lesson in unit.lessons"
                       :key="lesson.id"
-                      :href="route('lessons.show', lesson)"
+                      :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }"
                       :class="{
                         hidden: !UserStore.isAdmin && !lesson.published,
                         locked: !UserStore.isAdmin && !AcademyStateStore.hasUnlockedLesson(lesson.id),
@@ -187,11 +193,11 @@ watch(() => props.unit, () => {
                     <div>
                         <span>{{ lesson.unit_position }}</span>
                     </div>
-                </Link>
-                <Link v-if="UserStore.isAdmin && unit.lessons?.length < 9"
+                </RouterLink>
+                <RouterLink v-if="UserStore.isAdmin && unit.lessons?.length < 9"
                       class="new-lesson-link"
-                      :href="route('lesson-planner.unit-lesson', unit)">+
-                </Link>
+                      :to="{ name: 'lesson-planner.unit-lesson', params: { unit: unit.id } }">+
+                </RouterLink>
             </div>
         </div>
     </div>
@@ -207,13 +213,12 @@ watch(() => props.unit, () => {
     width: 100%;
     display: grid;
     background: var(--color-accent-light);
-    border-block-end: 0.1rem solid var(--color-dark-primary);
+    border-block-end: 1px solid var(--color-dark-primary);
     box-shadow: 0 0.3rem 0 rgb(0 0 0 / 25%);
     z-index: 2;
 
     @media (width >= 960px) {
         --unit-nav-sticky-offset: 3.6rem;
-        margin-block-end: 3.2rem;
         padding-inline: 0;
     }
 
@@ -267,7 +272,7 @@ watch(() => props.unit, () => {
         width: 100%;
         display: grid;
         align-items: center;
-        border-block-start: 0.1rem solid var(--color-dark-primary);
+        border-block-start: 1px solid var(--color-dark-primary);
         grid-template-columns: min-content minmax(0, 1fr);
 
         & > a.material-symbols-rounded {

@@ -1,10 +1,9 @@
 <script setup>
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {route} from "ziggy-js";
 import {CircleStencil, Cropper} from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import ModalWrapper from "./../Modals/ModalWrapper.vue";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../../composables/useNotifier.js";
 import WindowSection from "./../WindowSection.vue";
 import AppTip from "./../AppTip.vue";
 import {useUser} from "../../composables/users/useUser.js";
@@ -43,7 +42,7 @@ const emit = defineEmits([
 const {isStudent} = useUser(computed(() => props.user));
 const {t} = useI18n();
 
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 const maxAvatarFileSize = 5 * 1024 * 1024;
 const allowedAvatarMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const allowedAvatarExtensions = ['jpg', 'jpeg', 'png', 'webp'];
@@ -77,7 +76,7 @@ watch(
 );
 
 onMounted(async () => {
-    const response = await axios.get(route('avatars.get'));
+    const response = await axios.get('/api/avatars');
     defaultAvatars.value = response.data;
 });
 
@@ -125,7 +124,10 @@ const handleUploadSelection = (event) => {
 
     if (hasReachedAvatarLimit.value) {
         uploadError.value = t('modals.avatar-picker.errors.upload-limit', {count: maxUploadedAvatars});
-        NotificationStore.addNotification(uploadError.value, 'error');
+        Notifier.notify({
+            message: uploadError.value,
+            type: 'error',
+        });
         return;
     }
 
@@ -133,7 +135,10 @@ const handleUploadSelection = (event) => {
 
     if (validationError) {
         uploadError.value = validationError;
-        NotificationStore.addNotification(validationError, 'error');
+        Notifier.notify({
+            message: validationError,
+            type: 'error',
+        });
         return;
     }
 
@@ -171,7 +176,7 @@ const uploadAvatar = async () => {
         const payload = new FormData();
         payload.append('avatar', croppedAvatar, uploadFile.value.name);
 
-        const response = await axios.post(route('users.avatars.store', props.user.username), payload);
+        const response = await axios.post(`/api/users/${props.user.username}/avatars`, payload);
         const avatar = response.data.avatar;
 
         syncUploadedAvatars([
@@ -180,14 +185,19 @@ const uploadAvatar = async () => {
         ]);
 
         clearUploadPreview();
-        NotificationStore.addNotification(t('modals.avatar-picker.notifications.uploaded'), 'success');
+        Notifier.notify({
+            key: 'modals.avatar-picker.notifications.uploaded',
+        });
 
     } catch (error) {
         uploadError.value = error?.response?.data?.errors?.avatar?.[0]
             ?? error?.response?.data?.message
             ?? t('modals.avatar-picker.errors.upload');
 
-        NotificationStore.addNotification(uploadError.value, 'error');
+        Notifier.notify({
+            message: uploadError.value,
+            type: 'error',
+        });
 
     } finally {
         isUploadingAvatar.value = false;
@@ -204,7 +214,7 @@ const deleteAvatar = async (avatar) => {
     deletingAvatarIds.value = new Set([...deletingAvatarIds.value, avatar.id]);
 
     try {
-        const response = await axios.delete(route('avatars.destroy', avatar.id));
+        const response = await axios.delete(`/api/avatars/${avatar.id}`);
         const savedUser = response.data.user;
         const avatars = savedUser?.uploaded_avatars
             ?? localUploadedAvatars.value.filter((uploadedAvatar) => uploadedAvatar.id !== avatar.id);
@@ -219,13 +229,15 @@ const deleteAvatar = async (avatar) => {
             emit('user-updated', savedUser);
         }
 
-        NotificationStore.addNotification(t('modals.avatar-picker.notifications.deleted'), 'success');
+        Notifier.notify({
+            key: 'modals.avatar-picker.notifications.deleted',
+        });
 
     } catch (error) {
-        NotificationStore.addNotification(
-            error?.response?.data?.message ?? t('modals.avatar-picker.errors.delete'),
-            'error',
-        );
+        Notifier.notify({
+            message: error?.response?.data?.message ?? t('modals.avatar-picker.errors.delete'),
+            type: 'error',
+        });
 
     } finally {
         const nextDeletingAvatarIds = new Set(deletingAvatarIds.value);

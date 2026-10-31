@@ -1,41 +1,37 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import {useSoundBoothStore} from "../stores/SoundBoothStore.js";
-import {useRecordStore} from '../stores/RecordStore';
-import {useQueueStore} from '../stores/QueueStore.js';
+import {useSoundBoothSession} from "../useSoundBoothSession.js";
 import WizardVUMeter from '../ui/WizardVUMeter.vue';
 import WizardProgressBar from "../ui/WizardProgressBar.vue";
 import AppTip from "../../../../components/AppTip.vue";
 import PopupWindow from "../../../../components/Modals/PopupWindow.vue";
 
-const SoundBoothStore = useSoundBoothStore();
-const RecordStore = useRecordStore();
-const QueueStore = useQueueStore();
+const session = useSoundBoothSession();
 
-const originalQueueLength = QueueStore.queue.length;
+const originalQueueLength = session.queue.length;
 
 const alertLimitReached = ref(null);
 const alertQueueCompleted = ref(null);
 
 const canRecord = computed(() => {
-    return RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done < 500;
+    return session.recordings.statusCount.stashed + session.recordings.statusCount.done < 500;
 });
 
 watch(
-    () => RecordStore.data.statusCount.stashed + RecordStore.data.statusCount.done,
+    () => session.recordings.statusCount.stashed + session.recordings.statusCount.done,
     (recorded) => {
-        if (recorded >= 500 && RecordStore.recorder) {
-            RecordStore.closeRecorder();
+        if (recorded >= 500 && session.recorder) {
+            session.closeRecorder();
             alertLimitReached.value?.openDialog();
 
-        } else if (recorded < 500 && !RecordStore.recorder) {
-            RecordStore.openRecorder(RecordStore.audioParams);
+        } else if (recorded < 500 && !session.recorder) {
+            session.openRecorder(session.audioParams);
         }
     }
 );
 
 watch(
-    () => RecordStore.data.statusCount.done,
+    () => session.recordings.statusCount.done,
     (uploaded) => {
         if (uploaded >= originalQueueLength) {
             alertQueueCompleted.value?.openDialog();
@@ -44,7 +40,7 @@ watch(
 );
 
 onMounted(() => {
-    QueueStore.initSelection();
+    session.initSelection();
 });
 </script>
 
@@ -52,22 +48,22 @@ onMounted(() => {
     <div class="window-section-head">
         <h2>{{ $t('sound-booth.record.record') }}</h2>
     </div>
-    <AppTip v-if="SoundBoothStore.data.errorMessage">
-        <p>{{ SoundBoothStore.data.errorMessage }}</p>
+    <AppTip v-if="session.state.errorMessage">
+        <p>{{ session.state.errorMessage }}</p>
     </AppTip>
 
     <div class="rw-page__record mwe-rws-audio"
-         :class="{ 'mwe-rws-recording': SoundBoothStore.data.isRecording }">
+         :class="{ 'mwe-rws-recording': session.state.isRecording }">
         <section class="rw-record-queue">
             <div
-                v-for="(pronunciation, index) in QueueStore.queue"
+                v-for="(pronunciation, index) in session.queue"
                 :key="pronunciation.id"
                 :class="{
-                        'selected': QueueStore.selected === index,
-                        'mwe-rw-error': RecordStore.data.errors[pronunciation.id],
-                        [RecordStore.data.status[pronunciation.id]]: !!RecordStore.data.status[pronunciation.id]
+                        'selected': session.selectedItem === index,
+                        'mwe-rw-error': session.recordings.errors[pronunciation.id],
+                        [session.recordings.status[pronunciation.id]]: !!session.recordings.status[pronunciation.id]
                     }"
-                @click="QueueStore.selectItem(index)"
+                @click="session.selectItem(index)"
             >
                 {{ pronunciation.term.term }}
             </div>
@@ -78,50 +74,50 @@ onMounted(() => {
                 <img
                     :class="{
                             'arrow': true,
-                            'disabled': QueueStore.selected - 1 < 0
-                        }"
+                            'disabled': session.selectedItem - 1 < 0
+                    }"
                     src="/img/reverse.svg"
-                    alt="Back"
-                    @click="QueueStore.moveBackward"
+                    :alt="$t('sound-booth.alt.back')"
+                    @click="session.moveBackward"
                 />
                 <div class="rw-record-item">
                     <div>
-                        {{ QueueStore.queue[QueueStore.selected]?.term.term || '' }}
+                        {{ session.queue[session.selectedItem]?.term.term || '' }}
                     </div>
                     <div>
-                        {{ QueueStore.queue[QueueStore.selected]?.translit || '' }}
+                        {{ session.queue[session.selectedItem]?.translit || '' }}
                     </div>
                 </div>
                 <img
                     :class="{
                             'arrow': true,
-                            'disabled': QueueStore.selected + 1 >= QueueStore.queue.length
-                        }"
+                            'disabled': session.selectedItem + 1 >= session.queue.length
+                    }"
                     src="/img/play.svg"
-                    alt="Forward"
-                    @click="QueueStore.moveForward"
+                    :alt="$t('sound-booth.alt.forward')"
+                    @click="session.moveForward"
                 />
             </div>
 
             <!--           TODO: disable it if no word is selected -->
-            <div :class="`rw-actions ${SoundBoothStore.data.isUploading && 'disabled'}`">
+            <div :class="`rw-actions ${session.state.isUploading && 'disabled'}`">
                 <div class="rw-actions-title">
                     {{ $t('sound-booth.record.record') }}
                 </div>
                 <div class="rw-actions-content">
                     <div class="rw-actions-bar">
                         <template
-                            v-if="RecordStore.data.status[QueueStore.queue[QueueStore.selected]?.id] !== 'stashed'">
+                            v-if="session.recordings.status[session.queue[session.selectedItem]?.id] !== 'stashed'">
                             <template v-if="canRecord">
                                 <img
                                     class="toggle-record"
-                                    :src="`/img/${!SoundBoothStore.data.isRecording ? 'record' : 'stop'}.svg`"
-                                    :alt="!SoundBoothStore.data.isRecording ? 'Record' : 'Stop'"
-                                    @click="RecordStore.toggleRecording"
+                                    :src="`/img/${!session.state.isRecording ? 'record' : 'stop'}.svg`"
+                                    :alt="!session.state.isRecording ? $t('sound-booth.alt.record') : $t('sound-booth.alt.stop')"
+                                    @click="session.toggleRecording"
                                 />
                                 <WizardVUMeter id="rw-vumeter"
-                                               :value="RecordStore.vumeter"
-                                               :class="{ 'saturated': RecordStore.saturated, 'recording': SoundBoothStore.data.isRecording }"
+                                               :value="session.vumeter"
+                                               :class="{ 'saturated': session.saturated, 'recording': session.state.isRecording }"
                                 />
                             </template>
                         </template>
@@ -129,20 +125,20 @@ onMounted(() => {
                             <img
                                 class="trash"
                                 src="/img/trash.svg"
-                                alt="Discard"
-                                @click="RecordStore.discardRecord(QueueStore.queue[QueueStore.selected]?.id)"
+                                :alt="$t('sound-booth.alt.discard')"
+                                @click="session.discardRecord(session.queue[session.selectedItem]?.id)"
                             />
                             <img
                                 class="audio"
                                 src="/img/audio.svg"
-                                alt="Listen"
-                                @click="RecordStore.playRecord"
+                                :alt="$t('sound-booth.alt.listen')"
+                                @click="session.playRecord"
                             />
                         </template>
                     </div>
 
                     <div class="rw-item-counter">
-                        {{ RecordStore.data.statusCount.stashed }} / {{ QueueStore.queue.length }}
+                        {{ session.recordings.statusCount.stashed }} / {{ session.queue.length }}
                     </div>
                 </div>
 
@@ -169,27 +165,27 @@ onMounted(() => {
                     {{ $t('sound-booth.record.upload') }}
                 </div>
                 <div class="rw-actions-content">
-                    <template v-if="Object.keys(RecordStore.data.records).length !== 0">
+                    <template v-if="Object.keys(session.recordings.items).length !== 0">
                         <div class="rw-actions-bar">
                             <img
-                                v-if="RecordStore.data.statusCount.done < Object.keys(RecordStore.data.records).length"
+                                v-if="session.recordings.statusCount.done < Object.keys(session.recordings.items).length"
                                 class="upload"
                                 src="/img/upload.svg"
-                                alt="Upload"
-                                @click="RecordStore.uploadRecords"
+                                :alt="$t('sound-booth.alt.upload')"
+                                @click="session.uploadRecords"
                             />
                             <!--                    :disabled="SoundBoothStore.hasPendingRequests"-->
                             <!--                            (SoundBoothStore.data.isUploading === false || SoundBoothStore.hasPendingRequests === true)-->
 
                             <WizardProgressBar
-                                :value="(100 * RecordStore.data.statusCount.done / Object.keys(RecordStore.data.records).length)"
+                                :value="(100 * session.recordings.statusCount.done / Object.keys(session.recordings.items).length)"
                             />
                         </div>
 
                         <div class="rw-item-counter">
-                            <span>{{ RecordStore.data.statusCount.done }}</span>
-                            of
-                            <span>{{ Object.keys(RecordStore.data.records).length }}</span>
+                            <span>{{ session.recordings.statusCount.done }}</span>
+                            /
+                            <span>{{ Object.keys(session.recordings.items).length }}</span>
                         </div>
                     </template>
 
@@ -213,12 +209,12 @@ onMounted(() => {
         </section>
     </div>
 
-    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" title="Limit Reached">
+    <PopupWindow trigger="auto" type="alert" ref="alertLimitReached" :title="$t('sound-booth.record.limit-reached')">
         <p>Wow! You’ve recorded 500 Audios in one session! In order to guarantee good performance from the Record
             Wizard, please upload any recordings you still have stashed & refresh the page before recording anything
             more.</p>
     </PopupWindow>
-    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" title="Queue Completed">
+    <PopupWindow trigger="auto" type="alert" ref="alertQueueCompleted" :title="$t('sound-booth.record.queue-completed')">
         <p>Wonderful! You've uploaded all the items in your Queue. Proceed to the <b>Check</b> step to review your
             uploads, or return to the <b>Queue</b> step to load in another set of items.</p>
     </PopupWindow>

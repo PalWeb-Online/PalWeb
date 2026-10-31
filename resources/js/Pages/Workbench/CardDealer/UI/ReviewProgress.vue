@@ -1,6 +1,5 @@
 <script setup>
 import {computed, ref} from "vue";
-import {route} from 'ziggy-js';
 import {useUserStore} from "../../../../stores/UserStore.js";
 import {useTooltip} from "../../../../composables/useTooltip.js";
 import AppTooltip from "../../../../components/AppTooltip.vue";
@@ -202,9 +201,9 @@ const masteryBarSegments = computed(() => {
                 </div>
             </div>
         </div>
-        <Link v-if="UserStore.isStudent" :href="route('card-dealer.cards')">
+        <RouterLink v-if="UserStore.isStudent" :to="{ name: 'card-dealer.cards' }">
             {{ $t('card-dealer.review-progress.manage-cards') }}
-        </Link>
+        </RouterLink>
     </div>
 
     <AppTooltip ref="appTooltip"/>

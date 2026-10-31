@@ -143,6 +143,7 @@ h1, h2, h3 {
     text-wrap: balance;
     text-transform: uppercase;
     margin: 3.2rem 0 1.6rem;
+    text-box: trim-both cap alphabetic;
 }
 
 h1, h2, h3,
@@ -198,7 +199,7 @@ h3 {
     display: grid;
     padding: 0.4rem;
     border-radius: 0.6rem;
-    border: 0.1rem solid var(--color-dark-primary);
+    border: 1px solid var(--color-dark-primary);
     box-shadow: -0.3rem 0.3rem 0 0 rgb(0 0 0 / 0.25);
     background: white;
     text-align: start;
@@ -210,10 +211,7 @@ h3 {
 
     .loading-spinner {
         justify-self: center;
-
-        svg {
-            max-width: 3.2rem;
-        }
+        max-width: 3.2rem;
     }
 
     form {
@@ -264,7 +262,7 @@ h3 {
 
     .action-divider {
         margin: 0.3rem 0.6rem;
-        border-block-end: 0.1rem dotted var(--color-medium-secondary);
+        border-block-end: 1px dotted var(--color-medium-secondary);
     }
 }
 
@@ -518,7 +516,8 @@ h3 {
 
 .is-loading {
     opacity: 0.66;
-    animation: loading-phase 1s linear infinite;
+    pointer-events: none;
+    animation: loading-phase 1s ease-in-out infinite;
 }
 
 @keyframes loading-phase {
@@ -596,7 +595,7 @@ h3 {
         gap: 1.2rem;
 
         &:nth-child(2) {
-            border-block-start: 0.1rem solid var(--color-accent-medium);
+            border-block-start: 1px solid var(--color-accent-medium);
             padding-block-start: 1.2rem;
         }
     }

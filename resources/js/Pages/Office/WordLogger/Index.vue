@@ -1,14 +1,12 @@
 <script setup>
-import {route} from "ziggy-js";
-import Layout from "../../../Shared/Layout.vue";
 import {onMounted, reactive, ref} from "vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import TermItem from "../../../components/TermItem.vue";
 
 const tabs = [
-    {key: 'relatives', label: 'Relatives', routeName: 'word-logger.relatives'},
-    {key: 'sentences', label: 'Sentences', routeName: 'word-logger.sentences'},
-    {key: 'inflections', label: 'Inflections', routeName: 'word-logger.inflections'},
+    {key: 'relatives', label: 'Relatives', url: '/api/word-logger/relatives'},
+    {key: 'sentences', label: 'Sentences', url: '/api/word-logger/sentences'},
+    {key: 'inflections', label: 'Inflections', url: '/api/word-logger/inflections'},
 ];
 
 const activeTab = ref('relatives');
@@ -34,7 +32,7 @@ const loadTab = async (tabKey) => {
     isLoading[tabKey] = true;
 
     try {
-        const response = await axios.get(route(tab.routeName));
+        const response = await axios.get(tab.url);
         tabData[tabKey] = response.data;
     } finally {
         isLoading[tabKey] = false;
@@ -49,18 +47,13 @@ const selectTab = async (tabKey) => {
 onMounted(async () => {
     await loadTab(activeTab.value);
 });
-
-defineOptions({
-    layout: Layout
-})
 </script>
 <template>
-    <Head title="Word Logger"/>
     <div id="app-head">
         <h1>{{ $t('pages.word-logger.title') }}</h1>
     </div>
     <div id="app-body">
-        <Link :href="route('word-logger.term')">{{ $t('forms.actions.create', {title: $t('actions.models.term')}) }}</Link>
+        <RouterLink :to="{ name: 'word-logger.term' }">{{ $t('forms.actions.create', {title: $t('actions.models.term')}) }}</RouterLink>
 
         <div class="word-logger-tabs">
             <button v-for="tab in tabs"
@@ -75,7 +68,7 @@ defineOptions({
 
         <template v-else-if="activeTab === 'relatives' && tabData.relatives">
             <h1>Unlinked Reciprocal Relatives</h1>
-            <div v-if="tabData.relatives.unlinkedReciprocalTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.unlinkedReciprocalTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.unlinkedReciprocalTerms"
                           :key="`unlinked-${term.id}`"
                           :model="term"/>
@@ -83,7 +76,7 @@ defineOptions({
             <div v-else class="empty-state">No terms have relative relationships missing reciprocal links.</div>
 
             <h1>Missing Relative Glosses</h1>
-            <div v-if="tabData.relatives.missingGlossTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.missingGlossTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.missingGlossTerms"
                           :key="`missing-gloss-${term.id}`"
                           :model="term"/>
@@ -91,7 +84,7 @@ defineOptions({
             <div v-else class="empty-state">No gloss-requiring relative relationships are missing glosses.</div>
 
             <h1>Missing Relative Types</h1>
-            <div v-if="tabData.relatives.missingTypeTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.missingTypeTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.missingTypeTerms"
                           :key="`missing-type-${term.id}`"
                           :model="term"/>
@@ -106,7 +99,7 @@ defineOptions({
                     {{ term.sent_term }}
                     ({{ term.sent_translit }})
 
-                    <Link :href="route('sentences.show', term.sentence_id)">{{ $t('actions.common.view', {model: 'Sentence'}) }}</Link>
+                    <RouterLink :to="{ name: 'sentences.show', params: { sentence: term.sentence_id } }">{{ $t('actions.common.view', {model: 'Sentence'}) }}</RouterLink>
                 </div>
             </div>
             <div v-if="!tabData.sentences.fromSentences.length" class="empty-state">No sentence terms are waiting to be linked.</div>

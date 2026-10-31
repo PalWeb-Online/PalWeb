@@ -2,7 +2,6 @@
 import {computed, ref} from "vue";
 import {conjugate} from "../../utils/Conjugator.js";
 import ConjugationChart from "./ConjugationChart.vue";
-import {route} from "ziggy-js";
 import AppTip from "../AppTip.vue";
 
 const props = defineProps({
@@ -60,27 +59,27 @@ const vn = computed(() =>
                         <div class="inflection-chart-title" style="grid-column: span 2">
                             {{ $t('charts.conjugation.derivatives') }}
                         </div>
-                        <Link v-if="ap" :href="route('terms.show', ap.slug)" class="inflection-chart-item" style="grid-column: 1">
+                        <RouterLink v-if="ap" :to="{ name: 'terms.show', params: { term: ap.slug } }" class="inflection-chart-item" style="grid-column: 1">
                             <div>AP</div>
                             <div>
                                 <div>{{ ap.term }}</div>
                                 <div>{{ ap.translit }}</div>
                             </div>
-                        </Link>
-                        <Link v-if="pp" :href="route('terms.show', pp.slug)" class="inflection-chart-item" style="grid-column: 2">
+                        </RouterLink>
+                        <RouterLink v-if="pp" :to="{ name: 'terms.show', params: { term: pp.slug } }" class="inflection-chart-item" style="grid-column: 2">
                             <div>PP</div>
                             <div>
                                 <div>{{ pp.term }}</div>
                                 <div>{{ pp.translit }}</div>
                             </div>
-                        </Link>
-                        <Link v-if="vn" :href="route('terms.show', vn.slug)" class="inflection-chart-item" style="grid-column: span 2">
+                        </RouterLink>
+                        <RouterLink v-if="vn" :to="{ name: 'terms.show', params: { term: vn.slug } }" class="inflection-chart-item" style="grid-column: span 2">
                             <div>VN</div>
                             <div>
                                 <div>{{ vn.term }}</div>
                                 <div>{{ vn.translit }}</div>
                             </div>
-                        </Link>
+                        </RouterLink>
                     </div>
                 </div>
             </div>

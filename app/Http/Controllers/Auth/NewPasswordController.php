@@ -6,26 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StorePasswordRequest;
 use App\Http\Requests\Auth\UpdatePasswordRequest;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {
-    public function show(Request $request, $token = null): \Inertia\Response
-    {
-        return Inertia::render('Auth/NewPassword', [
-            'section' => 'account',
-            'token' => $token ?? '',
-            'email' => $token ? $request->email : '',
-        ]);
-    }
-
-    public function store(StorePasswordRequest $request): RedirectResponse
+    public function store(StorePasswordRequest $request): JsonResponse
     {
         $status = Password::reset(
             $request->only('email', 'token') + ['password' => $request->password],
@@ -39,19 +28,12 @@ class NewPasswordController extends Controller
             }
         );
 
-        if ($status == Password::PASSWORD_RESET) {
-            session()->flash('notification', ['type' => 'success', 'message' => 'New password has been set!']);
-
-            return to_route('users.show', $request->user());
-
-        } else {
-            session()->flash('notification', ['type' => 'error', 'message' => 'Failed to reset password.']);
-
-            return back();
-        }
+        return response()->json([
+            'success' => $status === Password::PASSWORD_RESET
+        ]);
     }
 
-    public function update(UpdatePasswordRequest $request): RedirectResponse
+    public function update(UpdatePasswordRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -61,8 +43,8 @@ class NewPasswordController extends Controller
 
         event(new PasswordReset($user));
 
-        session()->flash('notification', ['type' => 'success', 'message' => 'New password has been set!']);
-
-        return to_route('users.show', $request->user());
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

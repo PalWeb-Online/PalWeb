@@ -1,13 +1,12 @@
 import {defineStore} from 'pinia';
 import {computed, ref, watch} from 'vue';
-import {usePage} from "@inertiajs/vue3";
-import {route} from 'ziggy-js';
 import {useNotificationStore} from "./NotificationStore.js";
 import {useUser} from "../composables/users/useUser.js";
 
 export const useUserStore = defineStore('UserStore', () => {
-    const page = usePage();
-    const currentUser = ref(page.props.auth.user || null);
+    const currentUser = ref(null);
+    const hasFetchedCurrentUser = ref(false);
+    let currentUserRequest = null;
 
     const user = computed(() => currentUser.value);
 
@@ -32,12 +31,29 @@ export const useUserStore = defineStore('UserStore', () => {
         setUser(null);
     };
 
-    watch(
-        () => page.props.auth.user,
-        (newUser) => {
-            setUser(newUser || null);
+    const fetchCurrentUser = async () => {
+        if (hasFetchedCurrentUser.value) {
+            return user.value;
         }
-    );
+
+        if (currentUserRequest) {
+            return currentUserRequest;
+        }
+
+        currentUserRequest = (async () => {
+            try {
+                const {data} = await axios.get('/api/auth/user');
+                setUser(data.user || null);
+                return user.value;
+
+            } finally {
+                hasFetchedCurrentUser.value = true;
+                currentUserRequest = null;
+            }
+        })();
+
+        return currentUserRequest;
+    };
 
     watch(
         () => user.value?.id,
@@ -52,7 +68,7 @@ export const useUserStore = defineStore('UserStore', () => {
     const fetchDecks = async () => {
         if (!hasFetchedDecks.value) {
             try {
-                const response = await axios.get(route('users.decks.get'));
+                const response = await axios.get('/api/auth/decks');
                 decks.value = response.data.decks || [];
                 hasFetchedDecks.value = true;
 
@@ -66,6 +82,8 @@ export const useUserStore = defineStore('UserStore', () => {
         user,
         setUser,
         clearUser,
+        fetchCurrentUser,
+        hasFetchedCurrentUser,
         decks,
         hasFetchedDecks,
         fetchDecks,

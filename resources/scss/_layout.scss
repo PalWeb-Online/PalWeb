@@ -8,7 +8,7 @@ body {
     font-size: 1.6rem;
     hyphens: auto;
     margin: 0;
-    background: var(--color-pastel-light);
+    background: var(--color-dark-primary);
 }
 
 #app-container {
@@ -61,6 +61,8 @@ body {
 }
 
 #app-head {
+    grid-area: head;
+    align-self: start;
     background: white;
     padding: 1.6rem 3.2rem 2.4rem;
     border-block-end: 0.2rem solid var(--color-dark-primary);
@@ -77,14 +79,14 @@ body {
         font-size: clamp(4.8rem, 10vw, 6.4rem);
         line-height: 1.2em;
         margin: 0;
-        padding-block-end: 0.8rem;
+        padding-block: 1.6rem 2.4rem;
         color: var(--color-dark-primary);
     }
 }
 
 #app-body {
+    grid-area: body;
     display: grid;
-    grid-auto-rows: min-content;
     align-items: start;
     justify-items: center;
     height: 100%;
@@ -105,8 +107,21 @@ body {
         }
     }
 
-    & > .app-tip {
-        margin-inline: 0.8rem;
+    @media (width < 960px) {
+        & > .app-tip {
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    & > .zatune-loading {
+        width: min(32rem, 50%);
+        padding-block: 6.4rem;
+
+        .mascot-wrapper {
+            width: 100%;
+        }
     }
 }
 
@@ -139,14 +154,6 @@ body {
     background: var(--color-accent-medium);
     padding: 0;
     gap: 0;
-}
-
-.app-logo {
-    animation: bounceIn 0.5s;
-    z-index: 1;
-    cursor: pointer;
-
-    @include variables.pop-on-hover;
 }
 
 nav {

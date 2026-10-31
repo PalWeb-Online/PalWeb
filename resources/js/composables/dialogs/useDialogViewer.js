@@ -8,10 +8,7 @@ export function useDialogViewer() {
         load: loadDialog,
         reload: reloadDialog,
     } = useResourceViewer({
-        fetchModel: (dialogId, options = {}) => dialogLoader.fetchDialog(dialogId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: dialogLoader.fetchShowDialog,
         resetModel: dialogLoader.setDialog,
     });
 

@@ -7,7 +7,7 @@ export function useDialogSearch({
     const {
         searchResource: searchDialogs,
     } = useResourceSearch({
-        routeName: 'api.dialogs.search',
+        url: '/api/dialogs/search',
         params: () => ({
             lesson_id: unref(currentLessonId) ?? null,
         }),

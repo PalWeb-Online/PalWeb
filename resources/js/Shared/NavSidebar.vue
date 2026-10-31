@@ -1,20 +1,21 @@
 <script setup>
-import {useUserStore} from "../stores/UserStore.js";
-import {useNavigationStore} from "../stores/NavigationStore.js";
-import {router} from '@inertiajs/vue3'
-import {route} from 'ziggy-js';
-import {onMounted, onUnmounted, ref} from "vue";
-import {Carousel, Slide} from "vue3-carousel";
-import NavAuth from "./NavAuth.vue";
-import SignIn from "../components/Modals/SignIn.vue";
-import SignUp from "../components/Modals/SignUp.vue";
-import ModalWrapper from "../components/Modals/ModalWrapper.vue";
-import SendFeedback from "../components/Modals/SendFeedback.vue";
-import SendMail from "../components/Modals/SendMail.vue";
-import {useI18n} from "vue-i18n";
-import {useAuth} from "../composables/useAuth.js";
+import {useUserStore} from '../stores/UserStore.js';
+import {useNavigationStore} from '../stores/NavigationStore.js';
+import {onMounted, onUnmounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {Carousel, Slide} from 'vue3-carousel';
+import NavAuth from './NavAuth.vue';
+import SignIn from '../components/Modals/SignIn.vue';
+import SignUp from '../components/Modals/SignUp.vue';
+import ModalWrapper from '../components/Modals/ModalWrapper.vue';
+import SendFeedback from '../components/Modals/SendFeedback.vue';
+import SendMail from '../components/Modals/SendMail.vue';
+import {useI18n} from 'vue-i18n';
+import {useAuth} from '../composables/useAuth.js';
 
-const {locale} = useI18n();
+const { locale } = useI18n();
+const router = useRouter();
+const currentRoute = useRoute();
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -33,6 +34,8 @@ const sidebarRef = ref(null);
 
 const showSendMail = ref(false);
 
+const routeIs = (...names) => names.includes(currentRoute.name);
+
 const zIndices = ref({
     home: -1,
     academy: -1,
@@ -44,16 +47,34 @@ const zIndices = ref({
 const toSection = async (section, key) => {
     NavigationStore.data.section = section;
     carouselRef.value?.slideTo(key);
-}
+};
 
 const navigateOrPrompt = (page) => {
     if (UserStore.isUser) {
-        router.get(route(page));
+        router.push({ name: page });
 
     } else {
         NavigationStore.showSignIn = true;
     }
-}
+};
+
+const toggleAdminView = async (role = null) => {
+    try {
+        if (role) {
+            await axios.get(`/api/admin/toggle-view/${role}`);
+            UserStore.user.roles = [role];
+
+        } else {
+            const {data} = await axios.get('/api/admin/toggle-view');
+            UserStore.user.roles = data.roles;
+        }
+
+        router.go(0);
+
+    } catch (error) {
+        console.error('Error toggling admin view:', error);
+    }
+};
 
 const onSlideStart = () => {
     if (NavigationStore.data.section !== 'home') {
@@ -62,7 +83,7 @@ const onSlideStart = () => {
         });
         zIndices.value[NavigationStore.data.section] = 1;
     }
-}
+};
 
 const onSlideEnd = () => {
     if (NavigationStore.data.section === 'home') {
@@ -70,7 +91,7 @@ const onSlideEnd = () => {
             zIndices.value[sectionKey] = -1;
         });
     }
-}
+};
 
 const handleClickOutside = (event) => {
     if (NavigationStore.data.isOpen && !sidebarRef.value.contains(event.target)) {
@@ -84,10 +105,10 @@ const handleSignOut = async () => {
             NavigationStore.closeSidebar();
         },
     });
-}
+};
 
 onMounted(() => {
-    const removeNavigationListener = router.on('navigate', () => {
+    const removeNavigationListener = router.afterEach(() => {
         NavigationStore.closeSidebar();
     });
     document.addEventListener('click', handleClickOutside);
@@ -106,9 +127,9 @@ onMounted(() => {
                     {{
                         UserStore.user ? $t(`user.roles.${UserStore.highestRole}`) : $t('user.roles.guest')
                     }}
-                    <Link v-if="UserStore.user" class="auth-role" :href="route('subscription.index')">
+                    <RouterLink v-if="UserStore.user" class="auth-role" :to="{ name: 'subscription.index' }">
                         {{ $t('user.subscriptions.manage') }}
-                    </Link>
+                    </RouterLink>
                 </div>
                 <template v-if="UserStore.isUser">
                     <button class="material-symbols-rounded"
@@ -168,7 +189,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('units.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                        'active': ['Academy/Units/Index', 'Academy/Units/Show', 'Academy/Lessons/Show'].includes($page.component),
+                                        'active': routeIs('units.index', 'units.show', 'lessons.show'),
                                         'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -178,7 +199,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('dialogs.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Academy/Dialogs/Index', 'Academy/Dialogs/Show'].includes($page.component),
+                                         'active': routeIs('dialogs.index', 'dialogs.show'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -188,7 +209,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('scores.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Academy/Scores/Index', 'Academy/Scores/History'].includes($page.component),
+                                         'active': routeIs('scores.index', 'scores.history'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -197,24 +218,24 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="nav-carousel-section" :style="{ zIndex: zIndices.library }">
-                                <Link :href="route('terms.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Terms/Index', 'Library/Terms/Show'].includes($page.component) }"
+                                <RouterLink :to="{ name: 'terms.index' }"
+                                            class="nav-carousel-page-item"
+                                            :class="{ 'active': routeIs('terms.index', 'terms.show') }"
                                 >
                                     <div>{{ $t('pages.terms.index.title') }}</div>
                                     <div>{{ $t('pages.terms.index.subtitle') }}</div>
-                                </Link>
-                                <Link :href="route('sentences.index')"
-                                      class="nav-carousel-page-item"
-                                      :class="{ 'active': ['Library/Sentences/Index', 'Library/Sentences/Show'].includes($page.component) }"
+                                </RouterLink>
+                                <RouterLink :to="{ name: 'sentences.index' }"
+                                            class="nav-carousel-page-item"
+                                            :class="{ 'active': routeIs('sentences.index', 'sentences.show') }"
                                 >
                                     <div>{{ $t('pages.sentences.index.title') }}</div>
                                     <div>{{ $t('pages.sentences.index.subtitle') }}</div>
-                                </Link>
+                                </RouterLink>
                                 <div @click="navigateOrPrompt('decks.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Library/Decks/Index', 'Library/Decks/Show'].includes($page.component),
+                                         'active': routeIs('decks.index', 'decks.show'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -224,7 +245,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('audios.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Library/Audios/Index', 'Library/Audios/Speaker'].includes($page.component),
+                                         'active': routeIs('audios.index', 'speaker.show'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -236,7 +257,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('deck-master.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Workbench/DeckMaster/Index', 'Workbench/DeckMaster/Build', 'Workbench/DeckMaster/Study'].includes($page.component),
+                                         'active': routeIs('deck-master.index', 'deck-master.build', 'deck-master.study'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -246,7 +267,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('card-dealer.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': ['Workbench/CardDealer/Index', 'Workbench/CardDealer/Review'].includes($page.component),
+                                         'active': routeIs('card-dealer.index', 'card-dealer.cards', 'card-dealer.review'),
                                          'disabled': !['student', 'admin'].includes(UserStore.highestRole)
                                      }"
                                 >
@@ -256,7 +277,7 @@ onMounted(() => {
                                 <div @click="navigateOrPrompt('sound-booth.index')"
                                      class="nav-carousel-page-item"
                                      :class="{
-                                         'active': $page.component === 'Workbench/SoundBooth/SoundBooth',
+                                         'active': routeIs('sound-booth.index'),
                                          'disabled': !UserStore.isUser
                                      }"
                                 >
@@ -268,7 +289,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('word-logger.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/WordLogger/Index' }"
+                                    :class="{ 'active': routeIs('word-logger.index', 'word-logger.term') }"
                                 >
                                     <div>{{ $t('pages.word-logger.title') }}</div>
                                     <div>{{ $t('pages.word-logger.subtitle') }}</div>
@@ -276,7 +297,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('speech-maker.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/SpeechMaker/SpeechMaker' }"
+                                    :class="{ 'active': routeIs('speech-maker.index', 'speech-maker.dialog', 'speech-maker.dialog-sentence', 'speech-maker.sentence') }"
                                 >
                                     <div>{{ $t('pages.speech-maker.title') }}</div>
                                     <div>{{ $t('pages.speech-maker.subtitle') }}</div>
@@ -284,7 +305,7 @@ onMounted(() => {
                                 <div
                                     @click="navigateOrPrompt('lesson-planner.index')"
                                     class="nav-carousel-page-item"
-                                    :class="{ 'active': $page.component === 'Office/LessonPlanner/Course' }"
+                                    :class="{ 'active': routeIs('lesson-planner.index', 'lesson-planner.unit', 'lesson-planner.unit-decks', 'lesson-planner.unit-lesson', 'lesson-planner.lesson', 'lesson-planner.lesson-activity') }"
                                 >
                                     <div>{{ $t('pages.lesson-planner.title') }}</div>
                                     <div>{{ $t('pages.lesson-planner.subtitle') }}</div>
@@ -298,10 +319,10 @@ onMounted(() => {
                             <img src="/img/sphere-wireframe.svg" :alt="$t('pages.users.index.title')"/>
                             <div>{{ $t('pages.users.index.title') }}</div>
                         </div>
-                        <Link :href="route('wiki.index')" class="nav-portal">
+                        <RouterLink :to="{ name: 'wiki.index' }" class="nav-portal">
                             <img src="/img/sphere-wireframe.svg" :alt="$t('pages.wiki.title')"/>
                             <div>{{ $t('pages.wiki.title') }}</div>
-                        </Link>
+                        </RouterLink>
                     </div>
                 </div>
 
@@ -309,16 +330,16 @@ onMounted(() => {
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-admin') }}</div>
                     <div class="nav-user-menu-items">
                         <button @click="showSendMail = true">{{ $t('nav.sidebar.send-mail') }}</button>
-                        <Link :href="route('feedback.index')">{{ $t('nav.sidebar.view-feedback') }}</Link>
+                        <RouterLink :to="{ name: 'feedback.index' }">{{ $t('nav.sidebar.view-feedback') }}</RouterLink>
 
-                        <button v-if="!UserStore.isAdmin" @click="router.get(route('admin.toggle-view'))">
+                        <button v-if="!UserStore.isAdmin" @click="toggleAdminView()">
                             {{ $t('nav.sidebar.admin-actions.restore-admin-view') }}
                         </button>
                         <template v-else>
-                            <button @click="router.get(route('admin.toggle-view', 'student'))">
+                            <button @click="toggleAdminView('student')">
                                 {{ $t('nav.sidebar.admin-actions.view-as-student') }}
                             </button>
-                            <button @click="router.get(route('admin.toggle-view', 'pal'))">
+                            <button @click="toggleAdminView('pal')">
                                 {{ $t('nav.sidebar.admin-actions.view-as-pal') }}
                             </button>
                         </template>
@@ -327,8 +348,10 @@ onMounted(() => {
                 <div v-if="UserStore.isUser" class="nav-user-menu">
                     <div class="nav-user-menu-head">{{ $t('nav.sidebar.my-account') }}</div>
                     <div class="nav-user-menu-items">
-                        <Link :href="route('subscription.index')">{{ $t('nav.sidebar.manage-subscription') }}</Link>
-                        <Link :href="route('password.edit')">{{ $t('nav.sidebar.change-password') }}</Link>
+                        <RouterLink :to="{ name: 'subscription.index' }">
+                            {{ $t('nav.sidebar.manage-subscription') }}
+                        </RouterLink>
+                        <RouterLink :to="{ name: 'password.edit' }">{{ $t('nav.sidebar.change-password') }}</RouterLink>
                         <button v-if="!UserStore.user.has_discord"
                                 @click="startDiscordAuth"
                                 :disabled="startingDiscordAuth"
@@ -438,6 +461,7 @@ onMounted(() => {
 }
 
 .nav-sidebar-head {
+    --inset-top: env(safe-area-inset-top, 0);
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -446,7 +470,8 @@ onMounted(() => {
     font-family: var(--mono-font);
     font-size: 1.6rem;
     font-weight: 700;
-    height: 3em;
+    height: calc(3em + var(--inset-top));
+    padding-top: var(--inset-top);
 
     div {
         text-transform: uppercase;

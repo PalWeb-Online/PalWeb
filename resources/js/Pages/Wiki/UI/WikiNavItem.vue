@@ -1,6 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
-
 const props = defineProps({
     page: {
         type: Object,
@@ -40,12 +38,12 @@ const toggleSection = (slug) => {
             :class="{ active: currentSlug === page.slug }"
             :style="{ '--wiki-nav-depth': depth }"
         >
-            <Link
-                :href="route('wiki.show', page.slug)"
-                preserve-state
+            <RouterLink
+                :to="{ name: 'wiki.show', params: { slug: page.slug } }"
+
             >
                 <span class="wiki-page-title">{{ page.title }}</span>
-            </Link>
+            </RouterLink>
 
             <button
                 v-if="hasChildren(page)"
@@ -75,7 +73,7 @@ const toggleSection = (slug) => {
 
 <style scoped lang="scss">
 .wiki-nav > .wiki-nav-section:not(:last-child) {
-    border-block-end: 0.1rem solid var(--color-dark-primary);
+    border-block-end: 1px solid var(--color-dark-primary);
 }
 
 .wiki-nav-section {

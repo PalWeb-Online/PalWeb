@@ -1,7 +1,5 @@
 <script setup>
-import Layout from "../../../Shared/Layout.vue";
-import {route} from "ziggy-js";
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useNavGuard} from "../../../composables/NavGuard.js";
 import NavGuard from "../../../components/Modals/NavGuard.vue";
 import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
@@ -11,20 +9,18 @@ import {useActivityEditor} from "../../../composables/activities/useActivityEdit
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import DocumentBlocksManager from "../../../components/Blocks/Editors/DocumentBlocksManager.vue";
 
-defineOptions({
-    layout: Layout,
-})
-
 const props = defineProps({
     activityId: {
         type: Number,
         default: null,
     },
-    initialLesson: {
-        type: Object,
+    initialLessonId: {
+        type: Number,
         default: null,
     },
 });
+
+const initialLesson = ref(null);
 
 const {
     form,
@@ -42,10 +38,15 @@ const {
     deleteActivity,
 } = useActivityEditor({
     activityId: computed(() => props.activityId),
-    initialLesson: computed(() => props.initialLesson),
+    initialLesson: computed(() => initialLesson.value),
 });
 
 onMounted(async () => {
+    if (props.initialLessonId) {
+        const {data} = await axios.get(`/api/lessons/${props.initialLessonId}/edit`);
+        initialLesson.value = data.lesson;
+    }
+
     await loadForm();
 });
 
@@ -68,7 +69,6 @@ const hasNavigationGuard = computed(() => isDirty.value);
 const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
 </script>
 <template>
-    <Head title="Academy: Lessons"/>
     <div id="app-head">
         <h1>{{ $t('pages.lesson-planner.title') }}</h1>
     </div>
@@ -78,18 +78,18 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
             <AppTip>
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.activity')}) }}</p>
             </AppTip>
-            <Link class="portal-button" :href="route('lesson-planner.index')">
+            <RouterLink class="portal-button" :to="{ name: 'lesson-planner.index' }">
                 Back to Lesson Planner
-            </Link>
+            </RouterLink>
         </template>
 
         <template v-else>
             <div class="form-body" style="width: min(96rem, 100%); padding: 0">
                 <div class="unit-meta">
-                    <Link v-if="activity?.lesson?.id || initialLesson"
-                          :href="route('lesson-planner.lesson', activity?.lesson?.id ?? initialLesson.id)">
+                    <RouterLink v-if="activity?.lesson?.id || initialLesson"
+                          :to="{ name: 'lesson-planner.lesson', params: { lesson: activity?.lesson?.id ?? initialLesson.id } }">
                         <- to Lesson
-                    </Link>
+                    </RouterLink>
                 </div>
                 <div class="featured-title l">
                     {{ form.title }}
@@ -167,9 +167,9 @@ const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard)
                     <button type="button" @click="deleteActivity()">
                         {{ $t('actions.common.delete', {model: $t('actions.models.activity')}) }}
                     </button>
-                    <Link v-if="activity?.id" :href="route('activities.activity', activity.id)">
+                    <RouterLink v-if="activity?.id" :to="{ name: 'activities.activity', params: { activity: activity.id } }">
                         {{ $t('actions.common.view', {model: $t('actions.models.activity')}) }}
-                    </Link>
+                    </RouterLink>
                 </div>
             </div>
         </template>

@@ -1,13 +1,13 @@
 import {ref} from "vue";
-import {route} from "ziggy-js";
 import {usePageLoader} from "./usePageLoader.js";
 import {getDocumentPreset} from "../../components/Blocks/documentPresets.js";
 import {useDocumentResourceEditor} from "../documents/useDocumentResourceEditor.js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function usePageEditor({
-                                  pageId = null,
-                              } = {}) {
+                              pageId = null,
+                          } = {}) {
+    const router = useRouter();
     const documentPreset = getDocumentPreset('wiki');
     const pageLoader = usePageLoader();
 
@@ -38,10 +38,9 @@ export function usePageEditor({
     const redirectToEditRoute = (page = null) => {
         if (pageId.value || !page?.id) return;
 
-        router.visit(route('wiki.edit', page.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'wiki.edit',
+            params: {page: page.id},
         });
     };
 
@@ -59,7 +58,7 @@ export function usePageEditor({
         populateForm,
         extractSavedModel: (response) => response.data.page ?? response.data.data ?? null,
         getLoadIdentifier: () => pageId.value,
-        fetchModel: pageLoader.fetchPage,
+        fetchModel: pageLoader.fetchEditPage,
         resetModel: pageLoader.setPage,
         label: 'page',
         routeBase: 'wiki',
@@ -81,7 +80,7 @@ export function usePageEditor({
             redirectToEditRoute(savedModel);
         },
         onDeleteSuccess: () => {
-            router.get(route('wiki.index'));
+            router.push({name: 'wiki.index'});
         },
     });
 

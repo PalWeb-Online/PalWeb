@@ -8,9 +8,7 @@ export function useUnitViewer() {
         load: loadUnit,
         reload: reloadUnit,
     } = useResourceViewer({
-        fetchModel: (unitId) => unitLoader.fetchUnit(unitId, {
-            include: 'show',
-        }),
+        fetchModel: unitLoader.fetchShowUnit,
         resetModel: unitLoader.setUnit,
     });
 

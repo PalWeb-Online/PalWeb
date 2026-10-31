@@ -394,6 +394,10 @@
                 "label": "forma",
                 "option": "forma {form}"
             },
+            "root-type": {
+                "label": "Tipo de Raíz",
+                "option": "tipo {type}"
+            },
             "singular": "singular",
             "plural": "plural",
             "pattern-groups": {
@@ -538,7 +542,10 @@
         "send-feedback": {
             "title": "enviar feedback",
             "placeholder": "¿Algo no funciona? ¿Falta alguna palabra en el Diccionario? ¡Dínos!",
-            "submit": "Enviar"
+            "submit": "Enviar",
+            "notifications": {
+                "sent-feedback": "¡Gracias por tu feedback!"
+            }
         },
         "send-mail": {
             "title": "enviar correo",
@@ -546,7 +553,10 @@
                 "subject": "Asunto"
             },
             "placeholder": "¿Qué te gustaría decir?",
-            "submit": "Enviar"
+            "submit": "Enviar",
+            "notifications": {
+                "mail-queued": "¡El correo ha sido agregado a la cola!"
+            }
         },
         "sign-in": {
             "title": "iniciar sesión",
@@ -731,6 +741,7 @@
         "type": {
             "container": "contenedor",
             "heading": "titular",
+            "divider": "separador",
             "text": "texto",
             "image": "imagen",
             "audio": "audio",
@@ -1254,7 +1265,11 @@
             },
             "new-password": {
                 "title": "nueva contraseña",
-                "set-password": "establecer contraseña"
+                "set-password": "establecer contraseña",
+                "notifications": {
+                    "password-set-success": "Se ha establecido la nueva contraseña!",
+                    "password-set-failure": "No se pudo establecer la nueva contraseña."
+                }
             }
         },
         "wiki": {
@@ -1294,6 +1309,7 @@
                 "sentences-prompt": "Selecciona el Término que mejor se ajusta al espacio en blanco en la frase."
             },
             "notifications": {
+                "empty-deck": "¡No puedes hacer un Quiz con una Baraja vacía!",
                 "insufficient-items": "No se pudo generar un Quiz con al menos 5 preguntas.",
                 "quiz-generation-error": "No se pudo generar el Quiz."
             }
@@ -1324,6 +1340,28 @@
                 "info-unit-removal": "Para eliminar una Unidad, debes ir a su página de edición.",
                 "info-lesson-removal": "Eliminar una Lección de esta lista la desvinculará de esta Unidad. Debes ir a su página de edición para eliminar la Lección por completo.",
                 "warning-incomplete": "Esta Unidad está incompleta, ya que contiene menos de 9 Lecciones publicadas."
+            }
+        },
+        "error": {
+            "503": {
+                "title": "No Disponible",
+                "message": "Estamos haciendo algo de mantenimiento. Vuelve a revisar en breve."
+            },
+            "500": {
+                "title": "Error del Servidor",
+                "message": "¡Uy! Algo salió mal."
+            },
+            "404": {
+                "title": "No Encontrado",
+                "message": "Lo que buscas no existe."
+            },
+            "403": {
+                "title": "Prohibido",
+                "message": "Lo que acabas de hacer — no lo hagas."
+            },
+            "911": {
+                "title": "Desconectado",
+                "message": "Rayos. Intenta de nuevo más tarde."
             }
         }
     },
@@ -1410,7 +1448,8 @@
             "queue": "cola",
             "status": {
                 "full": "Ya tienes 100 artículos en la Cola.",
-                "empty": "La Cola ya está vacía."
+                "empty": "La Cola ya está vacía.",
+                "no-valid-items": "No hay artículos válidos en tu Dialecto actualmente disponibles para grabar."
             },
             "load": {
                 "button": "cargar baraja",
@@ -1428,16 +1467,51 @@
         "record": {
             "record": "grabar",
             "upload": "subir",
-            "prompt-start": "¡Graba algo para comenzar!"
+            "prompt-start": "¡Graba algo para comenzar!",
+            "limit-reached": "Límite alcanzado",
+            "queue-completed": "Cola completada"
         },
         "check": "revisar",
+        "titles": {
+            "speaker": "Grabadora (Hablante)",
+            "queue": "Grabadora (Cola)"
+        },
+        "microphone": {
+            "allow": "Permite que el navegador use tu micrófono para continuar.",
+            "prompt-again": "Haz clic aquí para pedirlo de nuevo."
+        },
+        "alt": {
+            "prompt": "Indicador",
+            "test": "Prueba",
+            "back": "Atrás",
+            "forward": "Adelante",
+            "record": "Grabar",
+            "stop": "Parar",
+            "discard": "Descartar",
+            "listen": "Escuchar",
+            "upload": "Subir"
+        },
+        "errors": {
+            "microphone-technical": "Hubo un problema técnico con el micrófono.",
+            "microphone-access": "No se permitió el acceso al micrófono.",
+            "microphone-not-found": "No se encontró el micrófono.",
+            "microphone-unknown": "Ocurrió un error desconocido con el micrófono.",
+            "record-init": "No se pudo inicializar la grabación.",
+            "record-stash": "No se pudo guardar la grabación temporalmente. Intenta grabar el artículo de nuevo.",
+            "record-discard": "No se pudo descartar la grabación. Inténtalo de nuevo.",
+            "record-upload": "No se pudo subir la grabación. Inténtalo de nuevo."
+        },
         "notifications": {
             "flush-queue-confirm": "¿Estás seguro de que quieres vaciar la Cola, eliminando todas tus grabaciones aún no subidas, si las hubiera?",
             "remove-item-confirm": "Tienes grabaciones aún no subidas para este elemento. ¿Estás seguro de que quieres sacarlo de la Cola antes de subirlo? Tu grabación no subida se perderá.",
             "auto-queue-success": "¡{count} Pronunciaciones fueron agregadas a la Cola!",
             "auto-queue-error": "No se pudo agregar Pronunciaciones automáticamente a la Cola.",
             "deck-queue-success": "¡{count} Pronunciaciones de la Baraja fueron agregadas a la Cola!",
-            "deck-queue-error": "No se pudo agregar Pronunciaciones de la Baraja a la Cola."
+            "deck-queue-error": "No se pudo agregar Pronunciaciones de la Baraja a la Cola.",
+            "discard-record-confirm": "¿Estás seguro de que quieres descartar esta grabación?",
+            "upload-records-confirm": "¿Estás seguro de que quieres subir todas tus grabaciones?",
+            "stashed-recordings-confirm": "¡Algunas de tus grabaciones guardadas temporalmente todavía no se han subido! Puedes revisar tus grabaciones subidas en el paso Revisar y volver al paso Grabar para continuar, pero si sales de la Grabadora sin subir las grabaciones guardadas temporalmente, se eliminarán.",
+            "leave-confirm": "¿Estás seguro de que quieres salir de la Grabadora? Se perderán tus {count} grabaciones guardadas temporalmente."
         }
     },
     "footer": {

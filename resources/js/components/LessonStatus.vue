@@ -1,6 +1,4 @@
 <script setup>
-import {route} from "ziggy-js";
-
 defineProps({
     lesson: Object,
     model: Object,
@@ -10,9 +8,9 @@ defineProps({
 <template>
     <div class="lesson-status">
         <div style="background: var(--color-medium-secondary); color: white;">
-            <Link class="lesson-title" :href="route('lessons.show', lesson.global_position)">
+            <RouterLink class="lesson-title" :to="{ name: 'lessons.show', params: { lesson: lesson.global_position } }">
                 {{ $t('lesson.key-index', {index: lesson.global_position}) }}
-            </Link>
+            </RouterLink>
 
             <div style="display: flex; align-items: center; gap: 0.8rem">
                 <div class="lock material-symbols-rounded" :class="{ unlocked: lesson.progress?.stage }">
@@ -34,12 +32,12 @@ defineProps({
                     total: model.model_class === 'deck' ? '3' : '1'
                 }) }}
             </div>
-            <Link v-if="model.model_class === 'deck'" :href="route('deck-master.study', model)">
+            <RouterLink v-if="model.model_class === 'deck'" :to="{ name: 'deck-master.study', params: { deck: model.id } }">
                 {{ $t('pages.deck-master.buttons.start-quiz') }}
-            </Link>
-            <Link v-else-if="model.model_class === 'activity'" :href="route('activities.activity', model)">
+            </RouterLink>
+            <RouterLink v-else-if="model.model_class === 'activity'" :to="{ name: 'activities.activity', params: { activity: model.id } }">
                 {{ $t('components.activity.start') }}
-            </Link>
+            </RouterLink>
         </div>
     </div>
 </template>

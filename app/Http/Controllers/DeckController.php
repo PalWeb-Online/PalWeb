@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Illuminate\Support\Facades\URL;
 use Throwable;
@@ -47,23 +46,7 @@ class DeckController extends Controller
         ]);
     }
 
-    public function index(): \Inertia\Response
-    {
-        return Inertia::render('Library/Decks/Index');
-    }
-
-    public function show(Deck $deck): \Inertia\Response
-    {
-        return Inertia::render('Library/Decks/Show', [
-            'deckId' => $deck->id,
-        ]);
-    }
-
-    // -------------------------------------------------------------------------
-    // API Methods
-    // -------------------------------------------------------------------------
-
-    public function apiIndex(Request $request, SearchService $searchService): JsonResponse
+    public function index(Request $request, SearchService $searchService): JsonResponse
     {
         URL::forceScheme('https');
 
@@ -100,41 +83,22 @@ class DeckController extends Controller
         ]);
     }
 
-    public function fetch(Request $request, Deck $deck): JsonResponse
+    public function show(Deck $deck): JsonResponse
     {
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
-
-        if ($includes->contains('show') || $includes->isEmpty()) {
-            Gate::authorize('interact', $deck);
-
-            $deck->load(['scores']);
-
-        } else {
-            if ($includes->contains('edit')) {
-                Gate::authorize('modify', $deck);
-
-                $deck->load([
-                    'terms' => fn ($q) => $q
-                        ->withItemData(),
-                ]);
-
-                $this->termService->hydratePronunciations($deck->terms);
-            }
-        }
-
-        return response()->json([
-            'deck' => new DeckResource($deck),
-        ]);
+        return $this->fetchDeck($deck);
     }
 
-    public function getDeckTerms(Deck $deck): JsonResponse
+    public function random(): JsonResponse
+    {
+        return $this->fetchDeck(Deck::query()->inRandomOrder()->firstOrFail());
+    }
+
+    private function fetchDeck(Deck $deck): JsonResponse
     {
         Gate::authorize('interact', $deck);
 
         $deck->load([
+            'scores',
             'terms' => fn ($q) => $q
                 ->whereNotNull('deck_term.gloss_id')
                 ->withItemData()
@@ -148,7 +112,21 @@ class DeckController extends Controller
         ]);
     }
 
-    // -------------------------------------------------------------------------
+    public function edit(Deck $deck): JsonResponse
+    {
+        Gate::authorize('modify', $deck);
+
+        $deck->load([
+            'terms' => fn ($q) => $q
+                ->withItemData(),
+        ]);
+
+        $this->termService->hydratePronunciations($deck->terms);
+
+        return response()->json([
+            'deck' => new DeckResource($deck),
+        ]);
+    }
 
     public function store(UpsertDeckRequest $request): JsonResponse
     {

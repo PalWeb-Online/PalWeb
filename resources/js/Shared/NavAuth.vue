@@ -1,44 +1,40 @@
 <script setup>
-import {route} from "ziggy-js";
 import {useUserStore} from "../stores/UserStore.js";
 import UserNametag from "../components/UserNametag.vue";
-import {useNotificationStore} from "../stores/NotificationStore.js";
-import {useI18n} from "vue-i18n";
+import {useNotifier} from "../composables/useNotifier.js";
 
-const {t} = useI18n();
 const UserStore = useUserStore();
-const NotificationStore = useNotificationStore();
+const Notifier = useNotifier();
 
 const sendVerificationLink = async () => {
     try {
-        const { data } = await axios.post(route('verification.send'));
+        const { data } = await axios.post('/api/email/verification/link');
 
         switch (data.outcome) {
             case 'sent':
-                NotificationStore.addNotification({
-                    type: 'success',
-                    message: t('components.nav-auth.notifications.link-sent'),
+                Notifier.notify({
+                    key: 'components.nav-auth.notifications.link-sent',
                 });
                 break;
 
             case 'already_verified':
-                NotificationStore.addNotification({
+                Notifier.notify({
+                    key: 'components.nav-auth.notifications.already-verified',
                     type: 'info',
-                    message: t('components.nav-auth.notifications.already-verified'),
                 });
                 break;
 
             default:
-                NotificationStore.addNotification({
+                Notifier.notify({
+                    key: 'components.nav-auth.notifications.link-sent-error',
                     type: 'error',
-                    message: t('components.nav-auth.notifications.link-sent-error'),
                 });
         }
 
     } catch (error) {
-        NotificationStore.addNotification({
+        Notifier.notify({
+            key: 'components.nav-auth.notifications.link-sent-error',
             type: 'error',
-            message: t('components.nav-auth.notifications.link-sent-error'),
         });
     }
 };
@@ -46,10 +42,10 @@ const sendVerificationLink = async () => {
 
 <template>
     <div class="auth-user">
-        <Link class="user-avatar" :href="route('users.show', UserStore.user.username)">
+        <RouterLink class="user-avatar" :to="{ name: 'users.show', params: { user: UserStore.user.username } }">
             <img :alt="$t('nav.auth.user-avatar')"
                  :src="UserStore.user.avatar_url"/>
-        </Link>
+        </RouterLink>
 
         <UserNametag :user="UserStore.user"/>
     </div>

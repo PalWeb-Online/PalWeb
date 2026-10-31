@@ -4,24 +4,20 @@ namespace App\Http\Controllers\Workbench;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PronunciationResource;
-use App\Http\Resources\SpeakerResource;
 use App\Models\Deck;
 use App\Models\Dialect;
+use App\Models\Location;
 use App\Models\Pronunciation;
-use App\Models\Speaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class SoundBoothController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function getSpeakerOptions(): JsonResponse
     {
-        $speaker = Speaker::firstWhere('user_id', auth()->user()?->id)?->load(['dialect']);
-
-        return Inertia::render('Workbench/SoundBooth/SoundBooth', [
-            'section' => 'workbench',
-            'speaker' => $speaker ? new SpeakerResource($speaker) : null,
+        return response()->json([
+            'dialects' => Dialect::find([6, 7, 8, 9, 10, 11, 12])->toArray(),
+            'locations' => Location::all()->makeHidden('coordinates')->toArray(),
         ]);
     }
 
@@ -80,6 +76,7 @@ class SoundBoothController extends Controller
             foreach ($deck->terms as $term) {
                 foreach ($term->pronunciations as $pronunciation) {
                     if (count($queued) + count($pronunciationsToQueue) >= 100) {
+//                        todo: change notification delivery
                         session()->flash('notification',
                             [
                                 'type' => 'success',

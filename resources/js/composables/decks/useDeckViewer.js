@@ -6,18 +6,20 @@ export function useDeckViewer() {
 
     const {
         load: loadDeck,
+        loadRandom: loadRandomDeck,
         reload: reloadDeck,
+        reloadRandom: reloadRandomDeck,
     } = useResourceViewer({
-        fetchModel: (deckId, options = {}) => deckLoader.fetchDeck(deckId, {
-            include: 'show',
-            ...options,
-        }),
+        fetchModel: deckLoader.fetchShowDeck,
+        fetchRandomModel: deckLoader.fetchRandomDeck,
         resetModel: deckLoader.setDeck,
     });
 
     return {
         ...deckLoader,
         loadDeck,
+        loadRandomDeck,
         reloadDeck,
+        reloadRandomDeck,
     };
 }

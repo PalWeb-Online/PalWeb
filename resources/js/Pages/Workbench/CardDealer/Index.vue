@@ -1,8 +1,5 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
-import {route} from "ziggy-js";
 import {computed, onMounted, reactive, ref, watch} from "vue";
-import Layout from "../../../Shared/Layout.vue";
 import {useUserStore} from "../../../stores/UserStore.js";
 import {useSearchStore} from "../../../stores/SearchStore.js";
 import DeckItem from "../../../components/DeckItem.vue";
@@ -12,20 +9,12 @@ import SessionPreview from "./UI/SessionPreview.vue";
 import ReviewProgress from "./UI/ReviewProgress.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 
-defineOptions({
-    layout: Layout
-});
-
 const UserStore = useUserStore();
 const SearchStore = useSearchStore();
 
 const props = defineProps({
     scope: String,
-    deck: Object,
-    cards: Array,
-    terms_count: Number,
-    review_history: Object,
-    session_stats: Object,
+    deckId: Number,
 })
 
 const scope = ref(props.scope ?? 'all');
@@ -37,17 +26,31 @@ const mode = computed(() => {
 const isLoading = ref(false);
 
 const allData = reactive({
-    cards: props.cards,
-    termsCount: props.terms_count,
-    sessionStats: props.session_stats,
-})
-
-const scopeData = reactive({
-    deck: props.deck,
     cards: [],
     termsCount: 0,
     sessionStats: null,
 })
+
+const scopeData = reactive({
+    deck: null,
+    cards: [],
+    termsCount: 0,
+    sessionStats: null,
+})
+
+const reviewHistory = ref({});
+
+onMounted(async () => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+    const {data} = await axios.get('/api/card-dealer', {params});
+
+    scope.value = data.scope ?? scope.value;
+    scopeData.deck = data.deck;
+    allData.cards = data.cards;
+    allData.termsCount = data.terms_count;
+    allData.sessionStats = data.session_stats;
+    reviewHistory.value = data.review_history;
+});
 
 const allSessionStats = computed(() => mapSessionStats(allData.sessionStats))
 const scopeSessionStats = computed(() => mapSessionStats(scopeData.sessionStats))
@@ -112,18 +115,6 @@ watch(
     }
 );
 
-watch(
-    () => ({
-        cards: props.cards,
-        sessionStats: props.session_stats,
-    }),
-    ({cards, sessionStats}) => {
-        allData.cards = cards;
-        allData.sessionStats = sessionStats;
-    },
-    {deep: false}
-);
-
 const openDeckSelector = () => {
     if (!scopeData.deck?.id) {
         SearchStore.openSearchGenie('insert', 'decks');
@@ -143,7 +134,7 @@ const fetchScopeData = async () => {
             payload.deck = scopeData.deck.id;
         }
 
-        const response = await axios.post(route('card-dealer.get.cards'), payload);
+        const response = await axios.post('/api/card-dealer/get-scope-cards', payload);
 
         if (response.data) {
             scopeData.cards = response.data.cards;
@@ -171,34 +162,31 @@ const activeSessionStats = computed(() => {
 const refreshSessionData = async () => {
     isLoading.value = true;
 
-    router.reload({
-        only: ['cards', 'session_stats'],
-        preserveScroll: true,
-        preserveState: true,
-    });
+    try {
+        if (mode.value === 'deck') {
+            await fetchScopeData();
+        } else {
+            const {data} = await axios.get('/api/card-dealer', {
+                params: {scope: scope.value},
+            });
 
-    if (mode.value === 'deck') {
-        await fetchScopeData();
+            allData.cards = data.cards;
+            allData.termsCount = data.terms_count;
+            allData.sessionStats = data.session_stats;
+            reviewHistory.value = data.review_history;
+        }
+    } finally {
+        isLoading.value = false;
     }
-
-    isLoading.value = false;
 };
 
 const handleSessionDataRefresh = async () => {
     await refreshSessionData();
 };
 
-onMounted(async () => {
-    if (props.deck) {
-        scopeData.deck = props.deck;
-        scope.value = 'deck';
-        await fetchScopeData();
-    }
-});
 </script>
 
 <template>
-    <Head title="Card Dealer"/>
     <div id="app-head">
         <h1>{{ $t('pages.card-dealer.title') }}</h1>
     </div>
@@ -276,7 +264,7 @@ onMounted(async () => {
                     </div>
                     <div class="score-stats-container__content">
                         <ReviewQueue :cards="activeCards"/>
-                        <ReviewHistory :review_history="review_history"/>
+                        <ReviewHistory :review_history="reviewHistory"/>
                     </div>
                 </div>
             </div>

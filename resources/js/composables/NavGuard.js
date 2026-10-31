@@ -1,7 +1,8 @@
 import {onMounted, onUnmounted, ref} from "vue";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 export function useNavGuard(hasNavigationGuard) {
+    const router = useRouter();
     const showAlert = ref(false);
     const pendingVisit = ref(null);
     const isSkippingGuard = ref(false);
@@ -16,17 +17,7 @@ export function useNavGuard(hasNavigationGuard) {
         if (pendingVisit.value) {
             isSkippingGuard.value = true;
 
-            const { href } = pendingVisit.value.url;
-            const { method, data, headers, replace, preserveState, preserveScroll } = pendingVisit.value;
-
-            router.visit(href, {
-                method,
-                data,
-                headers,
-                replace,
-                preserveState,
-                preserveScroll,
-            });
+            router.push(pendingVisit.value.fullPath);
 
             pendingVisit.value = null;
         }
@@ -40,8 +31,7 @@ export function useNavGuard(hasNavigationGuard) {
     };
 
     onMounted(() => {
-        // Blocks browser unloads and Inertia GET navigations while the form is dirty.
-        // It does not block Axios requests, and it does not show the custom modal for non-Inertia navigations.
+        // Blocks browser unloads and Vue Router navigations while the form is dirty.
 
         const handleBeforeUnload = (event) => {
             if (hasNavigationGuard.value) {
@@ -52,22 +42,20 @@ export function useNavGuard(hasNavigationGuard) {
 
         window.addEventListener('beforeunload', handleBeforeUnload);
 
-        const unsubscribe = router.on('before', (event) => {
-            // Since Axios, rather than Inertia, is used for POST/DELETE submissions, this line is purely defensive.
-            if (isSkippingGuard.value  || event.detail.visit.method !== 'get') {
+        const removeGuard = router.beforeEach((to) => {
+            if (isSkippingGuard.value) {
                 return;
             }
 
             if (hasNavigationGuard.value) {
-                event.preventDefault();
                 showAlert.value = true;
-                pendingVisit.value = event.detail.visit;
+                pendingVisit.value = to;
                 return false;
             }
         });
 
         onUnmounted(() => {
-            unsubscribe();
+            removeGuard();
             window.removeEventListener('beforeunload', handleBeforeUnload);
         });
     });

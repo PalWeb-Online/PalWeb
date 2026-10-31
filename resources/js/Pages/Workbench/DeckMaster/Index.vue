@@ -1,20 +1,20 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from "vue";
-import Layout from "../../../Shared/Layout.vue";
-import DeckFlashcard from "../../../components/DeckFlashcard.vue";
-import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
-import AppTip from "../../../components/AppTip.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import QuizzerWindow from "./UI/QuizzerWindow.vue";
-import ScoreStats from "../../../components/ScoreStats.vue";
-import {useDeckStudyStore} from "./Stores/DeckStudyStore.js";
-import ReviewProgress from "../CardDealer/UI/ReviewProgress.vue";
+import {onMounted, ref} from 'vue';
+import DeckFlashcard from '../../../components/DeckFlashcard.vue';
+import {useRouter} from 'vue-router';
+import AppTip from '../../../components/AppTip.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
+import QuizzerWindow from './UI/QuizzerWindow.vue';
+import ScoreStats from '../../../components/ScoreStats.vue';
+import ReviewProgress from '../CardDealer/UI/ReviewProgress.vue';
 
-const DeckStudyStore = useDeckStudyStore();
+const router = useRouter();
 
 const props = defineProps({
-    mode: {type: String, default: 'build'},
+    mode: {
+        type: String,
+        default: 'build',
+    },
 });
 
 const mode = ref(props.mode);
@@ -24,10 +24,9 @@ const collapsed = ref(true);
 
 const toggleMode = async () => {
     selectedDeck.value = null;
-    DeckStudyStore.reset();
     mode.value = mode.value === 'build' ? 'study' : 'build';
     await fetchDecks(mode.value);
-}
+};
 
 const isLoading = ref(false);
 
@@ -36,64 +35,51 @@ const fetchDecks = async (mode) => {
     decks.value = [];
 
     try {
-        const response = await axios.get(route('deck-master.get-decks'), {
-            params: {mode}
+        const response = await axios.get('/api/deck-master/decks', {
+            params: { mode },
         });
 
         decks.value = response.data.decks;
 
     } catch (error) {
-        console.error("Failed to fetch decks", error);
+        console.error('Failed to fetch decks', error);
     }
 
     isLoading.value = false;
 };
 
 const toggleSelectDeck = (index) => {
-    if (mode.value === 'build') {
-        selectedDeck.value =
-            selectedDeck.value?.id === decks.value[index].id
-                ? null
-                : decks.value[index];
-    } else {
-        DeckStudyStore.data.deck =
-            DeckStudyStore.data.deck?.id === decks.value[index].id
-                ? null
-                : decks.value[index];
-    }
+    selectedDeck.value =
+        selectedDeck.value?.id === decks.value[index].id
+            ? null
+            : decks.value[index];
 };
 
 const toBuild = () => {
     selectedDeck.value?.id
-        ? router.get(route('deck-master.build', selectedDeck.value?.id))
-        : router.get(route('deck-master.build'))
+        ? router.push({
+            name: 'deck-master.build',
+            params: { deck: selectedDeck.value?.id },
+        })
+        : router.push({ name: 'deck-master.build' });
 };
 
 const toStudy = () => {
-    if (DeckStudyStore.data.deck.id) {
-        router.get(route('deck-master.study', DeckStudyStore.data.deck.id));
+    if (selectedDeck.value?.id) {
+        router.push({
+            name: 'deck-master.study',
+            params: { deck: selectedDeck.value.id },
+        });
     }
 };
 
 onMounted(async () => {
     await fetchDecks(props.mode);
     selectedDeck.value = props.deck;
-
-    DeckStudyStore.reset();
-    DeckStudyStore.data.step = 'select';
-});
-
-onBeforeUnmount(() => {
-    DeckStudyStore.reset();
-});
-
-defineOptions({
-    layout: Layout
 });
 </script>
 
 <template>
-    <Head title="Deck Master"/>
     <div id="app-head">
         <h1>{{ $t('pages.deck-master.title') }}</h1>
         <div @click="toggleMode" class="app-mode-toggle" :class="mode">
@@ -104,24 +90,24 @@ defineOptions({
     </div>
 
     <div id="app-body" :class="{ 'dm-mode-study': mode === 'study' }">
-        <div id="dm-select">
-            <div class="deck-item-grid-wrapper">
+        <div class="deck-item-grid-wrapper">
+            <LoadingSpinner v-if="isLoading"/>
+            <template v-else>
                 <button v-if="mode === 'build'" class="material-symbols-rounded" @click="toBuild">
                     {{ selectedDeck ? 'edit' : 'add' }}
                 </button>
                 <button v-else-if="mode === 'study'" class="material-symbols-rounded" @click="collapsed = !collapsed">
                     {{ !collapsed ? 'collapse_all' : 'expand_all' }}
                 </button>
-
-                <div v-if="!isLoading && decks.length" class="deck-item-grid"
+                <div v-if="decks.length" class="deck-item-grid"
                      :class="{ collapsed: mode === 'study' && collapsed }">
                     <DeckFlashcard v-for="(deck, index) in decks" :key="deck.id" :model="deck"
                                    :disabled="mode === 'study' && !deck.terms.length"
-                                   :active="selectedDeck?.id === deck.id || DeckStudyStore.data.deck?.id === deck.id"
+                                   :active="selectedDeck?.id === deck.id"
                                    @flip="toggleSelectDeck(index)"
                     />
                 </div>
-                <div v-else-if="!isLoading && !decks.length" class="deck-item-grid">
+                <div v-else-if="!decks.length" class="deck-item-grid">
                     <AppTip>
                         <p v-if="mode === 'build'">
                             {{ $t('pages.deck-master.messages.no-created-decks') }}
@@ -131,19 +117,16 @@ defineOptions({
                         </p>
                     </AppTip>
                 </div>
-                <div v-show="isLoading" class="deck-item-grid">
-                    <LoadingSpinner/>
-                </div>
-            </div>
+            </template>
         </div>
 
-        <QuizzerWindow v-if="mode === 'study'">
+        <QuizzerWindow v-if="mode === 'study'" :deck="selectedDeck" step="select">
             <ReviewProgress
-                :cards="DeckStudyStore.data.deck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
-                :terms_count="DeckStudyStore.data.deck?.terms.length ?? 0"
+                :cards="selectedDeck?.terms.filter(term => term.card).flatMap(term => term.card) ?? []"
+                :terms_count="selectedDeck?.terms.length ?? 0"
             />
-            <ScoreStats :model="DeckStudyStore.data.deck"/>
-            <div v-if="DeckStudyStore.data.deck" class="window-footer">
+            <ScoreStats :model="selectedDeck"/>
+            <div v-if="selectedDeck" class="window-footer">
                 <button @click="toStudy">
                     {{ $t('pages.deck-master.select-deck') }}
                 </button>

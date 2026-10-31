@@ -1,5 +1,4 @@
 <script setup>
-import {route} from 'ziggy-js';
 import {computed, watch} from "vue";
 import {useUserStore} from "../stores/UserStore.js";
 import {useTooltip} from "../composables/useTooltip.js";
@@ -137,18 +136,28 @@ const trendLinePoints = computed(() => {
                         <div class="score-stats-graph-item" v-for="(s, i) in graphScores" :key="i"
                              :style="{ height: `${s.score * 100}%` }"
                         >
-                            <Link
-                                :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id, score: s.id })"
+                            <RouterLink
+                                :to="{
+                                    name: 'scores.history',
+                                    params: {
+                                        scorable_type: model.model_class,
+                                        scorable_id: model.id,
+                                    },
+                                    query: {score: s.id},
+                                }"
                                 class="interact-button"
                                 @mousemove="showTooltip(s, $event)"
                                 @mouseleave="hideTooltip()"
-                                preserve-scroll preserve-state
-                            ></Link>
+
+                            ></RouterLink>
                         </div>
 
                         <div v-if="isVisible" :style="tooltipStyle" ref="tooltip" class="data-tooltip">
-                            <div style="text-transform: capitalize">
-                                {{ $t(`components.score.quiz.types.${tooltipData.settings.quizType}`) }}
+                            <div style="text-transform: capitalize">{{
+                                    tooltipData.scorable_type === 'deck'
+                                        ? $t(`components.score.quiz.types.${tooltipData.settings.quizType}`)
+                                        : $t('activity.key')
+                                }}
                             </div>
                             <div>{{ formatter.format(tooltipData.score) }}
                                 <span style="font-size: 1.2rem">
@@ -175,9 +184,15 @@ const trendLinePoints = computed(() => {
                 </div>
             </div>
         </div>
-        <Link v-if="model?.stats && UserStore.isStudent" :href="route('scores.history', { scorable_type: model.model_class, scorable_id: model.id })">
+        <RouterLink v-if="model?.stats && UserStore.isStudent" :to="{
+            name: 'scores.history',
+            params: {
+                scorable_type: model.model_class,
+                scorable_id: model.id
+            }
+        }">
             {{ $t('components.score.history') }}
-        </Link>
+        </RouterLink>
     </div>
 </template>
 

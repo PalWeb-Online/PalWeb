@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
-import {computed, ref} from 'vue';
-import {route} from 'ziggy-js';
+import {computed, ref, watch} from 'vue';
 import {useUserStore} from "./UserStore.js";
 
 export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
@@ -15,6 +14,7 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
     const currentLesson = computed(() => academyState.value?.current_lesson ?? null);
     const lessonProgress = computed(() => academyState.value?.lesson_progress);
     const unlockedLessons = computed(() => academyState.value?.unlocked_lessons ?? UserStore.user?.unlocked_lessons ?? []);
+    const stateVersion = ref(0);
 
     const idsMatch = (left, right) => String(left) === String(right);
 
@@ -28,6 +28,14 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
 
     const hasCurrentStudyPlan = () => studyPlan.value?.date === today();
 
+    const resetState = () => {
+        stateVersion.value += 1;
+        academyState.value = null;
+        fetchPromise.value = null;
+        isLoading.value = false;
+        hasError.value = false;
+    };
+
     const fetchAcademyState = async ({force = false} = {}) => {
         if (fetchPromise.value) {
             return fetchPromise.value;
@@ -40,22 +48,36 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
         isLoading.value = true;
         hasError.value = false;
 
-        fetchPromise.value = axios.get(route('api.academy.state'))
+        const requestVersion = stateVersion.value;
+
+        const requestPromise = axios.get('/api/academy/state')
             .then(({data}) => {
+                if (requestVersion !== stateVersion.value) {
+                    return academyState.value;
+                }
+
                 academyState.value = data;
 
                 return data;
             })
             .catch((error) => {
+                if (requestVersion !== stateVersion.value) {
+                    return academyState.value;
+                }
+
                 hasError.value = true;
                 console.error('Unable to load Academy state:', error);
 
                 throw error;
             })
             .finally(() => {
-                isLoading.value = false;
-                fetchPromise.value = null;
+                if (fetchPromise.value === requestPromise) {
+                    isLoading.value = false;
+                    fetchPromise.value = null;
+                }
             });
+
+        fetchPromise.value = requestPromise;
 
         return fetchPromise.value;
     };
@@ -75,6 +97,15 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
         return lessonProgress.value?.[lessonId]?.completed ?? fallback;
     };
 
+    watch(
+        () => UserStore.user?.id,
+        (newId, oldId) => {
+            if (newId !== oldId) {
+                resetState();
+            }
+        }
+    );
+
     return {
         studyPlan,
         currentLesson,
@@ -84,6 +115,7 @@ export const useAcademyStateStore = defineStore('AcademyStateStore', () => {
         hasError,
         ensureState,
         refreshState,
+        resetState,
         isCurrentLesson,
         hasUnlockedLesson,
         isCompletedLesson,

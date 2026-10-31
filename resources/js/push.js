@@ -1,5 +1,3 @@
-import {route} from 'ziggy-js';
-
 export async function enableWebPush() {
     if (!('serviceWorker' in navigator)) {
         throw new Error('Service workers are not supported in this browser.');
@@ -28,7 +26,7 @@ export async function enableWebPush() {
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
     });
 
-    const response = await fetch(route('push-subscriptions.store'), {
+    const response = await fetch('/api/push-subscriptions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -65,7 +63,7 @@ export async function disableWebPush() {
         return {message: 'No active push subscription found.'};
     }
 
-    const response = await fetch(route('push-subscriptions.destroy'), {
+    const response = await fetch('/api/push-subscriptions', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

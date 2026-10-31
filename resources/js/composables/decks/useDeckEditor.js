@@ -1,18 +1,18 @@
 import {computed} from "vue";
-import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 import {useDeckLoader} from "./useDeckLoader.js";
 import {useResourceEditor} from "../resources/useResourceEditor.js";
 import {useUserStore} from "../../stores/UserStore.js";
-import {useNotificationStore} from "../../stores/NotificationStore.js";
+import {useNotifier} from "../useNotifier.js";
 import {useI18n} from "vue-i18n";
 
 export function useDeckEditor({
-                                  deckId = null,
-                              } = {}) {
+                              deckId = null,
+                          } = {}) {
     const {t} = useI18n();
+    const router = useRouter();
     const deckLoader = useDeckLoader();
-    const NotificationStore = useNotificationStore();
+    const Notifier = useNotifier();
 
     const UserStore = useUserStore();
     const author = computed(() => ({
@@ -55,10 +55,9 @@ export function useDeckEditor({
     const redirectToEditRoute = (deck = null) => {
         if (deckId.value || !deck?.id) return;
 
-        router.visit(route('deck-master.build', deck.id), {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
+        router.replace({
+            name: 'deck-master.build',
+            params: {deck: deck.id},
         });
     };
 
@@ -75,9 +74,7 @@ export function useDeckEditor({
         populateForm,
         extractSavedModel: (response) => response.data.deck ?? response.data.data ?? null,
         getLoadIdentifier: () => deckId.value,
-        fetchModel: (identifier) => deckLoader.fetchDeck(identifier, {
-            include: 'edit',
-        }),
+        fetchModel: deckLoader.fetchEditDeck,
         resetModel: deckLoader.setDeck,
         label: 'deck',
         routeBase: 'decks',
@@ -114,10 +111,13 @@ export function useDeckEditor({
         });
 
         updatePosition();
-        NotificationStore.addNotification(t('forms.notifications.model-added', {
-            model: t('actions.models.term'),
-            target: t('actions.models.deck'),
-        }));
+        Notifier.notify({
+            key: 'forms.notifications.model-added',
+            params: {
+                model: t('actions.models.term'),
+                target: t('actions.models.deck'),
+            },
+        });
     };
 
     const removeTerm = (index) => {

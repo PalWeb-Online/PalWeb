@@ -1,18 +1,16 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
 import CommentItem from "../../components/CommentItem.vue";
+import {onMounted, ref} from "vue";
 
-defineOptions({
-    layout: Layout
-})
+const feedbackComments = ref([]);
 
-defineProps({
-    feedbackComments: Array,
-})
+onMounted(async () => {
+    const {data} = await axios.get('/api/feedback');
+    feedbackComments.value = data.feedbackComments?.data ?? data.feedbackComments ?? [];
+});
 </script>
 
 <template>
-    <Head title="to-Do List"/>
     <div id="app-head">
         <h1>Feedback</h1>
     </div>

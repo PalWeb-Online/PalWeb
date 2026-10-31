@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {shuffle} from "lodash";
 import {useExerciseBlock} from "../../../composables/useExerciseBlock.js";
 import ExerciseItemPrompts from "./ExerciseItemPrompts.vue";
@@ -11,7 +11,8 @@ const props = defineProps({
 });
 
 const {
-    ActivitySession,
+    isViewingResults,
+    getExerciseById,
     processedItems,
 } = useExerciseBlock(props);
 
@@ -31,8 +32,8 @@ onMounted(async () => {
     if (props.block.exerciseType === 'match') {
         props.block.items.forEach(item => {
             matchColumns[item.id] = {
-                starts: !ActivitySession.isViewingResults ? shuffle(item.pairs.map(p => p.start)) : item.pairs.map(p => p.start),
-                ends: !ActivitySession.isViewingResults ? shuffle(item.pairs.map(p => p.end)) : item.pairs.map(p => p.end),
+                starts: !isViewingResults.value ? shuffle(item.pairs.map(p => p.start)) : item.pairs.map(p => p.start),
+                ends: !isViewingResults.value ? shuffle(item.pairs.map(p => p.end)) : item.pairs.map(p => p.end),
             };
         });
     }
@@ -44,6 +45,9 @@ onMounted(async () => {
     if (blockRef.value) {
         observer.observe(blockRef.value);
     }
+
+    await nextTick();
+    updateLines();
 });
 
 onUnmounted(() => {
@@ -63,9 +67,9 @@ const updateLines = () => {
 
         const gridRect = gridEl.getBoundingClientRect();
 
-        const response = ActivitySession.isViewingResults
+        const response = isViewingResults.value
             ? (ex.response || [])
-            : (ActivitySession.getExerciseById(ex.id)?.response || []);
+            : (getExerciseById(ex.id)?.response || []);
 
         const getCoords = (startVal, endVal) => {
             const startEl = gridEl.querySelector(`[data-match-val="${ex.id}-start-${startVal}"]`);
@@ -88,7 +92,7 @@ const updateLines = () => {
             if (!coords) return;
 
             let status = 'committed';
-            if (ActivitySession.isViewingResults) {
+            if (isViewingResults.value) {
                 const isCorrect = ex.pairs.some(p => p.start === pair.start && p.end === pair.end);
                 status = isCorrect ? 'correct' : 'incorrect';
             }
@@ -96,7 +100,7 @@ const updateLines = () => {
             newLines.push({...coords, status, itemId: ex.id});
         });
 
-        if (ActivitySession.isViewingResults) {
+        if (isViewingResults.value) {
             ex.pairs.forEach(correctPair => {
                 const wasFound = response.some(r => r.start === correctPair.start && r.end === correctPair.end);
 
@@ -118,7 +122,9 @@ const updateLines = () => {
 };
 
 const clearMatch = (itemId, type, value) => {
-    const exercise = ActivitySession.getExerciseById(itemId);
+    if (isViewingResults.value) return;
+
+    const exercise = getExerciseById(itemId);
     if (!exercise) return;
 
     const existingPairIndex = exercise.response.findIndex(p => p[type] === value);
@@ -130,7 +136,9 @@ const clearMatch = (itemId, type, value) => {
 };
 
 const handleMatchClick = (itemId, type, value) => {
-    const exercise = ActivitySession.getExerciseById(itemId);
+    if (isViewingResults.value) return;
+
+    const exercise = getExerciseById(itemId);
     if (!exercise) return;
 
     if (exercise.response.some(p => p[type] === value)) {
@@ -176,7 +184,7 @@ const getMatchState = (itemId, type, value) => {
     const item = props.block.items.find(i => i.id === itemId);
     if (!item) return 'none';
 
-    if (ActivitySession.isViewingResults) {
+    if (isViewingResults.value) {
         const isCorrect = item.pairs.some(p => {
             const isMatch = (type === 'start') ? p.start === value : p.end === value;
             return isMatch && p.correct;
@@ -185,7 +193,7 @@ const getMatchState = (itemId, type, value) => {
         return isCorrect ? 'correct' : 'incorrect';
     }
 
-    const exercise = ActivitySession.getExerciseById(itemId);
+    const exercise = getExerciseById(itemId);
     if (exercise?.response.some(p => p[type] === value)) {
         return 'committed';
     }
@@ -200,7 +208,7 @@ const getMatchState = (itemId, type, value) => {
         <ExercisesBlockPrompts :block="block"/>
         <template v-for="item in processedItems" :key="item.id">
             <div class="exercise--match" :data-item-id="item.id">
-                <ExerciseItemPrompts :exercise="item" :isViewingResults="ActivitySession.isViewingResults"/>
+                <ExerciseItemPrompts :exercise="item" :isViewingResults="isViewingResults"/>
 
                 <div class="exercise--match-grid">
                     <div class="exercise--match-column">
@@ -208,7 +216,7 @@ const getMatchState = (itemId, type, value) => {
                             <button
                                 :data-match-val="`${item.id}-start-${val}`"
                                 :class="getMatchState(item.id, 'start', val)"
-                                :disabled="ActivitySession.isViewingResults"
+                                :disabled="isViewingResults"
                                 @click="handleMatchClick(item.id, 'start', val)"
                             >{{ val }}
                             </button>
@@ -226,14 +234,14 @@ const getMatchState = (itemId, type, value) => {
                             <button
                                 :data-match-val="`${item.id}-end-${val}`"
                                 :class="getMatchState(item.id, 'end', val)"
-                                :disabled="ActivitySession.isViewingResults"
+                                :disabled="isViewingResults"
                                 @click="handleMatchClick(item.id, 'end', val)"
                             >{{ val }}
                             </button>
                         </div>
                     </div>
                 </div>
-                <AppTip v-if="ActivitySession.isViewingResults && item.tip">
+                <AppTip v-if="isViewingResults && item.tip">
                     <p>{{ item.tip }}</p>
                 </AppTip>
             </div>

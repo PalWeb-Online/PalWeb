@@ -1,8 +1,7 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useSearchStore} from '../stores/SearchStore.js';
-import {router} from '@inertiajs/vue3';
-import {route} from 'ziggy-js';
+import {useRouter} from "vue-router";
 import AppTooltip from "../components/AppTooltip.vue";
 import SearchFilters from "./SearchFilters.vue";
 import PopupWindow from "../components/Modals/PopupWindow.vue";
@@ -10,6 +9,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 import {useI18n} from "vue-i18n";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const SearchStore = useSearchStore();
 const emit = defineEmits(['close']);
@@ -68,22 +68,22 @@ const setActiveModel = (model) => {
 
 const selectModel = (model) => {
     const routes = {
-        terms: {route: 'terms.show', idField: 'slug'},
-        sentences: {route: 'sentences.show', idField: 'id'},
-        decks: {route: 'decks.show', idField: 'id'},
+        terms: {route: 'terms.show', param: 'term', idField: 'slug'},
+        sentences: {route: 'sentences.show', param: 'sentence', idField: 'id'},
+        decks: {route: 'decks.show', param: 'deck', idField: 'id'},
     };
 
     if (SearchStore.data.action === 'insert') {
         SearchStore.selectModel(model);
 
     } else if (routes[SearchStore.data.activeModel]) {
-        const {route: targetRoute, idField} = routes[SearchStore.data.activeModel];
-        const param = model[idField];
+        const {route: targetRoute, param, idField} = routes[SearchStore.data.activeModel];
 
-        router.get(route(targetRoute, param), {}, {
-            onSuccess: () => {
-                emit('close');
-            }
+        router.push({
+            name: targetRoute,
+            params: {[param]: model[idField]},
+        }).then(() => {
+            emit('close');
         });
     }
 };
@@ -212,7 +212,9 @@ watch(() => SearchStore.data.results, () => {
 
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'terms' && SearchStore.data.results.terms?.length > 0">
-            <Link class="sg-all-results" :href="route('terms.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'terms.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned,
@@ -221,29 +223,36 @@ watch(() => SearchStore.data.results, () => {
                     form: SearchStore.data.filters.form,
                     singular: SearchStore.data.filters.singular,
                     plural: SearchStore.data.filters.plural
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'sentences' && SearchStore.data.results.sentences?.length > 0">
-            <Link class="sg-all-results" :href="route('sentences.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'sentences.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
         <div class="sg-all-results"
              v-if="SearchStore.data.activeModel === 'decks' && SearchStore.data.results.decks?.length > 0">
-            <Link class="sg-all-results" :href="route('decks.index', {
+            <RouterLink class="sg-all-results" :to="{
+                name: 'decks.index',
+                query: {
                     search: SearchStore.data.filters.search,
                     match: SearchStore.data.filters.match,
                     pinned: SearchStore.data.filters.pinned
-                })">
+                }
+            }">
                 {{ $t('search.genie.see-all-results') }}
-            </Link>
+            </RouterLink>
         </div>
 
         <div class="sg-footer">
@@ -295,7 +304,7 @@ watch(() => SearchStore.data.results, () => {
     display: grid;
     gap: 0.4rem;
     overflow: auto;
-    border-block-start: 0.1rem solid var(--color-pastel-dark);
+    border-block-start: 1px solid var(--color-pastel-dark);
     padding: 1.2rem;
     scrollbar-width: thin;
 
@@ -303,7 +312,7 @@ watch(() => SearchStore.data.results, () => {
         padding-block: 1.2rem;
     }
 
-    .loading-spinner svg {
+    .loading-spinner {
         width: 4.8rem;
     }
 
@@ -340,10 +349,10 @@ watch(() => SearchStore.data.results, () => {
         text-align: center;
         color: var(--color-dark-primary);
         background: white;
-        border: 0.1rem solid var(--color-medium-primary);
+        border: 1px solid var(--color-medium-primary);
 
         &:hover {
-            border: 0.1rem solid var(--color-accent-medium);
+            border: 1px solid var(--color-accent-medium);
         }
     }
 }
@@ -355,7 +364,7 @@ watch(() => SearchStore.data.results, () => {
     color: var(--color-dark-primary);
     background: var(--color-accent-light);
     padding: 0.6rem 1.2rem;
-    border-block-start: 0.1rem solid var(--color-accent-medium);
+    border-block-start: 1px solid var(--color-accent-medium);
     font-size: 1.2rem;
     font-family: var(--mono-font);
 }

@@ -15,44 +15,36 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Throwable;
 
 class UnitController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): JsonResponse
     {
         $lessons = Lesson::where('unit_id', null)->get();
 
-        return Inertia::render('Academy/Units/Index', [
-            'section' => 'academy',
+        return response()->json([
             'units' => UnitResource::collection(Unit::all()),
             'lessons' => LessonResource::collection($lessons),
         ]);
     }
 
-    public function show(Unit $unit): \Inertia\Response
+    public function show(Unit $unit): JsonResponse
     {
         Gate::authorize('view', $unit);
-
-        return Inertia::render('Academy/Units/Show', [
-            'section' => 'academy',
-            'unitId' => $unit->id,
-        ]);
-    }
-
-    public function fetch(Request $request, Unit $unit): JsonResponse
-    {
-        Gate::authorize('view', $unit);
-
-        $includes = collect(explode(',', (string) $request->query('include')))
-            ->map(fn (string $include) => trim($include))
-            ->filter()
-            ->values();
 
         return response()->json([
             'unit' => new UnitResource($unit),
-            'lessons' => $includes->contains('show') ? LessonResource::collection($unit->lessons) : [],
+            'lessons' => LessonResource::collection($unit->lessons),
+        ]);
+    }
+
+    public function edit(Unit $unit): JsonResponse
+    {
+        Gate::authorize('view', $unit);
+
+        return response()->json([
+            'unit' => new UnitResource($unit),
         ]);
     }
 
