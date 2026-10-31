@@ -5,6 +5,7 @@ import AppTip from "../../../components/AppTip.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
 import {computed} from "vue";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const {
     collection: cards,
@@ -13,6 +14,7 @@ const {
     loading,
     currentPage,
     pageNumbers,
+    isLoadingPaginator,
     goToPage,
     updateFilter,
 } = useResourceIndex({
@@ -75,11 +77,11 @@ const hasCardFilters = computed(() => Boolean(filters.value.status || filters.va
                 </AppTip>
 
                 <template v-if="cards.data.length > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <TermItem v-for="card in cards.data" :key="card.id"
                                   :model="{ ...card.term, card: card }"
                         />
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

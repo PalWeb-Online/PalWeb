@@ -32,6 +32,12 @@ export function useSpeakerLoader() {
         },
     });
 
+    const fetchSpeakerAudios = async (speakerId, params = {}) => {
+        const response = await axios.get(`/api/speakers/${encodeURIComponent(speakerId)}`, { params });
+        audios.value = response.data.audios ?? emptyAudios();
+        return audios.value;
+    };
+
     return {
         speaker,
         speakerNotFound,
@@ -39,5 +45,6 @@ export function useSpeakerLoader() {
         audios,
         setSpeaker,
         fetchShowSpeaker,
+        fetchSpeakerAudios,
     };
 }

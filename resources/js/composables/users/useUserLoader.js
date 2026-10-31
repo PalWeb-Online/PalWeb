@@ -42,6 +42,12 @@ export function useUserLoader() {
         },
     });
 
+    const fetchUserDecks = async (username, params = {}) => {
+        const response = await axios.get(`/api/users/${encodeURIComponent(username)}`, { params });
+        decks.value = response.data.decks ?? emptyDecks();
+        return decks.value;
+    };
+
     return {
         user,
         decks,
@@ -53,5 +59,6 @@ export function useUserLoader() {
         setUser,
         fetchShowUser,
         fetchEditUser,
+        fetchUserDecks,
     };
 }

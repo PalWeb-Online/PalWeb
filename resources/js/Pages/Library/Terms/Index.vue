@@ -9,6 +9,7 @@ import {useNavigationStore} from "../../../stores/NavigationStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const UserStore = useUserStore();
 const NavigationStore = useNavigationStore();
@@ -27,6 +28,7 @@ const {
     loading,
     currentPage,
     pageNumbers,
+    isLoadingPaginator,
     goToPage,
     updateFilter,
 } = useResourceIndex({
@@ -88,9 +90,9 @@ const selectedLetter = computed(() => filters.value.letter ?? null);
                     </p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <TermItem v-for="term in terms.data" :key="term.id" :model="term"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

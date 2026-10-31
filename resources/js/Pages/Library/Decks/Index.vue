@@ -6,6 +6,7 @@ import {useUserStore} from "../../../stores/UserStore.js";
 import Paginator from "../../../Shared/Paginator.vue";
 import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import {useResourceIndex} from "../../../composables/resources/useResourceIndex.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
 
 const UserStore = useUserStore();
 
@@ -16,6 +17,7 @@ const {
     loading,
     currentPage,
     pageNumbers,
+    isLoadingPaginator,
     goToPage,
     updateFilter,
 } = useResourceIndex({
@@ -55,9 +57,9 @@ const {
                     <p v-else>{{ $t('pages.common.displaying-none', { model: $t('models.decks') }) }}</p>
                 </AppTip>
                 <template v-if="totalCount > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"

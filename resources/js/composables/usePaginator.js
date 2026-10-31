@@ -1,8 +1,9 @@
-import { ref, computed } from "vue";
+import {ref, computed} from 'vue';
 
 export function usePaginator(fetchFunction) {
     const currentPage = ref(1);
-    const lastPage    = ref(1);
+    const lastPage = ref(1);
+    const isLoadingPaginator = ref(false);
 
     const pageNumbers = computed(() => {
         const pages = [];
@@ -30,13 +31,19 @@ export function usePaginator(fetchFunction) {
         searchParams.set('page', page);
         window.history.pushState({}, '', '?' + searchParams.toString());
         fetchFunction(Object.fromEntries(searchParams.entries()));
-        window.scrollTo(0, 0);
     }
 
     function updatePagination(meta) {
         currentPage.value = meta.current_page;
-        lastPage.value    = meta.last_page;
+        lastPage.value = meta.last_page;
     }
 
-    return { currentPage, lastPage, pageNumbers, goToPage, updatePagination };
+    return {
+        currentPage,
+        lastPage,
+        pageNumbers,
+        isLoadingPaginator,
+        goToPage,
+        updatePagination,
+    };
 }

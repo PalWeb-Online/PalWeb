@@ -30,8 +30,13 @@ export function useResourceIndex({
     const loading = ref(true);
     const error = ref(null);
 
-    async function fetchIndex(params = {}) {
-        loading.value = true;
+    async function fetchIndex(params = {}, options = {}) {
+        const paginationOnly = options.paginationOnly ?? false;
+
+        if (!paginationOnly) {
+            loading.value = true;
+        }
+
         error.value = null;
 
         try {
@@ -39,14 +44,17 @@ export function useResourceIndex({
             const resource = data[resourceKey] ?? emptyCollection();
 
             collection.value = resource;
-            totalCount.value = data.totalCount ?? resource.meta?.total ?? 0;
-            filters.value = {
-                ...defaultFilters,
-                ...(data.filters ?? {}),
-            };
 
             updatePagination(resource.meta ?? emptyCollection().meta);
-            onResponse?.(data);
+
+            if (!paginationOnly) {
+                totalCount.value = data.totalCount ?? resource.meta?.total ?? 0;
+                filters.value = {
+                    ...defaultFilters,
+                    ...(data.filters ?? {}),
+                };
+                onResponse?.(data);
+            }
 
             return data;
 
@@ -56,9 +64,21 @@ export function useResourceIndex({
             return null;
 
         } finally {
-            loading.value = false;
+            if (!paginationOnly) {
+                loading.value = false;
+            }
         }
     }
+
+    const fetchPaginationPage = async (params = {}) => {
+        isLoadingPaginator.value = true;
+
+        try {
+            await fetchIndex(params, { paginationOnly: true });
+        } finally {
+            isLoadingPaginator.value = false;
+        }
+    };
 
     const {
         currentPage,
@@ -66,7 +86,8 @@ export function useResourceIndex({
         pageNumbers,
         goToPage,
         updatePagination,
-    } = usePaginator(fetchIndex);
+        isLoadingPaginator,
+    } = usePaginator(fetchPaginationPage);
 
     onMounted(() => {
         const params = queryParams();
@@ -117,6 +138,7 @@ export function useResourceIndex({
         currentPage,
         lastPage,
         pageNumbers,
+        isLoadingPaginator,
         goToPage,
         updateFilter,
     };

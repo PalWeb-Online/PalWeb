@@ -10,6 +10,7 @@ import {usePaginator} from '../../../composables/usePaginator.js';
 import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {useSpeakerViewer} from '../../../composables/speakers/useSpeakerViewer.js';
 import {useRoute} from 'vue-router';
+import PaginationPage from '../../../components/PaginationPage.vue';
 
 const UserStore = useUserStore();
 
@@ -29,12 +30,21 @@ const {
     isLoadingSpeaker,
     audios,
     reloadSpeaker,
+    fetchSpeakerAudios,
 } = useSpeakerViewer();
 
 const fetchSpeakerPage = async (params = {}) => {
-    await reloadSpeaker(props.speakerId, {
-        page: params.page ?? 1,
-    });
+    await reloadSpeaker(props.speakerId, { params });
+};
+
+const fetchAudioPage = async (params = {}) => {
+    isLoadingPaginator.value = true;
+
+    try {
+        await fetchSpeakerAudios(props.speakerId, params);
+    } finally {
+        isLoadingPaginator.value = false;
+    }
 };
 
 const {
@@ -42,7 +52,8 @@ const {
     pageNumbers,
     goToPage,
     updatePagination,
-} = usePaginator(fetchSpeakerPage);
+    isLoadingPaginator,
+} = usePaginator(fetchAudioPage);
 
 onMounted(() => fetchSpeakerPage(currentQuery()));
 
@@ -51,8 +62,15 @@ watch(() => audios.value.meta, (pagination) => {
 });
 
 watch(
-    () => [props.speakerId, route.query],
-    () => reloadSpeaker(currentQuery()),
+    () => [props.speakerId, route.query.page],
+    ([speakerId], [oldSpeakerId]) => {
+        if (speakerId !== oldSpeakerId) {
+            fetchSpeakerPage(currentQuery());
+            return;
+        }
+
+        fetchAudioPage(currentQuery());
+    },
 );
 </script>
 
@@ -77,14 +95,14 @@ watch(
             </UserItem>
             <div class="window-section-head"><h2>{{ $t('models.audios') }}</h2></div>
             <template v-if="audios.data.length > 0">
-                <div class="model-list index-list">
+                <PaginationPage :is-loading="isLoadingPaginator">
                     <PronunciationItem
                         v-for="audio in audios.data"
                         :key="audio.id"
                         :model="audio.pronunciation"
                         :audio="audio"
                     />
-                </div>
+                </PaginationPage>
                 <Paginator
                     :pageNumbers="pageNumbers"
                     :currentPage="currentPage"

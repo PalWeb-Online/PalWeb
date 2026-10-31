@@ -15,6 +15,7 @@ import {useUserViewer} from '../../../composables/users/useUserViewer.js';
 import {useRoute} from 'vue-router';
 import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {usePaginator} from '../../../composables/usePaginator.js';
+import PaginationPage from '../../../components/PaginationPage.vue';
 
 const UserStore = useUserStore();
 
@@ -37,6 +38,7 @@ const {
     userNotFound,
     isLoadingUser,
     reloadUser,
+    fetchUserDecks,
 } = useUserViewer();
 
 const { isStudent } = useUser(user);
@@ -56,22 +58,41 @@ const fetchUserPage = async (params = {}) => {
     await reloadUser(props.userUsername, { params });
 };
 
+const fetchDeckPage = async (params = {}) => {
+    isLoadingPaginator.value = true;
+
+    try {
+        await fetchUserDecks(props.userUsername, {
+            ...params,
+            sort: filters.value.sort,
+        });
+    } finally {
+        isLoadingPaginator.value = false;
+    }
+};
+
 const {
     currentPage,
     pageNumbers,
     goToPage,
     updatePagination,
-} = usePaginator(fetchUserPage);
+    isLoadingPaginator,
+} = usePaginator(fetchDeckPage);
 
 onMounted(() => fetchUserPage(currentQuery()));
 
-watch(() => decks.value.meta, (pagination) => {
-    updatePagination(pagination);
-});
+watch(() => decks.value.meta, updatePagination);
 
 watch(
-    () => [props.userUsername, route.query],
-    () => fetchUserPage(currentQuery()),
+    () => [props.userUsername, route.query.page, route.query.sort],
+    ([username], [oldUsername]) => {
+        if (username !== oldUsername) {
+            fetchUserPage(currentQuery());
+            return;
+        }
+
+        fetchDeckPage({ ...route.query });
+    },
 );
 </script>
 
@@ -159,9 +180,9 @@ watch(
                     </div>
                 </div>
                 <template v-if="decks.data.length > 0">
-                    <div class="model-list index-list">
+                    <PaginationPage :is-loading="isLoadingPaginator">
                         <DeckItem v-for="deck in decks.data" :key="deck.id" :model="deck"/>
-                    </div>
+                    </PaginationPage>
                     <Paginator
                         :pageNumbers="pageNumbers"
                         :currentPage="currentPage"
