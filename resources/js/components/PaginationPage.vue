@@ -9,7 +9,7 @@ defineProps({
 <template>
     <div class="pagination-page">
         <LoadingSpinner v-if="isLoading"/>
-        <div class="model-list index-list" :class="{ 'is-loading': isLoading }">
+        <div class="model-list" :class="{ 'is-loading': isLoading }">
             <slot/>
         </div>
     </div>

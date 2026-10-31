@@ -86,7 +86,9 @@ onMounted(() => {
     }
 
     & > button {
+        font-size: 1.6rem;
         text-align: center;
+        color: var(--color-dark-primary);
         background: var(--color-pastel-medium);
         padding-block-end: 0.2rem;
 

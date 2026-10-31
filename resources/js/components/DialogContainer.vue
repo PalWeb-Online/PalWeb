@@ -71,7 +71,7 @@ const {
             </div>
             <ZatuneLoading v-if="isLoadingTerms"
                            message="Please wait for a moment while we load the data for all the Terms in every Sentence."/>
-            <div class="model-list index-list">
+            <div class="model-list">
                 <template v-for="sentence in dialog.sentences">
                     <SentenceItem :id="'position-' + sentence.position" :model="sentence" speaker
                                   :showTerms="showTerms"

@@ -70,7 +70,7 @@ const {sentence, isLoading} = useSentence(props);
             <div class="window-section-head">
                 <h2>{{ $t('components.common.sections.terms') }}</h2>
             </div>
-            <div class="model-list index-list">
+            <div class="model-list">
                 <TermItem v-for="term in sentence.terms.filter(t => t.id)"
                           :key="term.id"
                           :model="term"

@@ -25,7 +25,7 @@ defineProps({
         <div class="window-section-head">
             <h2>{{ $t('components.common.sections.terms') }}</h2>
         </div>
-        <div v-if="Object.keys(root.terms).length > 0" class="model-list index-list">
+        <div v-if="Object.keys(root.terms).length > 0" class="model-list">
             <template v-for="term in root.terms" :key="term.id">
                 <TermItem :model="term"/>
             </template>

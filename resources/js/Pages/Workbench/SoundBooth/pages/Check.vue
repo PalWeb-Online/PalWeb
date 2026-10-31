@@ -26,7 +26,7 @@ const audios = computed(() =>
 
     <div class="rw-page__check">
         <section>
-            <div class="model-list index-list">
+            <div class="model-list">
                 <PronunciationItem v-for="audio in audios" :model="audio.pronunciation" :audio="audio"/>
             </div>
         </section>

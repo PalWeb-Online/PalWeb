@@ -45,7 +45,7 @@ watch(() => DeckStudySession.settings.quizType, (newVal) => {
                 <h2>{{ $t('components.common.sections.terms') }}</h2>
             </template>
             <template #content>
-                <div class="model-list index-list">
+                <div class="model-list">
                     <TermItem v-for="term in DeckStudySession.data.deck?.terms" :model="term"
                               :glossId="term.deckPivot.gloss_id"/>
                 </div>

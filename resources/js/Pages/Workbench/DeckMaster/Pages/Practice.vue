@@ -142,7 +142,7 @@ watch(() => DeckStudySession.data.terms, (newVal) => {
                 <h2>{{ $t('actions.models.term') }}</h2>
             </template>
             <template #content>
-                <div class="model-list index-list">
+                <div class="model-list">
                     <TermItem :model="cards[currentSlideIndex]"
                               :glossId="cards[currentSlideIndex].deckPivot.gloss_id ?? null"/>
                 </div>

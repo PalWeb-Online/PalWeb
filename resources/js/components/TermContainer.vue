@@ -420,7 +420,7 @@ const etymology = computed(() => {
                         </div>
                     </template>
                     <template #sentences>
-                        <div v-if="gloss.sentences.length > 0" class="model-list index-list">
+                        <div v-if="gloss.sentences.length > 0" class="model-list">
                             <SentenceItem v-if="showSentences.get(gloss.id)" v-for="sentence in gloss.sentences"
                                           :model="sentence"
                                           :currentTerm="term.id" dialog/>
@@ -478,7 +478,7 @@ const etymology = computed(() => {
 
             <div v-if="term.decks.length > 0" class="term-container-decks">
                 <div class="featured-title m">{{ $t('components.term.featured-in') }}</div>
-                <div class="model-list index-list">
+                <div class="model-list">
                     <DeckItem v-for="deck in term.decks" :model="deck"/>
                 </div>
             </div>
@@ -505,8 +505,10 @@ const etymology = computed(() => {
 .term-pronunciation {
     display: grid;
 
-    .model-list {
-        padding: 1.6rem;
+    @media (width >= 960px) {
+        .model-list {
+            padding: 1.6rem;
+        }
     }
 
     & > button {

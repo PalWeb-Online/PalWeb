@@ -181,10 +181,9 @@ watch(() => props.sentenceId, async () => {
                     circumstances.)</p>
             </AppTip>
             <draggable :list="form.terms" itemKey="sentencePivot.uuid" handle=".handle" @end="updatePosition()"
-                       class="model-list index-list draggable">
+                       class="model-list draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
-                        <!--                        todo: fix button appearance-->
                         <div class="model-item-container term-item-container">
                             <div class="model-item term-item">
                                 <button class="delete material-symbols-rounded"

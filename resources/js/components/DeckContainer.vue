@@ -95,7 +95,7 @@ const {deck, isLoading, isLoadingTerms, loadTermsError} = useDeck(props, {loadTe
                 <p>{{ $t('components.deck.terms.load-error') }}</p>
             </AppTip>
             <template v-else-if="deck.terms.length > 0">
-                <div class="model-list index-list">
+                <div class="model-list">
                     <TermItem v-for="term in deck.terms"
                               :key="term.id"
                               :model="term"

@@ -141,7 +141,7 @@ watch(() => props.dialogId, async () => {
             <div class="window-section-head">
                 <h2>{{ $t('components.dialog.sections.transcript') }}</h2>
             </div>
-            <draggable class="model-list index-list draggable" :list="form.sentences" itemKey="id" handle=".handle"
+            <draggable class="model-list draggable" :list="form.sentences" itemKey="id" handle=".handle"
                        @end="updatePosition()">
                 <template #item="{ element, index }">
                     <div class="model-item-container sentence-item-container">

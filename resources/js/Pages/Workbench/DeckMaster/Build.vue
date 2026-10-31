@@ -154,7 +154,7 @@ watch(() => props.deckId, async () => {
             </div>
             <draggable :list="form.terms" itemKey="deckTermKey" handle=".handle"
                        @end="updatePosition()"
-                       class="model-list index-list draggable">
+                       class="model-list draggable">
                 <template #item="{ element, index }">
                     <div class="draggable-item">
                         <div class="model-item-container term-item-container">

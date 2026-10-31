@@ -68,7 +68,7 @@ onMounted(async () => {
 
         <template v-else-if="activeTab === 'relatives' && tabData.relatives">
             <h1>Unlinked Reciprocal Relatives</h1>
-            <div v-if="tabData.relatives.unlinkedReciprocalTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.unlinkedReciprocalTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.unlinkedReciprocalTerms"
                           :key="`unlinked-${term.id}`"
                           :model="term"/>
@@ -76,7 +76,7 @@ onMounted(async () => {
             <div v-else class="empty-state">No terms have relative relationships missing reciprocal links.</div>
 
             <h1>Missing Relative Glosses</h1>
-            <div v-if="tabData.relatives.missingGlossTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.missingGlossTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.missingGlossTerms"
                           :key="`missing-gloss-${term.id}`"
                           :model="term"/>
@@ -84,7 +84,7 @@ onMounted(async () => {
             <div v-else class="empty-state">No gloss-requiring relative relationships are missing glosses.</div>
 
             <h1>Missing Relative Types</h1>
-            <div v-if="tabData.relatives.missingTypeTerms.length" class="model-list index-list">
+            <div v-if="tabData.relatives.missingTypeTerms.length" class="model-list">
                 <TermItem v-for="term in tabData.relatives.missingTypeTerms"
                           :key="`missing-type-${term.id}`"
                           :model="term"/>
