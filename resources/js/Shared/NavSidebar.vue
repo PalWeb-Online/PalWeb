@@ -461,6 +461,7 @@ onMounted(() => {
 }
 
 .nav-sidebar-head {
+    --inset-top: env(safe-area-inset-top, 0);
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -469,7 +470,8 @@ onMounted(() => {
     font-family: var(--mono-font);
     font-size: 1.6rem;
     font-weight: 700;
-    height: 3em;
+    height: calc(3em + var(--inset-top));
+    padding-top: var(--inset-top);
 
     div {
         text-transform: uppercase;

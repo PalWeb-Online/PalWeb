@@ -11,11 +11,6 @@ body {
     background: var(--color-dark-primary);
 }
 
-body.capacitor-app {
-    padding-top: env(safe-area-inset-top, 0px);
-    box-sizing: border-box;
-}
-
 #app-container {
     &.library, &.community, &.wiki, &.academy {
         #app-head {

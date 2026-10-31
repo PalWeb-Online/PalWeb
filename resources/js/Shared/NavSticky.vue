@@ -146,6 +146,8 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .nav-sticky {
+    --inset-top: env(safe-area-inset-top, 0);
+
     position: sticky;
     top: 0;
     display: flex;
@@ -153,7 +155,8 @@ onBeforeUnmount(() => {
     color: white;
     background: var(--color-medium-secondary);
     width: 100%;
-    height: 3em;
+    height: calc(3em + var(--inset-top));
+    padding-top: var(--inset-top);
     font-size: 1.6rem;
     z-index: 1;
     user-select: none;
