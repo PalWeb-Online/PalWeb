@@ -10,7 +10,7 @@ import TermItem from '../../../components/TermItem.vue';
 import AppButton from '../../../components/AppButton.vue';
 import {useAcademyStateStore} from '../../../stores/AcademyStateStore.js';
 import TermFlashcard from '../../../components/TermFlashcard.vue';
-import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const Notifier = useNotifier();
 const AcademyStateStore = useAcademyStateStore();
@@ -233,262 +233,263 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <LoadingSpinner v-if="isLoading"/>
-    <div v-else id="app-body">
-        <div class="window-container">
-            <div class="window-header">
-                <RouterLink :to="{
+    <LoadingWrapper :is-loading="isLoading">
+        <div id="app-body">
+            <div class="window-container">
+                <div class="window-header">
+                    <RouterLink :to="{
                     name: 'card-dealer.index',
                     query: {
                         scope: options.scope,
                         deck: options.deckId
                     }
                 }" class="material-symbols-rounded">
-                    arrow_back
-                </RouterLink>
-                <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>
-            </div>
-            <div class="window-section-head">
-                <h1>{{ $t('pages.cards.review.title') }}</h1>
-                <PopupWindow title="Card Dealer (Review)">
-                    <div class="h1">Tutorial</div>
-                    <p>Welcome to the Review area of the Card Dealer. Here, you will be shown <b>Owned</b> Cards
-                        that
-                        are due for review or <b>New</b> Cards to begin learning. All you have to do is look at the
-                        Card
-                        & see if you know the meaning of the Term. Once you're ready to check yourself, flip the
-                        Card &
-                        rate your knowledge of the Term.</p>
-                    <p>Cards are processed differently depending on whether they're in the Review or Learning
-                        buckets.</p>
-                    <div class="h2">Learning Cards</div>
-                    <p>When a Card is created, it automatically starts off in the Learning bucket. At this stage, it
-                        must pass a series of <b>Steps</b> before it can "graduate" to an Owned Card. Starting from
-                        Step
-                        0, every time you rate the Card "Know" you increase the Step by 1 (rating it "Easy" always
-                        graduates the Card, skipping the Steps entirely); rating the Card "Barely" keeps you on the
-                        same
-                        Step, while rating it "Wrong" returns the Card to Step 0. Essentially, the Steps are the
-                        minimum
-                        number of times you must see the Card & grade it "Know" before graduating the Card. You can
-                        adjust the number of Learning Steps in the Card Dealer dashboard; the default is 3.</p>
-                    <div class="h2">Review Cards</div>
-                    <p>Once you're in the groove, most Cards you see in your review sessions will be in the Review
-                        bucket. Unlike Learning Cards, these only require one grading Action to process. As for the
-                        grading options, they will determine how soon the Card will be due again; higher ratings,
-                        naturally, will make the Card be due further away in the future. However, if the Card is
-                        ever
-                        graded as "Wrong", then it returns to the Learning bucket & must pass through the Learning
-                        Steps
-                        again to graduate to the Review bucket. Note that none of your review stats for an Owned
-                        Card
-                        will ever be lost & your Mastery Score will not necessarily revert to zero.</p>
+                        arrow_back
+                    </RouterLink>
+                    <div class="window-header-url">www.palweb.app/workbench/card-dealer/review</div>
+                </div>
+                <div class="window-section-head">
+                    <h1>{{ $t('pages.cards.review.title') }}</h1>
+                    <PopupWindow title="Card Dealer (Review)">
+                        <div class="h1">Tutorial</div>
+                        <p>Welcome to the Review area of the Card Dealer. Here, you will be shown <b>Owned</b> Cards
+                            that
+                            are due for review or <b>New</b> Cards to begin learning. All you have to do is look at the
+                            Card
+                            & see if you know the meaning of the Term. Once you're ready to check yourself, flip the
+                            Card &
+                            rate your knowledge of the Term.</p>
+                        <p>Cards are processed differently depending on whether they're in the Review or Learning
+                            buckets.</p>
+                        <div class="h2">Learning Cards</div>
+                        <p>When a Card is created, it automatically starts off in the Learning bucket. At this stage, it
+                            must pass a series of <b>Steps</b> before it can "graduate" to an Owned Card. Starting from
+                            Step
+                            0, every time you rate the Card "Know" you increase the Step by 1 (rating it "Easy" always
+                            graduates the Card, skipping the Steps entirely); rating the Card "Barely" keeps you on the
+                            same
+                            Step, while rating it "Wrong" returns the Card to Step 0. Essentially, the Steps are the
+                            minimum
+                            number of times you must see the Card & grade it "Know" before graduating the Card. You can
+                            adjust the number of Learning Steps in the Card Dealer dashboard; the default is 3.</p>
+                        <div class="h2">Review Cards</div>
+                        <p>Once you're in the groove, most Cards you see in your review sessions will be in the Review
+                            bucket. Unlike Learning Cards, these only require one grading Action to process. As for the
+                            grading options, they will determine how soon the Card will be due again; higher ratings,
+                            naturally, will make the Card be due further away in the future. However, if the Card is
+                            ever
+                            graded as "Wrong", then it returns to the Learning bucket & must pass through the Learning
+                            Steps
+                            again to graduate to the Review bucket. Note that none of your review stats for an Owned
+                            Card
+                            will ever be lost & your Mastery Score will not necessarily revert to zero.</p>
 
-                    <div class="h1">Options</div>
-                    <div class="h2">Display Options</div>
-                    <ul>
-                        <li><b>Show Transcription</b> — Show Latin-script transcriptions. You may want this on more
-                            often than you think, as sometimes short vowels differentiate Terms that are otherwise
-                            spelled the same.
-                        </li>
-                    </ul>
-                    <div class="h2">Card Options</div>
-                    <p>When generating Cards within the Dictionary scope, it's inevitable that you will encounter
-                        Terms
-                        that are trivial for you if you already have some Arabic knowledge. Also, there may be
-                        certain
-                        Terms that you're completely uninterested in learning, such as potentially offensive
-                        terminology. Because of that, two options are provided to skip over these situations:</p>
-                    <ul>
-                        <li><b>Master</b> — Set very high stats for this Card so that the Mastery Level reaches
-                            100%.
-                        </li>
-                        <li><b>Suspend</b> — Set a null due date for this Card, meaning it won't be shown to you
-                            again.
-                        </li>
-                    </ul>
-                    <p>Suspended Cards are ignored by all progress metrics, so there is no penalty for suspending
-                        Cards. Also, suspended Cards do not count toward Card limits when building the review
-                        session. So, if your new Card limit is set to 10 & you generated 10 new Cards today &
-                        suspended 5 of them that you were not interested in, you will be able to generate 5 more
-                        Cards. You may manage your suspended Cards in the Card management portal & restore them at
-                        any
-                        time; restoring them will automatically make them due tomorrow.</p>
-                    <p>When you select <b>Master</b>, the Card is automatically suspended, because it is assumed
-                        that
-                        the Card is trivial to you & you aren't interested in seeing it in your review sessions. You
-                        may
-                        restore a mastered Card if you wish, but the due date will be extremely far away.</p>
-                </PopupWindow>
+                        <div class="h1">Options</div>
+                        <div class="h2">Display Options</div>
+                        <ul>
+                            <li><b>Show Transcription</b> — Show Latin-script transcriptions. You may want this on more
+                                often than you think, as sometimes short vowels differentiate Terms that are otherwise
+                                spelled the same.
+                            </li>
+                        </ul>
+                        <div class="h2">Card Options</div>
+                        <p>When generating Cards within the Dictionary scope, it's inevitable that you will encounter
+                            Terms
+                            that are trivial for you if you already have some Arabic knowledge. Also, there may be
+                            certain
+                            Terms that you're completely uninterested in learning, such as potentially offensive
+                            terminology. Because of that, two options are provided to skip over these situations:</p>
+                        <ul>
+                            <li><b>Master</b> — Set very high stats for this Card so that the Mastery Level reaches
+                                100%.
+                            </li>
+                            <li><b>Suspend</b> — Set a null due date for this Card, meaning it won't be shown to you
+                                again.
+                            </li>
+                        </ul>
+                        <p>Suspended Cards are ignored by all progress metrics, so there is no penalty for suspending
+                            Cards. Also, suspended Cards do not count toward Card limits when building the review
+                            session. So, if your new Card limit is set to 10 & you generated 10 new Cards today &
+                            suspended 5 of them that you were not interested in, you will be able to generate 5 more
+                            Cards. You may manage your suspended Cards in the Card management portal & restore them at
+                            any
+                            time; restoring them will automatically make them due tomorrow.</p>
+                        <p>When you select <b>Master</b>, the Card is automatically suspended, because it is assumed
+                            that
+                            the Card is trivial to you & you aren't interested in seeing it in your review sessions. You
+                            may
+                            restore a mastered Card if you wish, but the due date will be extremely far away.</p>
+                    </PopupWindow>
+                </div>
+                <WindowSection :visible="false">
+                    <template #title>
+                        <h2>{{ $t('pages.cards.review.sections.options') }}</h2>
+                    </template>
+                    <template #content>
+                        <div class="settings-wrapper">
+                            <ToggleSingle v-model="showTranscription"
+                                          :label="$t('components.common.options.show-transcription')"/>
+                        </div>
+                    </template>
+                </WindowSection>
+                <WindowSection :visible="false">
+                    <template #title>
+                        <h2>{{ $t('pages.cards.review.sections.card') }}</h2>
+                    </template>
+                    <template #content>
+                        <div class="model-list">
+                            <TermItem :model="queue[currentSlideIndex].term"
+                                      :glossId="queue[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
+                        </div>
+                        <div class="settings-wrapper">
+                            <AppButton @click="dismissCard('master')" :label="$t('actions.card.master')"
+                                       :disabled="currentSlideIndex === queue.length - 1"
+                            />
+                            <AppButton @click="dismissCard('suspend')" :label="$t('actions.card.suspend')"
+                                       :disabled="currentSlideIndex === queue.length - 1"
+                            />
+                        </div>
+                    </template>
+                </WindowSection>
             </div>
-            <WindowSection :visible="false">
-                <template #title>
-                    <h2>{{ $t('pages.cards.review.sections.options') }}</h2>
-                </template>
-                <template #content>
-                    <div class="settings-wrapper">
-                        <ToggleSingle v-model="showTranscription"
-                                      :label="$t('components.common.options.show-transcription')"/>
+
+            <div class="session-stats">
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" :style="progressFill"></div>
                     </div>
-                </template>
-            </WindowSection>
-            <WindowSection :visible="false">
-                <template #title>
-                    <h2>{{ $t('pages.cards.review.sections.card') }}</h2>
-                </template>
-                <template #content>
-                    <div class="model-list index-list">
-                        <TermItem :model="queue[currentSlideIndex].term"
-                                  :glossId="queue[currentSlideIndex].term.deckPivot?.gloss_id ?? null"/>
+                    <div class="progress-bar-values">
+                        <div class="featured-title s"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.processed-cards'), $event);"
+                             @mouseleave="appTooltip.hideTooltip()">
+                            {{ processedCount }}
+                        </div>
+                        <div class="featured-title l"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.session-progress'), $event);"
+                             @mouseleave="appTooltip.hideTooltip()">
+                            {{ formatter.format(processedCount / cards.length) }}
+                        </div>
+                        <div class="featured-title s"
+                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.total-cards'), $event);"
+                             @mouseleave="appTooltip.hideTooltip()">
+                            {{ cards.length }}
+                        </div>
                     </div>
-                    <div class="settings-wrapper">
-                        <AppButton @click="dismissCard('master')" :label="$t('actions.card.master')"
-                                   :disabled="currentSlideIndex === queue.length - 1"
-                        />
-                        <AppButton @click="dismissCard('suspend')" :label="$t('actions.card.suspend')"
-                                   :disabled="currentSlideIndex === queue.length - 1"
-                        />
+                </div>
+                <div class="card-buckets">
+                    <div class="bucket-wrapper">
+                        <div class="material-symbols-rounded">package_2</div>
+                        <div class="bucket-count-line"></div>
+                        <div class="bucket-count-wrapper">
+                            <div class="featured-title xs bucket-count"
+                                 @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning'), $event);"
+                                 @mouseleave="appTooltip.hideTooltip()">
+                                {{ buckets.newCards }}
+                            </div>
+                            <div class="featured-title s bucket-count"
+                                 @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning-relearning'), $event);"
+                                 @mouseleave="appTooltip.hideTooltip()">
+                                {{ buckets.learningCards }}
+                            </div>
+                            <div class="featured-title xs bucket-count"
+                                 @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-relearning'), $event);"
+                                 @mouseleave="appTooltip.hideTooltip()">
+                                {{ buckets.learningCards - buckets.newCards }}
+                            </div>
+                        </div>
+                        <div class="featured-title">{{ $t('pages.cards.review.learn') }}</div>
                     </div>
+
+                    <div class="bucket-wrapper">
+                        <div class="material-symbols-rounded">package_2</div>
+                        <div class="bucket-count-wrapper">
+                            <div class="featured-title s bucket-count"
+                                 @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-owned'), $event);"
+                                 @mouseleave="appTooltip.hideTooltip()">
+                                {{ buckets.reviewCards }}
+                            </div>
+                        </div>
+                        <div class="featured-title">{{ $t('pages.cards.review.review') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <Carousel v-if="queue.length > 0"
+                      class="flashcard-carousel"
+                      :enabled="false"
+                      :mouse-drag="false"
+                      :touch-drag="false"
+                      :items-to-show="1"
+                      ref="carouselRef"
+                      @slide-end="handleSlideEnd"
+            >
+                <template #slides>
+                    <Slide v-for="(card, index) in queue" :key="`${card.id}-${index}`">
+                        <div v-if="card.isFinalSlide">
+                            <div class="featured-title l" style="text-transform: uppercase">all done!</div>
+                        </div>
+                        <div v-else class="term-flashcard-wrapper">
+                            <TermFlashcard :ref="el => { if (el) flashcardRefs[`${card.id}-${index}`] = el }"
+                                           :canInteract="!gradeCommitted && index === currentSlideIndex"
+                                           :model="card.term"
+                                           :audioOnly="audioOnly"
+                                           :flipDefault="flipDefault"
+                                           :showTerm="!flipDefault"
+                                           :showTranslit="showTranscription"
+                                           :flipDefaultInflections="flipDefaultInflections"
+                                           @flipped="answerShown = true"
+                            />
+
+                            <div class="answer-buttons" :class="{disabled: gradeCommitted || !answerShown}">
+                                <div>
+                                    <button class="portal-button" @click="gradeCard(0)">{{ $t('card.grade.fail') }}
+                                    </button>
+                                    <div class="interval-preview">{{ card.next_intervals[0]?.label }}</div>
+                                </div>
+                                <div>
+                                    <button class="portal-button" @click="gradeCard(1)">{{ $t('card.grade.low') }}
+                                    </button>
+                                    <div class="interval-preview">{{ card.next_intervals[1]?.label }}</div>
+                                </div>
+                                <div>
+                                    <button class="portal-button" @click="gradeCard(2)">{{ $t('card.grade.medium') }}
+                                    </button>
+                                    <div class="interval-preview">{{ card.next_intervals[2]?.label }}</div>
+                                </div>
+                                <div>
+                                    <button class="portal-button" @click="gradeCard(3)">{{ $t('card.grade.high') }}
+                                    </button>
+                                    <div class="interval-preview">{{ card.next_intervals[3]?.label }}</div>
+                                </div>
+
+                                <PopupWindow title="Card Dealer (Review)">
+                                    <div class="h1">Grading</div>
+                                    <p>After flipping the Card, you must indicate how well you knew the Term.</p>
+                                    <ul>
+                                        <li><b>Wrong</b> — You didn't know the meaning of the Term or otherwise guessed
+                                            incorrectly.
+                                        </li>
+                                        <li><b>Barely</b> — You were eventually able to produce the meaning of the Term
+                                            with
+                                            a lot of
+                                            effort, or you guessed with a low degree of certainty; you could've easily
+                                            been
+                                            wrong.
+                                        </li>
+                                        <li><b>Know</b> — You were able to produce the meaning of the Term.</li>
+                                        <li><b>Easy</b> — You immediately produced the meaning of the Term, practically
+                                            automatically.
+                                        </li>
+                                    </ul>
+                                </PopupWindow>
+                            </div>
+                        </div>
+                    </Slide>
                 </template>
-            </WindowSection>
+            </Carousel>
         </div>
-
-        <div class="session-stats">
-            <div class="progress-bar-wrapper">
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" :style="progressFill"></div>
-                </div>
-                <div class="progress-bar-values">
-                    <div class="featured-title s"
-                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.processed-cards'), $event);"
-                         @mouseleave="appTooltip.hideTooltip()">
-                        {{ processedCount }}
-                    </div>
-                    <div class="featured-title l"
-                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.session-progress'), $event);"
-                         @mouseleave="appTooltip.hideTooltip()">
-                        {{ formatter.format(processedCount / cards.length) }}
-                    </div>
-                    <div class="featured-title s"
-                         @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.total-cards'), $event);"
-                         @mouseleave="appTooltip.hideTooltip()">
-                        {{ cards.length }}
-                    </div>
-                </div>
-            </div>
-            <div class="card-buckets">
-                <div class="bucket-wrapper">
-                    <div class="material-symbols-rounded">package_2</div>
-                    <div class="bucket-count-line"></div>
-                    <div class="bucket-count-wrapper">
-                        <div class="featured-title xs bucket-count"
-                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning'), $event);"
-                             @mouseleave="appTooltip.hideTooltip()">
-                            {{ buckets.newCards }}
-                        </div>
-                        <div class="featured-title s bucket-count"
-                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-learning-relearning'), $event);"
-                             @mouseleave="appTooltip.hideTooltip()">
-                            {{ buckets.learningCards }}
-                        </div>
-                        <div class="featured-title xs bucket-count"
-                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-relearning'), $event);"
-                             @mouseleave="appTooltip.hideTooltip()">
-                            {{ buckets.learningCards - buckets.newCards }}
-                        </div>
-                    </div>
-                    <div class="featured-title">{{ $t('pages.cards.review.learn') }}</div>
-                </div>
-
-                <div class="bucket-wrapper">
-                    <div class="material-symbols-rounded">package_2</div>
-                    <div class="bucket-count-wrapper">
-                        <div class="featured-title s bucket-count"
-                             @mousemove="appTooltip.showTooltip($t('pages.cards.review.tooltips.remaining-owned'), $event);"
-                             @mouseleave="appTooltip.hideTooltip()">
-                            {{ buckets.reviewCards }}
-                        </div>
-                    </div>
-                    <div class="featured-title">{{ $t('pages.cards.review.review') }}</div>
-                </div>
-            </div>
-        </div>
-
-        <Carousel v-if="queue.length > 0"
-                  class="flashcard-carousel"
-                  :enabled="false"
-                  :mouse-drag="false"
-                  :touch-drag="false"
-                  :items-to-show="1"
-                  ref="carouselRef"
-                  @slide-end="handleSlideEnd"
-        >
-            <template #slides>
-                <Slide v-for="(card, index) in queue" :key="`${card.id}-${index}`">
-                    <div v-if="card.isFinalSlide">
-                        <div class="featured-title l" style="text-transform: uppercase">all done!</div>
-                    </div>
-                    <div v-else class="term-flashcard-wrapper">
-                        <TermFlashcard :ref="el => { if (el) flashcardRefs[`${card.id}-${index}`] = el }"
-                                       :canInteract="!gradeCommitted && index === currentSlideIndex"
-                                       :model="card.term"
-                                       :audioOnly="audioOnly"
-                                       :flipDefault="flipDefault"
-                                       :showTerm="!flipDefault"
-                                       :showTranslit="showTranscription"
-                                       :flipDefaultInflections="flipDefaultInflections"
-                                       @flipped="answerShown = true"
-                        />
-
-                        <div class="answer-buttons" :class="{disabled: gradeCommitted || !answerShown}">
-                            <div>
-                                <button class="portal-button" @click="gradeCard(0)">{{ $t('card.grade.fail') }}
-                                </button>
-                                <div class="interval-preview">{{ card.next_intervals[0]?.label }}</div>
-                            </div>
-                            <div>
-                                <button class="portal-button" @click="gradeCard(1)">{{ $t('card.grade.low') }}
-                                </button>
-                                <div class="interval-preview">{{ card.next_intervals[1]?.label }}</div>
-                            </div>
-                            <div>
-                                <button class="portal-button" @click="gradeCard(2)">{{ $t('card.grade.medium') }}
-                                </button>
-                                <div class="interval-preview">{{ card.next_intervals[2]?.label }}</div>
-                            </div>
-                            <div>
-                                <button class="portal-button" @click="gradeCard(3)">{{ $t('card.grade.high') }}
-                                </button>
-                                <div class="interval-preview">{{ card.next_intervals[3]?.label }}</div>
-                            </div>
-
-                            <PopupWindow title="Card Dealer (Review)">
-                                <div class="h1">Grading</div>
-                                <p>After flipping the Card, you must indicate how well you knew the Term.</p>
-                                <ul>
-                                    <li><b>Wrong</b> — You didn't know the meaning of the Term or otherwise guessed
-                                        incorrectly.
-                                    </li>
-                                    <li><b>Barely</b> — You were eventually able to produce the meaning of the Term
-                                        with
-                                        a lot of
-                                        effort, or you guessed with a low degree of certainty; you could've easily
-                                        been
-                                        wrong.
-                                    </li>
-                                    <li><b>Know</b> — You were able to produce the meaning of the Term.</li>
-                                    <li><b>Easy</b> — You immediately produced the meaning of the Term, practically
-                                        automatically.
-                                    </li>
-                                </ul>
-                            </PopupWindow>
-                        </div>
-                    </div>
-                </Slide>
-            </template>
-        </Carousel>
-    </div>
-    <AppTooltip ref="appTooltip"/>
+        <AppTooltip ref="appTooltip"/>
+    </LoadingWrapper>
 </template>
 
 <style scoped lang="scss">
