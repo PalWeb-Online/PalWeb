@@ -48,7 +48,7 @@ import AppLogo from "./AppLogo.vue";
 
 <style scoped lang="scss">
 .footer-container {
-    align-self: end;
+    grid-area: foot;
     display: grid;
     gap: 3.2rem;
     font-family: var(--head-font);

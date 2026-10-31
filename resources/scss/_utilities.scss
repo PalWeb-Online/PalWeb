@@ -516,7 +516,8 @@ h3 {
 
 .is-loading {
     opacity: 0.66;
-    animation: loading-phase 1s linear infinite;
+    pointer-events: none;
+    animation: loading-phase 1s ease-in-out infinite;
 }
 
 @keyframes loading-phase {

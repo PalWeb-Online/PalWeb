@@ -6,7 +6,7 @@ import Footer from './Footer.vue';
 import AppNotification from '../components/AppNotification.vue';
 import {useNotificationStore} from '../stores/NotificationStore.js';
 import {useSearchStore} from '../stores/SearchStore.js';
-import {computed, onMounted, onUnmounted, watch} from 'vue';
+import {onMounted, onUnmounted, watch} from 'vue';
 import ModalWrapper from '../components/Modals/ModalWrapper.vue';
 import {useUserStore} from '../stores/UserStore.js';
 import i18n from '../i18n.js';
@@ -31,7 +31,6 @@ const NotificationStore = useNotificationStore();
 const AcademyStateStore = useAcademyStateStore();
 const Notifier = useNotifier();
 
-const {browserOnline} = useConnectionStatus(Echo);
 const { browserOnline } = useConnectionStatus(Echo);
 
 watch(
@@ -47,22 +46,48 @@ watch(
 
 let lastBrowserOnlineState = browserOnline.value;
 let hasSeenInitialConnectionState = false;
+let activeUserChannel = null;
+
+const leaveActiveUserChannel = () => {
+    if (!activeUserChannel) {
+        return;
+    }
+
+    window.Echo.leave(`users.${activeUserChannel}`);
+    activeUserChannel = null;
+};
+
+const listenToUserChannel = (userId) => {
+    leaveActiveUserChannel();
+
+    if (!userId) {
+        return;
+    }
+
+    activeUserChannel = userId;
+
+    window.Echo.private(`users.${userId}`)
+        .listen('UserNotificationSent', (e) => {
+            Notifier.notify(e);
+        })
+        .listen('AcademyStateUpdated', () => {
+            AcademyStateStore.refreshState().catch(() => {
+            });
+        });
+};
 
 onMounted(async () => {
     await NotificationStore.refreshBrowserSubscriptionState();
+});
 
-    const userId = UserStore.user?.id ?? null;
+watch(
+    () => UserStore.user?.id ?? null,
+    listenToUserChannel,
+    { immediate: true },
+);
 
-    if (userId) {
-        window.Echo.private(`users.${userId}`)
-            .listen('UserNotificationSent', (e) => {
-                Notifier.notify(e);
-            })
-            .listen('AcademyStateUpdated', () => {
-                AcademyStateStore.refreshState().catch(() => {
-                });
-            });
-    }
+onUnmounted(() => {
+    leaveActiveUserChannel();
 });
 
 watch(browserOnline, (isOnline) => {
@@ -137,7 +162,8 @@ watch(browserOnline, (isOnline) => {
         position: relative;
         z-index: 1;
         display: grid;
-        grid-template-rows: min-content 1fr;
+        grid-template-areas: "head" "body" "foot";
+        grid-template-rows: min-content 1fr min-content;
         align-content: start;
         min-height: inherit;
     }
@@ -168,16 +194,6 @@ watch(browserOnline, (isOnline) => {
 
     &.wiki, &.account {
         background: var(--color-pastel-light);
-    }
-
-    &.account {
-        @media (width <= 960px) {
-            #app-body > .app-tip {
-                border-radius: 0;
-                border: none;
-                box-shadow: 0 0.2rem 0 rgb(0 0 0 / 0.1);
-            }
-        }
     }
 }
 </style>

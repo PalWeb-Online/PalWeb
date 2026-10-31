@@ -66,6 +66,7 @@ body.capacitor-app {
 }
 
 #app-head {
+    grid-area: head;
     align-self: start;
     background: white;
     padding: 1.6rem 3.2rem 2.4rem;
@@ -83,14 +84,14 @@ body.capacitor-app {
         font-size: clamp(4.8rem, 10vw, 6.4rem);
         line-height: 1.2em;
         margin: 0;
-        padding-block-end: 0.8rem;
+        padding-block: 1.6rem 2.4rem;
         color: var(--color-dark-primary);
     }
 }
 
 #app-body {
+    grid-area: body;
     display: grid;
-    grid-auto-rows: min-content;
     align-items: start;
     justify-items: center;
     height: 100%;
