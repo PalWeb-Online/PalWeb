@@ -3,19 +3,63 @@ import DeckItem from "../../../components/DeckItem.vue";
 import AppTip from "../../../components/AppTip.vue";
 import Paginator from "../../../Shared/Paginator.vue";
 import ActivityItem from "../../../components/ActivityItem.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
+import {usePaginator} from "../../../composables/usePaginator.js";
+import PaginationPage from "../../../components/PaginationPage.vue";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
+const currentQuery = () => ({ ...route.query });
+
+const emptyScoredDecks = () => ({
+    data: [],
+    meta: {
+        links: [],
+        current_page: 1,
+        last_page: 1,
+        total: 0,
+    },
+});
 
 const mode = ref('decks');
 const scoredLessonModels = ref({});
-const latestScoredDecks = ref({data: [], meta: {links: []}});
+const latestScoredDecks = ref(emptyScoredDecks());
 const totalCount = ref(0);
 
-onMounted(async () => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+const fetchScores = async (params = {}) => {
     const {data} = await axios.get('/api/scores', {params});
+
     scoredLessonModels.value = data.scoredLessonModels;
-    latestScoredDecks.value = data.latestScoredDecks;
+    latestScoredDecks.value = data.latestScoredDecks ?? emptyScoredDecks();
     totalCount.value = data.totalCount;
+};
+
+const fetchScoredDeckPage = async (params = {}) => {
+    isLoadingPaginator.value = true;
+
+    try {
+        await fetchScores(params);
+    } finally {
+        isLoadingPaginator.value = false;
+    }
+};
+
+const {
+    currentPage,
+    pageNumbers,
+    goToPage,
+    updatePagination,
+    isLoadingPaginator,
+} = usePaginator(fetchScoredDeckPage);
+
+onMounted(async () => {
+    await fetchScores(currentQuery());
+});
+
+watch(() => latestScoredDecks.value.meta, updatePagination);
+
+watch(() => route.query.page, () => {
+    fetchScoredDeckPage(currentQuery());
 });
 </script>
 <template>
@@ -38,13 +82,19 @@ onMounted(async () => {
                 </AppTip>
 
                 <div class="featured-title m" style="text-transform: none">{{ $t('pages.scores.index.latest-scored') }}</div>
-                <div class="model-list">
-                    <AppTip v-if="!totalCount">
-                        <p>{{ $t('pages.scores.index.messages.no-decks') }}</p>
-                    </AppTip>
-                    <DeckItem v-for="deck in latestScoredDecks.data" :model="deck" :key="deck.id" target="academy"/>
-                    <Paginator :links="latestScoredDecks.meta.links"/>
-                </div>
+                <AppTip v-if="!totalCount">
+                    <p>{{ $t('pages.scores.index.messages.no-decks') }}</p>
+                </AppTip>
+                <template v-else>
+                    <PaginationPage :is-loading="isLoadingPaginator">
+                        <DeckItem v-for="deck in latestScoredDecks.data" :model="deck" :key="deck.id" target="academy"/>
+                    </PaginationPage>
+                    <Paginator
+                        :pageNumbers="pageNumbers"
+                        :currentPage="currentPage"
+                        :goToPage="goToPage"
+                    />
+                </template>
             </template>
             <template v-if="mode === 'lessons'">
                 <AppTip v-if="Object.keys(scoredLessonModels).length === 0">

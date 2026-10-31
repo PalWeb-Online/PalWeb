@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
         <div class="nav-sticky-info">
             <div>JER {{ formattedTime }} (UTC +{{ utcOffsetHours }})</div>
             <InstallButton/>
-            <RouterLink :to="{ name: 'homepage' }">PalWeb 2.4 (Msaxxan)</RouterLink>
+            <RouterLink :to="{ name: 'homepage' }">PalWeb 3.0 (α)</RouterLink>
         </div>
         <div class="nav-sticky-buttons">
             <button

@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
         <div class="homepage-hero-wrapper"
              :style="{ transform: `translateY(${heroOffset}px)` }"
         >
-            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'release-notes' } }" class="feature-callout">{{ $t('pages.home.release-notes', {version: 'v2.4'}) }}</RouterLink>
+            <RouterLink :to="{ name: 'wiki.show', params: { slug: 'release-notes' } }" class="feature-callout">{{ $t('pages.home.release-notes', {version: '3.0 (alpha)'}) }}</RouterLink>
             <HomepageHero/>
         </div>
     </div>
