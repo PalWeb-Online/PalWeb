@@ -93,7 +93,6 @@ watch(() => props.pageSlug, async () => {
 </script>
 
 <template>
-
     <div id="app-head">
         <h1>{{ $t('pages.wiki.title') }}</h1>
     </div>
@@ -111,7 +110,7 @@ watch(() => props.pageSlug, async () => {
             <h1>{{ page?.title }}</h1>
 
             <template v-if="UserStore.isAdmin">
-                <RouterLink :to="{ name: 'wiki.edit', params: { page: page.id } }" class="material-symbols-rounded">edit</RouterLink>
+                <RouterLink :to="{ name: 'wiki.edit', params: { page: page?.id } }" class="material-symbols-rounded">edit</RouterLink>
                 <RouterLink :to="{ name: 'wiki.edit' }" class="material-symbols-rounded">add</RouterLink>
             </template>
         </div>
@@ -133,6 +132,7 @@ watch(() => props.pageSlug, async () => {
             <LoadingSpinner v-if="isLoadingPage"/>
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
                 <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
+<!--                todo: this is useful, but currently will never be reached-->
                 <p>
                     <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit' }">Create this Page</RouterLink>
                     <RouterLink v-else :to="{ name: 'wiki.index' }">Go to Wiki Home</RouterLink>

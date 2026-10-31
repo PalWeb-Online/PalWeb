@@ -2,9 +2,8 @@
 import {onMounted, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import DeckContainer from '../../../components/DeckContainer.vue';
-import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {useDeckViewer} from '../../../composables/decks/useDeckViewer.js';
-import AppTip from '../../../components/AppTip.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const router = useRouter();
 const resolvedRandomDeckId = ref(null);
@@ -22,7 +21,6 @@ const props = defineProps({
 
 const {
     deck,
-    deckNotFound,
     isLoadingDeck,
     loadDeck,
     loadRandomDeck,
@@ -66,11 +64,9 @@ watch(
 </script>
 
 <template>
-    <LoadingSpinner v-if="isLoadingDeck"/>
-    <AppTip v-else-if="deckNotFound">
-        <p>{{ $t('pages.common.not-found', { model: $t('actions.models.deck') }) }}</p>
-    </AppTip>
-    <div v-else-if="deck" id="app-body">
-        <DeckContainer :model="deck"/>
-    </div>
+    <LoadingWrapper :is-loading="isLoadingDeck || !deck">
+        <div id="app-body">
+            <DeckContainer :model="deck"/>
+        </div>
+    </LoadingWrapper>
 </template>

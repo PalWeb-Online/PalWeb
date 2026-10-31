@@ -1,18 +1,18 @@
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import {useNavGuard} from "../../../composables/NavGuard.js";
-import NavGuard from "../../../components/Modals/NavGuard.vue";
-import UserAvatarWrapper from "../../../components/UserAvatarWrapper.vue";
-import AppTip from "../../../components/AppTip.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useUserEditor} from "../../../composables/users/useUserEditor.js";
-import {useTeacherEditor} from "../../../composables/teachers/useTeacherEditor.js";
-import {generateArabicName} from "../../../utils/NameGenerator.js";
-import {useUser} from "../../../composables/users/useUser.js";
-import {useUserStore} from "../../../stores/UserStore.js";
-import {useUserValidation} from "../../../composables/users/useUserValidation.js";
-import AvatarPicker from "../../../components/Modals/AvatarPicker.vue";
+import {computed, onMounted, ref, watch} from 'vue';
+import ModalWrapper from '../../../components/Modals/ModalWrapper.vue';
+import {useNavGuard} from '../../../composables/NavGuard.js';
+import NavGuard from '../../../components/Modals/NavGuard.vue';
+import UserAvatarWrapper from '../../../components/UserAvatarWrapper.vue';
+import AppTip from '../../../components/AppTip.vue';
+import {useUserEditor} from '../../../composables/users/useUserEditor.js';
+import {useTeacherEditor} from '../../../composables/teachers/useTeacherEditor.js';
+import {generateArabicName} from '../../../utils/NameGenerator.js';
+import {useUser} from '../../../composables/users/useUser.js';
+import {useUserStore} from '../../../stores/UserStore.js';
+import {useUserValidation} from '../../../composables/users/useUserValidation.js';
+import AvatarPicker from '../../../components/Modals/AvatarPicker.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const props = defineProps({
     userId: {
@@ -22,7 +22,7 @@ const props = defineProps({
 });
 
 const UserStore = useUserStore();
-const {isStudent} = useUser(computed(() => user.value));
+const { isStudent } = useUser(computed(() => user.value));
 
 const {
     form: userForm,
@@ -34,7 +34,6 @@ const {
     loadForm: loadUserForm,
     saveUser,
     user,
-    userNotFound,
 } = useUserEditor({
     userId: computed(() => props.userId),
 });
@@ -58,7 +57,11 @@ const {
 
 const hasNavigationGuard = computed(() => isUserDirty.value || isTeacherDirty.value);
 
-const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
+const {
+    showAlert,
+    handleConfirm,
+    handleCancel,
+} = useNavGuard(hasNavigationGuard);
 
 const {
     userErrors,
@@ -75,7 +78,7 @@ const {
 const showTeacherForm = ref(false);
 
 const canCreateTeacher = computed(() => {
-    return isStudent.value && UserStore.isAdmin
+    return isStudent.value && UserStore.isAdmin;
 });
 
 const canManageTeacher = computed(() => {
@@ -155,201 +158,204 @@ const localeKey = (value) => value?.toString().toLowerCase().replace(/[^a-z0-9]+
 </script>
 
 <template>
-    <div id="app-body">
-        <LoadingSpinner v-if="isLoadingUserForm"/>
-        <template v-else-if="userNotFound">
-            <AppTip>
-                <p>{{ $t('pages.common.not-found', {model: $t('action.models.user')}) }}</p>
-            </AppTip>
-            <RouterLink class="portal-button" :to="{ name: 'users.index' }">
-                Back to Community
-            </RouterLink>
-        </template>
-
-        <div v-else class="window-container">
-            <div class="window-header">
-                <RouterLink class="material-symbols-rounded" :to="{ name: 'users.show', params: { user: user?.username } }">
-                    arrow_back
-                </RouterLink>
-                <button @click="userForm.private = !userForm.private" class="material-symbols-rounded">
-                    {{ userForm.private ? 'lock' : 'public' }}
-                </button>
-                <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
-            </div>
-            <div class="window-section-head">
-                <h1>{{ $t('user.profile') }}</h1>
-                <RouterLink :to="{ name: 'users.show', params: { user: user?.username } }" class="material-symbols-rounded">
-                    visibility
-                </RouterLink>
-            </div>
-            <div class="user-item l">
-                <UserAvatarWrapper :user="avatarPreviewUser">
-                    <button type="button" @click="showAvatarPicker = true" class="material-symbols-rounded">
-                        photo
+    <LoadingWrapper :is-loading="isLoadingUserForm || !user">
+        <div id="app-body">
+            <div class="window-container">
+                <div class="window-header">
+                    <RouterLink class="material-symbols-rounded"
+                                :to="{ name: 'users.show', params: { user: user?.username } }">
+                        arrow_back
+                    </RouterLink>
+                    <button @click="userForm.private = !userForm.private" class="material-symbols-rounded">
+                        {{ userForm.private ? 'lock' : 'public' }}
                     </button>
-                </UserAvatarWrapper>
-                <div class="user-data-wrapper">
-                    <div class="form-body">
-                        <div class="field-item">
-                            <label>{{ $t('user.fields.name') }}</label>
-                            <div class="field-input">
-                                <input type="text" v-model="userForm.name" placeholder="Rafiq" required>
-                                <div class="field-chars"
-                                     :class="{'invalid': userForm.name.length > 50}"
-                                     v-text="50 - userForm.name.length"
-                                />
+                    <div class="window-header-url">www.palweb.app/hub/users/{user}</div>
+                </div>
+                <div class="window-section-head">
+                    <h1>{{ $t('user.profile') }}</h1>
+                    <RouterLink :to="{ name: 'users.show', params: { user: user?.username } }"
+                                class="material-symbols-rounded">
+                        visibility
+                    </RouterLink>
+                </div>
+                <div class="user-item l">
+                    <UserAvatarWrapper :user="avatarPreviewUser">
+                        <button type="button" @click="showAvatarPicker = true" class="material-symbols-rounded">
+                            photo
+                        </button>
+                    </UserAvatarWrapper>
+                    <div class="user-data-wrapper">
+                        <div class="form-body">
+                            <div class="field-item">
+                                <label>{{ $t('user.fields.name') }}</label>
+                                <div class="field-input">
+                                    <input type="text" v-model="userForm.name" placeholder="Rafiq" required>
+                                    <div class="field-chars"
+                                         :class="{'invalid': userForm.name.length > 50}"
+                                         v-text="50 - userForm.name.length"
+                                    />
+                                </div>
+                                <div v-if="userErrors.name" v-text="userErrors.name" class="field-error"/>
                             </div>
-                            <div v-if="userErrors.name" v-text="userErrors.name" class="field-error"/>
+                            <div class="field-item">
+                                <label>{{ $t('user.fields.username') }}</label>
+                                <div class="field-input">
+                                    <input type="text" v-model="userForm.username" placeholder="permanent.intifada"
+                                           required>
+                                    <div class="field-chars"
+                                         :class="{'invalid': userForm.username.length > 50}"
+                                         v-text="50 - userForm.username.length"
+                                    />
+                                </div>
+                                <div v-if="userErrors.username" v-text="userErrors.username" class="field-error"/>
+                            </div>
+                            <div class="field-item">
+                                <div style="display: flex; align-items: center; gap: 3.2rem;">
+                                    <label>{{ $t('user.fields.arabic-name') }}</label>
+                                    <button type="button" @click="userForm.ar_name = generateArabicName()">
+                                        {{ $t('modals.sign-up.randomize-name') }}
+                                    </button>
+                                </div>
+                                <div class="field-input">
+                                    <input type="text" v-model="userForm.ar_name" placeholder="رفيق" required>
+                                    <div class="field-chars"
+                                         :class="{'invalid': userForm.ar_name.length > 50}"
+                                         v-text="50 - userForm.ar_name.length"
+                                    />
+                                </div>
+                                <div v-if="userErrors.ar_name" v-text="userErrors.ar_name" class="field-error"/>
+                            </div>
                         </div>
-                        <div class="field-item">
-                            <label>{{ $t('user.fields.username') }}</label>
-                            <div class="field-input">
-                                <input type="text" v-model="userForm.username" placeholder="permanent.intifada"
-                                       required>
-                                <div class="field-chars"
-                                     :class="{'invalid': userForm.username.length > 50}"
-                                     v-text="50 - userForm.username.length"
-                                />
-                            </div>
-                            <div v-if="userErrors.username" v-text="userErrors.username" class="field-error"/>
-                        </div>
-                        <div class="field-item">
-                            <div style="display: flex; align-items: center; gap: 3.2rem;">
-                                <label>{{ $t('user.fields.arabic-name') }}</label>
-                                <button type="button" @click="userForm.ar_name = generateArabicName()">
-                                    {{ $t('modals.sign-up.randomize-name') }}
-                                </button>
-                            </div>
-                            <div class="field-input">
-                                <input type="text" v-model="userForm.ar_name" placeholder="رفيق" required>
-                                <div class="field-chars"
-                                     :class="{'invalid': userForm.ar_name.length > 50}"
-                                     v-text="50 - userForm.ar_name.length"
-                                />
-                            </div>
-                            <div v-if="userErrors.ar_name" v-text="userErrors.ar_name" class="field-error"/>
-                        </div>
-                    </div>
-                    <div class="user-comment">
+                        <div class="user-comment">
                         <textarea class="user-comment-content" v-model="userForm.bio"
                                   :placeholder="$t('components.user.bio-placeholder', {name: userForm.name})"
                         />
-                        <div class="user-comment-data">
-                            {{ $t('components.user.joined-on', {date: user?.created_at, ago: user?.created_ago}) }}
+                            <div class="user-comment-data">
+                                {{
+                                    $t('components.user.joined-on', {
+                                        date: user?.created_at,
+                                        ago: user?.created_ago,
+                                    })
+                                }}
+                            </div>
+                            <div v-if="userErrors.bio" v-text="userErrors.bio" class="field-error"/>
                         </div>
-                        <div v-if="userErrors.bio" v-text="userErrors.bio" class="field-error"/>
-                    </div>
-                    <div class="user-tag-wrapper">
-                        <div class="user-tag">
-                            <div class="material-symbols-rounded">location_on</div>
-                            <input type="text" v-model="userForm.home"
-                                   style="background: none"
-                                   :placeholder="$t('components.user.location-placeholder')"
-                            />
+                        <div class="user-tag-wrapper">
+                            <div class="user-tag">
+                                <div class="material-symbols-rounded">location_on</div>
+                                <input type="text" v-model="userForm.home"
+                                       style="background: none"
+                                       :placeholder="$t('components.user.location-placeholder')"
+                                />
+                            </div>
+                            <div v-if="userErrors.home" v-text="userErrors.home" class="field-error"/>
+                            <div class="user-tag">
+                                <div class="material-symbols-rounded">lips</div>
+                                <select v-model="userForm.dialect_id">
+                                    <option :value="8">
+                                        {{ $t(`dialect.${localeKey('Central Urban Palestinian')}`) }}
+                                    </option>
+                                    <option :value="9">
+                                        {{ $t(`dialect.${localeKey('Northern Urban Palestinian')}`) }}
+                                    </option>
+                                    <option :value="10">
+                                        {{ $t(`dialect.${localeKey('Central Rural Palestinian')}`) }}
+                                    </option>
+                                    <option :value="11">
+                                        {{ $t(`dialect.${localeKey('Northern Rural Palestinian')}`) }}
+                                    </option>
+                                    <option :value="6">
+                                        {{ $t(`dialect.${localeKey('Palestinian Bedouin')}`) }}
+                                    </option>
+                                    <option :value="7">
+                                        {{ $t(`dialect.${localeKey('Palestinian Druze')}`) }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                        <div v-if="userErrors.home" v-text="userErrors.home" class="field-error"/>
-                        <div class="user-tag">
-                            <div class="material-symbols-rounded">lips</div>
-                            <select v-model="userForm.dialect_id">
-                                <option :value="8">
-                                    {{ $t(`dialect.${localeKey('Central Urban Palestinian')}`) }}
-                                </option>
-                                <option :value="9">
-                                    {{ $t(`dialect.${localeKey('Northern Urban Palestinian')}`) }}
-                                </option>
-                                <option :value="10">
-                                    {{ $t(`dialect.${localeKey('Central Rural Palestinian')}`) }}
-                                </option>
-                                <option :value="11">
-                                    {{ $t(`dialect.${localeKey('Northern Rural Palestinian')}`) }}
-                                </option>
-                                <option :value="6">
-                                    {{ $t(`dialect.${localeKey('Palestinian Bedouin')}`) }}
-                                </option>
-                                <option :value="7">
-                                    {{ $t(`dialect.${localeKey('Palestinian Druze')}`) }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="window-footer">
-                <button :disabled="isSavingUser || !isUserDirty || !isValidUserRequest" @click="saveUser">
-                    {{ $t('forms.actions.save') }}
-                </button>
-                <button :disabled="isSavingUser || !isUserDirty" @click="resetUser()">
-                    {{ $t('forms.actions.reset') }}
-                </button>
-            </div>
-
-            <div v-if="canManageTeacher" class="window-section-head">
-                <h2>{{ $t('actions.models.teacher') }}</h2>
-                <button v-if="!teacherFormExists" @click="initializeTeacherForm" class="material-symbols-rounded">add
-                </button>
-                <button v-else-if="teacherExists" @click="removeTeacher" :disabled="isDeletingTeacher"
-                        class="material-symbols-rounded">delete
-                </button>
-            </div>
-            <AppTip v-if="canCreateTeacher">
-                <p v-if="!teacherFormExists">{{ $t('pages.users.edit.messages.teacher-eligible') }}</p>
-                <p v-else>{{ $t('pages.users.edit.messages.teacher-instructions') }}</p>
-            </AppTip>
-            <template v-if="canManageTeacher && teacherFormExists">
-                <AppTip v-if="!isStudent">
-                    <p>You don't have a Student subscription. You may continue to manage your Teacher profile here, but
-                        it will not be visible to others. Please renew your subscription to make your Teacher profile
-                        public.</p>
-                </AppTip>
-                <div class="form-body">
-                    <div class="field-item">
-                        <label>{{ $t('user.fields.email') }}</label>
-                        <div class="field-input">
-                            <input type="email" v-model="teacherForm.email" placeholder="teacher@example.com" required>
-                            <div class="field-chars" :class="{'invalid': teacherForm.email.length > 255}"
-                                 v-text="255 - teacherForm.email.length"/>
-                        </div>
-                        <div v-if="teacherErrors.email" v-text="teacherErrors.email" class="field-error"/>
-                    </div>
-
-                    <div class="field-item">
-                        <label>{{ $t('user.fields.bio') }}</label>
-                        <div class="field-input">
-                            <textarea v-model="teacherForm.bio" rows="10"
-                                      :placeholder="$t('pages.users.edit.messages.teacher-bio-placeholder')"/>
-                            <div class="field-chars" :class="{'invalid': teacherForm.bio.length > 5000}"
-                                 v-text="5000 - teacherForm.bio.length"/>
-                        </div>
-                        <div v-if="teacherErrors.bio" v-text="teacherErrors.bio" class="field-error"/>
                     </div>
                 </div>
                 <div class="window-footer">
-                    <button :disabled="isSavingTeacher || !isTeacherDirty || !isValidTeacherRequest"
-                            @click="saveTeacher">
+                    <button :disabled="isSavingUser || !isUserDirty || !isValidUserRequest" @click="saveUser">
                         {{ $t('forms.actions.save') }}
                     </button>
-                    <button :disabled="isSavingTeacher || !isTeacherDirty" @click="resetTeacher()">
+                    <button :disabled="isSavingUser || !isUserDirty" @click="resetUser()">
                         {{ $t('forms.actions.reset') }}
                     </button>
                 </div>
-            </template>
+
+                <div v-if="canManageTeacher" class="window-section-head">
+                    <h2>{{ $t('actions.models.teacher') }}</h2>
+                    <button v-if="!teacherFormExists" @click="initializeTeacherForm"
+                            class="material-symbols-rounded">
+                        add
+                    </button>
+                    <button v-else-if="teacherExists" @click="removeTeacher" :disabled="isDeletingTeacher"
+                            class="material-symbols-rounded">
+                        delete
+                    </button>
+                </div>
+                <AppTip v-if="canCreateTeacher">
+                    <p v-if="!teacherFormExists">{{ $t('pages.users.edit.messages.teacher-eligible') }}</p>
+                    <p v-else>{{ $t('pages.users.edit.messages.teacher-instructions') }}</p>
+                </AppTip>
+                <template v-if="canManageTeacher && teacherFormExists">
+                    <AppTip v-if="!isStudent">
+                        <p>You don't have a Student subscription. You may continue to manage your Teacher profile here,
+                            but it will not be visible to others. Please renew your subscription to make your Teacher
+                            profile public.</p>
+                    </AppTip>
+                    <div class="form-body">
+                        <div class="field-item">
+                            <label>{{ $t('user.fields.email') }}</label>
+                            <div class="field-input">
+                                <input type="email" v-model="teacherForm.email" placeholder="teacher@example.com"
+                                       required>
+                                <div class="field-chars" :class="{'invalid': teacherForm.email.length > 255}"
+                                     v-text="255 - teacherForm.email.length"/>
+                            </div>
+                            <div v-if="teacherErrors.email" v-text="teacherErrors.email" class="field-error"/>
+                        </div>
+
+                        <div class="field-item">
+                            <label>{{ $t('user.fields.bio') }}</label>
+                            <div class="field-input">
+                            <textarea v-model="teacherForm.bio" rows="10"
+                                      :placeholder="$t('pages.users.edit.messages.teacher-bio-placeholder')"/>
+                                <div class="field-chars" :class="{'invalid': teacherForm.bio.length > 5000}"
+                                     v-text="5000 - teacherForm.bio.length"/>
+                            </div>
+                            <div v-if="teacherErrors.bio" v-text="teacherErrors.bio" class="field-error"/>
+                        </div>
+                    </div>
+                    <div class="window-footer">
+                        <button :disabled="isSavingTeacher || !isTeacherDirty || !isValidTeacherRequest"
+                                @click="saveTeacher">
+                            {{ $t('forms.actions.save') }}
+                        </button>
+                        <button :disabled="isSavingTeacher || !isTeacherDirty" @click="resetTeacher()">
+                            {{ $t('forms.actions.reset') }}
+                        </button>
+                    </div>
+                </template>
+            </div>
         </div>
-    </div>
 
-    <AvatarPicker v-model="showAvatarPicker"
-                  :user="user"
-                  :default-avatar="userForm.avatar"
-                  :selected-avatar-id="userForm.avatar_id"
-                  :uploaded-avatars="uploadedAvatars"
-                  @select="selectAvatar"
-                  @uploaded-avatars-updated="updateUploadedAvatars"
-                  @user-updated="updateUser"/>
+        <AvatarPicker v-model="showAvatarPicker"
+                      :user="user"
+                      :default-avatar="userForm.avatar"
+                      :selected-avatar-id="userForm.avatar_id"
+                      :uploaded-avatars="uploadedAvatars"
+                      @select="selectAvatar"
+                      @uploaded-avatars-updated="updateUploadedAvatars"
+                      @user-updated="updateUser"/>
 
-    <ModalWrapper v-model="showAlert">
-        <NavGuard
-            :message="$t('modals.nav-guard.messages.unsaved-changes')"
-            @confirm="handleConfirm"
-            @cancel="handleCancel"
-        />
-    </ModalWrapper>
+        <ModalWrapper v-model="showAlert">
+            <NavGuard
+                :message="$t('modals.nav-guard.messages.unsaved-changes')"
+                @confirm="handleConfirm"
+                @cancel="handleCancel"
+            />
+        </ModalWrapper>
+    </LoadingWrapper>
 </template>

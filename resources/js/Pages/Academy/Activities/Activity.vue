@@ -1,24 +1,22 @@
 <script setup>
-import {computed, onMounted, watch} from "vue";
-import Results from "./Pages/Results.vue";
-import {createActivitySession, provideActivitySession} from "../../../composables/activities/useActivitySession.js";
-import DocumentBlocksRenderer from "../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
-import NavGuard from "../../../components/Modals/NavGuard.vue";
-import ModalWrapper from "../../../components/Modals/ModalWrapper.vue";
-import {useNavGuard} from "../../../composables/NavGuard.js";
-import {useActivityViewer} from "../../../composables/activities/useActivityViewer.js";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import AppTip from "../../../components/AppTip.vue";
+import {computed, onMounted, watch} from 'vue';
+import Results from './Pages/Results.vue';
+import {createActivitySession, provideActivitySession} from '../../../composables/activities/useActivitySession.js';
+import DocumentBlocksRenderer from '../../../components/Blocks/Renderers/DocumentBlocksRenderer.vue';
+import NavGuard from '../../../components/Modals/NavGuard.vue';
+import ModalWrapper from '../../../components/Modals/ModalWrapper.vue';
+import {useNavGuard} from '../../../composables/NavGuard.js';
+import {useActivityViewer} from '../../../composables/activities/useActivityViewer.js';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const props = defineProps({
     activityId: {
         type: Number,
         required: true,
     },
-})
+});
 
 const {
-    activityNotFound,
     isLoadingActivity,
     loadActivity,
     reloadActivity,
@@ -43,8 +41,14 @@ watch(() => props.activityId, () => {
     void openActivity(reloadActivity);
 });
 
-const hasNavigationGuard = computed(() => !ActivitySession.isViewingResults);
-const {showAlert, handleConfirm, handleCancel} = useNavGuard(hasNavigationGuard);
+const hasNavigationGuard = computed(() => {
+    return !ActivitySession.isViewingResults;
+});
+const {
+    showAlert,
+    handleConfirm,
+    handleCancel,
+} = useNavGuard(hasNavigationGuard);
 
 const isValidRequest = computed(() => {
     if (!ActivitySession.exercises.length) return;
@@ -57,22 +61,15 @@ const isValidRequest = computed(() => {
         }
 
         return false;
-    })
+    });
 });
 </script>
 
 <template>
-
-    <LoadingSpinner v-if="isLoadingActivity"/>
-    <template v-else-if="activityNotFound">
-        <AppTip>
-            <p>{{ $t('pages.common.not-found', {model: $t('actions.models.activity')}) }}</p>
-        </AppTip>
-    </template>
-    <template v-else-if="ActivitySession.activity">
-        <div class="activity-head" v-if="!ActivitySession.isViewingResults">
+    <LoadingWrapper :is-loading="isLoadingActivity || !ActivitySession.activity">
+        <div id="app-head" class="activity-head" v-if="!ActivitySession.isViewingResults">
             <RouterLink class="feature-callout" style="justify-self: center"
-                  :to="{ name: 'lessons.show', params: { lesson: ActivitySession.activity.lesson.global_position } }">
+                        :to="{ name: 'lessons.show', params: { lesson: ActivitySession.activity.lesson.global_position } }">
                 {{ $t('components.activity.exit') }}
             </RouterLink>
             <h1>{{ $t('components.activity.title') }}</h1>
@@ -90,37 +87,21 @@ const isValidRequest = computed(() => {
 
             <Results v-if="ActivitySession.isViewingResults"/>
         </div>
-    </template>
 
-    <ModalWrapper v-model="showAlert">
-        <NavGuard
-            :message="$t('modals.nav-guard.messages.unfinished-activity')"
-            @confirm="handleConfirm"
-            @cancel="handleCancel"
-        />
-    </ModalWrapper>
+        <ModalWrapper v-model="showAlert">
+            <NavGuard
+                :message="$t('modals.nav-guard.messages.unfinished-activity')"
+                @confirm="handleConfirm"
+                @cancel="handleCancel"
+            />
+        </ModalWrapper>
+    </LoadingWrapper>
 </template>
 
 <style scoped lang="scss">
-.activity-head {
-    display: grid;
-    justify-items: center;
-    gap: 2.4rem;
-    background: var(--color-accent-light);
+#app-container.academy #app-head.activity-head {
+    gap: 3.2rem;
     padding-block: 3.2rem;
-
-    h1 {
-        margin: 0;
-        font-family: var(--display-font), serif;
-        font-weight: 400;
-        font-size: 7.2rem;
-        color: var(--color-dark-primary);
-        line-height: 0.75;
-        padding-block-end: 1.2rem;
-
-        @media (width >= 960px) {
-            font-size: 9.6rem;
-        }
-    }
+    background: var(--color-accent-light);
 }
 </style>

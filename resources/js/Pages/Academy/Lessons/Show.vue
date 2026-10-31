@@ -1,14 +1,14 @@
 <script setup>
-import DialogContainer from "../../../components/DialogContainer.vue";
-import {onMounted, ref, watch} from "vue";
-import UnitNav from "../Units/UI/UnitNav.vue";
-import SkillContainer from "../Lessons/UI/SkillContainer.vue";
-import DeckContainer from "../../../components/DeckContainer.vue";
-import ActivityContainer from "../../../components/ActivityContainer.vue";
-import AppTip from "../../../components/AppTip.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
-import {useLessonViewer} from "../../../composables/lessons/useLessonViewer.js";
-import ProgressSummary from "./UI/ProgressSummary.vue";
+import DialogContainer from '../../../components/DialogContainer.vue';
+import {onMounted, ref, watch} from 'vue';
+import UnitNav from '../Units/UI/UnitNav.vue';
+import SkillContainer from '../Lessons/UI/SkillContainer.vue';
+import DeckContainer from '../../../components/DeckContainer.vue';
+import ActivityContainer from '../../../components/ActivityContainer.vue';
+import AppTip from '../../../components/AppTip.vue';
+import {useLessonViewer} from '../../../composables/lessons/useLessonViewer.js';
+import ProgressSummary from './UI/ProgressSummary.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const props = defineProps({
     unitId: {
@@ -19,11 +19,10 @@ const props = defineProps({
         type: Number,
         required: true,
     },
-})
+});
 
 const {
     lesson,
-    lessonNotFound,
     isLoadingLesson,
     unit,
     loadLesson,
@@ -53,56 +52,58 @@ watch([() => props.lessonId, () => props.unitId], async () => {
 <template>
     <UnitNav v-if="unit" :unit="unit" :activeLesson="lesson"/>
 
-    <LoadingSpinner v-if="isLoadingLesson"/>
-    <AppTip v-else-if="lessonNotFound">
-        <p>{{ $t('pages.common.not-found', {model: $t('actions.models.lesson')}) }}</p>
-    </AppTip>
-    <template v-else-if="lesson">
-        <div class="lesson-data-container">
-            <div class="lesson-data-head">
-                <div class="lesson-head-position">{{ $t('lesson.key-index', {index: lesson.global_position}) }}:</div>
-                <div class="lesson-head-title">{{ lesson.title }}</div>
-            </div>
-            <div class="lesson-data-body">
-                <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
-                <div v-if="lesson.document" class="lesson-skill-summary">
-                    <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
-                    <ul style="margin-block: 1.6rem">
-                        <li v-for="skill in lesson.document.skills">
-                            {{ skill.description }}
-                        </li>
-                    </ul>
+    <LoadingWrapper :is-loading="isLoadingLesson || !lesson">
+        <div id="app-body">
+            <div class="lesson-data-container">
+                <div class="lesson-data-head">
+                    <div class="lesson-head-position">{{
+                            $t('lesson.key-index', { index: lesson.global_position })
+                        }}:
+                    </div>
+                    <div class="lesson-head-title">{{ lesson.title }}</div>
                 </div>
+                <div class="lesson-data-body">
+                    <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
+                    <div v-if="lesson.document" class="lesson-skill-summary">
+                        <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
+                        <ul style="margin-block: 1.6rem">
+                            <li v-for="skill in lesson.document.skills">
+                                {{ skill.description }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ProgressSummary :lesson="lesson" v-model:current-tab="currentTab"/>
             </div>
-            <ProgressSummary :lesson="lesson" v-model:current-tab="currentTab"/>
+            <div class="lesson-tab-wrapper" v-show="currentTab === 'deck'">
+                <template v-if="lesson.deck">
+                    <DeckContainer :model="lesson.deck"/>
+                </template>
+                <AppTip v-else>
+                    <p>{{ $t('pages.lessons.show.missing-deck') }}</p>
+                </AppTip>
+            </div>
+            <div class="lesson-tab-wrapper" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
+                <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill"/>
+                <template v-if="lesson.activity">
+                    <div class="featured-title l" style="margin-block: 3.2rem">{{
+                            $t('pages.lessons.show.ready')
+                        }}
+                    </div>
+                    <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
+                </template>
+                <AppTip v-else>
+                    <p>{{ $t('pages.lessons.show.missing-activity') }}</p>
+                </AppTip>
+            </div>
+            <div class="lesson-tab-wrapper" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
+                <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
+                <AppTip v-else>
+                    <p>{{ $t('pages.lessons.show.missing-dialog') }}</p>
+                </AppTip>
+            </div>
         </div>
-
-        <div id="app-body" v-show="currentTab === 'deck'">
-            <template v-if="lesson.deck">
-                <DeckContainer :model="lesson.deck"/>
-            </template>
-            <AppTip v-else>
-                <p>{{ $t('pages.lessons.show.missing-deck') }}</p>
-            </AppTip>
-        </div>
-        <div id="app-body" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
-            <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill"/>
-
-            <template v-if="lesson.activity">
-                <div class="featured-title l" style="margin-block: 3.2rem">{{ $t('pages.lessons.show.ready') }}</div>
-                <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
-            </template>
-            <AppTip v-else>
-                <p>{{ $t('pages.lessons.show.missing-activity') }}</p>
-            </AppTip>
-        </div>
-        <div id="app-body" v-if="lesson.progress.stage > 2" v-show="currentTab === 'dialog'">
-            <DialogContainer v-if="lesson.dialog" :model="lesson.dialog"/>
-            <AppTip v-else>
-                <p>{{ $t('pages.lessons.show.missing-dialog') }}</p>
-            </AppTip>
-        </div>
-    </template>
+    </LoadingWrapper>
 </template>
 
 <style lang="scss" scoped>
@@ -150,5 +151,11 @@ watch([() => props.lessonId, () => props.unitId], async () => {
     font-size: 1.8rem;
     line-height: 1.5;
     padding: 3.2rem;
+}
+
+.lesson-tab-wrapper {
+    width: 100%;
+    display: grid;
+    justify-items: center;
 }
 </style>

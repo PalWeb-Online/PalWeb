@@ -13,9 +13,9 @@ import {useUser} from '../../../composables/users/useUser.js';
 import AppHeading from '../../../components/AppHeading.vue';
 import {useUserViewer} from '../../../composables/users/useUserViewer.js';
 import {useRoute} from 'vue-router';
-import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
 import {usePaginator} from '../../../composables/usePaginator.js';
 import PaginationPage from '../../../components/PaginationPage.vue';
+import LoadingWrapper from '../../../Shared/LoadingWrapper.vue';
 
 const UserStore = useUserStore();
 
@@ -35,7 +35,6 @@ const {
     badges,
     speaker,
     filters,
-    userNotFound,
     isLoadingUser,
     reloadUser,
     fetchUserDecks,
@@ -97,12 +96,8 @@ watch(
 </script>
 
 <template>
-    <div id="app-body">
-        <LoadingSpinner style="align-self: center" v-if="isLoadingUser"/>
-        <AppTip v-else-if="userNotFound">
-            <p>{{ $t('pages.common.not-found', { model: $t('actions.models.user') }) }}</p>
-        </AppTip>
-        <template v-else-if="user">
+    <LoadingWrapper :is-loading="isLoadingUser || !user">
+        <div id="app-body">
             <div class="window-container">
                 <div class="window-header">
                     <RouterLink :to="{ name: 'users.index' }" class="material-symbols-rounded">home</RouterLink>
@@ -204,8 +199,8 @@ watch(
                     <BadgeItem v-for="badge in unlockedBadges" :badge="badge" :key="badge.id"/>
                 </div>
             </div>
-        </template>
-    </div>
+        </div>
+    </LoadingWrapper>
 </template>
 
 <style scoped lang="scss">

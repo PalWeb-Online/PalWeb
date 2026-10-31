@@ -190,7 +190,7 @@ watch(selectedScore, (newVal) => {
                                     query: {score: score.id},
                                 }">
                                 <div style="text-transform: capitalize">
-                                    {{ $t(`models.${score.settings.quizType}`) ?? $t('components.activity.title') }}
+                                    {{ score.settings.quizType ? $t(`models.${score.settings.quizType}`) : $t('components.activity.title') }}
                                 </div>
                                 <div>{{ getScoreStats(score).formatted }}
                                     ({{ getScoreStats(score).correct }}/{{ getScoreStats(score).total }})
