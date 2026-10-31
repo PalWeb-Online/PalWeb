@@ -165,7 +165,7 @@
         align-items: normal;
         direction: rtl;
         background: var(--color-pastel-light);
-        border: 0.1rem dotted var(--color-medium-primary);
+        border: 1px dotted var(--color-medium-primary);
 
         .arb {
             font-size: 1.6rem;
@@ -251,7 +251,7 @@
             > div {
                 padding: 0.4rem;
                 font-family: var(--mono-font);
-                border: 0.1rem solid var(--color-dark-primary);
+                border: 1px solid var(--color-dark-primary);
                 box-shadow: -0.3rem 0.3rem rgb(0 0 0 / 0.25);
                 background: var(--color-pastel-light);
                 display: flex;

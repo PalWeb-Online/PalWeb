@@ -8,13 +8,13 @@
 
 @mixin info-box-yellow {
     background: var(--color-accent-light);
-    border: 0.1rem solid var(--color-accent-medium);
+    border: 1px solid var(--color-accent-medium);
 }
 
 @mixin button-primary-dark {
     background: white;
     color: var(--color-dark-primary);
-    border: 0.1rem solid var(--color-medium-secondary);
+    border: 1px solid var(--color-medium-secondary);
     box-shadow: -0.2rem 0.2rem 0 var(--color-medium-secondary);
     border-radius: 1.2rem;
     padding: 0.8rem 1.2rem;
@@ -23,7 +23,7 @@
 @mixin button-primary-deep {
     background: white;
     color: var(--color-dark-primary);
-    border: 0.1rem solid var(--color-dark-primary);
+    border: 1px solid var(--color-dark-primary);
     box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.25);
     border-radius: 1.2rem;
     padding: 0.8rem 1.2rem;
@@ -32,7 +32,7 @@
 @mixin box-accent-light {
     color: var(--color-dark-primary);
     background: var(--color-accent-light);
-    border: 0.1rem solid var(--color-accent-medium);
+    border: 1px solid var(--color-accent-medium);
     border-radius: 0.8rem;
     box-shadow: -0.2rem 0.2rem 0 rgb(0 0 0 / 0.1);
 }

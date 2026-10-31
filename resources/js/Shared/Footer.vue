@@ -128,7 +128,7 @@ import AppLogo from "./AppLogo.vue";
             }
 
             a:hover {
-                text-decoration: 0.1rem underline;
+                text-decoration: 1px underline;
             }
         }
     }

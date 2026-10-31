@@ -304,7 +304,7 @@ watch(() => SearchStore.data.results, () => {
     display: grid;
     gap: 0.4rem;
     overflow: auto;
-    border-block-start: 0.1rem solid var(--color-pastel-dark);
+    border-block-start: 1px solid var(--color-pastel-dark);
     padding: 1.2rem;
     scrollbar-width: thin;
 
@@ -349,10 +349,10 @@ watch(() => SearchStore.data.results, () => {
         text-align: center;
         color: var(--color-dark-primary);
         background: white;
-        border: 0.1rem solid var(--color-medium-primary);
+        border: 1px solid var(--color-medium-primary);
 
         &:hover {
-            border: 0.1rem solid var(--color-accent-medium);
+            border: 1px solid var(--color-accent-medium);
         }
     }
 }
@@ -364,7 +364,7 @@ watch(() => SearchStore.data.results, () => {
     color: var(--color-dark-primary);
     background: var(--color-accent-light);
     padding: 0.6rem 1.2rem;
-    border-block-start: 0.1rem solid var(--color-accent-medium);
+    border-block-start: 1px solid var(--color-accent-medium);
     font-size: 1.2rem;
     font-family: var(--mono-font);
 }

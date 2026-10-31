@@ -537,7 +537,7 @@ const etymology = computed(() => {
         gap: 0.8rem;
         padding: 0.8rem 1.6rem;
         background: var(--color-pastel-light);
-        border-inline-end: 0.1rem solid var(--color-medium-primary);
+        border-inline-end: 1px solid var(--color-medium-primary);
         direction: rtl;
 
         &:hover {
@@ -598,7 +598,7 @@ const etymology = computed(() => {
 
 .term-container-decks {
     background: var(--color-medium-primary);
-    border-block-start: 0.1rem solid var(--color-dark-primary);
+    border-block-start: 1px solid var(--color-dark-primary);
 
     .featured-title {
         color: white;

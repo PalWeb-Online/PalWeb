@@ -213,7 +213,7 @@ watch(() => props.unit, () => {
     width: 100%;
     display: grid;
     background: var(--color-accent-light);
-    border-block-end: 0.1rem solid var(--color-dark-primary);
+    border-block-end: 1px solid var(--color-dark-primary);
     box-shadow: 0 0.3rem 0 rgb(0 0 0 / 25%);
     z-index: 2;
 
@@ -272,7 +272,7 @@ watch(() => props.unit, () => {
         width: 100%;
         display: grid;
         align-items: center;
-        border-block-start: 0.1rem solid var(--color-dark-primary);
+        border-block-start: 1px solid var(--color-dark-primary);
         grid-template-columns: min-content minmax(0, 1fr);
 
         & > a.material-symbols-rounded {

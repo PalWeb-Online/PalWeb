@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
     }
 
     a:hover {
-        text-decoration: 0.1rem solid underline;
+        text-decoration: 1px solid underline;
     }
 }
 </style>

@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-block-end: 0.1rem solid var(--color-pastel-dark);
+        border-block-end: 1px solid var(--color-pastel-dark);
         height: 4.8rem;
 
         & > * {
@@ -56,7 +56,7 @@
         text-transform: capitalize;
 
         &:not(:last-child) {
-            border-block-end: 0.1rem dotted var(--color-pastel-dark);
+            border-block-end: 1px dotted var(--color-pastel-dark);
         }
 
         & > div:nth-child(1) {
@@ -212,7 +212,7 @@ button.audio-button {
     padding: 2.4rem;
     display: flex;
     align-items: center;
-    border-block-start: 0.1rem solid var(--color-accent-medium);
+    border-block-start: 1px solid var(--color-accent-medium);
     background: var(--color-accent-light);
 
     .rw-test-status-info {
@@ -249,7 +249,7 @@ button.audio-button {
 .rw-queue-body {
     padding: 1.6rem 2.4rem;
     display: grid;
-    border-block-end: 0.1rem solid var(--color-accent-medium);
+    border-block-end: 1px solid var(--color-accent-medium);
 
     p {
         margin-block: 0;
@@ -333,7 +333,7 @@ button.audio-button {
     display: grid;
     grid-template-columns: 1fr;
     background: var(--color-accent-medium);
-    gap: 0.1rem;
+    gap: 1px;
 
     section {
         background: white;

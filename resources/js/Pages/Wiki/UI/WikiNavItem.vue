@@ -73,7 +73,7 @@ const toggleSection = (slug) => {
 
 <style scoped lang="scss">
 .wiki-nav > .wiki-nav-section:not(:last-child) {
-    border-block-end: 0.1rem solid var(--color-dark-primary);
+    border-block-end: 1px solid var(--color-dark-primary);
 }
 
 .wiki-nav-section {

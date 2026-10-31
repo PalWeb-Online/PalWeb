@@ -75,7 +75,7 @@ onMounted(() => {
     .pronunciation-audios {
         flex-shrink: 0;
         display: grid;
-        gap: 0.1rem;
+        gap: 1px;
         justify-items: start;
         border-inline-start: none;
         background: var(--color-pastel-dark);
@@ -125,7 +125,7 @@ onMounted(() => {
 
     .pronunciation-item-term {
         flex-basis: 20%;
-        padding-block-start: 0.1rem;
+        padding-block-start: 1px;
         font-family: var(--ar-body-font), serif;
         font-size: 1.8rem;
         font-weight: 700;
@@ -151,7 +151,7 @@ onMounted(() => {
     }
 
     .pronunciation-item-dialect {
-        padding-block-end: 0.1rem;
+        padding-block-end: 1px;
         margin-inline-end: 0.8rem;
         font-family: var(--body-font), serif;
         font-weight: 700;

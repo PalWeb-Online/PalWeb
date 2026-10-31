@@ -132,7 +132,7 @@ const navigate = () => {
         }
 
         & > *:not(:first-child) {
-            border-block-start: 0.1rem solid var(--color-pastel-dark);
+            border-block-start: 1px solid var(--color-pastel-dark);
         }
 
         & > *:last-child {

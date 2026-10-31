@@ -146,7 +146,7 @@ const isCorrect = computed(() => {
         font-size: 1.4rem;
         padding-block-start: 0.8rem;
         color: var(--color-dark-primary);
-        border-block-start: 0.1rem dotted currentColor;
+        border-block-start: 1px dotted currentColor;
     }
 }
 </style>

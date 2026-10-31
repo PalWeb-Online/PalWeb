@@ -309,7 +309,7 @@ const removeMatchPair = (ex, index) => {
         gap: 1.6rem;
         padding: 1.6rem;
         border-radius: 0.5em;
-        border: 0.1rem solid var(--color-medium-primary);
+        border: 1px solid var(--color-medium-primary);
     }
 
     input, textarea {
