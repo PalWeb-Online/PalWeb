@@ -28,7 +28,9 @@ const cardTask = computed(() => {
             : `pages.academy.study-plan.cards.${studyPlan.value.cards.started ? 'review' : 'start'}-meta`,
         metaParams: { count: remainingDue },
         actionKey: 'pages.academy.study-plan.cards.action',
-        route: router.resolve({ name: 'card-dealer.review' }).href,
+        route: studyPlan.value.cards.started
+            ? router.resolve({ name: 'card-dealer.review' }).href
+            : router.resolve({ name: 'card-dealer.review', query: { scope: 'lesson' } }).href,
     };
 });
 
