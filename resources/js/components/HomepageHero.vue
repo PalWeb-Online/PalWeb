@@ -74,6 +74,7 @@ watch(
 .app-logo-wrapper {
     width: 90%;
     display: grid;
+    position: relative;
 
     h1 {
         text-align: center;
@@ -87,7 +88,6 @@ watch(
         color: var(--color-dark-primary);
         background: white;
         filter: drop-shadow(-0.25em 0.25em 0 rgb(0 0 0 / 0.25));
-        position: relative;
 
         .typing-cursor {
             transition: opacity 0.2s;
@@ -96,7 +96,7 @@ watch(
 
     .mascot-zatune {
         position: absolute;
-        top: 20%;
+        top: -15%;
         right: 0;
         max-width: 20%;
         z-index: 1;

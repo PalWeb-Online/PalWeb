@@ -173,6 +173,10 @@ watch(browserOnline, (isOnline) => {
         inset: 0;
         z-index: 0;
         pointer-events: none;
+
+        @media (width < 960px) {
+            display: none;
+        }
     }
 
     &.academy {
