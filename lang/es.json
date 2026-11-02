@@ -886,7 +886,7 @@
             "tasks": {
                 "deck": {
                     "label": "Haz un Quiz de la Baraja",
-                    "meta": "Obtén un Puntaje de 100% en cualquier tipo de Quiz ({count}/{total})"
+                    "meta": "Obtén un Puntaje de 100% en cualquier tipo de Quiz de Baraja"
                 },
                 "activity": {
                     "label": "Completa la Actividad",

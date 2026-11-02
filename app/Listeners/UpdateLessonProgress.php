@@ -57,7 +57,7 @@ class UpdateLessonProgress implements ShouldQueue
             ->where('score', '>=', 1)
             ->count();
 
-        if ($scorable instanceof \App\Models\Deck && $pivot->stage === 1 && $scoreCount >= 3) {
+        if ($scorable instanceof \App\Models\Deck && $pivot->stage === 1 && $scoreCount >= 1) {
             $user->lessons()->updateExistingPivot($lesson->id, [
                 'stage' => 2,
             ]);

@@ -41,7 +41,7 @@ const lessonTask = computed(() => {
     const isDeckTask = studyPlan.value.lesson.action.model_type === 'deck';
 
     return {
-        key: `lesson-${studyPlan.value.lesson.action.model_typee}`,
+        key: `lesson-${studyPlan.value.lesson.action.model_type}`,
         icon: isDeckTask ? 'style' : 'assignment',
         completed: studyPlan.value.lesson.completed,
         labelKey: 'pages.academy.study-plan.lesson.label',
