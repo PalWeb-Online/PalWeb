@@ -103,7 +103,7 @@ class AcademyStateController extends Controller
 
     private function isValidLessonTask(User $user, mixed $assignment): bool
     {
-        if (! is_array($assignment) || ! isset($assignment['key']) || ! isset($assignment['lesson_id'])) {
+        if (! is_array($assignment) || ! isset($assignment['lesson_id'])) {
             return false;
         }
 
