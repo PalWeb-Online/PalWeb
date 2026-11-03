@@ -33,11 +33,11 @@ export function useDocumentResourceLoader() {
             return;
         }
 
-        const response = await axios.post('/api/sentences/many', {
+        const { data } = await axios.post('/api/sentences/many', {
             ids,
         });
 
-        sentenceModels.value = response.data ?? {};
+        sentenceModels.value = data.sentences ?? {};
     };
 
     const resetDocuments = () => {
