@@ -20,6 +20,7 @@ const props = defineProps({
     deckId: {
         type: Number,
         required: false,
+        default: null,
     },
     scope: {
         type: String,
