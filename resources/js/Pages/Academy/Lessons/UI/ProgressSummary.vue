@@ -56,7 +56,7 @@ const progressItems = computed(() => {
             total: 1,
             completed: scoreCount('deck') >= 1,
             active: stage.value === 1,
-            route: props.lesson.deck ? {name: 'deck-master.study', params: {deck: props.lesson.deck}} : null,
+            route: props.lesson.deck ? {name: 'deck-master.study', params: {deck: props.lesson.deck.id}} : null,
         },
     ];
 
@@ -71,7 +71,7 @@ const progressItems = computed(() => {
             total: 1,
             completed: scoreCount('activity') >= 1,
             active: stage.value === 2,
-            route: props.lesson.activity ? {name: 'activities.activity', params: {activity: props.lesson.activity}} : null,
+            route: props.lesson.activity ? {name: 'activities.activity', params: {activity: props.lesson.activity.id}} : null,
         });
     }
 
