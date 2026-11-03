@@ -29,7 +29,7 @@ defineProps({
             <div v-if="['deck', 'activity'].includes(model.model_class)">
                 {{ $t('components.lesson.scored-perfect', {
                     count: lesson.scores_count[`${model.model_class}:${model.id}`] ?? 0,
-                    total: model.model_class === 'deck' ? '3' : '1'
+                    total: '1'
                 }) }}
             </div>
             <RouterLink v-if="model.model_class === 'deck'" :to="{ name: 'deck-master.study', params: { deck: model.id } }">

@@ -886,7 +886,7 @@
             "tasks": {
                 "deck": {
                     "label": "Quiz the Deck",
-                    "meta": "Score 100% on any type of Quiz ({count}/{total})"
+                    "meta": "Score 100% on any type of Deck Quiz"
                 },
                 "activity": {
                     "label": "Do the Activity",

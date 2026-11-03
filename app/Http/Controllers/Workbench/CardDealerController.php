@@ -21,14 +21,9 @@ class CardDealerController extends Controller
     ) {
     }
 
-    public function index(Request $request, ReviewService $reviewService): JsonResponse
+    public function index(ReviewService $reviewService): JsonResponse
     {
         $user = auth()->user();
-        $options = $this->makeReviewOptions($request, $user);
-
-        $deck = $options->scope === 'deck'
-            ? Deck::findOrFail($options->deckId)
-            : null;
 
         $reviewHistory = $user->cardReviews()
             ->where('reviewed_at', '>=', now()->subDays(30))
@@ -47,12 +42,10 @@ class CardDealerController extends Controller
             ->keyBy(fn ($item) => $item->reviewed_at->format('Y-m-d'));
 
         return response()->json([
-            'scope' => $options->scope,
-            'deck' => $deck ? new DeckResource($deck) : null,
             'cards' => CardResource::collection(Card::forUser($user->id)->get()),
             'terms_count' => Term::count(),
-            'review_history' => $reviewHistory,
             'session_stats' => $reviewService->getSessionStats($user, ReviewOptions::forUser($user)),
+            'review_history' => $reviewHistory,
         ]);
     }
 
@@ -95,6 +88,10 @@ class CardDealerController extends Controller
             $user = auth()->user();
             $options = $this->makeReviewOptions($request, $user);
 
+            $deck = $options->scope === 'deck'
+                ? Deck::findOrFail($options->deckId)
+                : null;
+
             $count = Term::query()
                 ->forReviewOptions($options, $user)
                 ->distinct()
@@ -106,13 +103,14 @@ class CardDealerController extends Controller
                 ->get();
 
             return response()->json([
+                'deck' => $deck ? new DeckResource($deck) : null,
                 'cards' => CardResource::collection($cards),
                 'terms_count' => $count,
                 'session_stats' => $reviewService->getSessionStats($user, $options),
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch Deck Cards.'], 500);
+            return response()->json(['error' => 'Failed to fetch scope Cards.'], 500);
         }
     }
 

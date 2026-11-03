@@ -125,6 +125,8 @@ onMounted(async () => {
 
     & > * {
         text-box: trim-both cap alphabetic;
+        line-height: 1;
+        text-align: center;
     }
 
     .ft-headword-arb {
@@ -178,10 +180,6 @@ onMounted(async () => {
         font-weight: 700;
         text-box: trim-both cap alphabetic;
     }
-}
-
-.zatune-comment {
-    padding: 0;
 }
 
 .zatune-image {

@@ -1,27 +1,27 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch} from "vue";
-import {useUserStore} from "../../../stores/UserStore.js";
-import {useSearchStore} from "../../../stores/SearchStore.js";
-import DeckItem from "../../../components/DeckItem.vue";
-import ReviewQueue from "./UI/ReviewQueue.vue";
-import ReviewHistory from "./UI/ReviewHistory.vue";
-import SessionPreview from "./UI/SessionPreview.vue";
-import ReviewProgress from "./UI/ReviewProgress.vue";
-import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
+import {computed, onMounted, reactive, ref, watch} from 'vue';
+import {useUserStore} from '../../../stores/UserStore.js';
+import {useSearchStore} from '../../../stores/SearchStore.js';
+import DeckItem from '../../../components/DeckItem.vue';
+import ReviewQueue from './UI/ReviewQueue.vue';
+import ReviewHistory from './UI/ReviewHistory.vue';
+import SessionPreview from './UI/SessionPreview.vue';
+import ReviewProgress from './UI/ReviewProgress.vue';
+import LoadingSpinner from '../../../Shared/LoadingSpinner.vue';
+import {useRouter} from 'vue-router';
+import {useNotifier} from '../../../composables/useNotifier.js';
 
 const UserStore = useUserStore();
 const SearchStore = useSearchStore();
+const Notifier = useNotifier();
+const router = useRouter();
 
 const props = defineProps({
     scope: String,
     deckId: Number,
-})
-
-const scope = ref(props.scope ?? 'all');
-
-const mode = computed(() => {
-    return scope.value === 'all' ? 'all' : 'deck';
 });
+
+const scope = ref(props.scope ?? 'lesson');
 
 const isLoading = ref(false);
 
@@ -29,31 +29,16 @@ const allData = reactive({
     cards: [],
     termsCount: 0,
     sessionStats: null,
-})
+});
 
 const scopeData = reactive({
     deck: null,
     cards: [],
     termsCount: 0,
     sessionStats: null,
-})
-
-const reviewHistory = ref({});
-
-onMounted(async () => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-    const {data} = await axios.get('/api/card-dealer', {params});
-
-    scope.value = data.scope ?? scope.value;
-    scopeData.deck = data.deck;
-    allData.cards = data.cards;
-    allData.termsCount = data.terms_count;
-    allData.sessionStats = data.session_stats;
-    reviewHistory.value = data.review_history;
 });
 
-const allSessionStats = computed(() => mapSessionStats(allData.sessionStats))
-const scopeSessionStats = computed(() => mapSessionStats(scopeData.sessionStats))
+const reviewHistory = ref({});
 
 const mapSessionStats = (stats) => ({
     ownedReviewedToday: stats?.owned_reviewed_today ?? 0,
@@ -62,10 +47,82 @@ const mapSessionStats = (stats) => ({
     remainingNew: stats?.remaining_new ?? 0,
     availableNew: stats?.available_new ?? 0,
     remainingReviews: stats?.remaining_reviews ?? 0,
-})
+});
+
+const applyGlobalData = (data) => {
+    allData.cards = data.cards;
+    allData.termsCount = data.terms_count;
+    allData.sessionStats = data.session_stats;
+    reviewHistory.value = data.review_history;
+};
+
+const applyScopeData = (data) => {
+    scopeData.deck = data.deck ?? null;
+    scopeData.cards = data.cards;
+    scopeData.termsCount = data.terms_count;
+    scopeData.sessionStats = data.session_stats;
+};
+
+const selectedScopePayload = computed(() => {
+    const payload = {
+        scope: scope.value,
+    };
+
+    const deckId = scopeData.deck?.id ?? props.deckId;
+
+    if (scope.value === 'deck' && deckId) {
+        payload.deck = Number(deckId);
+    }
+
+    return payload;
+});
+
+const fetchGlobalData = async () => {
+    const { data } = await axios.get('/api/card-dealer');
+    applyGlobalData(data);
+};
+
+const fetchScopeData = async () => {
+    if (isAllScope.value) {
+        return;
+    }
+
+    try {
+        const { data } = await axios.post('/api/card-dealer/get-scope-cards', selectedScopePayload.value);
+
+        if (data) {
+            applyScopeData(data);
+        }
+
+    } catch (error) {
+        console.error(`Error fetching Cards for ${scope.value} scope:`, error);
+        Notifier.notify({
+            message: 'Failed to fetch scope Cards. Defaulting to Dictionary scope.',
+            type: 'error'
+        })
+        router.push({ name: 'card-dealer.index' });
+        scope.value = 'all';
+    }
+};
+
+onMounted(async () => {
+    isLoading.value = true;
+
+    try {
+        await fetchGlobalData();
+        await fetchScopeData();
+
+    } finally {
+        isLoading.value = false;
+    }
+});
+
+const allSessionStats = computed(() => mapSessionStats(allData.sessionStats));
+const scopeSessionStats = computed(() => mapSessionStats(scopeData.sessionStats));
+const isAllScope = computed(() => scope.value === 'all');
 
 const selectedScopeKey = computed(() => {
-    if (mode.value !== 'deck') {
+    if (isAllScope.value) {
         return 'all';
     }
 
@@ -83,11 +140,7 @@ watch(
             return;
         }
 
-        if (mode.value !== 'deck') {
-            return;
-        }
-
-        if (scope.value === 'deck' && !scopeData.deck?.id) {
+        if (isAllScope.value) {
             return;
         }
 
@@ -99,7 +152,7 @@ watch(
         } finally {
             isLoading.value = false;
         }
-    }
+    },
 );
 
 watch(
@@ -112,7 +165,7 @@ watch(
         scopeData.deck = newModel;
         scope.value = 'deck';
         SearchStore.deselectModel();
-    }
+    },
 );
 
 const openDeckSelector = () => {
@@ -124,56 +177,26 @@ const openDeckSelector = () => {
     scope.value = 'deck';
 };
 
-const fetchScopeData = async () => {
-    try {
-        const payload = {
-            scope: scope.value,
-        };
-
-        if (scope.value === 'deck' && scopeData.deck?.id) {
-            payload.deck = scopeData.deck.id;
-        }
-
-        const response = await axios.post('/api/card-dealer/get-scope-cards', payload);
-
-        if (response.data) {
-            scopeData.cards = response.data.cards;
-            scopeData.termsCount = response.data.terms_count;
-            scopeData.sessionStats = response.data.session_stats;
-        }
-
-    } catch (error) {
-        console.error(`Error fetching Cards for ${scope.value} scope:`, error);
-    }
-};
-
 const activeCards = computed(() => {
-    return mode.value === 'deck' ? scopeData.cards : allData.cards
-})
+    return isAllScope.value ? allData.cards : scopeData.cards;
+});
 
 const activeTermsCount = computed(() => {
-    return mode.value === 'deck' ? scopeData.termsCount : allData.termsCount
-})
+    return isAllScope.value ? allData.termsCount : scopeData.termsCount;
+});
 
 const activeSessionStats = computed(() => {
-    return mode.value === 'deck' ? scopeSessionStats.value : allSessionStats.value;
-})
+    return isAllScope.value ? allSessionStats.value : scopeSessionStats.value;
+});
 
 const refreshSessionData = async () => {
     isLoading.value = true;
 
     try {
-        if (mode.value === 'deck') {
-            await fetchScopeData();
-        } else {
-            const {data} = await axios.get('/api/card-dealer', {
-                params: {scope: scope.value},
-            });
+        await fetchGlobalData();
 
-            allData.cards = data.cards;
-            allData.termsCount = data.terms_count;
-            allData.sessionStats = data.session_stats;
-            reviewHistory.value = data.review_history;
+        if (!isAllScope.value) {
+            await fetchScopeData();
         }
     } finally {
         isLoading.value = false;
@@ -183,7 +206,6 @@ const refreshSessionData = async () => {
 const handleSessionDataRefresh = async () => {
     await refreshSessionData();
 };
-
 </script>
 
 <template>
@@ -227,11 +249,12 @@ const handleSessionDataRefresh = async () => {
                     sets, this option is for you.
                 </p>
                 <p v-if="scope === 'deck'">
-                    Limit Cards to the Terms present in <b>a single Deck</b> if you want to target a specific set of Terms.
+                    Limit Cards to the Terms present in <b>a single Deck</b> if you want to target a specific set of
+                    Terms.
                 </p>
             </div>
 
-            <template v-if="mode === 'deck' && scope === 'deck'">
+            <template v-if="scope === 'deck'">
                 <div class="deck-preview-wrapper" v-if="scopeData.deck">
                     <DeckItem :model="scopeData.deck"/>
                     <span class="material-symbols-rounded"

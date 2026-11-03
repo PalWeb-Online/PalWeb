@@ -23,6 +23,7 @@ const props = defineProps({
     margin-block: 4%;
     padding-inline: 4%;
     grid-template-columns: 1fr min(25%, 16rem);
+    align-content: center;
 
     .comment-bubble {
         padding: 1.6rem 2rem;
