@@ -25,7 +25,7 @@ class AcademyStateController extends Controller
         $sessionStats = $reviewService->getSessionStats($user, $options);
 
         $remainingDue = $sessionStats['remaining_due'];
-        $remainingNewCapacity = $options->newLimit - $sessionStats['new_reviewed_today'];
+        $remainingNewCapacity = min($options->newLimit, $sessionStats['available_new']) - $sessionStats['new_reviewed_today'];
 
         return response()->json([
             'study_plan' => [
