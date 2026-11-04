@@ -21,16 +21,19 @@ class AcademyStateController extends Controller
         $currentLesson = $this->currentLesson($user);
         $lessonProgress = $user->getLessonProgress();
 
-        $remainingDue = (int) $reviewService->getSessionStats($user, ReviewOptions::forUser($user))['remaining_due'];
-        $cardsCount = $user->cards()->count();
+        $options = ReviewOptions::forUser($user, 'lesson');
+        $sessionStats = $reviewService->getSessionStats($user, $options);
+
+        $remainingDue = $sessionStats['remaining_due'];
+        $remainingNewCapacity = $options->newLimit - $sessionStats['new_reviewed_today'];
 
         return response()->json([
             'study_plan' => [
                 'date' => today()->toDateString(),
                 'cards' => [
+                    'remaining_new_capacity' => $remainingNewCapacity,
                     'remaining_due' => $remainingDue,
-                    'completed' => $remainingDue === 0,
-                    'started' => $cardsCount > 0,
+                    'completed' => $remainingDue + $remainingNewCapacity === 0,
                 ],
                 'lesson' => $currentLesson ? $this->lessonTask($user, $currentLesson) : null,
             ],

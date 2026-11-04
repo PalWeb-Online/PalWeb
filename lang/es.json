@@ -1153,14 +1153,16 @@
                 "error": "No se pudo cargar el Plan de Estudio de hoy.",
                 "tasks-completed": "¡Has terminado todo por hoy! ¡Nos vemos mañana!",
                 "cards": {
-                    "label": "Repasa tus Cartas Programadas",
-                    "meta": "Tienes {count} Cartas Programadas en el Repartidor.",
-                    "complete": "¡Ya no quedan más Cartas Programadas para hoy!",
-                    "action": "repasar cartas"
+                    "create-label": "Crea Cartas Nuevas",
+                    "create-meta": "Puedes crear {count} Cartas Nuevas en el Repartidor.",
+                    "review-label": "Repasa Cartas Programadas",
+                    "review-meta": "Tienes {count} Cartas Programadas en el Repartidor.",
+                    "complete": "¡No quedan más Cartas Programadas para hoy!",
+                    "action": "comenzar sesión"
                 },
                 "lesson": {
                     "label": "Continúa la Lección {lesson}",
-                    "continue-deck": "¡Haz un Quiz de la Baraja para desbloquear las Habilidades de esta Lección!",
+                    "continue-deck": "¡Haz un Quiz de Baraja para desbloquear las Habilidades de esta Lección!",
                     "continue-activity": "¡Haz la Actividad para desbloquear el Diálogo de esta Lección!"
                 }
             }
