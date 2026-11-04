@@ -16,21 +16,22 @@ const cardTask = computed(() => {
     if (!studyPlan.value?.cards) return null;
 
     const remainingDue = studyPlan.value.cards.remaining_due ?? 0;
-    const isDoneToday = studyPlan.value.cards.started && studyPlan.value.cards.completed;
+    const remainingNewCapacity = studyPlan.value.cards.remaining_new_capacity ?? 0;
 
     return {
         key: 'cards',
         icon: 'style',
-        completed: isDoneToday,
-        labelKey: `pages.academy.study-plan.cards.${studyPlan.value.cards.started ? 'review' : 'start'}-label`,
-        metaKey: isDoneToday
+        completed: studyPlan.value.cards.completed,
+        labelKey: `pages.academy.study-plan.cards.${remainingDue === 0 ? 'create' : 'review'}-label`,
+        metaKey: studyPlan.value.cards.completed
             ? 'pages.academy.study-plan.cards.complete'
-            : `pages.academy.study-plan.cards.${studyPlan.value.cards.started ? 'review' : 'start'}-meta`,
-        metaParams: { count: remainingDue },
+            : `pages.academy.study-plan.cards.${remainingDue > 0 ? 'review' : 'create'}-meta`,
+        metaParams: { count: remainingDue || remainingNewCapacity },
         actionKey: 'pages.academy.study-plan.cards.action',
-        route: studyPlan.value.cards.started
-            ? router.resolve({ name: 'card-dealer.review' }).href
-            : router.resolve({ name: 'card-dealer.review', query: { scope: 'lesson' } }).href,
+        route: router.resolve({
+            name: 'card-dealer.review',
+            query: { scope: 'lesson' },
+        }).href,
     };
 });
 
@@ -146,7 +147,7 @@ onMounted(() => {
     .mascot-zatune {
         position: absolute;
         top: -10%;
-        right: 5%;
+        inset-inline-end: 5%;
         max-width: 15%;
         z-index: 1;
     }

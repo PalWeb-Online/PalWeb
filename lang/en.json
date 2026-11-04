@@ -1153,12 +1153,12 @@
                 "error": "Unable to load today's Study Plan.",
                 "tasks-completed": "You got everything done for today! See you tomorrow!",
                 "cards": {
-                    "start-label": "Create some New Cards",
-                    "start-meta": "Go to the Card Dealer to generate New Cards for review.",
-                    "review-label": "Review your Due Cards",
+                    "create-label": "Create New Cards",
+                    "create-meta": "You can create {count} New Cards in the Card Dealer.",
+                    "review-label": "Review Due Cards",
                     "review-meta": "You have {count} Due Cards in the Card Dealer.",
-                    "complete": "No more Due Cards left for today!",
-                    "action": "review cards"
+                    "complete": "No more Cards left for today!",
+                    "action": "start session"
                 },
                 "lesson": {
                     "label": "Continue with Lesson {lesson}",
