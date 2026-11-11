@@ -1,13 +1,13 @@
 <script setup>
-import WikiNav from "./UI/WikiNav.vue";
-import AppTip from "../../components/AppTip.vue";
-import {computed, onMounted, ref, watch} from "vue";
-import LoadingSpinner from "../../Shared/LoadingSpinner.vue";
-import {useUserStore} from "../../stores/UserStore.js";
-import {getHeadingAnchorId} from "../../components/Blocks/headingAnchors.js";
-import PageContents from "./UI/PageContents.vue";
-import DocumentBlocksRenderer from "../../components/Blocks/Renderers/DocumentBlocksRenderer.vue";
-import {usePageViewer} from "../../composables/pages/usePageViewer.js";
+import WikiNav from './UI/WikiNav.vue';
+import AppTip from '../../components/AppTip.vue';
+import {computed, onMounted, ref, watch} from 'vue';
+import LoadingSpinner from '../../Shared/LoadingSpinner.vue';
+import {useUserStore} from '../../stores/UserStore.js';
+import {getHeadingAnchorId} from '../../components/Blocks/headingAnchors.js';
+import PageContents from './UI/PageContents.vue';
+import DocumentBlocksRenderer from '../../components/Blocks/Renderers/DocumentBlocksRenderer.vue';
+import {usePageViewer} from '../../composables/pages/usePageViewer.js';
 
 const props = defineProps({
     pageSlug: {
@@ -65,7 +65,10 @@ const tableOfContents = computed(() => {
         }));
 
     const root = [];
-    const stack = [{levelNumber: 0, children: root}];
+    const stack = [{
+        levelNumber: 0,
+        children: root,
+    }];
 
     headings.forEach((heading) => {
         while (stack.length > 1 && heading.levelNumber <= stack[stack.length - 1].levelNumber) {
@@ -88,7 +91,7 @@ onMounted(async () => {
 });
 
 watch(() => props.pageSlug, async () => {
-    await reloadPage(props.pageSlug)
+    await reloadPage(props.pageSlug);
 });
 </script>
 
@@ -110,7 +113,9 @@ watch(() => props.pageSlug, async () => {
             <h1>{{ page?.title }}</h1>
 
             <template v-if="UserStore.isAdmin">
-                <RouterLink :to="{ name: 'wiki.edit', params: { page: page?.id } }" class="material-symbols-rounded">edit</RouterLink>
+                <RouterLink :to="{ name: 'wiki.edit', params: { page: page?.id } }" class="material-symbols-rounded">
+                    edit
+                </RouterLink>
                 <RouterLink :to="{ name: 'wiki.edit' }" class="material-symbols-rounded">add</RouterLink>
             </template>
         </div>
@@ -131,8 +136,8 @@ watch(() => props.pageSlug, async () => {
 
             <LoadingSpinner v-if="isLoadingPage"/>
             <div v-else-if="pageNotFound" class="wiki-blocks-wrapper">
-                <p>{{ $t('pages.common.not-found', {model: $t('actions.models.page')}) }}</p>
-<!--                todo: this is useful, but currently will never be reached-->
+                <p>{{ $t('pages.common.not-found', { model: $t('actions.models.page') }) }}</p>
+                <!--                todo: this is useful, but currently will never be reached-->
                 <p>
                     <RouterLink v-if="UserStore.isAdmin" :to="{ name: 'wiki.edit' }">Create this Page</RouterLink>
                     <RouterLink v-else :to="{ name: 'wiki.index' }">Go to Wiki Home</RouterLink>
@@ -189,10 +194,10 @@ watch(() => props.pageSlug, async () => {
     width: 100%;
     max-width: 128rem;
     justify-self: center;
+    overflow: hidden;
 
     @media (width >= 1280px) {
         margin-block-end: 9.6rem;
-        overflow: hidden;
     }
 
     .window-section-head .menu.active {

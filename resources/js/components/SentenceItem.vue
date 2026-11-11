@@ -82,7 +82,7 @@ const {sentence, isLoading, isCurrentTerm} = useSentence(props);
                         </div>
                     </template>
                 </template>
-                <div v-else class="sentence-term" style="background: none">
+                <div v-else class="sentence-term non-hypertext" style="background: none">
                     <div>{{ sentence.sentence }}</div>
                     <div v-if="showTranscription">{{ sentence.translit }}</div>
                 </div>

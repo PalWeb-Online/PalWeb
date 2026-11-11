@@ -63,35 +63,28 @@ watch([() => props.lessonId, () => props.unitId], async () => {
                     <div class="lesson-head-title">{{ lesson.title }}</div>
                 </div>
                 <div class="lesson-data-body">
-                    <div>{{ lesson.description ?? $t('pages.lessons.show.no-description') }}</div>
-                    <div v-if="lesson.document" class="lesson-skill-summary">
-                        <div style="font-weight: 700">{{ $t('pages.lessons.show.skill-list') }}</div>
-                        <ul style="margin-block: 1.6rem">
-                            <li v-for="skill in lesson.document.skills">
-                                {{ skill.description }}
-                            </li>
-                        </ul>
-                    </div>
+                    <section>
+                        {{ lesson.description ?? $t('pages.lessons.show.no-description') }}
+                    </section>
+                    <section v-if="lesson.document">
+                        <div style="font-weight: 700; margin-block-end: 2.4rem">{{ $t('pages.lessons.show.skill-list') }}</div>
+                        <div v-for="skill in lesson.document.skills" class="lesson-skill-item">
+                            <div>{{ skill.type }}</div>
+                            <div>{{ skill.description }}</div>
+                        </div>
+                    </section>
                 </div>
+                <SkillContainer :skills="lesson.document?.skills" :disabled="lesson.progress.stage < 2"/>
                 <ProgressSummary :lesson="lesson" v-model:current-tab="currentTab"/>
             </div>
             <div class="lesson-tab-wrapper" v-show="currentTab === 'deck'">
-                <template v-if="lesson.deck">
-                    <DeckContainer :model="lesson.deck"/>
-                </template>
+                <DeckContainer v-if="lesson.deck" :model="lesson.deck"/>
                 <AppTip v-else>
                     <p>{{ $t('pages.lessons.show.missing-deck') }}</p>
                 </AppTip>
             </div>
             <div class="lesson-tab-wrapper" v-if="lesson.progress.stage > 1" v-show="currentTab === 'skills'">
-                <SkillContainer v-for="skill in lesson.document?.skills" :skill="skill"/>
-                <template v-if="lesson.activity">
-                    <div class="featured-title l" style="margin-block: 3.2rem">{{
-                            $t('pages.lessons.show.ready')
-                        }}
-                    </div>
-                    <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
-                </template>
+                <ActivityContainer v-if="lesson.activity" :model="lesson.activity"/>
                 <AppTip v-else>
                     <p>{{ $t('pages.lessons.show.missing-activity') }}</p>
                 </AppTip>
@@ -157,5 +150,22 @@ watch([() => props.lessonId, () => props.unitId], async () => {
     width: 100%;
     display: grid;
     justify-items: center;
+}
+
+.lesson-skill-item {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    margin-block: 1.6rem;
+
+    :first-child {
+        flex-basis: min(20%, 12rem);
+        flex-shrink: 0;
+        font-family: var(--head-font);
+        font-weight: 700;
+        font-size: 2.0rem;
+        color: var(--color-medium-secondary);
+        hyphens: none;
+    }
 }
 </style>

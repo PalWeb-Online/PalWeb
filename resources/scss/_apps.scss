@@ -135,7 +135,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    overflow: scroll;
+    min-width: 0;
     gap: 1em;
     padding-inline: 2em;
 
@@ -147,8 +147,15 @@
         font-weight: 700;
         white-space: nowrap;
         flex-grow: 1;
-        overflow: scroll;
+        min-width: 0;
         height: 100%;
+
+        & > :first-child {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 }
 
@@ -298,11 +305,16 @@
     background: white;
     position: relative;
     overflow: hidden;
+    border: 0.2rem solid var(--color-dark-primary);
+    border-radius: 0.8rem;
+    box-shadow: -0.4rem 0.4rem 0 rgb(0 0 0 / 0.25);
 
-    @media (width >= 960px) {
-        border: 0.2rem solid var(--color-dark-primary);
-        border-radius: 0.8rem;
-        box-shadow: -0.4rem 0.4rem 0 rgb(0 0 0 / 0.25);
+    @media (width < 960px) {
+        &:not(.modal-container) {
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
     }
 
     .app-tip {
@@ -406,8 +418,9 @@
 .window-header {
     .window-header-url {
         flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: scroll;
     }
 
     .term-deck-toggle {
@@ -485,19 +498,15 @@
         border-block-start: 1px solid var(--color-dark-secondary);
     }
 
-    & > * {
-        height: 100%;
-        display: flex;
-        align-items: center;
-    }
-
     h1, h2, h3 {
         margin: 0;
         color: currentColor;
         flex-grow: 1;
         padding-inline: 1.6rem;
         font-size: 1em;
-        overflow: scroll;
+        text-box: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
@@ -510,6 +519,9 @@
         user-select: none;
         cursor: pointer;
         font-weight: 400;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     .popup-menu-wrapper {
