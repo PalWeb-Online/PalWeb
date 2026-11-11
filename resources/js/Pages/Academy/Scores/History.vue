@@ -299,11 +299,22 @@ watch(selectedScore, (newVal) => {
 .score-item-wrapper {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    overflow: hidden;
+    background: white;
 
     .material-symbols-rounded {
+        padding-inline: 1.2rem;
         font-size: 2.0rem;
         color: var(--color-dark-primary);
+    }
+
+    @media (width >= 960px) {
+        background: var(--color-pastel-light);
+        border-radius: 0.8rem;
+
+        &:hover {
+            background: var(--color-pastel-medium);
+        }
     }
 }
 
@@ -312,17 +323,11 @@ watch(selectedScore, (newVal) => {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    background: var(--color-pastel-light);
     color: var(--color-dark-primary);
-    border-radius: 0.8rem;
     padding: 1.2rem 2.4rem;
     font-family: var(--body-font);
     font-weight: 700;
     font-size: 1.6rem;
-
-    &:hover {
-        background: var(--color-pastel-medium);
-    }
 
     & > *:last-child {
         justify-self: end;

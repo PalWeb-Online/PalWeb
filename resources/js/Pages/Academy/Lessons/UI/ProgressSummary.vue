@@ -31,7 +31,7 @@ const stages = computed(() => [
     {
         key: 'skills',
         index: 2,
-        labelKey: 'components.lesson.sections.skills',
+        labelKey: 'components.activity.title',
         unlocked: stage.value >= 2,
         completed: stage.value > 2,
     },

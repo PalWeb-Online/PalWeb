@@ -66,6 +66,11 @@
 }
 
 .quiz-question .sentence-item-container {
+    .model-item-content {
+        flex-flow: row wrap;
+        overflow-x: auto;
+    }
+
     .model-item-content .sentence-term {
         padding-inline: 0.8rem;
 
@@ -136,10 +141,10 @@
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
+    overflow-x: scroll;
     gap: 0;
 
     .sentence-term {
-        height: 100%;
         display: grid;
         align-content: center;
         justify-items: center;
@@ -169,6 +174,17 @@
         &.active {
             background: var(--color-pastel-medium);
         }
+    }
+
+    &:has(.non-hypertext) {
+        overflow-x: hidden
+    }
+
+    .sentence-term.non-hypertext > div {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     a:link.sentence-term, a:visited.sentence-term {

@@ -57,7 +57,7 @@ const {deck, blurb, isLoading} = useDeck(props);
                 <PinButton modelType="deck" :model="deck"/>
                 <div class="model-item-content" @click="router.push(requestTarget)">
                     <div class="model-item-title">
-                        {{ deck.name }}
+                        <span>{{ deck.name }}</span>
                         <span class="deck-item-terms-count">
                             {{ deck.terms_count }}
                         </span>

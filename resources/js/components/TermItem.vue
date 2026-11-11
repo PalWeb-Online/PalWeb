@@ -86,10 +86,9 @@ const showNextGloss = () => {
                         </div>
                     </div>
                     <div class="term-item-term">
-                        <RouterLink style="height: 100%; overflow: scroll; display: flex; align-items: center; gap: 1.2rem;"
-                              :to="{ name: 'terms.show', params: { term: term.slug } }">
+                        <RouterLink :to="{ name: 'terms.show', params: { term: term.slug } }">
                             <span class="arb">{{ term.term }}</span>
-                            <span class="translit">({{ term.translit }})</span>
+                            <span class="translit">{{ term.translit }}</span>
                         </RouterLink>
                         <AudioButton v-if="term.audio" :pronunciation="term.pronunciations[0]"/>
                     </div>
@@ -104,6 +103,7 @@ const showNextGloss = () => {
 
 <style scoped lang="scss">
 .term-item-gloss-controls {
+    flex-shrink: 0;
     display: grid;
     grid-template-rows: repeat(2, 1fr);
     width: 2.4rem;

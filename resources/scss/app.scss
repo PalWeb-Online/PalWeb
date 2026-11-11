@@ -54,13 +54,11 @@ html[lang="ar"] {
     .lesson-progress-summary,
     .sm-mode-select,
     .error-container,
-    #app-head
-    {
+    #app-head {
         direction: rtl;
     }
 
-    .term-references
-    {
+    .term-references {
         flex-flow: row wrap
     }
 }
@@ -242,19 +240,17 @@ html[lang="ar"] {
     }
 }
 
-.field-block-wrapper {
-    display: grid;
-    gap: 0.8rem;
-}
-
 .field-block {
     display: grid;
-    gap: 0.6rem;
-    border: 1px solid var(--color-dark-primary);
-    border-radius: 0.8rem;
-    box-shadow: -0.2rem 0.2rem 0 var(--color-dark-primary);
     overflow: hidden;
     background: white;
+    gap: 0.6rem;
+
+    @media (width >= 960px) {
+        border: 1px solid var(--color-dark-primary);
+        border-radius: 0.8rem;
+        box-shadow: -0.2rem 0.2rem 0 var(--color-dark-primary);
+    }
 
     .field-block-head {
         display: flex;
@@ -278,6 +274,7 @@ html[lang="ar"] {
 
     .field-block {
         box-shadow: none;
+        border-radius: 0.8rem;
         border: 1px solid var(--color-pastel-dark);
 
         .field-block-head {

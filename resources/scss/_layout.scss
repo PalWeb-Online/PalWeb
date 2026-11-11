@@ -17,7 +17,7 @@ body {
             background: none;
             border: none;
             box-shadow: none;
-            padding: 0;
+            padding: 3.2rem;
 
             h1 {
                 font-size: clamp(4.8rem, 12vw, 12.8rem);
@@ -46,16 +46,9 @@ body {
     &.wiki {
         #app-head {
             display: flex;
-            gap: 1.6rem;
             width: 100%;
             max-width: 128rem;
             justify-self: center;
-
-            h1 {
-                padding: 4.8rem 1.6rem;
-                text-align: start;
-                text-box: trim-both cap alphabetic;
-            }
         }
     }
 }
