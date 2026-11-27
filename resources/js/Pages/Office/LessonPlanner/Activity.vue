@@ -10,10 +10,6 @@ import LoadingSpinner from "../../../Shared/LoadingSpinner.vue";
 import DocumentBlocksManager from "../../../components/Blocks/Editors/DocumentBlocksManager.vue";
 
 const props = defineProps({
-    activityId: {
-        type: Number,
-        default: null,
-    },
     initialLessonId: {
         type: Number,
         default: null,
@@ -37,13 +33,15 @@ const {
     saveActivity,
     deleteActivity,
 } = useActivityEditor({
-    activityId: computed(() => props.activityId),
+    activityId: computed(() => initialLesson.value?.activity?.id),
     initialLesson: computed(() => initialLesson.value),
 });
 
 onMounted(async () => {
     if (props.initialLessonId) {
         const {data} = await axios.get(`/api/lessons/${props.initialLessonId}/edit`);
+        // todo: if the lesson does not exist, 404 error
+        //  this seems to also affect creating a Lesson in a Unit that doesn't exist
         initialLesson.value = data.lesson;
     }
 
